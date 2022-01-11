@@ -1,0 +1,8 @@
+ssh -T git@github.com
+git init
+git add --all
+git commit -m "C"
+git remote add origin https://github.com/hitchao/jvedioupdate.git
+git config --global http.sslVerify "false"
+git config http.postBuffer 524288000
+git push -u origin master -f

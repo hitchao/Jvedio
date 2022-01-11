@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio", "Jvedio\Jvedio.csproj", "{DCFB456D-B299-459F-A4C7-EC3D183B3971}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Language", "Jvedio.Language\Jvedio.Language.csproj", "{D7A06C53-5742-4894-820E-3697F81A3785}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Style", "Jvedio.Style\Jvedio.Style.csproj", "{C398561C-9E61-4258-A9A0-1692832A6A95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Utils", "Jvedio.Utils\Jvedio.Utils.csproj", "{0EB5999E-C297-4A50-ABB0-615BB92176DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCFB456D-B299-459F-A4C7-EC3D183B3971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCFB456D-B299-459F-A4C7-EC3D183B3971}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCFB456D-B299-459F-A4C7-EC3D183B3971}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCFB456D-B299-459F-A4C7-EC3D183B3971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7A06C53-5742-4894-820E-3697F81A3785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7A06C53-5742-4894-820E-3697F81A3785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7A06C53-5742-4894-820E-3697F81A3785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7A06C53-5742-4894-820E-3697F81A3785}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C398561C-9E61-4258-A9A0-1692832A6A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C398561C-9E61-4258-A9A0-1692832A6A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C398561C-9E61-4258-A9A0-1692832A6A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C398561C-9E61-4258-A9A0-1692832A6A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EB5999E-C297-4A50-ABB0-615BB92176DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EB5999E-C297-4A50-ABB0-615BB92176DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EB5999E-C297-4A50-ABB0-615BB92176DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EB5999E-C297-4A50-ABB0-615BB92176DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {597CF8DB-66FA-4748-9A32-86FC198DB326}
+	EndGlobalSection
+EndGlobal

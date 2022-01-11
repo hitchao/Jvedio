@@ -1,0 +1,855 @@
+﻿<style:BaseWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Jvedio"
+        xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:p="clr-namespace:Jvedio.Properties"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+        xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils"
+        x:Class="Jvedio.Settings"
+        mc:Ignorable="d"
+        Title="{x:Static lang:Resources.Settings}" 
+        Width="1000"
+        MinHeight="500" MinWidth="800"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        AllowDrop="True"
+        ContentRendered="Window_ContentRendered"
+        Closing="Window_Closing"
+    
+    
+        >
+
+    <style:BaseWindow.Resources>
+
+
+        <local:CookieNothingConverter x:Key="CookieNothingConverter" />
+
+
+
+
+        <Style x:Key="BaseTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+
+        <Style x:Key="TextBlockTitle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Width" Value="auto" />
+            <Setter Property="Height" Value="auto" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="5 0 0 0"/>
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <!--删除字体-->
+            <Setter Property="Margin" Value="20 5"/>
+        </Style>
+
+        <Style x:Key="InfoLabel" TargetType="{x:Type Label}">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="auto"/>
+            <!--删除字体-->
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="0 0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Width" Value="auto"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
+        </Style>
+
+
+        <Style x:Key="BaseHcTextBox" TargetType="TextBox" BasedOn="{StaticResource TextBoxBaseStyle}">
+            <!--删除字体-->
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
+            <Setter Property="Background" Value="{DynamicResource BackgroundTitle}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="auto"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinWidth" Value="400"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5 0"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}"/>
+        </Style>
+    </style:BaseWindow.Resources>
+
+    <Grid  Background="{DynamicResource BackgroundMain}"   >
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!--消息提示框-->
+        <ScrollViewer Height="auto" Background="Transparent" Panel.ZIndex="6" Width="auto" VerticalScrollBarVisibility="Hidden" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="10 0 30 20">
+            <StackPanel hc:Growl.GrowlParent="True" hc:Growl.Token="SettingsGrowl" VerticalAlignment="Bottom" Margin="0,10,10,10"/>
+        </ScrollViewer>
+
+        <TextBox Visibility="Visible" x:Name="FocusTextBox" Width="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-20 0"/>
+
+
+        <TabControl  Grid.Row="0" Margin="5" BorderBrush="{DynamicResource BackgroundSearch}"  x:Name="TabControl"  Background="Transparent" TabStripPlacement="Top" Style="{DynamicResource BaseHcTabControlStyle}"  >
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.Basic}" >
+                <StackPanel    >
+                    <WrapPanel Orientation="Vertical" Margin="5">
+                        <CheckBox IsChecked="{Binding CloseToTaskBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.CloseToBar}" />
+                        <CheckBox IsChecked="{Binding RandomDisplay, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.RandomWhenStartUp}"  />
+                        <CheckBox IsChecked="{Binding OpenDataBaseDefault, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.NotShowLibrary}"  />
+                        <CheckBox IsChecked="{Binding AutoDeleteNotExistMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.AutoDelete}"  />
+                        <CheckBox IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.DeleteFileWhenDeleteInfo}"  />
+                        <CheckBox IsChecked="{Binding ScanWhenRefresh, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.ScanWhenRefresh}"  />
+                    </WrapPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="5 0" >
+                        <CheckBox Unchecked="Unregister_HotKey" Checked="CheckBox_Checked" IsChecked="{Binding HotKey_Enable, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.BossKey}"  VerticalContentAlignment="Center"/>
+                        <hc:TextBox x:Name="hotkeyTextBox" Text="{Binding HotKey_String,Mode=OneWay,Source={x:Static p:Settings.Default}}" IsReadOnly="True" ContextMenu="{x:Null}" PreviewKeyUp="hotkeyTextBox_PreviewKeyUp" PreviewKeyDown="hotkeyTextBox_PreviewKeyDown" Style="{StaticResource BaseHcTextBox}"  />
+                        <Button Style="{StaticResource ButtonStyleFill}" Click="ApplyHotKey" Content="{x:Static lang:Resources.Apply}"   />
+                    </StackPanel>
+
+                    <StackPanel  Margin="20 5"  Orientation="Horizontal" >
+                        <Label  Style="{StaticResource InfoLabel}" Content="{x:Static lang:Resources.Language}"/>
+                        <RadioButton FocusVisualStyle="{x:Null}" GroupName="LangRadioButton"  Click="SetLanguage"  IsChecked="{Binding Language, ConverterParameter=中文, Converter={StaticResource LanguageTypeEnumConverter}, Mode=TwoWay}" Content="中文" Style="{StaticResource FlatRadioButton}"/>
+                        <RadioButton  FocusVisualStyle="{x:Null}"  GroupName="LangRadioButton"   Click="SetLanguage"   IsChecked="{Binding Language, ConverterParameter=English, Converter={StaticResource LanguageTypeEnumConverter}, Mode=TwoWay}"  Content="English"  Style="{StaticResource FlatRadioButton}"/>
+                        <RadioButton  FocusVisualStyle="{x:Null}"   GroupName="LangRadioButton"  Click="SetLanguage"   IsChecked="{Binding Language, ConverterParameter=日本語, Converter={StaticResource LanguageTypeEnumConverter}, Mode=TwoWay}"  Content="日本語"  Style="{StaticResource FlatRadioButton}"/>
+                    </StackPanel>
+
+
+
+                    <StackPanel Orientation="Horizontal"  Margin="20 5">
+                        <Label Style="{StaticResource InfoLabel}"  Content="{x:Static lang:Resources.ImageSavePath}"/>
+                        <hc:TextBox  ShowClearButton="True"   Style="{StaticResource BaseHcTextBox}"  Text="{Binding BasePicPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   />
+                        <Button Style="{StaticResource ButtonStyleFill}" Content="{x:Static lang:Resources.ChooseDir}"  Click="SetBasePicPath"  HorizontalAlignment="Right"/>
+                    </StackPanel>
+
+
+                    <StackPanel Orientation="Horizontal"  Margin="20 5">
+                        <Label Style="{StaticResource InfoLabel}"   Content="{x:Static lang:Resources.SetPlayer}"   />
+                        <hc:TextBox ShowClearButton="True" Style="{StaticResource BaseHcTextBox}"  Text="{Binding VedioPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}"    />
+                        <Button Style="{StaticResource ButtonStyleFill}" Content="{x:Static lang:Resources.Choose}"  Click="SetVediaPlaterPath"  />
+                    </StackPanel>
+
+
+                    <CheckBox IsChecked="False" Content="{x:Static lang:Resources.ShowOtherOptions}" HorizontalAlignment="Left" Margin="20 5" x:Name="AdvanceCheckBox"/>
+
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=AdvanceCheckBox,Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <StackPanel Orientation="Horizontal" Margin="10 10">
+
+                            <Slider x:Name="RecentDaysSlider" Value="{Binding RecentDays, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="1" Maximum="10" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=RecentDaysSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.ShowRecentCreate}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10 10">
+
+                            <Slider x:Name="RecentWatchSlider" Value="{Binding RecentWatchDays, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="1" Maximum="10" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=RecentWatchSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.ShowRecentPlay}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10 10">
+
+                            <Slider x:Name="SearchCandidateSlider" Value="{Binding SearchCandidateMaxCount, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="3" Maximum="15" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=SearchCandidateSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.SearchCandidateNumber}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10 10">
+
+                            <Slider x:Name="FilePathNumSlider" Value="{Binding FilePathClassificationMaxCount, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="3" Maximum="20" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=FilePathNumSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.DirClassificationNumber}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10 10">
+
+                            <Slider x:Name="FilePathDepthSlider" Value="{Binding FilePathClassificationMaxDepth, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="1" Maximum="10" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=FilePathDepthSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.DirClassificationDepth}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </StackPanel>
+
+
+            </TabItem>
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.Scan}" >
+                <StackPanel >
+
+                    <StackPanel Orientation="Vertical" Margin="5 20 0 5" Visibility="Collapsed">
+                        <CheckBox Checked="ListenCheckBox_Checked" x:Name="ListenCheckBox" IsChecked="{Binding ListenAllDir, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="10 5 10 5" Content="监听所有文件改动并更新数据库（不包括C盘）" />
+                        <CheckBox IsEnabled="{Binding IsChecked, ElementName=ListenCheckBox}" IsChecked="{Binding DelFromDBIfDel, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="50 5 10 5" Content="删除文件时从数据库删除" />
+                    </StackPanel>
+
+
+
+
+
+                    <StackPanel Orientation="Horizontal" Margin="20 5" Visibility="Visible">
+                        <Label Style="{StaticResource InfoLabel}" Content="{x:Static lang:Resources.FileSize}"   ToolTip="[0-2000]"/>
+                        <hc:TextBox Style="{StaticResource BaseHcTextBox}"  TextChanged="ScanMinFileSizeTextBox_TextChanged"  Text="{Binding ScanMinFileSize, Mode=OneWay, Source={x:Static p:Settings.Default}}"   ToolTip="[0-2000]"/>
+                        <Label  Style="{StaticResource InfoLabel}"   Content="MB"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20 5" Visibility="Visible">
+                        <Label Style="{StaticResource InfoLabel}" Content="{x:Static lang:Resources.ScanRe}"   ToolTip="[0-2000]"/>
+                        <TextBox FontSize="15" Foreground="{DynamicResource ForegroundSearch}" Background="{DynamicResource BackgroundTitle}" LostFocus="SetScanRe" BorderThickness="0" MinWidth="400" CaretBrush="{DynamicResource ForegroundSearch}" Width="380" Text="{Binding ScanRe, Source={x:Static p:Settings.Default},Mode=OneWay}" hc:InfoElement.TitleWidth="140" hc:InfoElement.Placeholder="{x:Static lang:Resources.UseSemToSplitRe}"  hc:InfoElement.Title="" hc:InfoElement.Necessary="True" Style="{StaticResource TextBoxExtend}" Margin="10 0"/>
+                    </StackPanel>
+
+                    <StackPanel  Orientation="Horizontal"  Margin="20 5" Visibility="Collapsed">
+                        <Label Style="{StaticResource InfoLabel}" Content="{x:Static lang:Resources.SubsectionSpiltChar}"   />
+                        <hc:TextBox   Style="{StaticResource BaseHcTextBox}"  Text="{Binding SubSectionFeature, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="5 0">
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding ScanGivenPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.ScanDirWhenStartUp}" />
+                            <ComboBox Style="{StaticResource SideComboBoxStyle}" SelectionChanged="DatabaseComboBox_SelectionChanged" x:Name="DatabaseComboBox" ItemsSource="{Binding DataBases}" MinWidth="150"   MaxWidth="300"    Margin="20 5" ToolTip="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
+                        </StackPanel>
+
+
+                        <StackPanel Orientation="Vertical" Margin="20 0" >
+                            <ListBox AllowDrop="True"  Drop="PathListBox_Drop"  DragOver="PathListBox_DragOver" VerticalAlignment="Top" HorizontalAlignment="Stretch" ItemsSource="{Binding ScanPath}" x:Name="PathListBox"  Height="200"     >
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="pack://application:,,,/Resources/Picture/folder.png" Width="20"/>
+                                            <TextBlock Text="{Binding}" Foreground="{DynamicResource ForegroundSearch}" FontSize="15" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <StackPanel Orientation="Horizontal" Margin="0 10" HorizontalAlignment="Left">
+                                <Button  Height="27" Width="27" Margin="5 0"   Style="{StaticResource RoundTitleButton}" Click="AddPath">
+                                    <Image Source="{Binding Themes, ConverterParameter=openfolder, Converter={StaticResource StringToUriStringConverter}, Mode=OneWay, Source={x:Static p:Settings.Default}}" Height="20" Width="20"  />
+                                </Button>
+                                <Button  Height="27" Width="27" Margin="5 0"   Style="{StaticResource RoundTitleButton}" Click="DelPath">
+                                    <Image Source="{Binding Themes, ConverterParameter=min, Converter={StaticResource StringToUriStringConverter}, Mode=OneWay, Source={x:Static p:Settings.Default}}" Height="20" Width="20"   />
+                                </Button>
+                                <Button  Height="27" Width="27" Margin="5 0"  Style="{StaticResource RoundCloseButton}" Click="ClearPath">
+                                    <Image Source="{Binding Themes, ConverterParameter=clear, Converter={StaticResource StringToUriStringConverter}, Mode=OneWay, Source={x:Static p:Settings.Default}}" Height="20" Width="20"   />
+                                </Button>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </StackPanel>
+
+                    <CheckBox HorizontalAlignment="Left" IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="20 0" Content="{x:Static lang:Resources.ImportNFOWhenScan}" />
+
+
+
+                </StackPanel>
+
+
+            </TabItem>
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.SyncInfo}" >
+                <StackPanel >
+
+
+                    <Button Margin="20 10" HorizontalAlignment="Left"  Content="{x:Static lang:Resources.Add}" MinWidth="100" Style="{DynamicResource FlatButton}"  Click="NewServer" />
+
+                    <Border Margin="20 5" Style="{StaticResource BorderTipInfo}" Background="{DynamicResource BackgroundMenu}">
+                        <TextBlock Text="{x:Static lang:Resources.Attention_UrlTest}" TextWrapping="Wrap" Foreground="{DynamicResource ForegroundGlobal}" HorizontalAlignment="Left"/>
+                    </Border>
+
+
+
+                    <DataGrid x:Name="ServersDataGrid" Visibility="Visible" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Servers}" Background="{DynamicResource BackgroundMenu}" MinHeight="200"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"   PreviewMouseLeftButtonDown="SetCurrentRowIndex"   VerticalScrollBarVisibility="Disabled"   Foreground="{DynamicResource ForegroundSearch}" Margin="20 5" HorizontalGridLinesBrush="Transparent" VerticalGridLinesBrush="Transparent"  BorderThickness="0" CanUserResizeRows="False" CanUserResizeColumns="True"  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" CanUserSortColumns="True"    Style="{DynamicResource DataGridStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}"  RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" DragIndicatorStyle="{DynamicResource DataGridColumnHeaderStyle2}" DropLocationIndicatorStyle="{DynamicResource DataGridStyle2}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}">
+
+
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{x:Static lang:Resources.Enable}" Width="auto" MinWidth="40"   >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox PreviewMouseUp="SetServerEnable" HorizontalAlignment="Center" IsChecked="{Binding IsEnable,Mode=OneWay}" Style="{StaticResource CheckBoxStyle1}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn IsReadOnly="True"    Header="{x:Static lang:Resources.UrlName}" Width="auto" MinWidth="100" MaxWidth="300" Binding="{Binding Name,Mode=OneWay}" >
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Left"></Setter>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTemplateColumn Header="{x:Static lang:Resources.Url}" Width="auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <hc:TextBox Text="{Binding Url,Mode=TwoWay}" ContextMenu="{StaticResource TextBoxContextMenu}" Name="url" HorizontalAlignment="Left" Foreground="{DynamicResource ForegroundGlobal}" TextAlignment="Left" Background="Transparent" Focusable="True"  GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"  BorderThickness="0" >
+                                        </hc:TextBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+                            <DataGridTemplateColumn Header="Cookie" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <hc:TextBox ContextMenu="{StaticResource TextBoxContextMenu}"  ToolTip="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}" Text="{Binding Cookie,Converter={StaticResource CookieNothingConverter},Mode=TwoWay}" HorizontalAlignment="Left" Foreground="{DynamicResource ForegroundGlobal}" TextAlignment="Left" Background="Transparent" Focusable="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"  BorderThickness="0" >
+                                        </hc:TextBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="{x:Static lang:Resources.Status}" Width="auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <fa:ImageAwesome    Height="20"    >
+                                            <fa:ImageAwesome.Style>
+                                                <Style TargetType="fa:ImageAwesome">
+                                                    <Style.Triggers>
+                                                        <DataTrigger  Binding="{Binding Available,Mode=OneWay}" Value="0">
+
+                                                        </DataTrigger>
+                                                        <DataTrigger  Binding="{Binding Available,Mode=OneWay}" Value="-1">
+                                                            <Setter Property="Icon" Value="TimesCircle"/>
+                                                            <Setter Property="Foreground" Value="Red"/>
+                                                            <Setter Property="Spin" Value="False"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger  Binding="{Binding Available,Mode=OneWay}" Value="1">
+                                                            <Setter Property="Icon" Value="CheckCircle"/>
+                                                            <Setter Property="Foreground" Value="#20B759"/>
+                                                            <Setter Property="Spin" Value="False"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger  Binding="{Binding Available,Mode=OneWay}" Value="2">
+                                                            <Setter Property="Icon" Value="Refresh"/>
+                                                            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
+                                                            <Setter Property="Spin" Value="True"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </fa:ImageAwesome.Style>
+                                        </fa:ImageAwesome>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.LatestUpdateDate}" Width="auto" Binding="{Binding LastRefreshDate,Mode=OneWay}" />
+                            <DataGridTemplateColumn Header="{x:Static lang:Resources.Options}" Width="auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Content="{x:Static lang:Resources.Test}"  Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}}" Cursor="Hand"  Style="{StaticResource ButtonPrimary}" Margin="5" MinWidth="50"  Click="TestServer" />
+                                            <Button Content="{x:Static lang:Resources.Delete}"   Style="{StaticResource ButtonDanger}"   Margin="5" Cursor="Hand"   Click="DeleteServer"  MinWidth="50"    />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+
+                        <!--<local:Server  IsEnable="True" Url="https://www.123.cam/" Cookie="123" Available="0" Name="123" LastRefreshDate="2020-09-04" />
+                        <local:Server IsEnable="False" Url="https://123.com/"  Cookie="123"  Available="0"  Name="123" LastRefreshDate="2020-10-05" />-->
+
+
+
+                    </DataGrid>
+
+                    <WrapPanel Orientation="Horizontal" Margin="20 5">
+
+                        <CheckBox IsChecked="{Binding SaveInfoToNFO, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Content="{x:Static lang:Resources.SaveToNFO}" />
+
+
+
+
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding SaveInfoToNFO, Converter={StaticResource BoolToVis}, Mode=OneWay, Source={x:Static p:Settings.Default}}">
+                            <!--<StackPanel Orientation="Horizontal" Visibility="Visible">-->
+                            <TextBox FontSize="15" Foreground="{DynamicResource ForegroundSearch}" Background="{DynamicResource BackgroundTitle}" BorderThickness="0" MinWidth="400" CaretBrush="{DynamicResource ForegroundSearch}" Width="380" Text="{Binding NFOSavePath, Source={x:Static p:Settings.Default}}" hc:InfoElement.TitleWidth="140" hc:InfoElement.Placeholder="{x:Static lang:Resources.ToolTip_SameAsVedio}"  hc:InfoElement.Title="" hc:InfoElement.Necessary="True" Style="{StaticResource TextBoxExtend}" Margin="10 0"/>
+
+                            <Button Content="{x:Static lang:Resources.ChooseDir}" Style="{StaticResource ButtonStyleFill}" HorizontalAlignment="Left"  Click="Button_Click_3" />
+                            <CheckBox IsChecked="{Binding OverriteNFO, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Content="{x:Static lang:Resources.overwrite}" />
+
+                        </StackPanel>
+
+
+
+
+                    </WrapPanel>
+
+
+                    <CheckBox x:Name="TimeOutAdvanceCheckBox" HorizontalAlignment="Left" Content="{x:Static lang:Resources.ShowOtherOptions}" IsChecked="False" Margin="30 5"/>
+
+                    <StackPanel Orientation="Vertical">
+
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=TimeOutAdvanceCheckBox,Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+
+
+
+
+                        <StackPanel Orientation="Horizontal" Margin="10 10">
+
+                            <Slider x:Name="HttpTimeoutSlider" Value="{Binding Timeout_forcestop, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="2" Maximum="40" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=HttpTimeoutSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.TimeOut_CloseConnection}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+
+                            <Slider x:Name="RequestTimeoutSlider" Value="{Binding Timeout_http, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="2" Maximum="40" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=RequestTimeoutSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.TimeOut_HTTP}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+
+                            <Slider x:Name="TcpTimeoutSlider" Value="{Binding Timeout_tcp, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="2" Maximum="40" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=TcpTimeoutSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.TimeOut_TCP}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+
+                            <Slider x:Name="DownloadTimeoutSlider" Value="{Binding Timeout_download, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="5" Maximum="40" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=DownloadTimeoutSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.TimeOut_DownloadImage}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+
+                            <Slider x:Name="StreamTimeoutSlider" Value="{Binding Timeout_stream, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="3" Maximum="40" Width="100" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Value, ElementName=StreamTimeoutSlider}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static lang:Resources.TimeOut_ReadWrite}" Style="{StaticResource TextBlockTitle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+
+                    </StackPanel>
+
+
+                </StackPanel>
+
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.Show}" >
+                <StackPanel >
+
+                    <StackPanel Orientation="Vertical"   HorizontalAlignment="Left" Margin="5">
+                        <CheckBox IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.ImageStretch}"  />
+                        <CheckBox IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.StatusBar}"  />
+                        <CheckBox IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.FunctionBar}"  />
+                        <CheckBox IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.Navigation}"  />
+
+                        <CheckBox IsChecked="{Binding ShowList, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.MyList}"  />
+                        <CheckBox IsChecked="{Binding ShowFilter, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.Filter}"  />
+
+                        <CheckBox IsChecked="{Binding ShowFileNameIfTitleEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.ShowFIlename}"  />
+                        <CheckBox IsChecked="{Binding TitleShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.ShowTranslation}"  />
+                        <CheckBox IsChecked="{Binding PlotShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Content="{x:Static lang:Resources.ShowTranslate2}"  />
+                        <CheckBox IsChecked="{Binding DetialWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Content="{x:Static lang:Resources.DetailViewAll}"  />
+                    </StackPanel>
+
+                    <!--TODO-->
+                    <!--ContextMenu-->
+                    <WrapPanel Visibility="Visible" Orientation="Horizontal" Margin="20 0">
+                        <TextBlock Foreground="{DynamicResource ForegroundGlobal}" Height="auto" VerticalAlignment="Center" Style="{StaticResource TextBlockTitle}" FontSize="15"  Margin="0 2 20 0" Text="{x:Static lang:Resources.MoviePerPage}" />
+                        <hc:NumericUpDown   Margin="0 5"   ToolTip="5-200"  Maximum="200" Minimum="4" Increment="10"  Background="{DynamicResource BackgroundSide}" Foreground="{DynamicResource ForegroundSearch}"   BorderThickness="0" Value="{Binding DisplayNumber, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Width="100"    />
+                        <TextBlock Visibility="Collapsed"   Foreground="{DynamicResource ForegroundGlobal}" Height="auto" VerticalAlignment="Center" Style="{StaticResource TextBlockTitle}" FontSize="15"  Margin="20 2 20 0" Text="{x:Static lang:Resources.NumherEachFlow}"/>
+                        <hc:NumericUpDown  Visibility="Collapsed"    Margin="0 5"  ToolTip="5-50" Maximum="50" Minimum="1" Increment="5"   Background="{DynamicResource BackgroundSide}" Foreground="{DynamicResource ForegroundSearch}"     BorderThickness="0" Value="{Binding FlowNum, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Width="100"       />
+                        <TextBlock  Foreground="{DynamicResource ForegroundGlobal}" Height="auto" VerticalAlignment="Center" Style="{StaticResource TextBlockTitle}" FontSize="15"  Margin="20 2 20 0" Text="{x:Static lang:Resources.ActorNumberPerPage}"/>
+                        <hc:NumericUpDown    Margin="0 5" ToolTip="5-100" Maximum="100" Minimum="5" Increment="5"  Background="{DynamicResource BackgroundSide}" Foreground="{DynamicResource ForegroundSearch}"      BorderThickness="0" Value="{Binding ActorDisplayNum, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Width="100"       />
+                    </WrapPanel>
+
+
+
+
+
+                    <TextBlock Text="按标签戳显示" Style="{StaticResource TextBlockTitle}" Visibility="Collapsed"/>
+                    <WrapPanel Orientation="Horizontal" Margin="40 5" Visibility="Collapsed">
+                        <CheckBox IsChecked="{Binding DisPlayNoStamp, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Margin="10 5 10 5" Content="无标签戳"  VerticalContentAlignment="Center"/>
+                        <CheckBox IsChecked="{Binding DisPlayCHS, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Margin="10 5 10 5" Content="中字"  VerticalContentAlignment="Center"/>
+                        <CheckBox IsChecked="{Binding DisPlayOutFlow, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Margin="10 5 10 5" Content="流出"  VerticalContentAlignment="Center"/>
+                        <CheckBox IsChecked="{Binding DisPlayHDV, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Margin="10 5 10 5" Content="高清"  VerticalContentAlignment="Center"/>
+
+
+
+                    </WrapPanel>
+
+                    <TextBlock Text="{x:Static lang:Resources.FormEffect}" Style="{StaticResource TextBlockTitle}" Margin="10" HorizontalAlignment="Left"/>
+                    <CheckBox HorizontalAlignment="Left" IsChecked="{Binding EnableWindowFade, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Margin="15 5" Content="{x:Static lang:Resources.FadeInOut}" />
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15 5">
+                        <Label Content="{x:Static lang:Resources.Opacity}" Style="{StaticResource InfoLabel}"    />
+                        <Slider x:Name="OpacitySlider" IsSnapToTickEnabled="True" Width="200" VerticalAlignment="Center" Margin="5 0" Value="{Binding Opacity_Main, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Maximum="1" Minimum="0.5" SmallChange="0.05" LargeChange="0.1" TickFrequency="0.05" Cursor="Hand" TickPlacement="None"  />
+                        <Label Content="{Binding Value, ElementName=OpacitySlider}" Style="{StaticResource InfoLabel}"  />
+
+                    </WrapPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.Theme}" >
+                <StackPanel >
+                    <WrapPanel x:Name="SkinWrapPanel" Orientation="Horizontal"  Margin="20 5">
+                        <Label  Style="{StaticResource InfoLabel}"  Content="{x:Static lang:Resources.Default}"/>
+                        <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"   Content="黑色" Background="Black"  Style="{StaticResource ColorRadioButton}"  />
+                        <RadioButton  FocusVisualStyle="{x:Null}"   GroupName="SkinRadioButton"  Click="SetSkin"   Content="白色" Background="White"  Style="{StaticResource ColorRadioButton}"  />
+                        <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"  Content="蓝色" Background="#87CEFF"  Style="{StaticResource ColorRadioButton}"  />
+                    </WrapPanel>
+
+                    <StackPanel    Margin="20 5">
+                        <Label  Style="{StaticResource InfoLabel}"  Content="{x:Static lang:Resources.MoreThemes}" HorizontalAlignment="Left"/>
+                        <Button Content="{x:Static lang:Resources.Get}" Style="{StaticResource ButtonStyleFill}" HorizontalAlignment="Left" Click="OpenDIY"  />
+
+
+                        <DataGrid x:Name="ThemesDataGrid" Visibility="Visible" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding ThemeList}" Background="{DynamicResource BackgroundMenu}" MinHeight="200"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"   PreviewMouseLeftButtonDown="SetCurrentRowIndex"   VerticalScrollBarVisibility="Disabled"   Foreground="{DynamicResource ForegroundSearch}" Margin="0 10" HorizontalGridLinesBrush="Transparent" VerticalGridLinesBrush="Transparent"  BorderThickness="0" CanUserResizeRows="False" CanUserResizeColumns="True"  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" CanUserSortColumns="True"    Style="{DynamicResource DataGridStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}"  RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" DragIndicatorStyle="{DynamicResource DataGridColumnHeaderStyle2}" DropLocationIndicatorStyle="{DynamicResource DataGridStyle2}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}">
+
+
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="{x:Static lang:Resources.Enable}" Width="auto" MinWidth="40"   >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <RadioButton Name="rb"  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"   Content="{Binding Name,Mode=OneWay}" Background="{Binding DisplayProperty.Title.MainBackground,Mode=OneWay,Converter={StaticResource MyColorToBrushConverter}}"  Style="{StaticResource ColorRadioButton}"  />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Name}" Width="auto" Binding="{Binding Name,Mode=OneWay}" />
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Author}" Width="auto" Binding="{Binding Author,Mode=OneWay}" />
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Date}" Width="auto" Binding="{Binding Date,Mode=OneWay}" />
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Version}" Width="auto" Binding="{Binding Version,Mode=OneWay}" />
+
+                            </DataGrid.Columns>
+
+                            <!--<local:Server  IsEnable="True" Url="https://www.123.cam/" Cookie="123" Available="0" Name="123" LastRefreshDate="2020-09-04" />
+                        <local:Server IsEnable="False" Url="https://123.com/"  Cookie="123"  Available="0"  Name="123" LastRefreshDate="2020-10-05" />-->
+
+
+
+                        </DataGrid>
+
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="代理" Visibility="Collapsed" >
+                <StackPanel >
+                </StackPanel>
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.Translate}" >
+                <StackPanel>
+                    <StackPanel Orientation="Vertical" IsEnabled="True" >
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Enable_TL_YOUDAO, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="20 10" Content="{x:Static lang:Resources.Youdao}" />
+                            <Button Click="TestTranslate"  Content="{x:Static lang:Resources.Test}"  Style="{StaticResource ButtonStyleFill}"  />
+                            <Button Click="LoadTranslate"  Content="{x:Static lang:Resources.LoadLocalKey}"  Style="{StaticResource ButtonStyleFill}"  />
+                            <!--TODO WIN7-->
+                            <fa:ImageAwesome    Height="20"  Foreground="{DynamicResource ForegroundSearch}" Margin="5 0"    />
+                            <Button Style="{StaticResource ButtonPrimary}" Content=" ？" Width="auto" HorizontalAlignment="Left"  Cursor="Hand"  Click="Button_Click_2"/>
+                        </StackPanel>
+
+                        <StackPanel  Orientation="Horizontal" Margin="20 5">
+                            <Label Content="API Key" Style="{StaticResource InfoLabel}" />
+                            <hc:TextBox   Style="{StaticResource BaseHcTextBox}"  Text="{Binding TL_YOUDAO_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  />
+                        </StackPanel>
+                        <StackPanel  Orientation="Horizontal" Margin="20 5">
+                            <Label  Content="Secret Key" Style="{StaticResource InfoLabel}"/>
+                            <hc:TextBox Style="{StaticResource BaseHcTextBox}"  Text="{Binding TL_YOUDAO_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  />
+                        </StackPanel>
+
+                    </StackPanel>
+
+
+                    <StackPanel Orientation="Vertical" IsEnabled="False" Visibility="Collapsed" >
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Enable_TL_BAIDU, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="20 10" Content="百度翻译" />
+                            <Button Click="TestTranslate"   Content="{x:Static lang:Resources.Test}"  Style="{StaticResource ButtonStyleFill}"  />
+                            <Image Margin="20 5" Width="32" Height="32" />
+                        </StackPanel>
+
+                        <StackPanel  Orientation="Horizontal" Margin="20 5">
+                            <Label Content="API Key" Style="{StaticResource InfoLabel}" />
+                            <hc:TextBox  Style="{StaticResource BaseHcTextBox}"  Text="{Binding TL_BAIDU_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  />
+                        </StackPanel>
+                        <StackPanel  Orientation="Horizontal" Margin="20 5">
+                            <Label Content="Secret Key" Style="{StaticResource InfoLabel}" />
+                            <hc:TextBox Style="{StaticResource BaseHcTextBox}"  Text="{Binding TL_BAIDU_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  />
+                        </StackPanel>
+
+                    </StackPanel>
+
+
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.AI}" >
+                <StackPanel>
+                    <StackPanel Orientation="Vertical" IsEnabled="True" >
+
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Enable_BaiduAI, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="20 10"  Content="{x:Static lang:Resources.BaiduFaceRecognition}" />
+                            <Button Click="TestAI"  Content="{x:Static lang:Resources.Test}"  Style="{StaticResource ButtonStyleFill}"  />
+                            <Button Click="LoadAI"  Content="{x:Static lang:Resources.LoadLocalKey}"  Style="{StaticResource ButtonStyleFill}"  />
+                            <fa:ImageAwesome    Height="20"  Foreground="{DynamicResource ForegroundSearch}" Margin="5 0"    />
+                            <Button Style="{StaticResource ButtonPrimary}" Content=" ？"  Cursor="Hand" Click="Button_Click_5"/>
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="20 5">
+                            <Label  Content="API Key" Style="{StaticResource InfoLabel}" />
+                            <hc:TextBox   Style="{StaticResource BaseHcTextBox}"  Text="{Binding Baidu_API_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="20 5">
+                            <Label  Content="Secret Key" Style="{StaticResource InfoLabel}"  />
+                            <hc:TextBox   Style="{StaticResource BaseHcTextBox}"  Text="{Binding Baidu_SECRET_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  />
+                        </StackPanel>
+
+                    </StackPanel>
+                    <CheckBox IsChecked="{Binding HalfCutOFf, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="20 10"  Content="{x:Static lang:Resources.HalfCutOff}" />
+
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.VedioProcessing}" >
+                <StackPanel  >
+                    <CheckBox Visibility="Collapsed" Margin="20 5" HorizontalAlignment="Left" IsChecked="{Binding ScreenShotToExtraPicPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Content="{x:Static lang:Resources.ScreenShotToPreviewDir}"  VerticalContentAlignment="Center"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="20 5">
+                        <TextBlock Text="{x:Static lang:Resources.FFmpegPath}" Style="{StaticResource BaseTextBlock}" Margin="10 5"   />
+                        <Border MouseLeftButtonUp="CopyFFmpegUrl" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="5" Margin="0" Style="{StaticResource BorderStyle}" Cursor="Hand" CornerRadius="5">
+                            <Image Source="pack://application:,,,/Resources/Picture/download.png" Margin="5"  Height="20"  />
+                        </Border>
+                        <Button Style="{StaticResource ButtonStyleFill}" Content="{x:Static lang:Resources.ChooseFFmpeg}"  Click="SetFFMPEGPath"  Margin="10 5"/>
+
+                        <hc:TextBox    Style="{StaticResource BaseHcTextBox}"  Text="{Binding FFMPEG_Path, Mode=TwoWay, Source={x:Static p:Settings.Default}}"    />
+
+
+                    </StackPanel>
+
+                    <Label Content="{x:Static lang:Resources.ScreenShot}" Style="{StaticResource LabelPrimary}" HorizontalAlignment="Left" Margin="20 0"/>
+
+
+                    <StackPanel Orientation="Horizontal" Margin="20 5">
+                        <Slider x:Name="ScreenshotNumSlider" Value="{Binding ScreenShotNum, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="1" Maximum="30" SmallChange="1" LargeChange="2" TickFrequency="1" Width="200" VerticalAlignment="Center"/>
+                        <TextBlock  Width="30"   Style="{StaticResource BaseTextBlock}"   Text="{Binding Value, ElementName=ScreenshotNumSlider, Mode=OneWay}"  />
+                        <TextBlock  Text ="{x:Static lang:Resources.ScreenShotNumber}" Style="{StaticResource BaseTextBlock}" />
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20 5">
+
+                        <Slider x:Name="ScreenShotIgnoreSlider1" Value="{Binding ScreenShotIgnoreStart, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="0" Maximum="10" SmallChange="1" LargeChange="2" TickFrequency="1" Width="200" VerticalAlignment="Center"/>
+                        <TextBlock   Width="30"    Style="{StaticResource BaseTextBlock}"   Text="{Binding  ElementName=ScreenShotIgnoreSlider1, Mode=OneWay,Path=Value}"  />
+                        <TextBlock  Text ="{x:Static lang:Resources.SkipBegin}" Style="{StaticResource BaseTextBlock}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20 5">
+
+                        <Slider x:Name="ScreenShotIgnoreSlider2" Value="{Binding ScreenShotIgnoreEnd, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="0" Maximum="10" SmallChange="1" LargeChange="2" TickFrequency="1" Width="200" VerticalAlignment="Center"/>
+                        <TextBlock  Width="30"     Style="{StaticResource BaseTextBlock}"   Text="{Binding ElementName=ScreenShotIgnoreSlider2, Mode=OneWay,Path=Value}"  />
+                        <TextBlock  Text ="{x:Static lang:Resources.SkipEnd}" Style="{StaticResource BaseTextBlock}" />
+                    </StackPanel>
+
+                    <Label Content="GIF" Style="{StaticResource LabelPrimary}" HorizontalAlignment="Left" Margin="20 0"/>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15 5">
+                        <Label Content="{x:Static lang:Resources.Resolution}" Style="{StaticResource InfoLabel}"    />
+                        <Slider x:Name="GifSlider1"  IsSnapToTickEnabled="True" Width="200" VerticalAlignment="Center" Margin="5 0" Value="{Binding Gif_Width, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Maximum="1980" Minimum="50" SmallChange="1" LargeChange="10" TickFrequency="1" Cursor="Hand" TickPlacement="None"  />
+                        <TextBlock Text="{Binding Value, ElementName=GifSlider1,StringFormat={}{0} px}" Style="{StaticResource BaseTextBlock}"  />
+                        <Slider x:Name="GifSlider2" IsEnabled="{Binding Gif_AutoHeight, Mode=TwoWay, Source={x:Static p:Settings.Default},Converter={StaticResource OppositeBooleanConverter}}"  IsSnapToTickEnabled="True" Width="200" VerticalAlignment="Center" Margin="5 0" Value="{Binding Gif_Height, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Maximum="1080" Minimum="50" SmallChange="1" LargeChange="10" TickFrequency="1" Cursor="Hand" TickPlacement="None"  />
+                        <TextBlock Text="{Binding Value, ElementName=GifSlider2,StringFormat={}{0} px}" Style="{StaticResource BaseTextBlock}"  />
+                        <CheckBox IsChecked="{Binding Gif_AutoHeight, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Margin="20 10"  Content="{x:Static lang:Resources.AutoHeight}" />
+
+
+                    </WrapPanel>
+
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15 5">
+                        <Label Content="{x:Static lang:Resources.Duration}" Style="{StaticResource InfoLabel}"    />
+                        <Slider x:Name="GifDurationSlider1"  IsSnapToTickEnabled="True" Width="200" VerticalAlignment="Center" Margin="5 0" Value="{Binding Gif_Duration, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Maximum="20" Minimum="1" SmallChange="1" LargeChange="2" TickFrequency="1" Cursor="Hand" TickPlacement="None"  />
+                        <TextBlock Text="{Binding Value, ElementName=GifDurationSlider1,StringFormat={}{0} s}" Style="{StaticResource BaseTextBlock}"  />
+                    </WrapPanel>
+
+                    <CheckBox IsChecked="{Binding SkipExistGif, Mode=TwoWay, Source={x:Static p:Settings.Default}}" HorizontalAlignment="Left" Margin="20 10"  Content="{x:Static lang:Resources.SkipExistGif}" />
+
+
+                    <WrapPanel Visibility="Collapsed" Orientation="Horizontal" Margin="20 10">
+                        <TextBlock  Foreground="{DynamicResource ForegroundGlobal}" Height="auto" VerticalAlignment="Center" Style="{StaticResource TextBlockTitle}" FontSize="15"  Margin="20 2" Text="线程数量"/>
+                        <Slider x:Name="ThreadNumSlider" Value="{Binding ScreenShot_ThreadNum, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="1" Maximum="10" SmallChange="1" LargeChange="2" TickFrequency="1" Width="100" VerticalAlignment="Center"/>
+
+
+                        <TextBlock Height="auto"   Style="{StaticResource BaseTextBlock}" TextAlignment="Center" VerticalAlignment="Center"  Text="{Binding Value, ElementName=ThreadNumSlider, Mode=OneWay}" HorizontalAlignment="Left" Margin="5 2" Width="50"   />
+
+
+
+
+                    </WrapPanel>
+                    <WrapPanel Visibility="Collapsed" Orientation="Horizontal" Margin="20 10">
+                        <TextBlock  Foreground="{DynamicResource ForegroundGlobal}" Height="auto" VerticalAlignment="Center" Style="{StaticResource TextBlockTitle}" FontSize="15"  Margin="20 2" Text="截图超时"/>
+                        <Slider x:Name="ScreenShotTimeoutSlider" Value="{Binding ScreenShot_TimeOut, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Minimum="2" Maximum="60" SmallChange="1" LargeChange="2" TickFrequency="1" Width="100" VerticalAlignment="Center"/>
+
+
+                        <TextBlock Height="auto"   Style="{StaticResource BaseTextBlock}" TextAlignment="Center" VerticalAlignment="Center"  Text="{Binding Value, ElementName=ScreenShotTimeoutSlider, Mode=OneWay}" HorizontalAlignment="Left" Margin="5 2" Width="50"   />
+
+
+
+
+                    </WrapPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.CustomAppearance}" >
+                <StackPanel>
+                    <WrapPanel Orientation="Horizontal" Margin="20 5"  HorizontalAlignment="Left">
+                        <CheckBox IsChecked="{Binding DisplayID, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.ID}" />
+                        <CheckBox IsChecked="{Binding DisplayTitle, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.Title}" />
+                        <CheckBox IsChecked="{Binding DisplayDate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.Date}" />
+                        <CheckBox IsChecked="{Binding DisplayStamp, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  Content="{x:Static lang:Resources.Stamp}" />
+                        <CheckBox IsChecked="{Binding DisplayFavorites, Mode=TwoWay, Source={x:Static p:Settings.Default}}"   Content="{x:Static lang:Resources.Favorites}"  />
+                    </WrapPanel>
+
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20 5">
+                        <Label Content="{x:Static lang:Resources.MovieOpacity}" Style="{StaticResource InfoLabel}"    />
+                        <Slider  IsSnapToTickEnabled="True" Width="200" VerticalAlignment="Center" Margin="5 0" Value="{Binding MovieOpacity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Maximum="1" Minimum="0" SmallChange="0.05" LargeChange="0.1" TickFrequency="0.05" Cursor="Hand" TickPlacement="None"  />
+                        <Label Content="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}}" Style="{StaticResource InfoLabel}"  />
+
+                    </WrapPanel>
+
+
+                    <StackPanel Orientation="Horizontal" Margin="20 5">
+                        <Label Content="{x:Static lang:Resources.BackgroundImage}" Style="{StaticResource InfoLabel}"  />
+                        <Button Style="{StaticResource ButtonStyleFill}" Content="{x:Static lang:Resources.Choose}" Click="SetBackgroundImage"/>
+
+                        <hc:TextBox   Style="{StaticResource BaseHcTextBox}"  Text="{Binding BackgroundImage, Mode=TwoWay, Source={x:Static p:Settings.Default}}"  />
+                    </StackPanel>
+                </StackPanel>
+
+            </TabItem>
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.Rename}" >
+                <StackPanel  >
+                    <WrapPanel x:Name="CheckedBoxWrapPanel" Orientation="Horizontal">
+                        <ToggleButton  Style="{StaticResource ToggleButtonStyle1}"  Content="{x:Static lang:Resources.ID}" Width="100"  Padding="5" Margin="5"   />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Title}" Width="100" Padding="5" Margin="5"  />
+
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.VedioType}" Width="100" Padding="5" Margin="5"   />
+
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Year}" Width="100" Padding="5" Margin="5"   />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Duration}" Width="100" Padding="5" Margin="5"   />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Country}" Width="100" Padding="5" Margin="5"  />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Director}" Width="100" Padding="5" Margin="5"   />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Genre}" Width="100" Padding="5" Margin="5"  />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Label}" Width="100" Padding="5" Margin="5"  />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Actor}" Width="100" Padding="5" Margin="5"  />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Studio}" Width="100" Padding="5" Margin="5"  />
+                        <ToggleButton Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.Rating}" Width="100" Padding="5" Margin="5"   />
+                        <ToggleButton MinWidth="155" Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.ReleaseDate}"  Padding="5" Margin="5"  />
+                        <ToggleButton MinWidth="155"  Style="{StaticResource ToggleButtonStyle1}" Content="{x:Static lang:Resources.TranslatedTitle}" Padding="5" Margin="5"   />
+                    </WrapPanel>
+                    <WrapPanel>
+                        <CheckBox  IsChecked="{Binding Path=DelRenameTitleSpace,Mode=TwoWay,Source={x:Static p:Settings.Default}}" Content="{x:Static lang:Resources.DeleteSpace}" Margin="10 5"/>
+                        <CheckBox  IsChecked="{Binding Path=AddLabelTagWhenRename,Mode=TwoWay,Source={x:Static p:Settings.Default}}" Content="{x:Static lang:Resources.AutoAddStamp}" Margin="10 5"/>
+
+                    </WrapPanel>
+
+                    <WrapPanel>
+                        <!--{'\\','#','%', '&', '*', '|', ':', '"', ' <', '>', '?', '/','.' }-->
+                        <StackPanel Orientation="Horizontal" Margin="10 5">
+                            <TextBlock Text="{x:Static lang:Resources.OuterSplitChar}" Style="{StaticResource BaseTextBlock}"/>
+                            <ComboBox x:Name="OutComboBox" Width="100" SelectionChanged="OutComboBox_SelectionChanged" Margin="10 0" Style="{StaticResource ComboBoxStyle1}" >
+                                <ComboBoxItem Content="_"  />
+                                <ComboBoxItem Content="-"/>
+                                <ComboBoxItem Content="$"/>
+                                <ComboBoxItem Content="%"/>
+                                <ComboBoxItem Content="^"/>
+                                <ComboBoxItem Content="@"/>
+                                <ComboBoxItem Content="+"/>
+                                <ComboBoxItem Content=","/>
+                            </ComboBox>
+                        </StackPanel>
+
+
+                        <StackPanel Orientation="Horizontal" Margin="10 5">
+                            <TextBlock Text="{x:Static lang:Resources.InnerSplitChar}" Style="{StaticResource BaseTextBlock}" />
+                            <ComboBox    x:Name="InComboBox"   Width="100" SelectionChanged="InComboBox_SelectionChanged"  Margin="10 0"  Style="{StaticResource ComboBoxStyle1}" >
+                                <ComboBoxItem Content="_"/>
+                                <ComboBoxItem Content="-"/>
+                                <ComboBoxItem Content="$"/>
+                                <ComboBoxItem Content="%"/>
+                                <ComboBoxItem Content="^"/>
+                                <ComboBoxItem Content="@"/>
+                                <ComboBoxItem Content="+"/>
+                                <ComboBoxItem Content=","/>
+                            </ComboBox>
+                        </StackPanel>
+                    </WrapPanel>
+
+
+
+
+
+                    <Grid  Margin="10 5" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" MinWidth="100" Content="{x:Static lang:Resources.RenameRule}" Style="{StaticResource LabelPrimary}"/>
+
+                        <hc:TextBox Margin="10 0" TextWrapping="Wrap" IsReadOnly="False"  TextChanged="TextBox_TextChanged"  Text="{Binding RenameFormat,Mode=TwoWay,Source={x:Static p:Settings.Default}}" Grid.Column="1" Width="auto" HorizontalAlignment="Stretch"    Padding="10 5" CaretBrush="{DynamicResource ForegroundSearch}"  Foreground="{DynamicResource ForegroundSearch}" TextAlignment="Left"  FontSize="18"   ContextMenu="{x:Null}" PreviewKeyUp="hotkeyTextBox_PreviewKeyUp" PreviewKeyDown="hotkeyTextBox_PreviewKeyDown" Style="{StaticResource BaseHcTextBox}"  />
+
+                    </Grid>
+
+
+
+
+                    <Grid  Margin="10 5" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label  Grid.Column="0"  MinWidth="100"  Content="{x:Static lang:Resources.RenamePreview}" Style="{StaticResource LabelPrimary}"/>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding ViewRenameFormat}"  TextAlignment="Left"  Grid.Column="1"  Width="auto" HorizontalAlignment="Stretch"  Margin="5 0"  Style="{StaticResource BaseTextBlock}" FontSize="18"  Padding="10 5"/>
+                    </Grid>
+
+                    <Border Margin="10 5" Style="{StaticResource BorderTipInfo}" Background="{DynamicResource BackgroundMenu}">
+                        <TextBlock Text="{x:Static lang:Resources.Attention_Rename}" TextWrapping="Wrap" Foreground="{DynamicResource ForegroundGlobal}"/>
+                    </Border>
+
+                </StackPanel>
+            </TabItem>
+
+        </TabControl>
+
+        <Grid Grid.Row="1" Background="{DynamicResource BackgroundTitle}"   >
+            <Button  Content="{x:Static lang:Resources.Restore}"   Style="{StaticResource ButtonStyleFill}" HorizontalAlignment="Left"  Click="Restore"/>
+
+            <Button Content="{x:Static lang:Resources.Save}" Style="{StaticResource ButtonStyleFill}" HorizontalAlignment="Right"  Click="SaveSettings"/>
+        </Grid>
+
+    </Grid>
+</style:BaseWindow>

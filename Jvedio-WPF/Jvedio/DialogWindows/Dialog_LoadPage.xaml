@@ -1,0 +1,61 @@
+﻿<style:BaseDialog
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:p="clr-namespace:Jvedio.Properties"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
+        xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+        xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils"
+        xmlns:local="clr-namespace:Jvedio"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+        x:Class="Jvedio.Dialog_LoadPage"
+        mc:Ignorable="d"
+        Title="{x:Static lang:Resources.LoadFromNet}" 
+    SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+    
+        >
+
+    <Window.Resources>
+        <converter:IntConverter x:Key="IntConverter"/>
+    </Window.Resources>
+
+
+    <Grid  Background="{DynamicResource BackgroundMain}"       >
+        <StackPanel Margin="20" >
+            <StackPanel   Orientation="Horizontal">
+                <Label  Content="{x:Static lang:Resources.Url}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+                <TextBox x:Name="tb" Grid.Row="0" FontSize="15" Foreground="{DynamicResource ForegroundSearch}" Background="{DynamicResource BackgroundTitle}" BorderThickness="0" Width="300" CaretBrush="{DynamicResource ForegroundSearch}" TextChanged="TextBox_TextChanged"    hc:InfoElement.TitleWidth="140" hc:InfoElement.Placeholder="{x:Static lang:Resources.FirstPageOfUrl}"  hc:InfoElement.Title="" hc:InfoElement.Necessary="True" Style="{StaticResource TextBoxExtend}" Margin="20" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="20 0">
+                <Button Margin="10" Style="{StaticResource ButtonSuccess}" Content="{x:Static lang:Resources.Save}" Click="SaveWebSite"/>
+
+                <Button  Margin="5 10"  Style="{StaticResource ButtonDanger}" Content="{x:Static lang:Resources.Delete}" Click="DeleteWebSite"/>
+
+                <ComboBox x:Name="cb" SelectedIndex="{Binding DatabaseSelectedIndex,FallbackValue=0}"   FontSize="16"  Style="{StaticResource SideComboBoxStyle}"  Margin="5"  SelectionChanged="DatabaseComboBox_SelectionChanged"      Width="300"  Height="30"  ToolTip="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}" HorizontalAlignment="Stretch" />
+
+            </StackPanel>
+
+
+            <StackPanel x:Name="VedioTypeStackPanel"   Orientation="Horizontal">
+                <Label  Content="{x:Static lang:Resources.VedioType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+                <RadioButton  FontSize="15"  Foreground="{DynamicResource ForegroundSearch}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
+                <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
+                <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
+            </StackPanel>
+
+            <DockPanel    >
+                <Label  Content="{x:Static lang:Resources.StartPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+                <TextBlock  Width="30"   Style="{StaticResource BaseTextBlock}"   Text="{Binding Value, ElementName=Slider, Mode=OneWay,Converter={StaticResource IntConverter}}"  VerticalAlignment="Center" />
+                <Slider Name="Slider" ValueChanged="Slider_ValueChanged"   Value="1" Minimum="1" Maximum="500" Margin="20 0" SmallChange="1" LargeChange="2" TickFrequency="1" Width="auto" VerticalAlignment="Center"    />
+            </DockPanel>
+
+            <DockPanel     >
+                <Label  Content="{x:Static lang:Resources.EndPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+                <TextBlock  Width="30"   Style="{StaticResource BaseTextBlock}"   Text="{Binding Value, ElementName=SliderEnd, Mode=OneWay,Converter={StaticResource IntConverter}}"  VerticalAlignment="Center" />
+                <Slider Name="SliderEnd" ValueChanged="SliderEnd_ValueChanged"   Value="5" Minimum="1" Maximum="500"  Margin="20 0"  SmallChange="1" LargeChange="2" TickFrequency="1"   VerticalAlignment="Center"  />
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</style:BaseDialog>

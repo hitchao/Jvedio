@@ -1,0 +1,64 @@
+﻿<style:BaseDialog
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
+        xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+        xmlns:local="clr-namespace:Jvedio"
+        x:Class="Jvedio.Dialog_About"
+        mc:Ignorable="d"
+        Title="{x:Static lang:Resources.About}" 
+        Width="500"
+        Height="auto"
+    SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+    ContentRendered="BaseDialog_ContentRendered"
+    
+        >
+
+    <Window.Resources>
+        <Style x:Key="BaseTextBlock" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <!--删除字体-->
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid  Background="{DynamicResource BackgroundMain}"  Height="auto"   VerticalAlignment="Top" >
+
+
+        <StackPanel Orientation="Vertical" Margin="20 50">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Height="40" HorizontalAlignment="Center"  VerticalAlignment="Center" Source="/Resources/Picture/Jvedio.png"/>
+                <Image Margin="0 10 0 10" HorizontalAlignment="Center" Height="40"  VerticalAlignment="Center"  Source="/Resources/Picture/Title.png"/>
+            </StackPanel>
+
+            <TextBlock   FontSize="20"  Text="{x:Static lang:Resources.About_Outline}" Style="{StaticResource BaseTextBlock}" Margin="10"/>
+
+            <TextBox Style="{StaticResource ReadOnlyTextBox}"       Text="{x:Static lang:Resources.About_Content}"    Margin="40 10"/>
+            <TextBox x:Name="VersionTextBlock"  FontSize="20" Style="{StaticResource ReadOnlyTextBox}"  Text="{x:Static lang:Resources.Version}"   Foreground="{DynamicResource ForegroundSearch}" Margin="10"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="20 0">
+                    <Image Source="/Resources/Ico/github.png" Width="25" />
+                    <TextBlock FontSize="20"    TextAlignment="Center" Foreground="{DynamicResource ForegroundSearch}" Margin="5 10"><Hyperlink NavigateUri="https://github.com/hitchao/Jvedio" Click="OpenUrl" ><Run Text="Github"/></Hyperlink></TextBlock>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="20 0">
+                    <Image Source="/Resources/Jvedio.ico" Width="25" />
+                    <TextBlock FontSize="20"    TextAlignment="Center" Foreground="{DynamicResource ForegroundSearch}" Margin="5 10"><Hyperlink NavigateUri="https://hitchao.github.io/JvedioWebPage/" Click="OpenUrl" ><Run Text="{x:Static lang:Resources.OfficialWebsite}"/></Hyperlink></TextBlock>
+                </StackPanel>
+
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</style:BaseDialog>
