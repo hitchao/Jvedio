@@ -19,7 +19,7 @@ using Jvedio.Core;
 namespace Jvedio
 {
 
-    public partial class WindowStartUp : Window
+    public partial class WindowStartUp : ChaoControls.Style.BaseWindow
     {
 
         private CancellationTokenSource cts;

@@ -20,8 +20,7 @@ if %choice% ==1 (
 	cd %p% && git push
 ) else if %choice% ==3  (
 	echo 执行命令：commit + push
-	set /p comment=请输入需要 commit 的内容：
-	cd %p% && git add --all && git commit -m %comment% && git push
+	cd %p% && git add --all && git commit -m "jvedio" && git push
 ) else if %choice% ==4  (
 	echo 执行命令：pull
 	cd %p% && git pull

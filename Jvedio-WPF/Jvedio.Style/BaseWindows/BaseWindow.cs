@@ -186,7 +186,7 @@ namespace Jvedio.Style
 
         private void InitEvent()
         {
-            ControlTemplate baseWindowTemplate = (ControlTemplate)App.Current.Resources["BaseWindowControlTemplate"];
+            ControlTemplate baseWindowTemplate = (ControlTemplate)App.Current.Resources["MyBaseWindowControlTemplate"];
             Button minBtn = (Button)baseWindowTemplate.FindName("BorderMin", this);
             minBtn.Click += delegate (object sender, RoutedEventArgs e)
             {

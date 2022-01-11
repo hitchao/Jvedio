@@ -17,8 +17,10 @@
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
 
-                <!--Fuck!why HandyControl must change all controls style-->
-                <!--Fuck! Why can not  App.xaml use Chinese-->
+                <!-- ChaoControls-->
+                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/Themes/ChaoControls.xaml"/>
+
                 <!--Main-->
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml"/>
 

@@ -6,11 +6,11 @@
 
     <converter:StringToUriStringConverter x:Key="StringToUriStringConverter" />
 
-   
 
 
 
-    <ControlTemplate x:Key="BaseWindowControlTemplate" TargetType="{x:Type Window}">
+
+    <ControlTemplate x:Key="MyBaseWindowControlTemplate" TargetType="{x:Type Window}">
         <Grid x:Name="MainGrid"  Margin="10" >
             <Border x:Name="MainBorder" CornerRadius="0" Margin="5"  Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Width="Auto" Height="Auto"  >
                 <Border.Effect>

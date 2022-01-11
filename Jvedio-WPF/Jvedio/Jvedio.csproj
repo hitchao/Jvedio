@@ -59,8 +59,7 @@
     <ApplicationIcon>Resources\Jvedio.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Jvedio.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -88,6 +87,10 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChaoControls.Style, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Visual_Studio_Project\chao-controls\ChaoControls.Style\bin\Debug\ChaoControls.Style.dll</HintPath>
+    </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.2\lib\net47\CommonServiceLocator.dll</HintPath>
     </Reference>
