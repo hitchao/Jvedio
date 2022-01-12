@@ -213,8 +213,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Command\File.cs" />
+    <Compile Include="Core\Command\OpenWindow.cs" />
     <Compile Include="Core\CrawlerLoader.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
+    <Compile Include="Core\pojo\data\FileInfo.cs" />
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Core\pojo\Theme.cs" />
     <Compile Include="Core\PropertiesLoader.cs" />
@@ -442,6 +445,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\Picture\logo.png" />
     <Resource Include="Resources\menuitem\magnet.png" />
     <Resource Include="Resources\Picture\NoPrinting_G.gif" />
     <Resource Include="Data\github.txt" />

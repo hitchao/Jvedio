@@ -16,6 +16,46 @@ using System.Windows.Media;
 namespace Jvedio.Utils.Converter
 {
 
+    public class FilePathToDirConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string path="";
+            if (value == null) return null;
+            path=value.ToString();
+            if(string.IsNullOrEmpty(path)) return null;
+            return System.IO.Path.GetDirectoryName(path);
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    public class SmallerPathConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return "";
+            int count = 2;
+            if(parameter!=null) int.TryParse(parameter.ToString(), out count);
+            string[] strs = value.ToString().Split('\\');
+            if (strs.Length <= count) return value.ToString();
+
+            StringBuilder builder   =new StringBuilder();
+            for (int i = strs.Length - 1; i >= strs.Length-count; i--)
+            {
+                builder.Insert(0, "\\"+ strs[i]);
+            }
+
+            return "~" + builder.ToString();
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
     public class IntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -501,7 +541,8 @@ namespace Jvedio.Utils.Converter
         {
             if (value == null)
                 return false;
-            return (((MyLanguage)value).ToString() == parameter.ToString());
+            Enum.TryParse<MyLanguage>(value.ToString(), out MyLanguage language);
+            return language.ToString() == parameter.ToString();
         }
 
         public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)

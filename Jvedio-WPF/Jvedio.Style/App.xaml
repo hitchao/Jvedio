@@ -30,8 +30,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/Color.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseWindowStyle.xaml"/>
-
+                
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/GlobalStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

@@ -13,7 +13,7 @@ namespace Jvedio
     /// <summary>
     /// WindowEdit.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowEdit : BaseWindow
+    public partial class WindowEdit : ChaoControls.Style.BaseWindow
     {
 
 

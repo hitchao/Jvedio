@@ -1,4 +1,4 @@
-﻿<style:BaseWindow x:Class="Jvedio.Window_DBManagement"
+﻿<chao:BaseWindow x:Class="Jvedio.Window_DBManagement"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,6 +7,7 @@
         xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
         xmlns:usercontrol="clr-namespace:Jvedio.Style.UserControls;assembly=Jvedio.Style"
         xmlns:hc="https://handyorg.github.io/handycontrol"
+                  xmlns:chao="https://gitee.com/secret/chao-controls"
         xmlns:plot="clr-namespace:Jvedio.Plot.Bar"
         mc:Ignorable="d"
         Title="{x:Static lang:Resources.MovieManagement}"       
@@ -19,7 +20,7 @@
         Closing="Jvedio_BaseWindow_Closing"
         >
 
-    <style:BaseWindow.Resources>
+    <chao:BaseWindow.Resources>
 
         <Style x:Key="DBBorder" TargetType="{x:Type Border}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
@@ -32,7 +33,7 @@
         </Style>
 
 
-    </style:BaseWindow.Resources>
+    </chao:BaseWindow.Resources>
     <Grid Background="{DynamicResource BackgroundMain}">
         <usercontrol:WaitingPanel Visibility="Collapsed" ShowCancelButton="Visible" x:Name="WaitingPanel"  Panel.ZIndex="5" Cancel="WaitingPanel_Cancel" ></usercontrol:WaitingPanel>
         <!--消息提示框-->
@@ -257,4 +258,4 @@
             </TabItem>
         </TabControl>
     </Grid>
-</style:BaseWindow>
+</chao:BaseWindow>

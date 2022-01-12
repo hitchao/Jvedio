@@ -26,6 +26,8 @@ namespace Jvedio
     {
 
 
+    
+
 
         public static T GetQueryOrDefault<T>(this BitmapMetadata metadata, string query, T defaultValue)
         {

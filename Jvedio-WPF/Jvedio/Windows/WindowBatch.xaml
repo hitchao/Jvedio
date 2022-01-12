@@ -1,4 +1,4 @@
-﻿<style:BaseWindow
+﻿<chao:BaseWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,6 +7,7 @@
     xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
         xmlns:p="clr-namespace:Jvedio.Properties"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+    xmlns:chao="https://gitee.com/secret/chao-controls"
         xmlns:usercontrol="clr-namespace:Jvedio.Style.UserControls;assembly=Jvedio.Style"
         xmlns:usercontrols="clr-namespace:Jvedio.Style.UserControls;assembly=Jvedio.Style"
         xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
@@ -223,4 +224,4 @@
 
 
     </Grid>
-</style:BaseWindow>
+</chao:BaseWindow>

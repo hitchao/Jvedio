@@ -22,7 +22,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowTools : BaseWindow
+    public partial class WindowTools : ChaoControls.Style.BaseWindow
     {
         public const string GrowlToken = "ToolsGrowl";
         public CancellationTokenSource cts;

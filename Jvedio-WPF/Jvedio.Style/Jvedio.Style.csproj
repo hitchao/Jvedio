@@ -73,7 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseWindows\BaseDialog.cs" />
-    <Compile Include="BaseWindows\BaseWindow.cs" />
     <Compile Include="PathData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -107,10 +106,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="BaseWindows\BaseDialogStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="BaseWindows\BaseWindowStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

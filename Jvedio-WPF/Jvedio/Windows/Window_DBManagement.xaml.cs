@@ -20,7 +20,7 @@ using static Jvedio.FileProcess;
 namespace Jvedio
 {
 
-    public partial class Window_DBManagement : BaseWindow
+    public partial class Window_DBManagement : ChaoControls.Style.BaseWindow
     {
         private string srcToCopy = "";
         private string dstToCopy = "";

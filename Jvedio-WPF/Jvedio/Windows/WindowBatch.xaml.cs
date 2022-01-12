@@ -29,7 +29,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowBatch : BaseWindow
+    public partial class WindowBatch : ChaoControls.Style.BaseWindow
     {
         public VieModel_Batch vieModel;
 

@@ -45,7 +45,7 @@
 
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/HandyControlStyle.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseDialogStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseWindowStyle.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
 
 

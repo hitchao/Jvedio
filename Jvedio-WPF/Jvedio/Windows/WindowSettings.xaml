@@ -1,10 +1,11 @@
-﻿<style:BaseWindow
+﻿<chao:BaseWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Jvedio"
         xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
+    xmlns:chao="https://gitee.com/secret/chao-controls"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:p="clr-namespace:Jvedio.Properties"
         xmlns:hc="https://handyorg.github.io/handycontrol"
@@ -24,7 +25,7 @@
     
         >
 
-    <style:BaseWindow.Resources>
+    <chao:BaseWindow.Resources>
 
 
         <local:CookieNothingConverter x:Key="CookieNothingConverter" />
@@ -81,7 +82,7 @@
             <Setter Property="Margin" Value="5 0"/>
             <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}"/>
         </Style>
-    </style:BaseWindow.Resources>
+    </chao:BaseWindow.Resources>
 
     <Grid  Background="{DynamicResource BackgroundMain}"   >
 
@@ -852,4 +853,4 @@
         </Grid>
 
     </Grid>
-</style:BaseWindow>
+</chao:BaseWindow>

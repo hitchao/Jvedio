@@ -1,4 +1,4 @@
-﻿<style:BaseWindow
+﻿<chao:BaseWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
         xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
+    xmlns:chao="https://gitee.com/secret/chao-controls"
         xmlns:p="clr-namespace:Jvedio.Properties"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         x:Class="Jvedio.WindowTools"
@@ -309,4 +310,4 @@
         </Grid>
 
     </Grid>
-</style:BaseWindow>
+</chao:BaseWindow>

@@ -10,6 +10,33 @@ namespace Jvedio
 {
     public static class FileHelper
     {
+         
+        public static bool TryMoveFile(string originPath, string targetPath)
+        {
+            
+            try
+            {
+                File.Move(originPath, targetPath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogF(ex);
+            }
+            return false;
+        }
+
+        public static string[] TryScanDIr(string path, string searchPattern, SearchOption searchOption)
+        {
+            try
+            {
+                return Directory.GetFiles( path,  searchPattern,  searchOption);
+            }catch(Exception ex)
+            {
+                Logger.LogF(ex);
+            }
+            return null;
+        }
 
         public static string[] TryGetAllFiles(string path,string pattern)
         {

@@ -19,11 +19,12 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_Settings : ViewModelBase
     {
-
+        Main main;
         public VieModel_Settings()
         {
+            main = ((Main)FileProcess.GetWindowByName("Main"));
             DataBase = Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath);
-            DataBases = ((Main)FileProcess.GetWindowByName("Main")).vieModel.DataBases;
+            DataBases = main?.vieModel.DataBases;
             ThemeList = new ObservableCollection<Theme>();
             foreach (Theme theme in ThemeLoader.Themes)
             {
@@ -149,7 +150,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private ObservableCollection<string> _DataBases;
+        private ObservableCollection<string> _DataBases=new ObservableCollection<string>();
 
         public ObservableCollection<string> DataBases
         {

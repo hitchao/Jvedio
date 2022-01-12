@@ -3,6 +3,8 @@
                     xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils">
 
     <!--Converter-->
+    <converter:SmallerPathConverter x:Key="SmallerPathConverter" />
+    <converter:FilePathToDirConverter x:Key="FilePathToDirConverter" />
     <converter:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
     <converter:MyColorToBrushConverter x:Key="MyColorToBrushConverter" />
     <converter:BoolToOppositeVisibilityConverter x:Key="BoolToOppositeVisibilityConverter" />
@@ -375,10 +377,9 @@
         </Style.Triggers>
     </Style>
 
-
-    <Style x:Key="HoverBorder" TargetType="Border">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content}"/>
+    <Style x:Key="RoundBorder" TargetType="Border">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Margin" Value="2"/>
@@ -389,6 +390,14 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+
+    <Style x:Key="HoverBorder" TargetType="Border" BasedOn="{StaticResource RoundBorder}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content}"/>
+    </Style>
+
+
 
 
 </ResourceDictionary>

@@ -34,7 +34,7 @@ namespace Jvedio
         public static readonly string ThemeDIY = "https://hitchao.github.io/JvedioWebPage/theme.html";
 
 
-
+        public static string DataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");
         public static string BasePicPath = Directory.Exists(Properties.Settings.Default.BasePicPath) ?
             Properties.Settings.Default.BasePicPath : AppDomain.CurrentDomain.BaseDirectory + "Pic\\";
         public static string[] InitDirs = new[] { "log", "DataBase", "BackUp", "Pic", "Plugins/Themes", "Plugins/Crawlers" };//初始化文件夹

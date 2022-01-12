@@ -6,29 +6,28 @@
         xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:chao="https://gitee.com/secret/chao-controls"
+        xmlns:cmd="clr-namespace:Jvedio.Core.Command"
         mc:Ignorable="d"
-        Title="Jvedio"         
-         Height="400" Width="600"
-         CanResize="True"
-          CanMinimized="True"
-
+        Title="欢迎使用 Jvedio"         
+        Height="400" Width="800"
+                  MinWidth="500"
+        TitleAlign="Left"
+        TitleMargin="5 0"
+        CanResize="True"
+        CanMinimized="True"      
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Resources/Jvedio.ico"
         Loaded="Window_Loaded"
-        Topmost="False"
+        Background="{DynamicResource BackgroundMain}"
+        Foreground="{DynamicResource Window.Title.Foreground}"
         >
-
-    <WindowChrome.WindowChrome>
-        <WindowChrome ResizeBorderThickness="0" CaptionHeight="0"/>
-    </WindowChrome.WindowChrome>
-
-    <Window.Resources>
+    <chao:BaseWindow.Resources>
 
 
 
         <!--如果是 新建视频库 则隐藏-->
         <Style x:Key="OptionBorderStyle" TargetType="Border">
-             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Visibility" Value="Visible"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=Children[0].Children[1].Text,RelativeSource={RelativeSource AncestorType={x:Type Grid},Mode=FindAncestor}}" Value="{x:Static lang:Resources.NewLibrary}">
@@ -40,7 +39,7 @@
 
         <!--更改图片-->
         <Style x:Key="ImageStyle" TargetType="Image">
-             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Source" Value="pack://application:,,,/Resources/Image/StartUp/库.png"/>
             <Setter Property="Width" Value="30"/>
             <Style.Triggers>
@@ -61,7 +60,7 @@
         </Style>
 
         <Style x:Key="DBBorder" TargetType="{x:Type Border}">
-             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{DynamicResource BackgroundSide}"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BackgroundSide}"/>
@@ -80,109 +79,227 @@
             <Setter Property="Margin" Value="0,5,0,5"/>
             <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
         </Style>
-    </Window.Resources>
+    </chao:BaseWindow.Resources>
 
 
-    <Grid   Background="{DynamicResource BackgroundMain}"   >
-        <Grid  >
+    <Grid  >
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
+            <Image HorizontalAlignment="Center" Height="80" VerticalAlignment="Center" Width="80" Source="/Resources/Picture/Jvedio.png"/>
+            <Image ToolTip="Jvedio" Margin="0 10 0 10" HorizontalAlignment="Center" Height="40"  VerticalAlignment="Center"  Source="/Resources/Picture/Title.png"/>
+            <TextBlock x:Name="statusText" Margin="10 2" TextAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSearch}" Text="{x:Static lang:Resources.Loading}"/>
+            <hc:LoadingCircle Foreground="{DynamicResource ForegroundGlobal}" Margin="0 15"/>
+        </StackPanel>
+
+        <Border  Visibility="{Binding InitCompleted,Converter={StaticResource bool2VisibilityConverter}}" CornerRadius="5"  BorderBrush="Gray" BorderThickness="0"  >
+            <Grid>
+                <Grid Grid.Row="1">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
 
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Image HorizontalAlignment="Center" Height="80" VerticalAlignment="Center" Width="80" Source="/Resources/Picture/Jvedio.png"/>
-                <Image ToolTip="Jvedio" Margin="0 10 0 10" HorizontalAlignment="Center" Height="40"  VerticalAlignment="Center"  Source="/Resources/Picture/Title.png"/>
-                <TextBlock x:Name="statusText" Margin="10 2" TextAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSearch}" Text="{x:Static lang:Resources.Loading}"/>
-                <hc:LoadingCircle Foreground="{DynamicResource ForegroundGlobal}" Margin="0 15"/>
-            </StackPanel>
+                    <Popup IsOpen="False" VerticalOffset="-20" HorizontalOffset="-20" x:Name="OptionPopup" Placement="Mouse" PopupAnimation="Fade"  AllowsTransparency="True" StaysOpen="False" >
+                        <Grid    Margin="5"   >
+                            <Border     Background="{DynamicResource BackgroundMenu}" CornerRadius="5" Margin="5" Effect="{StaticResource PopupDropShadowEffect}" />
+                            <StackPanel   Panel.ZIndex="7" Background="Transparent" Orientation="Vertical" Margin="10" Width="auto">
+                                <Button Style="{StaticResource SetButton}"    Content="{x:Static lang:Resources.Delete}" Click="DelSqlite"  />
+                                <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.Rename}"   Click="RenameSqlite"   />
+                                <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.SetPassword}"  Visibility="Collapsed"   />
+                                <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.SetDefaultToOpen}" Click="SetAsDefault" Visibility="Visible"  />
+                                <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.OpenPath}"   Click="OpenPath"   />
+                            </StackPanel>
+                        </Grid>
+                    </Popup>
 
-            <Border  Visibility="{Binding InitCompleted,FallbackValue=false,Converter={StaticResource bool2VisibilityConverter}}" CornerRadius="5" Background="{DynamicResource BackgroundMain}" BorderBrush="Gray" BorderThickness="0"  >
-                <Grid>
-                    <Grid Grid.Row="1">
+                    <Grid Height="100"   Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Background="#323233" >
+                            <Image Height="30" Source="/Resources/Picture/logo.png" Margin="0 30 0 0"/>
+                            <TextBlock Text="5.0.0.0" FontSize="15" HorizontalAlignment="Center" Foreground="Gray"/>
+                        </StackPanel>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
 
-
-                        <Popup IsOpen="False" VerticalOffset="-20" HorizontalOffset="-20" x:Name="OptionPopup" Placement="Mouse" PopupAnimation="Fade"  AllowsTransparency="True" StaysOpen="False" >
-                            <Grid    Margin="5"   >
-                                <Border     Background="{DynamicResource BackgroundMenu}" CornerRadius="5" Margin="5" Effect="{StaticResource PopupDropShadowEffect}" />
-                                <StackPanel   Panel.ZIndex="7" Background="Transparent" Orientation="Vertical" Margin="10" Width="auto">
-                                    <Button Style="{StaticResource SetButton}"    Content="{x:Static lang:Resources.Delete}" Click="DelSqlite"  />
-                                    <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.Rename}"   Click="RenameSqlite"   />
-                                    <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.SetPassword}"  Visibility="Collapsed"   />
-                                    <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.SetDefaultToOpen}" Click="SetAsDefault" Visibility="Visible"  />
-                                    <Button  Style="{StaticResource SetButton}"   Content="{x:Static lang:Resources.OpenPath}"   Click="OpenPath"   />
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <chao:SearchBox Search="SearchText_Changed"  VerticalAlignment="Center" FontSize="15" Height="50" Padding="5 0"     PlaceHolder="检索" PlaceHolderForeground="Gray"  Foreground="#fff" Background="Transparent" ShowSearchButton="False" ShowClearButton="True"    />
+ 
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10 0" >
+                                    <Button Content="新建" Width="80" Click="NewDatabase"/>
+                                    <Button Content="导入" Width="80" Click="ImportDatabase"/>
                                 </StackPanel>
                             </Grid>
-                        </Popup>
 
+                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                <Border Grid.Row="1"   Width="30" Height="30"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10" Tag="{DynamicResource Window.Title.Hover.Background}"    Style="{StaticResource  RoundBorder}"  CornerRadius="5"  MouseUp="ShowSortPopup">
+                                    <Border.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="名称" Click="SortDatabases"  />
+                                            <MenuItem Header="创建时间"  Click="SortDatabases"   />
+                                            <MenuItem Header="路径"  Click="SortDatabases"   />
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
+                                    <Viewbox  Width="20" Height="auto"  VerticalAlignment="Center"      >
+                                        <Path  VerticalAlignment="Center" HorizontalAlignment="Center"      Fill="{Binding Foreground,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" 
+                                   Data="M800.256 741.888l47.616-47.616a31.744 31.744 0 0 1 45.056 45.056l-102.4 102.4a31.744 31.744 0 0 1-54.272-22.528V204.8a32.256 32.256 0 0 1 64 0zM153.6 237.056a32.256 32.256 0 0 1 0-64h460.8a32.256 32.256 0 0 1 0 64z m0 307.2a32.256 32.256 0 0 1 0-64h460.8a32.256 32.256 0 0 1 0 64z m0 307.2a32.256 32.256 0 0 1 0-64h460.8a32.256 32.256 0 0 1 0 64z" />
+                                    </Viewbox>
+                                </Border>
+                                <Border Grid.Row="1"   Width="30" Height="30"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10" Tag="{DynamicResource Window.Title.Hover.Background}"    Style="{StaticResource  RoundBorder}"  CornerRadius="5"  MouseUp="RefreshDatabase">
+                                    <Viewbox  Width="20" Height="auto"  VerticalAlignment="Center"      >
+                                        <Path  VerticalAlignment="Center" HorizontalAlignment="Center"      Fill="{Binding Foreground,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" 
+                                   Data="M684.032 403.456q-17.408-8.192-15.872-22.016t11.776-22.016q3.072-2.048 19.968-15.872t41.472-33.28q-43.008-49.152-102.4-77.312t-129.024-28.16q-64.512 0-120.832 24.064t-98.304 66.048-66.048 98.304-24.064 120.832q0 63.488 24.064 119.808t66.048 98.304 98.304 66.048 120.832 24.064q53.248 0 100.864-16.896t87.04-47.616 67.584-72.192 41.472-90.624q7.168-23.552 26.624-38.912t46.08-15.36q31.744 0 53.76 22.528t22.016 53.248q0 14.336-5.12 27.648-21.504 71.68-63.488 132.096t-99.84 103.936-128.512 68.096-148.48 24.576q-95.232 0-179.2-35.84t-145.92-98.304-98.304-145.92-36.352-178.688 36.352-179.2 98.304-145.92 145.92-98.304 179.2-36.352q105.472 0 195.584 43.52t153.6 118.272q23.552-17.408 39.424-30.208t19.968-15.872q6.144-5.12 13.312-7.68t13.312 0 10.752 10.752 6.656 24.576q1.024 9.216 2.048 31.232t2.048 51.2 1.024 60.416-1.024 58.88q-1.024 34.816-16.384 50.176-8.192 8.192-24.576 9.216t-34.816-3.072q-27.648-6.144-60.928-13.312t-63.488-14.848-53.248-14.336-29.184-9.728z" />
+                                    </Viewbox>
+                                </Border>
 
-                        <TabControl TabStripPlacement="Left"  Tag="#323233" Style="{StaticResource FlatTabControl}" Background="Transparent" ItemContainerStyle="{StaticResource FlatTabItem}"   HorizontalAlignment="Stretch" >
-                            <TabItem Padding="20" FontSize="18" Height="40" Width="150" Style="{StaticResource FlatTabItem}" Background="Transparent" Header="视频"  HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" >
-                                <TextBlock Text="视频" HorizontalAlignment="Center"/>
-                            </TabItem>
-                            <TabItem Padding="20" FontSize="18" Height="40" Width="150" Style="{StaticResource FlatTabItem}" Background="Transparent" Header="图片"  HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" >
-                                <TextBlock Text="图片" HorizontalAlignment="Center"/>
-                            </TabItem>
-                            <TabItem Padding="20" FontSize="18" Height="40" Width="150" Style="{StaticResource FlatTabItem}" Background="Transparent" Header="漫画"  HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" >
-                                <TextBlock Text="视频" HorizontalAlignment="Center"/>
-                            </TabItem>
-                        </TabControl>
-
-                        <Button Content="设置" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10">
+                            </StackPanel>
                             
-                        </Button>
+                        </Grid>
+
+                    </Grid>
 
 
-                        <ScrollViewer Grid.Row="0"   Margin="5"   Panel.ZIndex="4"    x:Name="scrollViewer"  Visibility="Collapsed"     >
-                            <ItemsControl x:Name="itemsControl"   ItemsSource="{Binding DataBases,Mode=OneWay}" >
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel   Orientation="Horizontal" >
-
-                                        </WrapPanel>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-
-                                <ItemsControl.ItemTemplate>
+                    <TabControl   Grid.Row="1" TabStripPlacement="Left"  Tag="#323233" Style="{StaticResource FlatTabControl}" Background="Transparent" ItemContainerStyle="{StaticResource FlatTabItem}"   HorizontalAlignment="Stretch" >
+                        <TabItem  Padding="20" FontSize="16" Height="40" Width="200" Style="{StaticResource FlatTabItem}" Background="Transparent" Header="视频"    >
+                            <ListBox Name="listBox" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CurrentDatabases}" Style="{StaticResource NormalListBox}" Background="Transparent" d:ItemsSource="{d:SampleData ItemCount=5}">
+                                <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Width="200" Panel.ZIndex="5"  Margin="5" CornerRadius="5" Style="{StaticResource DBBorder}" Cursor="Arrow" >
-                                            <Grid Margin="5 10">
+                                        <Border Panel.ZIndex="5"   Margin="0"    CornerRadius="5" Style="{StaticResource RoundBorder}" Cursor="Hand" >
+                                            <Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="打开"/>
+                                                    <MenuItem Header="打开目录" Command="cmd:File.OpenDir" CommandParameter="{Binding Path,Converter={StaticResource FilePathToDirConverter}}"/>
+                                                    <MenuItem Header="重命名"  Click="RenameSqlite" />
+                                                    <MenuItem Header="删除" Tag="#ff2e2e" Click="DelSqlite"/>
+                                                </ContextMenu>
+                                            </Border.ContextMenu>
+                                            <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="100"/>
                                                     <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <StackPanel Grid.Column="0"  Orientation="Horizontal" Margin="5 5" PreviewMouseLeftButtonUp="LoadDataBase" Cursor="Hand">
-                                                    <Image Style="{StaticResource ImageStyle}" Margin="10 2"  />
-                                                    <TextBox ContextMenu="{StaticResource TextBoxContextMenu}" Cursor="Hand" TextAlignment="Left" Width="180" Height="auto"  KeyUp="TextBox_KeyUp" LostFocus="TextBox_LostFocus"  IsReadOnly="True" Text="{Binding .,Mode=TwoWay}" Margin="5" Grid.Row="1" Style="{StaticResource ReadWriteTextBox}" VerticalAlignment="Center" FontSize="20" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
-                                                </StackPanel>
-                                                <Border  Grid.Column="1"  Style="{StaticResource OptionBorderStyle}" Background="{DynamicResource BackgroundSide}"  Height="20"  Width="auto" Margin="4 0"  VerticalAlignment="Top" Cursor="Hand" MouseLeftButtonUp="OpenPopup">
-                                                    <Image x:Name="optionImage" Source="pack://application:,,,/Resources/Image/StartUp/选项.png" Width="15" Margin="2"  />
-                                                </Border>
+                                                <Image  Height="50" Grid.Row="0"  Source="/Resources/Picture/database.png"/>
 
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="{Binding Name}" Foreground="#fff" FontSize="20" Margin="0 5"/>
+                                                    <TextBlock Text="{Binding CreateDate}" Foreground="#fff" FontSize="12"/>
+                                                    <TextBlock Text="{Binding Path,Converter={StaticResource SmallerPathConverter},ConverterParameter=2}" ToolTip="{Binding Path}" Foreground="gray" FontSize="12"/>
+                                                </StackPanel>
                                             </Grid>
 
                                         </Border>
 
                                     </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            
+                            <!--<ScrollViewer  Background="Transparent"     x:Name="scrollViewer" Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"      >
+                                <ItemsControl x:Name="itemsControl"   ItemsSource="{Binding Videos}" >
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel   Orientation="Vertical" >
 
-                        <Grid Grid.Row="1" Visibility="Collapsed" >
-                            <Button HorizontalAlignment="Center" x:Name="LoadButton"  Style="{StaticResource FlatButton}" FontSize="15"  Content="{x:Static lang:Resources.ImportLibrary}"  Margin="20 10" Click="ImportDatabase" />
+                                            </StackPanel>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
 
-                            <ComboBox Visibility="Collapsed" HorizontalAlignment="Right" SelectionChanged="LanguageChanged" Margin="20 0" MinWidth="100"   VerticalAlignment="Center" SelectedIndex="0"  FontSize="20" Style="{StaticResource ComboBoxStyle1}"     >
-                                <ComboBoxItem Content="中文"/>
-                                <ComboBoxItem Content="English"/>
-                                <ComboBoxItem Content="日本語"/>
-                            </ComboBox>
-                        </Grid>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border   Panel.ZIndex="5"   HorizontalAlignment="Left"  Margin="5" CornerRadius="5" Style="{StaticResource RoundBorder}" Cursor="Arrow" >
+                                                <Border.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="打开"/>
+                                                        <MenuItem Header="设为默认"/>
+                                                        <MenuItem Header="设置密码"/>
+                                                        <MenuItem Header="删除" Foreground="Red"/>
+                                                    </ContextMenu>
+                                                </Border.ContextMenu>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="100"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image  Height="50" Grid.Row="0"  Source="/Resources/Picture/database.png"/>
 
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding Name}" Foreground="#fff"/>
+                                                        <TextBlock Text="{Binding Description}" Foreground="#fff"/>
+                                                        <TextBlock Text="{Binding Path}" Foreground="gray"/>
+                                                    </StackPanel>
+                                                </Grid>
+
+                                                --><!--<Grid Margin="5 10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0"  Orientation="Horizontal" Margin="5 5" PreviewMouseLeftButtonUp="LoadDataBase" Cursor="Hand">
+                                                        <Image Style="{StaticResource ImageStyle}" Margin="10 2"  />
+                                                        <TextBox ContextMenu="{StaticResource TextBoxContextMenu}" Cursor="Hand" TextAlignment="Left" Width="180" Height="auto"  KeyUp="TextBox_KeyUp" LostFocus="TextBox_LostFocus"  IsReadOnly="True" Text="{Binding .,Mode=TwoWay}" Margin="5" Grid.Row="1" Style="{StaticResource ReadWriteTextBox}" VerticalAlignment="Center" FontSize="20" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                                                    </StackPanel>
+                                                    <Border  Grid.Column="1"  Style="{StaticResource OptionBorderStyle}" Background="{DynamicResource BackgroundSide}"  Height="20"  Width="auto" Margin="4 0"  VerticalAlignment="Top" Cursor="Hand" MouseLeftButtonUp="OpenPopup">
+                                                        <Image x:Name="optionImage" Source="pack://application:,,,/Resources/Image/StartUp/选项.png" Width="15" Margin="2"  />
+                                                    </Border>
+
+                                                </Grid>--><!--
+
+                                            </Border>
+
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>-->
+                        </TabItem>
+                        <TabItem Padding="20" FontSize="16" Height="40" Width="200" Style="{StaticResource FlatTabItem}" Background="Transparent" Header="图片"  HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" >
+                            <TextBlock Text="图片" HorizontalAlignment="Center"/>
+                        </TabItem>
+                        <TabItem Padding="20" FontSize="16" Height="40" Width="200" Style="{StaticResource FlatTabItem}" Background="Transparent" Header="漫画"  HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" >
+                            <TextBlock Text="视频" HorizontalAlignment="Center"/>
+                        </TabItem>
+                    </TabControl>
+
+
+                    <Border Grid.Row="1"   Width="30" Height="30"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10" Tag="{DynamicResource Window.Title.Hover.Background}"    Style="{StaticResource  RoundBorder}"  CornerRadius="5"  MouseUp="ShowSettingsPopup">
+                            <Border.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="关于" Command="cmd:OpenWindow.About"  
+                                          CommandParameter="{Binding RelativeSource= {RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"  />
+                                    <MenuItem Header="设置" Command="cmd:OpenWindow.Settings"/>
+                                    <MenuItem Header="检查更新" Command="cmd:OpenWindow.Upgrade" 
+                                          CommandParameter="{Binding RelativeSource= {RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+                                    <MenuItem Header="打开文件路径" Command="cmd:File.OpenBaseDir" />
+                                </ContextMenu>
+                            </Border.ContextMenu>
+                            <Viewbox  Width="20" Height="auto"  VerticalAlignment="Center"      >
+                            <Path  VerticalAlignment="Center" HorizontalAlignment="Center"      Fill="{Binding Foreground,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" 
+                                   Data="M940 596l-76-57.6c0.8-8 1.6-16.8 1.6-26.4s-0.8-18.4-1.6-26.4l76-57.6c20.8-16 26.4-44 12.8-68l-84.8-143.2c-9.6-16.8-28-27.2-47.2-27.2-6.4 0-12 0.8-18.4 3.2L712 228c-15.2-10.4-31.2-19.2-47.2-26.4l-13.6-92c-4-26.4-26.4-45.6-53.6-45.6H426.4c-27.2 0-49.6 19.2-53.6 44.8L360 201.6c-16 7.2-31.2 16-47.2 26.4l-90.4-35.2c-6.4-2.4-12.8-3.2-19.2-3.2-19.2 0-37.6 9.6-46.4 26.4L71.2 360c-13.6 22.4-8 52 12.8 68l76 57.6c-0.8 9.6-1.6 18.4-1.6 26.4s0 16.8 1.6 26.4l-76 57.6c-20.8 16-26.4 44-12.8 68l84.8 143.2c9.6 16.8 28 27.2 47.2 27.2 6.4 0 12-0.8 18.4-3.2L312 796c15.2 10.4 31.2 19.2 47.2 26.4l13.6 92c3.2 25.6 26.4 45.6 53.6 45.6h171.2c27.2 0 49.6-19.2 53.6-44.8l13.6-92.8c16-7.2 31.2-16 47.2-26.4l90.4 35.2c6.4 2.4 12.8 3.2 19.2 3.2 19.2 0 37.6-9.6 46.4-26.4l85.6-144.8c12.8-23.2 7.2-51.2-13.6-67.2zM704 512c0 105.6-86.4 192-192 192S320 617.6 320 512s86.4-192 192-192 192 86.4 192 192z" />
+                        </Viewbox>
+                    </Border>
+
+
+                    <Grid Grid.Row="1" Visibility="Collapsed" >
+                        <Button HorizontalAlignment="Center" x:Name="LoadButton"  Style="{StaticResource FlatButton}" FontSize="15"  Content="{x:Static lang:Resources.ImportLibrary}"  Margin="20 10" Click="ImportDatabase" />
+
+                        <ComboBox Visibility="Collapsed" HorizontalAlignment="Right" SelectionChanged="LanguageChanged" Margin="20 0" MinWidth="100"   VerticalAlignment="Center" SelectedIndex="0"  FontSize="20" Style="{StaticResource ComboBoxStyle1}"     >
+                            <ComboBoxItem Content="中文"/>
+                            <ComboBoxItem Content="English"/>
+                            <ComboBoxItem Content="日本語"/>
+                        </ComboBox>
                     </Grid>
+
                 </Grid>
-            </Border>
-        </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </chao:BaseWindow>

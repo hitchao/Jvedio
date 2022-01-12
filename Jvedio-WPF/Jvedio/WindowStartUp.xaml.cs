@@ -15,6 +15,8 @@ using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
 using Newtonsoft.Json;
 using Jvedio.Core;
+using System.Windows.Controls.Primitives;
+using ChaoControls.Style;
 
 namespace Jvedio
 {
@@ -26,7 +28,6 @@ namespace Jvedio
         private CancellationToken ct;
         private VieModel_StartUp vieModel_StartUp;
         private Image optionImage;
-        private string beforeRename = "";
 
 
         public WindowStartUp()
@@ -34,8 +35,8 @@ namespace Jvedio
 
             InitializeComponent();
             vieModel_StartUp = new VieModel_StartUp();
-            vieModel_StartUp.ListDatabase();
             this.DataContext = vieModel_StartUp;
+            //itemsControl.ItemsSource = vieModel_StartUp.Videos;
 
             cts = new CancellationTokenSource();
             cts.Token.Register(() => Console.WriteLine("取消任务"));
@@ -122,7 +123,7 @@ namespace Jvedio
 
 
             //默认打开某个数据库
-            if (Jvedio.Core.Settings.Common.OpenDataBaseDefault && File.Exists(Properties.Settings.Default.DataBasePath))
+            if (Properties.Settings.Default.OpenDataBaseDefault && File.Exists(Properties.Settings.Default.DataBasePath))
             {
 
                 OpenDefaultDatabase();
@@ -145,6 +146,8 @@ namespace Jvedio
                 vieModel_StartUp.InitCompleted = true;
             }
         }
+
+
 
 
 
@@ -393,30 +396,29 @@ namespace Jvedio
                 foreach (var item in names)
                 {
                     string name = Path.GetFileNameWithoutExtension(item);
-                    if (name == Jvedio.Language.Resources.NewLibrary) continue;
-                    if (!DataBase.IsProperSqlite(item)) continue;
-                    if (File.Exists($"DataBase\\{name}.sqlite"))
+                    if (!DataBase.IsProperSqlite(item))
+                    {
+                        MessageCard.Show("不支持该文件：" + item);
+                        continue;
+                    }
+                    string targetPath = Path.Combine(GlobalVariable.DataPath, name + ".sqlite");
+                    if (File.Exists(targetPath))
                     {
                         if (new Msgbox(this, $"{Jvedio.Language.Resources.Message_AlreadyExist} {name} {Jvedio.Language.Resources.IsToOverWrite} ？").ShowDialog() == true)
                         {
-                            FileHelper.TryCopyFile(item, $"DataBase\\{name}.sqlite", true);
-                            if (!vieModel_StartUp.DataBases.Contains(name)) vieModel_StartUp.DataBases.Add(name);
+                            FileHelper.TryCopyFile(item, targetPath, true);
+                            vieModel_StartUp.ListDatabase();
                         }
                     }
                     else
                     {
-                        FileHelper.TryCopyFile(item, $"DataBase\\{name}.sqlite", true);
-                        if (!vieModel_StartUp.DataBases.Contains(name)) vieModel_StartUp.DataBases.Add(name);
+                        FileHelper.TryCopyFile(item, targetPath, true);
+                        vieModel_StartUp.ListDatabase();
                     }
-
                 }
             }
         }
 
-        private void CloseWindow(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
 
 
 
@@ -428,25 +430,23 @@ namespace Jvedio
 
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
-            Border border = optionImage.Parent as Border;
-            Grid grid = border.Parent as Grid;
-            StackPanel stackPanel = grid.Children.OfType<StackPanel>().First();
-            TextBox TextBox = stackPanel.Children[1] as TextBox;
-            string name = TextBox.Text;
-            if (name == Jvedio.Language.Resources.NewLibrary) return;
 
+            Core.pojo.data.SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            string path = sqliteInfo.Path;
+            string name = sqliteInfo.Name;
             if (new Msgbox(this, $"{Jvedio.Language.Resources.IsToDelete} {name}?").ShowDialog() == true)
             {
-                string dirpath = DateTime.Now.ToString("yyyyMMddHHss");
-                Directory.CreateDirectory($"BackUp\\{dirpath}");
-                if (File.Exists($"DataBase\\{name}.sqlite"))
+                string dirpath = DateTime.Now.ToString("yyyyMMddHHmm");
+                string backupPath=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"BackUp",dirpath);
+                FileHelper.TryCreateDir(backupPath);
+                if (File.Exists(path))
                 {
                     //备份
-                    FileHelper.TryCopyFile($"DataBase\\{name}.sqlite", $"BackUp\\{dirpath}\\{name}.sqlite", true);
+                    FileHelper.TryCopyFile(path, Path.Combine(backupPath, name +".sqlite"), true);
                     //删除
-                    if (FileHelper.TryDeleteFile($"DataBase\\{name}.sqlite"))
+                    if (FileHelper.TryDeleteFile(path))
                     {
-                        vieModel_StartUp.DataBases.Remove(name);
+                        vieModel_StartUp.ListDatabase();
                     }
                 }
             }
@@ -456,17 +456,27 @@ namespace Jvedio
 
         private void RenameSqlite(object sender, RoutedEventArgs e)
         {
-            Border border = optionImage.Parent as Border;
-            Grid grid = border.Parent as Grid;
-            StackPanel stackPanel = grid.Children.OfType<StackPanel>().First();
-            TextBox TextBox = stackPanel.Children[1] as TextBox;
-            //重命名
-            OptionPopup.IsOpen = false;
-            TextBox.IsReadOnly = false;
-            TextBox.Focus();
-            TextBox.SelectAll();
-            TextBox.Cursor = Cursors.IBeam;
-            beforeRename = TextBox.Text;
+
+            Core.pojo.data.SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            string originName = sqliteInfo.Name;
+            string originPath = sqliteInfo.Path;
+            DialogInput input = new DialogInput(this, Jvedio.Language.Resources.Rename, originName);
+            if (input.ShowDialog() == false) return;
+            string targetName = input.Text;
+            if(targetName== originName) return;
+            if (string.IsNullOrEmpty(targetName) || targetName.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) != -1)
+            {
+                MessageCard.Show("名称非法！");
+                return;
+            }
+            string targetPath = Path.Combine(GlobalVariable.DataPath, targetName + ".sqlite");
+            if (File.Exists(targetPath))
+            {
+                MessageCard.Show(Jvedio.Language.Resources.Message_AlreadyExist);
+                return;
+            }
+            FileHelper.TryMoveFile(originPath, targetPath);
+            vieModel_StartUp.ListDatabase(); // todo 仅更新重命名的
         }
 
 
@@ -475,81 +485,81 @@ namespace Jvedio
             string name = textBox.Text;
 
             //不修改
-            if (name == beforeRename)
-            {
-                textBox.IsReadOnly = true;
-                textBox.Cursor = Cursors.Hand;
-                beforeRename = "";
-                return;
-            }
+            //if (name == beforeRename)
+            //{
+            //    textBox.IsReadOnly = true;
+            //    textBox.Cursor = Cursors.Hand;
+            //    beforeRename = "";
+            //    return;
+            //}
 
 
             //新建一个数据库
-            if (beforeRename == "")
-            {
-                if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrEmpty(name) && !IsItemInList(name, vieModel_StartUp.DataBases) && name.IndexOfAny(Path.GetInvalidFileNameChars()) == -1)
-                {
-                    //新建
-                    MySqlite db = new MySqlite("DataBase\\" + name);
-                    db.CreateTable(DataBase.SQLITETABLE_MOVIE);
-                    db.CreateTable(DataBase.SQLITETABLE_ACTRESS);
-                    db.CreateTable(DataBase.SQLITETABLE_LIBRARY);
-                    db.CreateTable(DataBase.SQLITETABLE_JAVDB);
-                    db.CloseDB();
+            //if (beforeRename == "")
+            //{
+            //    if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrEmpty(name) && !IsItemInList(name, vieModel_StartUp.DataBases) && name.IndexOfAny(Path.GetInvalidFileNameChars()) == -1)
+            //    {
+            //        //新建
+            //        MySqlite db = new MySqlite("DataBase\\" + name);
+            //        db.CreateTable(DataBase.SQLITETABLE_MOVIE);
+            //        db.CreateTable(DataBase.SQLITETABLE_ACTRESS);
+            //        db.CreateTable(DataBase.SQLITETABLE_LIBRARY);
+            //        db.CreateTable(DataBase.SQLITETABLE_JAVDB);
+            //        db.CloseDB();
 
-                    if (vieModel_StartUp.DataBases.Contains(Jvedio.Language.Resources.NewLibrary))
-                        vieModel_StartUp.DataBases.Remove(Jvedio.Language.Resources.NewLibrary);
-                    textBox.IsReadOnly = true;
-                    textBox.Cursor = Cursors.Hand;
+            //        if (vieModel_StartUp.DataBases.Contains(Jvedio.Language.Resources.NewLibrary))
+            //            vieModel_StartUp.DataBases.Remove(Jvedio.Language.Resources.NewLibrary);
+            //        textBox.IsReadOnly = true;
+            //        textBox.Cursor = Cursors.Hand;
 
-                    vieModel_StartUp.DataBases.Add(name);
-                    vieModel_StartUp.DataBases.Add(Jvedio.Language.Resources.NewLibrary);
-                }
-                else
-                {
-                    textBox.Text = Jvedio.Language.Resources.NewLibrary;
-                }
-            }
-            else
-            {
-                //重命名
-                if (IsItemInList(name, vieModel_StartUp.DataBases))
-                {
-                    textBox.Text = beforeRename; //重复的
-                }
-                else
-                {
-                    //重命名
-                    if (name.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) == -1)
-                    {
-                        try
-                        {
-                            File.Move(AppDomain.CurrentDomain.BaseDirectory + $"DataBase\\{beforeRename}.sqlite",
-                                AppDomain.CurrentDomain.BaseDirectory + $"DataBase\\{name}.sqlite");
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogE(ex);
-                        }
-                        for (int i = 0; i < vieModel_StartUp.DataBases.Count; i++)
-                        {
-                            if (vieModel_StartUp.DataBases[i].ToLower() == beforeRename.ToLower())
-                            {
-                                vieModel_StartUp.DataBases[i] = name;
-                                break;
-                            }
-                        }
-                        itemsControl.Items.Refresh();
-                    }
-                    else
-                    {
-                        textBox.Text = beforeRename;
-                    }
+            //        vieModel_StartUp.DataBases.Add(name);
+            //        vieModel_StartUp.DataBases.Add(Jvedio.Language.Resources.NewLibrary);
+            //    }
+            //    else
+            //    {
+            //        textBox.Text = Jvedio.Language.Resources.NewLibrary;
+            //    }
+            //}
+            //else
+            //{
+            //    //重命名
+            //    if (IsItemInList(name, vieModel_StartUp.DataBases))
+            //    {
+            //        textBox.Text = beforeRename; //重复的
+            //    }
+            //    else
+            //    {
+            //        //重命名
+            //        if (name.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) == -1)
+            //        {
+            //            try
+            //            {
+            //                File.Move(AppDomain.CurrentDomain.BaseDirectory + $"DataBase\\{beforeRename}.sqlite",
+            //                    AppDomain.CurrentDomain.BaseDirectory + $"DataBase\\{name}.sqlite");
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Logger.LogE(ex);
+            //            }
+            //            for (int i = 0; i < vieModel_StartUp.DataBases.Count; i++)
+            //            {
+            //                if (vieModel_StartUp.DataBases[i].ToLower() == beforeRename.ToLower())
+            //                {
+            //                    vieModel_StartUp.DataBases[i] = name;
+            //                    break;
+            //                }
+            //            }
+            //            itemsControl.Items.Refresh();
+            //        }
+            //        else
+            //        {
+            //            textBox.Text = beforeRename;
+            //        }
 
 
-                }
-                beforeRename = "";
-            }
+            //    }
+            //    beforeRename = "";
+            //}
             textBox.IsReadOnly = true;
             textBox.Cursor = Cursors.Hand;
             textBox.TextAlignment = TextAlignment.Left;
@@ -620,6 +630,64 @@ namespace Jvedio
         private void LanguageChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine(e.AddedItems[0].ToString());
+        }
+
+
+        private void ShowSettingsPopup(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                Border border = sender as Border;
+                ContextMenu contextMenu = border.ContextMenu;
+                contextMenu.PlacementTarget = border;
+                contextMenu.Placement = PlacementMode.Top;
+                contextMenu.IsOpen = true;
+            }
+            e.Handled = true;
+        }
+
+
+
+
+        private void ShowSortPopup(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                Border border = sender as Border;
+                ContextMenu contextMenu = border.ContextMenu;
+                contextMenu.PlacementTarget = border;
+                contextMenu.Placement = PlacementMode.Bottom;
+                contextMenu.IsOpen = true;
+            }
+            e.Handled = true;
+        }
+
+        private void SortDatabases(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                string header = menuItem.Header.ToString();
+                vieModel_StartUp.SortDataBase(header);
+            }
+        }
+
+
+
+        private void SearchText_Changed(object sender, RoutedEventArgs e)
+        {
+            ChaoControls.Style.SearchBox textBox = sender as ChaoControls.Style.SearchBox;
+            vieModel_StartUp.Search(textBox.Text);
+        }
+
+        private void NewDatabase(object sender, RoutedEventArgs e)
+        {
+            MessageCard.Show("成功！");
+        }
+
+        private void RefreshDatabase(object sender, MouseButtonEventArgs e)
+        {
+            vieModel_StartUp.ListDatabase();
         }
     }
 }

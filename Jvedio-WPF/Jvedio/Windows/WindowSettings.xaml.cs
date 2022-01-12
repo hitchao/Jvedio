@@ -26,7 +26,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Settings : BaseWindow
+    public partial class Settings : ChaoControls.Style.BaseWindow
     {
 
         public const string ffmpeg_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z";
@@ -669,7 +669,7 @@ namespace Jvedio
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             //设置当前数据库
-            for (int i = 0; i < vieModel_Settings.DataBases.Count; i++)
+            for (int i = 0; i < vieModel_Settings.DataBases?.Count; i++)
             {
                 if (vieModel_Settings.DataBases[i].ToLower() == Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath).ToLower())
                 {
@@ -678,7 +678,7 @@ namespace Jvedio
                 }
             }
 
-            if (vieModel_Settings.DataBases.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
+            if (vieModel_Settings.DataBases?.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
 
             ShowViewRename(Properties.Settings.Default.RenameFormat);
 
