@@ -12,8 +12,8 @@ namespace Jvedio.Utils.Sqlite
     {
 
         public string SqlitePath { get; set; }
-        protected SQLiteCommand cmd;
-        protected SQLiteConnection cn;
+        public SQLiteCommand cmd;
+        public SQLiteConnection cn;
 
         public Sqlite(string path)
         {

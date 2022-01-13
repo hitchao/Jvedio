@@ -363,10 +363,6 @@ namespace Jvedio
             if (File.Exists(path))
                 GlobalVariable.BackgroundImage = ImageProcess.BitmapImageFromFile(path);
 
-            DefaultBigImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
-            DefaultSmallImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_S.png", UriKind.Relative));
-            DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
-
         }
 
         //绑定事件

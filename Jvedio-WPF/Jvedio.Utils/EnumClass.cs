@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace Jvedio.Utils
 {
     #region "enum"
+
+    public enum InfoType { Video, Picture,Game }
     public enum ViewType { 默认, 有图, 无图 }
     public enum MySearchType { 识别码, 名称, 演员 }
     public enum MyImageType { 缩略图, 海报图, 预览图, 动态图, 列表模式 }

@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Jvedio.Core.pojo.data;
+using Jvedio.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,9 +16,14 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_StartUp : ViewModelBase
     {
-        public RelayCommand ListDatabaseCommand { get; set; }
+       
 
         public bool Sort = false;
+        public string SortType = "";
+        public string CurrentSearch = "";
+        public int CurrentSideIdx = 0;
+
+        #region "属性"
 
         private bool _initCompleted;
         public bool InitCompleted
@@ -54,29 +60,36 @@ namespace Jvedio.ViewModel
             }
         }
 
+        #endregion
+
 
         public VieModel_StartUp()
         {
-            ListDatabaseCommand = new RelayCommand(ListDatabase);
-            ListDatabase();
+            ScanDatabase();
         }
 
-        public void Search(string search)
+        public void Search()
         {
             CurrentDatabases = null;
-            if (search == null) CurrentDatabases = Databases;
+            if (string.IsNullOrEmpty(CurrentSearch)) CurrentDatabases = Databases;
             ObservableCollection<Core.pojo.data.SqliteInfo> temp = new ObservableCollection<Core.pojo.data.SqliteInfo>();
-            Databases.ToList().Where(item => item.Name.IndexOf(search) >= 0 || item.Path.IndexOf(search) >= 0).ToList().ForEach
+            Databases.ToList().Where(item => item.Name.IndexOf(CurrentSearch) >= 0 || item.Path.IndexOf(CurrentSearch) >= 0).ToList().ForEach
                 (item => temp.Add(item));
             CurrentDatabases = temp;
+            SortDataBase();
         }
 
-        public void SortDataBase(string header)
+        public void SortDataBase()
         {
-            Sort = !Sort;
-            List<Core.pojo.data.SqliteInfo> sqliteInfos = Databases.ToList();
+            if(Databases==null || Databases.Count == 0)
+            {
+                CurrentDatabases = new ObservableCollection<SqliteInfo>();
+                return;
+            }
+            if(CurrentDatabases==null) CurrentDatabases = Databases;
+            List<Core.pojo.data.SqliteInfo> sqliteInfos = CurrentDatabases.ToList();
             CurrentDatabases = null;
-            switch (header)
+            switch (SortType)
             {
                 case "名称":
                     sqliteInfos = sqliteInfos.OrderBy(x => x.Name).ToList();
@@ -84,8 +97,16 @@ namespace Jvedio.ViewModel
                 case "创建时间":
                     sqliteInfos = sqliteInfos.OrderBy(x => x.CreateDate).ToList();
                     break;
-                case "数量":
+                case "数据数目":
                     sqliteInfos = sqliteInfos.OrderBy(x => x.Count).ToList();
+                    break;                
+                
+                case "访问频率":
+                    sqliteInfos = sqliteInfos.OrderBy(x => x.ViewCount).ToList();
+                    break;               
+                
+                case "文件大小":
+                    sqliteInfos = sqliteInfos.OrderBy(x => x.Size).ToList();
                     break;
                 case "路径":
                     sqliteInfos = sqliteInfos.OrderBy(x => x.Path).ToList();
@@ -101,10 +122,11 @@ namespace Jvedio.ViewModel
         }
 
 
-        public void ListDatabase()
+        public void ScanDatabase(InfoType type=InfoType.Video)
         {
             Databases = new ObservableCollection<SqliteInfo>();
-            string[] files = FileHelper.TryScanDIr(GlobalVariable.DataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
+            string scanDir = Path.Combine(GlobalVariable.DataPath, type.ToString());
+            string[] files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly);
             LoadDatabase(files);
         }
 
@@ -115,10 +137,49 @@ namespace Jvedio.ViewModel
                 foreach (var item in files)
                 {
                     SqliteInfo sqliteInfo = ParseInfo(item);
-                    if (sqliteInfo != null && !Databases.Contains(sqliteInfo)) Databases.Add(sqliteInfo);
+                    if (sqliteInfo != null && !Databases.Contains(sqliteInfo))
+                    {
+                        Databases.Add(sqliteInfo);
+                    }
                 }
             }
-            CurrentDatabases = Databases;
+            JoinInfo();
+            Search();
+        }
+
+
+        // 存储到数据库中
+        private void JoinInfo()
+        {
+            // 1. 新增 / 更新
+            // 2. 删除
+            List<SqliteInfo> sqliteInfos = ConfigConnection.Instance.SelectSqliteInfo();
+            foreach (var item in Databases)
+            {
+                if(sqliteInfos.Contains(item))
+                {
+                    SqliteInfo data =sqliteInfos[sqliteInfos.IndexOf(item)];
+                    //更新
+                    item.ID=data.ID;
+                    item.Count=data.Count;
+                    item.ViewCount = data.ViewCount;
+                    item.ViewCount = data.ViewCount;
+                    string imagePath = Path.Combine(GlobalVariable.ProjectImagePath,data.ImagePath);
+                    if(File.Exists(imagePath))item.ImagePath = imagePath;
+
+                    data.Size = item.Size;
+                    ConfigConnection.Instance.UpdateSqliteInfo(data);
+                }
+                else
+                {
+                    // 新增
+                    ConfigConnection.Instance.InsertSqliteInfo(item);
+                }
+            }
+
+            // 删除
+            List<SqliteInfo> toDelete = sqliteInfos.Except(Databases).ToList();
+            ConfigConnection.Instance.DeleteByIds(toDelete.Select(item => item.ID).ToList());
         }
 
         public SqliteInfo ParseInfo(string path)
@@ -129,9 +190,10 @@ namespace Jvedio.ViewModel
             SqliteInfo sqliteInfo = new SqliteInfo();
             sqliteInfo.Name = name;
             sqliteInfo.Path = path;
-            sqliteInfo.CreateDate = fileInfo.CreationTime.ToLongDateString();
-            sqliteInfo.Count = 10;
+            sqliteInfo.Size = fileInfo.Length;
+            sqliteInfo.CreateDate = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss");
             return sqliteInfo;
         }
+
     }
 }

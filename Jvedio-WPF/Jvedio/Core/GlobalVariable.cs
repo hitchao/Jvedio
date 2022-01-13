@@ -1,4 +1,5 @@
 ﻿
+using Jvedio.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,9 +18,13 @@ namespace Jvedio
 {
     public static class GlobalVariable
     {
+
+
         public delegate void ThemeChangeHandler();
         public static event ThemeChangeHandler ThemeChange;
 
+
+        // *************** 网址 ***************
         public static readonly string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
         public static readonly string YoudaoUrl = "https://github.com/hitchao/Jvedio/wiki/HowToSetYoudaoTranslation";
         public static readonly string BaiduUrl = "https://github.com/hitchao/Jvedio/wiki/HowToSetBaiduAI";
@@ -33,21 +38,46 @@ namespace Jvedio
         public static readonly string WebPageUrl = "https://hitchao.github.io/JvedioWebPage/";
         public static readonly string ThemeDIY = "https://hitchao.github.io/JvedioWebPage/theme.html";
 
+        // *************** 目录 ***************
+        public static string CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data", Environment.UserName);
+        public static string oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");// Jvedio 5.0 之前的
+        public static string DataPath = Path.Combine(CurrentUserFolder, "database");
+        public static string VideoDataPath = Path.Combine(DataPath, "video");
+        public static string PictureDataPath = Path.Combine(DataPath, "picture");
+        public static string GameDataPath = Path.Combine(DataPath, "game");
+        
 
-        public static string DataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");
+        public static string BackupPath = Path.Combine(CurrentUserFolder, "backup");
+        public static string LogPath = Path.Combine(CurrentUserFolder, "log");
+        public static string PicPath = Path.Combine(CurrentUserFolder, "pic");
         public static string BasePicPath = Directory.Exists(Properties.Settings.Default.BasePicPath) ?
-            Properties.Settings.Default.BasePicPath : AppDomain.CurrentDomain.BaseDirectory + "Pic\\";
-        public static string[] InitDirs = new[] { "log", "DataBase", "BackUp", "Pic", "Plugins/Themes", "Plugins/Crawlers" };//初始化文件夹
+    Properties.Settings.Default.BasePicPath : PicPath;
+        public static string ProjectImagePath = Path.Combine(CurrentUserFolder, "image","library");
+
+
+        public static string AIDataBasePath = Path.Combine(CurrentUserFolder, "AI.sqlite");
+        public static string TranslateDataBasePath = Path.Combine(CurrentUserFolder, "Translate.sqlite");
+        public static string MagnetsDataBasePath = Path.Combine(CurrentUserFolder, "Magnets.sqlite");
+        public static string BasePluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+        public static string ScanConfigPath = Path.Combine(CurrentUserFolder, "ScanPathConfig.xml");
+        public static string ServersConfigPath = Path.Combine(CurrentUserFolder, "ServersConfigPath.xml");
+
+        public static string UserConfigPath = Path.Combine(CurrentUserFolder, "user-config.xml");
+
         public static string[] PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
+        public static string[] InitDirs = new[] { 
+            DataPath, VideoDataPath, PictureDataPath, GameDataPath, 
+            BackupPath,LogPath,PicPath,ProjectImagePath,
+           Path.Combine(BasePluginsPath,"themes"), Path.Combine(BasePluginsPath,"crawlers") };//初始化文件夹
+
+        // *************** 目录 ***************
 
         public static string[] FontExt = new[] { ".otf", ".ttf" };
-
+        public static InfoType CurrentInfoType = InfoType.Video;
 
 
 
         public static Stopwatch stopwatch = new Stopwatch();//计时
-
-        public static string InfoDataBasePath = AppDomain.CurrentDomain.BaseDirectory + "Info.sqlite";
 
         //禁止的文件名符号
         //https://docs.microsoft.com/zh-cn/previous-versions/s6feh8zw(v=vs.110)?redirectedfrom=MSDN
@@ -86,9 +116,10 @@ namespace Jvedio
 
         //默认图片
         public static BitmapSource BackgroundImage;
-        public static BitmapImage DefaultSmallImage;
-        public static BitmapImage DefaultBigImage;
-        public static BitmapImage DefaultActorImage;
+        public static BitmapImage DefaultSmallImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_S.png", UriKind.Relative));
+        public static BitmapImage DefaultBigImage= new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
+        public static BitmapImage DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
+
 
 
         public static TimeSpan FadeInterval = TimeSpan.FromMilliseconds(150);//淡入淡出时间
@@ -102,8 +133,7 @@ namespace Jvedio
         public static string Prefix = "FC2-";
         public static int DefaultNewMovieType = 0;
 
-        public static string AIDataBasePath = AppDomain.CurrentDomain.BaseDirectory + "AI.sqlite";
-        public static string TranslateDataBasePath = AppDomain.CurrentDomain.BaseDirectory + "Translate.sqlite";
+
 
         public static FontFamily GlobalFont = null;
 

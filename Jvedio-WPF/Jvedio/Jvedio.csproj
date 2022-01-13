@@ -215,12 +215,14 @@
     </ApplicationDefinition>
     <Compile Include="Core\Command\File.cs" />
     <Compile Include="Core\Command\OpenWindow.cs" />
+    <Compile Include="Core\Command\Sqlite.cs" />
     <Compile Include="Core\CrawlerLoader.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
-    <Compile Include="Core\pojo\data\FileInfo.cs" />
+    <Compile Include="Core\pojo\data\SqliteInfo.cs" />
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Core\pojo\Theme.cs" />
     <Compile Include="Core\PropertiesLoader.cs" />
+    <Compile Include="Core\SqliteConnect\ConfigConnection.cs" />
     <Compile Include="Core\ThemeLoader.cs" />
     <Compile Include="DialogWindows\Dialog_LoadPage.xaml.cs">
       <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
@@ -308,7 +310,7 @@
     <Compile Include="Windows\Msgbox.xaml.cs">
       <DependentUpon>Msgbox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Other\GlobalVariable.cs" />
+    <Compile Include="Core\GlobalVariable.cs" />
     <Compile Include="ViewModel\VieModel_Details.cs" />
     <Compile Include="ViewModel\VieModel_Edit.cs" />
     <Compile Include="ViewModel\VieModel_Main.cs" />
@@ -449,6 +451,9 @@
     <Resource Include="Resources\menuitem\magnet.png" />
     <Resource Include="Resources\Picture\NoPrinting_G.gif" />
     <Resource Include="Data\github.txt" />
+    <Resource Include="Resources\Picture\datalist_video.png" />
+    <Content Include="sql\data-4.0.sql" />
+    <Content Include="sql\data.sql" />
     <Content Include="Data\x64\SQLite.Interop.dll" />
     <Content Include="Data\x86\SQLite.Interop.dll" />
     <Resource Include="Resources\Skin\white\classify.png" />
@@ -748,9 +753,7 @@
     <Content Include="Reference\PInvoke.dll" />
     <Content Include="Reference\QueryEngine.dll" />
     <Content Include="Reference\UsnOperation.dll" />
-    <Content Include="Reference\WpfAnimatedGif.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Reference\WpfAnimatedGif.dll" />
     <Resource Include="Resources\Jvedio.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

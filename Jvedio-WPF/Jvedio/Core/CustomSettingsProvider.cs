@@ -15,7 +15,7 @@ namespace Jvedio.Core
     class CustomSettingsProvider : SettingsProvider
     {
         // user.config 存储路径
-        static string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user-config.xml");
+        static string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName, "user-config.xml");
 
         const string NAME = "name";
         const string SERIALIZE_AS = "serializeAs";
@@ -137,6 +137,13 @@ namespace Jvedio.Core
         {
             if (!File.Exists(UserConfigPath))
             {
+                try
+                {
+                    Directory.CreateDirectory(GlobalVariable.CurrentUserFolder);
+                }catch (Exception ex)
+                {
+                    Logger.LogF(ex);
+                }
                 //if the config file is not where it's supposed to be create a new one.
                 CreateEmptyConfig();
             }

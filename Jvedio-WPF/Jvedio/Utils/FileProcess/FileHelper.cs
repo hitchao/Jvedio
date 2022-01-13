@@ -30,7 +30,11 @@ namespace Jvedio
         {
             try
             {
-                return Directory.GetFiles( path,  searchPattern,  searchOption);
+                if (Directory.Exists(path) && !string.IsNullOrEmpty(searchPattern))
+                {
+                    return Directory.GetFiles(path, searchPattern, searchOption);
+                }
+                
             }catch(Exception ex)
             {
                 Logger.LogF(ex);

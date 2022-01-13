@@ -18,15 +18,14 @@ namespace Jvedio
     public class ScanPathConfig
     {
 
-        private string DataBase = "";
-        private string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");
-        private string  filepath="" ;
+        private string DataBase = "info";
+        private string baseDir = GlobalVariable.CurrentUserFolder;
+        private string  filepath=GlobalVariable.ScanConfigPath;
 
         public ScanPathConfig(string databasename)
         {
-            DataBase = databasename;
+            if(!string.IsNullOrEmpty(databasename)) DataBase = databasename;
             if (!Directory.Exists(baseDir)) Directory.CreateDirectory(baseDir);
-            filepath = Path.Combine(baseDir, "ScanPathConfig");
         }
 
         public void Save(List<string> Paths)
