@@ -452,6 +452,10 @@
     <Resource Include="Resources\Picture\NoPrinting_G.gif" />
     <Resource Include="Data\github.txt" />
     <Resource Include="Resources\Picture\datalist_video.png" />
+    <Content Include="sql\actor - 复制%282%29.sql" />
+    <Content Include="sql\actor - 复制.sql" />
+    <Content Include="sql\actor.sql" />
+    <Content Include="sql\common.sql" />
     <Content Include="sql\data-4.0.sql" />
     <Content Include="sql\data.sql" />
     <Content Include="Data\x64\SQLite.Interop.dll" />
