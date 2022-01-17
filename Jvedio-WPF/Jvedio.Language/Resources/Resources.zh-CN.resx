@@ -676,7 +676,7 @@
     <value>启动后随机展示</value>
   </data>
   <data name="NotShowLibrary" xml:space="preserve">
-    <value>开启时不显示库选择</value>
+    <value>默认打开上一次关闭的库</value>
   </data>
   <data name="AutoDelete" xml:space="preserve">
     <value>自动删除不存在的影片</value>

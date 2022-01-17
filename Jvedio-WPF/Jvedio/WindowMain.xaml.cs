@@ -1,17 +1,19 @@
 ﻿using DynamicData;
+using HandyControl.Data;
+using HtmlAgilityPack;
+using Jvedio.Style;
+using Jvedio.Utils;
+using Jvedio.Utils.FileProcess;
+using Jvedio.Utils.Net;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
+using System.Net;
 using System.Security.Permissions;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -19,8 +21,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -31,24 +31,13 @@ using System.Windows.Threading;
 using static Jvedio.FileProcess;
 using static Jvedio.GlobalVariable;
 using static Jvedio.ImageProcess;
-using System.Windows.Media.Effects;
-using System.Text;
-using System.Security.Cryptography;
-using Jvedio.Utils.Encrypt;
-using Jvedio.Utils;
-using HtmlAgilityPack;
-using System.Net;
-using Jvedio.Style;
-using Jvedio.Utils.Net;
-using Jvedio.Utils.FileProcess;
-using HandyControl.Data;
 
 namespace Jvedio
 {
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : Window
+    public partial class Main : ChaoControls.Style.BaseWindow
     {
 
 
@@ -58,8 +47,6 @@ namespace Jvedio
         public bool Resizing = false;
         public DispatcherTimer ResizingTimer = new DispatcherTimer();
 
-        public Point WindowPoint = new Point(100, 100);
-        public Size WindowSize = new Size(1000, 600);
         public JvedioWindowState WinState = JvedioWindowState.Normal;
 
         public List<Actress> SelectedActress = new List<Actress>();
@@ -79,7 +66,6 @@ namespace Jvedio
         public Settings WindowSet = null;
         public VieModel_Main vieModel;
 
-        private HwndSource _hwndSource;
 
         public DetailMovie CurrentLabelMovie;
         public bool IsFlowing = false;
@@ -108,150 +94,7 @@ namespace Jvedio
             BindingEvent();
 
             if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported) taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
-            #region "改变窗体大小"
-            //https://www.cnblogs.com/yang-fei/p/4737308.html
-
-            if (resizeGrid != null)
-            {
-                foreach (UIElement element in resizeGrid.Children)
-                {
-                    if (element is Rectangle resizeRectangle)
-                    {
-                        resizeRectangle.PreviewMouseDown += ResizeRectangle_PreviewMouseDown;
-                        resizeRectangle.MouseMove += ResizeRectangle_MouseMove;
-                    }
-                }
-            }
-            PreviewMouseMove += OnPreviewMouseMove;
-            #endregion
         }
-
-        #region "改变窗体大小"
-        private void ResizeRectangle_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (this.WindowState == WindowState.Maximized) return;
-            if (this.Width == SystemParameters.WorkArea.Width || this.Height == SystemParameters.WorkArea.Height) return;
-
-            if (sender is Rectangle rectangle)
-            {
-                switch (rectangle.Name)
-                {
-                    case "TopRectangle":
-                        Cursor = Cursors.SizeNS;
-                        ResizeWindow(ResizeDirection.Top);
-                        break;
-                    case "Bottom":
-                        Cursor = Cursors.SizeNS;
-                        ResizeWindow(ResizeDirection.Bottom);
-                        break;
-                    case "LeftRectangle":
-                        Cursor = Cursors.SizeWE;
-                        ResizeWindow(ResizeDirection.Left);
-                        break;
-                    case "Right":
-                        Cursor = Cursors.SizeWE;
-                        ResizeWindow(ResizeDirection.Right);
-                        break;
-                    case "TopLeft":
-                        Cursor = Cursors.SizeNWSE;
-                        ResizeWindow(ResizeDirection.TopLeft);
-                        break;
-                    case "TopRight":
-                        Cursor = Cursors.SizeNESW;
-                        ResizeWindow(ResizeDirection.TopRight);
-                        break;
-                    case "BottomLeft":
-                        Cursor = Cursors.SizeNESW;
-                        ResizeWindow(ResizeDirection.BottomLeft);
-                        break;
-                    case "BottomRight":
-                        Cursor = Cursors.SizeNWSE;
-                        ResizeWindow(ResizeDirection.BottomRight);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-
-        protected void OnPreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (Mouse.LeftButton != MouseButtonState.Pressed)
-                Cursor = Cursors.Arrow;
-        }
-
-        private void ResizeRectangle_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (this.WindowState == WindowState.Maximized) return;
-            if (this.Width == SystemParameters.WorkArea.Width || this.Height == SystemParameters.WorkArea.Height) return;
-
-            if (sender is Rectangle rectangle)
-            {
-                switch (rectangle.Name)
-                {
-                    case "TopRectangle":
-                        Cursor = Cursors.SizeNS;
-                        break;
-                    case "Bottom":
-                        Cursor = Cursors.SizeNS;
-                        break;
-                    case "LeftRectangle":
-                        Cursor = Cursors.SizeWE;
-                        break;
-                    case "Right":
-                        Cursor = Cursors.SizeWE;
-                        break;
-                    case "TopLeft":
-                        Cursor = Cursors.SizeNWSE;
-                        break;
-                    case "TopRight":
-                        Cursor = Cursors.SizeNESW;
-                        break;
-                    case "BottomLeft":
-                        Cursor = Cursors.SizeNESW;
-                        break;
-                    case "BottomRight":
-                        Cursor = Cursors.SizeNWSE;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        public enum ResizeDirection
-        {
-            Left = 1,
-            Right = 2,
-            Top = 3,
-            TopLeft = 4,
-            TopRight = 5,
-            Bottom = 6,
-            BottomLeft = 7,
-            BottomRight = 8,
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            SourceInitialized += MainWindow_SourceInitialized;
-            base.OnInitialized(e);
-        }
-
-        private void MainWindow_SourceInitialized(object sender, EventArgs e)
-        {
-            _hwndSource = (HwndSource)PresentationSource.FromVisual(this);
-        }
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
-
-        private void ResizeWindow(ResizeDirection direction)
-        {
-            SendMessage(_hwndSource.Handle, 0x112, (IntPtr)(61440 + direction), IntPtr.Zero);
-        }
-
-        #endregion
 
 
         #region "热键"
@@ -368,7 +211,15 @@ namespace Jvedio
         //绑定事件
         private void BindingEvent()
         {
+            this.MaximumToNormal += (s, e) =>
+            {
+                MaxPath.Data = Geometry.Parse(PathData.MaxPath);
+            };
 
+            this.NormalToMaximum += (s, e) =>
+            {
+                MaxPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
+            };
 
             //绑定演员
             foreach (StackPanel item in ActorInfoStackPanel.Children.OfType<StackPanel>().ToList())
@@ -959,7 +810,6 @@ namespace Jvedio
 
 
             HideMargin();
-            vieModel.SideBorderWidth = Properties.Settings.Default.SideGridWidth < 200 ? 200 : Properties.Settings.Default.SideGridWidth;
         }
 
         private void SetWindowProperty()
@@ -1102,37 +952,38 @@ namespace Jvedio
         }
 
 
-        public async void MaxWindow(object sender, RoutedEventArgs e)
+        public async void OnMaxWindow(object sender, RoutedEventArgs e)
         {
-            Resizing = true;
-            if (WinState == 0)
-            {
-                var anim = new DoubleAnimation(0, Properties.Settings.Default.Opacity_Main, new Duration(TimeSpan.FromSeconds(0.25)), FillBehavior.Stop);
-                this.BeginAnimation(UIElement.OpacityProperty, anim);
-                //最大化
-                WinState = JvedioWindowState.Maximized;
-                WindowPoint = new Point(this.Left, this.Top);
-                WindowSize = new Size(this.Width, this.Height);
-                this.Width = SystemParameters.WorkArea.Width;
-                this.Height = SystemParameters.WorkArea.Height;
-                this.Top = SystemParameters.WorkArea.Top;
-                this.Left = SystemParameters.WorkArea.Left;
-                MaxButtonPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
-            }
-            else
-            {
-                var anim = new DoubleAnimation(0, Properties.Settings.Default.Opacity_Main, new Duration(TimeSpan.FromSeconds(0.5)), FillBehavior.Stop);
-                this.BeginAnimation(UIElement.OpacityProperty, anim);
-                WinState = JvedioWindowState.Normal;
-                this.Left = WindowPoint.X;
-                this.Width = WindowSize.Width;
-                this.Top = WindowPoint.Y;
-                this.Height = WindowSize.Height;
-                MaxButtonPath.Data = Geometry.Parse(PathData.MaxPath);
-            }
-            this.WindowState = WindowState.Normal;
-            this.OnLocationChanged(EventArgs.Empty);
-            HideMargin();
+            this.MaxWindow(sender, e);
+            //Resizing = true;
+            //if (WinState == 0)
+            //{
+            //    var anim = new DoubleAnimation(0, Properties.Settings.Default.Opacity_Main, new Duration(TimeSpan.FromSeconds(0.25)), FillBehavior.Stop);
+            //    this.BeginAnimation(UIElement.OpacityProperty, anim);
+            //    //最大化
+            //    WinState = JvedioWindowState.Maximized;
+            //    WindowPoint = new Point(this.Left, this.Top);
+            //    WindowSize = new Size(this.Width, this.Height);
+            //    this.Width = SystemParameters.WorkArea.Width;
+            //    this.Height = SystemParameters.WorkArea.Height;
+            //    this.Top = SystemParameters.WorkArea.Top;
+            //    this.Left = SystemParameters.WorkArea.Left;
+            //    MaxButtonPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
+            //}
+            //else
+            //{
+            //    var anim = new DoubleAnimation(0, Properties.Settings.Default.Opacity_Main, new Duration(TimeSpan.FromSeconds(0.5)), FillBehavior.Stop);
+            //    this.BeginAnimation(UIElement.OpacityProperty, anim);
+            //    WinState = JvedioWindowState.Normal;
+            //    this.Left = WindowPoint.X;
+            //    this.Width = WindowSize.Width;
+            //    this.Top = WindowPoint.Y;
+            //    this.Height = WindowSize.Height;
+            //    MaxButtonPath.Data = Geometry.Parse(PathData.MaxPath);
+            //}
+            //this.WindowState = WindowState.Normal;
+            //this.OnLocationChanged(EventArgs.Empty);
+            //HideMargin();
         }
 
         private void HideMargin()
@@ -4086,7 +3937,7 @@ namespace Jvedio
                     break;
             }
 
-            if (BackgroundImage != null)
+            if (BackgroundImage != null && File.Exists(BackgroundImage))
             {
                 SideBorder.Background = Brushes.Transparent;
                 TitleBorder.Background = Brushes.Transparent;
@@ -4098,11 +3949,11 @@ namespace Jvedio
                     Border border = expander.Content as Border;
                     border.Background = Brushes.Transparent;
                 }
-                BgImage.Source = BackgroundImage;
+                BgImage.Source = GlobalVariable.BackgroundImage;
             }
             else
             {
-                TitleBorder.Background = (SolidColorBrush)Application.Current.Resources["BackgroundTitle"];
+                TitleBorder.Background = (SolidColorBrush)Application.Current.Resources["Window.Title.Background"];
                 MainProgressBar.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
                 ActorProgressBar.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
                 foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
@@ -4143,7 +3994,7 @@ namespace Jvedio
 
 
 
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        private void ShowScanWindow(object sender, RoutedEventArgs e)
         {
             vieModel.ShowFirstRun = Visibility.Hidden;
             OpenTools(sender, e);
@@ -4268,42 +4119,6 @@ namespace Jvedio
 
         }
 
-
-
-        private bool IsDragingSideGrid = false;
-
-        private void DragRectangle_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (sender.GetType().Name == "Border") vieModel.ShowSearchPopup = false;
-            if (vieModel.SideBorderWidth >= 200) { if (sender is Rectangle rectangle) rectangle.Cursor = Cursors.SizeWE; }
-            if (IsDragingSideGrid)
-            {
-                this.Cursor = Cursors.SizeWE;
-                double width = e.GetPosition(this).X;
-                if (width > 500 || width < 200)
-                    return;
-                else
-                {
-                    vieModel.SideBorderWidth = width;
-                }
-
-            }
-        }
-
-        private void DragRectangle_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && vieModel.SideBorderWidth >= 200)
-            {
-                IsDragingSideGrid = true;
-            }
-        }
-
-        private void DragRectangle_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            IsDragingSideGrid = false;
-            Properties.Settings.Default.SideGridWidth = vieModel.SideBorderWidth;
-            Properties.Settings.Default.Save();
-        }
 
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
@@ -4764,13 +4579,13 @@ namespace Jvedio
             {
                 vieModel.MainGridThickness = new Thickness(5);
                 this.ResizeMode = ResizeMode.NoResize;
-                MaxButtonPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
+                //MaxButtonPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
             }
             else
             {
                 vieModel.MainGridThickness = new Thickness(10);
                 this.ResizeMode = ResizeMode.CanResize;
-                MaxButtonPath.Data = Geometry.Parse(PathData.MaxPath);
+                //MaxButtonPath.Data = Geometry.Parse(PathData.MaxPath);
             }
 
 
@@ -5745,7 +5560,7 @@ namespace Jvedio
             vieModel.ShowSearchPopup = false;
         }
 
-        private void HideBeginScanGrid(object sender, MouseButtonEventArgs e)
+        private void HideBeginScanGrid(object sender, RoutedEventArgs e)
         {
             vieModel.ShowFirstRun = Visibility.Hidden;
         }
@@ -6360,6 +6175,12 @@ namespace Jvedio
             {
                 SearchBar_SearchStarted(sender, null);
             }
+        }
+
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Grid grid = sender as Grid;
+            Properties.Settings.Default.SideGridWidth = grid.ActualWidth;
         }
     }
     public class ScrollViewerBehavior

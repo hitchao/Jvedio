@@ -38,6 +38,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChaoControls.Style">
+      <HintPath>..\..\..\..\Visual_Studio_Project\chao-controls\ChaoControls.Style\bin\Debug\ChaoControls.Style.dll</HintPath>
+    </Reference>
     <Reference Include="HandyControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=45be8712787a1e5b, processorArchitecture=MSIL">
       <HintPath>..\packages\HandyControl.3.1.0\lib\net472\HandyControl.dll</HintPath>
     </Reference>
@@ -108,6 +111,10 @@
     <Page Include="BaseWindows\BaseDialogStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Style\ChaoControls\PathRadioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\OutputPanel.xaml">
       <SubType>Designer</SubType>

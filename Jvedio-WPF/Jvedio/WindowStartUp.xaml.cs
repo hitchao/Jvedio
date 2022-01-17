@@ -36,7 +36,7 @@ namespace Jvedio
 
             InitializeComponent();
 
-            this.Width = SystemParameters.PrimaryScreenWidth*2 / 3;
+            this.Width = SystemParameters.PrimaryScreenWidth * 2 / 3;
             this.Height = SystemParameters.PrimaryScreenHeight * 2 / 3;
 
 
@@ -51,7 +51,7 @@ namespace Jvedio
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CheckSettings();//修复设置错误
+            EnsureSettings();//修复设置错误
             EnsureFileExists(); //判断文件是否存在
             EnsureDirExists();//创建文件夹
             MoveOldFiles();//迁移旧文件
@@ -201,7 +201,8 @@ namespace Jvedio
                     // todo 开启是扫描文件夹
                     await Task.Run(() =>
                     {
-                        this.Dispatcher.BeginInvoke(new Action(() => { 
+                        this.Dispatcher.BeginInvoke(new Action(() =>
+                        {
                             //statusText.Text = Jvedio.Language.Resources.Status_ScanDir; 
                         }), System.Windows.Threading.DispatcherPriority.Render);
                         List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), ct);
@@ -216,7 +217,7 @@ namespace Jvedio
             }
         }
 
-        public void CheckSettings()
+        public void EnsureSettings()
         {
             try
             {
@@ -232,6 +233,8 @@ namespace Jvedio
                 MessageBox.Show(ex.Message);
                 Logger.LogE(ex);
             }
+
+            if (Properties.Settings.Default.SideGridWidth <= 0) Properties.Settings.Default.SideGridWidth = 50;
 
 
 
@@ -555,7 +558,8 @@ namespace Jvedio
                     await Task.Run(() =>
                     {
 
-                        this.Dispatcher.BeginInvoke(new Action(() => { 
+                        this.Dispatcher.BeginInvoke(new Action(() =>
+                        {
                             //statusText.Text = Jvedio.Language.Resources.Status_ScanDir; 
                         }), System.Windows.Threading.DispatcherPriority.Background);
                         List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), ct);
@@ -612,25 +616,25 @@ namespace Jvedio
             }
         }
 
-        private void SetImage(int id,string imagePath)
+        private void SetImage(int id, string imagePath)
         {
             // 复制到 ProjectImagePath 下
-            string name=Path.GetFileNameWithoutExtension(imagePath);
-            string ext=Path.GetExtension(imagePath);
+            string name = Path.GetFileNameWithoutExtension(imagePath);
+            string ext = Path.GetExtension(imagePath);
             string newName = $"{id}_{name}{ext}";
-            string newPath=Path.Combine(GlobalVariable.ProjectImagePath,newName);
+            string newPath = Path.Combine(GlobalVariable.ProjectImagePath, newName);
             FileHelper.TryCopyFile(imagePath, newPath);
 
 
-            vieModel_StartUp.Databases.Where(x=>x.ID == id).SingleOrDefault().ImagePath = newPath;
-            vieModel_StartUp.CurrentDatabases.Where(x=>x.ID == id).SingleOrDefault().ImagePath = newPath;
-            
+            vieModel_StartUp.Databases.Where(x => x.ID == id).SingleOrDefault().ImagePath = newPath;
+            vieModel_StartUp.CurrentDatabases.Where(x => x.ID == id).SingleOrDefault().ImagePath = newPath;
+
             ConfigConnection.Instance.UpdateSqliteInfoField("ImagePath", newName, id);
         }
 
         private void LoadDataBase(object sender, RoutedEventArgs e)
         {
-            LoadDataBase( );
+            LoadDataBase();
         }
 
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

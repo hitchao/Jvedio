@@ -679,7 +679,7 @@
     <value>Random display after launch</value>
   </data>
   <data name="NotShowLibrary" xml:space="preserve">
-    <value>Don't show library selection when opening</value>
+    <value>Open the last closed library by default</value>
   </data>
   <data name="AutoDelete" xml:space="preserve">
     <value>Automatically delete non-existent videos</value>

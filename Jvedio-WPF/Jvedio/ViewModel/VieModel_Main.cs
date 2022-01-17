@@ -276,29 +276,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _HideSide = false;
 
-        public bool HideSide
-        {
-            get { return _HideSide; }
-            set
-            {
-                _HideSide = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private double _SideBorderWidth = 200;
-
-        public double SideBorderWidth
-        {
-            get { return _SideBorderWidth; }
-            set
-            {
-                _SideBorderWidth = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private bool _IsLoadingFilter = true;
 

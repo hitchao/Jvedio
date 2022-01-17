@@ -1,50 +1,57 @@
-<Application x:Class="Jvedio.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Jvedio" 
-             StartupUri="WindowStartUp.xaml" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             d1p1:Ignorable="d" 
-             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+<Application
+    x:Class="Jvedio.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Jvedio"
+    d1p1:Ignorable="d"
+    StartupUri="WindowStartUp.xaml">
 
 
 
     <Application.Resources>
-        <ResourceDictionary >
+        <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
 
 
-                <!--HandyControl-->
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+                <!--  HandyControl  -->
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
 
-                <!-- ChaoControls-->
-                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/Themes/ChaoControls.xaml"/>
+                <!--  ChaoControls  -->
+                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/Themes/ChaoControls.xaml" />
 
-                <!--Main-->
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml"/>
+                <!--  Main  -->
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
 
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideRadioButtonStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideComboBoxStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideRadioButtonStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideComboBoxStyle.xaml" />
 
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ContextMenuStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonFlatStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TabControlStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ListBoxStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ProgressBarStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ScrollViewStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/DataGridStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ToggleButtonStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ComboBoxStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/Color.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ContextMenuStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonFlatStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TabControlStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ListBoxStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ProgressBarStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ScrollViewStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/DataGridStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ToggleButtonStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ComboBoxStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/Color.xaml" />
 
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/HandyControlStyle.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseDialogStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/HandyControlStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseDialogStyle.xaml" />
+
+
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/Style/ChaoControls/PathRadioButton.xaml" />
+
 
             </ResourceDictionary.MergedDictionaries>
 
