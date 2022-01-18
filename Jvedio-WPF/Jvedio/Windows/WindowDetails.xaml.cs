@@ -1869,7 +1869,7 @@ namespace Jvedio
             dB.InsertFullMovie(newMovie, table);
             dB.CloseDB();
             Main main = App.Current.Windows[0] as Main;
-            main.InitList();
+            main.InitMyList();
             InitList();
         }
 

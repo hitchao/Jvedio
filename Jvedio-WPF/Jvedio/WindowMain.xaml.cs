@@ -1,4 +1,5 @@
-﻿using DynamicData;
+﻿using ChaoControls.Style;
+using DynamicData;
 using HandyControl.Data;
 using HtmlAgilityPack;
 using Jvedio.Style;
@@ -21,6 +22,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -85,7 +87,7 @@ namespace Jvedio
 
 
 
-            InitImage();
+            //InitImage();
 
             Properties.Settings.Default.Selected_Background = "#FF8000";
             Properties.Settings.Default.Selected_BorderBrush = "#FF8000";
@@ -195,18 +197,7 @@ namespace Jvedio
         #endregion
 
 
-        private void InitImage()
-        {
-            //设置背景
-            string path = Properties.Settings.Default.BackgroundImage;
-            if (!File.Exists(path)) path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "background.jpg");
-            GlobalVariable.BackgroundImage = null;
-            GC.Collect();
 
-            if (File.Exists(path))
-                GlobalVariable.BackgroundImage = ImageProcess.BitmapImageFromFile(path);
-
-        }
 
         //绑定事件
         private void BindingEvent()
@@ -807,9 +798,6 @@ namespace Jvedio
                 this.Width = SystemParameters.WorkArea.Width * 0.8;
                 this.Height = SystemParameters.WorkArea.Height * 0.8;
             }
-
-
-            HideMargin();
         }
 
         private void SetWindowProperty()
@@ -952,54 +940,11 @@ namespace Jvedio
         }
 
 
-        public async void OnMaxWindow(object sender, RoutedEventArgs e)
+        public void OnMaxWindow(object sender, RoutedEventArgs e)
         {
             this.MaxWindow(sender, e);
-            //Resizing = true;
-            //if (WinState == 0)
-            //{
-            //    var anim = new DoubleAnimation(0, Properties.Settings.Default.Opacity_Main, new Duration(TimeSpan.FromSeconds(0.25)), FillBehavior.Stop);
-            //    this.BeginAnimation(UIElement.OpacityProperty, anim);
-            //    //最大化
-            //    WinState = JvedioWindowState.Maximized;
-            //    WindowPoint = new Point(this.Left, this.Top);
-            //    WindowSize = new Size(this.Width, this.Height);
-            //    this.Width = SystemParameters.WorkArea.Width;
-            //    this.Height = SystemParameters.WorkArea.Height;
-            //    this.Top = SystemParameters.WorkArea.Top;
-            //    this.Left = SystemParameters.WorkArea.Left;
-            //    MaxButtonPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
-            //}
-            //else
-            //{
-            //    var anim = new DoubleAnimation(0, Properties.Settings.Default.Opacity_Main, new Duration(TimeSpan.FromSeconds(0.5)), FillBehavior.Stop);
-            //    this.BeginAnimation(UIElement.OpacityProperty, anim);
-            //    WinState = JvedioWindowState.Normal;
-            //    this.Left = WindowPoint.X;
-            //    this.Width = WindowSize.Width;
-            //    this.Top = WindowPoint.Y;
-            //    this.Height = WindowSize.Height;
-            //    MaxButtonPath.Data = Geometry.Parse(PathData.MaxPath);
-            //}
-            //this.WindowState = WindowState.Normal;
-            //this.OnLocationChanged(EventArgs.Empty);
-            //HideMargin();
         }
 
-        private void HideMargin()
-        {
-            if (WinState == JvedioWindowState.Normal)
-            {
-                vieModel.MainGridThickness = new Thickness(10);
-                this.ResizeMode = ResizeMode.CanResize;
-            }
-            else if (WinState == JvedioWindowState.Maximized || this.WindowState == WindowState.Maximized)
-            {
-                vieModel.MainGridThickness = new Thickness(0);
-                this.ResizeMode = ResizeMode.NoResize;
-            }
-            ResizingTimer.Start();
-        }
 
 
 
@@ -1021,7 +966,6 @@ namespace Jvedio
                     this.Left = e.GetPosition(border).X - border.ActualWidth * fracWidth;
                     this.Top = e.GetPosition(border).Y - border.ActualHeight / 2;
                     this.OnLocationChanged(EventArgs.Empty);
-                    HideMargin();
                 }
                 this.DragMove();
             }
@@ -1233,11 +1177,6 @@ namespace Jvedio
                 button.Content = Jvedio.Language.Resources.Show;
             else
                 button.Content = Jvedio.Language.Resources.Hide;
-
-
-
-
-
         }
 
 
@@ -3853,7 +3792,7 @@ namespace Jvedio
                 Border border = sender as Border;
                 ContextMenu contextMenu = border.ContextMenu;
                 contextMenu.PlacementTarget = border;
-                contextMenu.Placement = PlacementMode.Bottom;
+                contextMenu.Placement = PlacementMode.Top;
                 contextMenu.IsOpen = true;
             }
             e.Handled = true;
@@ -3869,24 +3808,26 @@ namespace Jvedio
             }
         }
 
-
-        private void Window_ContentRendered(object sender, EventArgs e)
+        private void ConfigFirstRun()
         {
-
             if (Properties.Settings.Default.FirstRun)
             {
                 vieModel.ShowFirstRun = Visibility.Visible;
                 Properties.Settings.Default.FirstRun = false;
                 Properties.Settings.Default.Save();
             }
-            AdjustWindow();
-            FadeIn();
-            SetSkin();
-            //显示公告
-            ShowNotice();
-            InitList();
-            //检查更新
-            CheckUpgrade(null, null);
+        }
+
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            ConfigFirstRun();
+            AdjustWindow();//还原窗口为上一次状态
+            FadeIn();//淡入
+            SetSkin();//设置主题颜色
+            ShowNotice();//显示公告
+            InitMyList();//初始化我的清单
+            CheckUpgrade(null, null);//检查更新
             this.Cursor = Cursors.Arrow;
             //设置当前数据库
             for (int i = 0; i < vieModel.DataBases.Count; i++)
@@ -3910,11 +3851,13 @@ namespace Jvedio
             var rbs = ImageTypeStackPanel.Children.OfType<RadioButton>().ToList();
             int.TryParse(Properties.Settings.Default.ShowImageMode, out int idx2);
             rbs[idx2].IsChecked = true;
-
-            InitList();
             vieModel.InitLettersNavigation();
 
         }
+
+        SolidColorBrush originSideBg = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];
+        SolidColorBrush originTitleBg = (SolidColorBrush)Application.Current.Resources["Window.Title.Background"];
+
 
         public void SetSkin()
         {
@@ -3929,17 +3872,18 @@ namespace Jvedio
                     myLinearGradientBrush.EndPoint = new Point(0.5, 1);
                     myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(62, 191, 223), 1));
                     myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(11, 114, 189), 0));
-                    SideBorder.Background = myLinearGradientBrush;
+                    //SideBorder.Background = myLinearGradientBrush;
                     break;
 
                 default:
-                    SideBorder.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
+                    //SideBorder.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
                     break;
             }
 
-            if (BackgroundImage != null && File.Exists(BackgroundImage))
+            if (Properties.Settings.Default.EnableBgImage && GlobalVariable.BackgroundImage != null)
             {
                 SideBorder.Background = Brushes.Transparent;
+                DatabaseComboBox.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Opacity.Background"];
                 TitleBorder.Background = Brushes.Transparent;
                 MainProgressBar.Background = Brushes.Transparent;
                 ActorProgressBar.Background = Brushes.Transparent;
@@ -3953,21 +3897,26 @@ namespace Jvedio
             }
             else
             {
-                TitleBorder.Background = (SolidColorBrush)Application.Current.Resources["Window.Title.Background"];
-                MainProgressBar.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
-                ActorProgressBar.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
+
+                TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+                DatabaseComboBox.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+                SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
+                MainProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
+                ActorProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
                 foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
                 {
-                    expander.Background = (SolidColorBrush)Application.Current.Resources["BackgroundTitle"];
+                    expander.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
                     Border border = expander.Content as Border;
-                    border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundMain"];
+                    border.SetResourceReference(Control.BackgroundProperty, "Window.Background");
                 }
             }
+            //设置背景图片
+            BgImage.Source = GlobalVariable.BackgroundImage;
 
 
         }
 
-        public void InitList()
+        public void InitMyList()
         {
             MySqlite dB = new MySqlite("mylist");
             List<string> tables = dB.GetAllTable();
@@ -3977,8 +3926,46 @@ namespace Jvedio
                 vieModel.MyList.Add(new MyListItem(table, (long)dB.SelectCountByTable(table)));
             }
             dB.Close();
-            ListItemsControl.ItemsSource = null;
-            ListItemsControl.ItemsSource = vieModel.MyList;//以前直接在 xaml 中绑定即可，现在不知为啥必须写代码绑定
+            AddListSample();
+            SplitList();
+        }
+
+        public void SplitList()
+        {
+            double height = AllRadioButton.ActualHeight;
+            double totalHeight = ListGrid.ActualHeight - height;//减去一个更多按钮的高度
+
+            ObservableCollection<MyListItem> list1 = new ObservableCollection<MyListItem>();
+            ObservableCollection<MyListItem> list2 = new ObservableCollection<MyListItem>();
+
+
+            for (int i = 0; i < vieModel.MyList.Count; i++)
+            {
+                if ((list1.Count + 1) * height <= totalHeight - 10) list1.Add(vieModel.MyList[i]);
+                else list2.Add(vieModel.MyList[i]);
+            }
+
+            vieModel.MainList = null;
+            vieModel.MoreList = null;
+            vieModel.MainList = list1;
+            vieModel.MoreList = list2;
+            if (vieModel.MoreList.Count > 0)
+            {
+                vieModel.ShowMoreListBtn = true;
+            }
+            else
+            {
+                vieModel.ShowMoreListBtn = false;
+            }
+        }
+
+
+        public void AddListSample()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                vieModel.MyList.Add(new MyListItem("我的清单" + i, i));
+            }
         }
 
 
@@ -4070,10 +4057,10 @@ namespace Jvedio
         {
             if (e.AddedItems.Count == 0) return;
             string name = e.AddedItems[0].ToString().ToLower();
-            string path = AppDomain.CurrentDomain.BaseDirectory + $"DataBase\\{name}.sqlite";
+            string path = System.IO.Path.Combine(GlobalVariable.VideoDataPath, $"{name}.sqlite");
             if (!File.Exists(path))
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.NotExists);
+                ChaoControls.Style.MessageCard.Show(Jvedio.Language.Resources.NotExists);
             }
             else
             {
@@ -4570,27 +4557,28 @@ namespace Jvedio
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (this.Width == SystemParameters.WorkArea.Width || this.Height == SystemParameters.WorkArea.Height)
+            AdjustListHeight();
+        }
+
+
+        public void AdjustListHeight()
+        {
+            // 调整我的清单
+            Console.WriteLine("ListGrid.ActualHeight=" + ListGrid.ActualHeight);
+            Console.WriteLine("ListGrid.Height=" + ListGrid.Height);
+            if (ListGrid.ActualHeight <= 0 || vieModel.MainList == null || vieModel.MainList.Count <= 0) return;
+            double height = AllRadioButton.ActualHeight;
+            double allItemsHeight = vieModel.MainList.Count * height;
+            Console.WriteLine("allItemsHeight=" + allItemsHeight);
+            if (allItemsHeight > ListGrid.ActualHeight)
             {
-                vieModel.MainGridThickness = new Thickness(0);
-                this.ResizeMode = ResizeMode.NoResize;
+                SplitList();
             }
-            else if (this.WindowState == WindowState.Maximized)
+
+            if (vieModel.MoreList?.Count > 0 && allItemsHeight < ListGrid.ActualHeight - height)
             {
-                vieModel.MainGridThickness = new Thickness(5);
-                this.ResizeMode = ResizeMode.NoResize;
-                //MaxButtonPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
+                SplitList();
             }
-            else
-            {
-                vieModel.MainGridThickness = new Thickness(10);
-                this.ResizeMode = ResizeMode.CanResize;
-                //MaxButtonPath.Data = Geometry.Parse(PathData.MaxPath);
-            }
-
-
-
-
         }
 
 
@@ -5023,8 +5011,8 @@ namespace Jvedio
 
         private void ShowSameList(object sender, EventArgs e)
         {
-            RadioButton radioButton = sender as RadioButton;
-            string listName = radioButton.Content.ToString();
+            PathRadioButton radioButton = sender as PathRadioButton;
+            string listName = radioButton.MainText.ToString();
             vieModel.ExecutiveSqlCommand(10, listName, $"select * from {listName}", "mylist");
 
 
@@ -5240,6 +5228,7 @@ namespace Jvedio
 
 
 
+            // 我的清单
             if (contextMenu.Visibility != Visibility.Visible) return;
             Task.Run(() =>
             {
@@ -5279,7 +5268,7 @@ namespace Jvedio
                 MySqlite dB = new MySqlite("mylist");
                 dB.InsertFullMovie(newMovie, table);
                 dB.CloseDB();
-                InitList();
+                InitMyList();
             }
 
         }
@@ -6182,6 +6171,24 @@ namespace Jvedio
             Grid grid = sender as Grid;
             Properties.Settings.Default.SideGridWidth = grid.ActualWidth;
         }
+
+        private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
+        }
+
+        private void ShowMoreList(object sender, RoutedEventArgs e)
+        {
+            PathRadioButton radioButton = sender as PathRadioButton;
+            if (radioButton != null)
+            {
+                radioButton.IsChecked = false;
+            }
+            MoreListPopup.PlacementTarget = radioButton;
+            MoreListPopup.IsOpen = true;
+        }
+
+
     }
     public class ScrollViewerBehavior
     {

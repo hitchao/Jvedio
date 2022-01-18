@@ -21,8 +21,10 @@
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
 
                 <!--  ChaoControls  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/Themes/ChaoControls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/Style/ChaoControls/PathRadioButton.xaml" />
 
                 <!--  Main  -->
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
@@ -44,13 +46,12 @@
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/Color.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/HandyControlStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseDialogStyle.xaml" />
 
 
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/Style/ChaoControls/PathRadioButton.xaml" />
+
 
 
             </ResourceDictionary.MergedDictionaries>

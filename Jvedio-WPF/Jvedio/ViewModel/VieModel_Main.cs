@@ -58,7 +58,7 @@ namespace Jvedio.ViewModel
         public RelayCommand FavoritesCommand { get; set; }
         public RelayCommand RecentCommand { get; set; }
 
-        public RelayCommand<bool> RecentWatchCommand { get; set; }
+        public RelayCommand RecentWatchCommand { get; set; }
 
         public RelayCommand AddNewMovie { get; set; }
         public RelayCommand FlipOverCommand { get; set; }
@@ -73,7 +73,7 @@ namespace Jvedio.ViewModel
             LabelCommand = new RelayCommand(GetLabelList);
             FlipOverCommand = new RelayCommand(AsyncFlipOver);
             FavoritesCommand = new RelayCommand(GetFavoritesMovie);
-            RecentWatchCommand = new RelayCommand<bool>(t => GetRecentWatch());
+            RecentWatchCommand = new RelayCommand(GetRecentWatch);
             RecentCommand = new RelayCommand(GetRecentMovie);
             AddNewMovie = new RelayCommand(AddSingleMovie);
             //获得所有数据库
@@ -235,6 +235,18 @@ namespace Jvedio.ViewModel
             set
             {
                 _ShowSearchPopup = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _ShowMoreListBtn = false;
+
+        public bool ShowMoreListBtn
+        {
+            get { return _ShowMoreListBtn; }
+            set
+            {
+                _ShowMoreListBtn = value;
                 RaisePropertyChanged();
             }
         }
@@ -428,6 +440,32 @@ namespace Jvedio.ViewModel
             set
             {
                 _MyList = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private ObservableCollection<MyListItem> _MainList;
+
+
+        public ObservableCollection<MyListItem> MainList
+        {
+            get { return _MainList; }
+            set
+            {
+                _MainList = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private ObservableCollection<MyListItem> _MoreList;
+
+
+        public ObservableCollection<MyListItem> MoreList
+        {
+            get { return _MoreList; }
+            set
+            {
+                _MoreList = value;
                 RaisePropertyChanged();
             }
         }
@@ -1273,12 +1311,10 @@ namespace Jvedio.ViewModel
         public void LoadDataBaseList()
         {
             DataBases = new ObservableCollection<string>();
-            try
-            {
-                var fiels = Directory.GetFiles("DataBase", "*.sqlite", SearchOption.TopDirectoryOnly).ToList();
-                fiels.ForEach(arg => DataBases.Add(Path.GetFileNameWithoutExtension(arg).ToLower()));
-            }
-            catch { }
+            string scanDir = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString());
+            List<string> files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly).ToList();
+            files.ForEach(arg => DataBases.Add(Path.GetFileNameWithoutExtension(arg).ToLower()));
+
         }
 
 
@@ -2163,7 +2199,7 @@ namespace Jvedio.ViewModel
             ExecutiveSqlCommand(2, $"{Jvedio.Language.Resources.RecentCreate} ({Properties.Settings.Default.RecentDays})", $"SELECT * from movie WHERE scandate BETWEEN '{date1}' AND '{date2}'");
         }
 
-        public void GetRecentWatch(bool add = true)
+        public void GetRecentWatch()
         {
             IsLoadingMovie = true;
             List<Movie> movies = new List<Movie>();

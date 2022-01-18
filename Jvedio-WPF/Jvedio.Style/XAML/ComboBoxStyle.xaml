@@ -164,7 +164,7 @@
         <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
     </Style>
 
-    <Style x:Key="BaseComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+    <!--<Style x:Key="BaseComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Padding" Value="4,1"/>
@@ -238,7 +238,7 @@
 
 
 
-    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource BaseComboBoxItemStyle}"/>
+    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource BaseComboBoxItemStyle}"/>-->
 
 
 </ResourceDictionary>

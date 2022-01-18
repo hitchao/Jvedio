@@ -14,16 +14,16 @@
     Title="Jvedio"
     Width="1100"
     Height="600"
-    MinWidth="1100"
+    MinWidth="800"
     MinHeight="500"
-    Background="{DynamicResource BackgroundMain}"
+    Background="{DynamicResource Global.Background}"
     CanMinimized="True"
     CanResize="True"
     Closed="Window_Closed"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
     Deactivated="Window_Deactivated"
-    Foreground="{DynamicResource ForegroundGlobal}"
+    Foreground="{DynamicResource Global.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     PreviewKeyDown="Window_PreviewKeyDown"
     PreviewKeyUp="Window_PreviewKeyUp"
@@ -249,13 +249,177 @@
             Margin="-20"
             HorizontalAlignment="Left"
             Panel.ZIndex="-1"
-            Foreground="White"
             Text=""
             Visibility="Visible" />
 
 
+
+
+
+        <!--  筛选器  -->
+        <StackPanel
+            x:Name="ExpanderStackPanel"
+            Grid.Row="3"
+            Width="auto"
+            Margin="5"
+            Visibility="{Binding ShowFilter, Source={x:Static p:Settings.Default}, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay, FallbackValue=Hidden}">
+            <Expander
+                Margin="0,5,0,0"
+                Background="{DynamicResource BackgroundTitle}"
+                BorderThickness="0"
+                Foreground="{DynamicResource ForegroundGlobal}"
+                Header="{x:Static lang:Resources.ReleaseYear}">
+                <Border
+                    Background="{DynamicResource BackgroundMain}"
+                    BorderThickness="0"
+                    CornerRadius="0,0,4,4">
+                    <ScrollViewer MaxHeight="200">
+
+
+                        <ItemsControl x:Name="SideFilterYear">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        Name="CheckBox"
+                                        HorizontalAlignment="Left"
+                                        Click="FilterSide"
+                                        Content="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
+            </Expander>
+            <Expander
+                Margin="0,5,0,0"
+                Background="{DynamicResource BackgroundTitle}"
+                BorderThickness="0"
+                Foreground="{DynamicResource ForegroundGlobal}"
+                Header="{x:Static lang:Resources.FileSize}">
+                <Border
+                    Background="{DynamicResource BackgroundMain}"
+                    BorderThickness="0"
+                    CornerRadius="0,0,4,4">
+                    <ItemsControl x:Name="SideFilterFileSize">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    Name="CheckBox"
+                                    HorizontalAlignment="Left"
+                                    Click="FilterSide"
+                                    Content="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+            </Expander>
+            <Expander
+                Margin="0,5,0,0"
+                Background="{DynamicResource BackgroundTitle}"
+                BorderThickness="0"
+                Foreground="{DynamicResource ForegroundGlobal}"
+                Header="{x:Static lang:Resources.VedioDuration}">
+                <Border
+                    Background="{DynamicResource BackgroundMain}"
+                    BorderThickness="0"
+                    CornerRadius="0,0,4,4">
+                    <ItemsControl x:Name="SideFilterRuntime">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    Name="CheckBox"
+                                    HorizontalAlignment="Left"
+                                    Click="FilterSide"
+                                    Content="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </Expander>
+            <Expander
+                Margin="0,5,0,0"
+                Background="{DynamicResource BackgroundTitle}"
+                BorderThickness="0"
+                Foreground="{DynamicResource ForegroundGlobal}"
+                Header="{x:Static lang:Resources.MovieRating}">
+                <Border
+                    Background="{DynamicResource BackgroundMain}"
+                    BorderThickness="0"
+                    CornerRadius="0,0,4,4">
+                    <ItemsControl x:Name="SideFilterRating">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    Name="CheckBox"
+                                    HorizontalAlignment="Left"
+                                    Click="FilterSide"
+                                    Content="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </Expander>
+            <Expander
+                Margin="0,5,0,0"
+                Background="{DynamicResource BackgroundTitle}"
+                BorderThickness="0"
+                Foreground="{DynamicResource ForegroundGlobal}"
+                Header="{x:Static lang:Resources.MovieLabels}">
+                <Border
+                    Background="{DynamicResource BackgroundMain}"
+                    BorderThickness="0"
+                    CornerRadius="0,0,4,4">
+                    <ScrollViewer MaxHeight="200">
+                        <ItemsControl x:Name="SideFilterLabel">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        Name="CheckBox"
+                                        HorizontalAlignment="Left"
+                                        Click="FilterSide"
+                                        Content="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Expander>
+
+        </StackPanel>
+
+
+
+
         <!--  显示 ffmpeg 结果  -->
-        <Grid Panel.ZIndex="5" Visibility="{Binding CmdVisibility, FallbackValue=hidden}">
+        <Grid Panel.ZIndex="5" Visibility="{Binding CmdVisibility, FallbackValue=Hidden}">
             <TextBox
                 Width="auto"
                 Height="auto"
@@ -266,7 +430,6 @@
                 Background="{DynamicResource BackgroundMenu}"
                 ContextMenu="{StaticResource TextBoxContextMenu}"
                 DockPanel.Dock="Top"
-                Foreground="{DynamicResource ForegroundSearch}"
                 Opacity="0.8"
                 Text="{Binding CmdText}"
                 TextChanged="CmdTextChanged"
@@ -338,7 +501,6 @@
                         Orientation="Horizontal">
                         <Button
                             Width="40"
-                            Background="{DynamicResource Window.Title.Background}"
                             Click="MinWindow"
                             Style="{StaticResource NormalButton}"
                             Tag="{DynamicResource Window.Title.Hover.Background}">
@@ -356,7 +518,6 @@
                         <Button
                             Name="ButtonMax"
                             Width="40"
-                            Background="{DynamicResource Window.Title.Background}"
                             Click="OnMaxWindow"
                             Style="{StaticResource NormalButton}"
                             Tag="{DynamicResource Window.Title.Hover.Background}">
@@ -375,7 +536,6 @@
                         <Button
                             Name="ButtonClose"
                             Width="40"
-                            Background="{DynamicResource Window.Title.Background}"
                             Click="CloseWindow"
                             Style="{StaticResource NormalButton}"
                             Tag="{DynamicResource Window.Title.Close.Hover.Background}">
@@ -422,7 +582,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
                             Width="{Binding SideGridWidth, Source={x:Static p:Settings.Default}, FallbackValue=200, Mode=OneWay}"
-                            MinWidth="50"
+                            MinWidth="40"
                             MaxWidth="500" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
@@ -430,29 +590,34 @@
                     <Border
                         x:Name="SideBorder"
                         Grid.Column="0"
-                        Background="{DynamicResource BackgroundSide}"
+                        Background="{DynamicResource Window.Side.Background}"
                         IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}">
                         <Grid SizeChanged="Grid_SizeChanged">
 
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="40" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="40" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
                             <ComboBox
+                                x:Name="DatabaseComboBox"
                                 Grid.Column="0"
                                 Height="30"
-                                MinWidth="150"
                                 Margin="5"
                                 HorizontalAlignment="Stretch"
+                                Background="{DynamicResource Window.Side.Background}"
+                                BorderBrush="{DynamicResource Window.Side.Hover.Background}"
                                 FontSize="16"
+                                Foreground="{DynamicResource Global.Foreground}"
+                                ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                 ItemsSource="{Binding DataBases}"
                                 SelectedIndex="{Binding DatabaseSelectedIndex, FallbackValue=0}"
                                 SelectionChanged="DatabaseComboBox_SelectionChanged"
-                                Style="{StaticResource SideComboBoxStyle}"
+                                Style="{StaticResource NormalComboBox}"
+                                Tag="{DynamicResource Window.Side.Hover.Background}"
                                 ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
                             <StackPanel
                                 Grid.Row="1"
@@ -500,60 +665,64 @@
                                     SubText="" />
                             </StackPanel>
 
+
+
                             <!--  我的清单  -->
-                            <StackPanel Grid.Row="2" Visibility="{Binding ShowList, Source={x:Static p:Settings.Default}, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay}">
-                                <Rectangle
-                                    Height="2"
-                                    Margin="2,0"
-                                    HorizontalAlignment="Stretch"
-                                    Fill="{DynamicResource ForegroundGlobal}"
-                                    RadiusX="1"
-                                    RadiusY="1" />
+                            <Grid x:Name="ListGrid" Grid.Row="2">
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        Margin="20,5"
-                                        HorizontalAlignment="Left"
-                                        Foreground="{DynamicResource ForegroundGlobal}"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="{x:Static lang:Resources.MyList}" />
-                                    <ToggleButton
-                                        Name="HideListToggleButton"
-                                        Grid.Column="1"
-                                        Margin="5,0"
-                                        Padding="0"
-                                        HorizontalAlignment="Right"
-                                        Background="Transparent"
-                                        BorderThickness="0"
-                                        Click="HideListScrollViewer"
-                                        Content="{x:Static lang:Resources.Hide}"
-                                        Foreground="{DynamicResource ForegroundGlobal}" />
-                                    <Button
-                                        Grid.Column="2"
-                                        HorizontalAlignment="Right"
-                                        Click="AddListItem"
-                                        Style="{StaticResource TitleButton}">
-                                        <Image
-                                            Width="15"
-                                            Height="15"
-                                            Source="{Binding Themes, Mode=OneWay, ConverterParameter=add, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                    </Button>
+                                <Popup
+                                    x:Name="MoreListPopup"
+                                    AllowsTransparency="True"
+                                    IsOpen="False"
+                                    Placement="Right"
+                                    PopupAnimation="Fade"
+                                    StaysOpen="False">
+                                    <Grid
+                                        MinWidth="200"
+                                        MaxWidth="500"
+                                        Margin="5">
+                                        <Border
+                                            Margin="5"
+                                            Background="{DynamicResource Menu.Background}"
+                                            CornerRadius="0"
+                                            Effect="{StaticResource PopupDropShadowEffect}" />
+                                        <StackPanel Margin="5">
+                                            <ItemsControl Background="Transparent" ItemsSource="{Binding MoreList}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
 
-                                </Grid>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel>
+                                                            <chao:PathRadioButton
+                                                                Click="ShowSameList"
+                                                                MainText="{Binding Name}"
+                                                                Path="M506.88 88.669091c-231.330909 0-418.909091 187.578182-418.909091 418.909091s187.578182 418.909091 418.909091 418.909091 418.909091-187.578182 418.909091-418.909091-187.578182-418.909091-418.909091-418.909091z m178.036364 661.178182c-8.843636 8.378182-20.247273 12.567273-31.650909 12.567272-12.567273 0-24.901818-4.887273-33.978182-14.894545l-177.338182-190.836364V299.52c0-25.6 20.945455-46.545455 46.545454-46.545455s46.545455 20.945455 46.545455 46.545455v220.625455l152.436364 163.84c17.221818 18.850909 16.290909 48.407273-2.56 65.861818z"
+                                                                Style="{StaticResource BasePathRadioButton}"
+                                                                SubText="{Binding Number}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
 
-                                <ScrollViewer Visibility="{Binding ElementName=HideListToggleButton, Path=IsChecked, Converter={StaticResource BoolToOppositeVisibilityConverter}, FallbackValue=Visible}">
-                                    <!--<ScrollViewer Visibility="Visible">-->
+                                    </Grid>
+                                </Popup>
 
+
+                                <StackPanel Visibility="{Binding ShowList, Source={x:Static p:Settings.Default}, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay}">
+                                    <Border
+                                        Height="1"
+                                        Margin="5,10"
+                                        Background="{DynamicResource Global.Foreground}"
+                                        CornerRadius="1" />
                                     <ItemsControl
                                         x:Name="ListItemsControl"
                                         Background="Transparent"
-                                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                        ItemsSource="{Binding MainList}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel />
@@ -563,207 +732,35 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Name="ListStackPanel">
-                                                    <Grid>
-                                                        <RadioButton
-                                                            Padding="20,0"
-                                                            Click="ShowSameList"
-                                                            Content="{Binding Name}"
-                                                            FocusVisualStyle="{x:Null}"
-                                                            Style="{StaticResource SideRadioButtonStyle}">
-                                                            <RadioButton.ContextMenu>
-                                                                <ContextMenu>
-                                                                    <MenuItem Click="EditListItem" Header="{x:Static lang:Resources.Rename}" />
-                                                                    <MenuItem Click="RemoveListItem" Header="{x:Static lang:Resources.Delete}" />
-                                                                </ContextMenu>
-                                                            </RadioButton.ContextMenu>
-                                                        </RadioButton>
-                                                        <TextBlock
-                                                            Margin="10,0"
-                                                            HorizontalAlignment="Right"
-                                                            VerticalAlignment="Center"
-                                                            Foreground="{DynamicResource ForegroundGlobal}"
-                                                            Style="{StaticResource BaseTextBlock}"
-                                                            Text="{Binding Number}" />
-                                                    </Grid>
-
+                                                    <chao:PathRadioButton
+                                                        Click="ShowSameList"
+                                                        MainText="{Binding Name}"
+                                                        Path="M506.88 88.669091c-231.330909 0-418.909091 187.578182-418.909091 418.909091s187.578182 418.909091 418.909091 418.909091 418.909091-187.578182 418.909091-418.909091-187.578182-418.909091-418.909091-418.909091z m178.036364 661.178182c-8.843636 8.378182-20.247273 12.567273-31.650909 12.567272-12.567273 0-24.901818-4.887273-33.978182-14.894545l-177.338182-190.836364V299.52c0-25.6 20.945455-46.545455 46.545454-46.545455s46.545455 20.945455 46.545455 46.545455v220.625455l152.436364 163.84c17.221818 18.850909 16.290909 48.407273-2.56 65.861818z"
+                                                        Style="{StaticResource BasePathRadioButton}"
+                                                        SubText="{Binding Number}" />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                </ScrollViewer>
 
 
 
-
-                            </StackPanel>
-
-
-
-                            <!--  筛选器  -->
-                            <StackPanel
-                                x:Name="ExpanderStackPanel"
-                                Grid.Row="3"
-                                Width="auto"
-                                Margin="5"
-                                Visibility="{Binding ShowFilter, Source={x:Static p:Settings.Default}, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay, FallbackValue=Hidden}">
-                                <Expander
-                                    Margin="0,5,0,0"
-                                    Background="{DynamicResource BackgroundTitle}"
-                                    BorderThickness="0"
-                                    Foreground="{DynamicResource ForegroundGlobal}"
-                                    Header="{x:Static lang:Resources.ReleaseYear}">
-                                    <Border
-                                        Background="{DynamicResource BackgroundMain}"
-                                        BorderThickness="0"
-                                        CornerRadius="0,0,4,4">
-                                        <ScrollViewer MaxHeight="200">
+                                    <chao:PathRadioButton
+                                        Click="ShowMoreList"
+                                        GroupName="more_PathRadioButton"
+                                        MainText="更多"
+                                        Path="M512 928C282.25 928 96 741.75 96 512S282.25 96 512 96s416 186.25 416 416-186.25 416-416 416zM272 600c48.601 0 88-39.399 88-88s-39.399-88-88-88-88 39.399-88 88 39.399 88 88 88z m240 0c48.601 0 88-39.399 88-88s-39.399-88-88-88-88 39.399-88 88 39.399 88 88 88z m240 0c48.601 0 88-39.399 88-88s-39.399-88-88-88-88 39.399-88 88 39.399 88 88 88z"
+                                        Style="{StaticResource BasePathRadioButton}"
+                                        SubText="&gt;"
+                                        Visibility="{Binding ShowMoreListBtn, Converter={StaticResource bool2VisibilityConverter}}" />
 
 
-                                            <ItemsControl x:Name="SideFilterYear">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox
-                                                            Name="CheckBox"
-                                                            HorizontalAlignment="Left"
-                                                            Click="FilterSide"
-                                                            Content="{Binding}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </ScrollViewer>
-                                    </Border>
-
-                                </Expander>
-                                <Expander
-                                    Margin="0,5,0,0"
-                                    Background="{DynamicResource BackgroundTitle}"
-                                    BorderThickness="0"
-                                    Foreground="{DynamicResource ForegroundGlobal}"
-                                    Header="{x:Static lang:Resources.FileSize}">
-                                    <Border
-                                        Background="{DynamicResource BackgroundMain}"
-                                        BorderThickness="0"
-                                        CornerRadius="0,0,4,4">
-                                        <ItemsControl x:Name="SideFilterFileSize">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox
-                                                        Name="CheckBox"
-                                                        HorizontalAlignment="Left"
-                                                        Click="FilterSide"
-                                                        Content="{Binding}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Border>
-
-                                </Expander>
-                                <Expander
-                                    Margin="0,5,0,0"
-                                    Background="{DynamicResource BackgroundTitle}"
-                                    BorderThickness="0"
-                                    Foreground="{DynamicResource ForegroundGlobal}"
-                                    Header="{x:Static lang:Resources.VedioDuration}">
-                                    <Border
-                                        Background="{DynamicResource BackgroundMain}"
-                                        BorderThickness="0"
-                                        CornerRadius="0,0,4,4">
-                                        <ItemsControl x:Name="SideFilterRuntime">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox
-                                                        Name="CheckBox"
-                                                        HorizontalAlignment="Left"
-                                                        Click="FilterSide"
-                                                        Content="{Binding}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Border>
-                                </Expander>
-                                <Expander
-                                    Margin="0,5,0,0"
-                                    Background="{DynamicResource BackgroundTitle}"
-                                    BorderThickness="0"
-                                    Foreground="{DynamicResource ForegroundGlobal}"
-                                    Header="{x:Static lang:Resources.MovieRating}">
-                                    <Border
-                                        Background="{DynamicResource BackgroundMain}"
-                                        BorderThickness="0"
-                                        CornerRadius="0,0,4,4">
-                                        <ItemsControl x:Name="SideFilterRating">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox
-                                                        Name="CheckBox"
-                                                        HorizontalAlignment="Left"
-                                                        Click="FilterSide"
-                                                        Content="{Binding}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Border>
-                                </Expander>
-                                <Expander
-                                    Margin="0,5,0,0"
-                                    Background="{DynamicResource BackgroundTitle}"
-                                    BorderThickness="0"
-                                    Foreground="{DynamicResource ForegroundGlobal}"
-                                    Header="{x:Static lang:Resources.MovieLabels}">
-                                    <Border
-                                        Background="{DynamicResource BackgroundMain}"
-                                        BorderThickness="0"
-                                        CornerRadius="0,0,4,4">
-                                        <ScrollViewer MaxHeight="200">
-                                            <ItemsControl x:Name="SideFilterLabel">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox
-                                                            Name="CheckBox"
-                                                            HorizontalAlignment="Left"
-                                                            Click="FilterSide"
-                                                            Content="{Binding}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </ScrollViewer>
-                                    </Border>
-                                </Expander>
-
-                            </StackPanel>
-
-
-
+                                </StackPanel>
+                            </Grid>
 
                             <Grid
                                 Grid.Row="4"
-                                Margin="0,0,10,5"
+                                Margin="0,0,5,5"
                                 VerticalAlignment="Bottom"
                                 Cursor="Hand">
                                 <Image
@@ -771,14 +768,39 @@
                                     Margin="20,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
+                                    MouseLeftButtonUp="Image_MouseLeftButtonUp"
                                     Source="Resources/Picture/Title.png"
                                     ToolTip="Jvedio" />
+
+
                                 <Border
                                     x:Name="SettingsBorder"
-                                    Grid.Column="1"
-                                    Width="27"
-                                    Height="27"
-                                    Margin="5,0"
+                                    Width="30"
+                                    Height="auto"
+                                    Margin="0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    ContextMenu="{StaticResource SettingsContextMenu}"
+                                    MouseUp="ShowSettingsPopup"
+                                    Style="{StaticResource RoundBorder}"
+                                    Tag="{DynamicResource Window.Title.Hover.Background}"
+                                    ToolTip="{x:Static lang:Resources.Settings}">
+                                    <Viewbox
+                                        Width="20"
+                                        Height="auto"
+                                        VerticalAlignment="Center">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M940 596l-76-57.6c0.8-8 1.6-16.8 1.6-26.4s-0.8-18.4-1.6-26.4l76-57.6c20.8-16 26.4-44 12.8-68l-84.8-143.2c-9.6-16.8-28-27.2-47.2-27.2-6.4 0-12 0.8-18.4 3.2L712 228c-15.2-10.4-31.2-19.2-47.2-26.4l-13.6-92c-4-26.4-26.4-45.6-53.6-45.6H426.4c-27.2 0-49.6 19.2-53.6 44.8L360 201.6c-16 7.2-31.2 16-47.2 26.4l-90.4-35.2c-6.4-2.4-12.8-3.2-19.2-3.2-19.2 0-37.6 9.6-46.4 26.4L71.2 360c-13.6 22.4-8 52 12.8 68l76 57.6c-0.8 9.6-1.6 18.4-1.6 26.4s0 16.8 1.6 26.4l-76 57.6c-20.8 16-26.4 44-12.8 68l84.8 143.2c9.6 16.8 28 27.2 47.2 27.2 6.4 0 12-0.8 18.4-3.2L312 796c15.2 10.4 31.2 19.2 47.2 26.4l13.6 92c3.2 25.6 26.4 45.6 53.6 45.6h171.2c27.2 0 49.6-19.2 53.6-44.8l13.6-92.8c16-7.2 31.2-16 47.2-26.4l90.4 35.2c6.4 2.4 12.8 3.2 19.2 3.2 19.2 0 37.6-9.6 46.4-26.4l85.6-144.8c12.8-23.2 7.2-51.2-13.6-67.2zM704 512c0 105.6-86.4 192-192 192S320 617.6 320 512s86.4-192 192-192 192 86.4 192 192z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+
+
+                                <!--<Border
+                                    x:Name="SettingsBorder"
+                                    Height="30"
                                     HorizontalAlignment="Right"
                                     ContextMenu="{StaticResource SettingsContextMenu}"
                                     CornerRadius="3"
@@ -786,7 +808,7 @@
                                     Style="{StaticResource BorderStyle}"
                                     ToolTip="{x:Static lang:Resources.Settings}">
                                     <Image Margin="4" Source="{Binding Themes, Mode=OneWay, ConverterParameter=menu, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                </Border>
+                                </Border>-->
                             </Grid>
 
                         </Grid>
@@ -803,10 +825,8 @@
                         Grid.Column="1"
                         Background="Transparent"
                         FocusVisualStyle="{x:Null}"
-                        SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}"
-                        Style="{DynamicResource HeaderHideTabControlStyle}"
-                        Visibility="Hidden">
-                        <TabItem Background="Transparent">
+                        SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}">
+                        <TabItem Header="影片">
                             <!--  影片  -->
                             <Grid>
 
@@ -2946,7 +2966,7 @@
                             </Grid>
 
                         </TabItem>
-                        <TabItem Background="Transparent">
+                        <TabItem Background="Transparent" Header="演员、类别">
                             <!--  演员、类别、标签  -->
                             <Grid
                                 Grid.Column="1"
@@ -3779,7 +3799,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Panel.ZIndex="10"
-                    Visibility="{Binding ShowFirstRun, FallbackValue=Visibility}">
+                    Visibility="{Binding ShowFirstRun, FallbackValue=Hidden}">
                     <Grid>
                         <Border
                             Margin="5"

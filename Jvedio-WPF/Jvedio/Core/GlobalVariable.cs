@@ -18,6 +18,10 @@ namespace Jvedio
 {
     public static class GlobalVariable
     {
+        static GlobalVariable()
+        {
+            LoadBgImage();
+        }
 
 
         public delegate void ThemeChangeHandler();
@@ -39,20 +43,20 @@ namespace Jvedio
         public static readonly string ThemeDIY = "https://hitchao.github.io/JvedioWebPage/theme.html";
 
         // *************** 目录 ***************
-        public static string CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data", Environment.UserName);
+        public static string CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);
         public static string oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");// Jvedio 5.0 之前的
         public static string DataPath = Path.Combine(CurrentUserFolder, "database");
         public static string VideoDataPath = Path.Combine(DataPath, "video");
         public static string PictureDataPath = Path.Combine(DataPath, "picture");
         public static string GameDataPath = Path.Combine(DataPath, "game");
-        
+
 
         public static string BackupPath = Path.Combine(CurrentUserFolder, "backup");
         public static string LogPath = Path.Combine(CurrentUserFolder, "log");
         public static string PicPath = Path.Combine(CurrentUserFolder, "pic");
         public static string BasePicPath = Directory.Exists(Properties.Settings.Default.BasePicPath) ?
     Properties.Settings.Default.BasePicPath : PicPath;
-        public static string ProjectImagePath = Path.Combine(CurrentUserFolder, "image","library");
+        public static string ProjectImagePath = Path.Combine(CurrentUserFolder, "image", "library");
 
 
         public static string AIDataBasePath = Path.Combine(CurrentUserFolder, "AI.sqlite");
@@ -65,8 +69,8 @@ namespace Jvedio
         public static string UserConfigPath = Path.Combine(CurrentUserFolder, "user-config.xml");
 
         public static string[] PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
-        public static string[] InitDirs = new[] { 
-            DataPath, VideoDataPath, PictureDataPath, GameDataPath, 
+        public static string[] InitDirs = new[] {
+            DataPath, VideoDataPath, PictureDataPath, GameDataPath,
             BackupPath,LogPath,PicPath,ProjectImagePath,
            Path.Combine(BasePluginsPath,"themes"), Path.Combine(BasePluginsPath,"crawlers") };//初始化文件夹
 
@@ -117,7 +121,7 @@ namespace Jvedio
         //默认图片
         public static BitmapSource BackgroundImage;
         public static BitmapImage DefaultSmallImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_S.png", UriKind.Relative));
-        public static BitmapImage DefaultBigImage= new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
+        public static BitmapImage DefaultBigImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
         public static BitmapImage DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
 
 
@@ -180,6 +184,23 @@ namespace Jvedio
         }
 
         #endregion
+
+
+        public static void LoadBgImage()
+        {
+            //设置背景
+            GlobalVariable.BackgroundImage = null;
+            if (Properties.Settings.Default.EnableBgImage)
+            {
+                string path = Properties.Settings.Default.BackgroundImage;
+                if (!File.Exists(path)) path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "background.jpg");
+                GC.Collect();
+
+                if (File.Exists(path))
+                    GlobalVariable.BackgroundImage = ImageProcess.BitmapImageFromFile(path);
+
+            }
+        }
 
         public static void InitVariable()
         {

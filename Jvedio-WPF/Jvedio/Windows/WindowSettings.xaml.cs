@@ -579,6 +579,11 @@ namespace Jvedio
         {
             Properties.Settings.Default.Themes = (sender as RadioButton).Content.ToString();
             Properties.Settings.Default.Save();
+            OnSetSkin();
+        }
+
+        private void OnSetSkin()
+        {
             Main main = GetWindowByName("Main") as Main;
             main.SetSkin();
             main?.SetSelected();
@@ -1267,6 +1272,12 @@ namespace Jvedio
         private void OpenDIY(object sender, RoutedEventArgs e)
         {
             FileHelper.TryOpenUrl(ThemeDIY, GrowlToken);
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalVariable.LoadBgImage();
+            OnSetSkin();
         }
     }
 

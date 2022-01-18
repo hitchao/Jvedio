@@ -4,11 +4,13 @@
     xmlns:chao="https://gitee.com/secret/chao-controls">
 
     <Style x:Key="BasePathRadioButton" TargetType="{x:Type chao:PathRadioButton}">
-        <Setter Property="Height" Value="35" />
-        <Setter Property="Margin" Value="5,2" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="PathHeight" Value="25" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Margin" Value="0" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
-        <Setter Property="CheckedBrush" Value="{DynamicResource BackgroundMenu}" />
+        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="CheckedBrush" Value="{DynamicResource Window.Side.Hover.Background}" />
     </Style>
 
 

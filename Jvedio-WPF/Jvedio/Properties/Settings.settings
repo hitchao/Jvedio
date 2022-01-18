@@ -432,10 +432,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ShowList" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ShowFilter" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ScanRe" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -445,6 +445,9 @@
     </Setting>
     <Setting Name="WebSiteList" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EnableBgImage" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

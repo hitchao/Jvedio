@@ -217,6 +217,10 @@ namespace Jvedio
             }
         }
 
+
+
+        private double MIN_SIDE_GRID_WIDTH = 40;
+
         public void EnsureSettings()
         {
             try
@@ -234,7 +238,7 @@ namespace Jvedio
                 Logger.LogE(ex);
             }
 
-            if (Properties.Settings.Default.SideGridWidth <= 0) Properties.Settings.Default.SideGridWidth = 50;
+            if (Properties.Settings.Default.SideGridWidth <= 0) Properties.Settings.Default.SideGridWidth = MIN_SIDE_GRID_WIDTH;
 
 
 
