@@ -2966,7 +2966,7 @@
                             </Grid>
 
                         </TabItem>
-                        <TabItem Background="Transparent" Header="演员、类别">
+                        <TabItem Background="White" Header="演员、类别">
                             <!--  演员、类别、标签  -->
                             <Grid
                                 Grid.Column="1"

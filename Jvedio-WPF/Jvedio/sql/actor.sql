@@ -1,10 +1,7 @@
-﻿
-
-
--- 【演员管理说明】
+﻿-- 【演员管理说明】
 -- 演员名称唯一，默认无同名演员，若存在同名，手动以标记位 NameFlag 区分
 drop table if exists actor_info;
-drop table if exists actor_name_to_works;
+drop table if exists actor_name_to_datas;
 drop table if exists actor_alias;
 drop table if exists actor_info_images;
 
@@ -31,7 +28,6 @@ create table actor_info(
     Hipline INT,
 
     ExtraInfo TEXT,
-
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     unique(Name,NameFlag)
@@ -42,18 +38,19 @@ COMMIT;
 -- 演员出演的作品和演员对应关系（多对多）
 -- 作品可以是：影视、写真、游戏等
 BEGIN;
-create table actor_name_to_works(
+create table actor_name_to_datas(
     ID INTEGER PRIMARY KEY autoincrement,
     Name VARCHAR(500),
     NameFlag INT DEFAULT 0,
 
-    WorkID INT,
-    unique(Name,NameFlag,WorkID)
+    DataID INT,
+    unique(Name,NameFlag,DataID)
 );
-CREATE INDEX actor_name_to_works_name_idx ON actor_name_to_works (Name,NameFlag);
+CREATE INDEX actor_name_to_datas_name_idx ON actor_name_to_datas (Name,NameFlag);
 COMMIT;
 
 -- 同一个人有多个名字
+-- 翻译的名字也属于此列
 BEGIN;
 create table actor_alias(
     ID INTEGER PRIMARY KEY autoincrement,
@@ -62,6 +59,7 @@ create table actor_alias(
 
     AliasName VARCHAR(500),
     AliasNameFlag INT DEFAULT 0,
+    Descriptions TEXT,
     unique(Name,NameFlag,AliasName,AliasNameFlag)
 );
 CREATE INDEX actor_alias_name_idx ON actor_alias (Name,NameFlag);
@@ -95,17 +93,20 @@ values
 ('星仔','中国','汉族','中国香港','19620622','A',174,70),
 ('周星星','中国','汉族','中国香港','19620622','A',174,70);
 
--- 同一个名字有多个别名
+-- 同一个名字有多个别名，需要用户自行输入
 insert into actor_alias
-( Name , NameFlag , AliasName , AliasNameFlag)
+( Name , NameFlag , AliasName , AliasNameFlag,Descriptions)
 values 
-('周星驰',0,'星爷',0),
-('周星驰',0,'星仔',0),
-('周星驰',0,'周星星',0);
+('周星驰',0,'星爷',0,'周星驰后期影视称呼'),
+('周星驰',0,'星仔',0,'前期影视称呼'),
+('周星驰',0,'周星星',0,'逃学威龙里的称呼'),
+('成龙',0,'陈港生',0,'真名'),
+('成龙',0,'房仕龙',0,'认祖归宗后按照族谱而取'),
+('成龙',0,'Jacky Chan',0,'英文名');
 
 -- 出演的作品
-insert into actor_name_to_works
-( Name , NameFlag , WorkID )
+insert into actor_name_to_datas
+( Name , NameFlag , DataID )
 values 
 ('周星驰',0,1),
 ('周星驰',0,2),
@@ -138,16 +139,16 @@ where actor_info.Name='周星驰' and actor_info.NameFlag=0 limit 1;
 select AliasName , AliasNameFlag from actor_alias
 where Name='周星驰' and NameFlag=0;
 
-select * from actor_name_to_works;
+select * from actor_name_to_datas;
 
 
 select * from 
-actor_name_to_works
+actor_name_to_datas
 where (Name,NameFlag) in 
 ( VALUES ('周星驰',0),('星爷',0));
 
 select * from 
-actor_name_to_works
+actor_name_to_datas
 where (Name,NameFlag) in 
 (select AliasName , AliasNameFlag from actor_alias
 where Name='周星驰' and NameFlag=0);

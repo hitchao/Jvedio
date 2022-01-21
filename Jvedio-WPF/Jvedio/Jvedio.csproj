@@ -453,7 +453,7 @@
     <Resource Include="Data\github.txt" />
     <Resource Include="Resources\Picture\datalist_video.png" />
     <Content Include="sql\actor - 复制%282%29.sql" />
-    <Content Include="sql\actor - 复制.sql" />
+    <Content Include="sql\metadata.sql" />
     <Content Include="sql\actor.sql" />
     <Content Include="sql\common.sql" />
     <Content Include="sql\data-4.0.sql" />

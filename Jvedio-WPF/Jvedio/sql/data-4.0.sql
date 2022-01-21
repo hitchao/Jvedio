@@ -30,6 +30,7 @@ create table if not exists movie (
     scandate VARCHAR(30),
     releasedate VARCHAR(10) DEFAULT '1900-01-01',
     visits INT DEFAULT 0,
+    
     director VARCHAR(50),
     genre TEXT,
     tag TEXT,
@@ -37,8 +38,10 @@ create table if not exists movie (
     actorid TEXT,
     studio VARCHAR(50),
     rating FLOAT DEFAULT 0,
+
     chinesetitle TEXT,
     favorites INT DEFAULT 0,
+
     label TEXT,
     plot TEXT,
     outline TEXT,
@@ -54,3 +57,13 @@ create table if not exists movie (
     bigimageurl TEXT,
     extraimageurl TEXT
 );
+
+-- 翻译表
+create table if not exists youdao (
+    id VARCHAR(50) PRIMARY KEY,
+    title TEXT,
+    translate_title TEXT,
+    plot TEXT,
+    translate_plot TEXT
+)
+
