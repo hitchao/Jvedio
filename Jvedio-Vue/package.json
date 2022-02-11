@@ -22,7 +22,7 @@
     "@vue/cli-plugin-pwa": "^3.0.0",
     "@vue/cli-service": "^3.0.0",
     "element-ui": "^2.15.6",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10"
   }
