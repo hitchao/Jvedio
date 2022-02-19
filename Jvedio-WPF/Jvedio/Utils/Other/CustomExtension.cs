@@ -19,6 +19,7 @@ using static Jvedio.GlobalVariable;
 using System.Windows.Media.Imaging;
 using System.Net;
 using Jvedio.Utils;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {
@@ -26,7 +27,7 @@ namespace Jvedio
     {
 
 
-    
+
 
 
         public static T GetQueryOrDefault<T>(this BitmapMetadata metadata, string query, T defaultValue)
@@ -42,9 +43,9 @@ namespace Jvedio
         public static string ToTagString(this string str)
         {
             if (str.Length != 1) return "";
-            if (str == "1" ) return  Jvedio.Language.Resources.HD ;
-            if (str == "2" ) return Jvedio.Language.Resources.Translated;
-            if (str == "3"  ) return Jvedio.Language.Resources.FlowOut;
+            if (str == "1") return Jvedio.Language.Resources.HD;
+            if (str == "2") return Jvedio.Language.Resources.Translated;
+            if (str == "3") return Jvedio.Language.Resources.FlowOut;
             return str;
         }
 
@@ -101,7 +102,8 @@ namespace Jvedio
             if (content == Jvedio.Language.Resources.ID)
             {
                 return "id";
-            }else if (content == Jvedio.Language.Resources.Title)
+            }
+            else if (content == Jvedio.Language.Resources.Title)
             {
                 return "title";
             }
@@ -190,7 +192,7 @@ namespace Jvedio
                 string[] result = new string[movie.subsectionlist.Count];
                 for (int i = 0; i < movie.subsectionlist.Count; i++)
                 {
-                    if(Properties.Settings.Default.AddLabelTagWhenRename && Identify.IsCHS(oldName))
+                    if (Properties.Settings.Default.AddLabelTagWhenRename && Identify.IsCHS(oldName))
                     {
                         result[i] = Path.Combine(dir, $"{newName}-{i + 1}_{Jvedio.Language.Resources.Translated}{ext}");
                     }
@@ -198,7 +200,7 @@ namespace Jvedio
                     {
                         result[i] = Path.Combine(dir, $"{newName}-{i + 1}{ext}");
                     }
-                    
+
                 }
                 return result;
             }
@@ -219,7 +221,7 @@ namespace Jvedio
 
 
 
-        private static void ReplaceWithValue(string property,Movie movie,ref string result)
+        private static void ReplaceWithValue(string property, Movie movie, ref string result)
         {
             string inSplit = Properties.Settings.Default.InSplit.Replace("无", "");
             PropertyInfo[] PropertyList = movie.GetType().GetProperties();
@@ -248,7 +250,7 @@ namespace Jvedio
                                 value = Jvedio.Language.Resources.Europe;
                         }
 
-                       
+
 
 
 
@@ -258,9 +260,9 @@ namespace Jvedio
                             int idx = result.IndexOf("{" + property + "}");
                             if (idx >= 1)
                             {
-                                result = result.Remove(idx - 1,1);
+                                result = result.Remove(idx - 1, 1);
                             }
-                            result = result.Replace("{" + property + "}","");
+                            result = result.Replace("{" + property + "}", "");
                         }
                         else
                             result = result.Replace("{" + property + "}", value);
@@ -280,7 +282,7 @@ namespace Jvedio
                     break;
                 }
             }
-            
+
         }
 
 

@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.IO;
 using static Jvedio.GlobalVariable;
 using System.Threading;
+using Jvedio.Core.pojo;
 
 namespace Jvedio.ViewModel
 {
@@ -27,7 +28,7 @@ namespace Jvedio.ViewModel
         /// <returns></returns>
         private bool IsToDownload(Movie movie)
         {
-            if (movie.IsToDownLoadInfo() || movie.extraimageurl=="")
+            if (movie.IsToDownLoadInfo() || movie.extraimageurl == "")
                 return true;
             else
             {
@@ -36,18 +37,19 @@ namespace Jvedio.ViewModel
                 if (!string.IsNullOrEmpty(movie.extraimageurl) && movie.extraimageurl.IndexOf(";") > 0)
                 {
                     //预览图地址不为空
-                    extraImageList = movie.extraimageurl.Split(';').ToList().Where(arg => !string.IsNullOrEmpty(arg) && arg.IndexOf("http") >= 0 && arg.IndexOf("dmm") >= 0)?.ToList(); 
+                    extraImageList = movie.extraimageurl.Split(';').ToList().Where(arg => !string.IsNullOrEmpty(arg) && arg.IndexOf("http") >= 0 && arg.IndexOf("dmm") >= 0)?.ToList();
 
                     int count = 0;
                     try
                     {
                         var files = Directory.GetFiles(BasePicPath + "ExtraPic\\" + movie.id + "\\", "*.*", SearchOption.TopDirectoryOnly);
-                        if (files != null)  count = files.Count(); 
-                    } catch { }
+                        if (files != null) count = files.Count();
+                    }
+                    catch { }
 
                     if (extraImageList.Count > count)
                         return true;
-                    else 
+                    else
                         return false;
                 }
                 else
@@ -73,7 +75,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        public bool Reset(int idx,Action<string> callback, CancellationTokenSource cts = null)
+        public bool Reset(int idx, Action<string> callback, CancellationTokenSource cts = null)
         {
             Movies = new ObservableCollection<string>();
             var movies = DataBase.SelectMoviesBySql("SELECT * FROM movie");
@@ -107,7 +109,7 @@ namespace Jvedio.ViewModel
                         {
                             Movies.Add(arg.id);
                         }
-                        else if(!Gif_Skip && File.Exists(arg.filepath))
+                        else if (!Gif_Skip && File.Exists(arg.filepath))
                         {
                             Movies.Add(arg.id);
                         }
@@ -119,11 +121,11 @@ namespace Jvedio.ViewModel
                 case 2:
                     foreach (var arg in movies)
                     {
-                        if (ScreenShot_Skip && File.Exists(arg.filepath) &&  !IsScreenShotExist(Path.Combine(Properties.Settings.Default.BasePicPath, "ScreenShot", arg.id)))
+                        if (ScreenShot_Skip && File.Exists(arg.filepath) && !IsScreenShotExist(Path.Combine(Properties.Settings.Default.BasePicPath, "ScreenShot", arg.id)))
                         {
                             Movies.Add(arg.id);
                         }
-                        else if (!ScreenShot_Skip && File.Exists(arg.filepath)) 
+                        else if (!ScreenShot_Skip && File.Exists(arg.filepath))
                         {
                             Movies.Add(arg.id);
                         }
@@ -179,7 +181,7 @@ namespace Jvedio.ViewModel
                 if (TotalNum != 0) Progress = (int)((double)value / (double)TotalNum * 100);
                 Console.WriteLine(Progress);
                 RaisePropertyChanged();
-                
+
             }
         }
 
@@ -313,7 +315,7 @@ namespace Jvedio.ViewModel
 
 
 
-        
+
 
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using DynamicData;
+using Jvedio.Core.pojo;
 using System;
 using System.Collections.Generic;
 using System.IO;

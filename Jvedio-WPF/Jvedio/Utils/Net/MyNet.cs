@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Jvedio.Utils;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils.Net;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {

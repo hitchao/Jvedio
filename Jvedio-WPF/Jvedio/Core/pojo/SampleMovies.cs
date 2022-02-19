@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Jvedio.Core.pojo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Jvedio.GlobalVariable;
 
-namespace Jvedio.Utils
+namespace Jvedio.Core.pojo
 {
-
 
     /// <summary>
     /// 生成 jvedio 的数据库
     /// </summary>
-    public  class SampleMovies
+    public class SampleMovies
     {
         public string jp = "名称";
         public int number = 1000;
@@ -51,13 +51,13 @@ namespace Jvedio.Utils
                         favorites = new Random(Guid.NewGuid().GetHashCode()).Next(0, 6),
                         visits = new Random(Guid.NewGuid().GetHashCode()).Next(0, 100),
                         title = GetSomeText(30, i),
-                        runtime= new Random(Guid.NewGuid().GetHashCode()).Next(0, 300),
-                        rating = (float)(new Random(Guid.NewGuid().GetHashCode()).Next(0, 100))/10,
-                        filesize =Math.Abs( 5 * 1024 * new Random(Guid.NewGuid().GetHashCode()).Next(0, 1024 * 1024)),
+                        runtime = new Random(Guid.NewGuid().GetHashCode()).Next(0, 300),
+                        rating = (float)(new Random(Guid.NewGuid().GetHashCode()).Next(0, 100)) / 10,
+                        filesize = Math.Abs(5 * 1024 * new Random(Guid.NewGuid().GetHashCode()).Next(0, 1024 * 1024)),
                         subsection = i % 100 == 0 ? "path1;path2" : "",
-                        scandate = DateTime.Now.AddDays(-new Random(Guid.NewGuid().GetHashCode()).Next(-500,500)).ToString("yyyy-MM-dd HH:mm:ss"),
-                        otherinfo = DateTime.Now.AddDays(-new Random(Guid.NewGuid().GetHashCode()).Next(-500, 500)). ToString("yyyy-MM-dd HH:mm:ss"),
-                        releasedate= DateTime.Now.AddDays(-new Random(Guid.NewGuid().GetHashCode()).Next(-500, 500)).ToString("yyyy-MM-dd"),
+                        scandate = DateTime.Now.AddDays(-new Random(Guid.NewGuid().GetHashCode()).Next(-500, 500)).ToString("yyyy-MM-dd HH:mm:ss"),
+                        otherinfo = DateTime.Now.AddDays(-new Random(Guid.NewGuid().GetHashCode()).Next(-500, 500)).ToString("yyyy-MM-dd HH:mm:ss"),
+                        releasedate = DateTime.Now.AddDays(-new Random(Guid.NewGuid().GetHashCode()).Next(-500, 500)).ToString("yyyy-MM-dd"),
                         vediotype = new Random(Guid.NewGuid().GetHashCode()).Next(1, 4),
                         tag = "系列" + new Random(Guid.NewGuid().GetHashCode()).Next(defaultmax),
                         director = "导演" + new Random(Guid.NewGuid().GetHashCode()).Next(defaultmax),
@@ -72,7 +72,7 @@ namespace Jvedio.Utils
             }
         }
 
-        public string GetSomeText(int maxlength,int seed)
+        public string GetSomeText(int maxlength, int seed)
         {
             string result = "";
             for (int i = 0; i < new Random(seed).Next(maxlength); i++)
@@ -94,19 +94,19 @@ namespace Jvedio.Utils
             List<int> engidx = new List<int>();
             while (engidx.Count < maxcount)
             {
-                int idx=new Random(Guid.NewGuid().GetHashCode()).Next(0, eng.Count);
+                int idx = new Random(Guid.NewGuid().GetHashCode()).Next(0, eng.Count);
                 if (!engidx.Contains(idx)) engidx.Add(idx);
             }
 
             for (int i = 0; i < maxcount; i++)
             {
-                result.Add(eng[engidx[i]] + "-"+ num[ new Random(Guid.NewGuid().GetHashCode()).Next(0, 1000)]);
+                result.Add(eng[engidx[i]] + "-" + num[new Random(Guid.NewGuid().GetHashCode()).Next(0, 1000)]);
             }
             return result;
         }
         private List<string> GetEng()
         {
-            List<string> result  = new List<string>();
+            List<string> result = new List<string>();
             string vcab = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             for (int i = 0; i < vcab.Length; i++)
@@ -115,9 +115,9 @@ namespace Jvedio.Utils
                 {
                     for (int k = 0; k < vcab.Length; k++)
                     {
-                        for (int m= 0; m < vcab.Length; m++)
+                        for (int m = 0; m < vcab.Length; m++)
                         {
-                            result.Add(vcab[i].ToString() + vcab[j] + vcab[k]+vcab[m]);
+                            result.Add(vcab[i].ToString() + vcab[j] + vcab[k] + vcab[m]);
                         }
                     }
                 }
@@ -136,7 +136,7 @@ namespace Jvedio.Utils
                 {
                     for (int n = 0; n < 10; n++)
                     {
-                        result.Add( num[v].ToString() + num[b] + num[n]);
+                        result.Add(num[v].ToString() + num[b] + num[n]);
                     }
                 }
             }
@@ -181,7 +181,7 @@ namespace Jvedio.Utils
             }
             return string.Join("/", result);
         }
-        private string GetLabel( int maxcount)
+        private string GetLabel(int maxcount)
         {
             List<string> result = new List<string>();
             int max = new Random().Next(0, 10);
@@ -190,7 +190,7 @@ namespace Jvedio.Utils
                 result.Add("标签" + new Random(i * max).Next(1, maxcount));
             }
             if (new Random(max).Next(maxcount) % 10 == 0) result.Add("高清");
-            if (new Random(max+1).Next(maxcount) % 20 == 0) result.Add("中文");
+            if (new Random(max + 1).Next(maxcount) % 20 == 0) result.Add("中文");
             if (new Random(max + 1).Next(maxcount) % 100 == 0) result.Add("流出");
             return string.Join(" ", result);
         }

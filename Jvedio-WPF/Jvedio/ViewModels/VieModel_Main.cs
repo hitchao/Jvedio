@@ -29,6 +29,7 @@ using DynamicData.Annotations;
 using System.Windows.Media;
 using System.ComponentModel;
 using Jvedio.Utils;
+using Jvedio.Core.pojo;
 
 namespace Jvedio.ViewModel
 {

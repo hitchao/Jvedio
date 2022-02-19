@@ -13,6 +13,8 @@ using System.Text.RegularExpressions;
 using DynamicData;
 using System.Windows.Media.Imaging;
 using Jvedio.Utils;
+using Jvedio.Core.pojo;
+
 namespace Jvedio.ViewModel
 {
     public class VieModel_Details : ViewModelBase
@@ -124,7 +126,7 @@ namespace Jvedio.ViewModel
         public void SaveLove()
         {
 
-                DataBase.UpdateMovieByID(DetailMovie.id, "favorites", DetailMovie.favorites, "string");
+            DataBase.UpdateMovieByID(DetailMovie.id, "favorites", DetailMovie.favorites, "string");
         }
 
         public void SaveLabel()
@@ -144,14 +146,14 @@ namespace Jvedio.ViewModel
         {
             ((WindowDetails)FileProcess.GetWindowByName("WindowDetails")).SetStatus(false);
             DetailMovie detailMovie = null;
-                detailMovie = DataBase.SelectDetailMovieById(movieid);
-                //访问次数+1
-                if (detailMovie != null)
-                {
-                    detailMovie.visits += 1;
-                    DataBase.UpdateMovieByID(movieid, "visits", detailMovie.visits);
-                }
-            
+            detailMovie = DataBase.SelectDetailMovieById(movieid);
+            //访问次数+1
+            if (detailMovie != null)
+            {
+                detailMovie.visits += 1;
+                DataBase.UpdateMovieByID(movieid, "visits", detailMovie.visits);
+            }
+
             //释放图片内存
             if (DetailMovie != null)
             {
@@ -174,7 +176,7 @@ namespace Jvedio.ViewModel
             DetailMovie = new DetailMovie();
             if (detailMovie != null)
             {
-                BitmapImage bigimage= ImageProcess.GetBitmapImage(detailMovie.id, "BigPic");
+                BitmapImage bigimage = ImageProcess.GetBitmapImage(detailMovie.id, "BigPic");
                 if (bigimage == null) bigimage = DefaultBigImage;
                 detailMovie.bigimage = bigimage;
                 MySqlite db = new MySqlite("Translate");

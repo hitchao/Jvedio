@@ -6,6 +6,7 @@ drop table if exists actor_alias;
 drop table if exists actor_info_images;
 
 
+-- Sex:0-未知，1-女 2-男
 -- 演员基本信息
 BEGIN;
 create table actor_info(
@@ -20,6 +21,7 @@ create table actor_info(
     BloodType VARCHAR(100),
     Height INT,
     Weight INT,
+    Sex INT,
     Hobby VARCHAR(500),
 
     Cup VARCHAR(1),
@@ -46,7 +48,8 @@ create table actor_name_to_datas(
     DataID INT,
     unique(Name,NameFlag,DataID)
 );
-CREATE INDEX actor_name_to_datas_name_idx ON actor_name_to_datas (Name,NameFlag);
+CREATE INDEX actor_name_to_datas_idx_Name ON actor_name_to_datas (Name,NameFlag);
+CREATE INDEX actor_name_to_datas_idx_DataID ON actor_name_to_datas (DataID);
 COMMIT;
 
 -- 同一个人有多个名字

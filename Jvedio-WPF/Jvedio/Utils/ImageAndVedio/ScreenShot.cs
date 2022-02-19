@@ -1,4 +1,5 @@
-﻿using Jvedio.Utils.ImageAndVedio;
+﻿using Jvedio.Core.pojo;
+using Jvedio.Utils.ImageAndVedio;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

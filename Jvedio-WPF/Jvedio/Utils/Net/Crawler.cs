@@ -11,6 +11,7 @@ using System.Net;
 using Jvedio.Utils;
 using Jvedio.Utils.Net;
 using static Jvedio.Utils.Net.Net;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {

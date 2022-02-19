@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.pojo.data;
+﻿using Jvedio.Core.pojo;
 using Jvedio.Utils;
 using Jvedio.Utils.Sqlite;
 using System;
@@ -53,7 +53,7 @@ namespace Jvedio
         }
 
 
-        public bool UpdateSqliteInfoField(string field,string value,int id)
+        public bool UpdateSqliteInfoField(string field, string value, int id)
         {
             if (Sqlite.IsTableExist("databases"))
             {
@@ -72,14 +72,14 @@ namespace Jvedio
                 InfoType type = GlobalVariable.CurrentInfoType;
                 SQLiteCommand cmd = Sqlite.cmd;
                 string id = string.Join(",", ID);
-                cmd.CommandText = $"delete from databases where ID in ({id}) and type='{type.ToString()}'";
+                cmd.CommandText = $"delete from databases where ID in ({id}) and type='{type}'";
                 int result = cmd.ExecuteNonQuery();
                 return result > 0;
             }
             return false;
         }
 
-        public void IncreaseField(string field,int id)
+        public void IncreaseField(string field, int id)
         {
             if (Sqlite.IsTableExist("databases"))
             {
@@ -107,12 +107,12 @@ namespace Jvedio
                 cmd.Parameters.Add("Type", DbType.String).Value = sqliteInfo.Type;
                 cmd.Parameters.Add("ViewCount", DbType.Int64).Value = sqliteInfo.ViewCount;
 
-                int result=cmd.ExecuteNonQuery();
+                int result = cmd.ExecuteNonQuery();
                 return result > 0;
             }
             return false;
         }
-        
+
         public bool InsertSqliteInfo(SqliteInfo sqliteInfo)
         {
             if (Sqlite.IsTableExist("databases"))
@@ -131,7 +131,7 @@ namespace Jvedio
                 cmd.Parameters.Add("ViewCount", DbType.Int64).Value = sqliteInfo.ViewCount;
                 cmd.Parameters.Add("CreateDate", DbType.String).Value = sqliteInfo.CreateDate;
 
-                int result=cmd.ExecuteNonQuery();
+                int result = cmd.ExecuteNonQuery();
                 return result > 0;
             }
             return false;

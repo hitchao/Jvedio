@@ -20,10 +20,10 @@ namespace Jvedio.Utils.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string path="";
+            string path = "";
             if (value == null) return null;
-            path=value.ToString();
-            if(string.IsNullOrEmpty(path)) return null;
+            path = value.ToString();
+            if (string.IsNullOrEmpty(path)) return null;
             return System.IO.Path.GetDirectoryName(path);
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -38,17 +38,17 @@ namespace Jvedio.Utils.Converter
         {
             if (value == null) return "";
             int count = 2;
-            if(parameter!=null) int.TryParse(parameter.ToString(), out count);
+            if (parameter != null) int.TryParse(parameter.ToString(), out count);
             string[] strs = value.ToString().Split('\\');
             if (strs.Length <= count) return value.ToString();
 
-            StringBuilder builder   =new StringBuilder();
-            for (int i = strs.Length - 1; i >= strs.Length-count; i--)
+            StringBuilder builder = new StringBuilder();
+            for (int i = strs.Length - 1; i >= strs.Length - count; i--)
             {
-                builder.Insert(0, "\\"+ strs[i]);
+                builder.Insert(0, "\\" + strs[i]);
             }
 
-            return "~" + builder.ToString();
+            return "..." + builder.ToString();
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

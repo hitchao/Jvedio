@@ -218,11 +218,27 @@
     <Compile Include="Core\Command\Sqlite.cs" />
     <Compile Include="Core\CrawlerLoader.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
-    <Compile Include="Core\pojo\data\SqliteInfo.cs" />
+    <Compile Include="Core\pojo\Actor.cs" />
+    <Compile Include="Core\pojo\Actress.cs" />
+    <Compile Include="Core\pojo\DetailMovie.cs" />
+    <Compile Include="Core\pojo\Genre.cs" />
+    <Compile Include="Core\pojo\Movie.cs" />
+    <Compile Include="Core\pojo\MyListItem.cs" />
+    <Compile Include="Core\pojo\SampleMovies.cs" />
+    <Compile Include="Core\pojo\Server.cs" />
+    <Compile Include="Core\pojo\Servers.cs" />
+    <Compile Include="Core\pojo\SqliteInfo.cs" />
+    <Compile Include="Core\pojo\Magnet.cs" />
+    <Compile Include="Core\pojo\VideoInfo.cs" />
+    <Compile Include="Core\pojo\WindowProperty.cs" />
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Core\pojo\Theme.cs" />
     <Compile Include="Core\PropertiesLoader.cs" />
+    <Compile Include="Core\SqliteConnect\CommonConnection.cs" />
+    <Compile Include="Core\SqliteConnect\DataConnection.cs" />
     <Compile Include="Core\SqliteConnect\ConfigConnection.cs" />
+    <Compile Include="Core\SqlMapper\BaseMapper.cs" />
+    <Compile Include="Core\SqlMapper\IMapper.cs" />
     <Compile Include="Core\ThemeLoader.cs" />
     <Compile Include="DialogWindows\Dialog_LoadPage.xaml.cs">
       <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
@@ -250,13 +266,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utils\Core\JsonUtils.cs" />
+    <Compile Include="Utils\Common\JsonUtils.cs" />
     <Compile Include="Utils\FileProcess\ClipBoard.cs" />
     <Compile Include="Utils\FileProcess\FileHelper.cs" />
     <Compile Include="Utils\FileProcess\StreamHelper.cs" />
     <Compile Include="Utils\Net\ActorCrawler.cs" />
     <Compile Include="Utils\Net\MyNet.cs" />
-    <Compile Include="Utils\Other\BaseClass.cs" />
     <Compile Include="Utils\Other\Comparer.cs" />
     <Compile Include="Utils\Other\Converter.cs" />
     <Compile Include="Utils\ImageAndVedio\FFmpegHelper.cs" />
@@ -265,7 +280,6 @@
     <Compile Include="Utils\ImageAndVedio\ScreenShot.cs" />
     <Compile Include="Utils\Net\DetailDownLoad.cs" />
     <Compile Include="Utils\Net\Upgrade.cs" />
-    <Compile Include="Utils\Other\SampleMovies.cs" />
     <Compile Include="Utils\FileProcess\FileProcess.cs" />
     <Compile Include="Utils\ImageAndVedio\MediaParse.cs" />
     <Compile Include="Utils\Config\RecentWatchedConfig.cs" />
@@ -293,7 +307,7 @@
     </Compile>
     <Compile Include="Utils\Plot\Bar\BarViewModel.cs" />
     <Compile Include="Utils\Sqlite\MySqlite.cs" />
-    <Compile Include="ViewModel\VieModel_Batch.cs" />
+    <Compile Include="ViewModels\VieModel_Batch.cs" />
     <Compile Include="Windows\DialogInput.xaml.cs">
       <DependentUpon>DialogInput.xaml</DependentUpon>
     </Compile>
@@ -311,13 +325,13 @@
       <DependentUpon>Msgbox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\GlobalVariable.cs" />
-    <Compile Include="ViewModel\VieModel_Details.cs" />
-    <Compile Include="ViewModel\VieModel_Edit.cs" />
-    <Compile Include="ViewModel\VieModel_Main.cs" />
-    <Compile Include="ViewModel\VieModel_Tools.cs" />
-    <Compile Include="ViewModel\VieModel_DBManagement.cs" />
-    <Compile Include="ViewModel\VieModel_StartUp.cs" />
-    <Compile Include="ViewModel\VieModel_Settings.cs" />
+    <Compile Include="ViewModels\VieModel_Details.cs" />
+    <Compile Include="ViewModels\VieModel_Edit.cs" />
+    <Compile Include="ViewModels\VieModel_Main.cs" />
+    <Compile Include="ViewModels\VieModel_Tools.cs" />
+    <Compile Include="ViewModels\VieModel_DBManagement.cs" />
+    <Compile Include="ViewModels\VieModel_StartUp.cs" />
+    <Compile Include="ViewModels\VieModel_Settings.cs" />
     <Compile Include="Windows\WindowDetails.xaml.cs">
       <DependentUpon>WindowDetails.xaml</DependentUpon>
     </Compile>
@@ -452,12 +466,13 @@
     <Resource Include="Resources\Picture\NoPrinting_G.gif" />
     <Resource Include="Data\github.txt" />
     <Resource Include="Resources\Picture\datalist_video.png" />
-    <Content Include="sql\actor - 复制%282%29.sql" />
-    <Content Include="sql\metadata.sql" />
-    <Content Include="sql\actor.sql" />
-    <Content Include="sql\common.sql" />
-    <Content Include="sql\data-4.0.sql" />
-    <Content Include="sql\data.sql" />
+    <Content Include="Sql\commic.sql" />
+    <Content Include="Sql\full-demo.sql" />
+    <Content Include="Sql\video.sql" />
+    <Content Include="Sql\actor.sql" />
+    <Content Include="Sql\common.sql" />
+    <Content Include="Sql\data-4.0.sql" />
+    <Content Include="Sql\data.sql" />
     <Content Include="Data\x64\SQLite.Interop.dll" />
     <Content Include="Data\x86\SQLite.Interop.dll" />
     <Resource Include="Resources\Skin\white\classify.png" />
@@ -780,7 +795,10 @@
       <Name>Jvedio.Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\Common\" />
+    <Folder Include="Mapper\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

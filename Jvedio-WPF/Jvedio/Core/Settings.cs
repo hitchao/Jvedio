@@ -1,11 +1,7 @@
-﻿using Jvedio.Utils.Core;
-using Newtonsoft.Json.Serialization;
+﻿using Jvedio.Utils.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core
 {
@@ -18,7 +14,7 @@ namespace Jvedio.Core
 
         static void initTempClass()
         {
-            
+
         }
 
         private class tempClass
@@ -91,7 +87,7 @@ namespace Jvedio.Core
             Console.WriteLine(json);
         }
 
-        
+
 
 
 

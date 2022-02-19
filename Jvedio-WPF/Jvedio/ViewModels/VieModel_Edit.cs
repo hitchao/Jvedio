@@ -9,7 +9,7 @@ using static Jvedio.FileProcess;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.IO;
-
+using Jvedio.Core.pojo;
 
 namespace Jvedio.ViewModel
 {
@@ -58,9 +58,9 @@ namespace Jvedio.ViewModel
             if (createDate == "") createDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             models.id = Identify.GetFanhao(fileInfo.Name);
-            models.vediotype =(int) Identify.GetVideoType(models.id);
+            models.vediotype = (int)Identify.GetVideoType(models.id);
             models.otherinfo = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            models.scandate= createDate ;
+            models.scandate = createDate;
             models.filesize = fileInfo.Length;
             if (models != null) { DetailMovie = models; }
         }
@@ -70,7 +70,7 @@ namespace Jvedio.ViewModel
 
         public RelayCommand<string> QueryCommand { get; set; }
 
-        public void Query(string movieid,string tablename="")
+        public void Query(string movieid, string tablename = "")
         {
             DetailMovie models = null;
             if (string.IsNullOrEmpty(tablename))
@@ -79,20 +79,20 @@ namespace Jvedio.ViewModel
             }
             else
             {
-                using(MySqlite mySqlite=new MySqlite("mylist"))
+                using (MySqlite mySqlite = new MySqlite("mylist"))
                 {
                     models = mySqlite.SelectDetailMovieBySql($"select * from {tablename} where id='{movieid}'");
                 }
             }
-            
-            
-            
+
+
+
             DetailMovie = new DetailMovie();
             if (models != null) { DetailMovie = models; }
         }
 
 
-        public  void Reset()
+        public void Reset()
         {
             Main main = App.Current.Windows[0] as Main;
             var models = main.vieModel.CurrentMovieList.Select(arg => arg.id).ToList();
@@ -101,7 +101,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        public bool SaveModel(string ID="")
+        public bool SaveModel(string ID = "")
         {
             string table = ((Main)GetWindowByName("Main")).GetCurrentList();
 
@@ -112,11 +112,11 @@ namespace Jvedio.ViewModel
                 return true;
             }
 
-            
+
             id = ID;
             if (DetailMovie != null)
             {
-                
+
                 if (DetailMovie.id.ToUpper() != id.ToUpper())
                 {
                     //修改了原来的识别码
@@ -130,7 +130,7 @@ namespace Jvedio.ViewModel
                     else
                     {
                         //修改了清单中的识别码
-                        using(MySqlite mySqlite=new MySqlite("mylist"))
+                        using (MySqlite mySqlite = new MySqlite("mylist"))
                         {
                             if (mySqlite.SelectMovieBySql($"select * from {table} where id='{ID}'") != null) return false;
 
@@ -142,14 +142,15 @@ namespace Jvedio.ViewModel
                     }
 
                 }
-                else {
+                else
+                {
                     InsertMovie(table);
                 }
 
                 return true;
             }
             return false;
-           
+
         }
 
         private void InsertMovie(string table)

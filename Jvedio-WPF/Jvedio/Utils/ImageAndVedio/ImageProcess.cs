@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
+using Jvedio.Core.pojo;
+
 namespace Jvedio
 {
     public static class ImageProcess
@@ -23,14 +25,14 @@ namespace Jvedio
         {
             //加载图片
             BitmapImage smallimage = GetBitmapImage(movie.id, "SmallPic");
-            BitmapImage bigimage =GetBitmapImage(movie.id, "BigPic");
+            BitmapImage bigimage = GetBitmapImage(movie.id, "BigPic");
             if (smallimage == null) smallimage = DefaultSmallImage;
             if (bigimage == null) bigimage = DefaultBigImage;
             movie.smallimage = smallimage;
             movie.bigimage = bigimage;
         }
 
-        public static BitmapImage GetActorImage( string name)
+        public static BitmapImage GetActorImage(string name)
         {
             //加载图片
             BitmapImage image = GetBitmapImage(name, "Actresses");
@@ -53,7 +55,7 @@ namespace Jvedio
                 {
                     g.CopyFromScreen(System.Drawing.Point.Empty, System.Drawing.Point.Empty, bounds.Size);
                 }
-                return BitmapToBitmapImage(bitmap,true);
+                return BitmapToBitmapImage(bitmap, true);
             }
         }
 
@@ -66,10 +68,10 @@ namespace Jvedio
                 if (fileFullName != "")
                 {
                     Bitmap bmp = new Bitmap(fileFullName);
-                    using(MemoryStream ms = new MemoryStream())
+                    using (MemoryStream ms = new MemoryStream())
                     {
                         bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        byte[] arr = new byte[ms.Length]; 
+                        byte[] arr = new byte[ms.Length];
                         ms.Position = 0;
                         ms.Read(arr, 0, (int)ms.Length);
                         return Convert.ToBase64String(arr);
@@ -170,7 +172,7 @@ namespace Jvedio
         {
             using (MemoryStream stream = new MemoryStream())
             {
-                if(isPng)
+                if (isPng)
                     bitmap.Save(stream, ImageFormat.Png);
                 else
                     bitmap.Save(stream, ImageFormat.Jpeg);
@@ -213,7 +215,7 @@ namespace Jvedio
             }
 
             if (!Directory.Exists(ImageDir)) Directory.CreateDirectory(ImageDir);
-           FileProcess.ByteArrayToFile(ImageByte, FilePath);
+            FileProcess.ByteArrayToFile(ImageByte, FilePath);
         }
 
 
@@ -223,7 +225,7 @@ namespace Jvedio
         /// </summary>
         /// <param name="filepath"></param>
         /// <returns></returns>
-        public static BitmapImage BitmapImageFromFile(string filepath,double DecodePixelWidth=0)
+        public static BitmapImage BitmapImageFromFile(string filepath, double DecodePixelWidth = 0)
         {
             try
             {
@@ -236,7 +238,7 @@ namespace Jvedio
                     bitmap.BeginInit();
                     bitmap.StreamSource = ms;
                     //ms.Close();
-                    if (DecodePixelWidth!=0) bitmap.DecodePixelWidth = (int)DecodePixelWidth;
+                    if (DecodePixelWidth != 0) bitmap.DecodePixelWidth = (int)DecodePixelWidth;
                     bitmap.CacheOption = BitmapCacheOption.OnLoad;//加载时才会将图像载入内存，因此不需要 ms.Close();
                     bitmap.EndInit();
                     bitmap.Freeze();

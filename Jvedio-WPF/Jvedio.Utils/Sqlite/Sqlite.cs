@@ -11,6 +11,8 @@ namespace Jvedio.Utils.Sqlite
     public class Sqlite : IDisposable
     {
 
+        public readonly static Dictionary<string, string> tables;
+
         public string SqlitePath { get; set; }
         public SQLiteCommand cmd;
         public SQLiteConnection cn;
@@ -18,6 +20,26 @@ namespace Jvedio.Utils.Sqlite
         public Sqlite(string path)
         {
             SqlitePath = path;
+        }
+
+
+        public void InitTables()
+        {
+            InitTables(tables);
+        }
+
+        public void InitTables(Dictionary<string, string> tables)
+        {
+            if (tables != null && tables.Count > 0)
+            {
+                foreach (string key in tables.Keys)
+                {
+                    if (!IsTableExist(key))
+                    {
+                        ExecuteSql(tables[key]);
+                    }
+                }
+            }
         }
 
 
@@ -58,7 +80,7 @@ namespace Jvedio.Utils.Sqlite
             List<string> tables = new List<string>();
             try
             {
-                using(SQLiteDataReader sr = cmd.ExecuteReader())
+                using (SQLiteDataReader sr = cmd.ExecuteReader())
                 {
                     while (sr.Read())
                     {
@@ -66,7 +88,8 @@ namespace Jvedio.Utils.Sqlite
                     }
                 }
             }
-            catch (System.Data.SQLite.SQLiteException ex) {
+            catch (System.Data.SQLite.SQLiteException ex)
+            {
                 Console.WriteLine(ex.Message);
             }
             return tables;
@@ -127,8 +150,23 @@ namespace Jvedio.Utils.Sqlite
 
         }
 
+        public SQLiteDataReader RunSql(string sqltext)
+        {
+            cmd.CommandText = sqltext;
+            try
+            {
+                return cmd.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
 
-        public double SelectCountByTable(string table, string field="id",string sql="")
+        }
+
+
+        public double SelectCountByTable(string table, string field = "id", string sql = "")
         {
             double result = 0;
             cmd.CommandText = $"SELECT count({field}) FROM {table} " + sql;
@@ -143,7 +181,7 @@ namespace Jvedio.Utils.Sqlite
 
         }
 
-        public string SelectByField(string info, string table,  string value, string filed="id")
+        public string SelectByField(string info, string table, string value, string filed = "id")
         {
             string result = "";
             string sqltext = $"select {info} from {table} where {filed} ='{value}'";

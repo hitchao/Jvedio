@@ -67,3 +67,26 @@ create table if not exists youdao (
     translate_plot TEXT
 )
 
+-- 磁力表
+create table if not exists magnets (
+    link VARCHAR(60) PRIMARY KEY,
+    id VARCHAR(50),
+    title TEXT,
+    size DOUBLE DEFAULT 0,
+    releasedate VARCHAR(10) DEFAULT '1900-01-01',
+    tag TEXT
+)
+
+
+-- javdb 照应表
+create table if not exists javdb (
+    id VARCHAR(50) PRIMARY KEY,
+    code VARCHAR(50)
+);
+
+
+-- library 照应表
+create table if not exists library (
+    id VARCHAR(50) PRIMARY KEY,
+    code VARCHAR(50)
+);

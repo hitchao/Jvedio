@@ -1,4 +1,5 @@
 ﻿using FontAwesome.WPF;
+using Jvedio.Core.pojo;
 using Jvedio.Style;
 using Jvedio.Utils;
 using Jvedio.Utils.Encrypt;

@@ -1,7 +1,8 @@
 ﻿using DynamicData.Annotations;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using Jvedio.Core.pojo.data;
+using Jvedio.Core.pojo;
+
 using Jvedio.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_StartUp : ViewModelBase
     {
-       
+
 
         public bool Sort = false;
         public string SortType = "";
@@ -36,7 +37,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        
+
 
 
         private ObservableCollection<SqliteInfo> _Databases;
@@ -48,7 +49,7 @@ namespace Jvedio.ViewModel
                 _Databases = value;
                 RaisePropertyChanged();
             }
-        }        
+        }
         private ObservableCollection<SqliteInfo> _CurrentDatabases;
         public ObservableCollection<SqliteInfo> CurrentDatabases
         {
@@ -72,7 +73,7 @@ namespace Jvedio.ViewModel
         {
             CurrentDatabases = null;
             if (string.IsNullOrEmpty(CurrentSearch)) CurrentDatabases = Databases;
-            ObservableCollection<Core.pojo.data.SqliteInfo> temp = new ObservableCollection<Core.pojo.data.SqliteInfo>();
+            ObservableCollection<SqliteInfo> temp = new ObservableCollection<SqliteInfo>();
             Databases.ToList().Where(item => item.Name.IndexOf(CurrentSearch) >= 0 || item.Path.IndexOf(CurrentSearch) >= 0).ToList().ForEach
                 (item => temp.Add(item));
             CurrentDatabases = temp;
@@ -81,13 +82,13 @@ namespace Jvedio.ViewModel
 
         public void SortDataBase()
         {
-            if(Databases==null || Databases.Count == 0)
+            if (Databases == null || Databases.Count == 0)
             {
                 CurrentDatabases = new ObservableCollection<SqliteInfo>();
                 return;
             }
-            if(CurrentDatabases==null) CurrentDatabases = Databases;
-            List<Core.pojo.data.SqliteInfo> sqliteInfos = CurrentDatabases.ToList();
+            if (CurrentDatabases == null) CurrentDatabases = Databases;
+            List<SqliteInfo> sqliteInfos = CurrentDatabases.ToList();
             CurrentDatabases = null;
             switch (SortType)
             {
@@ -99,12 +100,12 @@ namespace Jvedio.ViewModel
                     break;
                 case "数据数目":
                     sqliteInfos = sqliteInfos.OrderBy(x => x.Count).ToList();
-                    break;                
-                
+                    break;
+
                 case "访问频率":
                     sqliteInfos = sqliteInfos.OrderBy(x => x.ViewCount).ToList();
-                    break;               
-                
+                    break;
+
                 case "文件大小":
                     sqliteInfos = sqliteInfos.OrderBy(x => x.Size).ToList();
                     break;
@@ -115,14 +116,14 @@ namespace Jvedio.ViewModel
                 default:
                     break;
             }
-            ObservableCollection<Core.pojo.data.SqliteInfo> temp = new ObservableCollection<Core.pojo.data.SqliteInfo>();
+            ObservableCollection<SqliteInfo> temp = new ObservableCollection<SqliteInfo>();
             if (Sort) sqliteInfos.Reverse();
             sqliteInfos.ForEach(item => temp.Add(item));
             CurrentDatabases = temp;
         }
 
 
-        public void ScanDatabase(InfoType type=InfoType.Video)
+        public void ScanDatabase(InfoType type = InfoType.Video)
         {
             Databases = new ObservableCollection<SqliteInfo>();
             string scanDir = Path.Combine(GlobalVariable.DataPath, type.ToString());
@@ -156,16 +157,16 @@ namespace Jvedio.ViewModel
             List<SqliteInfo> sqliteInfos = ConfigConnection.Instance.SelectSqliteInfo();
             foreach (var item in Databases)
             {
-                if(sqliteInfos.Contains(item))
+                if (sqliteInfos.Contains(item))
                 {
-                    SqliteInfo data =sqliteInfos[sqliteInfos.IndexOf(item)];
+                    SqliteInfo data = sqliteInfos[sqliteInfos.IndexOf(item)];
                     //更新
-                    item.ID=data.ID;
-                    item.Count=data.Count;
+                    item.ID = data.ID;
+                    item.Count = data.Count;
                     item.ViewCount = data.ViewCount;
                     item.ViewCount = data.ViewCount;
-                    string imagePath = Path.Combine(GlobalVariable.ProjectImagePath,data.ImagePath);
-                    if(File.Exists(imagePath))item.ImagePath = imagePath;
+                    string imagePath = Path.Combine(GlobalVariable.ProjectImagePath, data.ImagePath);
+                    if (File.Exists(imagePath)) item.ImagePath = imagePath;
 
                     data.Size = item.Size;
                     ConfigConnection.Instance.UpdateSqliteInfo(data);

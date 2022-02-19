@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Utils.Core
+namespace Jvedio.Utils.Common
 {
     public static class JsonUtils
     {
@@ -19,7 +19,7 @@ namespace Jvedio.Utils.Core
                 if (types[i].IsNestedPrivate) continue;
                 FieldInfo[] fieldInfos = types[i].GetTypeInfo().DeclaredFields.ToArray();// Field
                 TypeInfo[] nestedTypes = types[i].GetTypeInfo().DeclaredNestedTypes.ToArray();// Class
-                StringBuilder sb=new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 foreach (var item in fieldInfos)
                 {
                     if (!item.IsStatic || !item.IsPublic) continue;
@@ -27,7 +27,7 @@ namespace Jvedio.Utils.Core
                 }
                 if (sb.Length >= 1 && sb[sb.Length - 1].Equals(',')) sb.Remove(sb.Length - 1, 1);
                 string fieldString = sb.ToString();
-                string innerStr= ClasstoJson(nestedTypes);
+                string innerStr = ClasstoJson(nestedTypes);
                 if (innerStr.Length > 0) fieldString += "," + innerStr;
                 result += "\"" + types[i].Name + "\":{" + fieldString + "},";
             }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Jvedio.Core.pojo.data
+namespace Jvedio.Core.pojo
 {
     public class SqliteInfo : INotifyPropertyChanged
     {
@@ -28,36 +28,43 @@ namespace Jvedio.Core.pojo.data
         public InfoType Type { get; set; }
 
         public string _CreateDate;
-        public string CreateDate { get { return _CreateDate; } set { _CreateDate = value; OnPropertyChanged(); } }        
-        
+        public string CreateDate { get { return _CreateDate; } set { _CreateDate = value; OnPropertyChanged(); } }
+
 
         public string _Name;
         public string Name { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
         public string _Path;
-        public string Path { get { return _Path; } set { _Path = value; OnPropertyChanged(); } }        
-        public string _ImagePath="";
-        public string ImagePath { get { return _ImagePath; } 
-            set { 
+        public string Path { get { return _Path; } set { _Path = value; OnPropertyChanged(); } }
+        public string _ImagePath = "";
+        public string ImagePath
+        {
+            get { return _ImagePath; }
+            set
+            {
                 _ImagePath = value;
                 if (File.Exists(_ImagePath))
                 {
                     Image = ImageProcess.BitmapImageFromFile(_ImagePath);
                 }
-                OnPropertyChanged(); 
-            } 
+                OnPropertyChanged();
+            }
         }
 
-        private BitmapSource _image ;
-        public BitmapSource Image { get { return _image; } set { 
-                _image = value; 
-                OnPropertyChanged(); 
-            } 
+        private BitmapSource _image;
+        public BitmapSource Image
+        {
+            get { return _image; }
+            set
+            {
+                _image = value;
+                OnPropertyChanged();
+            }
         }
 
         public Int64 _Count;
         public Int64 Count { get { return _Count; } set { _Count = value; OnPropertyChanged(); } }
 
-         public Int64 _ViewCount;
+        public Int64 _ViewCount;
         public Int64 ViewCount { get { return _ViewCount; } set { _ViewCount = value; OnPropertyChanged(); } }
 
 
@@ -73,13 +80,13 @@ namespace Jvedio.Core.pojo.data
         {
             if (obj == null) return false;
             SqliteInfo o = obj as SqliteInfo;
-            if(o == null) return false;
-            return o.Type == this.Type && o.Name == this.Name && o.Path==this.Path;
+            if (o == null) return false;
+            return o.Type == this.Type && o.Name == this.Name && o.Path == this.Path;
         }
 
         public override int GetHashCode()
         {
-            return  this.Type.GetHashCode()+this.Name.GetHashCode() + this.Path.GetHashCode();
+            return this.Type.GetHashCode() + this.Name.GetHashCode() + this.Path.GetHashCode();
         }
     }
 

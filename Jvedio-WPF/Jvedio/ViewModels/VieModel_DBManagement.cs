@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.ObjectModel;
 using System.IO;
 using Jvedio.Plot.Bar;
+using Jvedio.Core.pojo;
 
 namespace Jvedio.ViewModel
 {
@@ -69,13 +70,13 @@ namespace Jvedio.ViewModel
 
 
 
-        public  void Statistic()
+        public void Statistic()
         {
             Movies = new List<Movie>();
             string name = Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath).ToLower();
             name = "DataBase\\" + name;
             MySqlite db = new MySqlite(name);
-            Movies =  db.SelectMoviesBySql("SELECT * FROM movie");
+            Movies = db.SelectMoviesBySql("SELECT * FROM movie");
             db.CloseDB();
         }
 

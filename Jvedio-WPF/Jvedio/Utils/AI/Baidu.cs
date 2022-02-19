@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Web.Script.Serialization;
 using System.Windows;
 using System.Threading.Tasks;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {

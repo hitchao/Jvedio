@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jvedio.Core.pojo;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Jvedio
     /// <summary>
     /// 保存服务器配置到XML文件
     /// </summary>
-    public sealed  class ServerConfig
+    public sealed class ServerConfig
     {
         private string Root = "Servers";
         private bool CreateRoot = false;
@@ -105,7 +106,8 @@ namespace Jvedio
             try
             {
                 XmlDoc.Save(ConfigPath);
-            }catch(XmlException ex)
+            }
+            catch (XmlException ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -138,7 +140,7 @@ namespace Jvedio
 
 
 
-        public string ReadByName(string name,string node)
+        public string ReadByName(string name, string node)
         {
             XmlNode x1 = XmlDoc.SelectSingleNode($"/Servers/Server[@Name='{name}']/{node}");
             if (x1 != null) return x1.InnerText;
@@ -155,7 +157,7 @@ namespace Jvedio
                 ServerConfig serverConfig = new ServerConfig();
                 Server server = new Server(item.Name)
                 {
-                    Cookie = serverConfig.ReadByName(item.Name,"Cookie"),
+                    Cookie = serverConfig.ReadByName(item.Name, "Cookie"),
                     LastRefreshDate = serverConfig.ReadByName(item.Name, "LastRefreshDate"),
                     Url = serverConfig.ReadByName(item.Name, "Url"),
 
@@ -170,11 +172,12 @@ namespace Jvedio
         }
 
 
-        public void  DeleteByName(string name)
+        public void DeleteByName(string name)
         {
             XmlNode x1 = XmlDoc.SelectSingleNode($"/Servers/Server[@Name='{name}']");
             XmlElement root = XmlDoc.DocumentElement;
-            if (x1 != null) {
+            if (x1 != null)
+            {
                 root.RemoveChild(x1);
                 Save();
             }

@@ -17,7 +17,8 @@ using Newtonsoft.Json;
 using Jvedio.Core;
 using System.Windows.Controls.Primitives;
 using ChaoControls.Style;
-using Jvedio.Core.pojo.data;
+
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {
@@ -54,7 +55,7 @@ namespace Jvedio
             EnsureSettings();//修复设置错误
             EnsureFileExists(); //判断文件是否存在
             EnsureDirExists();//创建文件夹
-            MoveOldFiles();//迁移旧文件
+            MoveOldFiles();//迁移旧文件并迁移到新数据库
 
             Jvedio.Core.ThemeLoader.loadAllThemes(); //加载主题
             if (GlobalFont != null) this.FontFamily = GlobalFont;
@@ -115,12 +116,97 @@ namespace Jvedio
                     {
                         string name = Path.GetFileName(item);
                         string newFileName = Path.Combine(GlobalVariable.VideoDataPath, name);
-                        FileHelper.TryMoveFile(item, newFileName);
+                        bool success = MoveOldData(item, newFileName);
+                        if (success)
+                        {
+                            //FileHelper.TryDeleteFile(item);
+                        }
                     }
                 }
-                files = FileHelper.TryScanDIr(oldDataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
-                if (files != null && files.Length == 0) FileHelper.TryDeleteDir(oldDataPath);
+                //files = FileHelper.TryScanDIr(oldDataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
+                //if (files != null && files.Length == 0) FileHelper.TryDeleteDir(oldDataPath);
+                //迁移新数据
+
             }
+        }
+
+
+
+
+        /// <summary>
+        /// 移动旧数据库到新数据库
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        private bool MoveOldData(string origin, string target)
+        {
+            if (File.Exists(origin))
+            {
+                MySqlite oldSqlite = new MySqlite(origin);
+                VideoConnection newConnection = new VideoConnection(target);
+                newConnection.InitTables();
+                System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from movie");
+                if (sr != null)
+                {
+                    while (sr.Read())
+                    {
+                        DetailMovie detailMovie = new DetailMovie()
+                        {
+                            id = sr["id"].ToString(),
+                            title = sr["title"].ToString(),
+                            filepath = sr["filepath"].ToString(),
+                            subsection = sr["subsection"].ToString(),
+                            scandate = sr["scandate"].ToString(),
+                            releasedate = sr["releasedate"].ToString(),
+                            director = sr["director"].ToString(),
+                            genre = sr["genre"].ToString(),
+                            tag = sr["tag"].ToString(),
+                            actor = sr["actor"].ToString(),
+                            actorid = sr["actorid"].ToString(),
+                            studio = sr["studio"].ToString(),
+                            chinesetitle = sr["chinesetitle"].ToString(),
+                            label = sr["label"].ToString(),
+                            plot = sr["plot"].ToString(),
+                            outline = sr["outline"].ToString(),
+                            country = sr["country"].ToString(),
+                            otherinfo = sr["otherinfo"].ToString(),
+                            actressimageurl = sr["actressimageurl"].ToString(),
+                            smallimageurl = sr["smallimageurl"].ToString(),
+                            bigimageurl = sr["bigimageurl"].ToString(),
+                            extraimageurl = sr["extraimageurl"].ToString(),
+                            sourceurl = sr["sourceurl"].ToString(),
+                            source = sr["source"].ToString()
+                        };
+
+                        double.TryParse(sr["filesize"].ToString(), out double filesize);
+                        int.TryParse(sr["vediotype"].ToString(), out int vediotype);
+                        int.TryParse(sr["visits"].ToString(), out int visits);
+                        int.TryParse(sr["favorites"].ToString(), out int favorites);
+                        int.TryParse(sr["year"].ToString(), out int year);
+                        int.TryParse(sr["countrycode"].ToString(), out int countrycode);
+                        int.TryParse(sr["runtime"].ToString(), out int runtime);
+                        float.TryParse(sr["rating"].ToString(), out float rating);
+                        detailMovie.filesize = filesize;
+                        detailMovie.vediotype = vediotype;
+                        detailMovie.visits = visits;
+                        detailMovie.rating = rating;
+                        detailMovie.favorites = favorites;
+                        detailMovie.year = year;
+                        detailMovie.countrycode = countrycode;
+                        detailMovie.runtime = runtime;
+
+                        //导入新数据库中
+                        newConnection.insertMovie(detailMovie);
+                        break; // 测试
+                    }
+                }
+
+                oldSqlite.CloseDB();
+                newConnection.Close();
+                return true;
+            }
+            return false;
         }
 
         private void InitAppData()
@@ -397,7 +483,7 @@ namespace Jvedio
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
 
-            Core.pojo.data.SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             string path = sqliteInfo.Path;
             string name = sqliteInfo.Name;
             if (new Msgbox(this, $"{Jvedio.Language.Resources.IsToDelete} {name}?").ShowDialog() == true)
@@ -423,7 +509,7 @@ namespace Jvedio
         private void RenameSqlite(object sender, RoutedEventArgs e)
         {
 
-            Core.pojo.data.SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             string originName = sqliteInfo.Name;
             string originPath = sqliteInfo.Path;
             DialogInput input = new DialogInput(this, Jvedio.Language.Resources.Rename, originName);

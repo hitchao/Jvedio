@@ -13,18 +13,19 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Jvedio.Utils;
 using Jvedio.Utils.Sqlite;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {
     public class MySqlite : Sqlite
     {
 
-        public MySqlite(string path) : this(path,false)
+        public MySqlite(string path) : this(path, false)
         {
-            
+
         }
 
-        public MySqlite(string path, bool absolute ) : base(path)
+        public MySqlite(string path, bool absolute) : base(path)
         {
             SqlitePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path.EndsWith(".sqlite") ? path : path + ".sqlite");
             if (absolute && path != "") SqlitePath = path;
@@ -55,7 +56,7 @@ namespace Jvedio
 
         private DetailMovie GetDetailMovieFromSQLiteDataReader(SQLiteDataReader sr)
         {
-            if (sr==null || sr["id"] == null || string.IsNullOrEmpty(sr["id"].ToString())) return null;
+            if (sr == null || sr["id"] == null || string.IsNullOrEmpty(sr["id"].ToString())) return null;
             DetailMovie detailMovie = new DetailMovie()
             {
                 id = sr["id"].ToString(),
@@ -113,7 +114,7 @@ namespace Jvedio
 
         private Magnet GetMagnetFromSQLiteDataReader(SQLiteDataReader sr)
         {
-            if (sr==null || sr["id"] == null || string.IsNullOrEmpty(sr["id"].ToString())) return null;
+            if (sr == null || sr["id"] == null || string.IsNullOrEmpty(sr["id"].ToString())) return null;
             Magnet result = new Magnet()
             {
                 id = sr["id"].ToString(),

@@ -4,6 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 /Jvedio-WPF/Release/*
+/Jvedio-WPF/Jvedio/sql/18+/*
+/Jvedio-WPF/Jvedio/Sample/18+/*
 Version.md
 
 # User-specific files

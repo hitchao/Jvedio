@@ -26,6 +26,7 @@ using HandyControl.Data;
 using Jvedio.Utils;
 using Jvedio.Utils.Net;
 using Jvedio.Style.UserControls;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {

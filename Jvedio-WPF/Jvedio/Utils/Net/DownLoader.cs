@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
 using Jvedio.Utils.Net;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {
