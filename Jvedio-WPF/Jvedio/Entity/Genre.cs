@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
     /// <summary>
     /// 【按类别】中的分类

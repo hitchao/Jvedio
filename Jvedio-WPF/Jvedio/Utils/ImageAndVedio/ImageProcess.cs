@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio
 {

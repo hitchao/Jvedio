@@ -8,7 +8,7 @@ using System.ComponentModel;
 using DynamicData.Annotations;
 using System.Runtime.CompilerServices;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
     public class Theme : INotifyPropertyChanged
     {

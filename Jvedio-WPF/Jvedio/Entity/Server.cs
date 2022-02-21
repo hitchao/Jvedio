@@ -3,7 +3,7 @@ using Jvedio.Utils;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
 
     /// <summary>

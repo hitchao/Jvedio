@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.pojo;
+﻿using Jvedio.Entity;
 using Jvedio.Utils;
 using Jvedio.Utils.Sqlite;
 using System;

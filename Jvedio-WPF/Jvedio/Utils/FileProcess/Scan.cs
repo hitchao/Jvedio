@@ -10,7 +10,7 @@ using System.Threading;
 using System.Security.Permissions;
 using Jvedio.Utils;
 using System.Text;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio
 {

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.SqlMapper
 {
+    /// <summary>
+    /// 仿 Mybatis-Plus
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IMapper<T>
     {
 
@@ -23,5 +27,7 @@ namespace Jvedio.Core.SqlMapper
         T selectOne();
 
         int selectCount();
+
+        List<T> selectAll();
     }
 }

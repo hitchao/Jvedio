@@ -213,26 +213,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Attributes\TableAttribute.cs" />
+    <Compile Include="Core\Attributes\TableIdAttribute.cs" />
     <Compile Include="Core\Command\File.cs" />
     <Compile Include="Core\Command\OpenWindow.cs" />
     <Compile Include="Core\Command\Sqlite.cs" />
     <Compile Include="Core\CrawlerLoader.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
-    <Compile Include="Core\pojo\Actor.cs" />
-    <Compile Include="Core\pojo\Actress.cs" />
-    <Compile Include="Core\pojo\DetailMovie.cs" />
-    <Compile Include="Core\pojo\Genre.cs" />
-    <Compile Include="Core\pojo\Movie.cs" />
-    <Compile Include="Core\pojo\MyListItem.cs" />
-    <Compile Include="Core\pojo\SampleMovies.cs" />
-    <Compile Include="Core\pojo\Server.cs" />
-    <Compile Include="Core\pojo\Servers.cs" />
-    <Compile Include="Core\pojo\SqliteInfo.cs" />
-    <Compile Include="Core\pojo\Magnet.cs" />
-    <Compile Include="Core\pojo\VideoInfo.cs" />
-    <Compile Include="Core\pojo\WindowProperty.cs" />
+    <Compile Include="Core\Enum\IdType.cs" />
+    <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
+    <Compile Include="Entity\Actor.cs" />
+    <Compile Include="Entity\Actress.cs" />
+    <Compile Include="Entity\DetailMovie.cs" />
+    <Compile Include="Entity\Genre.cs" />
+    <Compile Include="Entity\Movie.cs" />
+    <Compile Include="Entity\MyListItem.cs" />
+    <Compile Include="Entity\SampleMovies.cs" />
+    <Compile Include="Entity\Server.cs" />
+    <Compile Include="Entity\Servers.cs" />
+    <Compile Include="Entity\SqliteInfo.cs" />
+    <Compile Include="Entity\Magnet.cs" />
+    <Compile Include="Entity\Translation.cs" />
+    <Compile Include="Entity\VideoInfo.cs" />
+    <Compile Include="Entity\WindowProperty.cs" />
     <Compile Include="Core\Settings.cs" />
-    <Compile Include="Core\pojo\Theme.cs" />
+    <Compile Include="Entity\Theme.cs" />
     <Compile Include="Core\PropertiesLoader.cs" />
     <Compile Include="Core\SqliteConnect\CommonConnection.cs" />
     <Compile Include="Core\SqliteConnect\DataConnection.cs" />
@@ -258,6 +263,7 @@
     <Compile Include="DialogWindows\Dialog_About.xaml.cs">
       <DependentUpon>Dialog_About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mapper\ComTranslationMapper.cs" />
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
@@ -797,7 +803,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\Common\" />
-    <Folder Include="Mapper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,7 +1,7 @@
 ﻿using DynamicData.Annotations;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 using Jvedio.Utils;
 using System;

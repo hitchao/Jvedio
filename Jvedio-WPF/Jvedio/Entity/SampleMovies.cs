@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.pojo;
+﻿using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Jvedio.GlobalVariable;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
 
     /// <summary>

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
 
     public class MyListItem : INotifyPropertyChanged

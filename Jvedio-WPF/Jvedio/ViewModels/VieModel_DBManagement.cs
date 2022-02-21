@@ -8,7 +8,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.ObjectModel;
 using System.IO;
 using Jvedio.Plot.Bar;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio.ViewModel
 {

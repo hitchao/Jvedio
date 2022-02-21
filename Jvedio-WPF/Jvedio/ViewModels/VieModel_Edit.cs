@@ -9,7 +9,7 @@ using static Jvedio.FileProcess;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.IO;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio.ViewModel
 {

@@ -1,7 +1,7 @@
 ﻿using Jvedio.Utils;
 using System.Windows;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
     public class WindowProperty
     {

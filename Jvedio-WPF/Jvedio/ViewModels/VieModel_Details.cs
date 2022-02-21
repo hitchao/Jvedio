@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 using DynamicData;
 using System.Windows.Media.Imaging;
 using Jvedio.Utils;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio.ViewModel
 {

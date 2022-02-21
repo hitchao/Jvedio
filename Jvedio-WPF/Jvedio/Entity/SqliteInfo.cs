@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
     public class SqliteInfo : INotifyPropertyChanged
     {

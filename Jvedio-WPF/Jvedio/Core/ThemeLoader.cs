@@ -1,5 +1,5 @@
 ﻿using ExCSS;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 using Jvedio.Utils;
 using Newtonsoft.Json;
 using System;

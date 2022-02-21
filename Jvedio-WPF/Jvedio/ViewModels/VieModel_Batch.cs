@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.IO;
 using static Jvedio.GlobalVariable;
 using System.Threading;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio.ViewModel
 {

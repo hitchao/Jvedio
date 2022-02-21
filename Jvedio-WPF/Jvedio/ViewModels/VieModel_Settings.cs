@@ -12,7 +12,7 @@ using System.IO;
 using static Jvedio.GlobalVariable;
 using static Jvedio.FileProcess;
 using Jvedio.Utils;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 using Jvedio.Core;
 
 namespace Jvedio.ViewModel
@@ -150,7 +150,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private ObservableCollection<string> _DataBases=new ObservableCollection<string>();
+        private ObservableCollection<string> _DataBases = new ObservableCollection<string>();
 
         public ObservableCollection<string> DataBases
         {

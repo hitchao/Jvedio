@@ -15,7 +15,7 @@ using System.Xml;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
 using Jvedio.Core;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio
 {

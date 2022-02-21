@@ -22,7 +22,7 @@ namespace Jvedio.Core
         const string CONFIG = "configuration";
         const string USER_SETTINGS = "userSettings";
         const string SETTING = "setting";
-        
+
 
         /// <summary>
         /// Loads the file into memory.
@@ -140,7 +140,8 @@ namespace Jvedio.Core
                 try
                 {
                     Directory.CreateDirectory(GlobalVariable.CurrentUserFolder);
-                }catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Logger.LogF(ex);
                 }

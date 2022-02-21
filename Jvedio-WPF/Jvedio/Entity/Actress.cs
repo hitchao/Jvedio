@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
 
     /// <summary>

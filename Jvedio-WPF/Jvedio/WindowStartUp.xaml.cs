@@ -18,7 +18,8 @@ using Jvedio.Core;
 using System.Windows.Controls.Primitives;
 using ChaoControls.Style;
 
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
+using Jvedio.Mapper;
 
 namespace Jvedio
 {
@@ -36,6 +37,7 @@ namespace Jvedio
         {
 
             InitializeComponent();
+            test();
 
             this.Width = SystemParameters.PrimaryScreenWidth * 2 / 3;
             this.Height = SystemParameters.PrimaryScreenHeight * 2 / 3;
@@ -47,6 +49,27 @@ namespace Jvedio
 
             FileHelper.TryDeleteFile("upgrade.bat");
             FileHelper.TryDeleteDir("Temp");
+        }
+
+        private void test()
+        {
+            ComTranslationMapper mapper = new ComTranslationMapper(@"D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\bin\Debug\data\chao\config.sqlite");
+
+            for (int i = 0; i < 10; i++)
+            {
+                Translation translation = new Translation();
+                translation.SourceLang = "SourceLang " + i;
+                translation.TargetLang = "TargetLang " + i;
+                translation.SourceText = "SourceText " + i;
+                translation.TargetText = "TargetText " + i;
+                translation.Platform = "谷歌 " + i;
+                mapper.insert(translation);
+            }
+
+
+            List<Translation> translations = mapper.selectAll();
+            translations.ForEach(translation => Console.WriteLine(translation));
+            this.Close();
         }
 
 

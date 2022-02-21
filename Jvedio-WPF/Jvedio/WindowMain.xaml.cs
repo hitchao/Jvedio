@@ -2,7 +2,7 @@
 using DynamicData;
 using HandyControl.Data;
 using HtmlAgilityPack;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 using Jvedio.Style;
 using Jvedio.Utils;
 using Jvedio.Utils.FileProcess;

@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.pojo;
+﻿using Jvedio.Entity;
 using Jvedio.Style;
 using Jvedio.Utils;
 using Jvedio.ViewModel;

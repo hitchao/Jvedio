@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Jvedio.Utils;
 using Jvedio.Utils.Sqlite;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio
 {

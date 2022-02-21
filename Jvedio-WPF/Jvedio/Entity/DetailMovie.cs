@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
     /// <summary>
     /// 详情页面的 Jvedio 影片，多了预览图、类别、演员、标签

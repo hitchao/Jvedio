@@ -23,7 +23,7 @@ using Jvedio.Utils;
 using System.Threading;
 using Jvedio.Style;
 using Jvedio.Utils.Net;
-using Jvedio.Core.pojo;
+using Jvedio.Entity;
 
 namespace Jvedio
 {

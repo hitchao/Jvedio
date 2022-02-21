@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.pojo;
+﻿using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
 using System.IO;

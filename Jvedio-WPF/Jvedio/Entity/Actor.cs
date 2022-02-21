@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Core.pojo
+namespace Jvedio.Entity
 {
     public class Actor : Actress
     {
