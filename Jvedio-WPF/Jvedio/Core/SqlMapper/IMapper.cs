@@ -13,9 +13,9 @@ namespace Jvedio.Core.SqlMapper
     public interface IMapper<T>
     {
 
-        int insert(T entity);
+        bool insert(T entity);
 
-        int deleteById(string id);
+        bool deleteById(object id);
 
         int deleteByDict(Dictionary<string, object> dict);
 

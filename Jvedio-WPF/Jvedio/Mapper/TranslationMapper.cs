@@ -11,9 +11,9 @@ namespace Jvedio.Mapper
 {
 
     [Table(tableName: "common_transaltions")]
-    public class ComTranslationMapper : BaseMapper<Translation>
+    public class TranslationMapper : BaseMapper<Translation>
     {
-        public ComTranslationMapper(string sqlitePath) : base(sqlitePath)
+        public TranslationMapper(string sqlitePath) : base(sqlitePath)
         {
         }
     }

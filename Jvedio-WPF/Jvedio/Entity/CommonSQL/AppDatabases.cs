@@ -1,5 +1,6 @@
 ﻿using DynamicData.Annotations;
-using Jvedio.Utils;
+using Jvedio.Core.Attributes;
+using Jvedio.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,29 +9,25 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
 {
-    public class SqliteInfo : INotifyPropertyChanged
+
+    // todo 修改 AppDatabases 对应的增删改查
+    [Table(tableName: "app_databases")]
+    public class AppDatabase : Serilizable, INotifyPropertyChanged
     {
 
-
-        public SqliteInfo()
+        public AppDatabase()
         {
             Image = new BitmapImage(new Uri("/Resources/Picture/datalist_video.png", UriKind.Relative));
         }
 
 
-        public int ID { get; set; }
-        public double Size { get; set; }
-        public InfoType Type { get; set; }
-
-        public string _CreateDate;
-        public string CreateDate { get { return _CreateDate; } set { _CreateDate = value; OnPropertyChanged(); } }
-
-
+        // 默认 IdType.AUTO
+        [TableId(IdType.AUTO)]
+        public long DBId { get; set; }
         public string _Name;
         public string Name { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
         public string _Path;
@@ -42,15 +39,14 @@ namespace Jvedio.Entity
             set
             {
                 _ImagePath = value;
-                if (File.Exists(_ImagePath))
-                {
-                    Image = ImageProcess.BitmapImageFromFile(_ImagePath);
-                }
+                if (File.Exists(_ImagePath)) Image = ImageProcess.BitmapImageFromFile(_ImagePath);
                 OnPropertyChanged();
             }
         }
 
         private BitmapSource _image;
+
+        [TableField(exist: false)]
         public BitmapSource Image
         {
             get { return _image; }
@@ -61,11 +57,15 @@ namespace Jvedio.Entity
             }
         }
 
-        public Int64 _Count;
-        public Int64 Count { get { return _Count; } set { _Count = value; OnPropertyChanged(); } }
 
-        public Int64 _ViewCount;
-        public Int64 ViewCount { get { return _ViewCount; } set { _ViewCount = value; OnPropertyChanged(); } }
+        public long? Size { get; set; }
+        public long? Count { get; set; }
+        public DataType DataType { get; set; }
+
+        public int? ViewCount { get; set; }
+        public string _CreateDate;
+        public string CreateDate { get { return _CreateDate; } set { _CreateDate = value; OnPropertyChanged(); } }
+        public string UpdateDate { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -79,15 +79,14 @@ namespace Jvedio.Entity
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            SqliteInfo o = obj as SqliteInfo;
+            AppDatabase o = obj as AppDatabase;
             if (o == null) return false;
-            return o.Type == this.Type && o.Name == this.Name && o.Path == this.Path;
+            return o.DataType == this.DataType && o.Name == this.Name && o.Path == this.Path;
         }
 
         public override int GetHashCode()
         {
-            return this.Type.GetHashCode() + this.Name.GetHashCode() + this.Path.GetHashCode();
+            return this.DataType.GetHashCode() + this.Name.GetHashCode() + this.Path.GetHashCode();
         }
     }
-
 }

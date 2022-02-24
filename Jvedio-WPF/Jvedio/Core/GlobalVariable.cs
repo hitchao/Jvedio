@@ -1,5 +1,7 @@
 ﻿
+using Jvedio.Core.Sql;
 using Jvedio.Entity;
+using Jvedio.Mapper;
 using Jvedio.Utils;
 using System;
 using System.Collections.Generic;
@@ -66,6 +68,7 @@ namespace Jvedio
         public static string BasePluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         public static string ScanConfigPath = Path.Combine(CurrentUserFolder, "ScanPathConfig.xml");
         public static string ServersConfigPath = Path.Combine(CurrentUserFolder, "ServersConfigPath.xml");
+        public static string AppDataPath = Path.Combine(CurrentUserFolder, "app_data.sqlite");
 
         public static string UserConfigPath = Path.Combine(CurrentUserFolder, "user-config.xml");
 
@@ -76,6 +79,11 @@ namespace Jvedio
            Path.Combine(BasePluginsPath,"themes"), Path.Combine(BasePluginsPath,"crawlers") };//初始化文件夹
 
         // *************** 目录 ***************
+
+
+        // *************** Mapper ***************
+
+        public static AppDatabaseMapper AppDatabaseMapper;
 
         public static string[] FontExt = new[] { ".otf", ".ttf" };
         public static InfoType CurrentInfoType = InfoType.Video;
@@ -206,8 +214,16 @@ namespace Jvedio
         public static void InitVariable()
         {
             JvedioServers = ServerConfig.Instance.ReadAll();
-
             Properties.Settings.Default.Save();
+
+            // 初始化数据库连接
+            AppDatabaseMapper = new AppDatabaseMapper(AppDataPath);
+            foreach (string key in SqliteTables.AppData.TABLES.Keys)
+            {
+                AppDatabaseMapper.createTable(key, SqliteTables.AppData.TABLES[key]);
+            }
+
+
 
             //每页数目
             //Properties.Settings.Default.DisplayNumber = 100;

@@ -20,6 +20,8 @@ using ChaoControls.Style;
 
 using Jvedio.Entity;
 using Jvedio.Mapper;
+using Jvedio.Core.SqlMapper;
+using Jvedio.Test;
 
 namespace Jvedio
 {
@@ -37,7 +39,7 @@ namespace Jvedio
         {
 
             InitializeComponent();
-            test();
+            //testMapper();
 
             this.Width = SystemParameters.PrimaryScreenWidth * 2 / 3;
             this.Height = SystemParameters.PrimaryScreenHeight * 2 / 3;
@@ -51,30 +53,34 @@ namespace Jvedio
             FileHelper.TryDeleteDir("Temp");
         }
 
-        private void test()
+
+
+        private void testMapper()
         {
-            ComTranslationMapper mapper = new ComTranslationMapper(@"D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\bin\Debug\data\chao\config.sqlite");
 
-            for (int i = 0; i < 10; i++)
-            {
-                Translation translation = new Translation();
-                translation.SourceLang = "SourceLang " + i;
-                translation.TargetLang = "TargetLang " + i;
-                translation.SourceText = "SourceText " + i;
-                translation.TargetText = "TargetText " + i;
-                translation.Platform = "谷歌 " + i;
-                mapper.insert(translation);
-            }
+            string demo_path = @"D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\Sql\demo.sqlite";
 
 
-            List<Translation> translations = mapper.selectAll();
-            translations.ForEach(translation => Console.WriteLine(translation));
+
+            AppDatabaseMapper appDatabaseMapper = new AppDatabaseMapper(demo_path);
+            TestMapper.insertAndSelect(appDatabaseMapper);
+
+            //TranslationMapper mapper = new TranslationMapper(demo_path);
+            //TestMapper.insertAndSelect(mapper);
+            //ComImagesMapper imagesMapper = new ComImagesMapper(demo_path);
+            //TestMapper.insertAndSelect(imagesMapper);
+
+
+
+
             this.Close();
         }
 
 
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            GlobalVariable.InitVariable();// 初始化全局变量
             EnsureSettings();//修复设置错误
             EnsureFileExists(); //判断文件是否存在
             EnsureDirExists();//创建文件夹
@@ -239,7 +245,7 @@ namespace Jvedio
                 InitDataBase();//初始化数据库
                 Identify.InitFanhaoList();
                 Scan.InitSearchPattern();
-                GlobalVariable.InitVariable();
+
             }
             catch (Exception ex)
             {
@@ -506,9 +512,9 @@ namespace Jvedio
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
 
-            SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            string path = sqliteInfo.Path;
-            string name = sqliteInfo.Name;
+            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            string path = info.Path;
+            string name = info.Name;
             if (new Msgbox(this, $"{Jvedio.Language.Resources.IsToDelete} {name}?").ShowDialog() == true)
             {
                 string dirpath = DateTime.Now.ToString("yyyyMMddHHmm");
@@ -521,7 +527,7 @@ namespace Jvedio
                     //删除
                     if (FileHelper.TryDeleteFile(path))
                     {
-                        ConfigConnection.Instance.DeleteByIds(new List<int>() { sqliteInfo.ID });
+                        GlobalVariable.AppDatabaseMapper.deleteById(info.DBId);
                         vieModel_StartUp.ScanDatabase();
                     }
                 }
@@ -532,9 +538,9 @@ namespace Jvedio
         private void RenameSqlite(object sender, RoutedEventArgs e)
         {
 
-            SqliteInfo sqliteInfo = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            string originName = sqliteInfo.Name;
-            string originPath = sqliteInfo.Path;
+            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            string originName = info.Name;
+            string originPath = info.Path;
             DialogInput input = new DialogInput(this, Jvedio.Language.Resources.Rename, originName);
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
@@ -550,11 +556,13 @@ namespace Jvedio
                 MessageCard.Show(Jvedio.Language.Resources.Message_AlreadyExist);
                 return;
             }
-            sqliteInfo.Name = targetName;
-            sqliteInfo.Path = targetPath;
+            info.Name = targetName;
+            info.Path = targetPath;
             FileHelper.TryMoveFile(originPath, targetPath);
-            ConfigConnection.Instance.UpdateSqliteInfoPath(sqliteInfo);
-            vieModel_StartUp.ScanDatabase(); // todo 仅更新重命名的
+            GlobalVariable.AppDatabaseMapper.updateById(info);
+
+            // 仅更新重命名的
+            vieModel_StartUp.refreshItem(info);
         }
 
 
@@ -658,9 +666,9 @@ namespace Jvedio
         {
 
             //加载数据库
-            SqliteInfo info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             string path = info.Path;
-            int id = info.ID;
+            long id = info.DBId;
             Properties.Settings.Default.DataBasePath = path;
             if (!File.Exists(Properties.Settings.Default.DataBasePath)) return;
             vieModel_StartUp.InitCompleted = false;
@@ -702,7 +710,7 @@ namespace Jvedio
             main.Show();
 
             // 次数+1
-            ConfigConnection.Instance.IncreaseField("ViewCount", id);
+            GlobalVariable.AppDatabaseMapper.increaseFieldById("ViewCount", id);
 
             this.Close();
         }
@@ -716,7 +724,7 @@ namespace Jvedio
 
         private void SetImage(object sender, RoutedEventArgs e)
         {
-            SqliteInfo info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
 
             System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
             dialog.Title = "选择图片";
@@ -725,11 +733,11 @@ namespace Jvedio
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string filename = dialog.FileName;
-                SetImage(info.ID, filename);
+                SetImage(info.DBId, filename);
             }
         }
 
-        private void SetImage(int id, string imagePath)
+        private void SetImage(long id, string imagePath)
         {
             // 复制到 ProjectImagePath 下
             string name = Path.GetFileNameWithoutExtension(imagePath);
@@ -739,10 +747,9 @@ namespace Jvedio
             FileHelper.TryCopyFile(imagePath, newPath);
 
 
-            vieModel_StartUp.Databases.Where(x => x.ID == id).SingleOrDefault().ImagePath = newPath;
-            vieModel_StartUp.CurrentDatabases.Where(x => x.ID == id).SingleOrDefault().ImagePath = newPath;
-
-            ConfigConnection.Instance.UpdateSqliteInfoField("ImagePath", newName, id);
+            vieModel_StartUp.Databases.Where(x => x.DBId == id).SingleOrDefault().ImagePath = newPath;
+            vieModel_StartUp.CurrentDatabases.Where(x => x.DBId == id).SingleOrDefault().ImagePath = newPath;
+            GlobalVariable.AppDatabaseMapper.updateFieldById("ImagePath", newName, id);
         }
 
         private void LoadDataBase(object sender, RoutedEventArgs e)

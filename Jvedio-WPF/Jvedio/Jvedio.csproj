@@ -214,26 +214,39 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Core\Attributes\TableAttribute.cs" />
+    <Compile Include="Core\Attributes\TableFieldAttribute.cs" />
     <Compile Include="Core\Attributes\TableIdAttribute.cs" />
     <Compile Include="Core\Command\File.cs" />
     <Compile Include="Core\Command\OpenWindow.cs" />
     <Compile Include="Core\Command\Sqlite.cs" />
     <Compile Include="Core\CrawlerLoader.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
-    <Compile Include="Core\Enum\IdType.cs" />
+    <Compile Include="Core\Enums\DataBaseType.cs" />
+    <Compile Include="Core\Enums\Gender.cs" />
+    <Compile Include="Core\Enums\IdType.cs" />
+    <Compile Include="Core\Enums\PathType.cs" />
+    <Compile Include="Core\Enums\VideoType.cs" />
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
+    <Compile Include="Core\Sql\SqliteTables.cs" />
     <Compile Include="Entity\Actor.cs" />
+    <Compile Include="Entity\Actor\ActorInfo.cs" />
     <Compile Include="Entity\Actress.cs" />
+    <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
+    <Compile Include="Entity\CommonSQL\CommonImage.cs" />
+    <Compile Include="Entity\Data\MetaData.cs" />
+    <Compile Include="Entity\Data\Video.cs" />
     <Compile Include="Entity\DetailMovie.cs" />
     <Compile Include="Entity\Genre.cs" />
     <Compile Include="Entity\Movie.cs" />
     <Compile Include="Entity\MyListItem.cs" />
     <Compile Include="Entity\SampleMovies.cs" />
+    <Compile Include="Entity\Serilizable.cs" />
     <Compile Include="Entity\Server.cs" />
     <Compile Include="Entity\Servers.cs" />
-    <Compile Include="Entity\SqliteInfo.cs" />
     <Compile Include="Entity\Magnet.cs" />
-    <Compile Include="Entity\Translation.cs" />
+    <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
+    <Compile Include="Entity\CommonSQL\CommonUrlCode.cs" />
+    <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\VideoInfo.cs" />
     <Compile Include="Entity\WindowProperty.cs" />
     <Compile Include="Core\Settings.cs" />
@@ -241,7 +254,6 @@
     <Compile Include="Core\PropertiesLoader.cs" />
     <Compile Include="Core\SqliteConnect\CommonConnection.cs" />
     <Compile Include="Core\SqliteConnect\DataConnection.cs" />
-    <Compile Include="Core\SqliteConnect\ConfigConnection.cs" />
     <Compile Include="Core\SqlMapper\BaseMapper.cs" />
     <Compile Include="Core\SqlMapper\IMapper.cs" />
     <Compile Include="Core\ThemeLoader.cs" />
@@ -263,16 +275,18 @@
     <Compile Include="DialogWindows\Dialog_About.xaml.cs">
       <DependentUpon>Dialog_About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mapper\ComTranslationMapper.cs" />
-    <Compile Include="Test.xaml.cs">
-      <DependentUpon>Test.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Mapper\AppDatabaseMapper.cs" />
+    <Compile Include="Mapper\ComImagesMapper.cs" />
+    <Compile Include="Mapper\TranslationMapper.cs" />
+    <Compile Include="Test\TestMapper.cs" />
     <Compile Include="Utils\AI\Baidu.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utils\Common\ClassUtils.cs" />
     <Compile Include="Utils\Common\JsonUtils.cs" />
+    <Compile Include="Utils\Common\TypeHelper.cs" />
     <Compile Include="Utils\FileProcess\ClipBoard.cs" />
     <Compile Include="Utils\FileProcess\FileHelper.cs" />
     <Compile Include="Utils\FileProcess\StreamHelper.cs" />
@@ -393,10 +407,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Test.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Utils\Plot\Bar\BarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -467,18 +477,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Sql\app_data.sql" />
+    <Content Include="Sql\single_db_actor.sql" />
+    <Content Include="Sql\single_db_commic.sql" />
+    <Content Include="Sql\single_db_video.sql" />
+    <Content Include="Sql\sql-before-5.0.sql" />
+    <None Include="Sql\demo.sqlite" />
     <Resource Include="Resources\Picture\logo.png" />
     <Resource Include="Resources\menuitem\magnet.png" />
     <Resource Include="Resources\Picture\NoPrinting_G.gif" />
     <Resource Include="Data\github.txt" />
     <Resource Include="Resources\Picture\datalist_video.png" />
-    <Content Include="Sql\commic.sql" />
-    <Content Include="Sql\full-demo.sql" />
-    <Content Include="Sql\video.sql" />
-    <Content Include="Sql\actor.sql" />
-    <Content Include="Sql\common.sql" />
-    <Content Include="Sql\data-4.0.sql" />
-    <Content Include="Sql\data.sql" />
     <Content Include="Data\x64\SQLite.Interop.dll" />
     <Content Include="Data\x86\SQLite.Interop.dll" />
     <Resource Include="Resources\Skin\white\classify.png" />

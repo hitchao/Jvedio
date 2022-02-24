@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Core.Enum
+namespace Jvedio.Core.Enums
 {
     public enum IdType
     {

@@ -1,4 +1,36 @@
 ﻿-- 【公共表】
+-- 文件名：app_config.sqlite
+-- app_xxx 存储 application 级别的信息
+-- common_xxx 存储公共信息
+
+-- 所有字段命名都和映射类一致
+-- 启动界面管理
+-- DataType: 0-Video 1-Picture 2-Game 3-Comics
+drop table if exists app_databases;
+BEGIN;
+create table app_databases (
+    DBId INTEGER PRIMARY KEY autoincrement,
+    Path TEXT DEFAULT '',
+    Name VARCHAR(500),
+    Size INTEGER DEFAULT 0,
+    Count INTEGER DEFAULT 0,
+    DataType INT DEFAULT 0,
+    ImagePath TEXT DEFAULT '',
+    ViewCount INT DEFAULT 0,
+
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    unique(DataType, Name),
+    unique(Path)
+);
+CREATE INDEX name_idx ON app_databases (Name);
+CREATE INDEX type_idx ON app_databases (DataType);
+COMMIT;
+
+insert into app_databases ( Count, Path, Name, Size, ImagePath, ViewCount )
+values ( 55, 'C:\123\test.sqlite', 'test', 51344, '123.png', 55);
+
+
 
 -- 【存储刮削的图片】
 -- PathType: 0-绝对路径 1-相对于Jvedio路径 2-相对于影片路径 3-网络绝对路径
@@ -8,9 +40,9 @@ create table common_images(
 
     Name VARCHAR(500),
     Path VARCHAR(1000),
-    PathType INT,
+    PathType INT DEFAULT 0,
     Ext VARCHAR(100),
-    Size DOUBLE,
+    Size INTEGER,
     Height INT,
     Width INT,
 
@@ -21,7 +53,7 @@ create table common_images(
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
 
-    unique(Path)
+    unique(PathType,Path)
 );
 
 insert into common_images
@@ -52,22 +84,22 @@ values ('简体中文','English','人是生而自由的','Man is born free','you
 -- 【磁力链接】
 -- Magnet 40位磁力链接
 -- TorrentUrl 种子下载地址
--- UID 视频的 UID
+-- VID 视频的 VID
 -- Tag 磁力标签
--- Downloads 下载次数
+-- DownloadNumber 下载次数
 -- ExtraInfo ：{"Seeds":"1","Peers":"0"}
 drop table if exists common_magnets;
 BEGIN;
-create table if not exists common_magnets (
+create table common_magnets (
     MagnetID INTEGER PRIMARY KEY autoincrement,
     Magnet VARCHAR(40),
     TorrentUrl VARCHAR(2000),
-    UID VARCHAR(500),
+    VID VARCHAR(500),
     Title TEXT,
-    Size DOUBLE DEFAULT 0,
+    Size INTEGER DEFAULT 0,
     Releasedate VARCHAR(10) DEFAULT '1900-01-01',
     Tag TEXT,
-    Downloads INT DEFAULT 0,
+    DownloadNumber INT DEFAULT 0,
     ExtraInfo TEXT,
 
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
@@ -75,28 +107,27 @@ create table if not exists common_magnets (
 
     unique(Magnet)
 );
-CREATE INDEX common_magnets_idx_UID ON common_magnets (UID);
+CREATE INDEX common_magnets_idx_VID ON common_magnets (VID);
 COMMIT;
 
 insert into common_magnets
-(Magnet,TorrentUrl,UID,Title,Size,Releasedate,Tag,Downloads,ExtraInfo)
+(Magnet,TorrentUrl,VID,Title,Size,Releasedate,Tag,DownloadNumber,ExtraInfo)
 values ('7c5cd6144ae373fec931f20deabcf25eda85cb40','种子下载地址','121213_713','磁力链接1',1034.24,'2014-10-30','高清 中文',15,'{"Seeds":"1","Peers":"0"}');
 
 -- 【db和library等识别码和网址的对应关系】
 -- web_type : 所属网址 => [db,library]
 drop table if exists common_url_code;
 BEGIN;
-create table if not exists common_url_code (
-    code_id INTEGER PRIMARY KEY autoincrement,
-    UID VARCHAR(500),
-    code VARCHAR(100),
-    web_type VARCHAR(100),
+create table common_url_code (
+    CodeId INTEGER PRIMARY KEY autoincrement,
+    VID VARCHAR(500),
+    Code VARCHAR(100),
+    WebType VARCHAR(100),
 
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
-CREATE INDEX common_url_code_idx_UID ON common_url_code (web_type,UID);
+CREATE INDEX common_url_code_idx_VID ON common_url_code (WebType,VID);
 COMMIT;
-insert into common_url_code
-(UID,code,web_type)
+insert into common_url_code(VID,Code,WebType)
 values ('ABCD-123','1BKY9','db');

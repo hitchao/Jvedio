@@ -8,6 +8,7 @@
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="Window_StartUp"
     Title="欢迎使用 Jvedio"
     Width="800"
     Height="400"
@@ -22,7 +23,203 @@
     TitleMargin="5 0"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <chao:BaseWindow.Resources />
+    <chao:BaseWindow.Resources>
+
+
+
+        <DataTemplate x:Key="TileTemplate">
+            <Border
+                Padding="3"
+                Panel.ZIndex="5"
+                Background="{StaticResource Window.Title.Background}"
+                Cursor="Hand"
+                MouseLeftButtonDown="LoadDataBase">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="LoadDataBase" Header="打开" />
+                        <MenuItem
+                            Command="cmd:File.OpenDir"
+                            CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
+                            Header="打开目录" />
+                        <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Click="SetImage" Header="设置图片" />
+                        <MenuItem
+                            Click="DelSqlite"
+                            Header="删除"
+                            Tag="#ff2e2e" />
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Image
+                        Grid.Row="0"
+                        Width="178"
+                        Height="100"
+                        Margin="0"
+                        Source="{Binding Image, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+
+                    <Grid Grid.Row="0">
+                        <Border
+                            Height="25"
+                            VerticalAlignment="Bottom"
+                            Background="Gray"
+                            Opacity="0.5" />
+                        <StackPanel
+                            Margin="5"
+                            VerticalAlignment="Bottom"
+                            Orientation="Horizontal">
+                            <Viewbox
+                                Width="12"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M194.56 386.048q31.744 0 46.592 19.456t14.848 43.008l0 447.488-192.512 0 0-443.392q0-31.744 19.968-49.152t43.52-17.408l67.584 0zM514.048 134.144q27.648 0 44.032 16.896t16.384 40.448l0 704.512-191.488 0 0-702.464q0-15.36 6.144-26.624t15.36-18.432 20.48-10.752 20.48-3.584l68.608 0zM832.512 577.536q9.216 0 19.968 5.12t20.48 14.336 16.384 20.992 6.656 25.088l0 252.928-191.488 0 0-250.88q0-11.264 4.608-23.552t12.8-22.016 19.456-15.872 24.576-6.144l66.56 0z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                            <TextBlock Margin="5,0" Text="{Binding Count}" />
+                            <Viewbox
+                                Width="12"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M995.474286 446.902857a569.782857 569.782857 0 0 0-95.817143-134.034286 540.708571 540.708571 0 0 0-775.314286 0 569.782857 569.782857 0 0 0-95.817143 134.034286 143.36 143.36 0 0 0 0 130.194286 569.782857 569.782857 0 0 0 95.817143 134.034286 540.708571 540.708571 0 0 0 775.314286 0 569.782857 569.782857 0 0 0 95.817143-134.034286 143.36 143.36 0 0 0 0-130.194286zM512 676.571429a164.571429 164.571429 0 1 1 164.571429-164.571429 164.571429 164.571429 0 0 1-164.571429 164.571429z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                            <TextBlock Margin="5,0" Text="{Binding ViewCount}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Margin="10,5,10,10">
+                        <TextBlock
+                            Margin="0,5"
+                            FontSize="20"
+                            Foreground="#fff"
+                            Text="{Binding Name}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="gray"
+                            Text="{Binding CreateDate}"
+                            ToolTip="{Binding CreateDate}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="gray"
+                            Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
+                            ToolTip="{Binding Path}" />
+                    </StackPanel>
+
+
+                </Grid>
+
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListTemplate">
+            <Border
+                Margin="0"
+                Panel.ZIndex="5"
+                CornerRadius="5"
+                Cursor="Hand"
+                MouseLeftButtonDown="LoadDataBase"
+                Style="{StaticResource RoundBorder}">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="LoadDataBase" Header="打开" />
+                        <MenuItem
+                            Command="cmd:File.OpenDir"
+                            CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
+                            Header="打开目录" />
+                        <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Click="SetImage" Header="设置图片" />
+                        <MenuItem
+                            Click="DelSqlite"
+                            Header="删除"
+                            Tag="#ff2e2e" />
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Grid.Row="0"
+                        Width="auto"
+                        Height="64"
+                        Source="{Binding Image, Mode=OneWay}"
+                        Stretch="Uniform" />
+                    <StackPanel Grid.Column="1" Margin="10,0">
+                        <TextBlock
+                            Margin="0,5"
+                            FontSize="20"
+                            Foreground="#fff"
+                            Text="{Binding Name}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="gray"
+                            Text="{Binding CreateDate}"
+                            ToolTip="{Binding CreateDate}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="gray"
+                            Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
+                            ToolTip="{Binding Path}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="2"
+                        VerticalAlignment="Bottom"
+                        Orientation="Horizontal">
+                        <Viewbox
+                            Width="12"
+                            Height="auto"
+                            VerticalAlignment="Center">
+                            <Path
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Data="M194.56 386.048q31.744 0 46.592 19.456t14.848 43.008l0 447.488-192.512 0 0-443.392q0-31.744 19.968-49.152t43.52-17.408l67.584 0zM514.048 134.144q27.648 0 44.032 16.896t16.384 40.448l0 704.512-191.488 0 0-702.464q0-15.36 6.144-26.624t15.36-18.432 20.48-10.752 20.48-3.584l68.608 0zM832.512 577.536q9.216 0 19.968 5.12t20.48 14.336 16.384 20.992 6.656 25.088l0 252.928-191.488 0 0-250.88q0-11.264 4.608-23.552t12.8-22.016 19.456-15.872 24.576-6.144l66.56 0z"
+                                Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                        </Viewbox>
+                        <TextBlock Margin="5,0" Text="{Binding Count}" />
+                        <Viewbox
+                            Width="12"
+                            Height="auto"
+                            VerticalAlignment="Center">
+                            <Path
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Data="M995.474286 446.902857a569.782857 569.782857 0 0 0-95.817143-134.034286 540.708571 540.708571 0 0 0-775.314286 0 569.782857 569.782857 0 0 0-95.817143 134.034286 143.36 143.36 0 0 0 0 130.194286 569.782857 569.782857 0 0 0 95.817143 134.034286 540.708571 540.708571 0 0 0 775.314286 0 569.782857 569.782857 0 0 0 95.817143-134.034286 143.36 143.36 0 0 0 0-130.194286zM512 676.571429a164.571429 164.571429 0 1 1 164.571429-164.571429 164.571429 164.571429 0 0 1-164.571429 164.571429z"
+                                Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                        </Viewbox>
+                        <TextBlock Margin="5,0" Text="{Binding ViewCount}" />
+                    </StackPanel>
+                </Grid>
+
+            </Border>
+        </DataTemplate>
+
+        <Style
+            x:Key="ContainerStyle"
+            BasedOn="{StaticResource ListBoxItemStyle1}"
+            TargetType="{x:Type ListBoxItem}">
+            <Setter Property="ContentTemplate" Value="{StaticResource ListTemplate}" />
+            <!--<Setter Property="ContentTemplate" Value="{StaticResource TileTemplate}" />-->
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.Tile}" Value="True">
+                    <Setter Property="ContentTemplate" Value="{StaticResource TileTemplate}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </chao:BaseWindow.Resources>
 
 
     <Grid>
@@ -189,6 +386,15 @@
                             </Viewbox>
                         </Border>
 
+                        <chao:Switch
+                            Width="40"
+                            Height="30"
+                            Background="Gray"
+                            IsChecked="{Binding Tile, Mode=TwoWay}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="平铺" />
                     </StackPanel>
 
                     <ListBox
@@ -197,96 +403,31 @@
                         HorizontalContentAlignment="Stretch"
                         d:ItemsSource="{d:SampleData ItemCount=5}"
                         Background="Transparent"
+                        ItemContainerStyle="{StaticResource ContainerStyle}"
                         ItemsSource="{Binding CurrentDatabases}"
-                        SelectionChanged="listBox_SelectionChanged"
-                        Style="{StaticResource NormalListBox}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border
-                                    Margin="0"
-                                    Panel.ZIndex="5"
-                                    CornerRadius="5"
-                                    Cursor="Hand"
-                                    MouseLeftButtonDown="LoadDataBase"
-                                    Style="{StaticResource RoundBorder}">
-                                    <Border.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Click="LoadDataBase" Header="打开" />
-                                            <MenuItem
-                                                Command="cmd:File.OpenDir"
-                                                CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
-                                                Header="打开目录" />
-                                            <MenuItem Click="RenameSqlite" Header="重命名" />
-                                            <MenuItem Click="SetImage" Header="设置图片" />
-                                            <MenuItem
-                                                Click="DelSqlite"
-                                                Header="删除"
-                                                Tag="#ff2e2e" />
-                                        </ContextMenu>
-                                    </Border.ContextMenu>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="100" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Image
-                                            Grid.Row="0"
-                                            Width="auto"
-                                            Height="64"
-                                            Source="{Binding Image, Mode=OneWay}"
-                                            Stretch="Uniform" />
-                                        <StackPanel Grid.Column="1" Margin="10,0">
-                                            <TextBlock
-                                                Margin="0,5"
-                                                FontSize="20"
-                                                Foreground="#fff"
-                                                Text="{Binding Name}" />
-                                            <TextBlock
-                                                FontSize="12"
-                                                Foreground="gray"
-                                                Text="{Binding CreateDate}"
-                                                ToolTip="{Binding CreateDate}" />
-                                            <TextBlock
-                                                FontSize="12"
-                                                Foreground="gray"
-                                                Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
-                                                ToolTip="{Binding Path}" />
-                                        </StackPanel>
-
-                                        <StackPanel
-                                            Grid.Column="2"
-                                            VerticalAlignment="Bottom"
-                                            Orientation="Horizontal">
-                                            <Viewbox
-                                                Width="12"
-                                                Height="auto"
-                                                VerticalAlignment="Center">
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M194.56 386.048q31.744 0 46.592 19.456t14.848 43.008l0 447.488-192.512 0 0-443.392q0-31.744 19.968-49.152t43.52-17.408l67.584 0zM514.048 134.144q27.648 0 44.032 16.896t16.384 40.448l0 704.512-191.488 0 0-702.464q0-15.36 6.144-26.624t15.36-18.432 20.48-10.752 20.48-3.584l68.608 0zM832.512 577.536q9.216 0 19.968 5.12t20.48 14.336 16.384 20.992 6.656 25.088l0 252.928-191.488 0 0-250.88q0-11.264 4.608-23.552t12.8-22.016 19.456-15.872 24.576-6.144l66.56 0z"
-                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                            </Viewbox>
-                                            <TextBlock Margin="5,0" Text="{Binding Count}" />
-                                            <Viewbox
-                                                Width="12"
-                                                Height="auto"
-                                                VerticalAlignment="Center">
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M995.474286 446.902857a569.782857 569.782857 0 0 0-95.817143-134.034286 540.708571 540.708571 0 0 0-775.314286 0 569.782857 569.782857 0 0 0-95.817143 134.034286 143.36 143.36 0 0 0 0 130.194286 569.782857 569.782857 0 0 0 95.817143 134.034286 540.708571 540.708571 0 0 0 775.314286 0 569.782857 569.782857 0 0 0 95.817143-134.034286 143.36 143.36 0 0 0 0-130.194286zM512 676.571429a164.571429 164.571429 0 1 1 164.571429-164.571429 164.571429 164.571429 0 0 1-164.571429 164.571429z"
-                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                            </Viewbox>
-                                            <TextBlock Margin="5,0" Text="{Binding ViewCount}" />
-                                        </StackPanel>
-                                    </Grid>
-
-                                </Border>
-
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
+                        SelectionChanged="listBox_SelectionChanged">
+                        <ListBox.Resources>
+                            <ItemsPanelTemplate x:Key="ListBoxWrapTemplate">
+                                <WrapPanel
+                                    Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
+                                    ItemHeight="{Binding (ListView.View).ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                            </ItemsPanelTemplate>
+                            <ItemsPanelTemplate x:Key="ListBoxVerticalStackTemplate">
+                                <StackPanel Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}" Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ListBox.Resources>
+                        <ListBox.Style>
+                            <Style BasedOn="{StaticResource NormalListBox}" TargetType="ListBox">
+                                <Setter Property="ItemsPanel" Value="{DynamicResource ListBoxVerticalStackTemplate}" />
+                                <!--<Setter Property="ItemsPanel" Value="{DynamicResource ListBoxWrapTemplate}" />-->
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Tile}" Value="True">
+                                        <Setter Property="ItemsPanel" Value="{DynamicResource ListBoxWrapTemplate}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.Style>
                     </ListBox>
 
 

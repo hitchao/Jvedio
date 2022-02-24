@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.Enum;
+﻿using Jvedio.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +9,20 @@ namespace Jvedio.Core.Attributes
 {
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
-    internal class TableIdAttribute : System.Attribute
+    internal class TableFieldAttribute : System.Attribute
     {
-        public IdType type;
+        public bool exist = false;
+        public bool select = true;
 
-        public TableIdAttribute(IdType type)
+        public TableFieldAttribute(bool exist)
         {
-            this.type = type;
+            this.exist = exist;
+        }
+
+
+        public TableFieldAttribute(bool exist, bool select) : this(exist)
+        {
+            this.select = select;
         }
     }
 }
