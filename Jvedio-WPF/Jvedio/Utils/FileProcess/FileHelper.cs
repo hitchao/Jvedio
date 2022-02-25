@@ -4,16 +4,18 @@ using System;
 
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Jvedio
 {
     public static class FileHelper
     {
-         
+
         public static bool TryMoveFile(string originPath, string targetPath)
         {
-            
+
             try
             {
                 File.Move(originPath, targetPath);
@@ -34,21 +36,22 @@ namespace Jvedio
                 {
                     return Directory.GetFiles(path, searchPattern, searchOption);
                 }
-                
-            }catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 Logger.LogF(ex);
             }
             return null;
         }
 
-        public static string[] TryGetAllFiles(string path,string pattern)
+        public static string[] TryGetAllFiles(string path, string pattern)
         {
             if (Directory.Exists(path))
             {
                 try
                 {
-                    return Directory.GetFiles(path, pattern,SearchOption.TopDirectoryOnly);
+                    return Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
                 }
                 catch (Exception ex)
                 {
@@ -110,6 +113,31 @@ namespace Jvedio
                 {
                     Logger.LogF(ex);
                 }
+            }
+            return false;
+        }
+
+        public static void TryMoveToRecycleBin(string path, int delay)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(delay * 1000);
+                TryMoveToRecycleBin(path);
+            });
+        }
+
+        public static bool TryMoveToRecycleBin(string path)
+        {
+            try
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(path,
+                Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogF(ex);
             }
             return false;
         }

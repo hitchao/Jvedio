@@ -231,6 +231,8 @@
     <Compile Include="Entity\Actor.cs" />
     <Compile Include="Entity\Actor\ActorInfo.cs" />
     <Compile Include="Entity\Actress.cs" />
+    <Compile Include="Entity\CommonSQL\AIFaceInfo.cs" />
+    <Compile Include="Entity\CommonSQL\AppConfig.cs" />
     <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
     <Compile Include="Entity\CommonSQL\CommonImage.cs" />
     <Compile Include="Entity\Data\MetaData.cs" />
@@ -253,7 +255,6 @@
     <Compile Include="Entity\Theme.cs" />
     <Compile Include="Core\PropertiesLoader.cs" />
     <Compile Include="Core\SqliteConnect\CommonConnection.cs" />
-    <Compile Include="Core\SqliteConnect\DataConnection.cs" />
     <Compile Include="Core\SqlMapper\BaseMapper.cs" />
     <Compile Include="Core\SqlMapper\IMapper.cs" />
     <Compile Include="Core\ThemeLoader.cs" />
@@ -275,10 +276,15 @@
     <Compile Include="DialogWindows\Dialog_About.xaml.cs">
       <DependentUpon>Dialog_About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mapper\ActorMapper.cs" />
+    <Compile Include="Mapper\AIFaceMapper.cs" />
+    <Compile Include="Mapper\AppConfigMapper.cs" />
     <Compile Include="Mapper\AppDatabaseMapper.cs" />
     <Compile Include="Mapper\ComImagesMapper.cs" />
+    <Compile Include="Mapper\MetaDataMapper.cs" />
     <Compile Include="Mapper\TranslationMapper.cs" />
     <Compile Include="Test\TestMapper.cs" />
+    <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
     <Compile Include="Utils\AI\Baidu.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -483,6 +489,7 @@
     <Content Include="Sql\single_db_video.sql" />
     <Content Include="Sql\sql-before-5.0.sql" />
     <None Include="Sql\demo.sqlite" />
+    <None Include="Sql\single_db.sqlite" />
     <Resource Include="Resources\Picture\logo.png" />
     <Resource Include="Resources\menuitem\magnet.png" />
     <Resource Include="Resources\Picture\NoPrinting_G.gif" />

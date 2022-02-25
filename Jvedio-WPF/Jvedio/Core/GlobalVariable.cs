@@ -84,6 +84,7 @@ namespace Jvedio
         // *************** Mapper ***************
 
         public static AppDatabaseMapper AppDatabaseMapper;
+        public static AppConfigMapper AppConfigMapper;
 
         public static string[] FontExt = new[] { ".otf", ".ttf" };
         public static InfoType CurrentInfoType = InfoType.Video;
@@ -218,6 +219,7 @@ namespace Jvedio
 
             // 初始化数据库连接
             AppDatabaseMapper = new AppDatabaseMapper(AppDataPath);
+            AppConfigMapper = new AppConfigMapper(AppDataPath);
             foreach (string key in SqliteTables.AppData.TABLES.Keys)
             {
                 AppDatabaseMapper.createTable(key, SqliteTables.AppData.TABLES[key]);

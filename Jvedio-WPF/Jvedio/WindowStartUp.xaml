@@ -108,11 +108,11 @@
                             Foreground="gray"
                             Text="{Binding CreateDate}"
                             ToolTip="{Binding CreateDate}" />
-                        <TextBlock
+                        <!--<TextBlock
                             FontSize="12"
                             Foreground="gray"
                             Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
-                            ToolTip="{Binding Path}" />
+                            ToolTip="{Binding Path}" />-->
                     </StackPanel>
 
 
@@ -124,11 +124,11 @@
         <DataTemplate x:Key="ListTemplate">
             <Border
                 Margin="0"
+                Padding="5"
                 Panel.ZIndex="5"
-                CornerRadius="5"
+                Background="{StaticResource Window.Title.Background}"
                 Cursor="Hand"
-                MouseLeftButtonDown="LoadDataBase"
-                Style="{StaticResource RoundBorder}">
+                MouseLeftButtonDown="LoadDataBase">
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Click="LoadDataBase" Header="打开" />
@@ -167,11 +167,11 @@
                             Foreground="gray"
                             Text="{Binding CreateDate}"
                             ToolTip="{Binding CreateDate}" />
-                        <TextBlock
+                        <!--<TextBlock
                             FontSize="12"
                             Foreground="gray"
                             Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
-                            ToolTip="{Binding Path}" />
+                            ToolTip="{Binding Path}" />-->
                     </StackPanel>
 
                     <StackPanel

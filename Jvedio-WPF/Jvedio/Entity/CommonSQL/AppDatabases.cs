@@ -13,8 +13,6 @@ using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
 {
-
-    // todo 修改 AppDatabases 对应的增删改查
     [Table(tableName: "app_databases")]
     public class AppDatabase : Serilizable, INotifyPropertyChanged
     {

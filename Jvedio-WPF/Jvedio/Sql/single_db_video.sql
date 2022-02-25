@@ -10,11 +10,13 @@
 -- RatingCount 评分的人数
 -- Genre 类别，以符号 / 分割
 -- Tag 标签，以符号 / 分割
--- Favorited 收藏该资源的人数
+-- FavoriteCount 收藏该资源的人数
 
 
 -- Grade 自己的评分
 -- Label 自己的标签
+
+-- ViewDate 最近一次播放的日期
 drop table if exists metadata;
 BEGIN;
 create table if not exists metadata (
@@ -36,13 +38,14 @@ create table if not exists metadata (
     Grade FLOAT DEFAULT 0.0,
     Label TEXT,
 
-    
+    ViewDate VARCHAR(30),
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
 CREATE INDEX metadata_idx_ReleaseDate ON metadata (ReleaseDate);
 CREATE INDEX metadata_idx_DataType ON metadata (DataType);
 CREATE INDEX metadata_idx_Hash ON metadata (Hash);
+CREATE INDEX metadata_idx_ViewDate ON metadata (ViewDate);
 COMMIT;
 
 -- 影视信息表
@@ -72,7 +75,7 @@ CREATE INDEX metadata_video_idx_VideoType ON metadata_video (VideoType);
 COMMIT;
 
 
-insert into metadata( Title, Size, Path, ReleaseDate, ReleaseYear, ViewCount, DataType, Rating, RatingCount, Favorited, Genre, Tag, Grade, Label )
+insert into metadata( Title, Size, Path, ReleaseDate, ReleaseYear, ViewCount, DataType, Rating, RatingCount, FavoriteCount, Genre, Tag, Grade, Label )
 values
 ('逃学威龙1',1024,'D:\逃学威龙1.mp4','1991-07-18',1991,0,0,4.5,1573,2721,'搞笑/休闲/警察/学校','',0.0,'无厘头/美女'),
 ('逃学威龙2',1024,'D:\逃学威龙2.mp4','1991-07-18',1991,0,0,4.5,1573,2721,'搞笑/休闲/警察/学校','',0.0,'无厘头/美女'),
@@ -86,30 +89,33 @@ values(1,'逃学威龙1','陈嘉上/王晶','中国','永盛电影制作有限�
 -- 多对多
 -- type: 0-缩略图 1-海报图 2-GIF图像
 --      仅支持单张图片，避免数据量过大
-drop table if exists data_movie_to_image;
+drop table if exists metadata_to_image;
 BEGIN;
-create table data_movie_to_image(
+create table metadata_to_image(
     id INTEGER PRIMARY KEY autoincrement,
     DataID INTEGER,
     ImageID INTEGER,
     ImageType INTEGER
 );
-CREATE INDEX data_movie_to_image_idx_DataID ON data_movie_to_image (DataID);
+CREATE INDEX metadata_to_image_idx_DataID ON metadata_to_image (DataID);
 COMMIT;
-insert into data_movie_to_image(DataID,ImageID,ImageType)
+
+
+
+insert into metadata_to_image(DataID,ImageID,ImageType)
 values (1,1,0), (1,2,1), (1,3,2), (1,4,2);
 
 
 
 -- 翻译转换表
 -- FieldType: 字段，Title,Plot,Outline,Studio,Genre 等都支持翻译
-drop table if exists data_to_translation;
+drop table if exists metadata_to_translation;
 BEGIN;
-create table data_to_translation(
+create table metadata_to_translation(
     ID INTEGER PRIMARY KEY autoincrement,
     FieldType VARCHAR(100),
     TransaltionID INT
 );
-CREATE INDEX data_to_translation_idx_ID_FieldType ON data_to_translation (ID,FieldType);
+CREATE INDEX metadata_to_translation_idx_ID_FieldType ON metadata_to_translation (ID,FieldType);
 COMMIT;
 

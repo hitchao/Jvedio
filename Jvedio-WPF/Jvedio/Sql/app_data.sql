@@ -31,6 +31,27 @@ insert into app_databases ( Count, Path, Name, Size, ImagePath, ViewCount )
 values ( 55, 'C:\123\test.sqlite', 'test', 51344, '123.png', 55);
 
 
+drop table if exists app_configs;
+BEGIN;
+create table app_configs (
+    ConfigId INTEGER PRIMARY KEY autoincrement,
+    ConfigName VARCHAR(100),
+    ConfigValue TEXT DEFAULT '',
+
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
+);
+CREATE INDEX app_configs_name_idx ON app_configs (ConfigName);
+COMMIT;
+
+
+drop table if exists common_recent_view;
+create table common_recent_view(
+    id INTEGER PRIMARY KEY autoincrement,
+    DataID INTEGER,
+    ViewDate VARCHAR(30)
+);
+
 
 -- 【存储刮削的图片】
 -- PathType: 0-绝对路径 1-相对于Jvedio路径 2-相对于影片路径 3-网络绝对路径
@@ -131,3 +152,30 @@ CREATE INDEX common_url_code_idx_VID ON common_url_code (WebType,VID);
 COMMIT;
 insert into common_url_code(VID,Code,WebType)
 values ('ABCD-123','1BKY9','db');
+
+
+-- Beauty 颜值打分
+-- Gender 性别
+-- Race 人种
+-- Mask 口罩/面具 0-否 1-是
+-- Glasses 是否戴眼镜
+drop table if exists common_ai_face;
+BEGIN;
+create table common_ai_face (
+    AIId INTEGER PRIMARY KEY autoincrement,
+    Age INT DEFAULT 0,
+    Beauty FLOAT DEFAULT 0,
+    Expression VARCHAR(100),
+    FaceShape VARCHAR(100),
+    Gender INT DEFAULT 0,
+    Glasses INT DEFAULT 0,
+    Race VARCHAR(100),
+    Emotion VARCHAR(100),
+    Mask INT DEFAULT 0,
+    Platform VARCHAR(100),
+    
+    ExtraInfo TEXT,
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
+);
+COMMIT;

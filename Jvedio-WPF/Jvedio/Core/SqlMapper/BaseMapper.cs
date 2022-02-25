@@ -207,6 +207,10 @@ namespace Jvedio.Core.SqlMapper
                     float.TryParse(value, out float Value);
                     p.SetValue(reslut, Value);
                 }
+                else if (p.PropertyType == typeof(bool))
+                {
+                    p.SetValue(reslut, value == "1" ? true : false);
+                }
                 else if (p.PropertyType == typeof(string))
                 {
                     p.SetValue(reslut, value);
@@ -352,6 +356,10 @@ namespace Jvedio.Core.SqlMapper
                 else if (TypeHelper.IsNumeric(type))
                 {
                     value_sql.Append(value);
+                }
+                else if (type == typeof(bool))
+                {
+                    value_sql.Append((bool)value ? 1 : 0);
                 }
                 else
                 {

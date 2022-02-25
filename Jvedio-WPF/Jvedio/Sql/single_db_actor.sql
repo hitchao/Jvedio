@@ -1,7 +1,7 @@
 ﻿-- 【演员管理说明】
 -- 演员名称唯一，默认无同名演员，若存在同名，手动以标记位 NameFlag 区分
 drop table if exists actor_info;
-drop table if exists actor_name_to_datas;
+drop table if exists actor_name_to_metadatas;
 drop table if exists actor_alias;
 drop table if exists actor_info_images;
 
@@ -40,7 +40,7 @@ COMMIT;
 -- 演员出演的作品和演员对应关系（多对多）
 -- 作品可以是：影视、写真、游戏等
 BEGIN;
-create table actor_name_to_datas(
+create table actor_name_to_metadatas(
     ID INTEGER PRIMARY KEY autoincrement,
     ActorName VARCHAR(500),
     NameFlag INT DEFAULT 0,
@@ -48,8 +48,8 @@ create table actor_name_to_datas(
     DataID INT,
     unique(ActorName,NameFlag,DataID)
 );
-CREATE INDEX actor_name_to_datas_idx_Name ON actor_name_to_datas (ActorName,NameFlag);
-CREATE INDEX actor_name_to_datas_idx_DataID ON actor_name_to_datas (DataID);
+CREATE INDEX actor_name_to_metadatas_idx_Name ON actor_name_to_metadatas (ActorName,NameFlag);
+CREATE INDEX actor_name_to_metadatas_idx_DataID ON actor_name_to_metadatas (DataID);
 COMMIT;
 
 -- 同一个人有多个名字
@@ -108,7 +108,7 @@ values
 ('成龙',0,'Jacky Chan',0,'英文名');
 
 -- 出演的作品
-insert into actor_name_to_datas
+insert into actor_name_to_metadatas
 ( ActorName , NameFlag , DataID )
 values 
 ('周星驰',0,1),
@@ -142,16 +142,16 @@ where actor_info.ActorName='周星驰' and actor_info.NameFlag=0 limit 1;
 select AliasName , AliasNameFlag from actor_alias
 where ActorName='周星驰' and NameFlag=0;
 
-select * from actor_name_to_datas;
+select * from actor_name_to_metadatas;
 
 
 select * from 
-actor_name_to_datas
+actor_name_to_metadatas
 where (ActorName,NameFlag) in 
 ( VALUES ('周星驰',0),('星爷',0));
 
 select * from 
-actor_name_to_datas
+actor_name_to_metadatas
 where (ActorName,NameFlag) in 
 (select AliasName , AliasNameFlag from actor_alias
 where ActorName='周星驰' and NameFlag=0);

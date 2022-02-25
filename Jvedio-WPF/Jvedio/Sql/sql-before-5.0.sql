@@ -90,3 +90,22 @@ create table if not exists library (
     id VARCHAR(50) PRIMARY KEY,
     code VARCHAR(50)
 );
+
+-- baidu AI
+create table if not exists baidu (
+    id VARCHAR(50) PRIMARY KEY,
+    age INT DEFAULT 0,
+    beauty FLOAT DEFAULT 0,
+    expression VARCHAR(20),
+    face_shape VARCHAR(20),
+    gender VARCHAR(20),
+    glasses VARCHAR(20),
+    race VARCHAR(20),
+    emotion VARCHAR(20),
+    mask VARCHAR(20)
+);
+
+insert into baidu(id,age,beauty,expression,face_shape,gender,glasses,race,emotion,mask)
+values 
+(1,20,8.7,'smiling','round',1,1,'yellow','happy',0),
+(2,19,5.7,'crying','round',1,1,'white','sad',0);

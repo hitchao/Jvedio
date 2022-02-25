@@ -30,6 +30,7 @@ namespace Jvedio.Entity
         public string Tag { get; set; }
         public float Grade { get; set; }
         public string Label { get; set; }
+        public string ViewDate { get; set; }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
     }

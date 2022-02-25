@@ -22,6 +22,8 @@ using Jvedio.Entity;
 using Jvedio.Mapper;
 using Jvedio.Core.SqlMapper;
 using Jvedio.Test;
+using Jvedio.Core.Sql;
+using Jvedio.Entity.CommonSQL;
 
 namespace Jvedio
 {
@@ -118,25 +120,20 @@ namespace Jvedio
             }
         }
 
+
+
         private void MoveOldFiles()
         {
-            string[] oldFIles = { "info.sqlite", "AI.sqlite", "Magnets.sqlite", "Translate.sqlite" };
-            foreach (var item in oldFIles)
-            {
-                FileHelper.TryMoveFile(item, Path.Combine(GlobalVariable.CurrentUserFolder, item));
-            }
-            string ScanPathConfig = Path.Combine(oldDataPath, "ScanPathConfig");
-            if (File.Exists(ScanPathConfig))
-            {
-                FileHelper.TryMoveFile(ScanPathConfig, GlobalVariable.ScanConfigPath);
-            }
-            string ServersConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServersConfig");
-            if (File.Exists(ServersConfigPath))
-            {
-                FileHelper.TryMoveFile(ServersConfigPath, GlobalVariable.ServersConfigPath);
-            }
+            // 迁移公共数据
+            Jvedio4ToJvedio5.MoveAI();
+            Jvedio4ToJvedio5.MoveMagnets();
+            Jvedio4ToJvedio5.MoveTranslate();
 
             string[] files = FileHelper.TryScanDIr(oldDataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
+            Jvedio4ToJvedio5.MoveScanPathConfig(files);
+            Jvedio4ToJvedio5.MoveServersConfig();
+            // 迁移库
+
             if (files != null)
             {
                 foreach (var item in files)
@@ -145,7 +142,7 @@ namespace Jvedio
                     {
                         string name = Path.GetFileName(item);
                         string newFileName = Path.Combine(GlobalVariable.VideoDataPath, name);
-                        bool success = MoveOldData(item, newFileName);
+                        bool success = Jvedio4ToJvedio5.MoveOldData(item, newFileName);
                         if (success)
                         {
                             //FileHelper.TryDeleteFile(item);
@@ -157,86 +154,13 @@ namespace Jvedio
                 //迁移新数据
 
             }
+            Jvedio4ToJvedio5.MoveRecentWatch(); //todo MoveRecentWatch
         }
 
 
 
 
-        /// <summary>
-        /// 移动旧数据库到新数据库
-        /// </summary>
-        /// <param name="origin"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        private bool MoveOldData(string origin, string target)
-        {
-            if (File.Exists(origin))
-            {
-                MySqlite oldSqlite = new MySqlite(origin);
-                VideoConnection newConnection = new VideoConnection(target);
-                newConnection.InitTables();
-                System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from movie");
-                if (sr != null)
-                {
-                    while (sr.Read())
-                    {
-                        DetailMovie detailMovie = new DetailMovie()
-                        {
-                            id = sr["id"].ToString(),
-                            title = sr["title"].ToString(),
-                            filepath = sr["filepath"].ToString(),
-                            subsection = sr["subsection"].ToString(),
-                            scandate = sr["scandate"].ToString(),
-                            releasedate = sr["releasedate"].ToString(),
-                            director = sr["director"].ToString(),
-                            genre = sr["genre"].ToString(),
-                            tag = sr["tag"].ToString(),
-                            actor = sr["actor"].ToString(),
-                            actorid = sr["actorid"].ToString(),
-                            studio = sr["studio"].ToString(),
-                            chinesetitle = sr["chinesetitle"].ToString(),
-                            label = sr["label"].ToString(),
-                            plot = sr["plot"].ToString(),
-                            outline = sr["outline"].ToString(),
-                            country = sr["country"].ToString(),
-                            otherinfo = sr["otherinfo"].ToString(),
-                            actressimageurl = sr["actressimageurl"].ToString(),
-                            smallimageurl = sr["smallimageurl"].ToString(),
-                            bigimageurl = sr["bigimageurl"].ToString(),
-                            extraimageurl = sr["extraimageurl"].ToString(),
-                            sourceurl = sr["sourceurl"].ToString(),
-                            source = sr["source"].ToString()
-                        };
 
-                        double.TryParse(sr["filesize"].ToString(), out double filesize);
-                        int.TryParse(sr["vediotype"].ToString(), out int vediotype);
-                        int.TryParse(sr["visits"].ToString(), out int visits);
-                        int.TryParse(sr["favorites"].ToString(), out int favorites);
-                        int.TryParse(sr["year"].ToString(), out int year);
-                        int.TryParse(sr["countrycode"].ToString(), out int countrycode);
-                        int.TryParse(sr["runtime"].ToString(), out int runtime);
-                        float.TryParse(sr["rating"].ToString(), out float rating);
-                        detailMovie.filesize = filesize;
-                        detailMovie.vediotype = vediotype;
-                        detailMovie.visits = visits;
-                        detailMovie.rating = rating;
-                        detailMovie.favorites = favorites;
-                        detailMovie.year = year;
-                        detailMovie.countrycode = countrycode;
-                        detailMovie.runtime = runtime;
-
-                        //导入新数据库中
-                        newConnection.insertMovie(detailMovie);
-                        break; // 测试
-                    }
-                }
-
-                oldSqlite.CloseDB();
-                newConnection.Close();
-                return true;
-            }
-            return false;
-        }
 
         private void InitAppData()
         {

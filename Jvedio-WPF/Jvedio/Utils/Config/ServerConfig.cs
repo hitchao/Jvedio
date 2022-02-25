@@ -18,7 +18,7 @@ namespace Jvedio
     {
         private string Root = "Servers";
         private bool CreateRoot = false;
-        private string ConfigPath = GlobalVariable.ServersConfigPath;
+        private string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServersConfig");
         private static string[] Nodes = new[] { "Url", "IsEnable", "LastRefreshDate", "Cookie" };
         private XmlDocument XmlDoc;
 
