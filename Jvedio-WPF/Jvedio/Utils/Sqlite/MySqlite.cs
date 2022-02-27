@@ -112,32 +112,35 @@ namespace Jvedio
         }
 
 
+
+        // todo GetMagnetFromSQLiteDataReader
         private Magnet GetMagnetFromSQLiteDataReader(SQLiteDataReader sr)
         {
-            if (sr == null || sr["id"] == null || string.IsNullOrEmpty(sr["id"].ToString())) return null;
-            Magnet result = new Magnet()
-            {
-                id = sr["id"].ToString(),
-                title = sr["title"].ToString(),
-                size = double.Parse(sr["size"].ToString()),
-                link = sr["link"].ToString(),
-                releasedate = sr["releasedate"].ToString()
-            };
+            //if (sr == null || sr["id"] == null || string.IsNullOrEmpty(sr["id"].ToString())) return null;
+            //Magnet result = new Magnet()
+            //{
+            //    id = sr["id"].ToString(),
+            //    title = sr["title"].ToString(),
+            //    size = double.Parse(sr["size"].ToString()),
+            //    link = sr["link"].ToString(),
+            //    releasedate = sr["releasedate"].ToString()
+            //};
 
-            string tag = sr["tag"].ToString();
-            if (tag.IndexOf(' ') > 0)
-            {
-                foreach (var item in tag.Split(' '))
-                {
-                    if (item.Length > 0) result.tag.Add(item);
-                }
-            }
-            else if (tag.Length > 0)
-            {
-                result.tag.Add(tag);
-            }
+            //string tag = sr["tag"].ToString();
+            //if (tag.IndexOf(' ') > 0)
+            //{
+            //    foreach (var item in tag.Split(' '))
+            //    {
+            //        if (item.Length > 0) result.tag.Add(item);
+            //    }
+            //}
+            //else if (tag.Length > 0)
+            //{
+            //    result.tag.Add(tag);
+            //}
 
-            return result;
+            //return result;
+            return null;
         }
 
         public List<Movie> SelectMoviesBySql(string sqltext)
@@ -364,18 +367,6 @@ namespace Jvedio
         }
 
 
-        public void InsertMagnet(Magnet magnet)
-        {
-            string sqltext = "INSERT OR IGNORE INTO magnets(link , id ,title  , size  ,releasedate,tag) values(@link , @id ,@title  , @size  ,@releasedate,@tag)";
-            cmd.CommandText = sqltext;
-            cmd.Parameters.Add("link", DbType.String).Value = magnet.link;
-            cmd.Parameters.Add("id", DbType.String).Value = magnet.id;
-            cmd.Parameters.Add("title", DbType.String).Value = magnet.title;
-            cmd.Parameters.Add("size", DbType.Double).Value = magnet.size;
-            cmd.Parameters.Add("releasedate", DbType.String).Value = magnet.releasedate;
-            cmd.Parameters.Add("tag", DbType.String).Value = string.Join(" ", magnet.tag);
-            cmd.ExecuteNonQuery();
-        }
 
 
         public void InsertByField(string table, string field, string value, string id)

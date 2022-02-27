@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Jvedio.Core.Enums;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,6 +58,63 @@ namespace Jvedio.Entity
 
 
 
+        public MetaData toMetaData()
+        {
+            MetaData result = new MetaData()
+            {
+                Title = title,
+                Size = (long)filesize,
+                Path = filepath,
+                Hash = "",
+                Country = country,
+                ReleaseDate = releasedate,
+                ReleaseYear = year,
+                ViewCount = visits,
+                DataType = DataType.Video,
+                Rating = rating,
+                RatingCount = 0,
+                FavoriteCount = 0,
+                Genre = genre,
+                Tag = tag,
+                Grade = favorites,
+                ViewDate = "",
+                FirstScanDate = scandate,
+                LastScanDate = otherinfo,
+            };
+            return result;
+        }
+        public Video toVideo()
+        {
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict.Add("actress", actressimageurl.Split(';'));
+            dict.Add("smallimage", smallimageurl);
+            dict.Add("bigimage", bigimageurl);
+            dict.Add("extraimages", extraimageurl.Split(';'));
+            string json = JsonConvert.SerializeObject(dict);
+
+            Video result = new Video()
+            {
+                VID = id,
+                VideoType = (VideoType)vediotype,
+                Director = director,
+                Studio = studio,
+                Publisher = studio,
+                Plot = plot,
+                Outline = outline,
+                Duration = runtime,
+
+                WebType = source.Replace("jav", ""),
+                WebUrl = sourceurl,
+
+                PreviewImagePaths = Path.Combine(GlobalVariable.BasePicPath, "ExtraPic", id),
+                ScreenShotPaths = Path.Combine(GlobalVariable.BasePicPath, "ScreenShot"),
+                GifImagePath = Path.Combine(GlobalVariable.BasePicPath, "Gif", $"{id}.jpg"),
+                BigImagePath = Path.Combine(GlobalVariable.BasePicPath, "BigPic", $"{id}.jpg"),
+                SmallImagePath = Path.Combine(GlobalVariable.BasePicPath, "SmallPic", $"{id}.jpg"),
+                ImageUrls = json,
+            };
+            return result;
+        }
 
     }
 

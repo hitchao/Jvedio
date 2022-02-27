@@ -28,6 +28,9 @@ namespace Jvedio.Entity
         public int Chest { get; set; }
         public int Waist { get; set; }
         public int Hipline { get; set; }
+        public string WebType { get; set; }
+        public string WebUrl { get; set; }
+        public string ImagePath { get; set; }
         public string ExtraInfo { get; set; }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }

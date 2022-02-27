@@ -113,44 +113,47 @@ drop table if exists common_magnets;
 BEGIN;
 create table common_magnets (
     MagnetID INTEGER PRIMARY KEY autoincrement,
-    Magnet VARCHAR(40),
+    MagnetLink VARCHAR(40),
     TorrentUrl VARCHAR(2000),
-    VID VARCHAR(500),
+    DataID INTEGER,
     Title TEXT,
     Size INTEGER DEFAULT 0,
     Releasedate VARCHAR(10) DEFAULT '1900-01-01',
     Tag TEXT,
+
     DownloadNumber INT DEFAULT 0,
     ExtraInfo TEXT,
 
-    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    CreateDate VARCHAR(30) NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
 
-    unique(Magnet)
+    unique(MagnetLink)
 );
-CREATE INDEX common_magnets_idx_VID ON common_magnets (VID);
+CREATE INDEX common_magnets_idx_DataID ON common_magnets (DataID);
 COMMIT;
 
 insert into common_magnets
-(Magnet,TorrentUrl,VID,Title,Size,Releasedate,Tag,DownloadNumber,ExtraInfo)
-values ('7c5cd6144ae373fec931f20deabcf25eda85cb40','种子下载地址','121213_713','磁力链接1',1034.24,'2014-10-30','高清 中文',15,'{"Seeds":"1","Peers":"0"}');
+(Magnet,TorrentUrl,DataID,Title,Size,Releasedate,Tag,DownloadNumber,ExtraInfo)
+values ('7c5cd6144ae373fec931f20deabcf25eda85cb40','种子下载地址',5,'磁力链接1',1034.24,'2014-10-30','高清 中文',15,'{"Seeds":"1","Peers":"0"}');
 
 -- 【db和library等识别码和网址的对应关系】
--- web_type : 所属网址 => [db,library]
+-- web_type : 所属网址 => [db,library,bus]
+-- CodeType ：演员对应或影片对应 => [actor,video]
 drop table if exists common_url_code;
 BEGIN;
 create table common_url_code (
     CodeId INTEGER PRIMARY KEY autoincrement,
-    VID VARCHAR(500),
-    Code VARCHAR(100),
+    LocalValue VARCHAR(500),
+    ValueType  VARCHAR(20) DEFAULT 'video',
+    RemoteValue VARCHAR(100),
     WebType VARCHAR(100),
-
+    
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
-CREATE INDEX common_url_code_idx_VID ON common_url_code (WebType,VID);
+CREATE INDEX common_url_code_idx_VID ON common_url_code (ValueType,WebType,LocalValue);
 COMMIT;
-insert into common_url_code(VID,Code,WebType)
+insert into common_url_code(LocalValue,RemoteValue,WebType)
 values ('ABCD-123','1BKY9','db');
 
 

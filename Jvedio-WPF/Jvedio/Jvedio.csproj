@@ -225,6 +225,7 @@
     <Compile Include="Core\Enums\Gender.cs" />
     <Compile Include="Core\Enums\IdType.cs" />
     <Compile Include="Core\Enums\PathType.cs" />
+    <Compile Include="Core\Enums\RelevanceType.cs" />
     <Compile Include="Core\Enums\VideoType.cs" />
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Sql\SqliteTables.cs" />
@@ -236,6 +237,7 @@
     <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
     <Compile Include="Entity\CommonSQL\CommonImage.cs" />
     <Compile Include="Entity\Data\MetaData.cs" />
+    <Compile Include="Entity\Data\UrlCode.cs" />
     <Compile Include="Entity\Data\Video.cs" />
     <Compile Include="Entity\DetailMovie.cs" />
     <Compile Include="Entity\Genre.cs" />
@@ -245,9 +247,8 @@
     <Compile Include="Entity\Serilizable.cs" />
     <Compile Include="Entity\Server.cs" />
     <Compile Include="Entity\Servers.cs" />
-    <Compile Include="Entity\Magnet.cs" />
+    <Compile Include="Entity\CommonSQL\Magnet.cs" />
     <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
-    <Compile Include="Entity\CommonSQL\CommonUrlCode.cs" />
     <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\VideoInfo.cs" />
     <Compile Include="Entity\WindowProperty.cs" />
@@ -281,19 +282,27 @@
     <Compile Include="Mapper\AppConfigMapper.cs" />
     <Compile Include="Mapper\AppDatabaseMapper.cs" />
     <Compile Include="Mapper\ComImagesMapper.cs" />
+    <Compile Include="Mapper\MagnetsMapper.cs" />
     <Compile Include="Mapper\MetaDataMapper.cs" />
     <Compile Include="Mapper\TranslationMapper.cs" />
+    <Compile Include="Mapper\UrlCodeMapper.cs" />
+    <Compile Include="Mapper\VideoMapper.cs" />
     <Compile Include="Test\TestMapper.cs" />
     <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
+    <Compile Include="Upgrade\UpgradeProcessWindow.xaml.cs">
+      <DependentUpon>UpgradeProcessWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\AI\Baidu.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\Common\ClassUtils.cs" />
+    <Compile Include="Utils\Common\DateHelper.cs" />
     <Compile Include="Utils\Common\JsonUtils.cs" />
     <Compile Include="Utils\Common\TypeHelper.cs" />
     <Compile Include="Utils\FileProcess\ClipBoard.cs" />
+    <Compile Include="Utils\FileProcess\DirHelper.cs" />
     <Compile Include="Utils\FileProcess\FileHelper.cs" />
     <Compile Include="Utils\FileProcess\StreamHelper.cs" />
     <Compile Include="Utils\Net\ActorCrawler.cs" />
@@ -333,6 +342,7 @@
     </Compile>
     <Compile Include="Utils\Plot\Bar\BarViewModel.cs" />
     <Compile Include="Utils\Sqlite\MySqlite.cs" />
+    <Compile Include="Utils\Sqlite\SqliteHelper.cs" />
     <Compile Include="ViewModels\VieModel_Batch.cs" />
     <Compile Include="Windows\DialogInput.xaml.cs">
       <DependentUpon>DialogInput.xaml</DependentUpon>
@@ -412,6 +422,10 @@
     <Page Include="DialogWindows\Dialog_Thanks.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Upgrade\UpgradeProcessWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Utils\Plot\Bar\BarView.xaml">
       <Generator>MSBuild:Compile</Generator>

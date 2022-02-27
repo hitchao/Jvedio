@@ -19,6 +19,7 @@ namespace Jvedio.Entity
         public long Size { get; set; }
         public string Path { get; set; }
         public string Hash { get; set; }
+        public string Country { get; set; }
         public string ReleaseDate { get; set; }
         public int ReleaseYear { get; set; }
         public int ViewCount { get; set; }
@@ -31,6 +32,8 @@ namespace Jvedio.Entity
         public float Grade { get; set; }
         public string Label { get; set; }
         public string ViewDate { get; set; }
+        public string FirstScanDate { get; set; }
+        public string LastScanDate { get; set; }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
     }

@@ -49,6 +49,7 @@ namespace Jvedio
         public static string CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);
         public static string oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");// Jvedio 5.0 之前的
         public static string DataPath = Path.Combine(CurrentUserFolder, "database");
+        public static string AllOldDataPath = Path.Combine(CurrentUserFolder, "olddata");
         public static string VideoDataPath = Path.Combine(DataPath, "video");
         public static string PictureDataPath = Path.Combine(DataPath, "picture");
         public static string GameDataPath = Path.Combine(DataPath, "game");
@@ -62,9 +63,7 @@ namespace Jvedio
         public static string ProjectImagePath = Path.Combine(CurrentUserFolder, "image", "library");
 
 
-        public static string AIDataBasePath = Path.Combine(CurrentUserFolder, "AI.sqlite");
         public static string TranslateDataBasePath = Path.Combine(CurrentUserFolder, "Translate.sqlite");
-        public static string MagnetsDataBasePath = Path.Combine(CurrentUserFolder, "Magnets.sqlite");
         public static string BasePluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         public static string ScanConfigPath = Path.Combine(CurrentUserFolder, "ScanPathConfig.xml");
         public static string ServersConfigPath = Path.Combine(CurrentUserFolder, "ServersConfigPath.xml");
@@ -75,7 +74,7 @@ namespace Jvedio
         public static string[] PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
         public static string[] InitDirs = new[] {
             DataPath, VideoDataPath, PictureDataPath, GameDataPath,
-            BackupPath,LogPath,PicPath,ProjectImagePath,
+            BackupPath,LogPath,PicPath,ProjectImagePath,AllOldDataPath,
            Path.Combine(BasePluginsPath,"themes"), Path.Combine(BasePluginsPath,"crawlers") };//初始化文件夹
 
         // *************** 目录 ***************
@@ -85,6 +84,8 @@ namespace Jvedio
 
         public static AppDatabaseMapper AppDatabaseMapper;
         public static AppConfigMapper AppConfigMapper;
+        public static TranslationMapper TranslationMapper;
+        public static MagnetsMapper MagnetsMapper;
 
         public static string[] FontExt = new[] { ".otf", ".ttf" };
         public static InfoType CurrentInfoType = InfoType.Video;
@@ -220,6 +221,8 @@ namespace Jvedio
             // 初始化数据库连接
             AppDatabaseMapper = new AppDatabaseMapper(AppDataPath);
             AppConfigMapper = new AppConfigMapper(AppDataPath);
+            TranslationMapper = new TranslationMapper(AppDataPath);
+            MagnetsMapper = new MagnetsMapper(AppDataPath);
             foreach (string key in SqliteTables.AppData.TABLES.Keys)
             {
                 AppDatabaseMapper.createTable(key, SqliteTables.AppData.TABLES[key]);

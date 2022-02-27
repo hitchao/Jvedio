@@ -256,15 +256,15 @@ namespace Jvedio
 
                         if (tdNodes != null && tdNodes.Count == 3)
                         {
-                            Magnet magnet = new Magnet(ID);
+                            Magnet magnet = new Magnet();// todo 指定 VID
                             //名称和 tag
                             HtmlNodeCollection linkNodes = tdNodes[0].SelectNodes("a");
-                            magnet.title = linkNodes[0].InnerText.CleanSqlString();
-                            magnet.link = linkNodes[0].Attributes["href"]?.Value;
+                            magnet.Title = linkNodes[0].InnerText.CleanSqlString();
+                            magnet.MagnetLink = linkNodes[0].Attributes["href"]?.Value;
 
                             for (int i = 1; i < linkNodes.Count; i++)
                             {
-                                magnet.tag.Add(linkNodes[i].InnerText);
+                                magnet.Tags.Add(linkNodes[i].InnerText);
                             }
 
                             //大小
@@ -281,10 +281,10 @@ namespace Jvedio
                                 size = size.Replace("MB", "");
                                 double.TryParse(size, out filesize);
                             }
-                            magnet.size = filesize;
+                            magnet.Size = (long)(filesize * 1024);
                             //发行日期
-                            magnet.releasedate = tdNodes[2].SelectSingleNode("a").InnerText.CleanSqlString();
-                            if (magnet.link.IndexOf("&") > 0) magnet.link = magnet.link.Split('&')[0];
+                            magnet.Releasedate = tdNodes[2].SelectSingleNode("a").InnerText.CleanSqlString();
+                            if (magnet.MagnetLink.IndexOf("&") > 0) magnet.MagnetLink = magnet.MagnetLink.Split('&')[0];
                             result.Add(magnet);
                         }
                     }
@@ -641,15 +641,15 @@ namespace Jvedio
 
                         if (tdNodes != null && tdNodes.Count == 3)
                         {
-                            Magnet magnet = new Magnet(ID);
+                            Magnet magnet = new Magnet();//todo 指定 DataID
                             //名称和 tag
                             HtmlNodeCollection linkNodes = tdNodes[0].SelectNodes("a");
-                            magnet.title = linkNodes[0].InnerText.CleanSqlString();
-                            magnet.link = linkNodes[0].Attributes["href"]?.Value;
+                            magnet.Title = linkNodes[0].InnerText.CleanSqlString();
+                            magnet.MagnetLink = linkNodes[0].Attributes["href"]?.Value;
 
                             for (int i = 1; i < linkNodes.Count; i++)
                             {
-                                magnet.tag.Add(linkNodes[i].InnerText);
+                                magnet.Tags.Add(linkNodes[i].InnerText);
                             }
 
                             //大小
@@ -666,10 +666,10 @@ namespace Jvedio
                                 size = size.Replace("MB", "");
                                 double.TryParse(size, out filesize);
                             }
-                            magnet.size = filesize;
+                            magnet.Size = (long)(filesize * 1024);
                             //发行日期
-                            magnet.releasedate = tdNodes[2].SelectSingleNode("a").InnerText.CleanSqlString();
-                            if (magnet.link.IndexOf("&") > 0) magnet.link = magnet.link.Split('&')[0];
+                            magnet.Releasedate = tdNodes[2].SelectSingleNode("a").InnerText.CleanSqlString();
+                            if (magnet.MagnetLink.IndexOf("&") > 0) magnet.MagnetLink = magnet.MagnetLink.Split('&')[0];
                             result.Add(magnet);
                         }
                     }
@@ -1045,13 +1045,13 @@ namespace Jvedio
                 if (tdNodes != null && tdNodes.Count == 3)
                 {
 
-                    Magnet magnet = new Magnet(ID);
+                    Magnet magnet = new Magnet(); //todo 指定 DataID
                     //磁力
                     HtmlNode linkNode = tdNodes[0].SelectSingleNode("a");
 
-                    magnet.link = linkNode.Attributes["href"]?.Value;
+                    magnet.MagnetLink = linkNode.Attributes["href"]?.Value;
                     HtmlNodeCollection titleNodes = linkNode.SelectNodes("span");
-                    magnet.title = titleNodes[0].InnerText;
+                    magnet.Title = titleNodes[0].InnerText;
 
                     List<string> taginfos = new List<string>();
                     for (int i = 1; i < titleNodes.Count; i++)
@@ -1071,7 +1071,7 @@ namespace Jvedio
                             if (size.Success && size.Value.Length > 0)
                             {
                                 double.TryParse(size.Value.Replace("GB", ""), out double filesize);
-                                magnet.size = filesize * 1024;
+                                magnet.Size = (long)(filesize * 1024 * 1024);
                             }
 
                         }
@@ -1082,20 +1082,20 @@ namespace Jvedio
                             if (size.Success && size.Value.Length > 0)
                             {
                                 double.TryParse(size.Value.Replace("MB", ""), out double filesize);
-                                magnet.size = filesize;
+                                magnet.Size = (long)(filesize * 1024);
                             }
                         }
                         else
                         {
-                            magnet.tag.Add(item);
+                            magnet.Tags.Add(item);
                         }
                     }
 
 
 
                     //发行日期
-                    magnet.releasedate = tdNodes[1].SelectSingleNode("span").InnerText;
-                    if (magnet.link.IndexOf("&") > 0) magnet.link = magnet.link.Split('&')[0];
+                    magnet.Releasedate = tdNodes[1].SelectSingleNode("span").InnerText;
+                    if (magnet.MagnetLink.IndexOf("&") > 0) magnet.MagnetLink = magnet.MagnetLink.Split('&')[0];
                     result.Add(magnet);
                 }
             }

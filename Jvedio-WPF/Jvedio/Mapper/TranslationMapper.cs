@@ -16,5 +16,9 @@ namespace Jvedio.Mapper
         public TranslationMapper(string sqlitePath) : base(sqlitePath)
         {
         }
+        public TranslationMapper() : base(GlobalVariable.AppDataPath)
+        {
+
+        }
     }
 }

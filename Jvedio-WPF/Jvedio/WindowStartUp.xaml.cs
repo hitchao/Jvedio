@@ -24,6 +24,7 @@ using Jvedio.Core.SqlMapper;
 using Jvedio.Test;
 using Jvedio.Core.Sql;
 using Jvedio.Entity.CommonSQL;
+using Jvedio.Utils.FileProcess;
 
 namespace Jvedio
 {
@@ -86,8 +87,9 @@ namespace Jvedio
             EnsureSettings();//修复设置错误
             EnsureFileExists(); //判断文件是否存在
             EnsureDirExists();//创建文件夹
-            MoveOldFiles();//迁移旧文件并迁移到新数据库
-
+            this.Visibility = Visibility.Hidden;
+            await MoveOldFiles();//迁移旧文件并迁移到新数据库
+            this.Visibility = Visibility.Visible;
             Jvedio.Core.ThemeLoader.loadAllThemes(); //加载主题
             if (GlobalFont != null) this.FontFamily = GlobalFont;
             SetSkin(Properties.Settings.Default.Themes);//设置皮肤
@@ -122,39 +124,21 @@ namespace Jvedio
 
 
 
-        private void MoveOldFiles()
+        private async Task<bool> MoveOldFiles()
         {
             // 迁移公共数据
             Jvedio4ToJvedio5.MoveAI();
-            Jvedio4ToJvedio5.MoveMagnets();
-            Jvedio4ToJvedio5.MoveTranslate();
-
             string[] files = FileHelper.TryScanDIr(oldDataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
             Jvedio4ToJvedio5.MoveScanPathConfig(files);
             Jvedio4ToJvedio5.MoveServersConfig();
-            // 迁移库
-
-            if (files != null)
-            {
-                foreach (var item in files)
-                {
-                    if (File.Exists(item))
-                    {
-                        string name = Path.GetFileName(item);
-                        string newFileName = Path.Combine(GlobalVariable.VideoDataPath, name);
-                        bool success = Jvedio4ToJvedio5.MoveOldData(item, newFileName);
-                        if (success)
-                        {
-                            //FileHelper.TryDeleteFile(item);
-                        }
-                    }
-                }
-                //files = FileHelper.TryScanDIr(oldDataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
-                //if (files != null && files.Length == 0) FileHelper.TryDeleteDir(oldDataPath);
-                //迁移新数据
-
-            }
+            bool success = await Jvedio4ToJvedio5.MoveDatabases(files);
+            //if (success)
+            //{
             Jvedio4ToJvedio5.MoveRecentWatch(); //todo MoveRecentWatch
+            Jvedio4ToJvedio5.MoveMagnets(); //todo MoveMagnets
+            Jvedio4ToJvedio5.MoveTranslate();   // todo MoveTranslate
+            //}
+            return true;
         }
 
 
@@ -166,7 +150,6 @@ namespace Jvedio
         {
             try
             {
-                InitDataBase();//初始化数据库
                 Identify.InitFanhaoList();
                 Scan.InitSearchPattern();
 
@@ -188,18 +171,6 @@ namespace Jvedio
                 ClearLogBefore(-10, "log\\NetWork");
                 ClearLogBefore(-10, "log\\scanlog");
                 ClearLogBefore(-10, "log\\file");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogE(ex);
-            }
-
-            try
-            {
-                //备份文件
-                BackUp(GlobalVariable.MagnetsDataBasePath);
-                BackUp(GlobalVariable.AIDataBasePath);
-                BackUp(GlobalVariable.TranslateDataBasePath);
             }
             catch (Exception ex)
             {
@@ -349,48 +320,6 @@ namespace Jvedio
             }
         }
 
-        private void InitDataBase()
-        {
-            //GlobalConnection.Init();
-            if (!File.Exists(AIDataBasePath))
-            {
-                MySqlite db = new MySqlite(AIDataBasePath);
-                db.CreateTable(DataBase.SQLITETABLE_BAIDUAI);
-                db.CloseDB();
-            }
-            else
-            {
-                //是否具有表结构
-                MySqlite db = new MySqlite(AIDataBasePath);
-                if (!db.IsTableExist("baidu")) db.CreateTable(DataBase.SQLITETABLE_BAIDUAI);
-                db.CloseDB();
-            }
-
-
-            if (!File.Exists(TranslateDataBasePath))
-            {
-                MySqlite db = new MySqlite(TranslateDataBasePath);
-                db.CreateTable(DataBase.SQLITETABLE_YOUDAO);
-                db.CreateTable(DataBase.SQLITETABLE_BAIDUTRANSLATE);
-                db.CloseDB();
-            }
-            else
-            {
-                //是否具有表结构
-                MySqlite db = new MySqlite(TranslateDataBasePath);
-                if (!db.IsTableExist("youdao")) db.CreateTable(DataBase.SQLITETABLE_YOUDAO);
-                if (!db.IsTableExist("baidu")) db.CreateTable(DataBase.SQLITETABLE_BAIDUTRANSLATE);
-                db.CloseDB();
-            }
-
-            if (!File.Exists(MagnetsDataBasePath))
-            {
-                MySqlite db = new MySqlite(MagnetsDataBasePath);
-                db.CreateTable(DataBase.SQLITETABLE_MAGNETS);
-                db.CloseDB();
-            }
-
-        }
 
 
 

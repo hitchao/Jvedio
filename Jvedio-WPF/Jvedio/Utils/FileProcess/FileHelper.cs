@@ -1,7 +1,7 @@
 ﻿using Jvedio.Utils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
-
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -12,6 +12,19 @@ namespace Jvedio
 {
     public static class FileHelper
     {
+
+        public static void TryWriteToFile(string filePath, string content)
+        {
+            try
+            {
+                File.WriteAllText(filePath, content);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogF(ex);
+            }
+        }
+
 
         public static bool TryMoveFile(string originPath, string targetPath)
         {
@@ -26,6 +39,15 @@ namespace Jvedio
                 Logger.LogF(ex);
             }
             return false;
+        }
+
+        public static void TryMoveFile(string originPath, string targetPath, int delay)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(delay * 1000);
+                TryMoveFile(originPath, targetPath);
+            });
         }
 
         public static string[] TryScanDIr(string path, string searchPattern, SearchOption searchOption)

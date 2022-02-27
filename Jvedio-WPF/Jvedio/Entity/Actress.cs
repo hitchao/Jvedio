@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -170,6 +171,35 @@ namespace Jvedio.Entity
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public ActorInfo toActorInfo()
+        {
+            ActorInfo info = new ActorInfo()
+            {
+                ActorName = name,
+                NameFlag = 0,
+                Country = "Japan",
+                Nation = "",
+                BirthPlace = birthplace,
+                Birthday = birthday,
+                BloodType = "",
+                Height = height,
+                Gender = Core.Enums.Gender.Female,
+                Hobby = hobby,
+                Cup = '0',
+                Chest = chest,
+                Waist = waist,
+                Hipline = hipline,
+                WebType = source,
+                WebUrl = string.IsNullOrEmpty(sourceurl) ? imageurl : sourceurl,
+                ImagePath = Path.Combine(GlobalVariable.BasePicPath, "Actresses", $"{name}.jpg"),
+            };
+            if (!string.IsNullOrEmpty(cup))
+                info.Cup = cup.ToCharArray()[0];
+
+
+
+            return info;
+        }
 
 
     }

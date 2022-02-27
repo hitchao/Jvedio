@@ -775,16 +775,16 @@ namespace Jvedio
         }
 
 
-        public static List<Magnet> SelectMagnetsByID(string ID)
-        {
+        //public static List<Magnet> SelectMagnetsByID(string ID)
+        //{
 
-            List<Magnet> result = new List<Magnet>();
-            using (MySqlite mySqlite = new MySqlite("Magnets"))
-            {
-                result = mySqlite.SelectMagnetsBySql($"select * from magnets where id='{ID}'");
-            }
-            return result;
-        }
+        //    List<Magnet> result = new List<Magnet>();
+        //    using (MySqlite mySqlite = new MySqlite("Magnets"))
+        //    {
+        //        result = mySqlite.SelectMagnetsBySql($"select * from magnets where id='{ID}'");
+        //    }
+        //    return result;
+        //}
 
 
         #endregion
@@ -1001,17 +1001,17 @@ namespace Jvedio
             }
         }
 
-        public static void SaveMagnets(List<Magnet> magnets)
-        {
-            foreach (var item in magnets)
-            {
-                using (MySqlite mySqlite = new MySqlite("Magnets"))
-                {
-                    mySqlite.InsertMagnet(item);
-                }
+        //public static void SaveMagnets(List<Magnet> magnets)
+        //{
+        //    foreach (var item in magnets)
+        //    {
+        //        using (MySqlite mySqlite = new MySqlite("Magnets"))
+        //        {
+        //            mySqlite.InsertMagnet(item);
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
         public static void SaveActressLikeByName(string name, int like)

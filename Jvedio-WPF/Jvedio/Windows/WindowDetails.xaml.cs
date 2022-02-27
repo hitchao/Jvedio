@@ -1646,16 +1646,20 @@ namespace Jvedio
             if (Properties.Settings.Default.ShowSecret)
             {
                 CopyMagnetsMenuItem.Items.Clear();
-                var magnets = DataBase.SelectMagnetsByID(vieModel.DetailMovie.id);
-                magnets = magnets.OrderByDescending(arg => arg.size).ThenByDescending(arg => arg.releasedate).ThenByDescending(arg => string.Join(" ", arg.tag).Length).ToList();
+
+                Dictionary<string, object> dic = new Dictionary<string, object>();
+                dic.Add(MagnetsMapper.PrimaryKey.Name, vieModel.DetailMovie.id);
+
+                List<Magnet> magnets = MagnetsMapper.selectByDict(dic);
+                magnets = magnets.OrderByDescending(arg => arg.Size).ThenByDescending(arg => arg.Releasedate).ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList();
                 foreach (var magnet in magnets)
                 {
                     MenuItem menuItem = new MenuItem();
                     string tag = "";
-                    if (magnet.tag.Count > 0) tag = "（" + string.Join(" ", magnet.tag) + "）";
+                    if (magnet.Tags.Count > 0) tag = "（" + string.Join(" ", magnet.Tags) + "）";
 
-                    menuItem.Header = $"{magnet.releasedate} {tag} {magnet.size} MB {magnet.title}";
-                    menuItem.Click += (s, ev) => ClipBoard.TrySetDataObject(magnet.link, GrowlToken, false);
+                    menuItem.Header = $"{magnet.Releasedate} {tag} {magnet.Size / 1024} MB {magnet.Title}";
+                    menuItem.Click += (s, ev) => ClipBoard.TrySetDataObject(magnet.MagnetLink, GrowlToken, false);
                     CopyMagnetsMenuItem.Items.Add(menuItem);
                 }
             }

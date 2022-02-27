@@ -2,6 +2,7 @@
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Utils.Common;
+using Jvedio.Utils.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -16,7 +17,7 @@ namespace Jvedio.Core.SqlMapper
     public class BaseMapper<T> : IMapper<T>, IDisposable
     {
 
-        private class Key
+        public class Key
         {
             public string Name { get; set; }
             public Type PropertyType { get; set; }
@@ -33,7 +34,7 @@ namespace Jvedio.Core.SqlMapper
         protected SQLiteCommand cmd;
         protected SQLiteConnection cn;
 
-        private Key PrimaryKey = new Key();//主键
+        public Key PrimaryKey = new Key();//主键
 
         protected PropertyInfo[] Properties;
         protected List<string> ExtraFields;
@@ -97,11 +98,19 @@ namespace Jvedio.Core.SqlMapper
 
 
 
+        public int insertBatch(ICollection<T> collections)
+        {
+            if (collections == null || collections.Count == 0) return 0;
+            string sqltext = generateBatchInsertSql(collections);
+            return executeNonQuery(sqltext);
+        }
+
 
 
         /// <exception cref="SQLiteException">插入时产生的异常</exception>
         public bool insert(T entity)
         {
+            if (entity == null) return false;
             string sqltext = generateInsertSql(entity);
             int insert = (int)executeNonQuery(sqltext);
             if (insert > 0)
@@ -151,6 +160,7 @@ namespace Jvedio.Core.SqlMapper
 
         public int updateById(T entity)
         {
+            if (entity == null) return 0;
             string sql = generateUpdateSql(entity);
             try { return (int)executeNonQuery(sql); }
             catch { throw; }
@@ -236,8 +246,9 @@ namespace Jvedio.Core.SqlMapper
 
         public int executeNonQuery(string sql)
         {
+            if (string.IsNullOrEmpty(sql)) return 0;
             cmd.CommandText = sql;
-            Console.WriteLine(new DateTime().ToLongTimeString() + " => " + sql);
+            Console.WriteLine(DateHelper.Now() + " => " + sql);
             try { return cmd.ExecuteNonQuery(); }
             catch { throw; }
         }
@@ -306,21 +317,37 @@ namespace Jvedio.Core.SqlMapper
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         private string generateWhere(object value)
         {
+            if (value == null) throw new ArgumentNullException("value");
             string where = $" {PrimaryKey.Name}={value}";
             if (PrimaryKey.PropertyType == typeof(string))
-                where = $" {PrimaryKey.Name}='{value}'";
+                where = $" {PrimaryKey.Name}='{SqliteHelper.format(value)}'";
             return where;
+
         }
+
+        /// <summary>
+        /// 生成 where xxx in (...) 语句
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         private string generateBatchWhere(List<string> values)
         {
+            if (values == null || values.Count == 0) throw new ArgumentNullException(nameof(values));
             StringBuilder builder = new StringBuilder();
             if (PrimaryKey.PropertyType == typeof(string))
             {
                 values.ForEach(value =>
                 {
-                    builder.Append($"'{value}',");
+                    builder.Append($"'{SqliteHelper.format(value)}',");
                 });
             }
             else
@@ -335,36 +362,101 @@ namespace Jvedio.Core.SqlMapper
             return $" {PrimaryKey.Name} in ({builder})";
         }
 
+
+        private object getValueByType(Type type, object value)
+        {
+            if (type == null) throw new ArgumentNullException("type");
+            if (value == null) return "''"; ;
+            if (type.IsEnum)
+            {
+                if (value == null) value = 0;
+                value = (int)value;
+                return value;
+            }
+            else if (TypeHelper.IsNumeric(type))
+            {
+                return value;
+            }
+            else if (type == typeof(bool))
+            {
+                return (bool)value ? 1 : 0;
+            }
+            else
+            {
+                return $"'{SqliteHelper.format(value)}'";
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        private string generateBatchInsertSql(ICollection<T> collection)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+            List<string> values = new List<string>();
+            StringBuilder field_sql = new StringBuilder();
+            int idx = 0;
+            foreach (T entity in collection)
+            {
+
+                StringBuilder value_sql = new StringBuilder();
+                for (int i = 0; i <= Properties.Length - 1; i++)
+                {
+                    string name = Properties[i].Name;
+                    if (name == PrimaryKey.Name || ExtraFields.Contains(name)) continue;
+                    Type type = Properties[i].PropertyType;
+                    object value = Properties[i].GetValue(entity);
+                    if (name == "CreateDate" || name == "UpdateDate")
+                    {
+                        if (value == null || string.IsNullOrEmpty(value.ToString()))
+                            value_sql.Append($"'{DateTime.Now.toLocalDate()}'");
+                    }
+                    else
+                    {
+                        value_sql.Append(getValueByType(type, value));
+                    }
+
+                    value_sql.Append(",");
+                    if (idx == 0)
+                    {
+                        field_sql.Append(name);
+                        field_sql.Append(",");
+                    }
+                }
+                idx++;
+                if (field_sql[field_sql.Length - 1] == ',') field_sql.Remove(field_sql.Length - 1, 1);
+                if (value_sql[value_sql.Length - 1] == ',') value_sql.Remove(value_sql.Length - 1, 1);
+                values.Add(value_sql.ToString());
+            }
+            string all_sql = string.Join("),(", values);
+            string result = $"INSERT INTO {TableName} ({field_sql}) values ({all_sql})";
+            return result;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         private string generateInsertSql(T entity)
         {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
             StringBuilder field_sql = new StringBuilder();
             StringBuilder value_sql = new StringBuilder();
             for (int i = 0; i <= Properties.Length - 1; i++)
             {
                 string name = Properties[i].Name;
                 if (name == PrimaryKey.Name || ExtraFields.Contains(name)) continue;
-
                 Type type = Properties[i].PropertyType;
                 object value = Properties[i].GetValue(entity);
                 if (value == null) continue;
-                if (type.IsEnum)
-                {
-                    if (value == null) value = 0;
-                    value = (int)value;
-                    value_sql.Append(value);
-                }
-                else if (TypeHelper.IsNumeric(type))
-                {
-                    value_sql.Append(value);
-                }
-                else if (type == typeof(bool))
-                {
-                    value_sql.Append((bool)value ? 1 : 0);
-                }
-                else
-                {
-                    value_sql.Append($"'{value}'");
-                }
+                value_sql.Append(getValueByType(type, value));
                 field_sql.Append(name);
                 field_sql.Append(",");
                 value_sql.Append(",");

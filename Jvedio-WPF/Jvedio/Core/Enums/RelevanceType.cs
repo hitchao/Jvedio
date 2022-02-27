@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.Enums
 {
-    public enum VideoType
+    public enum RelevanceType
     {
-        Normal,
-        UnCensored,
-        Censored,
+        Segmented,
+        SameActor
     }
 }

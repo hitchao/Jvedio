@@ -24,11 +24,15 @@ create table actor_info(
     Gender INT DEFAULT 0,
     Hobby VARCHAR(500),
 
-    Cup VARCHAR(1),
+    Cup VARCHAR(1) DEFAULT 'Z',
     Chest INT,
     Waist INT,
     Hipline INT,
 
+    WebType  VARCHAR(100),
+    WebUrl  VARCHAR(2000),
+
+    ImagePath TEXT,
     ExtraInfo TEXT,
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),

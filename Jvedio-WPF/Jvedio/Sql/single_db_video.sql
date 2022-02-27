@@ -17,6 +17,10 @@
 -- Label 自己的标签
 
 -- ViewDate 最近一次播放的日期
+-- FirstScanDate 最新一次扫描该资源的日期
+-- LastScanDate 最新一次扫描该资源的日期
+-- CreateDate 数据创建时间
+-- UpdateDate 最近时间
 drop table if exists metadata;
 BEGIN;
 create table if not exists metadata (
@@ -25,6 +29,7 @@ create table if not exists metadata (
     Size  INTEGER DEFAULT 0,
     Path TEXT,
     Hash VARCHAR(32),
+    Country VARCHAR(50),
     ReleaseDate VARCHAR(30) DEFAULT '1900-01-01',
     ReleaseYear INT DEFAULT 1900,
     ViewCount INT DEFAULT 0,
@@ -35,10 +40,15 @@ create table if not exists metadata (
     Genre TEXT,
     Tag TEXT,
 
+    
+
     Grade FLOAT DEFAULT 0.0,
     Label TEXT,
 
     ViewDate VARCHAR(30),
+    FirstScanDate VARCHAR(30),
+    LastScanDate VARCHAR(30),
+
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
@@ -46,12 +56,33 @@ CREATE INDEX metadata_idx_ReleaseDate ON metadata (ReleaseDate);
 CREATE INDEX metadata_idx_DataType ON metadata (DataType);
 CREATE INDEX metadata_idx_Hash ON metadata (Hash);
 CREATE INDEX metadata_idx_ViewDate ON metadata (ViewDate);
+CREATE INDEX metadata_idx_FirstScanDate ON metadata (FirstScanDate);
+CREATE INDEX metadata_idx_LastScanDate ON metadata (LastScanDate);
 COMMIT;
+
+
+-- 每个作品关联，如分段视频
+-- RelevanceType 0-分段视频 1-同一演员出演
+drop table if exists metadata_relevance;
+BEGIN;
+create table metadata_relevance(
+    Id INTEGER PRIMARY KEY autoincrement,
+    RelevanceType INT DEFAULT 0,
+    DataID INTEGER,
+    TargetDataID INTEGER
+);
+CREATE INDEX metadata_relevance_idx_DataID ON metadata_relevance (DataID,RelevanceType);
+COMMIT;
+
+
 
 -- 影视信息表
 -- VID 识别出来的标识符
 -- PreviewImages 预览图路径
 -- VideoType: 0-Normal 1-Censored 2-UnCensored
+-- ImageUrls: {"actress":[],"smallimage":"","bigimage":"","extraimages":[]}
+-- web_type : 所属网址 => [db,library,bus]
+-- WebUrl : 对应的网址
 drop table if exists metadata_video;
 BEGIN;
 create table metadata_video(
@@ -59,13 +90,22 @@ create table metadata_video(
     VID VARCHAR(500),
     VideoType INT DEFAULT 0,
     Director VARCHAR(100),
-    Country VARCHAR(50),
     Studio TEXT,
     Publisher TEXT,
     Plot TEXT,
     Outline TEXT,
     Duration INT DEFAULT 0,
-    PreviewImages TEXT,
+
+    ImageUrls TEXT DEFAULT '',
+    
+    PreviewImagePaths TEXT,
+    ScreenShotPaths TEXT,
+    GifImagePath TEXT,
+    BigImagePath TEXT,
+    SmallImagePath TEXT,
+
+    WebType  VARCHAR(100),
+    WebUrl  VARCHAR(2000),
 
     ExtraInfo TEXT,
     unique(DataID,VID)
@@ -85,30 +125,9 @@ insert into metadata_video(DataID,VID,Director,Country,Studio,Plot,Outline,Durat
 values(1,'逃学威龙1','陈嘉上/王晶','中国','永盛电影制作有限公司','','',101,'D:\预览图\逃学威龙','{"外文名":"Fight Back to School","类型":"喜剧","色彩":"彩色"}');
 
 
--- 视频和图片的对应关系
--- 多对多
--- type: 0-缩略图 1-海报图 2-GIF图像
---      仅支持单张图片，避免数据量过大
-drop table if exists metadata_to_image;
-BEGIN;
-create table metadata_to_image(
-    id INTEGER PRIMARY KEY autoincrement,
-    DataID INTEGER,
-    ImageID INTEGER,
-    ImageType INTEGER
-);
-CREATE INDEX metadata_to_image_idx_DataID ON metadata_to_image (DataID);
-COMMIT;
-
-
-
-insert into metadata_to_image(DataID,ImageID,ImageType)
-values (1,1,0), (1,2,1), (1,3,2), (1,4,2);
-
-
 
 -- 翻译转换表
--- FieldType: 字段，Title,Plot,Outline,Studio,Genre 等都支持翻译
+-- FieldType: 字段，Title,Plot,Outline,Studio,Genre,Actor 等都支持翻译
 drop table if exists metadata_to_translation;
 BEGIN;
 create table metadata_to_translation(
