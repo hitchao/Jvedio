@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Core.Enums
+namespace Jvedio.Core.DataBase
 {
-    public enum Gender
+    public class CommonConnection<T>
     {
-        Unknown,
-        Girl,
-        Boy
+
     }
 }

@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Core.Enums
+namespace Jvedio.Core.SimpleORM.Mapper
 {
-    public enum Gender
+    internal class PostgreSQLMapper
     {
-        Unknown,
-        Girl,
-        Boy
     }
 }

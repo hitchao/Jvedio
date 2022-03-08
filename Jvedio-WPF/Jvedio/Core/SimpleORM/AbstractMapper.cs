@@ -5,16 +5,14 @@ using Jvedio.Utils.Common;
 using Jvedio.Utils.Sqlite;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Core.SqlMapper
+namespace Jvedio.Core.SimpleORM
 {
-    public class BaseMapper<T> : IMapper<T>, IDisposable
+    public abstract class AbstractMapper<T> : IDisposable, IMapper<T>
     {
 
         public class Key
@@ -28,29 +26,58 @@ namespace Jvedio.Core.SqlMapper
                 IdType = IdType.AUTO;
             }
         }
-
-        protected string SqlitePath { get; set; }
         protected string TableName { get; set; }
-        protected SQLiteCommand cmd;
-        protected SQLiteConnection cn;
 
         public Key PrimaryKey = new Key();//主键
-
         protected PropertyInfo[] Properties;
         protected List<string> ExtraFields;
 
-        public BaseMapper(string sqlitePath)
+        public AbstractMapper()
         {
-            Init();
-            SqlitePath = sqlitePath;
-            cn = new SQLiteConnection("data source=" + SqlitePath);
-            cn.Open();
-            cmd = new SQLiteCommand();
-            cmd.Connection = cn;
+            InitReflectionProperties();
+            //Init();
         }
 
 
-        private void Init()
+        #region "Select"
+
+
+        public abstract string selectLastInsertRowId();
+
+        public abstract List<T> selectList(IWrapper<T> wrapper);
+
+        public abstract T selectById(IWrapper<T> wrapper);
+
+        public abstract List<T> selectByDict(Dictionary<string, object> dict, IWrapper<T> wrapper);
+
+        public abstract long selectCount(IWrapper<T> wrapper);
+
+        #endregion
+
+
+        #region "公共方法"
+
+
+
+        public abstract void Init();
+        public abstract void Dispose();
+
+        public abstract bool isTableExists(string tableName);
+
+
+        public abstract int executeNonQuery(string sql);
+
+        #endregion
+
+
+
+        public abstract int insert(IWrapper<T> wrapper);
+
+
+
+
+
+        private void InitReflectionProperties()
         {
             TableAttribute tableAttribute = (TableAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(TableAttribute));
             TableName = tableAttribute?.TableName;
@@ -77,6 +104,8 @@ namespace Jvedio.Core.SqlMapper
 
 
 
+
+
         public int deleteByDict(Dictionary<string, object> dict)
         {
             throw new NotImplementedException();
@@ -98,10 +127,10 @@ namespace Jvedio.Core.SqlMapper
 
 
 
-        public int insertBatch(ICollection<T> collections)
+        public int insertBatch(ICollection<T> collections, bool ignore = false)
         {
             if (collections == null || collections.Count == 0) return 0;
-            string sqltext = generateBatchInsertSql(collections);
+            string sqltext = generateBatchInsertSql(collections, ignore);
             return executeNonQuery(sqltext);
         }
 
@@ -185,86 +214,59 @@ namespace Jvedio.Core.SqlMapper
         }
 
 
-        public V toEntity<V>(SQLiteDataReader sr)
+        protected List<V> toEntity<V>(List<Dictionary<string, object>> list, PropertyInfo[] Properties)
         {
-            V reslut = System.Activator.CreateInstance<V>();
-            foreach (PropertyInfo p in Properties)
+            List<V> result = new List<V>();
+            if (Properties == null) Properties = this.Properties;
+            foreach (Dictionary<string, object> row in list)
             {
-                string name = p.Name;
-                if (ExtraFields.Contains(name)) continue;
-                string value = sr[name].ToString();
-                if (p.PropertyType.IsEnum)
+                V entity = System.Activator.CreateInstance<V>();
+                foreach (PropertyInfo p in Properties)
                 {
-                    int count = Enum.GetNames(p.PropertyType).Length;
-                    int v = -1;
-                    int.TryParse(value, out v);
-                    if (v < 0 || v >= count) v = 0;
-                    else p.SetValue(reslut, Enum.Parse(p.PropertyType, value));
+                    string name = p.Name;
+                    if (ExtraFields.Contains(name)) continue;
+                    string value = row[name] == null ? "" : row[name].ToString();
+                    if (p.PropertyType.IsEnum)
+                    {
+                        int count = Enum.GetNames(p.PropertyType).Length;
+                        int v = -1;
+                        int.TryParse(value, out v);
+                        if (v < 0 || v >= count) v = 0;
+                        else p.SetValue(entity, Enum.Parse(p.PropertyType, value));
 
+                    }
+                    else if (p.PropertyType == typeof(int) || p.PropertyType == typeof(int?))
+                    {
+                        int.TryParse(value, out int intValue);
+                        p.SetValue(entity, intValue);
+                    }
+                    else if (p.PropertyType == typeof(long) || p.PropertyType == typeof(long?))
+                    {
+                        long.TryParse(value, out long Value);
+                        p.SetValue(entity, Value);
+                    }
+                    else if (p.PropertyType == typeof(float) || p.PropertyType == typeof(float?))
+                    {
+                        float.TryParse(value, out float Value);
+                        p.SetValue(entity, Value);
+                    }
+                    else if (p.PropertyType == typeof(bool))
+                    {
+                        p.SetValue(entity, value == "1" ? true : false);
+                    }
+                    else if (p.PropertyType == typeof(string))
+                    {
+                        p.SetValue(entity, value);
+                    }
                 }
-                else if (p.PropertyType == typeof(int) || p.PropertyType == typeof(int?))
-                {
-                    int.TryParse(value, out int intValue);
-                    p.SetValue(reslut, intValue);
-                }
-                else if (p.PropertyType == typeof(long) || p.PropertyType == typeof(long?))
-                {
-                    long.TryParse(value, out long Value);
-                    p.SetValue(reslut, Value);
-                }
-                else if (p.PropertyType == typeof(float) || p.PropertyType == typeof(float?))
-                {
-                    float.TryParse(value, out float Value);
-                    p.SetValue(reslut, Value);
-                }
-                else if (p.PropertyType == typeof(bool))
-                {
-                    p.SetValue(reslut, value == "1" ? true : false);
-                }
-                else if (p.PropertyType == typeof(string))
-                {
-                    p.SetValue(reslut, value);
-                }
-            }
-            return reslut;
-        }
-        public List<T> selectAll()
-        {
-            List<T> result = new List<T>();
-            if (TableName == null) return null;
-            cmd.CommandText = $"select * from {TableName}";
-            using (SQLiteDataReader sr = cmd.ExecuteReader())
-            {
-                while (sr.Read())
-                {
-                    T entity = toEntity<T>(sr);
-                    result.Add(entity);
-                }
+                result.Add(entity);
             }
             return result;
         }
 
-        public int executeNonQuery(string sql)
-        {
-            if (string.IsNullOrEmpty(sql)) return 0;
-            cmd.CommandText = sql;
-            Console.WriteLine(DateHelper.Now() + " => " + sql);
-            try { return cmd.ExecuteNonQuery(); }
-            catch { throw; }
-        }
 
-        public string selectLastInsertRowId()
-        {
-            cmd.CommandText = "SELECT last_insert_rowid()";
-            using (SQLiteDataReader sr = cmd.ExecuteReader())
-            {
-                while (sr.Read())
-                {
-                    return sr[0].ToString();
-                }
-            }
-            return null;
-        }
+
+
 
         public void createTable(string tableName, string createTableSql)
         {
@@ -394,7 +396,7 @@ namespace Jvedio.Core.SqlMapper
         /// <param name="collection"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private string generateBatchInsertSql(ICollection<T> collection)
+        private string generateBatchInsertSql(ICollection<T> collection, bool ignore = false)
         {
             if (collection == null) throw new ArgumentNullException(nameof(collection));
             List<string> values = new List<string>();
@@ -433,7 +435,9 @@ namespace Jvedio.Core.SqlMapper
                 values.Add(value_sql.ToString());
             }
             string all_sql = string.Join("),(", values);
-            string result = $"INSERT INTO {TableName} ({field_sql}) values ({all_sql})";
+            string insert = "INSERT INTO";
+            if (ignore) insert = "INSERT OR IGNORE INTO";
+            string result = $"{insert} {TableName} ({field_sql}) values ({all_sql})";
             return result;
         }
 
@@ -467,23 +471,6 @@ namespace Jvedio.Core.SqlMapper
             return $"INSERT INTO {TableName} ({field_sql}) values ({value_sql})";
         }
 
-        public bool isTableExists(string tableName)
-        {
-            cmd.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';";
-            using (SQLiteDataReader sr = cmd.ExecuteReader())
-            {
-                while (sr.Read())
-                {
-                    return (sr[0] != null && !string.IsNullOrEmpty(sr[0].ToString()));
-                }
-            }
-            return false;
-        }
-
-        public void Dispose()
-        {
-            cmd?.Dispose();
-            cn?.Close();
-        }
+        public abstract bool removeDataBase(string db_name);
     }
 }

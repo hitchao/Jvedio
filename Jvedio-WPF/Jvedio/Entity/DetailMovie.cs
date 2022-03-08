@@ -74,8 +74,8 @@ namespace Jvedio.Entity
                 Rating = rating,
                 RatingCount = 0,
                 FavoriteCount = 0,
-                Genre = genre,
-                Tag = tag,
+                Genre = genre.Replace(' ', GlobalVariable.Separator),
+                Tag = tag.Replace(' ', GlobalVariable.Separator),
                 Grade = favorites,
                 ViewDate = "",
                 FirstScanDate = scandate,
@@ -86,11 +86,12 @@ namespace Jvedio.Entity
         public Video toVideo()
         {
             Dictionary<string, object> dict = new Dictionary<string, object>();
-            dict.Add("actress", actressimageurl.Split(';'));
-            dict.Add("smallimage", smallimageurl);
-            dict.Add("bigimage", bigimageurl);
-            dict.Add("extraimages", extraimageurl.Split(';'));
-            string json = JsonConvert.SerializeObject(dict);
+            if (!string.IsNullOrEmpty(actressimageurl)) dict.Add("actress", actressimageurl.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+            if (!string.IsNullOrEmpty(smallimageurl)) dict.Add("smallimage", smallimageurl);
+            if (!string.IsNullOrEmpty(bigimageurl)) dict.Add("bigimage", bigimageurl);
+            if (!string.IsNullOrEmpty(extraimageurl)) dict.Add("extraimages", extraimageurl.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+            string json = "";
+            if (dict.Count > 0) json = JsonConvert.SerializeObject(dict);
 
             Video result = new Video()
             {
@@ -102,15 +103,16 @@ namespace Jvedio.Entity
                 Plot = plot,
                 Outline = outline,
                 Duration = runtime,
+                SubSection = subsection,
 
                 WebType = source.Replace("jav", ""),
                 WebUrl = sourceurl,
 
-                PreviewImagePaths = Path.Combine(GlobalVariable.BasePicPath, "ExtraPic", id),
-                ScreenShotPaths = Path.Combine(GlobalVariable.BasePicPath, "ScreenShot"),
-                GifImagePath = Path.Combine(GlobalVariable.BasePicPath, "Gif", $"{id}.jpg"),
-                BigImagePath = Path.Combine(GlobalVariable.BasePicPath, "BigPic", $"{id}.jpg"),
-                SmallImagePath = Path.Combine(GlobalVariable.BasePicPath, "SmallPic", $"{id}.jpg"),
+                PreviewImagePaths = "*PicPath*/ExtraPic/" + id,
+                ScreenShotPaths = "*PicPath*/ScreenShot/" + id,
+                GifImagePath = "*PicPath*/Gif/" + $"{id}.jpg",
+                BigImagePath = "*PicPath*/BigPic/" + $"{id}.jpg",
+                SmallImagePath = "*PicPath*/SmallPic/" + $"{id}.jpg",
                 ImageUrls = json,
             };
             return result;

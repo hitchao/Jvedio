@@ -1810,5 +1810,17 @@ namespace Jvedio.Properties {
                 this["EnableBgImage"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SQLite")]
+        public string DataBaseType {
+            get {
+                return ((string)(this["DataBaseType"]));
+            }
+            set {
+                this["DataBaseType"] = value;
+            }
+        }
     }
 }

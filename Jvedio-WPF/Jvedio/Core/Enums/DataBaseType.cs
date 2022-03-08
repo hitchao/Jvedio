@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.Enums
 {
-    public enum DataType
+    public enum DataBaseType
     {
-        Video,
-        Picture,
-        Game,
-        Comics,
+        SQLite,
+        MySQL,
+        PostgreSql
     }
 }

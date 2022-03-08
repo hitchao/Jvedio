@@ -28,8 +28,7 @@ namespace Jvedio.Entity
         public long DBId { get; set; }
         public string _Name;
         public string Name { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
-        public string _Path;
-        public string Path { get { return _Path; } set { _Path = value; OnPropertyChanged(); } }
+
         public string _ImagePath = "";
         public string ImagePath
         {
@@ -55,8 +54,6 @@ namespace Jvedio.Entity
             }
         }
 
-
-        public long? Size { get; set; }
         public long? Count { get; set; }
         public DataType DataType { get; set; }
 
@@ -79,12 +76,12 @@ namespace Jvedio.Entity
             if (obj == null) return false;
             AppDatabase o = obj as AppDatabase;
             if (o == null) return false;
-            return o.DataType == this.DataType && o.Name == this.Name && o.Path == this.Path;
+            return o.DataType == this.DataType && o.Name == this.Name;
         }
 
         public override int GetHashCode()
         {
-            return this.DataType.GetHashCode() + this.Name.GetHashCode() + this.Path.GetHashCode();
+            return this.DataType.GetHashCode() + this.Name.GetHashCode();
         }
     }
 }

@@ -1311,10 +1311,10 @@ namespace Jvedio.ViewModel
 
         public void LoadDataBaseList()
         {
-            DataBases = new ObservableCollection<string>();
-            string scanDir = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString());
-            List<string> files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly).ToList();
-            files.ForEach(arg => DataBases.Add(Path.GetFileNameWithoutExtension(arg).ToLower()));
+            //DataBases = new ObservableCollection<string>();
+            //string scanDir = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString());
+            //List<string> files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly).ToList();
+            //files.ForEach(arg => DataBases.Add(Path.GetFileNameWithoutExtension(arg).ToLower()));
 
         }
 

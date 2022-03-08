@@ -1,4 +1,6 @@
-﻿-- 【公共表】
+﻿-- 单文件存储全部信息
+
+-- 【公共表】
 -- 文件名：app_config.sqlite
 -- app_xxx 存储 application 级别的信息
 -- common_xxx 存储公共信息
@@ -10,47 +12,21 @@ drop table if exists app_databases;
 BEGIN;
 create table app_databases (
     DBId INTEGER PRIMARY KEY autoincrement,
-    Path TEXT DEFAULT '',
     Name VARCHAR(500),
-    Size INTEGER DEFAULT 0,
     Count INTEGER DEFAULT 0,
     DataType INT DEFAULT 0,
     ImagePath TEXT DEFAULT '',
     ViewCount INT DEFAULT 0,
 
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    unique(DataType, Name),
-    unique(Path)
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
 CREATE INDEX name_idx ON app_databases (Name);
 CREATE INDEX type_idx ON app_databases (DataType);
 COMMIT;
 
-insert into app_databases ( Count, Path, Name, Size, ImagePath, ViewCount )
-values ( 55, 'C:\123\test.sqlite', 'test', 51344, '123.png', 55);
-
-
-drop table if exists app_configs;
-BEGIN;
-create table app_configs (
-    ConfigId INTEGER PRIMARY KEY autoincrement,
-    ConfigName VARCHAR(100),
-    ConfigValue TEXT DEFAULT '',
-
-    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
-);
-CREATE INDEX app_configs_name_idx ON app_configs (ConfigName);
-COMMIT;
-
-
-drop table if exists common_recent_view;
-create table common_recent_view(
-    id INTEGER PRIMARY KEY autoincrement,
-    DataID INTEGER,
-    ViewDate VARCHAR(30)
-);
+insert into app_databases ( Count, Name, ImagePath, ViewCount )
+values ( 55,'test', '123.png', 55);
 
 
 -- 【存储刮削的图片】

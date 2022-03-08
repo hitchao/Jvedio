@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SqlMapper;
+﻿using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,5 @@ namespace Jvedio.Mapper
 {
     public class MagnetsMapper : BaseMapper<Magnet>
     {
-        public MagnetsMapper(string sqlitePath) : base(sqlitePath)
-        {
-        }
     }
 }

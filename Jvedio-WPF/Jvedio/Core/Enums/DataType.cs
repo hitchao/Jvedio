@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.Enums
 {
-    public enum Gender
+    public enum DataType
     {
-        Unknown,
-        Girl,
-        Boy
+        Video,
+        Picture,
+        Game,
+        Comics,
     }
 }

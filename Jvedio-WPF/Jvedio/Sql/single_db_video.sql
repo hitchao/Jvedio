@@ -61,20 +61,6 @@ CREATE INDEX metadata_idx_LastScanDate ON metadata (LastScanDate);
 COMMIT;
 
 
--- 每个作品关联，如分段视频
--- RelevanceType 0-分段视频 1-同一演员出演
-drop table if exists metadata_relevance;
-BEGIN;
-create table metadata_relevance(
-    Id INTEGER PRIMARY KEY autoincrement,
-    RelevanceType INT DEFAULT 0,
-    DataID INTEGER,
-    TargetDataID INTEGER
-);
-CREATE INDEX metadata_relevance_idx_DataID ON metadata_relevance (DataID,RelevanceType);
-COMMIT;
-
-
 
 -- 影视信息表
 -- VID 识别出来的标识符
@@ -83,6 +69,7 @@ COMMIT;
 -- ImageUrls: {"actress":[],"smallimage":"","bigimage":"","extraimages":[]}
 -- web_type : 所属网址 => [db,library,bus]
 -- WebUrl : 对应的网址
+-- SubSection: 分段视频位置
 drop table if exists metadata_video;
 BEGIN;
 create table metadata_video(
@@ -95,6 +82,7 @@ create table metadata_video(
     Plot TEXT,
     Outline TEXT,
     Duration INT DEFAULT 0,
+    SubSection TEXT,
 
     ImageUrls TEXT DEFAULT '',
     
@@ -131,10 +119,21 @@ values(1,'逃学威龙1','陈嘉上/王晶','中国','永盛电影制作有限�
 drop table if exists metadata_to_translation;
 BEGIN;
 create table metadata_to_translation(
-    ID INTEGER PRIMARY KEY autoincrement,
+    id INTEGER PRIMARY KEY autoincrement,
+    DataID INTEGER,
     FieldType VARCHAR(100),
-    TransaltionID INT
+    TransaltionID INTEGER
 );
-CREATE INDEX metadata_to_translation_idx_ID_FieldType ON metadata_to_translation (ID,FieldType);
+CREATE INDEX metadata_to_translation_idx_DataID_FieldType ON metadata_to_translation (DataID,FieldType);
 COMMIT;
+
+drop table if exists metadata_to_actors;
+BEGIN;
+create table metadata_to_actors(
+    id INTEGER PRIMARY KEY autoincrement,
+    DataID INTEGER,
+    TransaltionID INTEGER
+);
+COMMIT;
+
 

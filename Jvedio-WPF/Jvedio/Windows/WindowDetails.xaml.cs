@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.GlobalVariable;
+using static Jvedio.GlobalMapper;
 using static Jvedio.FileProcess;
 using static Jvedio.ImageProcess;
 using System.Collections.ObjectModel;
@@ -1648,9 +1649,9 @@ namespace Jvedio
                 CopyMagnetsMenuItem.Items.Clear();
 
                 Dictionary<string, object> dic = new Dictionary<string, object>();
-                dic.Add(MagnetsMapper.PrimaryKey.Name, vieModel.DetailMovie.id);
+                dic.Add(magnetsMapper.PrimaryKey.Name, vieModel.DetailMovie.id);
 
-                List<Magnet> magnets = MagnetsMapper.selectByDict(dic);
+                List<Magnet> magnets = magnetsMapper.selectByDict(dic);
                 magnets = magnets.OrderByDescending(arg => arg.Size).ThenByDescending(arg => arg.Releasedate).ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList();
                 foreach (var magnet in magnets)
                 {

@@ -46,7 +46,7 @@ namespace Jvedio.ViewModel
                 ScanPath.Add(item);
             }
             if (ScanPath.Count == 0) ScanPath = null;
-            GlobalVariable.InitVariable();
+            //GlobalVariable.InitVariable();
             Servers = new ObservableCollection<Server>();
 
             Type type = JvedioServers.GetType();

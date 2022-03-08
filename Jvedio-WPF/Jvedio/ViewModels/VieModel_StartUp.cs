@@ -82,7 +82,12 @@ namespace Jvedio.ViewModel
 
         public VieModel_StartUp()
         {
-            ScanDatabase();
+            ReadFromDataBase();
+        }
+
+        public void ReadFromDataBase(InfoType infoType = InfoType.Video)
+        {
+
         }
 
         public void refreshItem(AppDatabase data)
@@ -111,7 +116,7 @@ namespace Jvedio.ViewModel
             CurrentDatabases = null;
             if (string.IsNullOrEmpty(CurrentSearch)) CurrentDatabases = Databases;
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
-            Databases.ToList().Where(item => item.Name.IndexOf(CurrentSearch) >= 0 || item.Path.IndexOf(CurrentSearch) >= 0).ToList().ForEach
+            Databases.ToList().Where(item => item.Name.IndexOf(CurrentSearch) >= 0).ToList().ForEach
                 (item => temp.Add(item));
             CurrentDatabases = temp;
             SortDataBase();
@@ -143,13 +148,6 @@ namespace Jvedio.ViewModel
                     infos = infos.OrderBy(x => x.ViewCount).ToList();
                     break;
 
-                case "文件大小":
-                    infos = infos.OrderBy(x => x.Size).ToList();
-                    break;
-                case "路径":
-                    infos = infos.OrderBy(x => x.Path).ToList();
-                    break;
-
                 default:
                     break;
             }
@@ -157,79 +155,6 @@ namespace Jvedio.ViewModel
             if (Sort) infos.Reverse();
             infos.ForEach(item => temp.Add(item));
             CurrentDatabases = temp;
-        }
-
-
-        public void ScanDatabase(InfoType type = InfoType.Video)
-        {
-            Databases = new ObservableCollection<AppDatabase>();
-            string scanDir = Path.Combine(GlobalVariable.DataPath, type.ToString());
-            string[] files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly);
-            LoadDatabase(files);
-        }
-
-        public void LoadDatabase(string[] files)
-        {
-            if (files != null && files.Length > 0)
-            {
-                foreach (var item in files)
-                {
-                    AppDatabase sqliteInfo = ParseInfo(item);
-                    if (sqliteInfo != null && !Databases.Contains(sqliteInfo))
-                    {
-                        Databases.Add(sqliteInfo);
-                    }
-                }
-            }
-            JoinInfo();
-            Search();
-        }
-
-
-        // 存储到数据库中
-        private void JoinInfo()
-        {
-            // 1. 新增 / 更新
-            // 2. 删除
-            List<AppDatabase> appDatabases = GlobalVariable.AppDatabaseMapper.selectAll();
-            foreach (var item in Databases)
-            {
-                if (appDatabases.Contains(item))
-                {
-                    AppDatabase data = appDatabases[appDatabases.IndexOf(item)];
-                    //更新
-                    item.DBId = data.DBId;
-                    item.Count = data.Count;
-                    item.ViewCount = data.ViewCount;
-                    item.ViewCount = data.ViewCount;
-                    string imagePath = Path.Combine(GlobalVariable.ProjectImagePath, data.ImagePath);
-                    if (File.Exists(imagePath)) item.ImagePath = imagePath;
-
-                    data.Size = item.Size;
-                    GlobalVariable.AppDatabaseMapper.updateById(item);
-                }
-                else
-                {
-                    // 新增
-                    GlobalVariable.AppDatabaseMapper.insert(item);
-                }
-            }
-            // 删除
-            List<AppDatabase> toDelete = appDatabases.Except(Databases).ToList();
-            GlobalVariable.AppDatabaseMapper.deleteByIds(toDelete.Select(item => item.DBId.ToString()).ToList());
-        }
-
-        public AppDatabase ParseInfo(string path)
-        {
-            string name = Path.GetFileNameWithoutExtension(path);
-            if (string.IsNullOrEmpty(name)) return null;
-            System.IO.FileInfo fileInfo = new System.IO.FileInfo(path);
-            AppDatabase info = new AppDatabase();
-            info.Name = name;
-            info.Path = path;
-            info.Size = fileInfo.Length;
-            info.CreateDate = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss");
-            return info;
         }
 
     }

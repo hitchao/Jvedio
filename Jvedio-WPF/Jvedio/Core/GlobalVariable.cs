@@ -1,5 +1,7 @@
 ﻿
-using Jvedio.Core.Sql;
+using Jvedio.Core.Enums;
+using Jvedio.Core.SimpleORM;
+using Jvedio.Core.DataBase;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using Jvedio.Utils;
@@ -31,6 +33,9 @@ namespace Jvedio
         public static event ThemeChangeHandler ThemeChange;
 
 
+        public const char Separator = (char)007;
+
+
         // *************** 网址 ***************
         public static readonly string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
         public static readonly string YoudaoUrl = "https://github.com/hitchao/Jvedio/wiki/HowToSetYoudaoTranslation";
@@ -45,47 +50,65 @@ namespace Jvedio
         public static readonly string WebPageUrl = "https://hitchao.github.io/JvedioWebPage/";
         public static readonly string ThemeDIY = "https://hitchao.github.io/JvedioWebPage/theme.html";
 
+
+
+
         // *************** 目录 ***************
-        public static string CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);
+        public static string CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);// todo CurrentUserFolder 不一定能创建
         public static string oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");// Jvedio 5.0 之前的
-        public static string DataPath = Path.Combine(CurrentUserFolder, "database");
         public static string AllOldDataPath = Path.Combine(CurrentUserFolder, "olddata");
-        public static string VideoDataPath = Path.Combine(DataPath, "video");
-        public static string PictureDataPath = Path.Combine(DataPath, "picture");
-        public static string GameDataPath = Path.Combine(DataPath, "game");
 
 
         public static string BackupPath = Path.Combine(CurrentUserFolder, "backup");
         public static string LogPath = Path.Combine(CurrentUserFolder, "log");
         public static string PicPath = Path.Combine(CurrentUserFolder, "pic");
-        public static string BasePicPath = Directory.Exists(Properties.Settings.Default.BasePicPath) ?
-    Properties.Settings.Default.BasePicPath : PicPath;
+        public static string BasePicPath = Directory.Exists(Properties.Settings.Default.BasePicPath) ? Properties.Settings.Default.BasePicPath : PicPath;
         public static string ProjectImagePath = Path.Combine(CurrentUserFolder, "image", "library");
-
-
         public static string TranslateDataBasePath = Path.Combine(CurrentUserFolder, "Translate.sqlite");
         public static string BasePluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         public static string ScanConfigPath = Path.Combine(CurrentUserFolder, "ScanPathConfig.xml");
         public static string ServersConfigPath = Path.Combine(CurrentUserFolder, "ServersConfigPath.xml");
-        public static string AppDataPath = Path.Combine(CurrentUserFolder, "app_data.sqlite");
 
         public static string UserConfigPath = Path.Combine(CurrentUserFolder, "user-config.xml");
 
         public static string[] PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
         public static string[] InitDirs = new[] {
-            DataPath, VideoDataPath, PictureDataPath, GameDataPath,
             BackupPath,LogPath,PicPath,ProjectImagePath,AllOldDataPath,
            Path.Combine(BasePluginsPath,"themes"), Path.Combine(BasePluginsPath,"crawlers") };//初始化文件夹
 
         // *************** 目录 ***************
 
 
+
+        // *************** 数据库***************
+        /// <summary>
+        /// 如果是 sqlite => xxx.sqlite ；如果是 Mysql/PostgreSql => 数据库名称：xxx
+        /// 使用 SQLITE 存储用户的配置，用户的数据可以采用多数据库形式
+        /// DB_TABLENAME_JVEDIO_DATA ,对于 SQLITE 来说是文件名，对于 Mysql 来说是库名
+        /// </summary>
+        public static readonly string DB_TABLENAME_APP_CONFIG = Path.Combine(CurrentUserFolder, "app_configs");
+        public static readonly string DB_TABLENAME_APP_DATAS = Path.Combine(CurrentUserFolder, "app_datas");
+        public static readonly string DEFAULT_SQLITE_PATH =
+            Path.Combine(CurrentUserFolder, DB_TABLENAME_APP_DATAS + ".sqlite");
+        public static readonly string DEFAULT_SQLITE_CONFIG_PATH =
+            Path.Combine(CurrentUserFolder, DB_TABLENAME_APP_CONFIG + ".sqlite");
+
+        public static DataBaseType CurrentDataBaseType = DataBaseType.SQLite;
+
+
+
+
+        // *************** 数据库***************
+
+
+
+
+
+
+
         // *************** Mapper ***************
 
-        public static AppDatabaseMapper AppDatabaseMapper;
-        public static AppConfigMapper AppConfigMapper;
-        public static TranslationMapper TranslationMapper;
-        public static MagnetsMapper MagnetsMapper;
+
 
         public static string[] FontExt = new[] { ".otf", ".ttf" };
         public static InfoType CurrentInfoType = InfoType.Video;
@@ -213,20 +236,17 @@ namespace Jvedio
             }
         }
 
+        public static void InitDataBase()
+        {
+            Enum.TryParse(Properties.Settings.Default.DataBaseType, true, out DataBaseType dataBaseType);
+            CurrentDataBaseType = dataBaseType;
+        }
+
         public static void InitVariable()
         {
             JvedioServers = ServerConfig.Instance.ReadAll();
             Properties.Settings.Default.Save();
 
-            // 初始化数据库连接
-            AppDatabaseMapper = new AppDatabaseMapper(AppDataPath);
-            AppConfigMapper = new AppConfigMapper(AppDataPath);
-            TranslationMapper = new TranslationMapper(AppDataPath);
-            MagnetsMapper = new MagnetsMapper(AppDataPath);
-            foreach (string key in SqliteTables.AppData.TABLES.Keys)
-            {
-                AppDatabaseMapper.createTable(key, SqliteTables.AppData.TABLES[key]);
-            }
 
 
 

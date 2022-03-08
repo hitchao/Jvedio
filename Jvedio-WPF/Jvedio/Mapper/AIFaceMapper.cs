@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SqlMapper;
+﻿using Jvedio.Core.SimpleORM;
 using Jvedio.Entity.CommonSQL;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,5 @@ namespace Jvedio.Mapper
 {
     public class AIFaceMapper : BaseMapper<AIFaceInfo>
     {
-        public AIFaceMapper(string sqlitePath) : base(sqlitePath)
-        {
-        }
     }
 }

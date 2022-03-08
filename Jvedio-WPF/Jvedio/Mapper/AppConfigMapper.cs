@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SqlMapper;
+﻿using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using System;
@@ -11,8 +11,5 @@ namespace Jvedio.Mapper
 {
     public class AppConfigMapper : BaseMapper<AppConfig>
     {
-        public AppConfigMapper(string sqlitePath) : base(sqlitePath)
-        {
-        }
     }
 }

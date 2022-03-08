@@ -1,29 +1,21 @@
-﻿using Jvedio.ViewModel;
+﻿using ChaoControls.Style;
+using Jvedio.Core;
+using Jvedio.Entity;
+using Jvedio.Utils;
+using Jvedio.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static Jvedio.FileProcess;
 using static Jvedio.GlobalVariable;
-using Jvedio.Utils;
-using Newtonsoft.Json;
-using Jvedio.Core;
-using System.Windows.Controls.Primitives;
-using ChaoControls.Style;
-
-using Jvedio.Entity;
-using Jvedio.Mapper;
-using Jvedio.Core.SqlMapper;
-using Jvedio.Test;
-using Jvedio.Core.Sql;
-using Jvedio.Entity.CommonSQL;
+using static Jvedio.GlobalMapper;
 using Jvedio.Utils.FileProcess;
 
 namespace Jvedio
@@ -58,39 +50,22 @@ namespace Jvedio
 
 
 
-        private void testMapper()
-        {
-
-            string demo_path = @"D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\Sql\demo.sqlite";
-
-
-
-            AppDatabaseMapper appDatabaseMapper = new AppDatabaseMapper(demo_path);
-            TestMapper.insertAndSelect(appDatabaseMapper);
-
-            //TranslationMapper mapper = new TranslationMapper(demo_path);
-            //TestMapper.insertAndSelect(mapper);
-            //ComImagesMapper imagesMapper = new ComImagesMapper(demo_path);
-            //TestMapper.insertAndSelect(imagesMapper);
-
-
-
-
-            this.Close();
-        }
-
 
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            GlobalVariable.InitVariable();// 初始化全局变量
             EnsureSettings();//修复设置错误
             EnsureFileExists(); //判断文件是否存在
             EnsureDirExists();//创建文件夹
+
+            GlobalVariable.InitVariable();// 初始化全局变量
+            GlobalMapper.Init();// 初始化数据库连接
+
             this.Visibility = Visibility.Hidden;
             await MoveOldFiles();//迁移旧文件并迁移到新数据库
             this.Visibility = Visibility.Visible;
-            Jvedio.Core.ThemeLoader.loadAllThemes(); //加载主题
+            ThemeLoader.loadAllThemes(); //加载主题
+
             if (GlobalFont != null) this.FontFamily = GlobalFont;
             SetSkin(Properties.Settings.Default.Themes);//设置皮肤
             InitAppData();// 初始化应用数据
@@ -134,10 +109,17 @@ namespace Jvedio
             bool success = await Jvedio4ToJvedio5.MoveDatabases(files);
             //if (success)
             //{
-            Jvedio4ToJvedio5.MoveRecentWatch(); //todo MoveRecentWatch
-            Jvedio4ToJvedio5.MoveMagnets(); //todo MoveMagnets
-            Jvedio4ToJvedio5.MoveTranslate();   // todo MoveTranslate
+            //Jvedio4ToJvedio5.MoveRecentWatch();
+            //Jvedio4ToJvedio5.MoveMagnets(); //todo MoveMagnets
+            //Jvedio4ToJvedio5.MoveTranslate();   // todo MoveTranslate
             //}
+
+            //FileHelper.TryCopyFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AI.sqlite"), Path.Combine(AllOldDataPath, "AI.sqlite"));
+            //FileHelper.TryMoveToRecycleBin(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AI.sqlite"), 3);
+            //FileHelper.TryMoveFile(Path.Combine(oldDataPath, "ScanPathConfig"), Path.Combine(AllOldDataPath, "ScanPathConfig"));
+            //FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServersConfig"), Path.Combine(AllOldDataPath, "ServersConfig"));
+            //DirHelper.TryMoveDir(oldDataPath, Path.Combine(AllOldDataPath, "DataBase"));// 移动 DataBase
+
             return true;
         }
 
@@ -341,20 +323,7 @@ namespace Jvedio
                         MessageCard.Show("不支持该文件：" + item);
                         continue;
                     }
-                    string targetPath = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString(), name + ".sqlite");
-                    if (File.Exists(targetPath))
-                    {
-                        if (new Msgbox(this, $"{Jvedio.Language.Resources.Message_AlreadyExist} {name} {Jvedio.Language.Resources.IsToOverWrite} ？").ShowDialog() == true)
-                        {
-                            FileHelper.TryCopyFile(item, targetPath, true);
-                            vieModel_StartUp.ScanDatabase();
-                        }
-                    }
-                    else
-                    {
-                        FileHelper.TryCopyFile(item, targetPath, true);
-                        vieModel_StartUp.ScanDatabase();
-                    }
+
                 }
             }
         }
@@ -365,26 +334,7 @@ namespace Jvedio
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
 
-            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            string path = info.Path;
-            string name = info.Name;
-            if (new Msgbox(this, $"{Jvedio.Language.Resources.IsToDelete} {name}?").ShowDialog() == true)
-            {
-                string dirpath = DateTime.Now.ToString("yyyyMMddHHmm");
-                string backupPath = Path.Combine(GlobalVariable.BackupPath, dirpath);
-                FileHelper.TryCreateDir(backupPath);
-                if (File.Exists(path))
-                {
-                    //备份
-                    FileHelper.TryCopyFile(path, Path.Combine(backupPath, name + ".sqlite"), true);
-                    //删除
-                    if (FileHelper.TryDeleteFile(path))
-                    {
-                        GlobalVariable.AppDatabaseMapper.deleteById(info.DBId);
-                        vieModel_StartUp.ScanDatabase();
-                    }
-                }
-            }
+
         }
 
 
@@ -393,7 +343,6 @@ namespace Jvedio
 
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             string originName = info.Name;
-            string originPath = info.Path;
             DialogInput input = new DialogInput(this, Jvedio.Language.Resources.Rename, originName);
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
@@ -403,17 +352,8 @@ namespace Jvedio
                 MessageCard.Show("名称非法！");
                 return;
             }
-            string targetPath = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString(), targetName + ".sqlite");
-            if (File.Exists(targetPath))
-            {
-                MessageCard.Show(Jvedio.Language.Resources.Message_AlreadyExist);
-                return;
-            }
             info.Name = targetName;
-            info.Path = targetPath;
-            FileHelper.TryMoveFile(originPath, targetPath);
-            GlobalVariable.AppDatabaseMapper.updateById(info);
-
+            appDatabaseMapper.updateById(info);
             // 仅更新重命名的
             vieModel_StartUp.refreshItem(info);
         }
@@ -475,6 +415,7 @@ namespace Jvedio
             vieModel_StartUp.Search();
         }
 
+
         private void NewDatabase(object sender, RoutedEventArgs e)
         {
             vieModel_StartUp.CurrentSearch = "";
@@ -494,13 +435,13 @@ namespace Jvedio
                 return;
             }
 
-            Jvedio.Core.Command.Sqlite.CreateVideoDataBase.Execute(targetName);
-            vieModel_StartUp.ScanDatabase();
+            //Jvedio.Core.Command.Sqlite.CreateVideoDataBase.Execute(targetName);
+            // 创建新数据库
         }
 
         private void RefreshDatabase(object sender, MouseButtonEventArgs e)
         {
-            vieModel_StartUp.ScanDatabase();
+            vieModel_StartUp.ReadFromDataBase();
         }
 
 
@@ -512,17 +453,14 @@ namespace Jvedio
             int idx = stackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
             vieModel_StartUp.CurrentSideIdx = idx;
             GlobalVariable.CurrentInfoType = (InfoType)idx;
-            vieModel_StartUp.ScanDatabase(GlobalVariable.CurrentInfoType);
+            vieModel_StartUp.ReadFromDataBase(GlobalVariable.CurrentInfoType);
         }
 
         public async void LoadDataBase()
         {
-
             //加载数据库
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            string path = info.Path;
             long id = info.DBId;
-            Properties.Settings.Default.DataBasePath = path;
             if (!File.Exists(Properties.Settings.Default.DataBasePath)) return;
             vieModel_StartUp.InitCompleted = false;
             if (Properties.Settings.Default.ScanGivenPath)
@@ -563,7 +501,7 @@ namespace Jvedio
             main.Show();
 
             // 次数+1
-            GlobalVariable.AppDatabaseMapper.increaseFieldById("ViewCount", id);
+            appDatabaseMapper.increaseFieldById("ViewCount", id);
 
             this.Close();
         }
@@ -602,7 +540,7 @@ namespace Jvedio
 
             vieModel_StartUp.Databases.Where(x => x.DBId == id).SingleOrDefault().ImagePath = newPath;
             vieModel_StartUp.CurrentDatabases.Where(x => x.DBId == id).SingleOrDefault().ImagePath = newPath;
-            GlobalVariable.AppDatabaseMapper.updateFieldById("ImagePath", newName, id);
+            appDatabaseMapper.updateFieldById("ImagePath", newName, id);
         }
 
         private void LoadDataBase(object sender, RoutedEventArgs e)

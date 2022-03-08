@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Jvedio.GlobalVariable;
+using static Jvedio.GlobalMapper;
 using System.IO;
 using System.Net;
 using Jvedio.Utils;
 using Jvedio.Utils.Net;
 using static Jvedio.Utils.Net.Net;
 using Jvedio.Entity;
+using Jvedio.Mapper;
 
 namespace Jvedio
 {
@@ -89,7 +91,7 @@ namespace Jvedio
                 //保存磁力
                 List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
                 if (magnets.Count > 0)
-                    MagnetsMapper.insertBatch(magnets);
+                    magnetsMapper.insertBatch(magnets);
             }
             return httpResult;
         }
@@ -167,7 +169,7 @@ namespace Jvedio
                 Movie movie = DataBase.SelectMovieByID(ID);
                 //保存磁力
                 List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
-                if (magnets.Count > 0) GlobalVariable.MagnetsMapper.insertBatch(magnets);
+                if (magnets.Count > 0) magnetsMapper.insertBatch(magnets);
             }
             return httpResult;
         }
@@ -247,7 +249,7 @@ namespace Jvedio
                 //保存磁力
                 List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
                 if (magnets.Count > 0)
-                    GlobalVariable.MagnetsMapper.insertBatch(magnets);
+                    magnetsMapper.insertBatch(magnets);
             }
             return httpResult;
         }
@@ -467,7 +469,7 @@ namespace Jvedio
                     //保存磁力
                     List<Magnet> magnets = new JavDBParse(ID, httpResult.SourceCode, MovieCode).ParseMagnet();
                     if (magnets.Count > 0)
-                        GlobalVariable.MagnetsMapper.insertBatch(magnets);
+                        magnetsMapper.insertBatch(magnets);
 
 
                 }

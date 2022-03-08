@@ -4058,7 +4058,9 @@ namespace Jvedio
         {
             if (e.AddedItems.Count == 0) return;
             string name = e.AddedItems[0].ToString().ToLower();
-            string path = System.IO.Path.Combine(GlobalVariable.VideoDataPath, $"{name}.sqlite");
+            // todo 新数据库
+            //string path = System.IO.Path.Combine(GlobalVariable.VideoDataPath, $"{name}.sqlite");
+            string path = "";
             if (!File.Exists(path))
             {
                 ChaoControls.Style.MessageCard.Show(Jvedio.Language.Resources.NotExists);

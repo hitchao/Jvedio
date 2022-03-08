@@ -22,6 +22,7 @@ namespace Jvedio.Entity
         public string Plot { get; set; }
         public string Outline { get; set; }
         public int Duration { get; set; }
+        public string SubSection { get; set; }
         public string PreviewImagePaths { get; set; }
         public string ScreenShotPaths { get; set; }
         public string GifImagePath { get; set; }

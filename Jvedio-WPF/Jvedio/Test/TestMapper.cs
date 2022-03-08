@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SqlMapper;
+﻿using Jvedio.Core.SimpleORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace Jvedio.Test
                     continue;
                 }
             }
-            mapper.selectAll().ForEach(item => Console.WriteLine(item));
+            //mapper.selectAll().ForEach(item => Console.WriteLine(item));
         }
     }
 }
