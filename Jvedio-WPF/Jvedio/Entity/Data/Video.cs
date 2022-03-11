@@ -13,6 +13,7 @@ namespace Jvedio.Entity
     public class Video
     {
         [TableId(IdType.AUTO)]
+        public long MVID { get; set; }
         public long DataID { get; set; }
         public string VID { get; set; }
         public VideoType VideoType { get; set; }

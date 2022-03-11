@@ -17,6 +17,7 @@ using static Jvedio.FileProcess;
 using static Jvedio.GlobalVariable;
 using static Jvedio.GlobalMapper;
 using Jvedio.Utils.FileProcess;
+using Jvedio.Windows;
 
 namespace Jvedio
 {
@@ -61,9 +62,8 @@ namespace Jvedio
             GlobalVariable.InitVariable();// 初始化全局变量
             GlobalMapper.Init();// 初始化数据库连接
 
-            this.Visibility = Visibility.Hidden;
+
             await MoveOldFiles();//迁移旧文件并迁移到新数据库
-            this.Visibility = Visibility.Visible;
             ThemeLoader.loadAllThemes(); //加载主题
 
             if (GlobalFont != null) this.FontFamily = GlobalFont;
@@ -107,18 +107,24 @@ namespace Jvedio
             Jvedio4ToJvedio5.MoveScanPathConfig(files);
             Jvedio4ToJvedio5.MoveServersConfig();
             bool success = await Jvedio4ToJvedio5.MoveDatabases(files);
-            //if (success)
-            //{
-            //Jvedio4ToJvedio5.MoveRecentWatch();
-            //Jvedio4ToJvedio5.MoveMagnets(); //todo MoveMagnets
-            //Jvedio4ToJvedio5.MoveTranslate();   // todo MoveTranslate
-            //}
+            if (success)
+            {
+                videoMapper.executeNonQuery("update metadata_video set DataID=MVID;");
+                Jvedio4ToJvedio5.MoveRecentWatch();
+                Jvedio4ToJvedio5.MoveMagnets();
+                Jvedio4ToJvedio5.MoveTranslate();
+            }
 
-            //FileHelper.TryCopyFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AI.sqlite"), Path.Combine(AllOldDataPath, "AI.sqlite"));
-            //FileHelper.TryMoveToRecycleBin(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AI.sqlite"), 3);
-            //FileHelper.TryMoveFile(Path.Combine(oldDataPath, "ScanPathConfig"), Path.Combine(AllOldDataPath, "ScanPathConfig"));
-            //FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServersConfig"), Path.Combine(AllOldDataPath, "ServersConfig"));
-            //DirHelper.TryMoveDir(oldDataPath, Path.Combine(AllOldDataPath, "DataBase"));// 移动 DataBase
+            // 移动文件
+            DirHelper.TryMoveDir(oldDataPath, Path.Combine(AllOldDataPath, "DataBase"));// 移动 DataBase
+
+            FileHelper.TryMoveFile(Path.Combine(oldDataPath, "ScanPathConfig"), Path.Combine(AllOldDataPath, "ScanPathConfig"));
+            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServersConfig"), Path.Combine(AllOldDataPath, "ServersConfig"));
+            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentWatch"), Path.Combine(AllOldDataPath, "RecentWatch"));
+            FileHelper.TryCopyFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AI.sqlite"), Path.Combine(AllOldDataPath, "AI.sqlite"));
+            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Magnets.sqlite"), Path.Combine(AllOldDataPath, "Magnets.sqlite"));
+            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translate.sqlite"), Path.Combine(AllOldDataPath, "Translate.sqlite"));
+
 
             return true;
         }
@@ -275,12 +281,6 @@ namespace Jvedio
             if (!File.Exists(@"x64\SQLite.Interop.dll") || !File.Exists(@"x86\SQLite.Interop.dll"))
             {
                 MessageBox.Show($"{Jvedio.Language.Resources.Missing} SQLite.Interop.dll", "Jvedio");
-                this.Close();
-            }
-
-            if (!File.Exists("BusActress.sqlite"))
-            {
-                MessageBox.Show($"{Jvedio.Language.Resources.Missing} BusActress.sqlite", "Jvedio");
                 this.Close();
             }
         }

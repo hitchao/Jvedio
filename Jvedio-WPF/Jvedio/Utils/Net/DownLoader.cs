@@ -250,7 +250,7 @@ namespace Jvedio
             if (ActorList.Count == 0) { this.State = DownLoadState.Completed; return; }
 
 
-            //先根据 BusActress.sqlite 获得 id
+            // todo 先根据 BusActress.sqlite 获得 id
             List<Actress> actresslist = new List<Actress>();
             foreach (Actress item in ActorList)
             {

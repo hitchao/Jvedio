@@ -38,6 +38,7 @@ namespace Jvedio.Core.SimpleORM
 
         int updateById(T entity);
         int update(T entity);
+        int update(IWrapper<T> wrapper);
 
 
         bool removeDataBase(string db_name);

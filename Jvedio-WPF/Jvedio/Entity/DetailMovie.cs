@@ -62,6 +62,7 @@ namespace Jvedio.Entity
         {
             MetaData result = new MetaData()
             {
+                DBId = DBId,
                 Title = title,
                 Size = (long)filesize,
                 Path = filepath,

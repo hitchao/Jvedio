@@ -30,10 +30,28 @@ namespace Jvedio.Entity
         public string Title { get; set; }
         public long Size { get; set; }
         public string Releasedate { get; set; }
-        public string Tag { get; set; }
+        private string _Tag;
+        public string Tag
+        {
+            get => _Tag;
+
+            set
+            {
+                _Tag = value;
+                Tags = new List<string>();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Tags.AddRange(value.Split(new char[] { ' ', GlobalVariable.Separator },
+                        StringSplitOptions.RemoveEmptyEntries));
+                }
+            }
+        }
 
         [TableField(false)]
         public List<string> Tags { get; set; }
+
+        [TableField(false)]
+        public string VID { get; set; }
         public int DownloadNumber { get; set; }
         public string ExtraInfo { get; set; }
         public string CreateDate { get; set; }

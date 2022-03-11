@@ -44,12 +44,22 @@ namespace Jvedio.Core.SimpleORM
          */
         IWrapper<T> Select(params string[] columns);
 
-        IWrapper<T> Where(string field, object value);
+        IWrapper<T> Eq(string field, object value);
+        IWrapper<T> Gt(string field, object value);
+        IWrapper<T> Ge(string field, object value);
+        IWrapper<T> Lt(string field, object value);
+        IWrapper<T> Le(string field, object value);
+        IWrapper<T> Like(string field, object value);
         IWrapper<T> GroupBy(string column);
         IWrapper<T> Desc();
         IWrapper<T> Asc();
         IWrapper<T> Limit(long offset, long row_count);
         IWrapper<T> Limit(long row_count);
+        IWrapper<T> In(string field, IEnumerable<string> items);
+
+
+        string toSelect();
+        string toWhere();
 
     }
 }

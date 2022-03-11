@@ -23,5 +23,8 @@ namespace Jvedio.Entity
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
 
+        [TableField(false)]
+        public string VID { get; set; }
+
     }
 }

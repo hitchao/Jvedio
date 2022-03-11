@@ -62,5 +62,10 @@ namespace Jvedio.Core.SimpleORM
         {
             throw new NotImplementedException();
         }
+
+        public override T selectOne(IWrapper<T> wrapper = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

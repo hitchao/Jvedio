@@ -25,6 +25,7 @@ drop table if exists metadata;
 BEGIN;
 create table if not exists metadata (
     DataID INTEGER PRIMARY KEY autoincrement,
+    DBId INTEGER,
     Title TEXT,
     Size  INTEGER DEFAULT 0,
     Path TEXT,
@@ -52,6 +53,7 @@ create table if not exists metadata (
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
+CREATE INDEX metadata_idx_DBId_DataID ON metadata (DBId,DataID);
 CREATE INDEX metadata_idx_ReleaseDate ON metadata (ReleaseDate);
 CREATE INDEX metadata_idx_DataType ON metadata (DataType);
 CREATE INDEX metadata_idx_Hash ON metadata (Hash);
@@ -73,7 +75,8 @@ COMMIT;
 drop table if exists metadata_video;
 BEGIN;
 create table metadata_video(
-    DataID INTEGER PRIMARY KEY autoincrement,
+    MVID INTEGER PRIMARY KEY autoincrement,
+    DataID INTEGER,
     VID VARCHAR(500),
     VideoType INT DEFAULT 0,
     Director VARCHAR(100),
@@ -98,6 +101,7 @@ create table metadata_video(
     ExtraInfo TEXT,
     unique(DataID,VID)
 );
+CREATE INDEX metadata_video_idx_DataID_VID ON metadata_video (DataID,VID);
 CREATE INDEX metadata_video_idx_VID ON metadata_video (VID);
 CREATE INDEX metadata_video_idx_VideoType ON metadata_video (VideoType);
 COMMIT;
@@ -122,7 +126,8 @@ create table metadata_to_translation(
     id INTEGER PRIMARY KEY autoincrement,
     DataID INTEGER,
     FieldType VARCHAR(100),
-    TransaltionID INTEGER
+    TransaltionID INTEGER,
+    unique(DataID,FieldType,TransaltionID)
 );
 CREATE INDEX metadata_to_translation_idx_DataID_FieldType ON metadata_to_translation (DataID,FieldType);
 COMMIT;

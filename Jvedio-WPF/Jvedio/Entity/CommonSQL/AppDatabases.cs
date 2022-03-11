@@ -36,7 +36,8 @@ namespace Jvedio.Entity
             set
             {
                 _ImagePath = value;
-                if (File.Exists(_ImagePath)) Image = ImageProcess.BitmapImageFromFile(_ImagePath);
+                string actual_path = Path.Combine(GlobalVariable.ProjectImagePath, ImagePath);
+                if (File.Exists(actual_path)) Image = ImageProcess.BitmapImageFromFile(actual_path);
                 OnPropertyChanged();
             }
         }

@@ -14,7 +14,8 @@ namespace Jvedio.Entity
     {
 
         [TableId(IdType.AUTO)]
-        public int DataID { get; set; }
+        public long DataID { get; set; }
+        public long DBId { get; set; }
         public string Title { get; set; }
         public long Size { get; set; }
         public string Path { get; set; }

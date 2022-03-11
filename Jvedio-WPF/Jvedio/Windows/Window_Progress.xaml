@@ -1,0 +1,85 @@
+﻿<chao:BaseWindow
+    x:Class="Jvedio.Windows.Window_Progress"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Jvedio.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="Progress_Window"
+    Title="处理进度"
+    Width="600"
+    Height="auto"
+    MinHeight="200"
+    MaxHeight="500"
+    Background="{DynamicResource BackgroundMain}"
+    CanMinimized="False"
+    CanResize="False"
+    Foreground="{DynamicResource Window.Title.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
+    ShowInTaskbar="True"
+    SizeToContent="Height"
+    TitleAlign="Left"
+    TitleMargin="5 0"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel Margin="20" Orientation="Vertical">
+            <TextBlock Margin="0,0,0,20" Text="{Binding MainText}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" MinWidth="60" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar
+                    Grid.Column="0"
+                    Width="auto"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    Maximum="100"
+                    Minimum="0"
+                    Style="{StaticResource ProgressBarStyle1}"
+                    Value="{Binding MainProgress, ElementName=Progress_Window}" />
+                <TextBlock
+                    Grid.Column="1"
+                    Padding="5,0"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Text="{Binding ElementName=Progress_Window, Path=MainProgress, StringFormat=\{0\}%}"
+                    TextAlignment="Center" />
+            </Grid>
+
+            <TextBlock
+                Margin="0,20"
+                Text="{Binding SubText, ElementName=Progress_Window}"
+                Visibility="{Binding HideSub, Converter={StaticResource bool2VisibilityConverter}}" />
+            <Grid Visibility="{Binding HideSub, Converter={StaticResource bool2VisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" MinWidth="60" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar
+                    Grid.Column="0"
+                    Width="auto"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    Maximum="100"
+                    Minimum="0"
+                    Style="{StaticResource ProgressBarStyle1}"
+                    Value="{Binding SubProgress, ElementName=Progress_Window}" />
+                <TextBlock
+                    Grid.Column="1"
+                    Padding="5,0"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Text="{Binding ElementName=Progress_Window, Path=SubProgress, StringFormat=\{0\}%}"
+                    TextAlignment="Center" />
+            </Grid>
+
+            <TextBlock
+                Margin="0,20"
+                Text="{Binding LogText, ElementName=Progress_Window}"
+                TextWrapping="WrapWithOverflow" />
+        </StackPanel>
+    </Grid>
+</chao:BaseWindow>

@@ -107,11 +107,11 @@ namespace Jvedio.Core.SimpleORM
         {
             if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
             {
-                return SqliteMapper.selectList();
+                return SqliteMapper.selectList(wrapper);
             }
             else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
             {
-                return MySQLMapper.selectList();
+                return MySQLMapper.selectList(wrapper);
             }
             return null;
         }
@@ -119,6 +119,19 @@ namespace Jvedio.Core.SimpleORM
         public override bool removeDataBase(string db_name)
         {
             throw new NotImplementedException();
+        }
+
+        public override T selectOne(IWrapper<T> wrapper = null)
+        {
+            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            {
+                return SqliteMapper.selectOne(wrapper);
+            }
+            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            {
+                return MySQLMapper.selectOne(wrapper);
+            }
+            return default(T);
         }
     }
 }

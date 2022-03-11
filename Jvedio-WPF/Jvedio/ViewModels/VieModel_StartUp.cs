@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
+using static Jvedio.GlobalMapper;
 
 namespace Jvedio.ViewModel
 {
@@ -54,6 +55,22 @@ namespace Jvedio.ViewModel
         }
 
 
+        private bool _ShowHideItem;
+
+        /// <summary>
+        /// 是否平铺
+        /// </summary>
+        public bool ShowHideItem
+        {
+            get { return _ShowHideItem; }
+            set
+            {
+                _ShowHideItem = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
 
 
         private ObservableCollection<AppDatabase> _Databases;
@@ -87,28 +104,20 @@ namespace Jvedio.ViewModel
 
         public void ReadFromDataBase(InfoType infoType = InfoType.Video)
         {
+            Databases = new ObservableCollection<AppDatabase>();
+            CurrentDatabases = new ObservableCollection<AppDatabase>();
+            List<AppDatabase> appDatabases = appDatabaseMapper.selectList();
+            foreach (var item in appDatabases)
+            {
+                Databases.Add(item);
+                CurrentDatabases.Add(item);
+            }
 
         }
 
         public void refreshItem(AppDatabase data)
         {
-            for (int i = 0; i < Databases.Count; i++)
-            {
-                if (Databases[i].DBId == data.DBId)
-                {
-                    Databases[i] = data;
-                    break;
-                }
-            }
-
-            for (int i = 0; i < CurrentDatabases.Count; i++)
-            {
-                if (CurrentDatabases[i].DBId == data.DBId)
-                {
-                    CurrentDatabases[i] = data;
-                    break;
-                }
-            }
+            ReadFromDataBase();
         }
 
         public void Search()

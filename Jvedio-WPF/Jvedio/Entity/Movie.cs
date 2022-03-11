@@ -72,6 +72,7 @@ namespace Jvedio.Entity
 
 
         public string id { get; set; }
+        public long DBId { get; set; }
         private string _title;
         public string title { get { return _title; } set { _title = value; OnPropertyChanged(); } }
         public double filesize { get; set; }

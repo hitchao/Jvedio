@@ -75,23 +75,55 @@ namespace Jvedio.Core.SimpleORM
             return null;
         }
 
+
+        private string generateSelectSqlByWrapper(IWrapper<T> wrapper)
+        {
+            if (wrapper == null) return null;
+            return wrapper.toSelect() + $" from {TableName} " + wrapper.toWhere();
+        }
+
+        public override T selectOne(IWrapper<T> wrapper = null)
+        {
+            if (TableName == null) return default(T);
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+
+            string sql = generateSelectSqlByWrapper(wrapper);
+            if (string.IsNullOrEmpty(sql)) sql = $"select * from {TableName}";
+            cmd.CommandText = sql;
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    dict = Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
+                    break;
+                }
+            }
+            List<T> result = toEntity<T>(new List<Dictionary<string, object>>() { { dict } }, null);
+            if (result == null || result.Count == 0) return default(T);
+            return result[0];
+        }
+
         public override List<T> selectList(IWrapper<T> wrapper = null)
         {
             if (TableName == null) return null;
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
 
-            cmd.CommandText = $"select * from {TableName}";
+            string sql = generateSelectSqlByWrapper(wrapper);
+            if (string.IsNullOrEmpty(sql)) sql = $"select * from {TableName}";
+
+            cmd.CommandText = sql;
+            //cmd.CommandText = $"select * from {TableName}";
             using (SQLiteDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
                     Dictionary<string, object> values = Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
-                    //T entity = toEntity<T>(sr);
                     list.Add(values);
                 }
             }
             return toEntity<T>(list, null);
         }
+
 
 
         public override T selectById(IWrapper<T> wrapper)

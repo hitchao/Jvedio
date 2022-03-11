@@ -44,6 +44,8 @@ namespace Jvedio.Core.SimpleORM
 
         public abstract string selectLastInsertRowId();
 
+
+
         public abstract List<T> selectList(IWrapper<T> wrapper);
 
         public abstract T selectById(IWrapper<T> wrapper);
@@ -127,10 +129,10 @@ namespace Jvedio.Core.SimpleORM
 
 
 
-        public int insertBatch(ICollection<T> collections, bool ignore = false)
+        public int insertBatch(ICollection<T> collections, InsertMode mode = InsertMode.Replace)
         {
             if (collections == null || collections.Count == 0) return 0;
-            string sqltext = generateBatchInsertSql(collections, ignore);
+            string sqltext = generateBatchInsertSql(collections, mode);
             return executeNonQuery(sqltext);
         }
 
@@ -176,10 +178,7 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
-        public T selectOne()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract T selectOne(IWrapper<T> wrapper = null);
 
         public int update(T entity)
         {
@@ -225,7 +224,8 @@ namespace Jvedio.Core.SimpleORM
                 {
                     string name = p.Name;
                     if (ExtraFields.Contains(name)) continue;
-                    string value = row[name] == null ? "" : row[name].ToString();
+                    if (!row.ContainsKey(name) || row[name] == null) continue;// 为 null 
+                    string value = row[name].ToString();
                     if (p.PropertyType.IsEnum)
                     {
                         int count = Enum.GetNames(p.PropertyType).Length;
@@ -396,7 +396,7 @@ namespace Jvedio.Core.SimpleORM
         /// <param name="collection"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private string generateBatchInsertSql(ICollection<T> collection, bool ignore = false)
+        private string generateBatchInsertSql(ICollection<T> collection, InsertMode mode = InsertMode.Normal)
         {
             if (collection == null) throw new ArgumentNullException(nameof(collection));
             List<string> values = new List<string>();
@@ -436,7 +436,9 @@ namespace Jvedio.Core.SimpleORM
             }
             string all_sql = string.Join("),(", values);
             string insert = "INSERT INTO";
-            if (ignore) insert = "INSERT OR IGNORE INTO";
+            if (mode == InsertMode.Ignore) insert = "INSERT OR IGNORE INTO";
+            else if (mode == InsertMode.Replace) insert = "INSERT OR REPLACE INTO";
+            else if (mode == InsertMode.Update) insert = "INSERT OR UPDATE INTO";
             string result = $"{insert} {TableName} ({field_sql}) values ({all_sql})";
             return result;
         }
@@ -472,5 +474,10 @@ namespace Jvedio.Core.SimpleORM
         }
 
         public abstract bool removeDataBase(string db_name);
+
+        public int update(IWrapper<T> wrapper)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

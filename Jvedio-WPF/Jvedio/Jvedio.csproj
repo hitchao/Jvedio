@@ -264,8 +264,11 @@
     <Compile Include="Core\Enums\DataType.cs" />
     <Compile Include="Core\Enums\Gender.cs" />
     <Compile Include="Core\Enums\IdType.cs" />
+    <Compile Include="Core\Enums\InsertMode.cs" />
+    <Compile Include="Core\Enums\Language.cs" />
     <Compile Include="Core\Enums\PathType.cs" />
     <Compile Include="Core\Enums\RelevanceType.cs" />
+    <Compile Include="Core\Enums\TranslationPlatform.cs" />
     <Compile Include="Core\Enums\VideoType.cs" />
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\GlobalMapper.cs" />
@@ -277,6 +280,7 @@
     <Compile Include="Core\SimpleORM\Mapper\SqliteMapper.cs" />
     <Compile Include="Core\SimpleORM\Wrapper\IWrapper.cs" />
     <Compile Include="Core\DataBase\Tables.cs" />
+    <Compile Include="Core\SimpleORM\Wrapper\UpdateWrapper.cs" />
     <Compile Include="Entity\Actor.cs" />
     <Compile Include="Entity\Actor\ActorInfo.cs" />
     <Compile Include="Entity\Actress.cs" />
@@ -335,9 +339,6 @@
     <Compile Include="Mapper\VideoMapper.cs" />
     <Compile Include="Test\TestMapper.cs" />
     <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
-    <Compile Include="Upgrade\UpgradeProcessWindow.xaml.cs">
-      <DependentUpon>UpgradeProcessWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\AI\Baidu.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -435,6 +436,9 @@
     <Compile Include="Windows\Window_DBManagement.xaml.cs">
       <DependentUpon>Window_DBManagement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Window_Progress.xaml.cs">
+      <DependentUpon>Window_Progress.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Window_ScreenShot.xaml.cs">
       <DependentUpon>Window_ScreenShot.xaml</DependentUpon>
     </Compile>
@@ -469,10 +473,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Upgrade\UpgradeProcessWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Utils\Plot\Bar\BarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -482,6 +482,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Window_DBManagement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Progress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

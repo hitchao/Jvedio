@@ -37,11 +37,12 @@
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Click="LoadDataBase" Header="打开" />
-                        <MenuItem
+                        <!--<MenuItem
                             Command="cmd:File.OpenDir"
                             CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
-                            Header="打开目录" />
+                            Header="打开目录" />-->
                         <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Header="隐藏" />
                         <MenuItem Click="SetImage" Header="设置图片" />
                         <MenuItem
                             Click="DelSqlite"
@@ -132,11 +133,8 @@
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Click="LoadDataBase" Header="打开" />
-                        <MenuItem
-                            Command="cmd:File.OpenDir"
-                            CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
-                            Header="打开目录" />
                         <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Header="隐藏" />
                         <MenuItem Click="SetImage" Header="设置图片" />
                         <MenuItem
                             Click="DelSqlite"
@@ -346,9 +344,7 @@
                                 <ContextMenu>
                                     <MenuItem Click="SortDatabases" Header="名称" />
                                     <MenuItem Click="SortDatabases" Header="创建时间" />
-                                    <MenuItem Click="SortDatabases" Header="路径" />
                                     <MenuItem Click="SortDatabases" Header="数据数目" />
-                                    <MenuItem Click="SortDatabases" Header="文件大小" />
                                     <MenuItem Click="SortDatabases" Header="访问频率" />
                                 </ContextMenu>
                             </Border.ContextMenu>
@@ -395,6 +391,15 @@
                             VerticalAlignment="Center"
                             Style="{StaticResource BaseTextBlock}"
                             Text="平铺" />
+                        <chao:Switch
+                            Width="40"
+                            Height="30"
+                            Background="Gray"
+                            IsChecked="{Binding ShowHideItem, Mode=TwoWay}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="显示隐藏库" />
                     </StackPanel>
 
                     <ListBox

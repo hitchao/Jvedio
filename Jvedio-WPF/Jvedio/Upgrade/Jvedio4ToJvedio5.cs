@@ -1,43 +1,26 @@
-﻿using Jvedio.ViewModel;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Core.SimpleORM;
+using Jvedio.Core.SimpleORM.Wrapper;
+using Jvedio.Entity;
+using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper;
+using Jvedio.Utils.Common;
+using Jvedio.Windows;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using static Jvedio.FileProcess;
-using static Jvedio.GlobalVariable;
-using static Jvedio.GlobalMapper;
-using Jvedio.Utils;
-using Newtonsoft.Json;
-using Jvedio.Core;
-using System.Windows.Controls.Primitives;
-using ChaoControls.Style;
-
-using Jvedio.Entity;
-using Jvedio.Mapper;
-using Jvedio.Core.SimpleORM;
-using Jvedio.Test;
-using Jvedio.Core.DataBase;
-using Jvedio.Entity.CommonSQL;
-using Jvedio.Core.Enums;
-using Jvedio.Utils.Common;
-using Jvedio.Utils.FileProcess;
 using System.Text;
+using System.Threading.Tasks;
+using static Jvedio.GlobalMapper;
+using static Jvedio.GlobalVariable;
 
 namespace Jvedio
 {
     public static class Jvedio4ToJvedio5
     {
-
-        private static UpgradeProcessWindow progressWindow = new UpgradeProcessWindow();
-
-
         public static void MoveScanPathConfig(string[] files)
         {
             string ScanPathConfig = Path.Combine(oldDataPath, "ScanPathConfig");
@@ -58,6 +41,27 @@ namespace Jvedio
                 appConfig.ConfigValue = json;
                 appConfigMapper.insert(appConfig);
 
+            }
+        }
+
+        public static void MoveRecentWatch()
+        {
+            string RecentWatch = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentWatch");
+            if (File.Exists(RecentWatch))
+            {
+                RecentWatchedConfig recentWatchedConfig = new RecentWatchedConfig();
+                Dictionary<DateTime, List<string>> dict = recentWatchedConfig.Read();
+                foreach (DateTime key in dict.Keys)
+                {
+                    List<string> list = dict[key];
+                    if (list != null && list.Count > 0)
+                    {
+                        string sql = $"update metadata set ViewDate = '{key.toLocalDate()}' " +
+                                    "where DataID in (select DataID from metadata_video " +
+                                    $"where VID in ('{string.Join("','", list)}')); ";
+                        metaDataMapper.executeNonQuery(sql);
+                    }
+                }
             }
         }
 
@@ -97,71 +101,41 @@ namespace Jvedio
             }
         }
 
+
+        private static void setProgress(float current, string logText)
+        {
+            if (window_Progress != null)
+            {
+                window_Progress.MainProgress = current;
+                window_Progress.LogText = logText;
+            }
+        }
+
+
+        private static Window_Progress window_Progress;
         public static async Task<bool> MoveDatabases(string[] files)
         {
-
-            if (files == null || files.Length == 0) return false;
+            if (files == null || files.Length == 0) return true;
             bool result = false;
-            string temp_file = Path.Combine(CurrentUserFolder, ".moving_databases");//如果存在改文件说明迁移数据失败，删除数据重新迁移
-
-            // 如果中断数据迁移了，则删除所有已迁移的文件
-            if (File.Exists(temp_file))
+            window_Progress = new Window_Progress("迁移数据");
+            window_Progress.Show();
+            for (int i = 0; i < files.Length; i++)
             {
-                //string[] exist_files = FileHelper.TryScanDIr(DataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
-
-
-                //foreach (var item in exist_files)
-                //{
-                //    try { File.Delete(item); }
-                //    catch (Exception ex)
-                //    {
-                //        Logger.LogE(ex);
-                //        new Msgbox(Application.Current.MainWindow, ex.Message).Show();
-                //        new Msgbox(Application.Current.MainWindow, "数据迁移失败，关闭程序").Show();
-                //        Application.Current.Shutdown();
-                //    }
-                //}
-            }
-            FileHelper.TryWriteToFile(temp_file, DateHelper.Now());
-            foreach (var item in files)
-            {
-                if (File.Exists(item))
+                string file = files[i];
+                if (File.Exists(file))
                 {
-                    string name = Path.GetFileName(item);
-                    bool success = await MoveOldData(item);
+                    bool success = await MoveOldData(file);
+                    setProgress((100 * (float)i + 1) / (float)files.Length, $"迁移数据：{Path.GetFileName(file)}");
                     if (success) result = true;
+
                 }
             }
-            FileHelper.TryDeleteFile(temp_file); // 迁移后才删除
-
+            window_Progress.Close();
             return result;
         }
 
-        private static void setProgress(string text, double current, double total)
-        {
-            if (App.Current != null)
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    progressWindow.CurrentText.Text = text;
-                    progressWindow.CurrentProgressBar.Value = current * 100;
-                    progressWindow.TotalProgressBar.Value = total * 100;
-                });
-            }
-
-        }
 
 
-        private static void shutdown()
-        {
-            if (App.Current != null)
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    Application.Current.Shutdown();
-                });
-            }
-        }
 
         /// <summary>
         /// 移动旧数据库到新数据库
@@ -174,15 +148,12 @@ namespace Jvedio
         {
             return await Task.Run(() =>
             {
-                if (!File.Exists(origin)) return false;
-
-                App.Current?.Dispatcher.Invoke((Action)delegate { progressWindow.Show(); });
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+                Console.WriteLine($"=======开始迁移数据：{Path.GetFileName(origin)}=========");
 
                 MySqlite oldSqlite = new MySqlite(origin);
-                float task_num = 4;
-
                 // 1. 迁移 Code
-                setProgress("迁移 Code", 0, 0);
                 System.Data.SQLite.SQLiteDataReader db = oldSqlite.RunSql("select * from javdb");
                 List<UrlCode> urlCodes = new List<UrlCode>();
                 if (db != null)
@@ -197,13 +168,11 @@ namespace Jvedio
                             ValueType = "video",
                         };
                         urlCodes.Add(urlCode);
-                        if (progressWindow.IsClosed) break;
                     }
-                    urlCodeMapper.insertBatch(urlCodes, true);
+                    urlCodeMapper.insertBatch(urlCodes);
                 }
                 db.Close();
 
-                setProgress("迁移 Code", 0.5, 0);
                 System.Data.SQLite.SQLiteDataReader library = oldSqlite.RunSql("select * from library");
                 urlCodes = new List<UrlCode>();
                 if (library != null)
@@ -218,20 +187,18 @@ namespace Jvedio
                             ValueType = "video",
                         };
                         urlCodes.Add(urlCode);
-                        if (progressWindow.IsClosed) break;
                     }
-                    urlCodeMapper.insertBatch(urlCodes, true);
+                    urlCodeMapper.insertBatch(urlCodes);
                 }
                 library.Close();
-                setProgress("", 1, 1.0 / task_num);
+                Console.WriteLine($"urlCodeMapper 用时：{watch.ElapsedMilliseconds} ms");
+                watch.Restart();
 
                 // 2. 迁移 actress
-                if (progressWindow.IsClosed) shutdown();
                 System.Data.SQLite.SQLiteDataReader actressReader = oldSqlite.RunSql("select * from actress");
                 List<ActorInfo> actressList = new List<ActorInfo>();
                 if (actressReader != null)
                 {
-                    setProgress("迁移 actress", 0, 1.0 / task_num);
                     while (actressReader.Read())
                     {
                         Actress actress = new Actress();
@@ -252,22 +219,26 @@ namespace Jvedio
                         actress.imageurl = actressReader["imageurl"].ToString();
                         ActorInfo actorInfo = actress.toActorInfo();
                         actressList.Add(actorInfo);
-                        if (progressWindow.IsClosed) break;
                     }
-                    actorMapper.insertBatch(actressList, true);
+                    actorMapper.insertBatch(actressList);
                 }
                 actressReader.Close();
-                setProgress("", 1, 3.0 / task_num);
+
+                Console.WriteLine($"actorMapper 用时：{watch.ElapsedMilliseconds} ms");
+                watch.Restart();
 
                 // 3. 迁移 movie
-                // 还只能一个个迁移
-                if (progressWindow.IsClosed) shutdown();
                 double total_count = oldSqlite.SelectCountByTable("movie");
-                System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from movie");
 
+                // 新建库
+                AppDatabase appDatabase = new AppDatabase();
+                appDatabase.Name = Path.GetFileNameWithoutExtension(origin);
+                appDatabase.Count = (long)total_count;
+                appDatabase.DataType = DataType.Video;
+                appDatabaseMapper.insert(appDatabase);
+                System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from movie");
                 if (sr != null)
                 {
-                    setProgress("迁移 movie", 0, 3 / task_num);
                     List<DetailMovie> detailMovies = new List<DetailMovie>();
                     while (sr.Read())
                     {
@@ -299,6 +270,7 @@ namespace Jvedio
                             source = sr["source"].ToString()
                         };
 
+                        detailMovie.DBId = appDatabase.DBId;
 
                         double.TryParse(sr["filesize"].ToString(), out double filesize);
                         int.TryParse(sr["vediotype"].ToString(), out int vediotype);
@@ -317,30 +289,34 @@ namespace Jvedio
                         detailMovie.countrycode = countrycode;
                         detailMovie.runtime = runtime;
                         detailMovies.Add(detailMovie);
-                        //handleActor(urlCodeMapper, detailMovie.actor, detailMovie.actorid, detailMovie.source);
-                        //
-                        //setProgress($"迁移 movie：{detailMovie.id}", idx / total_count, 3 / task_num);
-                        //idx++;
-                        //if (progressWindow.IsClosed) break;
                     }
-                    //metaDataMapper.insertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
-                    //videoMapper.insertBatch(detailMovies.Select(item => item.toVideo()).ToList());
-                    //handleChinesetitle(detailMovies);
-                    handleActor(detailMovies);
-                }
-                //setProgress("迁移结束", 1, 1);
 
+                    metaDataMapper.insertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
+
+
+                    Console.WriteLine($"metaDataMapper 用时：{watch.ElapsedMilliseconds} ms");
+                    watch.Restart();
+
+
+                    videoMapper.insertBatch(detailMovies.Select(item => item.toVideo()).ToList());
+
+                    Console.WriteLine($"videoMapper 用时：{watch.ElapsedMilliseconds} ms");
+                    watch.Restart();
+
+
+                    handleChinesetitle(detailMovies);
+                    handleActor(detailMovies);
+
+                    Console.WriteLine($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
+                    watch.Restart();
+                }
                 sr.Close();
                 oldSqlite.CloseDB();
-                //if (progressWindow.IsClosed) shutdown();
-                //if (App.Current != null)
-                //    App.Current.Dispatcher.Invoke((Action)delegate { progressWindow.Close(); });
+                watch.Stop();
                 return true;
             });
         }
 
-
-        // todo id 为0
         private static void handleChinesetitle(List<DetailMovie> list)
         {
             for (int i = 0; i < list.Count; i++)
@@ -350,11 +326,11 @@ namespace Jvedio
                 if (string.IsNullOrEmpty(chinesetitle) || string.IsNullOrEmpty(title)) continue;
                 TranslationMapper mapper = new TranslationMapper();
                 Translation translation = new Translation();
-                translation.SourceLang = "Japanese";
-                translation.TargetLang = "Chinese";
+                translation.SourceLang = Jvedio.Core.Enums.Language.Japanese.ToString();
+                translation.TargetLang = Jvedio.Core.Enums.Language.Chinese.ToString();
                 translation.SourceText = title;
                 translation.TargetText = chinesetitle;
-                translation.Platform = "youdao";
+                translation.Platform = Jvedio.Core.Enums.TranslationPlatform.youdao.ToString();
                 mapper.insert(translation);
                 string sql = "insert into metadata_to_translation(DataID,FieldType,TransaltionID) " +
                     $"values ({i + 1},'Title',{translation.TransaltionID})";
@@ -386,17 +362,17 @@ namespace Jvedio
             Dictionary<string, long> dict = actorInfos.ToDictionary(x => x.ActorName, x => x.ActorID);
             List<UrlCode> urlCodes = new List<UrlCode>();
 
-            Dictionary<string, int> actor_name_to_metadatas = new Dictionary<string, int>();
+            List<object[]> actor_name_to_metadatas = new List<object[]>();
 
             for (int i = 0; i < list.Count; i++)
             {
 
-                string actor = list[i].actor;
+                string actor = list[i].actor; // 演员A 演员B 演员C
                 string actorid = list[i].actorid;
                 if (string.IsNullOrEmpty(actor)) continue;
                 UrlCode urlCode = new UrlCode();
-                string[] actorNames = actor.Split(new char[] { '/', ' ' });
-                string[] actorIds = list[i].actorid.Split(new char[] { '/', ' ' });
+                string[] actorNames = actor.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] actorIds = list[i].actorid.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (actorIds.Length != actorNames.Length) continue;
                 for (int j = 0; j < actorNames.Length; j++)
                 {
@@ -409,7 +385,10 @@ namespace Jvedio
                     urlCodes.Add(urlCode);
                     if (dict.ContainsKey(actorName))
                     {
-                        actor_name_to_metadatas.Add(actorName, i + 1);
+                        object[] o = new object[2];
+                        o[0] = actorName;
+                        o[1] = i + 1;
+                        actor_name_to_metadatas.Add(o);
                     }
 
                 }
@@ -419,42 +398,18 @@ namespace Jvedio
             if (actor_name_to_metadatas.Count > 0)
             {
                 StringBuilder builder = new StringBuilder();
-                foreach (string key in actor_name_to_metadatas.Keys)
+                foreach (object[] item in actor_name_to_metadatas)
                 {
-                    builder.Append($"('{key}','{actor_name_to_metadatas[key]}'),");
+                    builder.Append($"('{item[0]}','{item[1]}'),");
                 }
                 if (builder[builder.Length - 1] == ',') builder.Remove(builder.Length - 1, 1);
-                string sql = $"insert into actor_name_to_metadatas(ActorName,DataID) values {builder};";
+                string sql = $"insert or ignore into actor_name_to_metadatas(ActorName,DataID) values {builder};";
                 metaDataMapper.executeNonQuery(sql);
 
 
             }
         }
 
-        public static void MoveRecentWatch()
-        {
-            RecentWatchedConfig watchedConfig = new RecentWatchedConfig();
-            Dictionary<DateTime, List<string>> dict = watchedConfig.Read();
-
-
-
-
-
-            foreach (DateTime dateTime in dict.Keys)
-            {
-                List<string> VIDList = dict[dateTime];
-                foreach (string vid in VIDList)
-                {
-
-
-
-                    Console.WriteLine(vid);
-                }
-            }
-
-
-
-        }
 
 
         // todo 修复 AI 存储问题
@@ -492,7 +447,6 @@ namespace Jvedio
                         faceInfo.Mask = mask != 0;
                         faceInfo.Platform = "baidu";
                         list.Add(faceInfo);
-                        //导入新数据库中
 
                     }
                     aIFaceMapper.insertBatch(list);
@@ -501,119 +455,123 @@ namespace Jvedio
             }
         }
 
-        private static void testInsertMagnets()
-        {
-            List<Magnet> magnets = new List<Magnet>();
-            for (int i = 0; i < 10; i++)
-            {
-                Magnet magnet = new Magnet();
-                magnet.Size = 1034240;
-                magnet.Title = "";
-                magnet.MagnetLink = "magnet:?xt=urn:btih:04A0F7C02782B9C6D850E0E22BE1A32B3D06753E" + i;
-                magnet.DataID = 1;
-                magnet.Title = "1pondo-121213_713秘藏映象の單人遊戲絕品氣質美少女西尾かおり";
-                magnet.Releasedate = "2014-10-30";
-                magnets.Add(magnet);
-            }
-            magnetsMapper.insertBatch(magnets);
-        }
-
-
-        // todo MoveMagnets
         public static void MoveMagnets()
         {
-
-            testInsertMagnets();
-
-
-            //string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Magnets.sqlite");
-            //string target = DataPath;
-            //if (File.Exists(origin))
-            //{
-            //    MySqlite oldSqlite = new MySqlite(origin);
-            //    AIFaceMapper faceMapper = new AIFaceMapper(target);
-            //    System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from magnets");
-            //    if (sr != null)
-            //    {
-            //        while (sr.Read())
-            //        {
-            //            Magnet faceInfo = new Magnet()
-            //            {
-            //                MagnetLink = sr["link"].ToString(),
-            //                FaceShape = sr["face_shape"].ToString(),
-            //                Race = sr["race"].ToString(),
-            //                Emotion = sr["emotion"].ToString(),
-            //            };
-
-            //            int.TryParse(sr["age"].ToString(), out int age);
-            //            int.TryParse(sr["glasses"].ToString(), out int glasses);
-            //            int.TryParse(sr["mask"].ToString(), out int mask);
-            //            float.TryParse(sr["beauty"].ToString(), out float beauty);
-
-            //            Enum.TryParse<Gender>(sr["gender"].ToString(), out Gender gender);
-
-            //            faceInfo.Age = age;
-            //            faceInfo.Beauty = beauty;
-            //            faceInfo.Gender = gender;
-            //            faceInfo.Glasses = glasses != 0;
-            //            faceInfo.Mask = mask != 0;
-            //            faceInfo.Platform = "baidu";
-
-            //            //导入新数据库中
-            //            faceMapper.insert(faceInfo);
-            //        }
-            //    }
-
-            //    oldSqlite.CloseDB();
-            //    faceMapper.Dispose();
-            //    FileHelper.TryMoveToRecycleBin(origin, 3);
-            //}
+            string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Magnets.sqlite");
+            if (File.Exists(origin))
+            {
+                MySqlite oldSqlite = new MySqlite(origin);
+                System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from magnets");
+                if (sr != null)
+                {
+                    List<Magnet> magnets = new List<Magnet>();
+                    HashSet<string> set = new HashSet<string>();
+                    while (sr.Read())
+                    {
+                        Magnet magnet = new Magnet()
+                        {
+                            MagnetLink = sr["link"].ToString(),
+                            Title = sr["title"].ToString(),
+                            Releasedate = sr["releasedate"].ToString(),
+                            Tag = sr["tag"].ToString().Replace(' ', GlobalVariable.Separator),
+                            VID = sr["id"].ToString(),
+                        };
+                        set.Add(magnet.VID);
+                        float.TryParse(sr["size"].ToString(), out float size);
+                        magnet.Size = (long)(size * 1024 * 1024);
+                        magnets.Add(magnet);
+                    }
+                    SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+                    wrapper.Select("VID", "DataID").In("VID", set);
+                    List<Video> videos = videoMapper.selectList(wrapper);
+                    Dictionary<string, long> dict = new Dictionary<string, long>();
+                    if (videos != null && videos.Count > 0) dict = videos.ToDictionary(x => x.VID, y => y.DataID);
+                    for (int i = 0; i < magnets.Count; i++)
+                    {
+                        string vid = magnets[i].VID;
+                        if (dict.ContainsKey(vid)) magnets[i].DataID = dict[vid];
+                    }
+                    magnetsMapper.insertBatch(magnets);
+                }
+                oldSqlite.CloseDB();
+            }
         }
         public static void MoveTranslate()
         {
-            //    string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translate.sqlite");
-            //    string target = DataPath;
-            //    if (File.Exists(origin))
-            //    {
-            //        MySqlite oldSqlite = new MySqlite(origin);
-            //        AIFaceMapper faceMapper = new AIFaceMapper(target);
-            //        System.Data.SQLite.SQLiteDataReader baidu = oldSqlite.RunSql("select * from baidu");
-            //        System.Data.SQLite.SQLiteDataReader youdao = oldSqlite.RunSql("select * from youdao");
-            //        if (baidu != null)
-            //        {
-            //            while (baidu.Read())
-            //            {
-            //                Translation faceInfo = new Translation()
-            //                {
-            //                    SourceLang = "",
-            //                    FaceShape = sr["face_shape"].ToString(),
-            //                    Race = sr["race"].ToString(),
-            //                    Emotion = sr["emotion"].ToString(),
-            //                };
+            string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translate.sqlite");
+            if (File.Exists(origin))
+            {
+                MySqlite oldSqlite = new MySqlite(origin);
+                System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from youdao");
 
-            //                int.TryParse(sr["age"].ToString(), out int age);
-            //                int.TryParse(sr["glasses"].ToString(), out int glasses);
-            //                int.TryParse(sr["mask"].ToString(), out int mask);
-            //                float.TryParse(sr["beauty"].ToString(), out float beauty);
+                // 先获得当前 transaltion 表的最大 id
+                SelectWrapper<Translation> wrapper = new SelectWrapper<Translation>();
+                wrapper.Select("MAX(TransaltionID) as TransaltionID");
+                long l = 0;
+                Translation translation = translationMapper.selectOne(wrapper);
+                if (translation != null) l = translation.TransaltionID;
+                if (sr != null)
+                {
+                    List<Translation> translations = new List<Translation>();
+                    HashSet<string> set = new HashSet<string>();
+                    while (sr.Read())
+                    {
+                        Translation title = new Translation()
+                        {
+                            SourceText = sr["title"].ToString(),
+                            TargetText = sr["translate_title"].ToString(),
+                            SourceLang = Jvedio.Core.Enums.Language.Japanese.ToString(),
+                            TargetLang = Jvedio.Core.Enums.Language.Chinese.ToString(),
+                            Platform = TranslationPlatform.youdao.ToString(),
+                            VID = sr["id"].ToString(),
+                        };
+                        Translation plot = new Translation()
+                        {
+                            SourceText = sr["plot"].ToString(),
+                            TargetText = sr["translate_plot"].ToString(),
+                            SourceLang = Jvedio.Core.Enums.Language.Japanese.ToString(),
+                            TargetLang = Jvedio.Core.Enums.Language.Chinese.ToString(),
+                            Platform = TranslationPlatform.youdao.ToString(),
+                            VID = sr["id"].ToString(),
+                        };
+                        set.Add(title.VID);
+                        translations.Add(title);
+                        translations.Add(plot);
+                    }
+                    l += 1;
+                    translationMapper.insertBatch(translations);
 
-            //                Enum.TryParse<Gender>(sr["gender"].ToString(), out Gender gender);
+                    SelectWrapper<Video> selectWrapper = new SelectWrapper<Video>();
+                    selectWrapper.Select("VID", "DataID").In("VID", set);
+                    List<Video> videos = videoMapper.selectList(selectWrapper);
+                    Dictionary<string, long> dict = new Dictionary<string, long>();
+                    if (videos != null && videos.Count > 0)
+                    {
+                        dict = videos.ToDictionary(x => x.VID, y => y.DataID);
+                    }
 
-            //                faceInfo.Age = age;
-            //                faceInfo.Beauty = beauty;
-            //                faceInfo.Gender = gender;
-            //                faceInfo.Glasses = glasses != 0;
-            //                faceInfo.Mask = mask != 0;
-            //                faceInfo.Platform = "baidu";
+                    if (dict.Count > 0)
+                    {
+                        for (int i = 0; i < translations.Count; i++)
+                        {
+                            long dataID = -1;
+                            if (dict.ContainsKey(translation.VID)) dataID = dict[translation.VID];
+                            if (dataID <= 0) continue;
+                            string FieldType = i % 2 == 0 ? "Title" : "Plot";
+                            string sql = "insert or replace into metadata_to_translation(DataID,FieldType,TransaltionID) " +
+                                        $"values ({dataID},'{FieldType}',{i + l})";
+                            metaDataMapper.executeNonQuery(sql);
+                        }
+                    }
 
-            //                //导入新数据库中
-            //                faceMapper.insert(faceInfo);
-            //            }
-            //        }
 
-            //        oldSqlite.CloseDB();
-            //        faceMapper.Dispose();
-            //        FileHelper.TryMoveToRecycleBin(origin, 3);
-            //    }
+
+
+                }
+                oldSqlite.CloseDB();
+            }
         }
+
+
     }
 }
