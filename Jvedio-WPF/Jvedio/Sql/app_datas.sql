@@ -8,6 +8,7 @@
 -- 所有字段命名都和映射类一致
 -- 启动界面管理
 -- DataType: 0-Video 1-Picture 2-Game 3-Comics
+-- Hide 是否隐藏 0-不隐藏，1 隐藏
 drop table if exists app_databases;
 BEGIN;
 create table app_databases (
@@ -17,6 +18,7 @@ create table app_databases (
     DataType INT DEFAULT 0,
     ImagePath TEXT DEFAULT '',
     ViewCount INT DEFAULT 0,
+    Hide INT DEFAULT 0,
 
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
@@ -27,6 +29,7 @@ COMMIT;
 
 insert into app_databases ( Count, Name, ImagePath, ViewCount )
 values ( 55,'test', '123.png', 55);
+
 
 
 -- 【存储刮削的图片】
@@ -158,3 +161,48 @@ create table common_ai_face (
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
 COMMIT;
+
+drop table if exists common_custom_list;
+BEGIN;
+create table common_custom_list (
+    ListID INTEGER PRIMARY KEY autoincrement,
+    ListName VARCHAR(200) DEFAULT 0,
+    Count INT DEFAULT 0,
+
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
+);
+CREATE INDEX common_custom_list_idx_ListName ON common_custom_list (ListName);
+COMMIT;
+
+drop table if exists common_custom_list_to_metadata;
+BEGIN;
+create table common_custom_list_to_metadata (
+    Id INTEGER PRIMARY KEY autoincrement,
+    ListID INTEGER,
+    DataID VARCHAR(200) DEFAULT 0,
+
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
+);
+CREATE INDEX common_custom_list_to_metadata_idx_ListID ON common_custom_list_to_metadata (ListID);
+COMMIT;
+
+
+
+-- SearchField: [video,actor,director,series,tag,label,...]
+drop table if exists common_search_history;
+BEGIN;
+create table common_search_history (
+    id INTEGER PRIMARY KEY autoincrement,
+    SearchValue TEXT,
+    SearchField VARCHAR(200),
+
+    ExtraInfo TEXT,
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
+);
+CREATE INDEX common_search_history_idx_SearchField ON common_search_history (SearchField);
+COMMIT;
+
+

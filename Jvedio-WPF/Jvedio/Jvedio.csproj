@@ -266,6 +266,7 @@
     <Compile Include="Core\Enums\IdType.cs" />
     <Compile Include="Core\Enums\InsertMode.cs" />
     <Compile Include="Core\Enums\Language.cs" />
+    <Compile Include="Core\Enums\SearchField.cs" />
     <Compile Include="Core\Enums\PathType.cs" />
     <Compile Include="Core\Enums\RelevanceType.cs" />
     <Compile Include="Core\Enums\TranslationPlatform.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="Core\GlobalMapper.cs" />
     <Compile Include="Core\SimpleORM\AbstractMapper.cs" />
     <Compile Include="Core\SimpleORM\BaseMapper.cs" />
+    <Compile Include="Core\SimpleORM\Log.cs" />
     <Compile Include="Core\SimpleORM\Mapper\MySQLMapper.cs" />
     <Compile Include="Core\SimpleORM\Mapper\PostgreSQLMapper.cs" />
     <Compile Include="Core\SimpleORM\Wrapper\SelectWrapper.cs" />
@@ -281,10 +283,16 @@
     <Compile Include="Core\SimpleORM\Wrapper\IWrapper.cs" />
     <Compile Include="Core\DataBase\Tables.cs" />
     <Compile Include="Core\SimpleORM\Wrapper\UpdateWrapper.cs" />
+    <Compile Include="Core\WindowConfig\AbstractConfig.cs" />
+    <Compile Include="Core\WindowConfig\GlobalConfig.cs" />
+    <Compile Include="Core\WindowConfig\IConfig.cs" />
+    <Compile Include="Core\WindowConfig\StartUp.cs" />
     <Compile Include="Entity\Actor.cs" />
     <Compile Include="Entity\Actor\ActorInfo.cs" />
     <Compile Include="Entity\Actress.cs" />
     <Compile Include="Entity\CommonSQL\AIFaceInfo.cs" />
+    <Compile Include="Entity\CommonSQL\SearchHistory.cs" />
+    <Compile Include="Entity\CommonSQL\CustomList.cs" />
     <Compile Include="Entity\CommonSQL\AppConfig.cs" />
     <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
     <Compile Include="Entity\CommonSQL\CommonImage.cs" />
@@ -331,6 +339,8 @@
     <Compile Include="Mapper\AIFaceMapper.cs" />
     <Compile Include="Mapper\AppConfigMapper.cs" />
     <Compile Include="Mapper\AppDatabaseMapper.cs" />
+    <Compile Include="Mapper\SearchHistoryMapper.cs" />
+    <Compile Include="Mapper\CustomListMapper.cs" />
     <Compile Include="Mapper\ComImagesMapper.cs" />
     <Compile Include="Mapper\MagnetsMapper.cs" />
     <Compile Include="Mapper\MetaDataMapper.cs" />
@@ -556,7 +566,6 @@
     <Resource Include="Resources\Picture\logo.png" />
     <Resource Include="Resources\menuitem\magnet.png" />
     <Resource Include="Resources\Picture\NoPrinting_G.gif" />
-    <Resource Include="Data\github.txt" />
     <Resource Include="Resources\Picture\datalist_video.png" />
     <Content Include="Data\x64\SQLite.Interop.dll" />
     <Content Include="Data\x86\SQLite.Interop.dll" />
@@ -630,7 +639,6 @@
       <LastGenOutput>Resource_String.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
-    <None Include="Data\BusActress.sqlite" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -897,13 +905,11 @@
   <PropertyGroup>
     <PreBuildEvent>XCOPY "$(ProjectDir)Reference\MediaInfo.dll" "$(TargetDir)" /E /Y /i
 XCOPY "$(ProjectDir)Reference\MediaInfoNET.dll" "$(TargetDir)" /E /Y /i
-XCOPY "$(ProjectDir)Data\BusActress.sqlite" "$(TargetDir)" /E /Y /i
 XCOPY "$(ProjectDir)Data\x86" "$(TargetDir)\x86" /E /Y /i
 XCOPY "$(ProjectDir)Data\x64" "$(TargetDir)\x64" /E /Y /i</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>XCOPY  "$(ProjectDir)bin\Debug"  "$(SolutionDir)Release\public\File"    /E /Y /i
-XCOPY  "$(ProjectDir)Data\github.txt"  "$(SolutionDir)Release"    /E /Y /i
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

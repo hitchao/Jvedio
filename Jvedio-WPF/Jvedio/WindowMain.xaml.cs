@@ -3,7 +3,6 @@ using DynamicData;
 using HandyControl.Data;
 using HtmlAgilityPack;
 using Jvedio.Entity;
-using Jvedio.Style;
 using Jvedio.Utils;
 using Jvedio.Utils.FileProcess;
 using Jvedio.Utils.Net;
@@ -23,13 +22,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using static Jvedio.FileProcess;
 using static Jvedio.GlobalVariable;
@@ -86,7 +83,7 @@ namespace Jvedio
             FilterGrid.Visibility = Visibility.Collapsed;
             WinState = 0;
 
-
+            vieModel = new VieModel_Main();
 
             //InitImage();
 
@@ -94,9 +91,9 @@ namespace Jvedio
             Properties.Settings.Default.Selected_BorderBrush = "#FF8000";
             //Properties.Settings.Default.DisplayNumber = 5;
 
-            BindingEvent();
+            //BindingEvent();
 
-            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported) taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
+            //if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported) taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
         }
 
 
@@ -264,121 +261,118 @@ namespace Jvedio
 
 
 
-        public async Task<bool> InitMovie()
+        public void InitMovie()
         {
-            return await Task.Run(() =>
+            Task.Run(() =>
             {
-                vieModel = new VieModel_Main();
-                if (Properties.Settings.Default.RandomDisplay)
-                    vieModel.RandomDisplay();
-                else
-                    vieModel.Reset();
+
+                //if (Properties.Settings.Default.RandomDisplay)
+                //    vieModel.RandomDisplay();
+                //else
+                //    vieModel.Reset();
 
 
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
-                {
-                    this.DataContext = vieModel;
-                    ItemsControl itemsControl;
-                    if (Properties.Settings.Default.EasyMode)
-                        itemsControl = SimpleMovieItemsControl;
-                    else
-                        itemsControl = MovieItemsControl;
-                    itemsControl.ItemsSource = vieModel.CurrentMovieList;
-                    vieModel.GetFilterInfo();
-                });
+                //Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
+                //{
+                //    this.DataContext = vieModel;
+                //    ItemsControl itemsControl;
+                //    if (Properties.Settings.Default.EasyMode)
+                //        itemsControl = SimpleMovieItemsControl;
+                //    else
+                //        itemsControl = MovieItemsControl;
+                //    itemsControl.ItemsSource = vieModel.CurrentMovieList;
+                //    vieModel.GetFilterInfo();
+                //});
 
-                vieModel.CurrentMovieListHideOrChanged += (s, ev) => { StopDownLoad(); };
-                vieModel.MovieFlipOverCompleted += (s, ev) =>
-                {
-                    //等待加载
-                    Dispatcher.BeginInvoke((Action)delegate
-                {
-                    vieModel.CurrentCount = vieModel.CurrentMovieList.Count;
-                    vieModel.TotalCount = vieModel.FilterMovieList.Count;
-                    if (Properties.Settings.Default.EditMode) SetSelected();
+                //vieModel.CurrentMovieListHideOrChanged += (s, ev) => { StopDownLoad(); };
+                //vieModel.MovieFlipOverCompleted += (s, ev) =>
+                //{
+                //    //等待加载
+                //    Dispatcher.BeginInvoke((Action)delegate
+                //{
+                //    vieModel.CurrentCount = vieModel.CurrentMovieList.Count;
+                //    vieModel.TotalCount = vieModel.FilterMovieList.Count;
+                //    if (Properties.Settings.Default.EditMode) SetSelected();
 
-                    if (Properties.Settings.Default.ShowImageMode == "2") AsyncLoadExtraPic();
-                    else if (Properties.Settings.Default.ShowImageMode == "3") AsyncLoadGif();
-                    else AsyncLoadImage();
-                    SetLoadingStatus(false);
-                    //滚动到指定位置
-                    if (autoScroll)
-                    {
-                        DoubleAnimation verticalAnimation = new DoubleAnimation();
-                        verticalAnimation.From = 0;
-                        verticalAnimation.To = VieModel_Main.PreviousOffset;
-                        verticalAnimation.Duration = TimeSpan.FromMilliseconds(500);
-                        Storyboard storyboard = new Storyboard();
-                        storyboard.Children.Add(verticalAnimation);
+                //    if (Properties.Settings.Default.ShowImageMode == "2") AsyncLoadExtraPic();
+                //    else if (Properties.Settings.Default.ShowImageMode == "3") AsyncLoadGif();
+                //    else AsyncLoadImage();
+                //    SetLoadingStatus(false);
+                //    //滚动到指定位置
+                //    if (autoScroll)
+                //    {
+                //        DoubleAnimation verticalAnimation = new DoubleAnimation();
+                //        verticalAnimation.From = 0;
+                //        verticalAnimation.To = VieModel_Main.PreviousOffset;
+                //        verticalAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                //        Storyboard storyboard = new Storyboard();
+                //        storyboard.Children.Add(verticalAnimation);
 
-                        if (Properties.Settings.Default.EasyMode)
-                            Storyboard.SetTarget(verticalAnimation, SimpleMovieScrollViewer);
-                        else
-                            Storyboard.SetTarget(verticalAnimation, MovieScrollViewer);
+                //        if (Properties.Settings.Default.EasyMode)
+                //            Storyboard.SetTarget(verticalAnimation, SimpleMovieScrollViewer);
+                //        else
+                //            Storyboard.SetTarget(verticalAnimation, MovieScrollViewer);
 
-                        Storyboard.SetTargetProperty(verticalAnimation, new PropertyPath(ScrollViewerBehavior.VerticalOffsetProperty));
-                        storyboard.Begin();
-                        autoScroll = false;
-                    }
-
-
-                }, DispatcherPriority.ContextIdle, null);
-                };
-
-                vieModel.OnCurrentMovieListRemove += (s, ev) =>
-                {
-                    ItemsControl itemsControl;
-                    if (Properties.Settings.Default.EasyMode)
-                        itemsControl = SimpleMovieItemsControl;
-                    else
-                        itemsControl = MovieItemsControl;
-
-                    //清除gif
-                    for (int i = 0; i < itemsControl.Items.Count; i++)
-                    {
-                        ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                        if (c.ContentTemplate.FindName("GifImage", c) is GifImage GifImage)
-                        {
-                            if (GifImage.Tag.ToString() == s.ToString())
-                            {
-                                GifImage.Source = null;
-                                GC.Collect();
-                                break;
-                            }
-
-                        }
-                    }
-                    //清除预览图
-                    for (int i = 0; i < itemsControl.Items.Count; i++)
-                    {
-                        ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                        if (c.ContentTemplate.FindName("myImage", c) is Image myImage && c.ContentTemplate.FindName("myImage2", c) is Image myImage2)
-                        {
-                            if (myImage.Tag.ToString() == s.ToString())
-                            {
-                                myImage.Source = null;
-                                myImage2.Source = null;
-                                break;
-                            }
-                        }
-                    }
-                };
-
-                vieModel.ActorFlipOverCompleted += (s, ev) =>
-                {
-                    //等待加载
-                    Dispatcher.BeginInvoke((Action)delegate
-                        {
-                            vieModel.ActorCurrentCount = vieModel.CurrentActorList.Count;
-                            vieModel.ActorTotalCount = vieModel.ActorList.Count;
-                            if (Properties.Settings.Default.ActorEditMode) ActorSetSelected();
-                            vieModel.SetClassifyLoadingStatus(false);
-                        }, DispatcherPriority.ContextIdle, null);
-                };
+                //        Storyboard.SetTargetProperty(verticalAnimation, new PropertyPath(ScrollViewerBehavior.VerticalOffsetProperty));
+                //        storyboard.Begin();
+                //        autoScroll = false;
+                //    }
 
 
-                return true;
+                //}, DispatcherPriority.ContextIdle, null);
+                //};
+
+                //vieModel.OnCurrentMovieListRemove += (s, ev) =>
+                //{
+                //    ItemsControl itemsControl;
+                //    if (Properties.Settings.Default.EasyMode)
+                //        itemsControl = SimpleMovieItemsControl;
+                //    else
+                //        itemsControl = MovieItemsControl;
+
+                //    //清除gif
+                //    for (int i = 0; i < itemsControl.Items.Count; i++)
+                //    {
+                //        ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                //        if (c.ContentTemplate.FindName("GifImage", c) is GifImage GifImage)
+                //        {
+                //            if (GifImage.Tag.ToString() == s.ToString())
+                //            {
+                //                GifImage.Source = null;
+                //                GC.Collect();
+                //                break;
+                //            }
+
+                //        }
+                //    }
+                //    //清除预览图
+                //    for (int i = 0; i < itemsControl.Items.Count; i++)
+                //    {
+                //        ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                //        if (c.ContentTemplate.FindName("myImage", c) is Image myImage && c.ContentTemplate.FindName("myImage2", c) is Image myImage2)
+                //        {
+                //            if (myImage.Tag.ToString() == s.ToString())
+                //            {
+                //                myImage.Source = null;
+                //                myImage2.Source = null;
+                //                break;
+                //            }
+                //        }
+                //    }
+                //};
+
+                //vieModel.ActorFlipOverCompleted += (s, ev) =>
+                //{
+                //    //等待加载
+                //    Dispatcher.BeginInvoke((Action)delegate
+                //        {
+                //            vieModel.ActorCurrentCount = vieModel.CurrentActorList.Count;
+                //            vieModel.ActorTotalCount = vieModel.ActorList.Count;
+                //            if (Properties.Settings.Default.ActorEditMode) ActorSetSelected();
+                //            vieModel.SetClassifyLoadingStatus(false);
+                //        }, DispatcherPriority.ContextIdle, null);
+                //};
             });
 
         }
@@ -3657,12 +3651,13 @@ namespace Jvedio
 
 
 
+        // todo
         private void ProgressBar_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (vieModel.ProgressBarVisibility == Visibility.Hidden && Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null)
-            {
-                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
-            }
+            //if (vieModel.ProgressBarVisibility == Visibility.Hidden && Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null)
+            //{
+            //    taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
+            //}
 
 
         }
@@ -3800,13 +3795,15 @@ namespace Jvedio
         }
 
 
+
+        // todo
         private void ClearRecentWatched(object sender, RoutedEventArgs e)
         {
-            if (new RecentWatchedConfig("").Clear())
-            {
-                ReadRecentWatchedFromConfig();
-                vieModel.AddToRecentWatch("");
-            }
+            //if (new RecentWatchedConfig("").Clear())
+            //{
+            //    //ReadRecentWatchedFromConfig();
+            //    //vieModel.AddToRecentWatch("");
+            //}
         }
 
         private void ConfigFirstRun()
@@ -3822,38 +3819,38 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            ConfigFirstRun();
-            AdjustWindow();//还原窗口为上一次状态
-            FadeIn();//淡入
-            SetSkin();//设置主题颜色
-            ShowNotice();//显示公告
-            InitMyList();//初始化我的清单
-            CheckUpgrade(null, null);//检查更新
-            this.Cursor = Cursors.Arrow;
-            //设置当前数据库
-            for (int i = 0; i < vieModel.DataBases.Count; i++)
-            {
-                if (vieModel.DataBases[i].ToLower() == System.IO.Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath).ToLower())
-                {
-                    vieModel.DatabaseSelectedIndex = i;
-                    break;
-                }
-            }
-            ReadRecentWatchedFromConfig();//显示最近播放
-            vieModel.AddToRecentWatch("");
-            //vieModel.GetFilterInfo();
+            //ConfigFirstRun();
+            //AdjustWindow();//todo 还原窗口为上一次状态
+            //FadeIn();//淡入
+            //SetSkin();//设置主题颜色
+            //ShowNotice();//显示公告
+            ////InitMyList();//todo 初始化我的清单
+            //CheckUpgrade(null, null);//检查更新
+            //this.Cursor = Cursors.Arrow;
+            //// todo 设置当前数据库
+            ////for (int i = 0; i < vieModel.DataBases.Count; i++)
+            ////{
+            ////    if (vieModel.DataBases[i].ToLower() == System.IO.Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath).ToLower())
+            ////    {
+            ////        vieModel.DatabaseSelectedIndex = i;
+            ////        break;
+            ////    }
+            ////}
+            ////ReadRecentWatchedFromConfig();// todo 显示最近播放
+            //vieModel.AddToRecentWatch("");
+            ////vieModel.GetFilterInfo();
 
-            //设置排序类型
-            var radioButtons = SortStackPanel.Children.OfType<RadioButton>().ToList();
-            int.TryParse(Properties.Settings.Default.SortType, out int idx);
-            radioButtons[idx].IsChecked = true;
+            //// todo 设置排序类型
+            //var radioButtons = SortStackPanel.Children.OfType<RadioButton>().ToList();
+            //int.TryParse(Properties.Settings.Default.SortType, out int idx);
+            //radioButtons[idx].IsChecked = true;
 
-            //设置图片类型
-            var rbs = ImageTypeStackPanel.Children.OfType<RadioButton>().ToList();
-            int.TryParse(Properties.Settings.Default.ShowImageMode, out int idx2);
-            rbs[idx2].IsChecked = true;
-            vieModel.InitLettersNavigation();
-
+            //// todo 设置图片类型
+            //var rbs = ImageTypeStackPanel.Children.OfType<RadioButton>().ToList();
+            //int.TryParse(Properties.Settings.Default.ShowImageMode, out int idx2);
+            //rbs[idx2].IsChecked = true;
+            ////await vieModel.InitLettersNavigation(); // todo 
+            //InitMovie();
         }
 
         SolidColorBrush originSideBg = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];

@@ -73,7 +73,12 @@ namespace Jvedio.Core.SimpleORM
 
 
 
-        public abstract int insert(IWrapper<T> wrapper);
+        public int insert(T entity, InsertMode mode = InsertMode.Replace)
+        {
+            if (entity == null) return -1;
+            string sqltext = generateBatchInsertSql(new List<T> { entity }, mode);
+            return executeNonQuery(sqltext);
+        }
 
 
 
@@ -311,8 +316,11 @@ namespace Jvedio.Core.SimpleORM
                 sql.Append(",");
 
             }
+            if (Properties.ToList().Where(x => x.Name == "UpdateDate").Any())
+            {
+                sql.Append($"UpdateDate='{DateHelper.Now()}'");
+            }
             if (sql[sql.Length - 1] == ',') sql.Remove(sql.Length - 1, 1);
-
             return $"UPDATE {TableName} SET {sql} WHERE {generateWhere(PrimaryKeyValue)}";
         }
 

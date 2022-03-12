@@ -16,6 +16,8 @@ namespace Jvedio
         public static TranslationMapper translationMapper = new TranslationMapper();
         public static MagnetsMapper magnetsMapper = new MagnetsMapper();
         public static AIFaceMapper aIFaceMapper = new AIFaceMapper();
+        public static CustomListMapper customListMapper = new CustomListMapper();
+        public static SearchHistoryMapper searchHistoryMapper = new SearchHistoryMapper();
 
         public static MetaDataMapper metaDataMapper = new MetaDataMapper();
         public static VideoMapper videoMapper = new VideoMapper();
@@ -30,6 +32,8 @@ namespace Jvedio
             translationMapper.Init();
             magnetsMapper.Init();
             aIFaceMapper.Init();
+            customListMapper.Init();
+            searchHistoryMapper.Init();
 
 
             foreach (string key in Tables.AppData.TABLES.Keys)

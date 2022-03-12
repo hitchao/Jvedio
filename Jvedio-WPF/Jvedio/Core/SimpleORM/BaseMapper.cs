@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jvedio.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,10 +58,6 @@ namespace Jvedio.Core.SimpleORM
             if (SqliteMapper == null) SqliteMapper = new SqliteMapper<T>(sqlitePath);
         }
 
-        public override int insert(IWrapper<T> wrapper)
-        {
-            return -1;
-        }
 
         public override bool isTableExists(string tableName)
         {

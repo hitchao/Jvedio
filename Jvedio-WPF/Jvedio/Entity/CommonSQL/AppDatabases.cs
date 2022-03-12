@@ -62,6 +62,7 @@ namespace Jvedio.Entity
         public string _CreateDate;
         public string CreateDate { get { return _CreateDate; } set { _CreateDate = value; OnPropertyChanged(); } }
         public string UpdateDate { get; set; }
+        public int Hide { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

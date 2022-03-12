@@ -1,6 +1,8 @@
 ﻿using DynamicData.Annotations;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using Jvedio.Core.Enums;
+using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using Jvedio.Utils;
@@ -20,26 +22,17 @@ namespace Jvedio.ViewModel
     {
 
 
-        public bool Sort = false;
-        public string SortType = "";
+        public bool Sort = GlobalConfig.StartUp.Sort;
+        public string SortType = GlobalConfig.StartUp.SortType;
         public string CurrentSearch = "";
-        public int CurrentSideIdx = 0;
+        public long CurrentSideIdx = GlobalConfig.StartUp.SideIdx;
+        public long CurrentDBID = GlobalConfig.StartUp.CurrentDBID;
 
         #region "属性"
 
-        private bool _initCompleted;
-        public bool InitCompleted
-        {
-            get { return _initCompleted; }
-            set
-            {
-                _initCompleted = value;
-                RaisePropertyChanged();
-            }
-        }
 
 
-        private bool _Tile;
+        private bool _Tile = GlobalConfig.StartUp.Tile;
 
         /// <summary>
         /// 是否平铺
@@ -54,8 +47,23 @@ namespace Jvedio.ViewModel
             }
         }
 
+        private bool _Loading = true;
+        public bool Loading
+        {
+            get { return _Loading; }
+            set
+            {
+                _Loading = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        private bool _ShowHideItem;
+        public override void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            base.RaisePropertyChanged(propertyName);
+        }
+
+        private bool _ShowHideItem = GlobalConfig.StartUp.ShowHideItem;
 
         /// <summary>
         /// 是否平铺
@@ -102,17 +110,17 @@ namespace Jvedio.ViewModel
             ReadFromDataBase();
         }
 
-        public void ReadFromDataBase(InfoType infoType = InfoType.Video)
+        public void ReadFromDataBase()
         {
             Databases = new ObservableCollection<AppDatabase>();
             CurrentDatabases = new ObservableCollection<AppDatabase>();
-            List<AppDatabase> appDatabases = appDatabaseMapper.selectList();
-            foreach (var item in appDatabases)
-            {
-                Databases.Add(item);
-                CurrentDatabases.Add(item);
-            }
+            List<AppDatabase> appDatabases = new List<AppDatabase>();
+            SelectWrapper<AppDatabase> wrapper = new SelectWrapper<AppDatabase>();
+            wrapper.Eq("DataType", (int)GlobalVariable.CurrentDataType);
+            appDatabases = appDatabaseMapper.selectList(wrapper);
 
+            appDatabases.ForEach(item => Databases.Add(item));
+            Search();
         }
 
         public void refreshItem(AppDatabase data)
@@ -120,13 +128,24 @@ namespace Jvedio.ViewModel
             ReadFromDataBase();
         }
 
+
+
+
         public void Search()
         {
             CurrentDatabases = null;
             if (string.IsNullOrEmpty(CurrentSearch)) CurrentDatabases = Databases;
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
-            Databases.ToList().Where(item => item.Name.IndexOf(CurrentSearch) >= 0).ToList().ForEach
+            if (!ShowHideItem)
+            {
+                Databases.ToList().Where(item => item.Hide == 0).Where(item => item.Name.IndexOf(CurrentSearch) >= 0).ToList().ForEach
                 (item => temp.Add(item));
+            }
+            else
+            {
+                Databases.ToList().Where(item => item.Hide >= 0).Where(item => item.Name.IndexOf(CurrentSearch) >= 0).ToList().ForEach
+                (item => temp.Add(item));
+            }
             CurrentDatabases = temp;
             SortDataBase();
         }

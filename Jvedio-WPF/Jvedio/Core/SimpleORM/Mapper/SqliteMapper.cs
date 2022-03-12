@@ -1,4 +1,5 @@
-﻿using Jvedio.Utils.Common;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Utils.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -36,7 +37,9 @@ namespace Jvedio.Core.SimpleORM
 
         public override bool isTableExists(string tableName)
         {
-            cmd.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';";
+            string sql = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';";
+            cmd.CommandText = sql;
+            Log.Info(sql);
             using (SQLiteDataReader sr = cmd.ExecuteReader())
             {
                 while (sr.Read())
@@ -64,7 +67,9 @@ namespace Jvedio.Core.SimpleORM
 
         public override string selectLastInsertRowId()
         {
-            cmd.CommandText = "SELECT last_insert_rowid()";
+            string sql = "SELECT last_insert_rowid()";
+            cmd.CommandText = sql;
+            Log.Info(sql);
             using (SQLiteDataReader sr = cmd.ExecuteReader())
             {
                 while (sr.Read())
@@ -90,6 +95,7 @@ namespace Jvedio.Core.SimpleORM
             string sql = generateSelectSqlByWrapper(wrapper);
             if (string.IsNullOrEmpty(sql)) sql = $"select * from {TableName}";
             cmd.CommandText = sql;
+            Log.Info(sql);
             using (SQLiteDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -112,7 +118,7 @@ namespace Jvedio.Core.SimpleORM
             if (string.IsNullOrEmpty(sql)) sql = $"select * from {TableName}";
 
             cmd.CommandText = sql;
-            //cmd.CommandText = $"select * from {TableName}";
+            Log.Info(sql);
             using (SQLiteDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -141,10 +147,6 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
-        public override int insert(IWrapper<T> wrapper)
-        {
-            throw new NotImplementedException();
-        }
 
         public override bool removeDataBase(string db_name)
         {

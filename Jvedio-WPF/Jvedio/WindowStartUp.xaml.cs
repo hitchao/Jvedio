@@ -18,6 +18,8 @@ using static Jvedio.GlobalVariable;
 using static Jvedio.GlobalMapper;
 using Jvedio.Utils.FileProcess;
 using Jvedio.Windows;
+using Jvedio.Core.Enums;
+using System.Windows.Media.Animation;
 
 namespace Jvedio
 {
@@ -74,27 +76,20 @@ namespace Jvedio
             vieModel_StartUp = new VieModel_StartUp();
             this.DataContext = vieModel_StartUp;
 
-            //默认打开某个数据库
-            if (Properties.Settings.Default.OpenDataBaseDefault && File.Exists(Properties.Settings.Default.DataBasePath))
+            List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
+            for (int i = 0; i < radioButtons.Count; i++)
             {
-                OpenDefaultDatabase();
-                //启动主窗口
-                Main main = new Main();
-                try
-                {
-                    await main.InitMovie();
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogE(ex);
-                }
-                main.Show();
-                this.Close();
+                if (i == vieModel_StartUp.CurrentSideIdx) radioButtons[i].IsChecked = true;
+                else radioButtons[i].IsChecked = false;
             }
-            else
+
+            if (!Properties.Settings.Default.OpenDataBaseDefault)
             {
-                vieModel_StartUp.InitCompleted = true;
+                vieModel_StartUp.Loading = false;
+                this.TitleHeight = 30;
             }
+
+
         }
 
 
@@ -113,18 +108,21 @@ namespace Jvedio
                 Jvedio4ToJvedio5.MoveRecentWatch();
                 Jvedio4ToJvedio5.MoveMagnets();
                 Jvedio4ToJvedio5.MoveTranslate();
+                Jvedio4ToJvedio5.MoveMyList();
+                Jvedio4ToJvedio5.MoveSearchHistory();
             }
 
             // 移动文件
+
             DirHelper.TryMoveDir(oldDataPath, Path.Combine(AllOldDataPath, "DataBase"));// 移动 DataBase
+            string[] moveFiles = { "SearchHistory", "ServersConfig", "RecentWatch",
+                "AI.sqlite", "Magnets.sqlite", "Translate.sqlite", "mylist.sqlite" };
 
-            FileHelper.TryMoveFile(Path.Combine(oldDataPath, "ScanPathConfig"), Path.Combine(AllOldDataPath, "ScanPathConfig"));
-            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServersConfig"), Path.Combine(AllOldDataPath, "ServersConfig"));
-            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentWatch"), Path.Combine(AllOldDataPath, "RecentWatch"));
-            FileHelper.TryCopyFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AI.sqlite"), Path.Combine(AllOldDataPath, "AI.sqlite"));
-            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Magnets.sqlite"), Path.Combine(AllOldDataPath, "Magnets.sqlite"));
-            FileHelper.TryMoveFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translate.sqlite"), Path.Combine(AllOldDataPath, "Translate.sqlite"));
-
+            foreach (string filename in moveFiles)
+            {
+                string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+                if (File.Exists(origin)) FileHelper.TryMoveFile(origin, Path.Combine(AllOldDataPath, filename));
+            }
 
             return true;
         }
@@ -302,39 +300,15 @@ namespace Jvedio
             }
         }
 
-
-
-
-
-        private void ImportDatabase(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseDataBase;
-            OpenFileDialog1.Filter = $"Sqlite {Jvedio.Language.Resources.File}|*.sqlite";
-            OpenFileDialog1.Multiselect = true;
-            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                string[] names = OpenFileDialog1.FileNames;
-                foreach (var item in names)
-                {
-                    string name = Path.GetFileNameWithoutExtension(item);
-                    if (!DataBase.IsProperSqlite(item))
-                    {
-                        MessageCard.Show("不支持该文件：" + item);
-                        continue;
-                    }
-
-                }
-            }
-        }
-
-
-
-
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
-
-
+            AppDatabase database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            Msgbox msgbox = new Msgbox(this, $"确认删除 {database.Name}？");
+            if (msgbox.ShowDialog() == true)
+            {
+                appDatabaseMapper.deleteById(database.DBId);
+                RefreshDatabase();
+            }
         }
 
 
@@ -347,11 +321,6 @@ namespace Jvedio
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
             if (targetName == originName) return;
-            if (string.IsNullOrEmpty(targetName) || targetName.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) != -1)
-            {
-                MessageCard.Show("名称非法！");
-                return;
-            }
             info.Name = targetName;
             appDatabaseMapper.updateById(info);
             // 仅更新重命名的
@@ -424,45 +393,47 @@ namespace Jvedio
             DialogInput input = new DialogInput(this, Jvedio.Language.Resources.NewLibrary);
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
-            if (string.IsNullOrEmpty(targetName) || targetName.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) != -1)
-            {
-                MessageCard.Show("名称非法！");
-                return;
-            }
-            if (vieModel_StartUp.Databases.Where(x => x.Name == targetName).Any())
-            {
-                MessageCard.Show(Jvedio.Language.Resources.Message_AlreadyExist);
-                return;
-            }
-
-            //Jvedio.Core.Command.Sqlite.CreateVideoDataBase.Execute(targetName);
+            if (string.IsNullOrEmpty(targetName)) return;
             // 创建新数据库
+            AppDatabase appDatabase = new AppDatabase();
+            appDatabase.Name = targetName;
+            appDatabase.DataType = (DataType)vieModel_StartUp.CurrentSideIdx;
+            appDatabaseMapper.insert(appDatabase);
+            RefreshDatabase();
         }
 
         private void RefreshDatabase(object sender, MouseButtonEventArgs e)
+        {
+            RefreshDatabase();
+        }
+
+
+        public void RefreshDatabase()
         {
             vieModel_StartUp.ReadFromDataBase();
         }
 
 
-
-        private void SideRadioButton_Click(object sender, RoutedEventArgs e)
+        private void ChangeDataType(object sender, RoutedEventArgs e)
         {
             RadioButton radioButton = sender as RadioButton;
             StackPanel stackPanel = radioButton.Parent as StackPanel;
             int idx = stackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
             vieModel_StartUp.CurrentSideIdx = idx;
-            GlobalVariable.CurrentInfoType = (InfoType)idx;
-            vieModel_StartUp.ReadFromDataBase(GlobalVariable.CurrentInfoType);
+            GlobalVariable.CurrentDataType = (DataType)idx;
+            vieModel_StartUp.ReadFromDataBase();
         }
 
         public async void LoadDataBase()
         {
             //加载数据库
-            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            long id = info.DBId;
-            if (!File.Exists(Properties.Settings.Default.DataBasePath)) return;
-            vieModel_StartUp.InitCompleted = false;
+            long id = vieModel_StartUp.CurrentDBID;
+            if (listBox.SelectedIndex >= 0)
+            {
+                AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+                id = info.DBId;
+            }
+            vieModel_StartUp.Loading = true;
             if (Properties.Settings.Default.ScanGivenPath)
             {
                 try
@@ -484,25 +455,16 @@ namespace Jvedio
                 }
 
             }
-
-
-            //启动主窗口
-            Main main = new Main();
-            //statusText.Text = Jvedio.Language.Resources.Status_InitMovie;
-            try
-            {
-                await main.InitMovie();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                Logger.LogE(ex);
-            }
-            main.Show();
-
+            vieModel_StartUp.Loading = false;
             // 次数+1
             appDatabaseMapper.increaseFieldById("ViewCount", id);
-
+            vieModel_StartUp.CurrentDBID = id;
+            //启动主窗口
+            //Application.Current.MainWindow = new Main();
+            //Application.Current.MainWindow.Show();
+            var window = new Main();
+            Application.Current.MainWindow = window;
+            window.Show();
             this.Close();
         }
 
@@ -550,6 +512,42 @@ namespace Jvedio
 
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
+        }
+
+        private void ShowHideDataBase(object sender, RoutedEventArgs e)
+        {
+            vieModel_StartUp.ReadFromDataBase();
+        }
+
+        private void HideDataBase(object sender, RoutedEventArgs e)
+        {
+            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            info.Hide = info.Hide == 0 ? 1 : 0;
+            appDatabaseMapper.updateById(info);
+            vieModel_StartUp.ReadFromDataBase();
+        }
+
+        private void Window_StartUp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            GlobalConfig.StartUp.Tile = vieModel_StartUp.Tile;
+            GlobalConfig.StartUp.ShowHideItem = vieModel_StartUp.ShowHideItem;
+            GlobalConfig.StartUp.SideIdx = vieModel_StartUp.CurrentSideIdx;
+            GlobalConfig.StartUp.CurrentDBID = vieModel_StartUp.CurrentDBID;
+            GlobalConfig.StartUp.Sort = vieModel_StartUp.Sort;
+            GlobalConfig.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? "名称" : vieModel_StartUp.SortType;
+            GlobalConfig.StartUp.Save();
+        }
+
+        private void listBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            LoadDataBase();
+        }
+
+        private void Window_StartUp_ContentRendered(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.OpenDataBaseDefault)
+                LoadDataBase();
 
         }
     }

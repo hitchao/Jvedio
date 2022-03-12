@@ -41,10 +41,11 @@ namespace Jvedio.ViewModel
         {
             //读取配置文件
             ScanPath = new ObservableCollection<string>();
-            foreach (var item in ReadScanPathFromConfig(DataBase))
-            {
-                ScanPath.Add(item);
-            }
+            // todo
+            //foreach (var item in ReadScanPathFromConfig(DataBase))
+            //{
+            //    ScanPath.Add(item);
+            //}
             if (ScanPath.Count == 0) ScanPath = null;
             //GlobalVariable.InitVariable();
             Servers = new ObservableCollection<Server>();

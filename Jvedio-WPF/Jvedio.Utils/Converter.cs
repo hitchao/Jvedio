@@ -150,6 +150,23 @@ namespace Jvedio.Utils.Converter
 
     }
 
+    public class Hide2TextConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || value.ToString() == "0") return "隐藏";
+            return "取消隐藏";
+        }
+
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+
+
+    }
+
     public class WidthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

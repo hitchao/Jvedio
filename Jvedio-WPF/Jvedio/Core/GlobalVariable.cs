@@ -111,7 +111,7 @@ namespace Jvedio
 
 
         public static string[] FontExt = new[] { ".otf", ".ttf" };
-        public static InfoType CurrentInfoType = InfoType.Video;
+        public static DataType CurrentDataType = DataType.Video;
 
 
 

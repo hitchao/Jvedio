@@ -546,12 +546,6 @@ namespace Jvedio
 
 
 
-        public static void ReadRecentWatchedFromConfig()
-        {
-            if (!File.Exists("RecentWatch")) return;
-            RecentWatched = new RecentWatchedConfig("").Read();
-        }
-
 
         public static void SaveRecentWatched()
         {

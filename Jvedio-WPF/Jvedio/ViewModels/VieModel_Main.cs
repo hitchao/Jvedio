@@ -68,19 +68,25 @@ namespace Jvedio.ViewModel
 
         public VieModel_Main()
         {
-            ResetCommand = new RelayCommand(Reset);
-            GenreCommand = new RelayCommand(GetGenreList);
-            ActorCommand = new RelayCommand(GetActorList);
-            LabelCommand = new RelayCommand(GetLabelList);
-            FlipOverCommand = new RelayCommand(AsyncFlipOver);
-            FavoritesCommand = new RelayCommand(GetFavoritesMovie);
-            RecentWatchCommand = new RelayCommand(GetRecentWatch);
-            RecentCommand = new RelayCommand(GetRecentMovie);
-            AddNewMovie = new RelayCommand(AddSingleMovie);
+            //ResetCommand = new RelayCommand(Reset);
+            //GenreCommand = new RelayCommand(GetGenreList);
+            //ActorCommand = new RelayCommand(GetActorList);
+            //LabelCommand = new RelayCommand(GetLabelList);
+            //FlipOverCommand = new RelayCommand(AsyncFlipOver);
+            //FavoritesCommand = new RelayCommand(GetFavoritesMovie);
+            //RecentWatchCommand = new RelayCommand(GetRecentWatch);
+            //RecentCommand = new RelayCommand(GetRecentMovie);
+            //AddNewMovie = new RelayCommand(AddSingleMovie);
+
+
+            //DataBases = new ObservableCollection<string>();
+
+
+
             //获得所有数据库
-            LoadDataBaseList();
-            LoadSearchHistory();
-            CurrentMovieList = new ObservableCollection<Movie>();
+            //LoadDataBaseList();
+            //LoadSearchHistory();
+            //CurrentMovieList = new ObservableCollection<Movie>();
             //CurrentMovieList.AllowEdit = true;
             //CurrentMovieList.AllowNew = true;
             //CurrentMovieList.AllowRemove = true;
@@ -1280,24 +1286,24 @@ namespace Jvedio.ViewModel
 
         public async Task<bool> InitLettersNavigation()
         {
-            LettersNavigation = new ObservableCollection<char>();
-            List<char> _temp = new List<char>();
-            var movies = DataBase.SelectAllID();
-            if (movies == null || movies.Count == 0) return false;
-            foreach (var item in movies)
-            {
+            //LettersNavigation = new ObservableCollection<char>();
+            //List<char> _temp = new List<char>();
+            //var movies = DataBase.SelectAllID();
+            //if (movies == null || movies.Count == 0) return false;
+            //foreach (var item in movies)
+            //{
 
-                if (item.Length >= 1)
-                {
-                    char firstchar = item.ToUpper()[0];
-                    if (!_temp.Contains(firstchar)) _temp.Add(firstchar);
-                }
-            }
+            //    if (item.Length >= 1)
+            //    {
+            //        char firstchar = item.ToUpper()[0];
+            //        if (!_temp.Contains(firstchar)) _temp.Add(firstchar);
+            //    }
+            //}
 
-            foreach (var item in _temp.OrderBy(arg => arg))
-            {
-                LettersNavigation.Add(item);
-            }
+            //foreach (var item in _temp.OrderBy(arg => arg))
+            //{
+            //    LettersNavigation.Add(item);
+            //}
             return true;
         }
 

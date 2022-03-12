@@ -16,10 +16,13 @@
     Background="{DynamicResource BackgroundMain}"
     CanMinimized="True"
     CanResize="True"
+    Closing="Window_StartUp_Closing"
+    ContentRendered="Window_StartUp_ContentRendered"
     Foreground="{DynamicResource Window.Title.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     Loaded="Window_Loaded"
     TitleAlign="Left"
+    TitleHeight="0"
     TitleMargin="5 0"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -32,8 +35,7 @@
                 Padding="3"
                 Panel.ZIndex="5"
                 Background="{StaticResource Window.Title.Background}"
-                Cursor="Hand"
-                MouseLeftButtonDown="LoadDataBase">
+                Cursor="Hand">
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Click="LoadDataBase" Header="打开" />
@@ -42,7 +44,7 @@
                             CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
                             Header="打开目录" />-->
                         <MenuItem Click="RenameSqlite" Header="重命名" />
-                        <MenuItem Header="隐藏" />
+                        <MenuItem Click="HideDataBase" Header="{Binding Hide, Converter={StaticResource Hide2TextConverter}}" />
                         <MenuItem Click="SetImage" Header="设置图片" />
                         <MenuItem
                             Click="DelSqlite"
@@ -128,13 +130,12 @@
                 Padding="5"
                 Panel.ZIndex="5"
                 Background="{StaticResource Window.Title.Background}"
-                Cursor="Hand"
-                MouseLeftButtonDown="LoadDataBase">
+                Cursor="Hand">
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Click="LoadDataBase" Header="打开" />
                         <MenuItem Click="RenameSqlite" Header="重命名" />
-                        <MenuItem Header="隐藏" />
+                        <MenuItem Click="HideDataBase" Header="{Binding Hide, Converter={StaticResource Hide2TextConverter}}" />
                         <MenuItem Click="SetImage" Header="设置图片" />
                         <MenuItem
                             Click="DelSqlite"
@@ -204,14 +205,12 @@
             </Border>
         </DataTemplate>
 
-        <Style
-            x:Key="ContainerStyle"
-            BasedOn="{StaticResource ListBoxItemStyle1}"
-            TargetType="{x:Type ListBoxItem}">
+        <Style x:Key="ContainerStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Margin" Value="0,2" />
             <Setter Property="ContentTemplate" Value="{StaticResource ListTemplate}" />
             <!--<Setter Property="ContentTemplate" Value="{StaticResource TileTemplate}" />-->
             <Style.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.Tile}" Value="True">
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.Tile, FallbackValue=False}" Value="True">
                     <Setter Property="ContentTemplate" Value="{StaticResource TileTemplate}" />
                 </DataTrigger>
             </Style.Triggers>
@@ -223,10 +222,25 @@
     <Grid>
 
         <Border
+            Panel.ZIndex="20"
+            Background="{DynamicResource Window.Background}"
+            Visibility="{Binding Loading, Converter={StaticResource bool2VisibilityConverter}, FallbackValue=Hidden}">
+            <StackPanel VerticalAlignment="Center">
+                <Image
+                    Height="40"
+                    Margin="0,30,0,0"
+                    Source="/Resources/Picture/logo.png" />
+                <hc:LoadingCircle
+                    Height="30"
+                    Margin="0,20"
+                    Foreground="{DynamicResource ForegroundGlobal}" />
+            </StackPanel>
+        </Border>
+
+        <Border
             BorderBrush="Gray"
             BorderThickness="0"
-            CornerRadius="5"
-            Visibility="{Binding InitCompleted, Converter={StaticResource bool2VisibilityConverter}}">
+            CornerRadius="5">
             <Grid>
 
                 <Grid.ColumnDefinitions>
@@ -236,7 +250,10 @@
 
 
 
-                <StackPanel Grid.Column="0" Background="{DynamicResource Window.Side.Background}">
+                <StackPanel
+                    Name="SidePanel"
+                    Grid.Column="0"
+                    Background="{DynamicResource Window.Side.Background}">
                     <Image
                         Height="30"
                         Margin="0,30,0,0"
@@ -250,17 +267,16 @@
                         Margin="0,20,0,0"
                         HorizontalContentAlignment="Center"
                         Background="Transparent"
-                        Click="SideRadioButton_Click"
+                        Click="ChangeDataType"
                         Content="视频"
                         Foreground="White"
-                        IsChecked="True"
                         Style="{StaticResource SideRadioButton}"
                         Tag="5" />
                     <RadioButton
                         Margin="0"
                         HorizontalContentAlignment="Center"
                         Background="Transparent"
-                        Click="SideRadioButton_Click"
+                        Click="ChangeDataType"
                         Content="图片"
                         Foreground="White"
                         Style="{StaticResource SideRadioButton}"
@@ -269,7 +285,7 @@
                         Margin="0"
                         HorizontalContentAlignment="Center"
                         Background="Transparent"
-                        Click="SideRadioButton_Click"
+                        Click="ChangeDataType"
                         Content="游戏"
                         Foreground="White"
                         Style="{StaticResource SideRadioButton}"
@@ -305,13 +321,10 @@
                             Margin="10,0"
                             Orientation="Horizontal">
                             <Button
-                                Width="80"
+                                Width="auto"
+                                MinWidth="100"
                                 Click="NewDatabase"
                                 Content="新建" />
-                            <Button
-                                Width="80"
-                                Click="ImportDatabase"
-                                Content="导入" />
                         </StackPanel>
                     </Grid>
 
@@ -395,6 +408,7 @@
                             Width="40"
                             Height="30"
                             Background="Gray"
+                            Click="ShowHideDataBase"
                             IsChecked="{Binding ShowHideItem, Mode=TwoWay}" />
                         <TextBlock
                             VerticalAlignment="Center"
@@ -410,6 +424,7 @@
                         Background="Transparent"
                         ItemContainerStyle="{StaticResource ContainerStyle}"
                         ItemsSource="{Binding CurrentDatabases}"
+                        MouseDoubleClick="listBox_MouseDoubleClick"
                         SelectionChanged="listBox_SelectionChanged">
                         <ListBox.Resources>
                             <ItemsPanelTemplate x:Key="ListBoxWrapTemplate">
@@ -461,7 +476,7 @@
                                 Command="cmd:OpenWindow.Upgrade"
                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                 Header="检查更新" />
-                            <MenuItem Command="cmd:File.OpenBaseDir" Header="打开文件路径" />
+                            <MenuItem Command="cmd:File.OpenBaseDir" Header="打开程序所在路径" />
                         </ContextMenu>
                     </Border.ContextMenu>
                     <Viewbox
@@ -478,14 +493,14 @@
 
 
                 <Grid Grid.Row="1" Visibility="Collapsed">
-                    <Button
+                    <!--<Button
                         x:Name="LoadButton"
                         Margin="20,10"
                         HorizontalAlignment="Center"
                         Click="ImportDatabase"
                         Content="{x:Static lang:Resources.ImportLibrary}"
                         FontSize="15"
-                        Style="{StaticResource FlatButton}" />
+                        Style="{StaticResource FlatButton}" />-->
 
                     <ComboBox
                         MinWidth="100"

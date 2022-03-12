@@ -39,7 +39,7 @@ namespace Jvedio
                 AppConfig appConfig = new AppConfig();
                 appConfig.ConfigName = "ScanPaths";
                 appConfig.ConfigValue = json;
-                appConfigMapper.insert(appConfig);
+                appConfigMapper.insert(appConfig,InsertMode.Replace);
 
             }
         }
@@ -96,7 +96,7 @@ namespace Jvedio
                 AppConfig appConfig = new AppConfig();
                 appConfig.ConfigName = "Servers";
                 appConfig.ConfigValue = json;
-                appConfigMapper.insert(appConfig);
+                appConfigMapper.insert(appConfig, InsertMode.Replace);
 
             }
         }
@@ -171,7 +171,7 @@ namespace Jvedio
                     }
                     urlCodeMapper.insertBatch(urlCodes);
                 }
-                db.Close();
+                db?.Close();
 
                 System.Data.SQLite.SQLiteDataReader library = oldSqlite.RunSql("select * from library");
                 urlCodes = new List<UrlCode>();
@@ -190,7 +190,7 @@ namespace Jvedio
                     }
                     urlCodeMapper.insertBatch(urlCodes);
                 }
-                library.Close();
+                library?.Close();
                 Console.WriteLine($"urlCodeMapper 用时：{watch.ElapsedMilliseconds} ms");
                 watch.Restart();
 
@@ -222,7 +222,7 @@ namespace Jvedio
                     }
                     actorMapper.insertBatch(actressList);
                 }
-                actressReader.Close();
+                actressReader?.Close();
 
                 Console.WriteLine($"actorMapper 用时：{watch.ElapsedMilliseconds} ms");
                 watch.Restart();
@@ -310,7 +310,7 @@ namespace Jvedio
                     Console.WriteLine($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
                     watch.Restart();
                 }
-                sr.Close();
+                sr?.Close();
                 oldSqlite.CloseDB();
                 watch.Stop();
                 return true;
@@ -451,6 +451,7 @@ namespace Jvedio
                     }
                     aIFaceMapper.insertBatch(list);
                 }
+                sr?.Close();
                 oldSqlite.CloseDB();
             }
         }
@@ -493,8 +494,97 @@ namespace Jvedio
                     }
                     magnetsMapper.insertBatch(magnets);
                 }
+                sr?.Close();
                 oldSqlite.CloseDB();
             }
+        }
+        public static void MoveSearchHistory()
+        {
+            string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SearchHistory");
+            if (!File.Exists(origin)) return;
+            using (StreamReader sr = new StreamReader(origin))
+            {
+                string data = sr.ReadToEnd();
+                if (!string.IsNullOrEmpty(data))
+                {
+                    List<SearchHistory> histories = new List<SearchHistory>();
+                    List<string> VID_list = data.Split(new char[] { '\'' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    foreach (string VID in VID_list)
+                    {
+                        SearchHistory history = new SearchHistory();
+                        history.SearchField = SearchField.video;
+                        history.SearchValue = VID;
+                        histories.Add(history);
+                    }
+                    searchHistoryMapper.insertBatch(histories);
+                }
+            }
+        }
+
+        public static void MoveMyList()
+        {
+            string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mylist.sqlite");
+            if (File.Exists(origin))
+            {
+                MySqlite oldSqlite = new MySqlite(origin);
+                List<string> tables = oldSqlite.GetAllTable();
+                Dictionary<string, List<string>> datas = new Dictionary<string, List<string>>();
+                System.Data.SQLite.SQLiteDataReader sr;
+
+                foreach (string table in tables)
+                {
+                    List<string> list = new List<string>();
+                    sr = oldSqlite.RunSql($"select * from {table}");
+                    if (sr != null)
+                    {
+                        while (sr.Read())
+                        {
+                            list.Add(sr.GetString(0));
+                        }
+                    }
+                    sr.Close();
+                    datas.Add(table, list);
+                }
+                oldSqlite.CloseDB();
+                HashSet<string> set = new HashSet<string>();
+                foreach (string key in datas.Keys)
+                {
+                    set.UnionWith(datas[key]);
+                }
+
+                SelectWrapper<Video> selectWrapper = new SelectWrapper<Video>();
+                selectWrapper.Select("VID", "DataID").In("VID", set);
+                List<Video> videos = videoMapper.selectList(selectWrapper);
+                Dictionary<string, long> dict = new Dictionary<string, long>();
+                if (videos != null && videos.Count > 0)
+                {
+                    dict = videos.ToDictionary(x => x.VID, y => y.DataID);
+                }
+                if (dict.Count > 0)
+                {
+                    foreach (string key in datas.Keys)
+                    {
+                        List<string> id_list = datas[key];
+                        // 新增一个清单
+                        CustomList list = new CustomList();
+                        list.ListName = key;
+                        list.Count = id_list.Count;
+                        customListMapper.insert(list);
+                        List<string> values = new List<string>();
+                        foreach (string VID in id_list)
+                        {
+                            if (!dict.ContainsKey(VID)) continue;
+                            long dataID = dict[VID];
+                            if (dataID <= 0) continue;
+                            values.Add($"({list.ListID},{dataID})");
+                        }
+                        string sql = "insert or replace into common_custom_list_to_metadata(ListID,DataID) " +
+                                 $"values {string.Join(",", values)}";
+                        metaDataMapper.executeNonQuery(sql);
+                    }
+                }
+            }
+
         }
         public static void MoveTranslate()
         {
@@ -568,6 +658,7 @@ namespace Jvedio
 
 
                 }
+                sr?.Close();
                 oldSqlite.CloseDB();
             }
         }

@@ -4,6 +4,10 @@
     xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils">
 
     <!--  Converter  -->
+    <converter:Hide2TextConverter x:Key="Hide2TextConverter" />
+
+
+
     <converter:SmallerPathConverter x:Key="SmallerPathConverter" />
     <converter:FilePathToDirConverter x:Key="FilePathToDirConverter" />
     <converter:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />

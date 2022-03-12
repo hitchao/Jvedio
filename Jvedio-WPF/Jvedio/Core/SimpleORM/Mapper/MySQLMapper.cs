@@ -23,10 +23,6 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
-        public override int insert(IWrapper<T> wrapper)
-        {
-            throw new NotImplementedException();
-        }
 
         public override bool isTableExists(string tableName)
         {

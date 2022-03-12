@@ -166,6 +166,22 @@ namespace Jvedio
             return result;
         }
 
+        public List<string> getAllTables()
+        {
+            string sql = "SELECT name FROM sqlite_master WHERE type='table'";
+            List<string> result = new List<string>();
+            cmd.CommandText = sql;
+            using (SQLiteDataReader sr = cmd.ExecuteReader())
+            {
+                while (sr.Read())
+                {
+                    string name = sr[0].ToString();
+                    result.Add(name);
+                }
+            }
+            return result;
+        }
+
         public List<Magnet> SelectMagnetsBySql(string sqltext)
         {
             List<Magnet> result = new List<Magnet>();

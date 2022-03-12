@@ -167,6 +167,7 @@ namespace Jvedio.Core.SimpleORM
                     list.Add($" {where.Field} in ('{string.Join("','", values)}')");
                 }
             }
+            if (list.Count == 0) return "";
             return $" where {string.Join(" and ", list)}";
         }
 
