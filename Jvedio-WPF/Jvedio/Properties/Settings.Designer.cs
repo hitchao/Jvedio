@@ -1822,5 +1822,29 @@ namespace Jvedio.Properties {
                 this["DataBaseType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int InfoItemWidth {
+            get {
+                return ((int)(this["InfoItemWidth"]));
+            }
+            set {
+                this["InfoItemWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowSideTagStamp {
+            get {
+                return ((bool)(this["ShowSideTagStamp"]));
+            }
+            set {
+                this["ShowSideTagStamp"] = value;
+            }
+        }
     }
 }

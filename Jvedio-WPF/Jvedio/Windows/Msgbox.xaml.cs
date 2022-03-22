@@ -38,10 +38,10 @@ namespace Jvedio
             }
             else
             {
-                this.Left = window.Left + 15;
-                this.Top = window.Top + 15;
-                this.Height = window.Height - 30;
-                this.Width = window.Width - 30;
+                this.Left = window.Left;
+                this.Top = window.Top;
+                this.Height = window.Height;
+                this.Width = window.Width;
             }
             if (window.WindowState == WindowState.Minimized) window.WindowState = WindowState.Normal;
             window.Activate();

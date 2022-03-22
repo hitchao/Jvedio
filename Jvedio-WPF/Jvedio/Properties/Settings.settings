@@ -452,5 +452,11 @@
     <Setting Name="DataBaseType" Type="System.String" Scope="User">
       <Value Profile="(Default)">SQLite</Value>
     </Setting>
+    <Setting Name="InfoItemWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="ShowSideTagStamp" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

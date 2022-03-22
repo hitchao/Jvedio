@@ -4,6 +4,7 @@ using Jvedio.Core.SimpleORM.Wrapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
+using Jvedio.Utils;
 using Jvedio.Utils.Common;
 using Jvedio.Windows;
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ namespace Jvedio
                 AppConfig appConfig = new AppConfig();
                 appConfig.ConfigName = "ScanPaths";
                 appConfig.ConfigValue = json;
-                appConfigMapper.insert(appConfig,InsertMode.Replace);
+                appConfigMapper.insert(appConfig, InsertMode.Replace);
 
             }
         }
@@ -117,17 +118,20 @@ namespace Jvedio
         {
             if (files == null || files.Length == 0) return true;
             bool result = false;
-            window_Progress = new Window_Progress("迁移数据");
-            window_Progress.Show();
+            window_Progress = new Window_Progress("迁移数据", logText: "");
+
+            // 不等待
+            Task.Run(() => { App.Current.Dispatcher.Invoke(() => { window_Progress.ShowDialog(); }); });
             for (int i = 0; i < files.Length; i++)
             {
                 string file = files[i];
                 if (File.Exists(file))
                 {
                     bool success = await MoveOldData(file);
-                    setProgress((100 * (float)i + 1) / (float)files.Length, $"迁移数据：{Path.GetFileName(file)}");
-                    if (success) result = true;
 
+                    if (success)
+                        result = true;
+                    setProgress((100 * (float)i + 1) / (float)files.Length, $"迁移数据：{Path.GetFileName(file)}");
                 }
             }
             window_Progress.Close();
@@ -237,6 +241,7 @@ namespace Jvedio
                 appDatabase.DataType = DataType.Video;
                 appDatabaseMapper.insert(appDatabase);
                 System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from movie");
+                List<Video> videos = new List<Video>();
                 if (sr != null)
                 {
                     List<DetailMovie> detailMovies = new List<DetailMovie>();
@@ -291,14 +296,27 @@ namespace Jvedio
                         detailMovies.Add(detailMovie);
                     }
 
+                    long before = metaDataMapper.selectCount();
                     metaDataMapper.insertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
-
+                    long after = metaDataMapper.selectCount();
 
                     Console.WriteLine($"metaDataMapper 用时：{watch.ElapsedMilliseconds} ms");
                     watch.Restart();
+                    //videos = new List<Video>();
+                    detailMovies.ForEach(arg =>
+                    {
+                        before++;
+                        Video video = arg.toVideo();
+                        video.DataID = before;
+                        video.Path = arg.filepath;
+                        video.Size = (long)arg.filesize;
+                        video.Genre = arg.genre;
+                        video.Tag = arg.tag;
+                        video.Label = arg.label;
+                        videos.Add(video);
+                    });
 
-
-                    videoMapper.insertBatch(detailMovies.Select(item => item.toVideo()).ToList());
+                    videoMapper.insertBatch(videos);
 
                     Console.WriteLine($"videoMapper 用时：{watch.ElapsedMilliseconds} ms");
                     watch.Restart();
@@ -313,6 +331,38 @@ namespace Jvedio
                 sr?.Close();
                 oldSqlite.CloseDB();
                 watch.Stop();
+
+                // 建立标签戳索引
+
+                //SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+                //wrapper.Select("Size", "Genre", "Tag", "Label", "Path").Eq("metadata.DBId", appDatabase.DBId).Eq("metadata.DataType", 0);
+                //string sql = $"{wrapper.toSelect(false)} FROM metadata_video " +
+                //            "JOIN metadata " +
+                //            "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false);
+
+                //List<Dictionary<string, object>> temp = metaDataMapper.select(sql);
+                //videos = metaDataMapper.toEntity<Video>(temp, typeof(Video).GetProperties(), false);
+
+
+                List<string> list = new List<string>();
+                foreach (Video video in videos)
+                {
+                    if (Identify.IsHDV(video.Size) || video.Genre?.IndexOfAnyString(TagStrings_HD) >= 0 || video.Tag?.IndexOfAnyString(TagStrings_HD) >= 0 || video.Label?.IndexOfAnyString(TagStrings_HD) >= 0)
+                    {
+                        list.Add($"({video.DataID},1)");
+                    }
+
+                    if (Identify.IsCHS(video.Path) || video.Genre?.IndexOfAnyString(TagStrings_Translated) >= 0 || video.Tag?.IndexOfAnyString(TagStrings_Translated) >= 0 || video.Label?.IndexOfAnyString(TagStrings_Translated) >= 0)
+                    {
+                        list.Add($"({video.DataID},2)");
+                    }
+                }
+                if (list.Count > 0)
+                {
+                    string sql = $"insert into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
+                    videoMapper.executeNonQuery(sql);
+                }
+
                 return true;
             });
         }

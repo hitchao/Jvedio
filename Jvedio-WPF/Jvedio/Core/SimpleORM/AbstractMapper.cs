@@ -52,7 +52,10 @@ namespace Jvedio.Core.SimpleORM
 
         public abstract List<T> selectByDict(Dictionary<string, object> dict, IWrapper<T> wrapper);
 
-        public abstract long selectCount(IWrapper<T> wrapper);
+        public abstract long selectCount(IWrapper<T> wrapper = null);
+        public abstract long selectCount(string sql);
+        public abstract List<Dictionary<string, object>> select(IWrapper<T> wrapper);
+        public abstract List<Dictionary<string, object>> select(string sql);
 
         #endregion
 
@@ -88,7 +91,10 @@ namespace Jvedio.Core.SimpleORM
         {
             TableAttribute tableAttribute = (TableAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(TableAttribute));
             TableName = tableAttribute?.TableName;
-            Properties = typeof(T).GetProperties();
+            // 不获得父类的属性
+            Properties = typeof(T).GetProperties(System.Reflection.BindingFlags.Public
+                                                | System.Reflection.BindingFlags.Instance
+                                                | System.Reflection.BindingFlags.DeclaredOnly);
             IEnumerable<PropertyInfo> enumerable = Properties.Where(prop => prop.IsDefined(typeof(TableIdAttribute), false));
             if (!enumerable.Any()) throw new PrimaryKeyTypeException();//必须设置主键
 
@@ -178,10 +184,6 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
-        public int selectCount()
-        {
-            throw new NotImplementedException();
-        }
 
         public abstract T selectOne(IWrapper<T> wrapper = null);
 
@@ -218,7 +220,7 @@ namespace Jvedio.Core.SimpleORM
         }
 
 
-        protected List<V> toEntity<V>(List<Dictionary<string, object>> list, PropertyInfo[] Properties)
+        public List<V> toEntity<V>(List<Dictionary<string, object>> list, PropertyInfo[] Properties, bool existField = true)
         {
             List<V> result = new List<V>();
             if (Properties == null) Properties = this.Properties;
@@ -228,7 +230,7 @@ namespace Jvedio.Core.SimpleORM
                 foreach (PropertyInfo p in Properties)
                 {
                     string name = p.Name;
-                    if (ExtraFields.Contains(name)) continue;
+                    if (existField && ExtraFields.Contains(name)) continue;
                     if (!row.ContainsKey(name) || row[name] == null) continue;// 为 null 
                     string value = row[name].ToString();
                     if (p.PropertyType.IsEnum)
@@ -408,12 +410,12 @@ namespace Jvedio.Core.SimpleORM
         {
             if (collection == null) throw new ArgumentNullException(nameof(collection));
             List<string> values = new List<string>();
-            StringBuilder field_sql = new StringBuilder();
+            List<string> field_sql = new List<string>();
             int idx = 0;
             foreach (T entity in collection)
             {
 
-                StringBuilder value_sql = new StringBuilder();
+                List<object> value_sql = new List<object>();
                 for (int i = 0; i <= Properties.Length - 1; i++)
                 {
                     string name = Properties[i].Name;
@@ -423,31 +425,29 @@ namespace Jvedio.Core.SimpleORM
                     if (name == "CreateDate" || name == "UpdateDate")
                     {
                         if (value == null || string.IsNullOrEmpty(value.ToString()))
-                            value_sql.Append($"'{DateTime.Now.toLocalDate()}'");
+                            value_sql.Add($"'{DateTime.Now.toLocalDate()}'");
+                        else
+                            value_sql.Add($"'{value}'");
                     }
                     else
                     {
-                        value_sql.Append(getValueByType(type, value));
+                        value_sql.Add(getValueByType(type, value));
                     }
 
-                    value_sql.Append(",");
                     if (idx == 0)
                     {
-                        field_sql.Append(name);
-                        field_sql.Append(",");
+                        field_sql.Add(name);
                     }
                 }
                 idx++;
-                if (field_sql[field_sql.Length - 1] == ',') field_sql.Remove(field_sql.Length - 1, 1);
-                if (value_sql[value_sql.Length - 1] == ',') value_sql.Remove(value_sql.Length - 1, 1);
-                values.Add(value_sql.ToString());
+                values.Add(string.Join(",", value_sql));
             }
             string all_sql = string.Join("),(", values);
             string insert = "INSERT INTO";
             if (mode == InsertMode.Ignore) insert = "INSERT OR IGNORE INTO";
             else if (mode == InsertMode.Replace) insert = "INSERT OR REPLACE INTO";
             else if (mode == InsertMode.Update) insert = "INSERT OR UPDATE INTO";
-            string result = $"{insert} {TableName} ({field_sql}) values ({all_sql})";
+            string result = $"{insert} {TableName} ({string.Join(",", field_sql)}) values ({all_sql})";
             return result;
         }
 

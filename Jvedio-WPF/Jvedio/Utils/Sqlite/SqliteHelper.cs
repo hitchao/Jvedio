@@ -18,5 +18,10 @@ namespace Jvedio.Utils.Sqlite
         {
             return str.Replace("'", "''");
         }
+
+        public static string handleNewLine(string str)
+        {
+            return str.Replace('\n', GlobalVariable.Separator);
+        }
     }
 }

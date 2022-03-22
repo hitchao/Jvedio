@@ -175,6 +175,10 @@ create table common_custom_list (
 CREATE INDEX common_custom_list_idx_ListName ON common_custom_list (ListName);
 COMMIT;
 
+insert into common_custom_list(ListName,Count) VALUES
+('清单1',1), ('清单2',20), ('清单3',78), ('清单4',756), ('清单5',612), ('清单6',75), 
+('清单7',12), ('清单8',231), ('清单9',676), ('清单10',85);
+
 drop table if exists common_custom_list_to_metadata;
 BEGIN;
 create table common_custom_list_to_metadata (
@@ -205,4 +209,17 @@ create table common_search_history (
 CREATE INDEX common_search_history_idx_SearchField ON common_search_history (SearchField);
 COMMIT;
 
+drop table if exists common_tagstamp;
+BEGIN;
+create table common_tagstamp (
+    TagID INTEGER PRIMARY KEY autoincrement,
+    Foreground VARCHAR(100),
+    Background VARCHAR(100),
+    TagName VARCHAR(200),
 
+    ExtraInfo TEXT,
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
+);
+insert into common_tagstamp(Background,Foreground,TagName) values('154,88,183,255','255,255,255,255','高清'),('154,205,50,255','255,255,255,255','中文');
+COMMIT;

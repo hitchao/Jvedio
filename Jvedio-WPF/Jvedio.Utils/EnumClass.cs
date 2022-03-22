@@ -17,7 +17,7 @@ namespace Jvedio.Utils
 
     public enum ImageType { SmallImage, BigImage, ExtraImage, ActorImage }
 
-    public enum JvedioWindowState { Normal, Minimized, Maximized, FullScreen, None }
+
 
     public enum WebSite { Bus, BusEu, Library, DB, FC2, Jav321, DMM, MOO, None }
 

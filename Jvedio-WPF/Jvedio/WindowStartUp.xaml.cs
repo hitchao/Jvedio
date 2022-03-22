@@ -89,6 +89,9 @@ namespace Jvedio
                 this.TitleHeight = 30;
             }
 
+            if (Properties.Settings.Default.OpenDataBaseDefault)
+                LoadDataBase();
+
 
         }
 
@@ -102,9 +105,9 @@ namespace Jvedio
             Jvedio4ToJvedio5.MoveScanPathConfig(files);
             Jvedio4ToJvedio5.MoveServersConfig();
             bool success = await Jvedio4ToJvedio5.MoveDatabases(files);
-            if (success)
+            if (success && files != null && files.Length > 0)
             {
-                videoMapper.executeNonQuery("update metadata_video set DataID=MVID;");
+                //videoMapper.executeNonQuery("update metadata_video set DataID=MVID;");
                 Jvedio4ToJvedio5.MoveRecentWatch();
                 Jvedio4ToJvedio5.MoveMagnets();
                 Jvedio4ToJvedio5.MoveTranslate();
@@ -546,8 +549,6 @@ namespace Jvedio
 
         private void Window_StartUp_ContentRendered(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.OpenDataBaseDefault)
-                LoadDataBase();
 
         }
     }

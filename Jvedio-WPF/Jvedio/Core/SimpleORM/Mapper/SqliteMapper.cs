@@ -2,6 +2,7 @@
 using Jvedio.Utils.Common;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ namespace Jvedio.Core.SimpleORM
 {
     public class SqliteMapper<T> : AbstractMapper<T>
     {
+        // todo 多 select 下会导致 datareader 报错
+        // 需要一个连接池
         protected SQLiteCommand cmd;
         protected SQLiteConnection cn;
 
@@ -84,7 +87,7 @@ namespace Jvedio.Core.SimpleORM
         private string generateSelectSqlByWrapper(IWrapper<T> wrapper)
         {
             if (wrapper == null) return null;
-            return wrapper.toSelect() + $" from {TableName} " + wrapper.toWhere();
+            return wrapper.toSelect() + $" from {TableName} " + wrapper.toWhere() + wrapper.toOrder();
         }
 
         public override T selectOne(IWrapper<T> wrapper = null)
@@ -112,10 +115,21 @@ namespace Jvedio.Core.SimpleORM
         public override List<T> selectList(IWrapper<T> wrapper = null)
         {
             if (TableName == null) return null;
-            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+            return toEntity<T>(select(wrapper), null);
+        }
 
+        public override List<Dictionary<string, object>> select(IWrapper<T> wrapper)
+        {
+            if (TableName == null) return null;
+            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
             string sql = generateSelectSqlByWrapper(wrapper);
             if (string.IsNullOrEmpty(sql)) sql = $"select * from {TableName}";
+            return select(sql);
+        }
+        public override List<Dictionary<string, object>> select(string sql)
+        {
+            if (TableName == null) return null;
+            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
 
             cmd.CommandText = sql;
             Log.Info(sql);
@@ -127,7 +141,7 @@ namespace Jvedio.Core.SimpleORM
                     list.Add(values);
                 }
             }
-            return toEntity<T>(list, null);
+            return list;
         }
 
 
@@ -144,14 +158,42 @@ namespace Jvedio.Core.SimpleORM
 
         public override long selectCount(IWrapper<T> wrapper)
         {
-            throw new NotImplementedException();
+            string sql = $"select count(*) from {TableName} ";
+
+            if (wrapper != null) sql += wrapper.toWhere(); ;
+
+
+
+            return selectCount(sql);
         }
+
+
 
 
         public override bool removeDataBase(string db_name)
         {
             this.Dispose();
             return FileHelper.TryDeleteFile(db_name);
+        }
+
+        public override long selectCount(string sql)
+        {
+            long count = 0L;
+            // 新建一个 SQLiteCommand
+            using (SQLiteCommand cmd = new SQLiteCommand(sql))
+            {
+                cmd.Connection = cn;
+                Log.Info(sql);
+
+                using (SQLiteDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        count = reader.GetInt64(0);
+                    }
+                }
+            }
+            return count;
         }
     }
 }

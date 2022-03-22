@@ -24,7 +24,9 @@ namespace Jvedio.ViewModel
         {
             main = ((Main)FileProcess.GetWindowByName("Main"));
             DataBase = Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath);
-            DataBases = main?.vieModel.DataBases;
+
+            // todo
+            // DataBases = main?.vieModel.DataBases;
             ThemeList = new ObservableCollection<Theme>();
             foreach (Theme theme in ThemeLoader.Themes)
             {

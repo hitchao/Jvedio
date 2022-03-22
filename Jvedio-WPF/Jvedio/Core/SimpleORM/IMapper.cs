@@ -25,6 +25,10 @@ namespace Jvedio.Core.SimpleORM
 
 
         long selectCount(IWrapper<T> wrapper);
+        long selectCount(string sql);
+
+        List<Dictionary<string, object>> select(IWrapper<T> wrapper);
+        List<Dictionary<string, object>> select(string sql);
 
 
         #endregion

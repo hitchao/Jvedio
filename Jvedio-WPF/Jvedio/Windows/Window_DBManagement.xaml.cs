@@ -83,7 +83,9 @@ namespace Jvedio
             string name = Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath);
             Main main = GetWindowByName("Main") as Main;
             main.vieModel.LoadDataBaseList();
-            main.vieModel.DatabaseSelectedIndex = main.vieModel.DataBases.IndexOf(name);
+
+            // todo
+            //main.vieModel.DatabaseSelectedIndex = main.vieModel.DataBases.IndexOf(name);
         }
 
         public void EditDataBase(object sender, MouseButtonEventArgs e)

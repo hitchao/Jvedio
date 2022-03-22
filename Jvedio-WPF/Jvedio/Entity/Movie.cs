@@ -3,6 +3,7 @@ using Jvedio.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 
@@ -73,6 +74,7 @@ namespace Jvedio.Entity
 
         public string id { get; set; }
         public long DBId { get; set; }
+        public long MVID { get; set; }
         private string _title;
         public string title { get { return _title; } set { _title = value; OnPropertyChanged(); } }
         public double filesize { get; set; }
@@ -232,6 +234,33 @@ namespace Jvedio.Entity
             }
 
             return result;
+        }
+
+        public static List<Movie> parse(List<Dictionary<string, object>> list)
+        {
+
+            List<Movie> result = new List<Movie>();
+            if (list == null || list.Count == 0) return result;
+            //foreach (Dictionary<string, object> dict in list)
+            //{
+            //    Movie movie = new Movie();
+            //    List<System.Reflection.PropertyInfo> props = movie.GetType().GetProperties().ToList();
+            //    foreach (string key in dict.Keys)
+            //    {
+            //        if (props.Where(x => x.Name == key).Any())
+            //        {
+            //            props[i].setva
+            //        }
+            //    }
+
+
+
+            //}
+
+
+            return result;
+
+
         }
 
 

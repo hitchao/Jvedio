@@ -127,7 +127,7 @@
     <value>快速添加 +</value>
   </data>
   <data name="Favorites" xml:space="preserve">
-    <value>特別收藏</value>
+    <value>我的收藏</value>
   </data>
   <data name="Hide" xml:space="preserve">
     <value>隐藏</value>
@@ -298,7 +298,7 @@
     <value>排序</value>
   </data>
   <data name="MultiSelect" xml:space="preserve">
-    <value>多选模式</value>
+    <value>多选</value>
   </data>
   <data name="About_Outline" xml:space="preserve">
     <value>本地视频的管理</value>

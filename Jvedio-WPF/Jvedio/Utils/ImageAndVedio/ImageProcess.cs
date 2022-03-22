@@ -31,6 +31,29 @@ namespace Jvedio
             movie.smallimage = smallimage;
             movie.bigimage = bigimage;
         }
+        public static void SetImage(ref Video video)
+        {
+            //加载图片
+            string bigImagePath = Video.parseImagePath(video.BigImagePath);
+            string smallImagePath = Video.parseImagePath(video.SmallImagePath);
+            BitmapImage smallimage = ReadImageFromFile(smallImagePath);
+            BitmapImage bigimage = ReadImageFromFile(bigImagePath);
+            if (smallimage == null) smallimage = DefaultSmallImage;
+            if (bigimage == null) bigimage = DefaultBigImage;
+            video.SmallImage = smallimage;
+            video.BigImage = bigimage;
+        }
+
+
+        public static void SetGif(ref Video video)
+        {
+            //加载图片
+            string gifpath = Video.parseImagePath(video.GifImagePath);
+            if (File.Exists(gifpath))
+                video.GifUri = new Uri(gifpath);
+            else
+                video.GifUri = GlobalVariable.DefaultBigImage.UriSource;
+        }
 
         public static BitmapImage GetActorImage(string name)
         {
@@ -265,6 +288,13 @@ namespace Jvedio
         }
 
         public static BitmapImage GetExtraImage(string filepath)
+        {
+            if (File.Exists(filepath))
+                return BitmapImageFromFile(filepath);
+            else
+                return null;
+        }
+        public static BitmapImage ReadImageFromFile(string filepath)
         {
             if (File.Exists(filepath))
                 return BitmapImageFromFile(filepath);

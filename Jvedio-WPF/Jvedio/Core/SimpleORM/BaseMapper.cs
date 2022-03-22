@@ -82,9 +82,30 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
-        public override long selectCount(IWrapper<T> wrapper)
+        public override long selectCount(IWrapper<T> wrapper = null)
         {
-            throw new NotImplementedException();
+            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            {
+                return SqliteMapper.selectCount(wrapper);
+            }
+            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            {
+                return MySQLMapper.selectCount(wrapper);
+            }
+            return 0;
+        }
+
+        public override long selectCount(string sql)
+        {
+            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            {
+                return SqliteMapper.selectCount(sql);
+            }
+            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            {
+                return MySQLMapper.selectCount(sql);
+            }
+            return 0;
         }
 
         public override string selectLastInsertRowId()
@@ -130,5 +151,33 @@ namespace Jvedio.Core.SimpleORM
             }
             return default(T);
         }
+
+        public override List<Dictionary<string, object>> select(IWrapper<T> wrapper)
+        {
+            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            {
+                return SqliteMapper.select(wrapper);
+            }
+            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            {
+                return MySQLMapper.select(wrapper);
+            }
+            return null;
+        }
+
+        public override List<Dictionary<string, object>> select(string sql)
+        {
+            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            {
+                return SqliteMapper.select(sql);
+            }
+            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            {
+                return MySQLMapper.select(sql);
+            }
+            return null;
+        }
+
+
     }
 }

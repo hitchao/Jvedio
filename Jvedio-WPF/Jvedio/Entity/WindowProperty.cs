@@ -9,12 +9,12 @@ namespace Jvedio.Entity
         {
             Location = new Point(0, 0);
             Size = new Size(0, 0);
-            WinState = JvedioWindowState.Normal;
+            WinState = Jvedio.Core.Enums.WindowState.Normal;
         }
         public Point Location { get; set; }
         public Size Size { get; set; }
 
-        public JvedioWindowState WinState { get; set; }
+        public Jvedio.Core.Enums.WindowState WinState { get; set; }
     }
 
 }

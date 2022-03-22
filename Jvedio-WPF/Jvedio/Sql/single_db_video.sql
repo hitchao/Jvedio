@@ -55,7 +55,7 @@ create table if not exists metadata (
 );
 CREATE INDEX metadata_idx_DBId_DataID ON metadata (DBId,DataID);
 CREATE INDEX metadata_idx_ReleaseDate ON metadata (ReleaseDate);
-CREATE INDEX metadata_idx_DataType ON metadata (DataType);
+CREATE INDEX metadata_idx_DataType ON metadata (DBId,DataType);
 CREATE INDEX metadata_idx_Hash ON metadata (Hash);
 CREATE INDEX metadata_idx_ViewDate ON metadata (ViewDate);
 CREATE INDEX metadata_idx_FirstScanDate ON metadata (FirstScanDate);
@@ -139,6 +139,18 @@ create table metadata_to_actors(
     DataID INTEGER,
     TransaltionID INTEGER
 );
+COMMIT;
+
+drop table if exists metadata_to_tagstamp;
+BEGIN;
+create table metadata_to_tagstamp(
+    id INTEGER PRIMARY KEY autoincrement,
+    DataID INTEGER,
+    TagID INTEGER,
+    unique(DataID,TagID)
+);
+CREATE INDEX metadata_to_tagstamp_idx_DataID ON metadata_to_tagstamp (DataID);
+CREATE INDEX metadata_to_tagstamp_idx_TagID ON metadata_to_tagstamp (TagID);
 COMMIT;
 
 

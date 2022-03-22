@@ -271,8 +271,12 @@
     <Compile Include="Core\Enums\RelevanceType.cs" />
     <Compile Include="Core\Enums\TranslationPlatform.cs" />
     <Compile Include="Core\Enums\VideoType.cs" />
+    <Compile Include="Core\Enums\ViewMode.cs" />
+    <Compile Include="Core\Enums\WindowState.cs" />
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
+    <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\GlobalMapper.cs" />
+    <Compile Include="Core\SimpleMarkDown\MarkDown.cs" />
     <Compile Include="Core\SimpleORM\AbstractMapper.cs" />
     <Compile Include="Core\SimpleORM\BaseMapper.cs" />
     <Compile Include="Core\SimpleORM\Log.cs" />
@@ -283,9 +287,10 @@
     <Compile Include="Core\SimpleORM\Wrapper\IWrapper.cs" />
     <Compile Include="Core\DataBase\Tables.cs" />
     <Compile Include="Core\SimpleORM\Wrapper\UpdateWrapper.cs" />
-    <Compile Include="Core\WindowConfig\AbstractConfig.cs" />
-    <Compile Include="Core\WindowConfig\GlobalConfig.cs" />
-    <Compile Include="Core\WindowConfig\IConfig.cs" />
+    <Compile Include="Core\WindowConfig\Base\AbstractConfig.cs" />
+    <Compile Include="Core\WindowConfig\Base\GlobalConfig.cs" />
+    <Compile Include="Core\WindowConfig\Base\IConfig.cs" />
+    <Compile Include="Core\WindowConfig\Main.cs" />
     <Compile Include="Core\WindowConfig\StartUp.cs" />
     <Compile Include="Entity\Actor.cs" />
     <Compile Include="Entity\Actor\ActorInfo.cs" />
@@ -296,6 +301,7 @@
     <Compile Include="Entity\CommonSQL\AppConfig.cs" />
     <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
     <Compile Include="Entity\CommonSQL\CommonImage.cs" />
+    <Compile Include="Entity\CommonSQL\TagStamp.cs" />
     <Compile Include="Entity\Data\MetaData.cs" />
     <Compile Include="Entity\Data\UrlCode.cs" />
     <Compile Include="Entity\Data\Video.cs" />
@@ -311,6 +317,7 @@
     <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
     <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\VideoInfo.cs" />
+    <Compile Include="Entity\Views\TagStamp.cs" />
     <Compile Include="Entity\WindowProperty.cs" />
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Entity\Theme.cs" />
@@ -339,6 +346,7 @@
     <Compile Include="Mapper\AIFaceMapper.cs" />
     <Compile Include="Mapper\AppConfigMapper.cs" />
     <Compile Include="Mapper\AppDatabaseMapper.cs" />
+    <Compile Include="Mapper\TagStampMapper.cs" />
     <Compile Include="Mapper\SearchHistoryMapper.cs" />
     <Compile Include="Mapper\CustomListMapper.cs" />
     <Compile Include="Mapper\ComImagesMapper.cs" />
@@ -400,6 +408,7 @@
     <Compile Include="Utils\Plot\Bar\BarViewModel.cs" />
     <Compile Include="Utils\Sqlite\MySqlite.cs" />
     <Compile Include="Utils\Sqlite\SqliteHelper.cs" />
+    <Compile Include="Utils\Visual\VisualHelper.cs" />
     <Compile Include="ViewModels\VieModel_Batch.cs" />
     <Compile Include="Windows\DialogInput.xaml.cs">
       <DependentUpon>DialogInput.xaml</DependentUpon>
@@ -454,6 +463,9 @@
     </Compile>
     <Compile Include="Windows\Window_ImageViewer.xaml.cs">
       <DependentUpon>Window_ImageViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_TagStamp.xaml.cs">
+      <DependentUpon>Window_TagStamp.xaml</DependentUpon>
     </Compile>
     <Page Include="DialogWindows\Dialog_LoadPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -536,6 +548,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WindowStartUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_TagStamp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

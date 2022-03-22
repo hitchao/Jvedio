@@ -49,10 +49,27 @@ namespace Jvedio.Core.SimpleORM
             GreaterEqual,
             LessThen,
             LessEqual,
-            Like
+            Like,
+            NotLike,
+            NotEqual,
+            Between
         }
 
+
+        static Dictionary<WhereCondition, string> whereConditions = new Dictionary<WhereCondition, string>()
+        {
+            { WhereCondition.GreaterThen,">" } ,
+            { WhereCondition.GreaterEqual,">=" } ,
+            { WhereCondition.LessEqual,"<=" } ,
+            { WhereCondition.LessThen,"<" } ,
+            { WhereCondition.Equal,"=" } ,
+            { WhereCondition.NotEqual,"!=" } ,
+        };
+
         List<Where> Wheres { get; set; }
+
+        string OrderField { get; set; }
+        bool SortDesc { get; set; }
 
         public SelectWrapper()
         {
@@ -79,15 +96,6 @@ namespace Jvedio.Core.SimpleORM
 
 
 
-        public IWrapper<T> Asc()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IWrapper<T> Desc()
-        {
-            throw new NotImplementedException();
-        }
 
         public IWrapper<T> GroupBy(string column)
         {
@@ -131,7 +139,7 @@ namespace Jvedio.Core.SimpleORM
             return this;
         }
 
-        public string toSelect()
+        public string toSelect(bool existField = true)
         {
             if (SelectColumns.Count == 0) return "SELECT * ";
             StringBuilder builder = new StringBuilder();
@@ -140,15 +148,25 @@ namespace Jvedio.Core.SimpleORM
                 string name = field;
                 int idx = field.IndexOf(" as ");
                 if (idx > 0) name = field.Substring(idx + 4).Trim();
-                if (existFields.Where(item => item.Name == name).Any())
+                if (existField)
+                {
+                    if (existFields.Where(item => item.Name == name).Any())
+                        builder.Append(field + ",");
+                }
+                else
+                {
                     builder.Append(field + ",");
+                }
+
+
             }
             if (builder.Length == 0) return "SELECT * ";
             if (builder[builder.Length - 1] == ',') builder.Remove(builder.Length - 1, 1);
             return $"select {builder}";
         }
 
-        public string toWhere()
+
+        public string toWhere(bool exist = true)
         {
             if (Wheres == null || Wheres.Count == 0) return "";
             List<string> list = new List<string>();
@@ -156,16 +174,39 @@ namespace Jvedio.Core.SimpleORM
             {
                 List<object> values = where.Values;
                 if (values == null || values.Count == 0) continue;
-                PropertyInfo propertyInfo = existFields.Where(item => item.Name == where.Field).First();
-                if (propertyInfo == null) continue;
+                PropertyInfo propertyInfo = existFields.Where(item => item.Name == where.Field).FirstOrDefault();
+                if (exist && propertyInfo == null) continue;
+
                 if (values.Count == 1)
                 {
-                    list.Add($" {where.Field} = '{values[0]}'");
+                    // 表驱动设计
+                    if (whereConditions.ContainsKey(where.Condition))
+                    {
+                        list.Add($" {where.Field} {whereConditions[where.Condition]} '{values[0]}'");
+                    }
+                    else if (where.Condition == WhereCondition.Like)
+                    {
+                        list.Add($" {where.Field} like '%{values[0]}%'");
+                    }
+                    else if (where.Condition == WhereCondition.NotLike)
+                    {
+                        list.Add($" {where.Field} not like '%{values[0]}%'");
+                    }
                 }
                 else
                 {
-                    list.Add($" {where.Field} in ('{string.Join("','", values)}')");
+                    if (where.Condition == WhereCondition.Between)
+                    {
+                        list.Add($" {where.Field} BETWEEN '{values[0]}' AND '{values[1]}'");
+                    }
+                    else
+                    {
+                        list.Add($" {where.Field} in ('{string.Join("','", values)}')");
+                    }
+
                 }
+
+
             }
             if (list.Count == 0) return "";
             return $" where {string.Join(" and ", list)}";
@@ -183,6 +224,14 @@ namespace Jvedio.Core.SimpleORM
         public IWrapper<T> Eq(string field, object value)
         {
             Where where = getWhere(field, value, WhereCondition.Equal);
+            if (!Wheres.Contains(where)) Wheres.Add(where);
+            return this;
+        }
+
+
+        public IWrapper<T> NotEq(string field, object value)
+        {
+            Where where = getWhere(field, value, WhereCondition.NotEqual);
             if (!Wheres.Contains(where)) Wheres.Add(where);
             return this;
         }
@@ -218,6 +267,39 @@ namespace Jvedio.Core.SimpleORM
         public IWrapper<T> Like(string field, object value)
         {
             Where where = getWhere(field, value, WhereCondition.Like);
+            if (!Wheres.Contains(where)) Wheres.Add(where);
+            return this;
+        }
+
+        public IWrapper<T> Desc(string field)
+        {
+            OrderField = field;
+            SortDesc = true;
+            return this;
+        }
+
+        public IWrapper<T> Asc(string field)
+        {
+            OrderField = field;
+            SortDesc = false;
+            return this;
+        }
+
+        public string toOrder()
+        {
+            if (!string.IsNullOrEmpty(OrderField))
+            {
+                return $" ORDER BY {OrderField} {(SortDesc ? "DESC" : "ASC")}";
+            }
+            return "";
+        }
+
+        public IWrapper<T> Between(string field, object value1, object value2)
+        {
+            Where where = new Where();
+            where.Field = field;
+            where.Condition = WhereCondition.Between;
+            where.Values = new List<object> { value1, value2 };
             if (!Wheres.Contains(where)) Wheres.Add(where);
             return this;
         }

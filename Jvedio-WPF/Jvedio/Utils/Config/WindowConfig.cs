@@ -189,8 +189,8 @@ namespace Jvedio
             double.TryParse(x3?.InnerText, out w);
             double.TryParse(x4?.InnerText, out h);
 
-            JvedioWindowState jvedioWindowState = JvedioWindowState.Normal;
-            Enum.TryParse<JvedioWindowState>(x5?.InnerText, out jvedioWindowState);
+            Jvedio.Core.Enums.WindowState jvedioWindowState = Jvedio.Core.Enums.WindowState.Normal;
+            Enum.TryParse<Jvedio.Core.Enums.WindowState>(x5?.InnerText, out jvedioWindowState);
 
             windowProperty.Location = new Point(x, y);
             windowProperty.Size = new Size(w, h);

@@ -34,6 +34,16 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
+        public override List<Dictionary<string, object>> select(IWrapper<T> wrapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override List<Dictionary<string, object>> select(string sql)
+        {
+            throw new NotImplementedException();
+        }
+
         public override List<T> selectByDict(Dictionary<string, object> dict, IWrapper<T> wrapper)
         {
             throw new NotImplementedException();
@@ -45,6 +55,11 @@ namespace Jvedio.Core.SimpleORM
         }
 
         public override long selectCount(IWrapper<T> wrapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override long selectCount(string sql)
         {
             throw new NotImplementedException();
         }

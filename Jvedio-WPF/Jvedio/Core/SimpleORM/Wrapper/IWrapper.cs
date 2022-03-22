@@ -45,21 +45,24 @@ namespace Jvedio.Core.SimpleORM
         IWrapper<T> Select(params string[] columns);
 
         IWrapper<T> Eq(string field, object value);
+        IWrapper<T> NotEq(string field, object value);
         IWrapper<T> Gt(string field, object value);
         IWrapper<T> Ge(string field, object value);
         IWrapper<T> Lt(string field, object value);
         IWrapper<T> Le(string field, object value);
         IWrapper<T> Like(string field, object value);
         IWrapper<T> GroupBy(string column);
-        IWrapper<T> Desc();
-        IWrapper<T> Asc();
+        IWrapper<T> Desc(string field);
+        IWrapper<T> Asc(string field);
         IWrapper<T> Limit(long offset, long row_count);
         IWrapper<T> Limit(long row_count);
         IWrapper<T> In(string field, IEnumerable<string> items);
+        IWrapper<T> Between(string field, object value1, object value2);
 
 
-        string toSelect();
-        string toWhere();
+        string toSelect(bool existField = true);
+        string toWhere(bool existField = true);
+        string toOrder();
 
     }
 }

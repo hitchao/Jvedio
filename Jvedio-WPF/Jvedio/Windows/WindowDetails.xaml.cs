@@ -41,7 +41,7 @@ namespace Jvedio
         public VieModel_Details vieModel;
         public Point WindowPoint = new Point(100, 100);
         public Size WindowSize = new Size(1200, 700);
-        public JvedioWindowState WinState = JvedioWindowState.Normal;
+        public Jvedio.Core.Enums.WindowState WinState = Jvedio.Core.Enums.WindowState.Normal;
         Main windowMain = GetWindowByName("Main") as Main;
         WindowEdit WindowEdit;
         public DetailDownLoad DetailDownLoad;
@@ -512,14 +512,14 @@ namespace Jvedio
             {
                 string filepath = vieModel.DetailMovie.filepath;
                 Main main = GetWindowByName("Main") as Main;
-                main.PlayVideoWithPlayer(filepath, vieModel.DetailMovie.id, GrowlToken);
+                // main.PlayVideoWithPlayer(filepath, vieModel.DetailMovie.id, GrowlToken);
             }
         }
 
         private void MoveWindow(object sender, MouseEventArgs e)
         {
             //移动窗口
-            if (e.LeftButton == MouseButtonState.Pressed && WinState == JvedioWindowState.Normal)
+            if (e.LeftButton == MouseButtonState.Pressed && WinState == Jvedio.Core.Enums.WindowState.Normal)
             {
                 this.DragMove();
             }
@@ -1205,7 +1205,7 @@ namespace Jvedio
             TextBlock textBlock = stackPanel.Children.OfType<TextBlock>().Last();
             string filepath = textBlock.Text;
             Main main = GetWindowByName("Main") as Main;
-            main.PlayVideoWithPlayer(filepath, vieModel.DetailMovie.id, GrowlToken);
+            //main.PlayVideoWithPlayer(filepath, vieModel.DetailMovie., GrowlToken);
 
 
         }

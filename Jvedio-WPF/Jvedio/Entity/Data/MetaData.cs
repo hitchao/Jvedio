@@ -1,8 +1,11 @@
-﻿using Jvedio.Core.Attributes;
+﻿using DynamicData.Annotations;
+using Jvedio.Core.Attributes;
 using Jvedio.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,5 +40,14 @@ namespace Jvedio.Entity
         public string LastScanDate { get; set; }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

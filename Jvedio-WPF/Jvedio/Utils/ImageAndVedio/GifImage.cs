@@ -33,11 +33,7 @@ namespace Jvedio
 
         private void Initialize()
         {
-            if (!File.Exists(GifSource))
-            {
-                this.Source = GlobalVariable.DefaultBigImage;
-            }
-            else
+            if (File.Exists(GifSource))
             {
                 gif = new Gif(this.GifSource);
                 var decoder = gif.GetDecoder();
@@ -47,24 +43,34 @@ namespace Jvedio
                 this.Source = gif.GetFirstFrame();
                 _isInitialized = true;
             }
+            else
+            {
+                this.Source = GlobalVariable.DefaultBigImage;
+            }
 
         }
 
-        
+
 
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
-            if (bitmapImages == null && gif!=null) bitmapImages = gif.GetAllFrame().BitmapSources;
-            if (bitmapImages!=null && bitmapImages .Count>0) this.StartAnimation();
+            if (gif != null)
+            {
+                if (bitmapImages == null) bitmapImages = gif.GetAllFrame().BitmapSources;
+                if (bitmapImages != null && bitmapImages.Count > 0) this.StartAnimation();
+            }
             base.OnMouseEnter(e);
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
-            this.StopAnimation();
-            bitmapImages = null;
-            GC.Collect();
+            if (gif != null)
+            {
+                this.StopAnimation();
+                bitmapImages = null;
+                GC.Collect();
+            }
             base.OnMouseLeave(e);
         }
 

@@ -16,6 +16,9 @@ using System.Xml;
 using static Jvedio.GlobalVariable;
 using static Jvedio.FileProcess;
 using System.Windows.Documents;
+using Jvedio.Core.SimpleORM;
+using Jvedio.Entity.CommonSQL;
+using Jvedio.Core.SimpleMarkDown;
 
 namespace Jvedio
 {
@@ -25,14 +28,32 @@ namespace Jvedio
     public partial class Dialog_Notice : Jvedio.Style.BaseDialog
     {
 
-        
-        public Dialog_Notice(Window owner,bool showbutton,string content) : base(owner, showbutton)
+        public string Message { get; set; }
+
+        public Dialog_Notice(Window owner, bool showbutton, string message) : base(owner, showbutton)
         {
             InitializeComponent();
-            this.ContentRendered += (s, e) => NoticeTextBlock.Text = content;
+            Message = message;
+            this.ContentRendered += RenderContent;
         }
 
+        public void RenderContent(object sender, EventArgs e)
+        {
+            richTextBox.Document = MarkDown.parse(Message);
+        }
 
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string configName = "Notice";
+            //获取本地的公告
+            string notices = "";
+            SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
+            wrapper.Eq("ConfigName", configName);
+            AppConfig appConfig = GlobalMapper.appConfigMapper.selectOne(wrapper);
+            if (appConfig != null && !string.IsNullOrEmpty(appConfig.ConfigValue))
+                notices = appConfig.ConfigValue.Replace(GlobalVariable.Separator, '\n');
+            this.Message = notices;
+            RenderContent(sender, e);
+        }
     }
 }

@@ -94,7 +94,7 @@ namespace Jvedio.Entity
             string json = "";
             if (dict.Count > 0) json = JsonConvert.SerializeObject(dict);
 
-            Video result = new Video()
+            Video result = new Video(false)
             {
                 VID = id,
                 VideoType = (VideoType)vediotype,
@@ -104,14 +104,14 @@ namespace Jvedio.Entity
                 Plot = plot,
                 Outline = outline,
                 Duration = runtime,
-                SubSection = subsection,
+                SubSection = subsection.Replace(';', GlobalVariable.Separator),
 
                 WebType = source.Replace("jav", ""),
                 WebUrl = sourceurl,
 
                 PreviewImagePaths = "*PicPath*/ExtraPic/" + id,
                 ScreenShotPaths = "*PicPath*/ScreenShot/" + id,
-                GifImagePath = "*PicPath*/Gif/" + $"{id}.jpg",
+                GifImagePath = "*PicPath*/Gif/" + $"{id}.gif",
                 BigImagePath = "*PicPath*/BigPic/" + $"{id}.jpg",
                 SmallImagePath = "*PicPath*/SmallPic/" + $"{id}.jpg",
                 ImageUrls = json,

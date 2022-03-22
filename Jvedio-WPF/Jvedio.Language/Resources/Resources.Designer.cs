@@ -1240,7 +1240,7 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
-        ///   查找类似 特別收藏 的本地化字符串。
+        ///   查找类似 我的收藏 的本地化字符串。
         /// </summary>
         public static string Favorites {
             get {
@@ -2662,7 +2662,7 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
-        ///   查找类似 多选模式 的本地化字符串。
+        ///   查找类似 多选 的本地化字符串。
         /// </summary>
         public static string MultiSelect {
             get {

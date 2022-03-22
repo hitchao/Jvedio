@@ -18,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Jvedio.Entity.CommonSQL;
 
 namespace Jvedio
 {
@@ -125,16 +126,15 @@ namespace Jvedio
         public static Servers JvedioServers;
         public static Dictionary<string, string> UrlCookies;// key 网址 value 对应的 cookie
 
-        //骑兵、步兵识别码
+
         public static List<string> Censored = new List<string>();
         public static List<string> Uncensored = new List<string>();
 
 
-
-
-        // jav321 转换规则
         public static Dictionary<string, string> Jav321IDDict = new Dictionary<string, string>();
 
+        // 标签戳
+        public static List<TagStamp> TagStamps = new List<TagStamp>();
 
         //按类别中分类
         public static string[] GenreEurope = new string[8];

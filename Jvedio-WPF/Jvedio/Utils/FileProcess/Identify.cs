@@ -10,14 +10,14 @@ namespace Jvedio
     public static class Identify
     {
         public static double MinHDVFileSize = 2;//多少 GB 视为高清
-        
+
         public static string[] CHS = new string[] { "中字", "中文字幕", "字幕", "中文", "translated", "translate" };
         public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2K", "4K", "8K", "16K", "32K" };
         public static string[] FLOWOUT;
 
         static Identify()
         {
-            FLOWOUT=Resource_String.FLOWOUT.Split(',');
+            FLOWOUT = Resource_String.FLOWOUT.Split(',');
         }
 
 
@@ -91,7 +91,10 @@ namespace Jvedio
             FileInfo fileInfo = new FileInfo(filepath);
             string name = fileInfo.Name.ToLower();
             if (!File.Exists(filepath)) return HDV.Any(arg => name.IndexOf(arg) >= 0);
-            long filesize = fileInfo.Length;
+            return IsHDV(fileInfo.Length);
+        }
+        public static bool IsHDV(long filesize)
+        {
             return filesize > 0 && filesize / 1024 / 1024 / 1024 >= MinHDVFileSize;
         }
 
