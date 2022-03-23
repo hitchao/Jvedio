@@ -297,8 +297,8 @@ namespace Jvedio
                     }
 
                     long before = metaDataMapper.selectCount();
+                    long nextID = before + 1;
                     metaDataMapper.insertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
-                    long after = metaDataMapper.selectCount();
 
                     Console.WriteLine($"metaDataMapper 用时：{watch.ElapsedMilliseconds} ms");
                     watch.Restart();
@@ -323,7 +323,7 @@ namespace Jvedio
 
 
                     handleChinesetitle(detailMovies);
-                    handleActor(detailMovies);
+                    handleActor(detailMovies, nextID);
 
                     Console.WriteLine($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
                     watch.Restart();
@@ -390,7 +390,7 @@ namespace Jvedio
         }
 
 
-        private static void handleActor(List<DetailMovie> list)
+        private static void handleActor(List<DetailMovie> list, long beforeID)
         {
             // 新增不存在的
             List<ActorInfo> actorInfos = actorMapper.selectList();
@@ -398,7 +398,7 @@ namespace Jvedio
             HashSet<string> to_insert = new HashSet<string>();
             foreach (string name in names)
             {
-                to_insert.UnionWith(name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToHashSet());
+                to_insert.UnionWith(name.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries).ToHashSet());
             }
 
             HashSet<string> hashSet = actorInfos.Select(x => x.ActorName).ToHashSet();
@@ -414,6 +414,8 @@ namespace Jvedio
 
             List<object[]> actor_name_to_metadatas = new List<object[]>();
 
+            long count = metaDataMapper.selectCount();
+
             for (int i = 0; i < list.Count; i++)
             {
 
@@ -423,27 +425,38 @@ namespace Jvedio
                 UrlCode urlCode = new UrlCode();
                 string[] actorNames = actor.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 string[] actorIds = list[i].actorid.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (actorIds.Length != actorNames.Length) continue;
+                if (actorIds.Length == actorNames.Length)
+                {
+                    // 如果 id 和名字数量一样，插入  urlCode
+                    for (int j = 0; j < actorNames.Length; j++)
+                    {
+                        string actorName = actorNames[j];
+                        if (string.IsNullOrEmpty(actorName)) continue;
+                        urlCode.LocalValue = actorName;
+                        urlCode.RemoteValue = actorIds[j];
+                        urlCode.WebType = !string.IsNullOrEmpty(list[i].source) ? list[i].source.Replace("jav", "") : "";
+                        urlCode.ValueType = "actor";
+                        urlCodes.Add(urlCode);
+
+
+                    }
+                }
                 for (int j = 0; j < actorNames.Length; j++)
                 {
                     string actorName = actorNames[j];
-                    if (string.IsNullOrEmpty(actorName)) continue;
-                    urlCode.LocalValue = actorName;
-                    urlCode.RemoteValue = actorIds[j];
-                    urlCode.WebType = !string.IsNullOrEmpty(list[i].source) ? list[i].source.Replace("jav", "") : "";
-                    urlCode.ValueType = "actor";
-                    urlCodes.Add(urlCode);
                     if (dict.ContainsKey(actorName))
                     {
                         object[] o = new object[2];
                         o[0] = actorName;
-                        o[1] = i + 1;
+                        o[1] = beforeID + i; // DataID
                         actor_name_to_metadatas.Add(o);
                     }
-
                 }
+
+
+
             }
-            urlCodeMapper.insertBatch(urlCodes);
+            urlCodeMapper.insertBatch(urlCodes, InsertMode.Ignore);
 
             if (actor_name_to_metadatas.Count > 0)
             {
@@ -608,7 +621,7 @@ namespace Jvedio
                 Dictionary<string, long> dict = new Dictionary<string, long>();
                 if (videos != null && videos.Count > 0)
                 {
-                    dict = videos.ToDictionary(x => x.VID, y => y.DataID);
+                    dict = videos.ToLookup(t => t.VID, t => t.DataID).ToDictionary(t => t.Key, t => t.First());
                 }
                 if (dict.Count > 0)
                 {

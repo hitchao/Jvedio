@@ -13,15 +13,33 @@ namespace Jvedio.Entity
 {
 
     [Table(tableName: "metadata")]
-    public class MetaData
+    public class MetaData : INotifyPropertyChanged
     {
 
         [TableId(IdType.AUTO)]
         public long DataID { get; set; }
         public long DBId { get; set; }
         public string Title { get; set; }
-        public long Size { get; set; }
-        public string Path { get; set; }
+        private long _Size;
+        public long Size
+        {
+            get { return _Size; }
+            set
+            {
+                _Size = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _Path;
+        public string Path
+        {
+            get { return _Path; }
+            set
+            {
+                _Path = value;
+                OnPropertyChanged();
+            }
+        }
         public string Hash { get; set; }
         public string Country { get; set; }
         public string ReleaseDate { get; set; }
@@ -31,13 +49,58 @@ namespace Jvedio.Entity
         public float Rating { get; set; }
         public int RatingCount { get; set; }
         public int FavoriteCount { get; set; }
-        public string Genre { get; set; }
+        private string _Genre;
+        public string Genre
+        {
+            get { return _Genre; }
+            set
+            {
+                _Genre = value;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    GenreList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        [TableField(exist: false)]
+        public List<string> GenreList { get; set; }
         public string Tag { get; set; }
         public float Grade { get; set; }
-        public string Label { get; set; }
+
+        private string _Label;
+        public string Label
+        {
+            get { return _Label; }
+            set
+            {
+                _Label = value;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    LabelList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        [TableField(exist: false)]
+        public List<string> LabelList { get; set; }
+
         public string ViewDate { get; set; }
         public string FirstScanDate { get; set; }
-        public string LastScanDate { get; set; }
+
+
+        private string _LastScanDate;
+        public string LastScanDate
+        {
+            get { return _LastScanDate; }
+            set
+            {
+                _LastScanDate = value;
+                OnPropertyChanged();
+            }
+        }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
 

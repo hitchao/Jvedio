@@ -179,10 +179,6 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
-        public T selectById(string id)
-        {
-            throw new NotImplementedException();
-        }
 
 
         public abstract T selectOne(IWrapper<T> wrapper = null);

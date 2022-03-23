@@ -709,7 +709,7 @@
     <value>保存</value>
   </data>
   <data name="ShowOtherOptions" xml:space="preserve">
-    <value>---显示其他选项---</value>
+    <value>其他</value>
   </data>
   <data name="ShowRecentCreate" xml:space="preserve">
     <value>显示最近创建的天数（天）</value>
@@ -1739,5 +1739,11 @@
   </data>
   <data name="Get" xml:space="preserve">
     <value>获取</value>
+  </data>
+  <data name="TeenMode" xml:space="preserve">
+    <value>青少年模式</value>
+  </data>
+  <data name="Outline" xml:space="preserve">
+    <value>大纲</value>
   </data>
 </root>

@@ -137,6 +137,7 @@
                 <StackPanel>
                     <WrapPanel Margin="5" Orientation="Vertical">
                         <CheckBox Content="{x:Static lang:Resources.CloseToBar}" IsChecked="{Binding CloseToTaskBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{x:Static lang:Resources.TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="{x:Static lang:Resources.RandomWhenStartUp}" IsChecked="{Binding RandomDisplay, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="{x:Static lang:Resources.NotShowLibrary}" IsChecked="{Binding OpenDataBaseDefault, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="{x:Static lang:Resources.AutoDelete}" IsChecked="{Binding AutoDeleteNotExistMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
@@ -1616,7 +1617,10 @@
 
 
                     <StackPanel Margin="20,5" Orientation="Horizontal">
-                        <CheckBox Click="CheckBox_Click" Content="{x:Static lang:Resources.BackgroundImage}" IsChecked="{Binding EnableBgImage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox
+                            Click="CheckBox_Click"
+                            Content="{x:Static lang:Resources.BackgroundImage}"
+                            IsChecked="{Binding EnableBgImage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <!--<Label Content="{x:Static lang:Resources.BackgroundImage}" Style="{StaticResource InfoLabel}"  />-->
 
                         <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding BackgroundImage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />

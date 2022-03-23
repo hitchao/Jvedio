@@ -148,7 +148,10 @@ namespace Jvedio.Core.SimpleORM
 
         public override T selectById(IWrapper<T> wrapper)
         {
-            throw new NotImplementedException();
+            if (TableName == null) return default(T);
+            List<T> list = toEntity<T>(select(wrapper), null);
+            if (list == null || list.Count == 0) return default(T);
+            return list[0];
         }
 
         public override List<T> selectByDict(Dictionary<string, object> dict, IWrapper<T> wrapper)

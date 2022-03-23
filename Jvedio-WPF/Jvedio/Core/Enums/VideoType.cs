@@ -11,5 +11,6 @@ namespace Jvedio.Core.Enums
         Normal,
         UnCensored,
         Censored,
+        Europe
     }
 }

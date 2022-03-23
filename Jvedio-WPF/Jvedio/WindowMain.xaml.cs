@@ -77,6 +77,8 @@ namespace Jvedio
 
         Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager taskbarInstance = null;
 
+        public WindowEdit WindowEdit;
+
 
         public Main()
         {
@@ -89,8 +91,8 @@ namespace Jvedio
 
             //InitImage();
 
-            Properties.Settings.Default.Selected_Background = "#FF8000";
-            Properties.Settings.Default.Selected_BorderBrush = "#FF8000";
+            //Properties.Settings.Default.Selected_Background = "#FF8000";
+            //Properties.Settings.Default.Selected_BorderBrush = "#FF8000";
             //Properties.Settings.Default.DisplayNumber = 5;
 
             BindingEvent();// 绑定控件事件
@@ -346,11 +348,11 @@ namespace Jvedio
                 Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
                 {
                     ItemsControl itemsControl;
-                    if (Properties.Settings.Default.EasyMode)
-                        itemsControl = SimpleMovieItemsControl;
-                    else
-                        itemsControl = MovieItemsControl;
-                    //itemsControl.ItemsSource = vieModel.CurrentMovieList;
+                    //if (Properties.Settings.Default.EasyMode)
+                    //    itemsControl = SimpleMovieItemsControl;
+                    //else
+                    itemsControl = MovieItemsControl;
+                    //itemsControl.ItemsSource = vieModel.CurrentVideoList;
                     //itemsControl.ItemsSource = vieModel.CurrentVideoList;
                     //vieModel.GetFilterInfo(); // todo
                 });
@@ -361,12 +363,11 @@ namespace Jvedio
                     //等待加载
                     Dispatcher.BeginInvoke((Action)delegate
                 {
-                    vieModel.CurrentCount = vieModel.CurrentMovieList.Count;
+                    vieModel.CurrentCount = vieModel.CurrentVideoList.Count;
                     //vieModel.TotalCount = vieModel.FilterMovieList.Count;
                     if (Properties.Settings.Default.EditMode) SetSelected();
 
-                    if (Properties.Settings.Default.ShowImageMode == "2") AsyncLoadExtraPic();
-                    else if (Properties.Settings.Default.ShowImageMode == "3") AsyncLoadGif();
+                    if (Properties.Settings.Default.ShowImageMode == "2") AsyncLoadGif();
                     else AsyncLoadImage();
                     SetLoadingStatus(false);
                     //滚动到指定位置
@@ -379,10 +380,10 @@ namespace Jvedio
                         Storyboard storyboard = new Storyboard();
                         storyboard.Children.Add(verticalAnimation);
 
-                        if (Properties.Settings.Default.EasyMode)
-                            Storyboard.SetTarget(verticalAnimation, SimpleMovieScrollViewer);
-                        else
-                            Storyboard.SetTarget(verticalAnimation, MovieScrollViewer);
+                        //if (Properties.Settings.Default.EasyMode)
+                        //    Storyboard.SetTarget(verticalAnimation, SimpleMovieScrollViewer);
+                        //else
+                        Storyboard.SetTarget(verticalAnimation, MovieScrollViewer);
 
                         Storyboard.SetTargetProperty(verticalAnimation, new PropertyPath(ScrollViewerBehavior.VerticalOffsetProperty));
                         storyboard.Begin();
@@ -396,10 +397,10 @@ namespace Jvedio
                 vieModel.OnCurrentMovieListRemove += (s, ev) =>
                 {
                     ItemsControl itemsControl;
-                    if (Properties.Settings.Default.EasyMode)
-                        itemsControl = SimpleMovieItemsControl;
-                    else
-                        itemsControl = MovieItemsControl;
+                    //if (Properties.Settings.Default.EasyMode)
+                    //    itemsControl = SimpleMovieItemsControl;
+                    //else
+                    itemsControl = MovieItemsControl;
 
                     //清除gif
                     for (int i = 0; i < itemsControl.Items.Count; i++)
@@ -696,18 +697,20 @@ namespace Jvedio
 
         public void CancelSelect()
         {
-            Properties.Settings.Default.EditMode = false; vieModel.SelectedMovie.Clear(); SetSelected();
+            Properties.Settings.Default.EditMode = false;
+            vieModel.SelectedVideo.Clear();
+            SetSelected();
         }
 
         public void SelectAll(object sender, RoutedEventArgs e)
         {
             if (Properties.Settings.Default.EditMode) { CancelSelect(); return; }
             Properties.Settings.Default.EditMode = true;
-            foreach (var item in vieModel.CurrentMovieList)
+            foreach (var item in vieModel.CurrentVideoList)
             {
-                if (!vieModel.SelectedMovie.Contains(item))
+                if (!vieModel.SelectedVideo.Contains(item))
                 {
-                    vieModel.SelectedMovie.Add(item);
+                    vieModel.SelectedVideo.Add(item);
 
                 }
             }
@@ -733,41 +736,41 @@ namespace Jvedio
 
         public void RefreshMovieByID(string ID)
         {
-            Movie movie = DataBase.SelectMovieByID(ID);
-            addTag(ref movie);
-            if (Properties.Settings.Default.ShowImageMode == "3")
-            {
-                //gif
-                string gifpath = System.IO.Path.Combine(BasePicPath, "GIF", $"{movie.id}.gif");
-                if (File.Exists(gifpath))
-                    movie.GifUri = new Uri(gifpath);
-                else
-                    movie.GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
-            }
-            else
-            {
-                SetImage(ref movie);
-            }
-            (Movie currentMovie1, int idx1) = GetMovieFromCurrentMovie(ID);
-            (Movie currentMovie2, int idx2) = GetMovieFromAllMovie(ID);
-            (Movie currentMovie3, int idx3) = GetMovieFromFilterMovie(ID);
+            //Movie movie = DataBase.SelectMovieByID(ID);
+            //addTag(ref movie);
+            //if (Properties.Settings.Default.ShowImageMode == "3")
+            //{
+            //    gif
+            //    string gifpath = System.IO.Path.Combine(BasePicPath, "GIF", $"{movie.id}.gif");
+            //    if (File.Exists(gifpath))
+            //        movie.GifUri = new Uri(gifpath);
+            //    else
+            //        movie.GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
+            //}
+            //else
+            //{
+            //    SetImage(ref movie);
+            //}
+            //(Movie currentMovie1, int idx1) = GetMovieFromCurrentMovie(ID);
+            //(Movie currentMovie2, int idx2) = GetMovieFromAllMovie(ID);
+            //(Movie currentMovie3, int idx3) = GetMovieFromFilterMovie(ID);
 
-            if (currentMovie1 != null && idx1 < vieModel.CurrentMovieList.Count)
-            {
-                vieModel.CurrentMovieList[idx1] = null;
-                vieModel.CurrentMovieList[idx1] = movie;
-            }
-            if (currentMovie2 != null && idx2 < vieModel.MovieList.Count)
-            {
-                vieModel.MovieList[idx2] = null;
-                vieModel.MovieList[idx2] = movie;
-            }
+            //if (currentMovie1 != null && idx1 < vieModel.CurrentVideoList.Count)
+            //{
+            //    vieModel.CurrentVideoList[idx1] = null;
+            //    vieModel.CurrentVideoList[idx1] = movie;
+            //}
+            //if (currentMovie2 != null && idx2 < vieModel.MovieList.Count)
+            //{
+            //    vieModel.MovieList[idx2] = null;
+            //    vieModel.MovieList[idx2] = movie;
+            //}
 
-            if (currentMovie3 != null && idx3 < vieModel.FilterMovieList.Count)
-            {
-                vieModel.FilterMovieList[idx2] = null;
-                vieModel.FilterMovieList[idx2] = movie;
-            }
+            //if (currentMovie3 != null && idx3 < vieModel.FilterMovieList.Count)
+            //{
+            //    vieModel.FilterMovieList[idx2] = null;
+            //    vieModel.FilterMovieList[idx2] = movie;
+            //}
         }
 
 
@@ -1333,7 +1336,7 @@ namespace Jvedio
                         {
                             if (actress.name == textBox.Text.Split('(')[0])
                             {
-                                border.Background = (SolidColorBrush)Application.Current.Resources["Selected_Background"];
+                                border.Background = GlobalStyle.Common.HighLight.Background;
                                 break;
                                 //dropShadowEffect = new DropShadowEffect() { Color = Colors.OrangeRed, BlurRadius = 10, Direction = -90, RenderingBias = RenderingBias.Quality, ShadowDepth = 0 };
                                 //border.Effect = dropShadowEffect;
@@ -1348,15 +1351,12 @@ namespace Jvedio
 
         public void BorderMouseEnter(object sender, MouseEventArgs e)
         {
-            Console.WriteLine((sender as GifImage).GifSource);
             if (Properties.Settings.Default.EditMode)
             {
-                Image image = sender as Image;
-                Grid grid = image.Parent as Grid;
-                StackPanel stackPanel = grid.Parent as StackPanel;
-                Grid grid1 = stackPanel.Parent as Grid;
-                Border border = grid1.Children[0] as Border;
-                border.BorderBrush = (SolidColorBrush)Application.Current.Resources["Selected_BorderBrush"];
+                GifImage image = sender as GifImage;
+                Grid grid = image.FindParentOfType<Grid>("rootGrid");
+                Border border = grid.Children[0] as Border;
+                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
             }
         }
 
@@ -1365,21 +1365,18 @@ namespace Jvedio
 
             if (Properties.Settings.Default.EditMode)
             {
-                Image image = sender as Image;
-                Grid grid = image.Parent as Grid;
-                StackPanel stackPanel = grid.Parent as StackPanel;
-                Grid grid1 = stackPanel.Parent as Grid;
-                Border border = grid1.Children[0] as Border;
-                string id = image.ToolTip.ToString();
-                if (vieModel.SelectedMovie.Select(arg => arg.id).ToList().Contains(id))
+                GifImage image = sender as GifImage;
+                long dataID = getDataID(image);
+                Grid grid = image.FindParentOfType<Grid>("rootGrid");
+                Border border = grid.Children[0] as Border;
+                if (vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
                 {
-                    border.BorderBrush = (SolidColorBrush)Application.Current.Resources["Selected_BorderBrush"];
+                    border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
                 }
                 else
                 {
                     border.BorderBrush = Brushes.Transparent;
                 }
-
             }
         }
 
@@ -1393,7 +1390,7 @@ namespace Jvedio
             if (Properties.Settings.Default.ActorEditMode)
             {
 
-                border.BorderBrush = (SolidColorBrush)Application.Current.Resources["Selected_BorderBrush"];
+                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
             }
             else
             {
@@ -1483,38 +1480,6 @@ namespace Jvedio
         }
 
 
-        private (Movie, int) GetMovieFromAllMovie(string id)
-        {
-            Movie result = null;
-            int idx = 0;
-            for (int i = 0; i < vieModel.CurrentMovieList.Count; i++)
-            {
-                if (vieModel.CurrentMovieList[i].id == id)
-                {
-                    result = vieModel.CurrentMovieList[i];
-                    idx = i;
-                    break;
-                }
-            }
-            return (result, idx);
-        }
-
-        private (Movie, int) GetMovieFromCurrentMovie(string id)
-        {
-            Movie result = null;
-            int idx = 0;
-            for (int i = 0; i < vieModel.CurrentMovieList.Count; i++)
-            {
-                if (vieModel.CurrentMovieList[i].id == id)
-                {
-                    result = vieModel.CurrentMovieList[i];
-                    idx = i;
-                    break;
-                }
-            }
-            return (result, idx);
-        }
-
 
         private (Actress, int) GetActressFromCurrentActors(string name)
         {
@@ -1554,14 +1519,14 @@ namespace Jvedio
         private void ShowDetails(object sender, MouseButtonEventArgs e)
         {
             if (Resizing || !canShowDetails) return;
-            //StackPanel parent = ((sender as FrameworkElement).Parent as Grid).Parent as StackPanel;
-            FrameworkElement framework = (FrameworkElement)sender;
-
-            //var TB = parent.Children.OfType<TextBox>().First();//识别码
-            string id = framework.ToolTip.ToString();
+            FrameworkElement element = sender as FrameworkElement;//点击 border 也能选中
+            long ID = getDataID(element);
             if (Properties.Settings.Default.EditMode)
             {
-                (Movie movie, int selectIdx) = GetMovieFromCurrentMovie(id);
+                Video video = vieModel.CurrentVideoList.Where(arg => arg.DataID == ID).FirstOrDefault();
+                int selectIdx = vieModel.CurrentVideoList.IndexOf(video);
+
+                // 多选
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
                     if (firstidx == -1)
@@ -1585,21 +1550,21 @@ namespace Jvedio
 
                     for (int i = firstidx + 1; i <= secondidx; i++)
                     {
-                        var m = vieModel.CurrentMovieList[i];
-                        if (vieModel.SelectedMovie.Contains(m))
-                            vieModel.SelectedMovie.Remove(m);
+                        Video m = vieModel.CurrentVideoList[i];
+                        if (vieModel.SelectedVideo.Contains(m))
+                            vieModel.SelectedVideo.Remove(m);
                         else
-                            vieModel.SelectedMovie.Add(m);
+                            vieModel.SelectedVideo.Add(m);
                     }
                     firstidx = -1;
                     secondidx = -1;
                 }
                 else
                 {
-                    if (vieModel.SelectedMovie.Contains(movie))
-                        vieModel.SelectedMovie.Remove(movie);
+                    if (vieModel.SelectedVideo.Contains(video))
+                        vieModel.SelectedVideo.Remove(video);
                     else
-                        vieModel.SelectedMovie.Add(movie);
+                        vieModel.SelectedVideo.Add(video);
                 }
 
 
@@ -1608,15 +1573,17 @@ namespace Jvedio
             }
             else
             {
-                wd?.Close();
-                wd = new WindowDetails(id);
-                wd.Show();
-                VieModel_Main.PreviousPage = vieModel.CurrentPage;
+                //wd?.Close();
+                //wd = new WindowDetails(id);
+                //wd.Show();
+                //VieModel_Main.PreviousPage = vieModel.CurrentPage;
 
-                if (Properties.Settings.Default.EasyMode)
-                    VieModel_Main.PreviousOffset = SimpleMovieScrollViewer.VerticalOffset;
-                else
-                    VieModel_Main.PreviousOffset = MovieScrollViewer.VerticalOffset;
+                //if (Properties.Settings.Default.EasyMode)
+                //{
+                //    //VieModel_Main.PreviousOffset = SimpleMovieScrollViewer.VerticalOffset;
+                //}
+                //else
+                VieModel_Main.PreviousOffset = MovieScrollViewer.VerticalOffset;
             }
             canShowDetails = false;
         }
@@ -1700,30 +1667,26 @@ namespace Jvedio
         public void SetSelected()
         {
             ItemsControl itemsControl;
-            if (Properties.Settings.Default.EasyMode)
-                itemsControl = SimpleMovieItemsControl;
-            else
-                itemsControl = MovieItemsControl;
+            //if (Properties.Settings.Default.EasyMode)
+            //    itemsControl = SimpleMovieItemsControl;
+            //else
+            itemsControl = MovieItemsControl;
 
             for (int i = 0; i < itemsControl.Items.Count; i++)
             {
                 ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                Border border = FindElementByName<Border>(c, "MovieBorder");
+                Border border = FindElementByName<Border>(c, "rootBorder");
+                Grid grid = border.Parent as Grid;
+                long dataID = getDataID(border);
                 if (border != null)
                 {
-                    if (c.ContentTemplate.FindName("Image", c) is Image image)
+
+                    border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
+                    border.BorderBrush = Brushes.Transparent;
+                    if (Properties.Settings.Default.EditMode && vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
                     {
-                        border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
-                        border.BorderBrush = Brushes.Transparent;
-                        foreach (Movie movie in vieModel.SelectedMovie)
-                        {
-                            if (movie.id == image.ToolTip.ToString())
-                            {
-                                border.Background = (SolidColorBrush)Application.Current.Resources["Selected_Background"];
-                                border.BorderBrush = (SolidColorBrush)Application.Current.Resources["Selected_Background"];
-                                break;
-                            }
-                        }
+                        border.Background = GlobalStyle.Common.HighLight.Background;
+                        border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
 
                     }
                 }
@@ -1736,13 +1699,14 @@ namespace Jvedio
         public void DisposeGif(string id, bool disposeAll = false)
         {
             ItemsControl itemsControl;
-            if (Properties.Settings.Default.EasyMode)
-                itemsControl = SimpleMovieItemsControl;
-            else
-                itemsControl = MovieItemsControl;
+            //if (Properties.Settings.Default.EasyMode)
+            //    itemsControl = SimpleMovieItemsControl;
+            //else
+            itemsControl = MovieItemsControl;
             for (int i = 0; i < itemsControl.Items.Count; i++)
             {
                 ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                if (c == null) continue;
                 if (c.ContentTemplate.FindName("GifImage", c) is HandyControl.Controls.GifImage GifImage && c.ContentTemplate.FindName("IDTextBox", c) is TextBox textBox)
                 {
                     if (disposeAll)
@@ -1814,79 +1778,9 @@ namespace Jvedio
         }
 
 
-        public void SaveShowViewMode(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            MenuItem father = menuItem.Parent as MenuItem;
-            int idx = father.Items.IndexOf(menuItem);
-
-            for (int i = 0; i < father.Items.Count; i++)
-            {
-                MenuItem item = (MenuItem)father.Items[i];
-                if (i == idx)
-                {
-                    item.IsChecked = true;
-                }
-                else
-                {
-                    item.IsChecked = false;
-                }
-            }
 
 
-            Properties.Settings.Default.ShowViewMode = idx.ToString();
-            Properties.Settings.Default.Save();
-            vieModel.AsyncFlipOver();
-        }
 
-        public void SaveVedioType(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            MenuItem father = menuItem.Parent as MenuItem;
-            int idx = father.Items.IndexOf(menuItem);
-
-
-            for (int i = 0; i < father.Items.Count; i++)
-            {
-                MenuItem item = (MenuItem)father.Items[i];
-                if (i == idx)
-                {
-                    item.IsChecked = true;
-                }
-                else
-                {
-                    item.IsChecked = false;
-                }
-            }
-
-            Properties.Settings.Default.VedioType = idx.ToString();
-            Properties.Settings.Default.Save();
-            vieModel.AsyncFlipOver();
-        }
-
-        public void SaveStampsType(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            MenuItem father = menuItem.Parent as MenuItem;
-            int idx = father.Items.IndexOf(menuItem);
-
-
-            for (int i = 0; i < father.Items.Count; i++)
-            {
-                MenuItem item = (MenuItem)father.Items[i];
-                if (i == idx)
-                {
-                    item.IsChecked = true;
-                }
-                else
-                {
-                    item.IsChecked = false;
-                }
-            }
-
-            vieModel.ShowStampType = idx;
-            vieModel.AsyncFlipOver();
-        }
         public void SetViewMode(object sender, RoutedEventArgs e)
         {
             PathRadioButton radioButton = sender as PathRadioButton;
@@ -1928,15 +1822,15 @@ namespace Jvedio
             if (!Properties.Settings.Default.EasyMode) return;
             Task.Run(async () =>
             {
-                for (int i = 0; i < vieModel.CurrentMovieList.Count; i++)
+                for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
                 {
                     await Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
                     {
-                        if (i >= vieModel.CurrentMovieList.Count) return;
-                        Movie movie = vieModel.CurrentMovieList[i];
-                        SetImage(ref movie);
-                        vieModel.CurrentMovieList[i] = null;
-                        vieModel.CurrentMovieList[i] = movie;
+                        if (i >= vieModel.CurrentVideoList.Count) return;
+                        Video video = vieModel.CurrentVideoList[i];
+                        SetImage(ref video);
+                        vieModel.CurrentVideoList[i] = null;
+                        vieModel.CurrentVideoList[i] = video;
                     });
                 }
             });
@@ -1948,10 +1842,10 @@ namespace Jvedio
         public void AsyncLoadExtraPic()
         {
             ItemsControl itemsControl;
-            if (Properties.Settings.Default.EasyMode)
-                itemsControl = SimpleMovieItemsControl;
-            else
-                itemsControl = MovieItemsControl;
+            //if (Properties.Settings.Default.EasyMode)
+            //    itemsControl = SimpleMovieItemsControl;
+            //else
+            itemsControl = MovieItemsControl;
             if (ImageSlides == null) ImageSlides = new List<ImageSlide>();
             List<Image> images1 = new List<Image>();
             List<Image> images2 = new List<Image>();
@@ -1974,7 +1868,7 @@ namespace Jvedio
             int idx = ImageSlides.Count;
             Task.Run(async () =>
             {
-                for (int i = idx; i < vieModel.CurrentMovieList.Count; i++)
+                for (int i = idx; i < vieModel.CurrentVideoList.Count; i++)
                 {
                     await Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
                     {
@@ -2023,7 +1917,7 @@ namespace Jvedio
         {
             //无进度条时
             ScrollViewer sv = sender as ScrollViewer;
-            if (sv.VerticalOffset == 0 && sv.VerticalOffset == sv.ScrollableHeight && vieModel.CurrentMovieList.Count < Properties.Settings.Default.DisplayNumber && !IsFlowing)
+            if (sv.VerticalOffset == 0 && sv.VerticalOffset == sv.ScrollableHeight && vieModel.CurrentVideoList.Count < Properties.Settings.Default.DisplayNumber && !IsFlowing)
             {
                 IsFlowing = true;
                 LoadMovie();
@@ -2052,7 +1946,7 @@ namespace Jvedio
             //if (!IsFlowing && sv.ScrollableHeight - sv.VerticalOffset <= 10 && sv.VerticalOffset != 0)
             //{
             //    Console.WriteLine("1");
-            //    if (!IsFlowing && vieModel.CurrentMovieList.Count < Properties.Settings.Default.DisplayNumber && vieModel.CurrentMovieList.Count < vieModel.FilterMovieList.Count && vieModel.CurrentMovieList.Count + (vieModel.CurrentPage - 1) * Properties.Settings.Default.DisplayNumber < vieModel.FilterMovieList.Count)
+            //    if (!IsFlowing && vieModel.CurrentVideoList.Count < Properties.Settings.Default.DisplayNumber && vieModel.CurrentVideoList.Count < vieModel.FilterMovieList.Count && vieModel.CurrentVideoList.Count + (vieModel.CurrentPage - 1) * Properties.Settings.Default.DisplayNumber < vieModel.FilterMovieList.Count)
             //    {
             //        IsFlowing = true;
             //        LoadMovie();
@@ -2102,10 +1996,10 @@ namespace Jvedio
 
         public void GotoTop(object sender, MouseButtonEventArgs e)
         {
-            if (Properties.Settings.Default.EasyMode)
-                SimpleMovieScrollViewer.ScrollToTop();
-            else
-                MovieScrollViewer.ScrollToTop();
+            //if (Properties.Settings.Default.EasyMode)
+            //    SimpleMovieScrollViewer.ScrollToTop();
+            //else
+            MovieScrollViewer.ScrollToTop();
         }
 
         public void PlayVideo(object sender, MouseButtonEventArgs e)
@@ -2144,7 +2038,7 @@ namespace Jvedio
 
         public void OpenImagePath(object sender, RoutedEventArgs e)
         {
-            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
             MenuItem _mnu = sender as MenuItem;
             if (_mnu.Parent is MenuItem mnu)
@@ -2187,220 +2081,207 @@ namespace Jvedio
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
-        public void OpenFilePath(object sender, RoutedEventArgs e)
-        {
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            vieModel.SelectedMovie.ToList().ForEach(arg =>
-            {
-                if (!FileHelper.TryOpenSelectPath(arg.filepath) && vieModel.SelectedMovie.Count == 1)
-                    HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.NotExists}  {arg.filepath}", GrowlToken);
-            });
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-        }
 
 
         public async void TranslateMovie(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.Enable_TL_BAIDU & !Properties.Settings.Default.Enable_TL_YOUDAO)
-            {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetYoudao, GrowlToken);
-                return;
-            }
+            //if (!Properties.Settings.Default.Enable_TL_BAIDU & !Properties.Settings.Default.Enable_TL_YOUDAO)
+            //{
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetYoudao, GrowlToken);
+            //    return;
+            //}
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            string result = "";
-            MySqlite dataBase = new MySqlite("Translate");
+            //string id = GetIDFromMenuItem(sender, 1);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //string result = "";
+            //MySqlite dataBase = new MySqlite("Translate");
 
 
-            int successNum = 0;
-            int failNum = 0;
-            int translatedNum = 0;
+            //int successNum = 0;
+            //int failNum = 0;
+            //int translatedNum = 0;
 
-            foreach (Movie movie in vieModel.SelectedMovie)
-            {
+            //foreach (Movie movie in vieModel.SelectedVideo)
+            //{
 
-                //检查是否已经翻译过，如有则跳过
-                if (!string.IsNullOrEmpty(dataBase.SelectByField("translate_title", "youdao", movie.id))) { translatedNum++; continue; }
-                if (movie.title != "")
-                {
+            //    //检查是否已经翻译过，如有则跳过
+            //    if (!string.IsNullOrEmpty(dataBase.SelectByField("translate_title", "youdao", movie.id))) { translatedNum++; continue; }
+            //    if (movie.title != "")
+            //    {
 
-                    if (Properties.Settings.Default.Enable_TL_YOUDAO) result = await Translate.Youdao(movie.title);
-                    //保存
-                    if (result != "")
-                    {
+            //        if (Properties.Settings.Default.Enable_TL_YOUDAO) result = await Translate.Youdao(movie.title);
+            //        //保存
+            //        if (result != "")
+            //        {
 
-                        dataBase.SaveYoudaoTranslateByID(movie.id, movie.title, result, "title");
+            //            dataBase.SaveYoudaoTranslateByID(movie.id, movie.title, result, "title");
 
-                        //显示
-                        int index1 = vieModel.CurrentMovieList.IndexOf(vieModel.CurrentMovieList.Where(arg => arg.id == movie.id).First()); ;
-                        int index2 = vieModel.MovieList.IndexOf(vieModel.MovieList.Where(arg => arg.id == movie.id).First());
-                        int index3 = vieModel.FilterMovieList.IndexOf(vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
-                        movie.title = result;
-                        try
-                        {
-                            vieModel.CurrentMovieList[index1] = null;
-                            vieModel.MovieList[index2] = null;
-                            vieModel.FilterMovieList[index3] = null;
-                            vieModel.CurrentMovieList[index1] = movie;
-                            vieModel.MovieList[index2] = movie;
-                            vieModel.FilterMovieList[index3] = movie;
-                            successNum++;
-                        }
-                        catch (ArgumentNullException) { }
+            //            //显示
+            //            int index1 = vieModel.CurrentVideoList.IndexOf(vieModel.CurrentVideoList.Where(arg => arg.id == movie.id).First()); ;
+            //            int index2 = vieModel.MovieList.IndexOf(vieModel.MovieList.Where(arg => arg.id == movie.id).First());
+            //            int index3 = vieModel.FilterMovieList.IndexOf(vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
+            //            movie.title = result;
+            //            try
+            //            {
+            //                vieModel.CurrentVideoList[index1] = null;
+            //                vieModel.MovieList[index2] = null;
+            //                vieModel.FilterMovieList[index3] = null;
+            //                vieModel.CurrentVideoList[index1] = movie;
+            //                vieModel.MovieList[index2] = movie;
+            //                vieModel.FilterMovieList[index3] = movie;
+            //                successNum++;
+            //            }
+            //            catch (ArgumentNullException) { }
 
-                    }
+            //        }
 
-                }
-                else { failNum++; }
+            //    }
+            //    else { failNum++; }
 
-                if (movie.plot != "")
-                {
-                    if (Properties.Settings.Default.Enable_TL_YOUDAO) result = await Translate.Youdao(movie.plot);
-                    //保存
-                    if (result != "")
-                    {
-                        dataBase.SaveYoudaoTranslateByID(movie.id, movie.plot, result, "plot");
-                        dataBase.CloseDB();
-                    }
+            //    if (movie.plot != "")
+            //    {
+            //        if (Properties.Settings.Default.Enable_TL_YOUDAO) result = await Translate.Youdao(movie.plot);
+            //        //保存
+            //        if (result != "")
+            //        {
+            //            dataBase.SaveYoudaoTranslateByID(movie.id, movie.plot, result, "plot");
+            //            dataBase.CloseDB();
+            //        }
 
-                }
+            //    }
 
-            }
-            dataBase.CloseDB();
-            HandyControl.Controls.Growl.Success($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum}", GrowlToken);
-            HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.Message_FailNum} {failNum}", GrowlToken);
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SkipNum} {translatedNum}", GrowlToken);
+            //}
+            //dataBase.CloseDB();
+            //HandyControl.Controls.Growl.Success($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum}", GrowlToken);
+            //HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.Message_FailNum} {failNum}", GrowlToken);
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SkipNum} {translatedNum}", GrowlToken);
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
 
 
         public async void GenerateActor(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.Enable_BaiduAI) { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetBaiduAI, GrowlToken); return; }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.Enable_BaiduAI) { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetBaiduAI, GrowlToken); return; }
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            this.Cursor = Cursors.Wait;
-            int successNum = 0;
+            //string id = GetIDFromMenuItem(sender, 1);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //this.Cursor = Cursors.Wait;
+            //int successNum = 0;
 
-            foreach (Movie movie in vieModel.SelectedMovie)
-            {
-                if (movie.actor == "") continue;
-                string BigPicPath = Properties.Settings.Default.BasePicPath + $"BigPic\\{movie.id}.jpg";
+            //foreach (Movie movie in vieModel.SelectedVideo)
+            //{
+            //    if (movie.actor == "") continue;
+            //    string BigPicPath = Properties.Settings.Default.BasePicPath + $"BigPic\\{movie.id}.jpg";
 
-                string name;
-                if (vieModel.ActorInfoGrid == Visibility.Visible)
-                    name = vieModel.Actress.name;
-                else
-                    name = movie.actor.Split(actorSplitDict[movie.vediotype])[0];
-
-
-                string ActressesPicPath = Properties.Settings.Default.BasePicPath + $"Actresses\\{name}.jpg";
-                if (File.Exists(BigPicPath))
-                {
-                    Int32Rect int32Rect = await FaceDetect.GetAIResult(movie, BigPicPath);
-                    if (int32Rect != Int32Rect.Empty)
-                    {
-                        await Task.Delay(500);
-                        //切割演员头像
-                        System.Drawing.Bitmap SourceBitmap = new System.Drawing.Bitmap(BigPicPath);
-                        BitmapImage bitmapImage = ImageProcess.BitmapToBitmapImage(SourceBitmap);
-                        ImageSource actressImage = ImageProcess.CutImage(bitmapImage, ImageProcess.GetActressRect(bitmapImage, int32Rect));
-                        System.Drawing.Bitmap bitmap = ImageProcess.ImageSourceToBitmap(actressImage);
-                        try { bitmap.Save(ActressesPicPath, System.Drawing.Imaging.ImageFormat.Jpeg); successNum++; }
-                        catch (Exception ex) { Logger.LogE(ex); }
-                    }
-                }
-                else
-                {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_PosterMustExist, GrowlToken);
-                }
-            }
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedMovie.Count}", GrowlToken);
-            //更新到窗口中
-            foreach (Movie movie1 in vieModel.SelectedMovie)
-            {
-                if (!string.IsNullOrEmpty(movie1.actor) && movie1.actor.IndexOf(vieModel.Actress.name) >= 0)
-                {
-                    vieModel.Actress.smallimage = GetActorImage(vieModel.Actress.name);
-                    break;
-                }
-            }
+            //    string name;
+            //    if (vieModel.ActorInfoGrid == Visibility.Visible)
+            //        name = vieModel.Actress.name;
+            //    else
+            //        name = movie.actor.Split(actorSplitDict[movie.vediotype])[0];
 
 
+            //    string ActressesPicPath = Properties.Settings.Default.BasePicPath + $"Actresses\\{name}.jpg";
+            //    if (File.Exists(BigPicPath))
+            //    {
+            //        Int32Rect int32Rect = await FaceDetect.GetAIResult(movie, BigPicPath);
+            //        if (int32Rect != Int32Rect.Empty)
+            //        {
+            //            await Task.Delay(500);
+            //            //切割演员头像
+            //            System.Drawing.Bitmap SourceBitmap = new System.Drawing.Bitmap(BigPicPath);
+            //            BitmapImage bitmapImage = ImageProcess.BitmapToBitmapImage(SourceBitmap);
+            //            ImageSource actressImage = ImageProcess.CutImage(bitmapImage, ImageProcess.GetActressRect(bitmapImage, int32Rect));
+            //            System.Drawing.Bitmap bitmap = ImageProcess.ImageSourceToBitmap(actressImage);
+            //            try { bitmap.Save(ActressesPicPath, System.Drawing.Imaging.ImageFormat.Jpeg); successNum++; }
+            //            catch (Exception ex) { Logger.LogE(ex); }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_PosterMustExist, GrowlToken);
+            //    }
+            //}
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
+            ////更新到窗口中
+            //foreach (Movie movie1 in vieModel.SelectedVideo)
+            //{
+            //    if (!string.IsNullOrEmpty(movie1.actor) && movie1.actor.IndexOf(vieModel.Actress.name) >= 0)
+            //    {
+            //        vieModel.Actress.smallimage = GetActorImage(vieModel.Actress.name);
+            //        break;
+            //    }
+            //}
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            this.Cursor = Cursors.Arrow;
+
+
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //this.Cursor = Cursors.Arrow;
         }
 
 
 
         public async void GenerateGif(object sender, RoutedEventArgs e)
         {
-            if (!File.Exists(Properties.Settings.Default.FFMPEG_Path))
-            {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetFFmpeg, GrowlToken);
-                return;
-            }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            string id = GetIDFromMenuItem(sender, 1);
-            int successNum = 0;
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            this.Cursor = Cursors.Wait;
-            vieModel.CmdText = "";
-            vieModel.CmdVisibility = Visibility.Visible;
-            foreach (Movie movie in vieModel.SelectedMovie)
-            {
-                if (Properties.Settings.Default.SkipExistGif && File.Exists(System.IO.Path.Combine(BasePicPath, "GIF", $"{movie.id}.gif")))
-                {
-                    App.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        vieModel.CmdText += $"{movie.id} {Jvedio.Language.Resources.Skip}\n";
-                    });
+            //if (!File.Exists(Properties.Settings.Default.FFMPEG_Path))
+            //{
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetFFmpeg, GrowlToken);
+            //    return;
+            //}
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //string id = GetIDFromMenuItem(sender, 1);
+            //int successNum = 0;
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //this.Cursor = Cursors.Wait;
+            //vieModel.CmdText = "";
+            //vieModel.CmdVisibility = Visibility.Visible;
+            //foreach (Movie movie in vieModel.SelectedVideo)
+            //{
+            //    if (Properties.Settings.Default.SkipExistGif && File.Exists(System.IO.Path.Combine(BasePicPath, "GIF", $"{movie.id}.gif")))
+            //    {
+            //        App.Current.Dispatcher.Invoke((Action)delegate
+            //        {
+            //            vieModel.CmdText += $"{movie.id} {Jvedio.Language.Resources.Skip}\n";
+            //        });
 
-                    continue;
-                }
+            //        continue;
+            //    }
 
 
-                bool success = false;
-                string message = "";
-                ScreenShot screenShot = new ScreenShot();
-                screenShot.SingleScreenShotCompleted += (s, ev) =>
-                {
-                    App.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        Console.WriteLine(((ScreenShotEventArgs)ev).FFmpegCommand);
-                        vieModel.CmdText += $"{Jvedio.Language.Resources.SuccessGifTo} ： {((ScreenShotEventArgs)ev).FilePath}\n";
-                        RefreshMovieByID(movie.id);
-                    });
-                };
-                (success, message) = await screenShot.AsyncGenrateGif(movie);
-                if (success)
-                    successNum++;
-                else
-                    await this.Dispatcher.BeginInvoke((Action)delegate
-                    {
-                        vieModel.CmdText += $"{movie.id} {Jvedio.Language.Resources.Message_Fail}，{Jvedio.Language.Resources.Reason}：{message}\n";
+            //    bool success = false;
+            //    string message = "";
+            //    ScreenShot screenShot = new ScreenShot();
+            //    screenShot.SingleScreenShotCompleted += (s, ev) =>
+            //    {
+            //        App.Current.Dispatcher.Invoke((Action)delegate
+            //        {
+            //            Console.WriteLine(((ScreenShotEventArgs)ev).FFmpegCommand);
+            //            vieModel.CmdText += $"{Jvedio.Language.Resources.SuccessGifTo} ： {((ScreenShotEventArgs)ev).FilePath}\n";
+            //            RefreshMovieByID(movie.id);
+            //        });
+            //    };
+            //    (success, message) = await screenShot.AsyncGenrateGif(movie);
+            //    if (success)
+            //        successNum++;
+            //    else
+            //        await this.Dispatcher.BeginInvoke((Action)delegate
+            //        {
+            //            vieModel.CmdText += $"{movie.id} {Jvedio.Language.Resources.Message_Fail}，{Jvedio.Language.Resources.Reason}：{message}\n";
 
-                    });
-            }
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedMovie.Count}", GrowlToken);
+            //        });
+            //}
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            this.Cursor = Cursors.Arrow;
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //this.Cursor = Cursors.Arrow;
         }
 
         private async void ScreenShot(object sender, MouseButtonEventArgs e)
@@ -2419,41 +2300,41 @@ namespace Jvedio
         public async void GenerateScreenShot(object sender, RoutedEventArgs e)
         {
 
-            if (!File.Exists(Properties.Settings.Default.FFMPEG_Path))
-            {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetFFmpeg, GrowlToken);
-                return;
-            }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            int successNum = 0;
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            this.Cursor = Cursors.Wait;
-            vieModel.CmdText = "";
-            vieModel.CmdVisibility = Visibility.Visible;
-            foreach (Movie movie in vieModel.SelectedMovie)
-            {
-                bool success = false;
-                string message = "";
-                ScreenShot screenShot = new ScreenShot();
-                screenShot.SingleScreenShotCompleted += (s, ev) =>
-                {
-                    App.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        Console.WriteLine(((ScreenShotEventArgs)ev).FFmpegCommand);
-                        vieModel.CmdText += $"{Jvedio.Language.Resources.SuccessScreenShotTo} ： {((ScreenShotEventArgs)ev).FilePath}\n";
-                        //cmdTextBox.ScrollToEnd();
-                    });
-                };
-                (success, message) = await screenShot.AsyncScreenShot(movie);
-                if (success) successNum++;
-                else this.Dispatcher.Invoke((Action)delegate { vieModel.CmdText += $"{movie.id} {Jvedio.Language.Resources.Message_Fail}，{Jvedio.Language.Resources.Reason}：{message}\n"; });
-            }
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedMovie.Count}", GrowlToken);
+            //if (!File.Exists(Properties.Settings.Default.FFMPEG_Path))
+            //{
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetFFmpeg, GrowlToken);
+            //    return;
+            //}
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //int successNum = 0;
+            //string id = GetIDFromMenuItem(sender, 1);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //this.Cursor = Cursors.Wait;
+            //vieModel.CmdText = "";
+            //vieModel.CmdVisibility = Visibility.Visible;
+            //foreach (Movie movie in vieModel.SelectedVideo)
+            //{
+            //    bool success = false;
+            //    string message = "";
+            //    ScreenShot screenShot = new ScreenShot();
+            //    screenShot.SingleScreenShotCompleted += (s, ev) =>
+            //    {
+            //        App.Current.Dispatcher.Invoke((Action)delegate
+            //        {
+            //            Console.WriteLine(((ScreenShotEventArgs)ev).FFmpegCommand);
+            //            vieModel.CmdText += $"{Jvedio.Language.Resources.SuccessScreenShotTo} ： {((ScreenShotEventArgs)ev).FilePath}\n";
+            //            //cmdTextBox.ScrollToEnd();
+            //        });
+            //    };
+            //    (success, message) = await screenShot.AsyncScreenShot(movie);
+            //    if (success) successNum++;
+            //    else this.Dispatcher.Invoke((Action)delegate { vieModel.CmdText += $"{movie.id} {Jvedio.Language.Resources.Message_Fail}，{Jvedio.Language.Resources.Reason}：{message}\n"; });
+            //}
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            this.Cursor = Cursors.Arrow;
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //this.Cursor = Cursors.Arrow;
 
         }
 
@@ -2465,184 +2346,184 @@ namespace Jvedio
 
         public async void GenerateSmallImage(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.Enable_BaiduAI) { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetBaiduAI, GrowlToken); return; }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            int successNum = 0;
-            this.Cursor = Cursors.Wait;
-            foreach (Movie movie in vieModel.SelectedMovie)
-            {
-                string BigPicPath = Properties.Settings.Default.BasePicPath + $"BigPic\\{movie.id}.jpg";
-                string SmallPicPath = Properties.Settings.Default.BasePicPath + $"SmallPic\\{movie.id}.jpg";
-                if (File.Exists(BigPicPath))
-                {
-                    System.Drawing.Bitmap SourceBitmap = new System.Drawing.Bitmap(BigPicPath);
-                    BitmapImage bitmapImage = ImageProcess.BitmapToBitmapImage(SourceBitmap);
-                    if (Properties.Settings.Default.HalfCutOFf)
-                    {
-                        double rate = 380f / 800f;
+            //if (!Properties.Settings.Default.Enable_BaiduAI) { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetBaiduAI, GrowlToken); return; }
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //string id = GetIDFromMenuItem(sender, 1);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //int successNum = 0;
+            //this.Cursor = Cursors.Wait;
+            //foreach (Movie movie in vieModel.SelectedVideo)
+            //{
+            //    string BigPicPath = Properties.Settings.Default.BasePicPath + $"BigPic\\{movie.id}.jpg";
+            //    string SmallPicPath = Properties.Settings.Default.BasePicPath + $"SmallPic\\{movie.id}.jpg";
+            //    if (File.Exists(BigPicPath))
+            //    {
+            //        System.Drawing.Bitmap SourceBitmap = new System.Drawing.Bitmap(BigPicPath);
+            //        BitmapImage bitmapImage = ImageProcess.BitmapToBitmapImage(SourceBitmap);
+            //        if (Properties.Settings.Default.HalfCutOFf)
+            //        {
+            //            double rate = 380f / 800f;
 
-                        Int32Rect int32Rect = new Int32Rect() { Height = SourceBitmap.Height, Width = (int)(rate * SourceBitmap.Width), X = (int)((1 - rate) * SourceBitmap.Width), Y = 0 };
-                        ImageSource smallImage = ImageProcess.CutImage(bitmapImage, int32Rect);
-                        System.Drawing.Bitmap bitmap = ImageProcess.ImageSourceToBitmap(smallImage);
-                        try
-                        {
-                            bitmap.Save(SmallPicPath, System.Drawing.Imaging.ImageFormat.Jpeg); successNum++;
-                        }
-                        catch (Exception ex) { Logger.LogE(ex); }
-                    }
-                    else
-                    {
-                        Int32Rect int32Rect = await FaceDetect.GetAIResult(movie, BigPicPath);
-                        if (int32Rect != Int32Rect.Empty)
-                        {
-                            await Task.Delay(500);
-                            //切割缩略图
-                            ImageSource smallImage = ImageProcess.CutImage(bitmapImage, ImageProcess.GetRect(bitmapImage, int32Rect));
-                            System.Drawing.Bitmap bitmap = ImageProcess.ImageSourceToBitmap(smallImage);
-                            try
-                            {
-                                bitmap.Save(SmallPicPath, System.Drawing.Imaging.ImageFormat.Jpeg); successNum++;
-                            }
-                            catch (Exception ex) { Logger.LogE(ex); }
-                        }
+            //            Int32Rect int32Rect = new Int32Rect() { Height = SourceBitmap.Height, Width = (int)(rate * SourceBitmap.Width), X = (int)((1 - rate) * SourceBitmap.Width), Y = 0 };
+            //            ImageSource smallImage = ImageProcess.CutImage(bitmapImage, int32Rect);
+            //            System.Drawing.Bitmap bitmap = ImageProcess.ImageSourceToBitmap(smallImage);
+            //            try
+            //            {
+            //                bitmap.Save(SmallPicPath, System.Drawing.Imaging.ImageFormat.Jpeg); successNum++;
+            //            }
+            //            catch (Exception ex) { Logger.LogE(ex); }
+            //        }
+            //        else
+            //        {
+            //            Int32Rect int32Rect = await FaceDetect.GetAIResult(movie, BigPicPath);
+            //            if (int32Rect != Int32Rect.Empty)
+            //            {
+            //                await Task.Delay(500);
+            //                //切割缩略图
+            //                ImageSource smallImage = ImageProcess.CutImage(bitmapImage, ImageProcess.GetRect(bitmapImage, int32Rect));
+            //                System.Drawing.Bitmap bitmap = ImageProcess.ImageSourceToBitmap(smallImage);
+            //                try
+            //                {
+            //                    bitmap.Save(SmallPicPath, System.Drawing.Imaging.ImageFormat.Jpeg); successNum++;
+            //                }
+            //                catch (Exception ex) { Logger.LogE(ex); }
+            //            }
 
-                    }
+            //        }
 
-                    //读取
-                    int index1 = vieModel.CurrentMovieList.IndexOf(movie);
-                    int index2 = vieModel.MovieList.IndexOf(movie);
-                    int index3 = vieModel.FilterMovieList.IndexOf(movie);
-                    movie.smallimage = ImageProcess.GetBitmapImage(movie.id, "SmallPic");
+            //        //读取
+            //        int index1 = vieModel.CurrentVideoList.IndexOf(movie);
+            //        int index2 = vieModel.MovieList.IndexOf(movie);
+            //        int index3 = vieModel.FilterMovieList.IndexOf(movie);
+            //        movie.smallimage = ImageProcess.GetBitmapImage(movie.id, "SmallPic");
 
-                    vieModel.CurrentMovieList[index1] = null;
-                    vieModel.MovieList[index2] = null;
-                    vieModel.FilterMovieList[index3] = null;
-                    vieModel.CurrentMovieList[index1] = movie;
-                    vieModel.MovieList[index2] = movie;
-                    vieModel.FilterMovieList[index3] = movie;
+            //        vieModel.CurrentVideoList[index1] = null;
+            //        vieModel.MovieList[index2] = null;
+            //        vieModel.FilterMovieList[index3] = null;
+            //        vieModel.CurrentVideoList[index1] = movie;
+            //        vieModel.MovieList[index2] = movie;
+            //        vieModel.FilterMovieList[index3] = movie;
 
 
 
-                }
-                else
-                {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_PosterMustExist, GrowlToken);
-                }
+            //    }
+            //    else
+            //    {
+            //        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_PosterMustExist, GrowlToken);
+            //    }
 
-            }
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedMovie.Count}", GrowlToken);
+            //}
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            this.Cursor = Cursors.Arrow;
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //this.Cursor = Cursors.Arrow;
         }
 
 
         public void RenameFile(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.RenameFormat.IndexOf("{") < 0)
-            {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetRenameRule, GrowlToken);
-                return;
-            }
+            //if (Properties.Settings.Default.RenameFormat.IndexOf("{") < 0)
+            //{
+            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetRenameRule, GrowlToken);
+            //    return;
+            //}
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            StringCollection paths = new StringCollection();
-            int num = 0;
-            vieModel.SelectedMovie.ToList().ForEach(arg => { if (File.Exists(arg.filepath)) { paths.Add(arg.filepath); } });
-            if (paths.Count > 0)
-            {
-                //重命名文件
-                foreach (Movie m in vieModel.SelectedMovie)
-                {
-                    if (!File.Exists(m.filepath)) continue;
-                    DetailMovie movie = DataBase.SelectDetailMovieById(m.id);
-                    //try
-                    //{
-                    string[] newPath = movie.ToFileName();
-                    if (movie.hassubsection)
-                    {
-                        for (int i = 0; i < newPath.Length; i++)
-                        {
-                            File.Move(movie.subsectionlist[i], newPath[i]);
-                        }
-                        num++;
+            //string id = GetIDFromMenuItem(sender, 1);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //StringCollection paths = new StringCollection();
+            //int num = 0;
+            //vieModel.SelectedVideo.ToList().ForEach(arg => { if (File.Exists(arg.filepath)) { paths.Add(arg.filepath); } });
+            //if (paths.Count > 0)
+            //{
+            //    //重命名文件
+            //    foreach (Movie m in vieModel.SelectedVideo)
+            //    {
+            //        if (!File.Exists(m.filepath)) continue;
+            //        DetailMovie movie = DataBase.SelectDetailMovieById(m.id);
+            //        //try
+            //        //{
+            //        string[] newPath = movie.ToFileName();
+            //        if (movie.hassubsection)
+            //        {
+            //            for (int i = 0; i < newPath.Length; i++)
+            //            {
+            //                File.Move(movie.subsectionlist[i], newPath[i]);
+            //            }
+            //            num++;
 
-                        //显示
-                        int index1 = vieModel.CurrentMovieList.IndexOf(vieModel.CurrentMovieList.Where(arg => arg.id == movie.id).First()); ;
-                        int index2 = vieModel.MovieList.IndexOf(vieModel.MovieList.Where(arg => arg.id == movie.id).First());
-                        int index3 = vieModel.FilterMovieList.IndexOf(vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
-                        movie.filepath = newPath[0];
-                        movie.subsection = string.Join(";", newPath);
-                        try
-                        {
-                            vieModel.CurrentMovieList[index1].filepath = movie.filepath;
-                            vieModel.MovieList[index2].filepath = movie.filepath;
-                            vieModel.CurrentMovieList[index1].subsection = movie.subsection;
-                            vieModel.MovieList[index2].subsection = movie.subsection;
-                            vieModel.FilterMovieList[index3].filepath = movie.filepath;
-                            vieModel.FilterMovieList[index3].subsection = movie.subsection;
-                        }
-                        catch (ArgumentNullException) { }
-                        DataBase.UpdateMovieByID(movie.id, "filepath", movie.filepath, "string");//保存
-                        DataBase.UpdateMovieByID(movie.id, "subsection", movie.subsection, "string");//保存
-                        if (vieModel.SelectedMovie.Count == 1) HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
-                    }
-                    else
-                    {
-                        if (!File.Exists(newPath[0]))
-                        {
-                            File.Move(movie.filepath, newPath[0]);
-                            num++;
-                            //显示
-                            int index1 = vieModel.CurrentMovieList.IndexOf(vieModel.CurrentMovieList.Where(arg => arg.id == movie.id).First()); ;
-                            int index2 = vieModel.MovieList.IndexOf(vieModel.MovieList.Where(arg => arg.id == movie.id).First());
-                            int index3 = vieModel.FilterMovieList.IndexOf(vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
-                            movie.filepath = newPath[0];
-                            try
-                            {
-                                vieModel.CurrentMovieList[index1].filepath = movie.filepath;
-                                vieModel.MovieList[index2].filepath = movie.filepath;
-                                vieModel.FilterMovieList[index3].filepath = movie.filepath;
-                            }
-                            catch (ArgumentNullException) { }
-                            DataBase.UpdateMovieByID(movie.id, "filepath", movie.filepath, "string");//保存
-                            if (vieModel.SelectedMovie.Count == 1) HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
-                        }
-                        else
-                        {
-                            //存在同名文件
-                            HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_Fail, GrowlToken);
-                        }
+            //            //显示
+            //            int index1 = vieModel.CurrentVideoList.IndexOf(vieModel.CurrentVideoList.Where(arg => arg.id == movie.id).First()); ;
+            //            int index2 = vieModel.MovieList.IndexOf(vieModel.MovieList.Where(arg => arg.id == movie.id).First());
+            //            int index3 = vieModel.FilterMovieList.IndexOf(vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
+            //            movie.filepath = newPath[0];
+            //            movie.subsection = string.Join(";", newPath);
+            //            try
+            //            {
+            //                vieModel.CurrentVideoList[index1].filepath = movie.filepath;
+            //                vieModel.MovieList[index2].filepath = movie.filepath;
+            //                vieModel.CurrentVideoList[index1].subsection = movie.subsection;
+            //                vieModel.MovieList[index2].subsection = movie.subsection;
+            //                vieModel.FilterMovieList[index3].filepath = movie.filepath;
+            //                vieModel.FilterMovieList[index3].subsection = movie.subsection;
+            //            }
+            //            catch (ArgumentNullException) { }
+            //            DataBase.UpdateMovieByID(movie.id, "filepath", movie.filepath, "string");//保存
+            //            DataBase.UpdateMovieByID(movie.id, "subsection", movie.subsection, "string");//保存
+            //            if (vieModel.SelectedVideo.Count == 1) HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //        }
+            //        else
+            //        {
+            //            if (!File.Exists(newPath[0]))
+            //            {
+            //                File.Move(movie.filepath, newPath[0]);
+            //                num++;
+            //                //显示
+            //                int index1 = vieModel.CurrentVideoList.IndexOf(vieModel.CurrentVideoList.Where(arg => arg.id == movie.id).First()); ;
+            //                int index2 = vieModel.MovieList.IndexOf(vieModel.MovieList.Where(arg => arg.id == movie.id).First());
+            //                int index3 = vieModel.FilterMovieList.IndexOf(vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
+            //                movie.filepath = newPath[0];
+            //                try
+            //                {
+            //                    vieModel.CurrentVideoList[index1].filepath = movie.filepath;
+            //                    vieModel.MovieList[index2].filepath = movie.filepath;
+            //                    vieModel.FilterMovieList[index3].filepath = movie.filepath;
+            //                }
+            //                catch (ArgumentNullException) { }
+            //                DataBase.UpdateMovieByID(movie.id, "filepath", movie.filepath, "string");//保存
+            //                if (vieModel.SelectedVideo.Count == 1) HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //            }
+            //            else
+            //            {
+            //                //存在同名文件
+            //                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_Fail, GrowlToken);
+            //            }
 
-                    }
-
-
-                    //}catch(Exception ex)
-                    //{
-                    //    HandyControl.Controls.Growl.Error(ex.Message);
-                    //    continue;
-                    //}
-                }
-                HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {num}/{vieModel.SelectedMovie.Count} ", GrowlToken);
-            }
-            else
-            {
-                //文件不存在！无法重命名！
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_FileNotExist, GrowlToken);
-            }
+            //        }
 
 
+            //        //}catch(Exception ex)
+            //        //{
+            //        //    HandyControl.Controls.Growl.Error(ex.Message);
+            //        //    continue;
+            //        //}
+            //    }
+            //    HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {num}/{vieModel.SelectedVideo.Count} ", GrowlToken);
+            //}
+            //else
+            //{
+            //    //文件不存在！无法重命名！
+            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_FileNotExist, GrowlToken);
+            //}
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+
+
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
 
@@ -2651,218 +2532,216 @@ namespace Jvedio
         {
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            int successnum = 0;
-            for (int i = 0; i < vieModel.SelectedMovie.Count; i++)
-            {
-                Movie movie = vieModel.SelectedMovie[i];
-                string oldID = movie.id.ToUpper();
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //int successnum = 0;
+            //for (int i = 0; i < vieModel.SelectedVideo.Count; i++)
+            //{
+            //    Movie movie = vieModel.SelectedVideo[i];
+            //    string oldID = movie.id.ToUpper();
 
-                Console.WriteLine(vieModel.CurrentMovieList[0].id);
+            //    Console.WriteLine(vieModel.CurrentVideoList[0].id);
 
-                if (oldID.IndexOf("-") > 0)
-                {
-                    string num = oldID.Split('-').Last();
-                    string eng = oldID.Remove(oldID.Length - num.Length, num.Length);
-                    if (num.Length == 5 && eng.Replace("-", "").All(char.IsLetter))
-                    {
-                        string newID = eng + num.Remove(0, 2);
-                        if (DataBase.SelectMovieByID(newID) == null)
-                        {
-                            Movie newMovie = DataBase.SelectMovieByID(oldID);
-                            DataBase.DeleteByField("movie", "id", oldID);
-                            newMovie.id = newID;
-                            DataBase.InsertFullMovie(newMovie);
-                            UpdateInfo(oldID, newID);
-                            successnum++;
-                        }
-                    }
-
-
-                }
-            }
-
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successnum}/{vieModel.SelectedMovie.Count}", GrowlToken);
+            //    if (oldID.IndexOf("-") > 0)
+            //    {
+            //        string num = oldID.Split('-').Last();
+            //        string eng = oldID.Remove(oldID.Length - num.Length, num.Length);
+            //        if (num.Length == 5 && eng.Replace("-", "").All(char.IsLetter))
+            //        {
+            //            string newID = eng + num.Remove(0, 2);
+            //            if (DataBase.SelectMovieByID(newID) == null)
+            //            {
+            //                Movie newMovie = DataBase.SelectMovieByID(oldID);
+            //                DataBase.DeleteByField("movie", "id", oldID);
+            //                newMovie.id = newID;
+            //                DataBase.InsertFullMovie(newMovie);
+            //                UpdateInfo(oldID, newID);
+            //                successnum++;
+            //            }
+            //        }
 
 
+            //    }
+            //}
+
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successnum}/{vieModel.SelectedVideo.Count}", GrowlToken);
 
 
 
 
-            vieModel.SelectedMovie.Clear();
-            SetSelected();
+
+
+            //vieModel.SelectedVideo.Clear();
+            //SetSelected();
         }
 
         private void UpdateInfo(string oldID, string newID)
         {
-            Movie movie = DataBase.SelectMovieByID(newID);
-            SetImage(ref movie);
+            //Movie movie = DataBase.SelectMovieByID(newID);
+            //SetImage(ref movie);
 
-            for (int i = 0; i < vieModel.CurrentMovieList.Count; i++)
-            {
-                try
-                {
-                    if (vieModel.CurrentMovieList[i]?.id.ToUpper() == oldID.ToUpper())
-                    {
-                        vieModel.CurrentMovieList[i] = null;
-                        vieModel.CurrentMovieList[i] = movie;
-                        break;
-                    }
-                }
-                catch { }
-            }
+            //for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
+            //{
+            //    try
+            //    {
+            //        if (vieModel.CurrentVideoList[i]?.id.ToUpper() == oldID.ToUpper())
+            //        {
+            //            vieModel.CurrentVideoList[i] = null;
+            //            vieModel.CurrentVideoList[i] = movie;
+            //            break;
+            //        }
+            //    }
+            //    catch { }
+            //}
 
 
-            for (int i = 0; i < vieModel.MovieList.Count; i++)
-            {
-                try
-                {
-                    if (vieModel.MovieList[i]?.id.ToUpper() == oldID.ToUpper())
-                    {
-                        vieModel.MovieList[i] = null;
-                        vieModel.MovieList[i] = movie;
-                        break;
-                    }
-                }
-                catch { }
-            }
+            //for (int i = 0; i < vieModel.MovieList.Count; i++)
+            //{
+            //    try
+            //    {
+            //        if (vieModel.MovieList[i]?.id.ToUpper() == oldID.ToUpper())
+            //        {
+            //            vieModel.MovieList[i] = null;
+            //            vieModel.MovieList[i] = movie;
+            //            break;
+            //        }
+            //    }
+            //    catch { }
+            //}
 
-            for (int i = 0; i < vieModel.FilterMovieList.Count; i++)
-            {
-                try
-                {
-                    if (vieModel.FilterMovieList[i]?.id.ToUpper() == oldID.ToUpper())
-                    {
-                        vieModel.FilterMovieList[i] = null;
-                        vieModel.FilterMovieList[i] = movie;
-                        break;
-                    }
-                }
-                catch { }
-            }
+            //for (int i = 0; i < vieModel.FilterMovieList.Count; i++)
+            //{
+            //    try
+            //    {
+            //        if (vieModel.FilterMovieList[i]?.id.ToUpper() == oldID.ToUpper())
+            //        {
+            //            vieModel.FilterMovieList[i] = null;
+            //            vieModel.FilterMovieList[i] = movie;
+            //            break;
+            //        }
+            //    }
+            //    catch { }
+            //}
         }
 
 
         public void CopyFile(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            StringCollection paths = new StringCollection();
-            int num = 0;
-            vieModel.SelectedMovie.ToList().ForEach(arg => { if (File.Exists(arg.filepath)) { paths.Add(arg.filepath); num++; } });
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //StringCollection paths = new StringCollection();
+            //int num = 0;
+            //vieModel.SelectedVideo.ToList().ForEach(arg => { if (File.Exists(arg.filepath)) { paths.Add(arg.filepath); num++; } });
 
-            if (paths.Count > 0 && ClipBoard.TrySetFileDropList(paths, GrowlToken, false))
-                HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_Copied} {num}/{vieModel.SelectedMovie.Count}", GrowlToken);
+            //if (paths.Count > 0 && ClipBoard.TrySetFileDropList(paths, GrowlToken, false))
+            //    HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_Copied} {num}/{vieModel.SelectedVideo.Count}", GrowlToken);
 
-            if (vieModel.SelectedMovie.Count == 1 && !File.Exists(vieModel.SelectedMovie[0].filepath))
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_FileNotExist, GrowlToken);
-
-
+            //if (vieModel.SelectedVideo.Count == 1 && !File.Exists(vieModel.SelectedVideo[0].filepath))
+            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_FileNotExist, GrowlToken);
 
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+
+
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
         public void DeleteFile(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
 
-            int num = 0;
-            vieModel.SelectedMovie.ToList().ForEach(arg =>
-            {
+            //int num = 0;
+            //vieModel.SelectedVideo.ToList().ForEach(arg =>
+            //{
 
-                if (arg.subsectionlist.Count > 0)
-                {
-                    //分段视频
-                    arg.subsectionlist.ForEach(path =>
-                {
-                    if (File.Exists(path))
-                    {
-                        try
-                        {
-                            FileSystem.DeleteFile(path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
-                            num++;
-                        }
-                        catch (Exception ex) { Logger.LogF(ex); }
-                    }
-                });
-                }
-                else
-                {
-                    if (File.Exists(arg.filepath))
-                    {
-                        try
-                        {
-                            FileSystem.DeleteFile(arg.filepath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
-                            num++;
-                        }
-                        catch (Exception ex) { Logger.LogF(ex); }
+            //    if (arg.subsectionlist.Count > 0)
+            //    {
+            //        //分段视频
+            //        arg.subsectionlist.ForEach(path =>
+            //    {
+            //        if (File.Exists(path))
+            //        {
+            //            try
+            //            {
+            //                FileSystem.DeleteFile(path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+            //                num++;
+            //            }
+            //            catch (Exception ex) { Logger.LogF(ex); }
+            //        }
+            //    });
+            //    }
+            //    else
+            //    {
+            //        if (File.Exists(arg.filepath))
+            //        {
+            //            try
+            //            {
+            //                FileSystem.DeleteFile(arg.filepath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+            //                num++;
+            //            }
+            //            catch (Exception ex) { Logger.LogF(ex); }
 
-                    }
-                }
-
-
-
-
-            });
-
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_DeleteToRecycleBin} {num}/{vieModel.SelectedMovie.Count}", GrowlToken);
-
-            if (num > 0 && Properties.Settings.Default.DelInfoAfterDelFile)
-            {
-                try
-                {
-                    vieModel.SelectedMovie.ToList().ForEach(arg =>
-                    {
-                        DataBase.DeleteByField("movie", "id", arg.id);
-                        vieModel.CurrentMovieList.Remove(arg); //从主界面删除
-                        vieModel.MovieList.Remove(arg);
-                        vieModel.FilterMovieList.Remove(arg);
-                    });
-
-                    //从详情窗口删除
-                    if (GetWindowByName("WindowDetails") != null)
-                    {
-                        WindowDetails windowDetails = GetWindowByName("WindowDetails") as WindowDetails;
-                        foreach (var item in vieModel.SelectedMovie.ToList())
-                        {
-                            if (windowDetails.vieModel.DetailMovie.id == item.id)
-                            {
-                                windowDetails.Close();
-                                break;
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                vieModel.Statistic();
-            }
+            //        }
+            //    }
 
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+
+            //});
+
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_DeleteToRecycleBin} {num}/{vieModel.SelectedVideo.Count}", GrowlToken);
+
+            //if (num > 0 && Properties.Settings.Default.DelInfoAfterDelFile)
+            //{
+            //    try
+            //    {
+            //        vieModel.SelectedVideo.ToList().ForEach(arg =>
+            //        {
+            //            DataBase.DeleteByField("movie", "id", arg.id);
+            //            vieModel.CurrentVideoList.Remove(arg); //从主界面删除
+            //            vieModel.MovieList.Remove(arg);
+            //            vieModel.FilterMovieList.Remove(arg);
+            //        });
+
+            //        //从详情窗口删除
+            //        if (GetWindowByName("WindowDetails") != null)
+            //        {
+            //            WindowDetails windowDetails = GetWindowByName("WindowDetails") as WindowDetails;
+            //            foreach (var item in vieModel.SelectedVideo.ToList())
+            //            {
+            //                if (windowDetails.vieModel.DetailMovie.id == item.id)
+            //                {
+            //                    windowDetails.Close();
+            //                    break;
+            //                }
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine(ex.Message);
+            //    }
+            //    vieModel.Statistic();
+            //}
+
+
+
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
-        public WindowEdit WindowEdit;
+
 
 
         public void EditInfo(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.EditMode) { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_NotEdit, GrowlToken); return; }
-            if (DownLoader?.State == DownLoadState.DownLoading) { HandyControl.Controls.Growl.Warning(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return; }
-            if (WindowEdit != null) { WindowEdit.Close(); }
+            WindowEdit?.Close();
             WindowEdit = new WindowEdit(GetIDFromMenuItem(sender));
             WindowEdit.ShowDialog();
 
@@ -2870,96 +2749,73 @@ namespace Jvedio
 
         public async void DeleteID(object sender, RoutedEventArgs e)
         {
-            if (DownLoader?.State == DownLoadState.DownLoading) { HandyControl.Controls.Growl.Warning(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return; }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (DownLoader?.State == DownLoadState.DownLoading) { HandyControl.Controls.Growl.Warning(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return; }
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
 
-            if (Properties.Settings.Default.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToDelete).ShowDialog() == false) { return; }
+            //if (Properties.Settings.Default.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToDelete).ShowDialog() == false) { return; }
 
-            vieModel.SelectedMovie.ToList().ForEach(arg =>
-            {
-                DataBase.DeleteByField("movie", "id", arg.id);
-                vieModel.CurrentMovieList.Remove(arg); //从主界面删除
-                vieModel.MovieList.Remove(arg);
-                vieModel.FilterMovieList.Remove(arg);
-            });
+            //vieModel.SelectedVideo.ToList().ForEach(arg =>
+            //{
+            //    DataBase.DeleteByField("movie", "id", arg.id);
+            //    vieModel.CurrentVideoList.Remove(arg); //从主界面删除
+            //    vieModel.MovieList.Remove(arg);
+            //    vieModel.FilterMovieList.Remove(arg);
+            //});
 
-            //从详情窗口删除
-            if (GetWindowByName("WindowDetails") != null)
-            {
-                WindowDetails windowDetails = GetWindowByName("WindowDetails") as WindowDetails;
-                foreach (var item in vieModel.SelectedMovie.ToList())
-                {
-                    if (windowDetails.vieModel.DetailMovie.id == item.id)
-                    {
-                        windowDetails.Close();
-                        break;
-                    }
-                }
-            }
+            ////从详情窗口删除
+            //if (GetWindowByName("WindowDetails") != null)
+            //{
+            //    WindowDetails windowDetails = GetWindowByName("WindowDetails") as WindowDetails;
+            //    foreach (var item in vieModel.SelectedVideo.ToList())
+            //    {
+            //        if (windowDetails.vieModel.DetailMovie.id == item.id)
+            //        {
+            //            windowDetails.Close();
+            //            break;
+            //        }
+            //    }
+            //}
 
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.SuccessDelete} {vieModel.SelectedMovie.Count} ", GrowlToken);
-            //修复数字显示
-            vieModel.CurrentCount -= vieModel.SelectedMovie.Count;
-            //vieModel.TotalCount -= vieModel.SelectedMovie.Count;
+            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.SuccessDelete} {vieModel.SelectedVideo.Count} ", GrowlToken);
+            ////修复数字显示
+            //vieModel.CurrentCount -= vieModel.SelectedVideo.Count;
+            ////vieModel.TotalCount -= vieModel.SelectedVideo.Count;
 
-            vieModel.SelectedMovie.Clear();
-            vieModel.Statistic();
+            //vieModel.SelectedVideo.Clear();
+            //vieModel.Statistic();
 
-            await Task.Run(() => { Task.Delay(1000).Wait(); });
+            //await Task.Run(() => { Task.Delay(1000).Wait(); });
 
 
-            vieModel.SelectedMovie.Clear();
-            Properties.Settings.Default.EditMode = false;
-            SetSelected();
+            //vieModel.SelectedVideo.Clear();
+            //Properties.Settings.Default.EditMode = false;
+            //SetSelected();
         }
 
 
         public void DeleteInfo(object sender, RoutedEventArgs e)
         {
-            if (DownLoader?.State == DownLoadState.DownLoading) { HandyControl.Controls.Growl.Warning(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return; }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
+            //    if (DownLoader?.State == DownLoadState.DownLoading) { HandyControl.Controls.Growl.Warning(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return; }
+            //    if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //    Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
+            //    if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
 
-            if (Properties.Settings.Default.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToClearInfo).ShowDialog() == false) { return; }
+            //    if (Properties.Settings.Default.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToClearInfo).ShowDialog() == false) { return; }
 
-            vieModel.SelectedMovie.ToList().ForEach(arg =>
-            {
-                DataBase.ClearInfoByID(arg.id);
-                RefreshMovieByID(arg.id);
-            });
-            vieModel.SelectedMovie.Clear();
-            Properties.Settings.Default.EditMode = false;
-            SetSelected();
-        }
-
-        public Movie GetMovieFromVieModel(string id)
-        {
-            foreach (Movie movie in vieModel.CurrentMovieList)
-            {
-                if (movie.id == id)
-                {
-                    return movie;
-                }
-            }
-            return null;
+            //    vieModel.SelectedVideo.ToList().ForEach(arg =>
+            //    {
+            //        DataBase.ClearInfoByID(arg.id);
+            //        RefreshMovieByID(arg.id);
+            //    });
+            //    vieModel.SelectedVideo.Clear();
+            //    Properties.Settings.Default.EditMode = false;
+            //    SetSelected();
         }
 
 
-        public Actress GetActressFromVieModel(string name)
-        {
-            foreach (Actress actress in vieModel.ActorList)
-            {
-                if (actress.name == name)
-                {
-                    return actress;
-                }
-            }
-            return null;
-        }
 
         public string GetFormatGenreString(List<Movie> movies, string type = "genre")
         {
@@ -3009,28 +2865,28 @@ namespace Jvedio
         //清空标签
         public void ClearLabel(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
 
-            foreach (var movie in this.vieModel.MovieList)
-            {
-                foreach (var item in vieModel.SelectedMovie)
-                {
-                    if (item.id == movie.id)
-                    {
-                        DataBase.UpdateMovieByID(item.id, "label", "", "String");
-                        break;
-                    }
-                }
-            }
-            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //foreach (var movie in this.vieModel.MovieList)
+            //{
+            //    foreach (var item in vieModel.SelectedVideo)
+            //    {
+            //        if (item.id == movie.id)
+            //        {
+            //            DataBase.UpdateMovieByID(item.id, "label", "", "String");
+            //            break;
+            //        }
+            //    }
+            //}
+            //HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
 
-            vieModel.GetLabelList();
+            //vieModel.GetLabelList();
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
         }
 
@@ -3039,18 +2895,18 @@ namespace Jvedio
         //删除单个影片标签
         public void DelSingleLabel(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.EditMode)
-            {
-                //HandyControl.Controls.Growl.Info("不支持批量", GrowlToken);
-                return;
-            }
+            //if (Properties.Settings.Default.EditMode)
+            //{
+            //    //HandyControl.Controls.Growl.Info("不支持批量", GrowlToken);
+            //    return;
+            //}
 
-            DetailMovie CurrentMovie = DataBase.SelectDetailMovieById(GetIDFromMenuItem(sender, 1));
-            LabelDelGrid.Visibility = Visibility.Visible;
-            vieModel.CurrentMovieLabelList = new List<string>();
-            vieModel.CurrentMovieLabelList = CurrentMovie.label.Split(' ').ToList();
-            CurrentLabelMovie = CurrentMovie;
-            LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
+            //DetailMovie CurrentMovie = DataBase.SelectDetailMovieById(GetIDFromMenuItem(sender, 1));
+            //LabelDelGrid.Visibility = Visibility.Visible;
+            //vieModel.CurrentMovieLabelList = new List<string>();
+            //vieModel.CurrentMovieLabelList = CurrentMovie.label.Split(' ').ToList();
+            //CurrentLabelMovie = CurrentMovie;
+            //LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
 
 
         }
@@ -3059,75 +2915,75 @@ namespace Jvedio
         //删除多个影片标签
         public void DelLabel(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
 
-            //string TotalLabel = GetFormatGenreString(vieModel.SelectedMovie,"label");
-            var di = new DialogInput(this, Jvedio.Language.Resources.InputTitle6, "");
-            di.ShowDialog();
-            if (di.DialogResult == true & di.Text != "")
-            {
-                foreach (var movie in this.vieModel.MovieList)
-                {
-                    foreach (var item in vieModel.SelectedMovie)
-                    {
-                        if (item.id == movie.id)
-                        {
-                            List<string> originlabel = LabelToList(movie.label);
-                            List<string> newlabel = LabelToList(di.Text);
-                            movie.label = string.Join(" ", originlabel.Except(newlabel).ToList());
-                            DataBase.UpdateMovieByID(item.id, "label", movie.label, "String");
-                            break;
-                        }
-                    }
+            ////string TotalLabel = GetFormatGenreString(vieModel.SelectedVideo,"label");
+            //var di = new DialogInput(this, Jvedio.Language.Resources.InputTitle6, "");
+            //di.ShowDialog();
+            //if (di.DialogResult == true & di.Text != "")
+            //{
+            //    foreach (var movie in this.vieModel.MovieList)
+            //    {
+            //        foreach (var item in vieModel.SelectedVideo)
+            //        {
+            //            if (item.id == movie.id)
+            //            {
+            //                List<string> originlabel = LabelToList(movie.label);
+            //                List<string> newlabel = LabelToList(di.Text);
+            //                movie.label = string.Join(" ", originlabel.Except(newlabel).ToList());
+            //                DataBase.UpdateMovieByID(item.id, "label", movie.label, "String");
+            //                break;
+            //            }
+            //        }
 
-                }
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
-                vieModel.GetLabelList();
-            }
+            //    }
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //    vieModel.GetLabelList();
+            //}
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
         //增加标签
         public void AddLabel(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            var di = new DialogInput(this, Jvedio.Language.Resources.InputTitle1, "");
-            di.ShowDialog();
-            if (di.DialogResult == true & di.Text != "")
-            {
-                foreach (var movie in this.vieModel.MovieList)
-                {
-                    foreach (var item in vieModel.SelectedMovie)
-                    {
-                        if (item.id == movie.id)
-                        {
-                            List<string> originlabel = LabelToList(movie.label);
-                            List<string> newlabel = LabelToList(di.Text);
-                            movie.label = string.Join(" ", originlabel.Union(newlabel).ToList());
-                            originlabel.ForEach(arg => Console.WriteLine(arg));
-                            newlabel.ForEach(arg => Console.WriteLine(arg));
-                            originlabel.Union(newlabel).ToList().ForEach(arg => Console.WriteLine(arg));
-                            DataBase.UpdateMovieByID(item.id, "label", movie.label, "String");
-                            break;
-                        }
-                    }
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //var di = new DialogInput(this, Jvedio.Language.Resources.InputTitle1, "");
+            //di.ShowDialog();
+            //if (di.DialogResult == true & di.Text != "")
+            //{
+            //    foreach (var movie in this.vieModel.MovieList)
+            //    {
+            //        foreach (var item in vieModel.SelectedVideo)
+            //        {
+            //            if (item.id == movie.id)
+            //            {
+            //                List<string> originlabel = LabelToList(movie.label);
+            //                List<string> newlabel = LabelToList(di.Text);
+            //                movie.label = string.Join(" ", originlabel.Union(newlabel).ToList());
+            //                originlabel.ForEach(arg => Console.WriteLine(arg));
+            //                newlabel.ForEach(arg => Console.WriteLine(arg));
+            //                originlabel.Union(newlabel).ToList().ForEach(arg => Console.WriteLine(arg));
+            //                DataBase.UpdateMovieByID(item.id, "label", movie.label, "String");
+            //                break;
+            //            }
+            //        }
 
-                }
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //    }
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
 
-                vieModel.GetLabelList();
+            //    vieModel.GetLabelList();
 
-            }
+            //}
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
 
@@ -3138,40 +2994,40 @@ namespace Jvedio
         private void OpenWeb(object sender, RoutedEventArgs e)
         {
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender));
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
 
-            vieModel.SelectedMovie.ToList().ForEach(arg =>
-            {
-                if (arg.sourceurl.IsProperUrl())
-                {
-                    FileHelper.TryOpenUrl(arg.GetSourceUrl(), GrowlToken);
-                }
-                else
-                {
-                    //为空则使用 bus 打开
-                    if (!string.IsNullOrEmpty(JvedioServers.Bus.Url) && JvedioServers.Bus.Url.IsProperUrl())
-                    {
-                        FileHelper.TryOpenUrl(JvedioServers.Bus.Url + arg.id, GrowlToken);
-                    }
-                    else if (arg.id.StartsWith("FC2") && JvedioServers.FC2.Url.IsProperUrl())
-                    {
-                        FileHelper.TryOpenUrl($"{JvedioServers.FC2.Url}article/{arg.id}/", GrowlToken);
-                    }
-                    else
-                    {
-                        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_UrlNotSet, GrowlToken);
-                    }
+            //vieModel.SelectedVideo.ToList().ForEach(arg =>
+            //{
+            //    if (arg.sourceurl.IsProperUrl())
+            //    {
+            //        FileHelper.TryOpenUrl(arg.GetSourceUrl(), GrowlToken);
+            //    }
+            //    else
+            //    {
+            //        //为空则使用 bus 打开
+            //        if (!string.IsNullOrEmpty(JvedioServers.Bus.Url) && JvedioServers.Bus.Url.IsProperUrl())
+            //        {
+            //            FileHelper.TryOpenUrl(JvedioServers.Bus.Url + arg.id, GrowlToken);
+            //        }
+            //        else if (arg.id.StartsWith("FC2") && JvedioServers.FC2.Url.IsProperUrl())
+            //        {
+            //            FileHelper.TryOpenUrl($"{JvedioServers.FC2.Url}article/{arg.id}/", GrowlToken);
+            //        }
+            //        else
+            //        {
+            //            HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_UrlNotSet, GrowlToken);
+            //        }
 
-                }
-            });
+            //    }
+            //});
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
 
-        private string GetIDFromMenuItem(object sender, int depth = 0)
+        private long GetIDFromMenuItem(object sender, int depth = 0)
         {
             MenuItem mnu = sender as MenuItem;
             ContextMenu contextMenu = null;
@@ -3184,93 +3040,69 @@ namespace Jvedio
                 MenuItem _mnu = mnu.Parent as MenuItem;
                 contextMenu = _mnu.Parent as ContextMenu;
             }
-            StackPanel sp = contextMenu.PlacementTarget as StackPanel;
-            return sp.Tag.ToString();
+            GifImage gifImage = contextMenu.PlacementTarget as GifImage;
+            return getDataID(gifImage);
         }
 
 
         private void DownLoadSelectMovie(object sender, RoutedEventArgs e)
         {
-            if (DownLoader?.State == DownLoadState.DownLoading)
-            {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
-            }
-            else if (!JvedioServers.IsProper())
-            {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
-            }
-            else
-            {
-                try
-                {
-                    if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-                    string id = GetIDFromMenuItem(sender);
-                    Movie CurrentMovie = GetMovieFromVieModel(id);
-                    if (CurrentMovie != null)
-                    {
-                        if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-                        StartDownload(vieModel.SelectedMovie.ToList());
-                    }
+            //if (DownLoader?.State == DownLoadState.DownLoading)
+            //{
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //}
+            //else if (!JvedioServers.IsProper())
+            //{
+            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //        string id = GetIDFromMenuItem(sender);
+            //        Movie CurrentMovie = GetMovieFromVieModel(id);
+            //        if (CurrentMovie != null)
+            //        {
+            //            if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //            StartDownload(vieModel.SelectedVideo.ToList());
+            //        }
 
 
-                }
-                catch (Exception ex) { Console.WriteLine(ex.StackTrace); Console.WriteLine(ex.Message); }
-            }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //    }
+            //    catch (Exception ex) { Console.WriteLine(ex.StackTrace); Console.WriteLine(ex.Message); }
+            //}
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
         private void ForceToDownLoad(object sender, RoutedEventArgs e)
         {
-            if (DownLoader?.State == DownLoadState.DownLoading)
-            {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
-            }
-            else if (!JvedioServers.IsProper())
-            {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
-            }
-            else
-            {
-                try
-                {
-                    if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-                    string id = GetIDFromMenuItem(sender, 1);
-                    Movie CurrentMovie = GetMovieFromVieModel(id);
-                    if (CurrentMovie != null)
-                    {
-                        if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-                        StartDownload(vieModel.SelectedMovie.ToList(), true);
-                    }
+            //if (DownLoader?.State == DownLoadState.DownLoading)
+            //{
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //}
+            //else if (!JvedioServers.IsProper())
+            //{
+            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //        string id = GetIDFromMenuItem(sender, 1);
+            //        Movie CurrentMovie = GetMovieFromVieModel(id);
+            //        if (CurrentMovie != null)
+            //        {
+            //            if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //            StartDownload(vieModel.SelectedVideo.ToList(), true);
+            //        }
 
 
-                }
-                catch (Exception ex) { Console.WriteLine(ex.StackTrace); Console.WriteLine(ex.Message); }
-            }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-        }
-        private void Canvas_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (ImageSlides == null) return;
-            Canvas canvas = (Canvas)sender;
-            int index = vieModel.CurrentMovieList.IndexOf(vieModel.CurrentMovieList.Where(arg => arg.id == canvas.ToolTip.ToString()).FirstOrDefault());
-            if (index < ImageSlides.Count)
-            {
-                ImageSlides[index].LoadAllImage();
-                ImageSlides[index].Start();
-            }
-
-        }
-
-        private void Canvas_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (ImageSlides == null) return;
-            Canvas canvas = (Canvas)sender;
-            int index = vieModel.CurrentMovieList.IndexOf(vieModel.CurrentMovieList.Where(arg => arg.id == canvas.ToolTip.ToString()).FirstOrDefault());
-            if (index >= 0 && index < ImageSlides.Count)
-            {
-                ImageSlides[index].Stop();
-            }
-
+            //    }
+            //    catch (Exception ex) { Console.WriteLine(ex.StackTrace); Console.WriteLine(ex.Message); }
+            //}
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
 
@@ -3515,10 +3347,10 @@ namespace Jvedio
             else vieModel.CurrentPage += 1;
 
             vieModel.AsyncFlipOver();
-            if (Properties.Settings.Default.EasyMode)
-                SimpleMovieScrollViewer.ScrollToTop();
-            else
-                MovieScrollViewer.ScrollToTop();
+            //if (Properties.Settings.Default.EasyMode)
+            //    SimpleMovieScrollViewer.ScrollToTop();
+            //else
+            MovieScrollViewer.ScrollToTop();
 
         }
 
@@ -3530,10 +3362,10 @@ namespace Jvedio
             else vieModel.CurrentPage -= 1;
 
             vieModel.AsyncFlipOver();
-            if (Properties.Settings.Default.EasyMode)
-                SimpleMovieScrollViewer.ScrollToTop();
-            else
-                MovieScrollViewer.ScrollToTop();
+            //if (Properties.Settings.Default.EasyMode)
+            //    SimpleMovieScrollViewer.ScrollToTop();
+            //else
+            MovieScrollViewer.ScrollToTop();
 
         }
 
@@ -3563,11 +3395,11 @@ namespace Jvedio
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.A & Properties.Settings.Default.EditMode)
             {
-                foreach (var item in vieModel.CurrentMovieList)
+                foreach (var item in vieModel.CurrentVideoList)
                 {
-                    if (!vieModel.SelectedMovie.Contains(item))
+                    if (!vieModel.SelectedVideo.Contains(item))
                     {
-                        vieModel.SelectedMovie.Add(item);
+                        vieModel.SelectedVideo.Add(item);
                     }
                 }
                 SetSelected();
@@ -3589,45 +3421,45 @@ namespace Jvedio
 
         public void DownLoadSelectedActor(object sender, RoutedEventArgs e)
         {
-            if (downLoadActress?.State == DownLoadState.DownLoading)
-            {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return;
-            }
+            //if (downLoadActress?.State == DownLoadState.DownLoading)
+            //{
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return;
+            //}
 
-            if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
-            StackPanel sp = null;
-            if (sender is MenuItem mnu)
-            {
-                sp = ((ContextMenu)mnu.Parent).PlacementTarget as StackPanel;
-                string name = sp.Tag.ToString();
-                Actress CurrentActress = GetActressFromVieModel(name);
-                if (!SelectedActress.Select(g => g.name).ToList().Contains(CurrentActress.name)) SelectedActress.Add(CurrentActress);
-                StartDownLoadActor(SelectedActress);
+            //if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
+            //StackPanel sp = null;
+            //if (sender is MenuItem mnu)
+            //{
+            //    sp = ((ContextMenu)mnu.Parent).PlacementTarget as StackPanel;
+            //    string name = sp.Tag.ToString();
+            //    Actress CurrentActress = GetActressFromVieModel(name);
+            //    if (!SelectedActress.Select(g => g.name).ToList().Contains(CurrentActress.name)) SelectedActress.Add(CurrentActress);
+            //    StartDownLoadActor(SelectedActress);
 
-            }
-            if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
+            //}
+            //if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
         }
 
         public void LikeSelectedActor(object sender, RoutedEventArgs e)
         {
 
-            if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
-            StackPanel sp = null;
-            if (sender is MenuItem mnu)
-            {
-                sp = ((ContextMenu)mnu.Parent).PlacementTarget as StackPanel;
-                string name = sp.Tag.ToString();
-                Actress CurrentActress = GetActressFromVieModel(name);
-                if (!SelectedActress.Select(g => g.name).ToList().Contains(CurrentActress.name)) SelectedActress.Add(CurrentActress);
-                DataBase.CreateTable(DataBase.SQLITETABLE_ACTRESS_LOVE);
-                foreach (Actress actress in SelectedActress)
-                {
-                    Actress newActress = DataBase.SelectInfoByActress(actress);
-                    DataBase.SaveActressLikeByName(newActress.name, newActress.like == 0 ? 1 : 0);
-                }
+            //if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
+            //StackPanel sp = null;
+            //if (sender is MenuItem mnu)
+            //{
+            //    sp = ((ContextMenu)mnu.Parent).PlacementTarget as StackPanel;
+            //    string name = sp.Tag.ToString();
+            //    Actress CurrentActress = GetActressFromVieModel(name);
+            //    if (!SelectedActress.Select(g => g.name).ToList().Contains(CurrentActress.name)) SelectedActress.Add(CurrentActress);
+            //    DataBase.CreateTable(DataBase.SQLITETABLE_ACTRESS_LOVE);
+            //    foreach (Actress actress in SelectedActress)
+            //    {
+            //        Actress newActress = DataBase.SelectInfoByActress(actress);
+            //        DataBase.SaveActressLikeByName(newActress.name, newActress.like == 0 ? 1 : 0);
+            //    }
 
-            }
-            if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
+            //}
+            //if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
 
         }
 
@@ -3726,6 +3558,8 @@ namespace Jvedio
 
 
         }
+
+
 
 
         private long getDataID(UIElement o)
@@ -3846,20 +3680,20 @@ namespace Jvedio
 
         private void Button_StartDownload(object sender, RoutedEventArgs e)
         {
-            DownloadPopup.IsOpen = false;
+            //DownloadPopup.IsOpen = false;
 
-            if (!JvedioServers.IsProper())
-            {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
+            //if (!JvedioServers.IsProper())
+            //{
+            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
 
-            }
-            else
-            {
-                if (DownLoader?.State == DownLoadState.DownLoading)
-                    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
-                else
-                    StartDownload(vieModel.CurrentMovieList.ToList());
-            }
+            //}
+            //else
+            //{
+            //    if (DownLoader?.State == DownLoadState.DownLoading)
+            //        HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //    else
+            //        StartDownload(vieModel.CurrentVideoList.ToList());
+            //}
 
 
         }
@@ -4019,7 +3853,7 @@ namespace Jvedio
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            vieModel.SelectedMovie.Clear();
+            vieModel.SelectedVideo.Clear();
             SetSelected();
         }
 
@@ -4151,8 +3985,7 @@ namespace Jvedio
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
         {
-            return;
-            vieModel.SelectedMovie.Clear();
+            vieModel.SelectedVideo.Clear();
             SetSelected();
         }
 
@@ -4318,24 +4151,24 @@ namespace Jvedio
 
         private void ManageLabel(object sender, RoutedEventArgs e)
         {
-            vieModel.GetLabelList();
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
+            //vieModel.GetLabelList();
+            //string id = GetIDFromMenuItem(sender, 1);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
 
 
 
-            LabelGrid.Visibility = Visibility.Visible;
-            for (int i = 0; i < vieModel.LabelList.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)LabelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelItemsControl.Items[i]);
-                WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
-                if (wrapPanel != null)
-                {
-                    ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
-                    toggleButton.IsChecked = false;
-                }
-            }
+            //LabelGrid.Visibility = Visibility.Visible;
+            //for (int i = 0; i < vieModel.LabelList.Count; i++)
+            //{
+            //    ContentPresenter c = (ContentPresenter)LabelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelItemsControl.Items[i]);
+            //    WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
+            //    if (wrapPanel != null)
+            //    {
+            //        ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
+            //        toggleButton.IsChecked = false;
+            //    }
+            //}
 
 
         }
@@ -4346,45 +4179,45 @@ namespace Jvedio
 
 
 
-            //获得选中的标签
-            List<string> originLabels = new List<string>();
-            for (int i = 0; i < vieModel.LabelList.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)LabelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelItemsControl.Items[i]);
-                WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
-                if (wrapPanel != null)
-                {
-                    ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
-                    if ((bool)toggleButton.IsChecked)
-                    {
-                        Match match = Regex.Match(toggleButton.Content.ToString(), @"\( \d+ \)");
-                        if (match != null && match.Value != "")
-                        {
-                            string label = toggleButton.Content.ToString().Replace(match.Value, "");
-                            if (!originLabels.Contains(label)) originLabels.Add(label);
-                        }
+            ////获得选中的标签
+            //List<string> originLabels = new List<string>();
+            //for (int i = 0; i < vieModel.LabelList.Count; i++)
+            //{
+            //    ContentPresenter c = (ContentPresenter)LabelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelItemsControl.Items[i]);
+            //    WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
+            //    if (wrapPanel != null)
+            //    {
+            //        ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
+            //        if ((bool)toggleButton.IsChecked)
+            //        {
+            //            Match match = Regex.Match(toggleButton.Content.ToString(), @"\( \d+ \)");
+            //            if (match != null && match.Value != "")
+            //            {
+            //                string label = toggleButton.Content.ToString().Replace(match.Value, "");
+            //                if (!originLabels.Contains(label)) originLabels.Add(label);
+            //            }
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
-            if (originLabels.Count <= 0)
-            {
-                //HandyControl.Controls.Growl.Warning("请选择标签！", GrowlToken);
-                return;
-            }
+            //if (originLabels.Count <= 0)
+            //{
+            //    //HandyControl.Controls.Growl.Warning("请选择标签！", GrowlToken);
+            //    return;
+            //}
 
 
-            foreach (Movie movie in vieModel.SelectedMovie)
-            {
-                List<string> labels = LabelToList(movie.label);
-                labels = labels.Union(originLabels).ToList();
-                movie.label = string.Join(" ", labels);
-                DataBase.UpdateMovieByID(movie.id, "label", movie.label, "String");
-            }
-            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            LabelGrid.Visibility = Visibility.Hidden;
+            //foreach (Movie movie in vieModel.SelectedVideo)
+            //{
+            //    List<string> labels = LabelToList(movie.label);
+            //    labels = labels.Union(originLabels).ToList();
+            //    movie.label = string.Join(" ", labels);
+            //    DataBase.UpdateMovieByID(movie.id, "label", movie.label, "String");
+            //}
+            //HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //LabelGrid.Visibility = Visibility.Hidden;
 
         }
 
@@ -4430,7 +4263,7 @@ namespace Jvedio
             LabelDelItemsControl.ItemsSource = null;
             LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
 
-            if (vieModel.CurrentMovieList.Count == 0)
+            if (vieModel.CurrentVideoList.Count == 0)
             {
                 HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
                 LabelDelGrid.Visibility = Visibility.Hidden;
@@ -4519,7 +4352,7 @@ namespace Jvedio
             LabelDelItemsControl.ItemsSource = null;
             LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
 
-            if (vieModel.CurrentMovieList.Count == 0)
+            if (vieModel.CurrentVideoList.Count == 0)
             {
                 HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
                 LabelDelGrid.Visibility = Visibility.Hidden;
@@ -4597,77 +4430,77 @@ namespace Jvedio
 
         private async void DownLoadWithUrl(object sender, RoutedEventArgs e)
         {
-            string id = GetIDFromMenuItem(sender, 1);
+            long id = GetIDFromMenuItem(sender, 1);
 
-            DialogInput dialogInput = new DialogInput(this, Jvedio.Language.Resources.InputTitle2);
-            if (dialogInput.ShowDialog() == true)
-            {
-                string url = dialogInput.Text;
-                if (!url.StartsWith("http"))
-                {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_WrongUrl, GrowlToken);
-                }
-                else
-                {
+            //DialogInput dialogInput = new DialogInput(this, Jvedio.Language.Resources.InputTitle2);
+            //if (dialogInput.ShowDialog() == true)
+            //{
+            //    string url = dialogInput.Text;
+            //    if (!url.StartsWith("http"))
+            //    {
+            //        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_WrongUrl, GrowlToken);
+            //    }
+            //    else
+            //    {
 
-                    string host = new Uri(url).Host;
-                    WebSite webSite = await new MyNet().CheckUrlType(url.Split(':')[0] + "://" + host);
-                    if (webSite == WebSite.None)
-                    {
-                        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_NotRecognize, GrowlToken);
-                    }
-                    else
-                    {
-                        if (webSite == WebSite.DMM || webSite == WebSite.Jav321)
-                        {
-                            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.NotSupport, GrowlToken);
-                        }
-                        else
-                        {
-                            HandyControl.Controls.Growl.Info($"{webSite} {Jvedio.Language.Resources.Message_BeginParse}", GrowlToken);
-                            bool result = await MyNet.ParseSpecifiedInfo(webSite, id, url);
-                            if (result)
-                            {
-                                HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_BeginDownloadImage, GrowlToken);
-                                //更新到主界面
-                                RefreshMovieByID(id);
+            //        string host = new Uri(url).Host;
+            //        WebSite webSite = await new MyNet().CheckUrlType(url.Split(':')[0] + "://" + host);
+            //        if (webSite == WebSite.None)
+            //        {
+            //            HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_NotRecognize, GrowlToken);
+            //        }
+            //        else
+            //        {
+            //            if (webSite == WebSite.DMM || webSite == WebSite.Jav321)
+            //            {
+            //                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.NotSupport, GrowlToken);
+            //            }
+            //            else
+            //            {
+            //                HandyControl.Controls.Growl.Info($"{webSite} {Jvedio.Language.Resources.Message_BeginParse}", GrowlToken);
+            //                bool result = await MyNet.ParseSpecifiedInfo(webSite, id, url);
+            //                if (result)
+            //                {
+            //                    HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_BeginDownloadImage, GrowlToken);
+            //                    //更新到主界面
+            //                    RefreshMovieByID(id);
 
-                                //下载图片
-                                DetailMovie dm = DataBase.SelectDetailMovieById(id);
-                                //下载小图
-                                await MyNet.DownLoadSmallPic(dm, true);
-                                dm.smallimage = ImageProcess.GetBitmapImage(dm.id, "SmallPic");
-                                RefreshMovieByID(id);
-
-
-                                if (dm.sourceurl?.IndexOf("fc2club") >= 0)
-                                {
-                                    //复制大图
-                                    if (File.Exists(GlobalVariable.BasePicPath + $"SmallPic\\{dm.id}.jpg") & !File.Exists(GlobalVariable.BasePicPath + $"BigPic\\{dm.id}.jpg"))
-                                    {
-                                        FileHelper.TryCopyFile(GlobalVariable.BasePicPath + $"SmallPic\\{dm.id}.jpg", GlobalVariable.BasePicPath + $"BigPic\\{dm.id}.jpg");
-                                    }
-                                }
-                                else
-                                {
-                                    //下载大图
-                                    await MyNet.DownLoadBigPic(dm, true);
-                                }
-                                dm.bigimage = ImageProcess.GetBitmapImage(dm.id, "BigPic");
-                                RefreshMovieByID(id);
+            //                    //下载图片
+            //                    DetailMovie dm = DataBase.SelectDetailMovieById(id);
+            //                    //下载小图
+            //                    await MyNet.DownLoadSmallPic(dm, true);
+            //                    dm.smallimage = ImageProcess.GetBitmapImage(dm.id, "SmallPic");
+            //                    RefreshMovieByID(id);
 
 
-                            }
-                            else
-                            {
-                                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_Fail, GrowlToken);
-                            }
-                        }
-                    }
-                }
+            //                    if (dm.sourceurl?.IndexOf("fc2club") >= 0)
+            //                    {
+            //                        //复制大图
+            //                        if (File.Exists(GlobalVariable.BasePicPath + $"SmallPic\\{dm.id}.jpg") & !File.Exists(GlobalVariable.BasePicPath + $"BigPic\\{dm.id}.jpg"))
+            //                        {
+            //                            FileHelper.TryCopyFile(GlobalVariable.BasePicPath + $"SmallPic\\{dm.id}.jpg", GlobalVariable.BasePicPath + $"BigPic\\{dm.id}.jpg");
+            //                        }
+            //                    }
+            //                    else
+            //                    {
+            //                        //下载大图
+            //                        await MyNet.DownLoadBigPic(dm, true);
+            //                    }
+            //                    dm.bigimage = ImageProcess.GetBitmapImage(dm.id, "BigPic");
+            //                    RefreshMovieByID(id);
 
 
-            }
+            //                }
+            //                else
+            //                {
+            //                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_Fail, GrowlToken);
+            //                }
+            //            }
+            //        }
+            //    }
+
+
+            //}
         }
 
         private void Image_DragOver(object sender, DragEventArgs e)
@@ -5112,7 +4945,7 @@ namespace Jvedio
                 MyListItem myListItem = vieModel.MyList.Where(arg => arg.Name == listName).FirstOrDefault();
                 vieModel.MyList.Remove(myListItem);
                 ReMoveFromMyList(listName);
-                vieModel.CurrentMovieList.Clear();
+                vieModel.CurrentVideoList.Clear();
             }
 
         }
@@ -5202,7 +5035,7 @@ namespace Jvedio
 
         private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            if (vieModel.IsLoadingMovie)
+            if (vieModel.IsLoadingMovie || Properties.Settings.Default.EditMode)
             {
                 e.Handled = true;
                 return;
@@ -5335,19 +5168,19 @@ namespace Jvedio
 
         private void MyListItemClick(object sender, EventArgs e)
         {
-            MenuItem menuItem = sender as MenuItem;
-            string table = menuItem.Header.ToString();
-            string id = GetIDFromMenuItem(sender, 1);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            foreach (Movie movie in vieModel.SelectedMovie)
-            {
-                Movie newMovie = DataBase.SelectMovieByID(movie.id);
-                MySqlite dB = new MySqlite("mylist");
-                dB.InsertFullMovie(newMovie, table);
-                dB.CloseDB();
-                InitMyList();
-            }
+            //MenuItem menuItem = sender as MenuItem;
+            //string table = menuItem.Header.ToString();
+            //string id = GetIDFromMenuItem(sender, 1);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //foreach (Movie movie in vieModel.SelectedVideo)
+            //{
+            //    Movie newMovie = DataBase.SelectMovieByID(movie.id);
+            //    MySqlite dB = new MySqlite("mylist");
+            //    dB.InsertFullMovie(newMovie, table);
+            //    dB.CloseDB();
+            //    InitMyList();
+            //}
 
         }
 
@@ -5465,74 +5298,74 @@ namespace Jvedio
 
         private async void RemoveFromList(object sender, RoutedEventArgs e)
         {
-            string table = GetCurrentList();
-            if (string.IsNullOrEmpty(table)) return;
+            //string table = GetCurrentList();
+            //if (string.IsNullOrEmpty(table)) return;
 
 
 
 
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
-            string id = GetIDFromMenuItem(sender, 0);
-            Movie CurrentMovie = GetMovieFromVieModel(id);
-            if (!vieModel.SelectedMovie.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedMovie.Add(CurrentMovie);
-            if (Properties.Settings.Default.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToRemove).ShowDialog() == false) return;
-            MySqlite dB = new MySqlite("mylist");
-            vieModel.SelectedMovie.ToList().ForEach(arg =>
-                {
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            //string id = GetIDFromMenuItem(sender, 0);
+            //Movie CurrentMovie = GetMovieFromVieModel(id);
+            //if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
+            //if (Properties.Settings.Default.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToRemove).ShowDialog() == false) return;
+            //MySqlite dB = new MySqlite("mylist");
+            //vieModel.SelectedVideo.ToList().ForEach(arg =>
+            //    {
 
-                    dB.DeleteByField(table, "id", arg.id);
+            //        dB.DeleteByField(table, "id", arg.id);
 
-                    vieModel.CurrentMovieList.Remove(arg); //从主界面删除
-                    vieModel.MovieList.Remove(arg);
-                    vieModel.FilterMovieList.Remove(arg);
-                });
-            dB.Close();
-            //从详情窗口删除
-            if (GetWindowByName("WindowDetails") != null)
-            {
-                WindowDetails windowDetails = GetWindowByName("WindowDetails") as WindowDetails;
-                foreach (var item in vieModel.SelectedMovie.ToList())
-                {
-                    if (windowDetails.vieModel.DetailMovie.id == item.id)
-                    {
-                        windowDetails.Close();
-                        break;
-                    }
-                }
-            }
+            //        vieModel.CurrentVideoList.Remove(arg); //从主界面删除
+            //        vieModel.MovieList.Remove(arg);
+            //        vieModel.FilterMovieList.Remove(arg);
+            //    });
+            //dB.Close();
+            ////从详情窗口删除
+            //if (GetWindowByName("WindowDetails") != null)
+            //{
+            //    WindowDetails windowDetails = GetWindowByName("WindowDetails") as WindowDetails;
+            //    foreach (var item in vieModel.SelectedVideo.ToList())
+            //    {
+            //        if (windowDetails.vieModel.DetailMovie.id == item.id)
+            //        {
+            //            windowDetails.Close();
+            //            break;
+            //        }
+            //    }
+            //}
 
-            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
-            //修复数字显示
-            vieModel.CurrentCount -= vieModel.SelectedMovie.Count;
-            //vieModel.TotalCount -= vieModel.SelectedMovie.Count;
+            //HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            ////修复数字显示
+            //vieModel.CurrentCount -= vieModel.SelectedVideo.Count;
+            ////vieModel.TotalCount -= vieModel.SelectedVideo.Count;
 
-            vieModel.SelectedMovie.Clear();
+            //vieModel.SelectedVideo.Clear();
 
-            await Task.Run(() => { Task.Delay(100).Wait(); });
-            //ListItemsControl.ItemsSource = null;
-            //ListItemsControl.ItemsSource = vieModel.MyList;
+            //await Task.Run(() => { Task.Delay(100).Wait(); });
+            ////ListItemsControl.ItemsSource = null;
+            ////ListItemsControl.ItemsSource = vieModel.MyList;
 
-            //侧边栏选项选中
-            for (int i = 0; i < ListItemsControl.Items.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)ListItemsControl.ItemContainerGenerator.ContainerFromItem(ListItemsControl.Items[i]);
-                StackPanel stackPanel = FindElementByName<StackPanel>(c, "ListStackPanel");
-                if (stackPanel != null)
-                {
-                    var grids = stackPanel.Children.OfType<Grid>().ToList();
-                    foreach (Grid grid in grids)
-                    {
-                        RadioButton radioButton = grid.Children.OfType<RadioButton>().First();
-                        if (radioButton != null && radioButton.Content.ToString() == table)
-                        {
-                            radioButton.IsChecked = true;
-                            break;
-                        }
-                    }
+            ////侧边栏选项选中
+            //for (int i = 0; i < ListItemsControl.Items.Count; i++)
+            //{
+            //    ContentPresenter c = (ContentPresenter)ListItemsControl.ItemContainerGenerator.ContainerFromItem(ListItemsControl.Items[i]);
+            //    StackPanel stackPanel = FindElementByName<StackPanel>(c, "ListStackPanel");
+            //    if (stackPanel != null)
+            //    {
+            //        var grids = stackPanel.Children.OfType<Grid>().ToList();
+            //        foreach (Grid grid in grids)
+            //        {
+            //            RadioButton radioButton = grid.Children.OfType<RadioButton>().First();
+            //            if (radioButton != null && radioButton.Content.ToString() == table)
+            //            {
+            //                radioButton.IsChecked = true;
+            //                break;
+            //            }
+            //        }
 
-                }
-            }
-            if (!Properties.Settings.Default.EditMode) vieModel.SelectedMovie.Clear();
+            //    }
+            //}
+            //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
 
@@ -5720,7 +5553,7 @@ namespace Jvedio
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            vieModel.CurrentMovieList.Clear();
+            vieModel.CurrentVideoList.Clear();
         }
 
         private void CopyText(object sender, MouseButtonEventArgs e)
@@ -6393,6 +6226,78 @@ namespace Jvedio
 
 
         }
+
+
+        bool canDrawSelect = false;
+        System.Windows.Shapes.Rectangle rectangle;
+        System.Windows.Point startPoint;
+        private void BeginDrawSelect(object sender, MouseButtonEventArgs e)
+        {
+            return;
+            if (!Properties.Settings.Default.EditMode) return;
+            Panel.SetZIndex(DragSelectCanvas, 1);
+            canDrawSelect = true;
+            rectangle = new System.Windows.Shapes.Rectangle();
+            rectangle.Height = 0;
+            rectangle.Width = 0;
+            rectangle.Fill = GlobalStyle.Common.HighLight.Background;
+            rectangle.Stroke = GlobalStyle.Common.HighLight.BorderBrush;
+            rectangle.Opacity = 0.8;
+            rectangle.StrokeThickness = 1;
+            rectangle.MouseLeftButtonUp += DragSelectCanvas_MouseUp;
+            rectangle.MouseMove += DrawSelect;
+
+            DragSelectCanvas.Children.Add(rectangle);
+            startPoint = e.GetPosition(DragSelectCanvas);
+            Canvas.SetLeft(rectangle, startPoint.X);
+            Canvas.SetTop(rectangle, startPoint.Y);
+            (sender as FrameworkElement).CaptureMouse();
+        }
+
+
+        // todo 拖动选择
+        private void DrawSelect(object sender, MouseEventArgs e)
+        {
+            return;
+            if (canDrawSelect)
+            {
+                System.Windows.Point point = e.GetPosition(DragSelectCanvas);
+                double x = point.X - startPoint.X;
+                double y = point.Y - startPoint.Y;
+                Console.WriteLine($"({x},{y})");
+                rectangle.Width = Math.Abs(x);
+                rectangle.Height = Math.Abs(y);
+                if (x < 0)
+                {
+                    Canvas.SetLeft(rectangle, point.X);
+                }
+
+                if (y < 0)
+                {
+                    Canvas.SetTop(rectangle, point.Y);
+                }
+
+            }
+
+        }
+
+        private void DragSelectCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            return;
+            cancelDrawSelect();
+            (sender as FrameworkElement).ReleaseMouseCapture();
+        }
+
+
+
+        private void cancelDrawSelect()
+        {
+            canDrawSelect = false;
+            DragSelectCanvas.Children.Clear();
+            Panel.SetZIndex(DragSelectCanvas, -1);
+
+        }
+
 
     }
     public class ScrollViewerBehavior

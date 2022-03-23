@@ -1309,18 +1309,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EditWindow_ShowMore {
-            get {
-                return ((bool)(this["EditWindow_ShowMore"]));
-            }
-            set {
-                this["EditWindow_ShowMore"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int SearchCandidateMaxCount {
             get {
@@ -1844,6 +1832,18 @@ namespace Jvedio.Properties {
             }
             set {
                 this["ShowSideTagStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TeenMode {
+            get {
+                return ((bool)(this["TeenMode"]));
+            }
+            set {
+                this["TeenMode"] = value;
             }
         }
     }

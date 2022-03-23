@@ -3058,6 +3058,15 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
+        ///   查找类似 大纲 的本地化字符串。
+        /// </summary>
+        public static string Outline {
+            get {
+                return ResourceManager.GetString("Outline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 覆盖已有文件 的本地化字符串。
         /// </summary>
         public static string overwrite {
@@ -3832,7 +3841,7 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
-        ///   查找类似 ---显示其他选项--- 的本地化字符串。
+        ///   查找类似 其他 的本地化字符串。
         /// </summary>
         public static string ShowOtherOptions {
             get {
@@ -4332,6 +4341,15 @@ namespace Jvedio.Language {
         public static string TaskSettings {
             get {
                 return ResourceManager.GetString("TaskSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 青少年模式 的本地化字符串。
+        /// </summary>
+        public static string TeenMode {
+            get {
+                return ResourceManager.GetString("TeenMode", resourceCulture);
             }
         }
         

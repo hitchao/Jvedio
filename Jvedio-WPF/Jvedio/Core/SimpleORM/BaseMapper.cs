@@ -79,7 +79,15 @@ namespace Jvedio.Core.SimpleORM
 
         public override T selectById(IWrapper<T> wrapper)
         {
-            throw new NotImplementedException();
+            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            {
+                return SqliteMapper.selectById(wrapper);
+            }
+            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            {
+                return MySQLMapper.selectById(wrapper);
+            }
+            return default(T);
         }
 
         public override long selectCount(IWrapper<T> wrapper = null)

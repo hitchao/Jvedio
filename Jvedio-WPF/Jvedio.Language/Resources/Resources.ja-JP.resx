@@ -709,7 +709,7 @@
     <value>保存する</value>
   </data>
   <data name="ShowOtherOptions" xml:space="preserve">
-    <value>---他のオプションを表示---</value>
+    <value>他のオ</value>
   </data>
   <data name="ShowRecentCreate" xml:space="preserve">
     <value>最近作成された日数を表示する（日）</value>
@@ -1742,5 +1742,11 @@
   </data>
   <data name="Get" xml:space="preserve">
     <value>取得</value>
+  </data>
+  <data name="TeenMode" xml:space="preserve">
+    <value>TeenMode</value>
+  </data>
+  <data name="Outline" xml:space="preserve">
+    <value>要綱</value>
   </data>
 </root>

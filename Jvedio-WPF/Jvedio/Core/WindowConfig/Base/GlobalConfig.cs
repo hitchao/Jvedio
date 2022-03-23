@@ -11,11 +11,13 @@ namespace Jvedio
     {
         public static StartUp StartUp = StartUp.createInstance();
         public static Jvedio.Core.WindowConfig.Main Main = Jvedio.Core.WindowConfig.Main.createInstance();
+        public static Jvedio.Core.WindowConfig.Edit Edit = Jvedio.Core.WindowConfig.Edit.createInstance();
 
         static GlobalConfig()
         {
             StartUp.Read();
             Main.Read();
+            Edit.Read();
         }
     }
 }

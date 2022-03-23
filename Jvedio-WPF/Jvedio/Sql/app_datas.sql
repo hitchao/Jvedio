@@ -128,12 +128,11 @@ create table common_url_code (
     WebType VARCHAR(100),
     
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    unique(ValueType,WebType,LocalValue,RemoteValue)
 );
 CREATE INDEX common_url_code_idx_VID ON common_url_code (ValueType,WebType,LocalValue);
 COMMIT;
-insert into common_url_code(LocalValue,RemoteValue,WebType)
-values ('ABCD-123','1BKY9','db');
 
 
 -- Beauty 颜值打分

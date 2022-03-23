@@ -102,7 +102,7 @@ namespace Jvedio
         // *************** 数据库***************
 
 
-
+        public static string SupportVideoFormat = $"{Jvedio.Language.Resources.NormalVedio}(*.avi, *.mp4, *.mkv, *.mpg, *.rmvb)| *.avi; *.mp4; *.mkv; *.mpg; *.rmvb|{Jvedio.Language.Resources.OtherVedio}((*.rm, *.mov, *.mpeg, *.flv, *.wmv, *.m4v)| *.rm; *.mov; *.mpeg; *.flv; *.wmv; *.m4v|{Jvedio.Language.Resources.AllFile} (*.*)|*.*";
 
 
 
@@ -174,6 +174,8 @@ namespace Jvedio
 
 
         public static FontFamily GlobalFont = null;
+
+
 
         #region "热键"
         [DllImport("user32.dll")]

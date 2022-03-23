@@ -494,9 +494,9 @@ namespace Jvedio
         public void EditInfo(object sender, RoutedEventArgs e)
         {
 
-            if (WindowEdit != null) WindowEdit.Close();
-            WindowEdit = new WindowEdit(vieModel.DetailMovie.id);
-            WindowEdit.Show();
+            //if (WindowEdit != null) WindowEdit.Close();
+            //WindowEdit = new WindowEdit(vieModel.DetailMovie.id);
+            //WindowEdit.Show();
         }
 
 
@@ -545,45 +545,45 @@ namespace Jvedio
 
             }
 
-            if (!Properties.Settings.Default.DetialWindowShowAllMovie)
-            {
+            //if (!Properties.Settings.Default.DetialWindowShowAllMovie)
+            //{
 
-                windowMain = App.Current.Windows[0] as Main;
+            //    windowMain = App.Current.Windows[0] as Main;
 
-                for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
-                {
-                    if (vieModel.DetailMovie.id.ToLower() == windowMain.vieModel.CurrentMovieList[i].id.ToLower())
-                    {
-                        if (i == 0) { id = windowMain.vieModel.CurrentMovieList[windowMain.vieModel.CurrentMovieList.Count - 1].id; }
-                        else { id = windowMain.vieModel.CurrentMovieList[i - 1].id; }
-                        break;
-                    }
-                }
+            //    for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
+            //    {
+            //        if (vieModel.DetailMovie.id.ToLower() == windowMain.vieModel.CurrentMovieList[i].id.ToLower())
+            //        {
+            //            if (i == 0) { id = windowMain.vieModel.CurrentMovieList[windowMain.vieModel.CurrentMovieList.Count - 1].id; }
+            //            else { id = windowMain.vieModel.CurrentMovieList[i - 1].id; }
+            //            break;
+            //        }
+            //    }
 
-            }
-            else
-            {
-                for (int i = 0; i < MovieIDs.Count; i++)
-                {
-                    if (vieModel.DetailMovie.id.ToLower() == MovieIDs[i].ToLower())
-                    {
-                        if (i == 0) { id = MovieIDs[MovieIDs.Count - 1]; }
-                        else { id = MovieIDs[i - 1]; }
-                        break;
-                    }
-                }
-            }
-
-
+            //}
+            //else
+            //{
+            //    for (int i = 0; i < MovieIDs.Count; i++)
+            //    {
+            //        if (vieModel.DetailMovie.id.ToLower() == MovieIDs[i].ToLower())
+            //        {
+            //            if (i == 0) { id = MovieIDs[MovieIDs.Count - 1]; }
+            //            else { id = MovieIDs[i - 1]; }
+            //            break;
+            //        }
+            //    }
+            //}
 
 
 
-            if (id != "")
-            {
-                vieModel.CleanUp();
-                vieModel.Query(id);
-                vieModel.SelectImageIndex = 0;
-            }
+
+
+            //if (id != "")
+            //{
+            //    vieModel.CleanUp();
+            //    vieModel.Query(id);
+            //    vieModel.SelectImageIndex = 0;
+            //}
 
 
 
@@ -598,45 +598,45 @@ namespace Jvedio
             cancelLoadImage = true;
             string id = "";
             //加载所有影片
-            if (Properties.Settings.Default.DetialWindowShowAllMovie && MovieIDs.Count <= 0)
-            {
-                MovieIDs = DataBase.SelectPartialInfo("SELECT * FROM movie").Select(arg => arg.id).ToList();
-            }
+            //if (Properties.Settings.Default.DetialWindowShowAllMovie && MovieIDs.Count <= 0)
+            //{
+            //    MovieIDs = DataBase.SelectPartialInfo("SELECT * FROM movie").Select(arg => arg.id).ToList();
+            //}
 
-            if (!Properties.Settings.Default.DetialWindowShowAllMovie)
-            {
-                windowMain = App.Current.Windows[0] as Main;
+            //if (!Properties.Settings.Default.DetialWindowShowAllMovie)
+            //{
+            //    windowMain = App.Current.Windows[0] as Main;
 
-                for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
-                {
-                    if (vieModel.DetailMovie.id == windowMain.vieModel.CurrentMovieList[i].id)
-                    {
-                        if (i == windowMain.vieModel.CurrentMovieList.Count - 1) { id = windowMain.vieModel.CurrentMovieList[0].id; }
-                        else { id = windowMain.vieModel.CurrentMovieList[i + 1].id; }
-                        break;
-                    }
-                }
-            }
-            else
-            {
+            //    for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
+            //    {
+            //        if (vieModel.DetailMovie.id == windowMain.vieModel.CurrentMovieList[i].id)
+            //        {
+            //            if (i == windowMain.vieModel.CurrentMovieList.Count - 1) { id = windowMain.vieModel.CurrentMovieList[0].id; }
+            //            else { id = windowMain.vieModel.CurrentMovieList[i + 1].id; }
+            //            break;
+            //        }
+            //    }
+            //}
+            //else
+            //{
 
-                for (int i = 0; i < MovieIDs.Count; i++)
-                {
-                    if (vieModel.DetailMovie.id.ToLower() == MovieIDs[i].ToLower())
-                    {
-                        if (i == MovieIDs.Count - 1) { id = MovieIDs[0]; }
-                        else { id = MovieIDs[i + 1]; }
-                        break;
-                    }
-                }
-            }
+            //    for (int i = 0; i < MovieIDs.Count; i++)
+            //    {
+            //        if (vieModel.DetailMovie.id.ToLower() == MovieIDs[i].ToLower())
+            //        {
+            //            if (i == MovieIDs.Count - 1) { id = MovieIDs[0]; }
+            //            else { id = MovieIDs[i + 1]; }
+            //            break;
+            //        }
+            //    }
+            //}
 
-            if (id != "")
-            {
-                vieModel.CleanUp();
-                vieModel.Query(id);
-                vieModel.SelectImageIndex = 0;
-            }
+            //if (id != "")
+            //{
+            //    vieModel.CleanUp();
+            //    vieModel.Query(id);
+            //    vieModel.SelectImageIndex = 0;
+            //}
 
 
 
@@ -814,59 +814,59 @@ namespace Jvedio
         private void RefreshUI(string smallPicPath, string BigPicPath = "")
         {
             windowMain = App.Current.Windows[0] as Main;
-            for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
-            {
-                try
-                {
-                    if (windowMain.vieModel.CurrentMovieList[i]?.id == vieModel.DetailMovie.id)
-                    {
-                        Movie movie = windowMain.vieModel.CurrentMovieList[i];
-                        BitmapSource smallimage = movie.smallimage;
-                        BitmapSource bigimage = movie.bigimage;
+            //for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
+            //{
+            //    try
+            //    {
+            //        if (windowMain.vieModel.CurrentMovieList[i]?.id == vieModel.DetailMovie.id)
+            //        {
+            //            Movie movie = windowMain.vieModel.CurrentMovieList[i];
+            //            BitmapSource smallimage = movie.smallimage;
+            //            BitmapSource bigimage = movie.bigimage;
 
-                        if (smallPicPath != "") movie.bigimage = null;
-                        if (BigPicPath != "") movie.smallimage = null;
-                        windowMain.vieModel.CurrentMovieList[i] = null;
-                        if (smallPicPath != "") movie.smallimage = BitmapImageFromFile(smallPicPath);
-                        if (BigPicPath != "") movie.bigimage = BitmapImageFromFile(BigPicPath);
+            //            if (smallPicPath != "") movie.bigimage = null;
+            //            if (BigPicPath != "") movie.smallimage = null;
+            //            windowMain.vieModel.CurrentMovieList[i] = null;
+            //            if (smallPicPath != "") movie.smallimage = BitmapImageFromFile(smallPicPath);
+            //            if (BigPicPath != "") movie.bigimage = BitmapImageFromFile(BigPicPath);
 
-                        if (movie.bigimage == null && bigimage != null) movie.bigimage = bigimage;
-                        if (movie.smallimage == null && smallimage != null) movie.smallimage = smallimage;
+            //            if (movie.bigimage == null && bigimage != null) movie.bigimage = bigimage;
+            //            if (movie.smallimage == null && smallimage != null) movie.smallimage = smallimage;
 
-                        windowMain.vieModel.CurrentMovieList[i] = movie;
-                    }
-                }
-                catch (Exception ex1)
-                {
-                    Console.WriteLine(ex1.StackTrace);
-                    Console.WriteLine(ex1.Message);
-                }
-            }
+            //            windowMain.vieModel.CurrentMovieList[i] = movie;
+            //        }
+            //    }
+            //    catch (Exception ex1)
+            //    {
+            //        Console.WriteLine(ex1.StackTrace);
+            //        Console.WriteLine(ex1.Message);
+            //    }
+            //}
         }
 
 
         public void RefreshFavorites()
         {
-            windowMain = App.Current.Windows[0] as Main;
-            for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
-            {
-                try
-                {
-                    if (windowMain.vieModel.CurrentMovieList[i]?.id == vieModel.DetailMovie.id)
-                    {
-                        Movie movie = windowMain.vieModel.CurrentMovieList[i];
-                        windowMain.vieModel.CurrentMovieList[i] = null;
-                        movie.favorites = vieModel.DetailMovie.favorites;
-                        windowMain.vieModel.CurrentMovieList[i] = movie;
-                        windowMain.vieModel.Statistic();
-                    }
-                }
-                catch (Exception ex1)
-                {
-                    Console.WriteLine(ex1.StackTrace);
-                    Console.WriteLine(ex1.Message);
-                }
-            }
+            //windowMain = App.Current.Windows[0] as Main;
+            //for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
+            //{
+            //    try
+            //    {
+            //        if (windowMain.vieModel.CurrentMovieList[i]?.id == vieModel.DetailMovie.id)
+            //        {
+            //            Movie movie = windowMain.vieModel.CurrentMovieList[i];
+            //            windowMain.vieModel.CurrentMovieList[i] = null;
+            //            movie.favorites = vieModel.DetailMovie.favorites;
+            //            windowMain.vieModel.CurrentMovieList[i] = movie;
+            //            windowMain.vieModel.Statistic();
+            //        }
+            //    }
+            //    catch (Exception ex1)
+            //    {
+            //        Console.WriteLine(ex1.StackTrace);
+            //        Console.WriteLine(ex1.Message);
+            //    }
+            //}
         }
 
 
@@ -978,26 +978,26 @@ namespace Jvedio
 
         public void DeleteID(object sender, RoutedEventArgs e)
         {
-            DataBase.DeleteByField("movie", "id", vieModel.DetailMovie.id);
-            windowMain = App.Current.Windows[0] as Main;
-            var movie = windowMain.vieModel.CurrentMovieList.Where(arg => arg.id == vieModel.DetailMovie.id).First();
+            //    DataBase.DeleteByField("movie", "id", vieModel.DetailMovie.id);
+            //    windowMain = App.Current.Windows[0] as Main;
+            //    var movie = windowMain.vieModel.CurrentMovieList.Where(arg => arg.id == vieModel.DetailMovie.id).First();
 
-            if (windowMain.vieModel.CurrentMovieList.Count > 1)
-            {
-                NextMovie(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
-            }
+            //    if (windowMain.vieModel.CurrentMovieList.Count > 1)
+            //    {
+            //        NextMovie(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            //        HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //    }
 
-            //从主界面删除
-            windowMain.vieModel.CurrentMovieList.Remove(movie);
-            windowMain.vieModel.MovieList.Remove(movie);
-            windowMain.vieModel.FilterMovieList.Remove(movie);
-            windowMain.vieModel.Statistic();
+            //    //从主界面删除
+            //    windowMain.vieModel.CurrentMovieList.Remove(movie);
+            //    windowMain.vieModel.MovieList.Remove(movie);
+            //    windowMain.vieModel.FilterMovieList.Remove(movie);
+            //    windowMain.vieModel.Statistic();
 
-            if (windowMain.vieModel.CurrentMovieList.Count == 0)
-            {
-                this.Close();
-            }
+            //    if (windowMain.vieModel.CurrentMovieList.Count == 0)
+            //    {
+            //        this.Close();
+            //    }
         }
 
         private void OpenWeb(object sender, RoutedEventArgs e)
@@ -1013,25 +1013,25 @@ namespace Jvedio
         private void UpdateInfo(DetailMovie movie)
         {
             //显示到主界面
-            Main main = App.Current.Windows[0] as Main;
+            //Main main = App.Current.Windows[0] as Main;
 
-            int index1 = main.vieModel.CurrentMovieList.IndexOf(main.vieModel.CurrentMovieList.Where(arg => arg.id == movie.id).First()); ;
-            int index2 = main.vieModel.MovieList.IndexOf(main.vieModel.MovieList.Where(arg => arg.id == movie.id).First());
-            int index3 = main.vieModel.FilterMovieList.IndexOf(main.vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
-            try
-            {
-                main.vieModel.CurrentMovieList[index1] = null;
-                main.vieModel.MovieList[index2] = null;
-                main.vieModel.CurrentMovieList[index1] = movie;
-                main.vieModel.MovieList[index2] = movie;
-                main.vieModel.FilterMovieList[index3] = null;
-                main.vieModel.FilterMovieList[index3] = movie;
-            }
-            catch (ArgumentNullException) { }
+            //int index1 = main.vieModel.CurrentMovieList.IndexOf(main.vieModel.CurrentMovieList.Where(arg => arg.id == movie.id).First()); ;
+            //int index2 = main.vieModel.MovieList.IndexOf(main.vieModel.MovieList.Where(arg => arg.id == movie.id).First());
+            //int index3 = main.vieModel.FilterMovieList.IndexOf(main.vieModel.FilterMovieList.Where(arg => arg.id == movie.id).First());
+            //try
+            //{
+            //    main.vieModel.CurrentMovieList[index1] = null;
+            //    main.vieModel.MovieList[index2] = null;
+            //    main.vieModel.CurrentMovieList[index1] = movie;
+            //    main.vieModel.MovieList[index2] = movie;
+            //    main.vieModel.FilterMovieList[index3] = null;
+            //    main.vieModel.FilterMovieList[index3] = movie;
+            //}
+            //catch (ArgumentNullException) { }
 
-            //显示到当前页面
-            vieModel.DetailMovie = null;
-            vieModel.DetailMovie = movie;
+            ////显示到当前页面
+            //vieModel.DetailMovie = null;
+            //vieModel.DetailMovie = movie;
 
         }
 

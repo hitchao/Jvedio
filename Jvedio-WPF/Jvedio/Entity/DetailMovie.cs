@@ -77,6 +77,7 @@ namespace Jvedio.Entity
                 FavoriteCount = 0,
                 Genre = genre.Replace(' ', GlobalVariable.Separator),
                 Tag = tag.Replace(' ', GlobalVariable.Separator),
+                Label = label.Replace(' ', GlobalVariable.Separator),
                 Grade = favorites,
                 ViewDate = "",
                 FirstScanDate = scandate,

@@ -276,6 +276,7 @@
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\GlobalMapper.cs" />
+    <Compile Include="Core\GlobalStyle.cs" />
     <Compile Include="Core\SimpleMarkDown\MarkDown.cs" />
     <Compile Include="Core\SimpleORM\AbstractMapper.cs" />
     <Compile Include="Core\SimpleORM\BaseMapper.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="Core\WindowConfig\Base\AbstractConfig.cs" />
     <Compile Include="Core\WindowConfig\Base\GlobalConfig.cs" />
     <Compile Include="Core\WindowConfig\Base\IConfig.cs" />
+    <Compile Include="Core\WindowConfig\Edit.cs" />
     <Compile Include="Core\WindowConfig\Main.cs" />
     <Compile Include="Core\WindowConfig\StartUp.cs" />
     <Compile Include="Entity\Actor.cs" />
@@ -366,6 +368,7 @@
     <Compile Include="Utils\Common\DateHelper.cs" />
     <Compile Include="Utils\Common\JsonUtils.cs" />
     <Compile Include="Utils\Common\TypeHelper.cs" />
+    <Compile Include="Utils\Common\Validation.cs" />
     <Compile Include="Utils\FileProcess\ClipBoard.cs" />
     <Compile Include="Utils\FileProcess\DirHelper.cs" />
     <Compile Include="Utils\FileProcess\FileHelper.cs" />

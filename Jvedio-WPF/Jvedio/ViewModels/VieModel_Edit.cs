@@ -10,170 +10,80 @@ using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.IO;
 using Jvedio.Entity;
+using Jvedio.Core.SimpleORM;
+using System.Windows;
 
 namespace Jvedio.ViewModel
 {
     class VieModel_Edit : ViewModelBase
     {
 
-        public string id;//用于判断是否更改了 id
+        public Video _CurrentVideo;
 
-        public DetailMovie detailmovie;
-
-        public DetailMovie DetailMovie
+        public Video CurrentVideo
         {
-            get { return detailmovie; }
+            get { return _CurrentVideo; }
             set
             {
-                detailmovie = value;
-                RaisePropertyChanged();
-                id = DetailMovie.id;
-            }
-        }
-
-
-
-        public ObservableCollection<string> movieIDList;
-
-        public ObservableCollection<string> MovieIDList
-        {
-            get { return movieIDList; }
-            set
-            {
-                movieIDList = value;
+                _CurrentVideo = value;
                 RaisePropertyChanged();
             }
         }
 
 
-        public void Refresh(string filepath)
+        public bool _MoreExpanded = GlobalConfig.Edit.MoreExpanded;
+
+        public bool MoreExpanded
         {
-            DetailMovie models = new DetailMovie { filepath = filepath };
-            FileInfo fileInfo = new FileInfo(filepath);
+            get { return _MoreExpanded; }
+            set
+            {
+                _MoreExpanded = value;
+                RaisePropertyChanged();
+            }
+        }
 
-            //获取创建日期
-            string createDate = "";
-            try { createDate = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"); }
-            catch { }
-            if (createDate == "") createDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            models.id = Identify.GetFanhao(fileInfo.Name);
-            models.vediotype = (int)Identify.GetVideoType(models.id);
-            models.otherinfo = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            models.scandate = createDate;
-            models.filesize = fileInfo.Length;
-            if (models != null) { DetailMovie = models; }
+        public long _DataID;
+
+        public long DataID
+        {
+            get { return _DataID; }
+            set
+            {
+                _DataID = value;
+                RaisePropertyChanged();
+            }
         }
 
 
 
-
-        public RelayCommand<string> QueryCommand { get; set; }
-
-        public void Query(string movieid, string tablename = "")
+        public VieModel_Edit(long dataid)
         {
-            DetailMovie models = null;
-            if (string.IsNullOrEmpty(tablename))
-            {
-                models = DataBase.SelectDetailMovieById(movieid);
-            }
-            else
-            {
-                using (MySqlite mySqlite = new MySqlite("mylist"))
-                {
-                    models = mySqlite.SelectDetailMovieBySql($"select * from {tablename} where id='{movieid}'");
-                }
-            }
 
-
-
-            DetailMovie = new DetailMovie();
-            if (models != null) { DetailMovie = models; }
+            if (dataid <= 0) return;
+            DataID = dataid;
+            CurrentVideo = GlobalMapper.videoMapper.SelectVideoByID(dataid);
         }
 
 
         public void Reset()
         {
-            Main main = App.Current.Windows[0] as Main;
-            var models = main.vieModel.CurrentMovieList.Select(arg => arg.id).ToList();
-            MovieIDList = new ObservableCollection<string>();
-            models?.ForEach(arg => { MovieIDList.Add(arg.ToUpper()); });
+            CurrentVideo = null;
+            CurrentVideo = GlobalMapper.videoMapper.SelectVideoByID(DataID);
         }
 
 
-        public bool SaveModel(string ID = "")
+        public bool Save()
         {
-            string table = ((Main)GetWindowByName("Main")).GetCurrentList();
-
-
-            if (ID == "" && DetailMovie != null && DetailMovie.id.ToUpper() == id.ToUpper())
-            {
-                InsertMovie(table);
-                return true;
-            }
-
-
-            id = ID;
-            if (DetailMovie != null)
-            {
-
-                if (DetailMovie.id.ToUpper() != id.ToUpper())
-                {
-                    //修改了原来的识别码
-                    if (string.IsNullOrEmpty(table))
-                    {
-                        if (DataBase.SelectMovieByID(ID) != null) return false;
-                        DataBase.DeleteByField("movie", "id", DetailMovie.id);
-                        DetailMovie.id = id;
-                        DataBase.InsertFullMovie(DetailMovie);
-                    }
-                    else
-                    {
-                        //修改了清单中的识别码
-                        using (MySqlite mySqlite = new MySqlite("mylist"))
-                        {
-                            if (mySqlite.SelectMovieBySql($"select * from {table} where id='{ID}'") != null) return false;
-
-                            mySqlite.DeleteByField(table, "id", DetailMovie.id);
-                            DetailMovie.id = id;
-                            mySqlite.InsertFullMovie(DetailMovie, table);
-                        }
-
-                    }
-
-                }
-                else
-                {
-                    InsertMovie(table);
-                }
-
-                return true;
-            }
-            return false;
+            if (CurrentVideo == null) return false;
+            MetaData data = (MetaData)CurrentVideo;
+            data.DataID = DataID;
+            int update1 = GlobalMapper.metaDataMapper.updateById(data);
+            int update2 = GlobalMapper.videoMapper.updateById(CurrentVideo);
+            return update1 > 0 & update2 > 0;
 
         }
-
-        private void InsertMovie(string table)
-        {
-            if (string.IsNullOrEmpty(table))
-                DataBase.InsertFullMovie(DetailMovie);
-            else
-            {
-                using (MySqlite mySqlite = new MySqlite("mylist"))
-                {
-                    mySqlite.InsertFullMovie(DetailMovie, table);
-                }
-            }
-        }
-
-
-
-
-
-
-
-
-
 
     }
 }

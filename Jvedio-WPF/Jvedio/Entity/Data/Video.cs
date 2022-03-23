@@ -1,6 +1,7 @@
 ﻿using Jvedio.Core.Attributes;
 using Jvedio.Core.Enums;
 using Jvedio.Entity.CommonSQL;
+using Jvedio.Utils.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,17 @@ namespace Jvedio.Entity
         public long MVID { get; set; }
         public long DataID { get; set; }
         public string VID { get; set; }
-        public VideoType VideoType { get; set; }
+        private VideoType _VideoType;
+
+        public VideoType VideoType
+        {
+            get { return _VideoType; }
+            set
+            {
+                _VideoType = value;
+                OnPropertyChanged();
+            }
+        }
         public string Director { get; set; }
         public string Studio { get; set; }
         public string Publisher { get; set; }
@@ -55,7 +66,7 @@ namespace Jvedio.Entity
             set
             {
                 _SubSection = value;
-                SubSectionList = value.Split(GlobalVariable.Separator).ToList();
+                SubSectionList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 if (SubSectionList.Count >= 2) HasSubSection = true;
                 OnPropertyChanged();
             }
@@ -93,6 +104,34 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public string TagIDs { get; set; }
 
+
+
+        private string _ActorNames;
+
+        [TableField(exist: false)]
+        public string ActorNames
+        {
+            get { return _ActorNames; }
+            set
+            {
+                _ActorNames = value;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    ActorNameList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        [TableField(exist: false)]
+        public List<string> ActorNameList { get; set; }
+
+        [TableField(exist: false)]
+        public string NameFlags { get; set; }
+
+        [TableField(exist: false)]
+        public List<ActorInfo> ActorInfos { get; set; }
+
         public static string parseImagePath(string path)
         {
 
@@ -102,6 +141,11 @@ namespace Jvedio.Entity
             //if (path.StartsWith("*PicPath*")) return Path.GetFullPath(GlobalVariable.BasePicPath + path.Replace("*PicPath*", ""));
             if (path.StartsWith("*PicPath*")) return System.IO.Path.GetFullPath(basePicPath + path.Replace("*PicPath*", ""));
             else return path;
+        }
+
+        public override string ToString()
+        {
+            return ClassUtils.toString(this);
         }
 
     }

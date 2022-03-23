@@ -712,7 +712,7 @@
     <value>Save</value>
   </data>
   <data name="ShowOtherOptions" xml:space="preserve">
-    <value>---Show other options---</value>
+    <value>More</value>
   </data>
   <data name="ShowRecentCreate" xml:space="preserve">
     <value>Show the number of days recently created (day)</value>
@@ -1742,5 +1742,11 @@
   </data>
   <data name="Get" xml:space="preserve">
     <value>Get</value>
+  </data>
+  <data name="TeenMode" xml:space="preserve">
+    <value>TeenMode</value>
+  </data>
+  <data name="Outline" xml:space="preserve">
+    <value>Outline</value>
   </data>
 </root>
