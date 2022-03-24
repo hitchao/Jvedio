@@ -19,6 +19,10 @@ namespace Jvedio
         private static readonly object ExceptionLock = new object();
         private static readonly object ScanLogLock = new object();
 
+        private static readonly object ErrorLock = new object();
+
+
+
         public static void LogE(Exception e)
         {
             Console.WriteLine(e.StackTrace);
@@ -143,6 +147,22 @@ namespace Jvedio
             }
         }
 
+
+        public static void Error(string str)
+        {
+            str += Environment.NewLine;
+            Console.WriteLine(str);
+            string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\Error";
+            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+            lock (DataBaseLock)
+            {
+                using (StreamWriter sr = new StreamWriter(filepath, true))
+                {
+                    try { sr.Write(str); } catch { }
+                }
+            }
+        }
 
 
 

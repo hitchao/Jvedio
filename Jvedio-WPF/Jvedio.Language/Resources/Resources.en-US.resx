@@ -351,17 +351,11 @@
   <data name="Menu_CopyFile" xml:space="preserve">
     <value>Copy Files (C)</value>
   </data>
-  <data name="Menu_ClearInfo" xml:space="preserve">
-    <value>Clear Info</value>
-  </data>
   <data name="Menu_DeleteInfo" xml:space="preserve">
     <value>Delete Info(D)</value>
   </data>
   <data name="Menu_DeleteFile" xml:space="preserve">
     <value>Delete File(T)</value>
-  </data>
-  <data name="ToolTip_ClearInfo" xml:space="preserve">
-    <value>Clear the synchronized message</value>
   </data>
   <data name="ToolTip_DeleteInfo" xml:space="preserve">
     <value>Delete information (do not delete files)</value>
@@ -700,7 +694,7 @@
     <value>Skin</value>
   </data>
   <data name="ImageSavePath" xml:space="preserve">
-    <value>Picture save path</value>
+    <value>Picture Path</value>
   </data>
   <data name="ChooseDir" xml:space="preserve">
     <value>Select Folder</value>

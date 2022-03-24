@@ -50,7 +50,6 @@ namespace Jvedio.Entity
         [TableField(false)]
         public List<string> Tags { get; set; }
 
-        [TableField(false)]
         public string VID { get; set; }
         public int DownloadNumber { get; set; }
         public string ExtraInfo { get; set; }

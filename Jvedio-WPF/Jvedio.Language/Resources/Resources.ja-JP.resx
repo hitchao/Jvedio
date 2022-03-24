@@ -351,17 +351,11 @@
   <data name="Menu_CopyFile" xml:space="preserve">
     <value>ファイルをコピーする(C)</value>
   </data>
-  <data name="Menu_ClearInfo" xml:space="preserve">
-    <value>メッセージを空にする</value>
-  </data>
   <data name="Menu_DeleteInfo" xml:space="preserve">
     <value>メッセージを削除する(D)</value>
   </data>
   <data name="Menu_DeleteFile" xml:space="preserve">
     <value>ファイルを削除する(T)</value>
-  </data>
-  <data name="ToolTip_ClearInfo" xml:space="preserve">
-    <value>同期した情報を空にします</value>
   </data>
   <data name="ToolTip_DeleteInfo" xml:space="preserve">
     <value>メッセージを削除する(ファイルを削除しない)</value>
@@ -697,7 +691,7 @@
     <value>肌</value>
   </data>
   <data name="ImageSavePath" xml:space="preserve">
-    <value>画像保存パス</value>
+    <value>画像パス</value>
   </data>
   <data name="ChooseDir" xml:space="preserve">
     <value>フォルダーを選択</value>

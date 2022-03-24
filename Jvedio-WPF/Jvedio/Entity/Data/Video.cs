@@ -4,6 +4,7 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace Jvedio.Entity
             SmallImage = GlobalVariable.DefaultSmallImage;
             BigImage = GlobalVariable.DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
+            PreviewImageList = new ObservableCollection<BitmapSource>();
         }
 
 
@@ -73,8 +75,14 @@ namespace Jvedio.Entity
         }
         [TableField(exist: false)]
         public bool HasSubSection { get; set; }
-        public string PreviewImagePaths { get; set; }
-        public string ScreenShotPaths { get; set; }
+        public string PreviewImagePath { get; set; }
+
+        [TableField(exist: false)]
+        public ObservableCollection<string> PreviewImagePathList { get; set; }
+
+        [TableField(exist: false)]
+        public ObservableCollection<BitmapSource> PreviewImageList { get; set; }
+        public string ScreenShotPath { get; set; }
         public string GifImagePath { get; set; }
         public string BigImagePath { get; set; }
         public string SmallImagePath { get; set; }
@@ -131,6 +139,8 @@ namespace Jvedio.Entity
 
         [TableField(exist: false)]
         public List<ActorInfo> ActorInfos { get; set; }
+        [TableField(exist: false)]
+        public List<Magnet> Magnets { get; set; }
 
         public static string parseImagePath(string path)
         {

@@ -51,8 +51,8 @@ namespace Jvedio.Mapper
             "Duration",
             "SubSection",
             "ImageUrls",
-            "PreviewImagePaths",
-            "ScreenShotPaths",
+            "PreviewImagePath",
+            "ScreenShotPath",
             "GifImagePath",
             "BigImagePath",
             "SmallImagePath",
@@ -72,6 +72,30 @@ namespace Jvedio.Mapper
             List<Video> videos = toEntity<Video>(list, typeof(Video).GetProperties(), false);
             if (videos.Count > 0) return videos[0];
             return null;
+        }
+
+        public int deleteVideoByIds(List<string> idList)
+        {
+            if (idList == null || idList.Count == 0) return 0;
+            int c1 = GlobalMapper.metaDataMapper.deleteByIds(idList);
+            int c2 = GlobalMapper.videoMapper.deleteByIds(idList);
+            StringBuilder builder = new StringBuilder();
+            string ids = string.Join(",", idList);
+            builder.Append("begin;");
+            builder.Append($"delete from metadata_to_translation where DataID in ({ids});");
+            builder.Append($"delete from metadata_to_tagstamp where DataID in ({ids});");
+            builder.Append($"delete from actor_name_to_metadatas where DataID in ({ids});");
+            builder.Append($"delete from common_custom_list_to_metadata where DataID in ({ids});");
+            builder.Append("commit;");
+            GlobalMapper.videoMapper.executeNonQuery(builder.ToString());
+            if (c1 == c2 && idList.Count == c1) return c1;
+            else
+            {
+                // todo 日志
+
+            }
+            return 0;
+
         }
     }
 }

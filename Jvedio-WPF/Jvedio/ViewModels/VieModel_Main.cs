@@ -43,6 +43,7 @@ namespace Jvedio.ViewModel
         public event EventHandler MovieFlipOverCompleted;
         public event EventHandler ActorFlipOverCompleted;
         public event EventHandler OnCurrentMovieListRemove;
+        public event EventHandler PageChangedCompleted;
 
         public bool IsFlipOvering = false;
         public VedioType CurrentVedioType = VedioType.所有;
@@ -457,32 +458,6 @@ namespace Jvedio.ViewModel
             set
             {
                 _MyList = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<MyListItem> _MainList;
-
-
-        public ObservableCollection<MyListItem> MainList
-        {
-            get { return _MainList; }
-            set
-            {
-                _MainList = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<MyListItem> _MoreList;
-
-
-        public ObservableCollection<MyListItem> MoreList
-        {
-            get { return _MoreList; }
-            set
-            {
-                _MoreList = value;
                 RaisePropertyChanged();
             }
         }
@@ -1870,11 +1845,17 @@ namespace Jvedio.ViewModel
 
 
 
-        private delegate void LoadVideoDelegate(Video video);
-        private void LoadVideo(Video video)
+        private delegate void LoadVideoDelegate(Video video, int idx);
+        private void LoadVideo(Video video, int idx)
         {
             if (renderVideoCT.IsCancellationRequested) return;
-            CurrentVideoList.Add(video);
+            if (CurrentVideoList.Count < PageSize)
+                CurrentVideoList.Add(video);
+            else
+            {
+                CurrentVideoList[idx] = null;
+                CurrentVideoList[idx] = video;
+            }
             CurrentCount = CurrentVideoList.Count;
             //Console.WriteLine($"渲染第 {CurrentPage} 页的数据");
         }
@@ -2261,6 +2242,7 @@ namespace Jvedio.ViewModel
             "GifImagePath",
             "BigImagePath",
             "SmallImagePath",
+            "PreviewImagePath",
             "WebUrl",
             "WebType",
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
@@ -2360,14 +2342,7 @@ namespace Jvedio.ViewModel
             //if (rendering) return;
             List<Dictionary<string, object>> list = metaDataMapper.select(sql);
             List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
-
-
-
-
-
-
             VideoList = new ObservableCollection<Video>();
-            CurrentVideoList = new ObservableCollection<Video>();
 
             if (Videos == null || Videos.Count <= 0) return;
             Videos.ForEach(video => VideoList.Add(video));
@@ -2378,66 +2353,40 @@ namespace Jvedio.ViewModel
         }
 
 
+        public void setTag(ref Video video)
+        {
+            if (!string.IsNullOrEmpty(video.TagIDs))
+            {
+                video.TagStamp = new List<TagStamp>();
+                foreach (var tagID in video.TagIDs.Split(','))
+                {
+                    long.TryParse(tagID.Trim(), out long id);
+                    if (id > 0) video.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault());
+                }
+            }
+        }
+
+
+
         public async void render()
         {
-            Console.WriteLine("开始渲染数据");
-
-
-
-            // 核心
-            //while (rendering)
-            //{
-            //    await Task.Delay(100);
-            //}
-
+            if (CurrentVideoList == null) CurrentVideoList = new ObservableCollection<Video>();
             int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageMode);
-
-
-            Uri defaultUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
-
-            foreach (Video item in VideoList)
+            for (int i = 0; i < VideoList.Count; i++)
             {
-                try
-                {
-                    renderVideoCT.ThrowIfCancellationRequested();
-                }
-                catch (OperationCanceledException ex)
-                {
-                    renderVideoCTS?.Dispose();
-                    break;
-                }
+                try { renderVideoCT.ThrowIfCancellationRequested(); }
+                catch (OperationCanceledException ex) { renderVideoCTS?.Dispose(); break; }
                 rendering = true;
-                Video video = item;
-                //if (!Properties.Settings.Default.EasyMode) 
-
-                if (imageMode < 2)
-                {
-                    SetImage(ref video);
-                }
-                else if (imageMode == 2)
-                {
-                    string gifpath = Video.parseImagePath(video.GifImagePath);
-                    if (File.Exists(gifpath))
-                        video.GifUri = new Uri(gifpath);
-                }
-
-                // 设置标签戳
-                if (!string.IsNullOrEmpty(video.TagIDs))
-                {
-                    video.TagStamp = new List<TagStamp>();
-                    foreach (var tagID in video.TagIDs.Split(','))
-                    {
-                        long.TryParse(tagID.Trim(), out long id);
-                        if (id > 0) video.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault());
-                    }
-                }
-
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video);
+                Video video = VideoList[i];
+                SetImage(ref video, imageMode);
+                setTag(ref video);// 设置标签戳
+                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
             }
 
             if (renderVideoCT.IsCancellationRequested) refreshVideoRenderToken();
             rendering = false;
             //if (pageQueue.Count > 0) pageQueue.Dequeue();
+            PageChangedCompleted?.Invoke(this, null);
         }
 
         public void GetFavoritesMovie()

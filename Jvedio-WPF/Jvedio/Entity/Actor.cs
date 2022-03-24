@@ -10,7 +10,7 @@ namespace Jvedio.Entity
     {
         public Actor(string name = "") : base(name)
         {
-            sex = 2;// 男演员
+
         }
     }
 }

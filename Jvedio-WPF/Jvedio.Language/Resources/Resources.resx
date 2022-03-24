@@ -351,17 +351,11 @@
   <data name="Menu_CopyFile" xml:space="preserve">
     <value>复制文件(C)</value>
   </data>
-  <data name="Menu_ClearInfo" xml:space="preserve">
-    <value>清空信息</value>
-  </data>
   <data name="Menu_DeleteInfo" xml:space="preserve">
     <value>删除信息(D)</value>
   </data>
   <data name="Menu_DeleteFile" xml:space="preserve">
     <value>删除文件(T)</value>
-  </data>
-  <data name="ToolTip_ClearInfo" xml:space="preserve">
-    <value>清空同步的信息</value>
   </data>
   <data name="ToolTip_DeleteInfo" xml:space="preserve">
     <value>删除信息（不删除文件）</value>
@@ -697,7 +691,7 @@
     <value>皮肤</value>
   </data>
   <data name="ImageSavePath" xml:space="preserve">
-    <value>图片保存路径</value>
+    <value>图片路径</value>
   </data>
   <data name="ChooseDir" xml:space="preserve">
     <value>选择文件夹</value>

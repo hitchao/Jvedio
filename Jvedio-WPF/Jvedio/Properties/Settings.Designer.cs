@@ -1846,5 +1846,17 @@ namespace Jvedio.Properties {
                 this["TeenMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ImagePathType {
+            get {
+                return ((int)(this["ImagePathType"]));
+            }
+            set {
+                this["ImagePathType"] = value;
+            }
+        }
     }
 }

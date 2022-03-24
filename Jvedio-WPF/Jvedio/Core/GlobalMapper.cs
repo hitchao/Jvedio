@@ -16,7 +16,6 @@ namespace Jvedio
         public static TranslationMapper translationMapper = new TranslationMapper();
         public static MagnetsMapper magnetsMapper = new MagnetsMapper();
         public static AIFaceMapper aIFaceMapper = new AIFaceMapper();
-        public static CustomListMapper customListMapper = new CustomListMapper();
         public static TagStampMapper tagStampMapper = new TagStampMapper();
         public static SearchHistoryMapper searchHistoryMapper = new SearchHistoryMapper();
 
@@ -33,7 +32,6 @@ namespace Jvedio
             translationMapper.Init();
             magnetsMapper.Init();
             aIFaceMapper.Init();
-            customListMapper.Init();
             tagStampMapper.Init();
             searchHistoryMapper.Init();
 

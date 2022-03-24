@@ -1537,7 +1537,7 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
-        ///   查找类似 图片保存路径 的本地化字符串。
+        ///   查找类似 图片路径 的本地化字符串。
         /// </summary>
         public static string ImageSavePath {
             get {
@@ -1965,15 +1965,6 @@ namespace Jvedio.Language {
         public static string Menu_Advance {
             get {
                 return ResourceManager.GetString("Menu_Advance", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 清空信息 的本地化字符串。
-        /// </summary>
-        public static string Menu_ClearInfo {
-            get {
-                return ResourceManager.GetString("Menu_ClearInfo", resourceCulture);
             }
         }
         
@@ -4521,15 +4512,6 @@ namespace Jvedio.Language {
         public static string Tools {
             get {
                 return ResourceManager.GetString("Tools", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 清空同步的信息 的本地化字符串。
-        /// </summary>
-        public static string ToolTip_ClearInfo {
-            get {
-                return ResourceManager.GetString("ToolTip_ClearInfo", resourceCulture);
             }
         }
         

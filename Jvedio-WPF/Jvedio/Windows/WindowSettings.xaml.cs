@@ -530,19 +530,6 @@ namespace Jvedio
             }
         }
 
-        private void SetBasePicPath(object sender, RoutedEventArgs e)
-        {
-            var path = FileHelper.SelectPath(this);
-            if (Directory.Exists(path))
-            {
-                if (path.Substring(path.Length - 1, 1) != "\\") { path = path + "\\"; }
-                Properties.Settings.Default.BasePicPath = path;
-            }
-            else
-            {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_CanNotBeNull, GrowlToken);
-            }
-        }
 
         private void SaveSettings(object sender, RoutedEventArgs e)
         {
@@ -1279,6 +1266,20 @@ namespace Jvedio
         {
             GlobalVariable.LoadBgImage();
             OnSetSkin();
+        }
+
+        private void SetBasePicPath(object sender, MouseButtonEventArgs e)
+        {
+            var path = FileHelper.SelectPath(this);
+            if (Directory.Exists(path))
+            {
+                if (path.Substring(path.Length - 1, 1) != "\\") { path = path + "\\"; }
+                Properties.Settings.Default.BasePicPath = path;
+            }
+            else
+            {
+                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_CanNotBeNull, GrowlToken);
+            }
         }
     }
 

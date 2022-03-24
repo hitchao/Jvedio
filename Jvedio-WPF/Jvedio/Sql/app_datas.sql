@@ -95,6 +95,7 @@ create table common_magnets (
     MagnetLink VARCHAR(40),
     TorrentUrl VARCHAR(2000),
     DataID INTEGER,
+    VID INTEGER,
     Title TEXT,
     Size INTEGER DEFAULT 0,
     Releasedate VARCHAR(10) DEFAULT '1900-01-01',
@@ -109,6 +110,7 @@ create table common_magnets (
     unique(MagnetLink)
 );
 CREATE INDEX common_magnets_idx_DataID ON common_magnets (DataID);
+CREATE INDEX common_magnets_idx_VID ON common_magnets (VID);
 COMMIT;
 
 insert into common_magnets
@@ -161,35 +163,6 @@ create table common_ai_face (
 );
 COMMIT;
 
-drop table if exists common_custom_list;
-BEGIN;
-create table common_custom_list (
-    ListID INTEGER PRIMARY KEY autoincrement,
-    ListName VARCHAR(200) DEFAULT 0,
-    Count INT DEFAULT 0,
-
-    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
-);
-CREATE INDEX common_custom_list_idx_ListName ON common_custom_list (ListName);
-COMMIT;
-
-insert into common_custom_list(ListName,Count) VALUES
-('清单1',1), ('清单2',20), ('清单3',78), ('清单4',756), ('清单5',612), ('清单6',75), 
-('清单7',12), ('清单8',231), ('清单9',676), ('清单10',85);
-
-drop table if exists common_custom_list_to_metadata;
-BEGIN;
-create table common_custom_list_to_metadata (
-    Id INTEGER PRIMARY KEY autoincrement,
-    ListID INTEGER,
-    DataID VARCHAR(200) DEFAULT 0,
-
-    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
-);
-CREATE INDEX common_custom_list_to_metadata_idx_ListID ON common_custom_list_to_metadata (ListID);
-COMMIT;
 
 
 

@@ -549,7 +549,7 @@ namespace Jvedio
                     wrapper.Select("VID", "DataID").In("VID", set);
                     List<Video> videos = videoMapper.selectList(wrapper);
                     Dictionary<string, long> dict = new Dictionary<string, long>();
-                    if (videos != null && videos.Count > 0) dict = videos.ToDictionary(x => x.VID, y => y.DataID);
+                    if (videos != null && videos.Count > 0) dict = videos.ToLookup(x => x.VID, y => y.DataID).ToDictionary(x => x.Key, x => x.First());
                     for (int i = 0; i < magnets.Count; i++)
                     {
                         string vid = magnets[i].VID;
@@ -586,67 +586,67 @@ namespace Jvedio
 
         public static void MoveMyList()
         {
-            string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mylist.sqlite");
-            if (File.Exists(origin))
-            {
-                MySqlite oldSqlite = new MySqlite(origin);
-                List<string> tables = oldSqlite.GetAllTable();
-                Dictionary<string, List<string>> datas = new Dictionary<string, List<string>>();
-                System.Data.SQLite.SQLiteDataReader sr;
+            //string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mylist.sqlite");
+            //if (File.Exists(origin))
+            //{
+            //    MySqlite oldSqlite = new MySqlite(origin);
+            //    List<string> tables = oldSqlite.GetAllTable();
+            //    Dictionary<string, List<string>> datas = new Dictionary<string, List<string>>();
+            //    System.Data.SQLite.SQLiteDataReader sr;
 
-                foreach (string table in tables)
-                {
-                    List<string> list = new List<string>();
-                    sr = oldSqlite.RunSql($"select * from {table}");
-                    if (sr != null)
-                    {
-                        while (sr.Read())
-                        {
-                            list.Add(sr.GetString(0));
-                        }
-                    }
-                    sr.Close();
-                    datas.Add(table, list);
-                }
-                oldSqlite.CloseDB();
-                HashSet<string> set = new HashSet<string>();
-                foreach (string key in datas.Keys)
-                {
-                    set.UnionWith(datas[key]);
-                }
+            //    foreach (string table in tables)
+            //    {
+            //        List<string> list = new List<string>();
+            //        sr = oldSqlite.RunSql($"select * from {table}");
+            //        if (sr != null)
+            //        {
+            //            while (sr.Read())
+            //            {
+            //                list.Add(sr.GetString(0));
+            //            }
+            //        }
+            //        sr.Close();
+            //        datas.Add(table, list);
+            //    }
+            //    oldSqlite.CloseDB();
+            //    HashSet<string> set = new HashSet<string>();
+            //    foreach (string key in datas.Keys)
+            //    {
+            //        set.UnionWith(datas[key]);
+            //    }
 
-                SelectWrapper<Video> selectWrapper = new SelectWrapper<Video>();
-                selectWrapper.Select("VID", "DataID").In("VID", set);
-                List<Video> videos = videoMapper.selectList(selectWrapper);
-                Dictionary<string, long> dict = new Dictionary<string, long>();
-                if (videos != null && videos.Count > 0)
-                {
-                    dict = videos.ToLookup(t => t.VID, t => t.DataID).ToDictionary(t => t.Key, t => t.First());
-                }
-                if (dict.Count > 0)
-                {
-                    foreach (string key in datas.Keys)
-                    {
-                        List<string> id_list = datas[key];
-                        // 新增一个清单
-                        CustomList list = new CustomList();
-                        list.ListName = key;
-                        list.Count = id_list.Count;
-                        customListMapper.insert(list);
-                        List<string> values = new List<string>();
-                        foreach (string VID in id_list)
-                        {
-                            if (!dict.ContainsKey(VID)) continue;
-                            long dataID = dict[VID];
-                            if (dataID <= 0) continue;
-                            values.Add($"({list.ListID},{dataID})");
-                        }
-                        string sql = "insert or replace into common_custom_list_to_metadata(ListID,DataID) " +
-                                 $"values {string.Join(",", values)}";
-                        metaDataMapper.executeNonQuery(sql);
-                    }
-                }
-            }
+            //    SelectWrapper<Video> selectWrapper = new SelectWrapper<Video>();
+            //    selectWrapper.Select("VID", "DataID").In("VID", set);
+            //    List<Video> videos = videoMapper.selectList(selectWrapper);
+            //    Dictionary<string, long> dict = new Dictionary<string, long>();
+            //    if (videos != null && videos.Count > 0)
+            //    {
+            //        dict = videos.ToLookup(t => t.VID, t => t.DataID).ToDictionary(t => t.Key, t => t.First());
+            //    }
+            //    if (dict.Count > 0)
+            //    {
+            //        foreach (string key in datas.Keys)
+            //        {
+            //            List<string> id_list = datas[key];
+            //            // 新增一个清单
+            //            CustomList list = new CustomList();
+            //            list.ListName = key;
+            //            list.Count = id_list.Count;
+            //            customListMapper.insert(list);
+            //            List<string> values = new List<string>();
+            //            foreach (string VID in id_list)
+            //            {
+            //                if (!dict.ContainsKey(VID)) continue;
+            //                long dataID = dict[VID];
+            //                if (dataID <= 0) continue;
+            //                values.Add($"({list.ListID},{dataID})");
+            //            }
+            //            string sql = "insert or replace into common_custom_list_to_metadata(ListID,DataID) " +
+            //                     $"values {string.Join(",", values)}";
+            //            metaDataMapper.executeNonQuery(sql);
+            //        }
+            //    }
+            //}
 
         }
         public static void MoveTranslate()

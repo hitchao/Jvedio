@@ -124,18 +124,18 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
-        public bool deleteById(object id)
+        public int deleteById(object id)
         {
             string sqltext = $"delete from {TableName} where {generateWhere(id)}";
-            return executeNonQuery(sqltext) > 0;
+            return executeNonQuery(sqltext);
         }
 
-        public bool deleteByIds(List<string> idList)
+        public int deleteByIds(List<string> idList)
         {
-            if (idList == null || idList.Count == 0) return true;
+            if (idList == null || idList.Count == 0) return 0;
             if (idList.Count == 1) return deleteById(idList[0]);
             string sqltext = $"delete from {TableName} where {generateBatchWhere(idList)}";
-            return executeNonQuery(sqltext) > 0;
+            return executeNonQuery(sqltext);
         }
 
 
@@ -205,6 +205,16 @@ namespace Jvedio.Core.SimpleORM
             if (type == typeof(string))
                 sql = $"update {TableName} set {field}='{value}' where {generateWhere(id)}";
             return executeNonQuery(sql) > 0;
+        }
+
+        public int updateField(string field, string value, IWrapper<T> wrapper)
+        {
+            Type type = typeof(T).GetProperty(field).PropertyType;
+
+            string sql = $"update {TableName} set {field}={value} {wrapper.toWhere()}";
+            if (type == typeof(string))
+                sql = $"update {TableName} set {field}='{value}' {wrapper.toWhere()}";
+            return executeNonQuery(sql);
         }
 
 

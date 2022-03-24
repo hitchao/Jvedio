@@ -110,8 +110,8 @@ namespace Jvedio.Entity
                 WebType = source.Replace("jav", ""),
                 WebUrl = sourceurl,
 
-                PreviewImagePaths = "*PicPath*/ExtraPic/" + id,
-                ScreenShotPaths = "*PicPath*/ScreenShot/" + id,
+                PreviewImagePath = "*PicPath*/ExtraPic/" + id,
+                ScreenShotPath = "*PicPath*/ScreenShot/" + id,
                 GifImagePath = "*PicPath*/Gif/" + $"{id}.gif",
                 BigImagePath = "*PicPath*/BigPic/" + $"{id}.jpg",
                 SmallImagePath = "*PicPath*/SmallPic/" + $"{id}.jpg",

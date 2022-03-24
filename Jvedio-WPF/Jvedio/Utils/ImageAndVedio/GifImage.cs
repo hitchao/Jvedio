@@ -25,69 +25,17 @@ namespace Jvedio
 
         private List<BitmapSource> bitmapImages;
         private Gif gif;
+
+        private static bool ShowGif = false;
+
+
+        #region "DependencyProperty"
         public int FrameIndex
         {
             get { return (int)GetValue(FrameIndexProperty); }
             set { SetValue(FrameIndexProperty, value); }
         }
 
-        private void Initialize()
-        {
-            if (File.Exists(GifSource))
-            {
-                gif = new Gif(this.GifSource);
-                var decoder = gif.GetDecoder();
-                _animation = new Int32Animation(0, decoder.Frames.Count - 1, gif.GetTotalDuration());
-                _animation.RepeatBehavior = RepeatBehavior.Forever;
-                this.Source = null;
-                this.Source = gif.GetFirstFrame();
-                _isInitialized = true;
-            }
-            else
-            {
-                this.Source = GlobalVariable.DefaultBigImage;
-            }
-
-        }
-
-
-
-
-        protected override void OnMouseEnter(MouseEventArgs e)
-        {
-            if (gif != null)
-            {
-                if (bitmapImages == null) bitmapImages = gif.GetAllFrame().BitmapSources;
-                if (bitmapImages != null && bitmapImages.Count > 0) this.StartAnimation();
-            }
-            base.OnMouseEnter(e);
-        }
-
-        protected override void OnMouseLeave(MouseEventArgs e)
-        {
-            if (gif != null)
-            {
-                this.StopAnimation();
-                bitmapImages = null;
-                GC.Collect();
-            }
-            base.OnMouseLeave(e);
-        }
-
-
-
-
-
-        static GifImage()
-        {
-            VisibilityProperty.OverrideMetadata(typeof(GifImage),
-                new FrameworkPropertyMetadata(VisibilityPropertyChanged));
-        }
-
-        private static void VisibilityPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
 
         public static readonly DependencyProperty FrameIndexProperty =
             DependencyProperty.Register("FrameIndex", typeof(int), typeof(GifImage), new UIPropertyMetadata(0, new PropertyChangedCallback(ChangingFrameIndex)));
@@ -101,20 +49,20 @@ namespace Jvedio
         /// <summary>
         /// Defines whether the animation starts on it's own
         /// </summary>
-        public bool AutoStart
-        {
-            get { return (bool)GetValue(AutoStartProperty); }
-            set { SetValue(AutoStartProperty, value); }
-        }
+        //public bool AutoStart
+        //{
+        //    get { return (bool)GetValue(AutoStartProperty); }
+        //    set { SetValue(AutoStartProperty, value); }
+        //}
 
-        public static readonly DependencyProperty AutoStartProperty =
-            DependencyProperty.Register("AutoStart", typeof(bool), typeof(GifImage), new UIPropertyMetadata(false, AutoStartPropertyChanged));
+        //public static readonly DependencyProperty AutoStartProperty =
+        //    DependencyProperty.Register("AutoStart", typeof(bool), typeof(GifImage), new UIPropertyMetadata(false, AutoStartPropertyChanged));
 
-        private static void AutoStartPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue)
-                (sender as GifImage).StartAnimation();
-        }
+        //private static void AutoStartPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        //{
+        //    if ((bool)e.NewValue)
+        //        (sender as GifImage).StartAnimation();
+        //}
 
         public string GifSource
         {
@@ -127,8 +75,141 @@ namespace Jvedio
 
         private static void GifSourcePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            (sender as GifImage).Initialize();
+            if (ShowGif)
+                (sender as GifImage).Initialize();
         }
+
+        public static readonly DependencyProperty SmallImageSourceProperty =
+            DependencyProperty.Register("SmallImageSource", typeof(ImageSource), typeof(GifImage), new UIPropertyMetadata(null, ImageSourcePropertyChanged));
+
+        public ImageSource SmallImageSource
+        {
+            get { return (ImageSource)GetValue(SmallImageSourceProperty); }
+            set { SetValue(SmallImageSourceProperty, value); }
+        }
+
+        private static void ImageSourcePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            GifImage gifImage = sender as GifImage;
+            gifImage.Initialize();
+        }
+
+        public static readonly DependencyProperty BigImageSourceProperty =
+            DependencyProperty.Register("BigImageSource", typeof(ImageSource), typeof(GifImage), new UIPropertyMetadata(null, ImageSourcePropertyChanged));
+
+        public ImageSource BigImageSource
+        {
+            get { return (ImageSource)GetValue(BigImageSourceProperty); }
+            set { SetValue(BigImageSourceProperty, value); }
+        }
+
+
+        public enum ViewSourceType
+        {
+            None,
+            SmallImage,
+            BigImage,
+            Gif
+        }
+
+
+
+        public static readonly DependencyProperty SourceTypeProperty =
+            DependencyProperty.Register("SourceType", typeof(ViewSourceType), typeof(GifImage), new UIPropertyMetadata(ViewSourceType.None, SourceTypePropertyChanged));
+
+        public ViewSourceType SourceType
+        {
+            get { return (ViewSourceType)GetValue(SourceTypeProperty); }
+            set { SetValue(SourceTypeProperty, value); }
+        }
+
+
+
+        private static void SourceTypePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ViewSourceType type = (ViewSourceType)e.NewValue;
+            ShowGif = false;
+            GifImage gifImage = sender as GifImage;
+            gifImage.Initialize();
+        }
+
+
+        #endregion
+
+
+        static GifImage()
+        {
+            VisibilityProperty.OverrideMetadata(typeof(GifImage),
+                new FrameworkPropertyMetadata(VisibilityPropertyChanged));
+
+        }
+
+        private static void VisibilityPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+
+        }
+
+
+        private void Initialize()
+        {
+            this.Source = null;// 移除之前绑定的 Image
+            if (SourceType == ViewSourceType.SmallImage)
+            {
+                Source = SmallImageSource;
+            }
+            else if (SourceType == ViewSourceType.BigImage)
+            {
+                Source = BigImageSource;
+            }
+            else if (SourceType == ViewSourceType.Gif)
+            {
+                ShowGif = true;
+                if (File.Exists(GifSource))
+                {
+                    gif = new Gif(this.GifSource);
+                    var decoder = gif.GetDecoder();
+                    _animation = new Int32Animation(0, decoder.Frames.Count - 1, gif.GetTotalDuration());
+                    _animation.RepeatBehavior = RepeatBehavior.Forever;
+                    this.Source = null;
+                    this.Source = gif.GetFirstFrame();
+                    _isInitialized = true;
+                }
+                else
+                {
+                    this.Source = GlobalVariable.DefaultBigImage;
+                }
+            }
+        }
+
+
+
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            if (ShowGif && gif != null)
+            {
+                if (bitmapImages == null) bitmapImages = gif.GetAllFrame().BitmapSources;
+                if (bitmapImages != null && bitmapImages.Count > 0) this.StartAnimation();
+            }
+            base.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            if (ShowGif && gif != null) { stop(); }
+            base.OnMouseLeave(e);
+        }
+
+        private void stop()
+        {
+            this.StopAnimation();
+            bitmapImages = null;
+            GC.Collect();
+        }
+
+
+
+
 
         /// <summary>
         /// Starts the animation
@@ -147,6 +228,17 @@ namespace Jvedio
         public void StopAnimation()
         {
             BeginAnimation(FrameIndexProperty, null);
+        }
+
+        public void Dispose()
+        {
+            this.BigImageSource = null;
+            this.SmallImageSource = null;
+            this.gif = null;
+            this.bitmapImages = null;
+            this._animation = null;
+            this.Source = null;
+            this.GifSource = null;
         }
 
     }

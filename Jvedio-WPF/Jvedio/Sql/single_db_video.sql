@@ -89,8 +89,8 @@ create table metadata_video(
 
     ImageUrls TEXT DEFAULT '',
     
-    PreviewImagePaths TEXT,
-    ScreenShotPaths TEXT,
+    PreviewImagePath TEXT,
+    ScreenShotPath TEXT,
     GifImagePath TEXT,
     BigImagePath TEXT,
     SmallImagePath TEXT,
@@ -132,14 +132,6 @@ create table metadata_to_translation(
 CREATE INDEX metadata_to_translation_idx_DataID_FieldType ON metadata_to_translation (DataID,FieldType);
 COMMIT;
 
-drop table if exists metadata_to_actors;
-BEGIN;
-create table metadata_to_actors(
-    id INTEGER PRIMARY KEY autoincrement,
-    DataID INTEGER,
-    TransaltionID INTEGER
-);
-COMMIT;
 
 drop table if exists metadata_to_tagstamp;
 BEGIN;

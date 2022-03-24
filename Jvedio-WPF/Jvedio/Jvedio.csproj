@@ -299,7 +299,6 @@
     <Compile Include="Entity\Actress.cs" />
     <Compile Include="Entity\CommonSQL\AIFaceInfo.cs" />
     <Compile Include="Entity\CommonSQL\SearchHistory.cs" />
-    <Compile Include="Entity\CommonSQL\CustomList.cs" />
     <Compile Include="Entity\CommonSQL\AppConfig.cs" />
     <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
     <Compile Include="Entity\CommonSQL\CommonImage.cs" />
@@ -350,7 +349,6 @@
     <Compile Include="Mapper\AppDatabaseMapper.cs" />
     <Compile Include="Mapper\TagStampMapper.cs" />
     <Compile Include="Mapper\SearchHistoryMapper.cs" />
-    <Compile Include="Mapper\CustomListMapper.cs" />
     <Compile Include="Mapper\ComImagesMapper.cs" />
     <Compile Include="Mapper\MagnetsMapper.cs" />
     <Compile Include="Mapper\MetaDataMapper.cs" />

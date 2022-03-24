@@ -19,6 +19,7 @@
     AllowDrop="True"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
+    Foreground="{DynamicResource Global.Foreground}"
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -128,6 +129,7 @@
             Margin="5"
             Background="Transparent"
             BorderBrush="{DynamicResource BackgroundSearch}"
+            SelectedIndex="0"
             Style="{DynamicResource BaseHcTabControlStyle}"
             TabStripPlacement="Top">
             <TabItem
@@ -193,18 +195,6 @@
 
 
 
-                    <StackPanel Margin="20,5" Orientation="Horizontal">
-                        <Label Content="{x:Static lang:Resources.ImageSavePath}" Style="{StaticResource InfoLabel}" />
-                        <hc:TextBox
-                            ShowClearButton="True"
-                            Style="{StaticResource BaseHcTextBox}"
-                            Text="{Binding BasePicPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <Button
-                            HorizontalAlignment="Right"
-                            Click="SetBasePicPath"
-                            Content="{x:Static lang:Resources.ChooseDir}"
-                            Style="{StaticResource ButtonStyleFill}" />
-                    </StackPanel>
 
 
                     <StackPanel Margin="20,5" Orientation="Horizontal">
@@ -338,6 +328,138 @@
 
                 </StackPanel>
 
+
+            </TabItem>
+
+            <TabItem
+                Background="Transparent"
+                FontSize="15"
+                Header="图像">
+
+                <StackPanel Margin="20,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Grid.Column="0"
+                            Margin="0,10"
+                            VerticalAlignment="Top"
+                            VerticalContentAlignment="Top"
+                            Content="{x:Static lang:Resources.ImageSavePath}"
+                            Style="{StaticResource InfoLabel}" />
+                        <StackPanel
+                            Grid.Column="2"
+                            Margin="5,0"
+                            Orientation="Vertical">
+                            <ComboBox
+                                Name="ImageSelectComboBox"
+                                Height="30"
+                                MinWidth="500"
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                Background="{DynamicResource Window.Side.Background}"
+                                BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                                FontSize="16"
+                                Foreground="{DynamicResource Global.Foreground}"
+                                ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                                SelectedIndex="{Binding ImagePathType, Source={x:Static p:Settings.Default}, Mode=TwoWay}"
+                                Style="{StaticResource NormalComboBox}"
+                                Tag="{DynamicResource Window.Side.Hover.Background}"
+                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                <ComboBoxItem Content="绝对路径" />
+                                <ComboBoxItem Content="相对于 Jvedio 的路径" />
+                                <ComboBoxItem Content="相对于影片路径" />
+                            </ComboBox>
+                            <StackPanel Orientation="Horizontal">
+                                <chao:SearchBox
+                                    MinWidth="500"
+                                    ShowClearButton="True"
+                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Text="{Binding BasePicPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                <Border
+                                    Grid.Column="2"
+                                    Padding="3,2,5,5"
+                                    MouseLeftButtonDown="SetBasePicPath"
+                                    ToolTip="{x:Static lang:Resources.Sorting}">
+
+                                    <Border.Style>
+                                        <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=ImageSelectComboBox}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+
+
+                                    <Viewbox Width="auto" Height="18">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M919.04 416.4608c0-17.8688-5.12-22.9888-22.9888-22.9888H130.304c-17.8688 0-25.6 5.12-25.6 25.6v400.7424c0 53.6064 22.9888 76.8 74.0352 76.8h668.8256c51.2 0 74.0352-22.9888 74.0352-74.0352-2.56-138.0864-2.56-270.848-2.56-406.1184zM125.184 352.6144H875.52c43.4176 0 43.4176 0 43.4176-40.96 0-48.4864-20.48-66.56-66.56-66.56h-323.8912c-40.96 0-40.96 0-40.96-40.96 0-43.4176-20.48-61.44-63.7952-61.44H168.6016c-46.08-2.56-63.7952 15.36-66.56 61.44v125.5424c0.3584 20.4288 5.4784 22.9376 23.1424 22.9376z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+                            </StackPanel>
+
+                            <TextBox
+                                Margin="10"
+                                FontSize="15"
+                                Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                Text="请输入相对路径（以 './' 或 '../' 开头）或绝对路径。" />
+
+                            <StackPanel Orientation="Vertical" Visibility="Collapsed">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label
+                                        Margin="0,10"
+                                        VerticalAlignment="Top"
+                                        VerticalContentAlignment="Top"
+                                        Content="海报"
+                                        Style="{StaticResource InfoLabel}" />
+                                    <chao:SearchBox
+                                        MinWidth="500"
+                                        ShowClearButton="True"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label
+                                        Margin="0,10"
+                                        VerticalAlignment="Top"
+                                        VerticalContentAlignment="Top"
+                                        Content="缩略"
+                                        Style="{StaticResource InfoLabel}" />
+                                    <chao:SearchBox
+                                        MinWidth="500"
+                                        ShowClearButton="True"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label
+                                        Margin="0,10"
+                                        VerticalAlignment="Top"
+                                        VerticalContentAlignment="Top"
+                                        Content="预览"
+                                        Style="{StaticResource InfoLabel}" />
+                                    <chao:SearchBox
+                                        MinWidth="500"
+                                        ShowClearButton="True"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="" />
+                                </StackPanel>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </Grid>
+
+
+                </StackPanel>
 
             </TabItem>
             <TabItem

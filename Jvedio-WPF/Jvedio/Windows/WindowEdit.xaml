@@ -27,26 +27,6 @@
 
         <local:VideoTypeConverter x:Key="VideoTypeConverter" />
 
-        <Style x:Key="BaseSearchTextBox" TargetType="{x:Type chao:SearchBox}">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Height" Value="auto" />
-            <Setter Property="ShowClearButton" Value="True" />
-            <Setter Property="FontFamily" Value="Times New Romans" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="PlaceHolder" Value="" />
-            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
-            <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
-            <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="5,0" />
-            <Setter Property="Margin" Value="5" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ListBoxItem.Hover.Background}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
 
 
 

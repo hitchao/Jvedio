@@ -41,6 +41,7 @@
     <chao:BaseWindow.Resources>
 
         <!--  高清、中字、流出  -->
+        <local:ParseImagePathConverter x:Key="ParseImagePathConverter" />
         <local:TagStampsConverter x:Key="TagStampsConverter" />
         <local:MovieStampTypeToVisibilityConverter x:Key="MovieStampTypeToVisibilityConverter" />
 
@@ -165,22 +166,23 @@
             <Setter Property="Height" Value="40" />
         </Style>
 
-        <Style x:Key="ViewImage" TargetType="{x:Type Image}">
+        <Style x:Key="GifImageStyle" TargetType="{x:Type local:GifImage}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ShowImageMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="0">
-                    <Setter Property="Source" Value="{Binding SmallImage, Mode=OneWay}" />
+                    <Setter Property="SourceType" Value="SmallImage" />
                     <Setter Property="Width" Value="{Binding SmallImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
                     <Setter Property="Height" Value="{Binding SmallImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
 
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding ShowImageMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="1">
-                    <Setter Property="Source" Value="{Binding BigImage, Mode=OneWay}" />
+                    <Setter Property="SourceType" Value="BigImage" />
                     <Setter Property="Width" Value="{Binding BigImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
                     <Setter Property="Height" Value="{Binding BigImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding ShowImageMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="2">
+                    <Setter Property="SourceType" Value="Gif" />
                     <Setter Property="Width" Value="{Binding GifImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
                     <Setter Property="Height" Value="{Binding GifImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
                 </DataTrigger>
@@ -770,6 +772,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Panel.ZIndex="6"
+                                    PreviewMouseLeftButtonDown="NewList"
                                     Style="{StaticResource RoundBorder}"
                                     Tag="{DynamicResource Window.Title.Hover.Background}"
                                     ToolTip="{x:Static lang:Resources.Add}">
@@ -826,21 +829,17 @@
                                 <chao:TogglePanel
                                     Padding="0,5"
                                     FontSize="15"
-                                    Header="我的清单"
+                                    Header="快速访问"
                                     IsExpanded="True"
                                     IsSelected="False"
                                     LineWidth="0"
                                     Style="{StaticResource BaseTogglePanel}">
-                                    <StackPanel Visibility="{Binding ShowList, Source={x:Static p:Settings.Default}, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay}">
-                                        <!--<Border
-                                        Height="1"
-                                        Margin="5,10"
-                                        Background="{DynamicResource Global.Foreground}"
-                                        CornerRadius="1" />-->
+                                    <StackPanel>
+
                                         <ItemsControl
-                                            x:Name="ListItemsControl"
+                                            x:Name="MyListItemsControl"
                                             Background="Transparent"
-                                            ItemsSource="{Binding MainList}">
+                                            ItemsSource="{Binding MyList}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel />
@@ -849,30 +848,15 @@
 
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <StackPanel Name="ListStackPanel">
-                                                        <chao:PathRadioButton
-                                                            Click="ShowSameList"
-                                                            MainText="{Binding Name}"
-                                                            Path="M506.88 88.669091c-231.330909 0-418.909091 187.578182-418.909091 418.909091s187.578182 418.909091 418.909091 418.909091 418.909091-187.578182 418.909091-418.909091-187.578182-418.909091-418.909091-418.909091z m178.036364 661.178182c-8.843636 8.378182-20.247273 12.567273-31.650909 12.567272-12.567273 0-24.901818-4.887273-33.978182-14.894545l-177.338182-190.836364V299.52c0-25.6 20.945455-46.545455 46.545454-46.545455s46.545455 20.945455 46.545455 46.545455v220.625455l152.436364 163.84c17.221818 18.850909 16.290909 48.407273-2.56 65.861818z"
-                                                            Style="{StaticResource BasePathRadioButton}"
-                                                            SubText="{Binding Number}" />
-                                                    </StackPanel>
+                                                    <chao:PathRadioButton
+                                                        Click="ShowSameList"
+                                                        MainText="{Binding Name}"
+                                                        Path="M506.88 88.669091c-231.330909 0-418.909091 187.578182-418.909091 418.909091s187.578182 418.909091 418.909091 418.909091 418.909091-187.578182 418.909091-418.909091-187.578182-418.909091-418.909091-418.909091z m178.036364 661.178182c-8.843636 8.378182-20.247273 12.567273-31.650909 12.567272-12.567273 0-24.901818-4.887273-33.978182-14.894545l-177.338182-190.836364V299.52c0-25.6 20.945455-46.545455 46.545454-46.545455s46.545455 20.945455 46.545455 46.545455v220.625455l152.436364 163.84c17.221818 18.850909 16.290909 48.407273-2.56 65.861818z"
+                                                        Style="{StaticResource BasePathRadioButton}"
+                                                        SubText="{Binding Number}" />
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-
-
-
-                                        <chao:PathRadioButton
-                                            Click="ShowMoreList"
-                                            GroupName="more_PathRadioButton"
-                                            MainText="更多"
-                                            Path="M512 928C282.25 928 96 741.75 96 512S282.25 96 512 96s416 186.25 416 416-186.25 416-416 416zM272 600c48.601 0 88-39.399 88-88s-39.399-88-88-88-88 39.399-88 88 39.399 88 88 88z m240 0c48.601 0 88-39.399 88-88s-39.399-88-88-88-88 39.399-88 88 39.399 88 88 88z m240 0c48.601 0 88-39.399 88-88s-39.399-88-88-88-88 39.399-88 88 39.399 88 88 88z"
-                                            Style="{StaticResource BasePathRadioButton}"
-                                            SubText="&gt;"
-                                            Visibility="{Binding ShowMoreListBtn, Converter={StaticResource bool2VisibilityConverter}}" />
-
-
                                     </StackPanel>
 
                                 </chao:TogglePanel>
@@ -2204,17 +2188,20 @@
                                                                             ToolTip="{Binding id, Mode=OneWay}"
                                                                             Visibility="{Binding ShowImageMode, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=2, Source={x:Static p:Settings.Default}, Mode=OneWay}">-->
                                                                     <local:GifImage
+                                                                        x:Name="GifImage"
                                                                         Margin="0"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
+                                                                        BigImageSource="{Binding BigImage, Mode=OneWay}"
                                                                         Cursor="Hand"
                                                                         GifSource="{Binding GifUri, Mode=OneWay}"
                                                                         MouseEnter="BorderMouseEnter"
                                                                         MouseLeave="BorderMouseLeave"
                                                                         MouseLeftButtonDown="CanShowDetails"
                                                                         MouseLeftButtonUp="ShowDetails"
+                                                                        SmallImageSource="{Binding SmallImage, Mode=OneWay}"
                                                                         Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
-                                                                        Style="{StaticResource ViewImage}">
+                                                                        Style="{StaticResource GifImageStyle}">
                                                                         <Image.ContextMenu>
                                                                             <ContextMenu
                                                                                 ContextMenuOpening="ContextMenu_ContextMenuOpening"
@@ -2250,17 +2237,35 @@
                                                                                     <MenuItem Click="DelLabel" Header="{x:Static lang:Resources.Menu_LabelManage4}" />
                                                                                     <MenuItem Click="ClearLabel" Header="{x:Static lang:Resources.Menu_LabelManage5}" />
                                                                                 </MenuItem>
-                                                                                <MenuItem Header="{x:Static lang:Resources.OpenPath}">
+                                                                                <MenuItem Header="{x:Static lang:Resources.OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                                                                                    <MenuItem
+                                                                                        Command="cmd:File.OpenSelectFile"
+                                                                                        CommandParameter="{Binding Path}"
+                                                                                        Header="{x:Static lang:Resources.Movie}" />
+                                                                                    <MenuItem
+                                                                                        Command="cmd:File.OpenSelectFile"
+                                                                                        CommandParameter="{Binding BigImagePath, Converter={StaticResource ParseImagePathConverter}}"
+                                                                                        Header="{x:Static lang:Resources.Poster}" />
+                                                                                    <MenuItem
+                                                                                        Command="cmd:File.OpenSelectFile"
+                                                                                        CommandParameter="{Binding SmallImagePath, Converter={StaticResource ParseImagePathConverter}}"
+                                                                                        Header="{x:Static lang:Resources.Thumbnail}" />
+                                                                                    <MenuItem
+                                                                                        Command="cmd:File.OpenSelectFile"
+                                                                                        CommandParameter="{Binding GifImagePath, Converter={StaticResource ParseImagePathConverter}}"
+                                                                                        Header="Gif" />
                                                                                     <MenuItem
                                                                                         Command="cmd:File.OpenDir"
-                                                                                        CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
-                                                                                        Header="{x:Static lang:Resources.Movie}" />
-                                                                                    <MenuItem Click="OpenImagePath" Header="{x:Static lang:Resources.Poster}" />
-                                                                                    <MenuItem Click="OpenImagePath" Header="{x:Static lang:Resources.Thumbnail}" />
-                                                                                    <MenuItem Click="OpenImagePath" Header="Gif" />
-                                                                                    <MenuItem Click="OpenImagePath" Header="{x:Static lang:Resources.Preview}" />
-                                                                                    <MenuItem Click="OpenImagePath" Header="{x:Static lang:Resources.ScreenShot}" />
-                                                                                    <MenuItem Click="OpenImagePath" Header="{x:Static lang:Resources.ActressImage}" />
+                                                                                        CommandParameter="{Binding PreviewImagePath, Converter={StaticResource ParseImagePathConverter}, ConverterParameter=OnlyDir}"
+                                                                                        Header="{x:Static lang:Resources.Preview}" />
+                                                                                    <MenuItem
+                                                                                        Command="cmd:File.OpenDir"
+                                                                                        CommandParameter="{Binding ScreenShotPath, Converter={StaticResource ParseImagePathConverter}, ConverterParameter=OnlyDir}"
+                                                                                        Header="{x:Static lang:Resources.ScreenShot}" />
+                                                                                    <!--<MenuItem
+                                                                                        Command="cmd:File.OpenDir"
+                                                                                        CommandParameter="{Binding Path, Converter={StaticResource ParseImagePathConverter}}"
+                                                                                        Header="{x:Static lang:Resources.ActressImage}" />-->
                                                                                 </MenuItem>
                                                                                 <MenuItem Name="TagMenuItems" Header="添加标记" />
                                                                                 <MenuItem
@@ -2268,10 +2273,6 @@
                                                                                     Header="{x:Static lang:Resources.Menu_OpenWebSite}"
                                                                                     Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
                                                                                 <MenuItem Click="CopyFile" Header="{x:Static lang:Resources.Menu_CopyFile}" />
-                                                                                <MenuItem
-                                                                                    Click="DeleteInfo"
-                                                                                    Header="{x:Static lang:Resources.Menu_ClearInfo}"
-                                                                                    ToolTip="{x:Static lang:Resources.ToolTip_ClearInfo}" />
                                                                                 <MenuItem
                                                                                     Click="DeleteID"
                                                                                     Header="{x:Static lang:Resources.Menu_DeleteInfo}"

@@ -43,13 +43,15 @@ namespace Jvedio.Utils
         }
 
 
-        public static string ToProperFileSize(this long filesize)
+        public static string ToProperFileSize(this long byteCount)
         {
-            double result = (double)filesize / 1024 / 1024;//MB
-            if (filesize >= 0.9)
-                return $"{Math.Round(result, 2)} MB";
-            else
-                return $"{Math.Ceiling(result * 1024)} KB";//KB
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + " " + suf[place];
         }
 
         public static bool IsLetter(this char c)

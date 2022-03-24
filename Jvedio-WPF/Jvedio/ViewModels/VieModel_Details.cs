@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using static Jvedio.GlobalVariable;
+using static Jvedio.GlobalMapper;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.IO;
@@ -14,6 +15,7 @@ using DynamicData;
 using System.Windows.Media.Imaging;
 using Jvedio.Utils;
 using Jvedio.Entity;
+using Jvedio.Core.SimpleORM;
 
 namespace Jvedio.ViewModel
 {
@@ -23,7 +25,7 @@ namespace Jvedio.ViewModel
         public event EventHandler QueryCompleted;
         public VieModel_Details()
         {
-            QueryCommand = new RelayCommand<string>(Query);
+
         }
 
         private int _SelectImageIndex = 0;
@@ -65,14 +67,14 @@ namespace Jvedio.ViewModel
 
 
 
-        private DetailMovie detailmovie;
+        private Video _CurrentVideo;
 
-        public DetailMovie DetailMovie
+        public Video CurrentVideo
         {
-            get { return detailmovie; }
+            get { return _CurrentVideo; }
             set
             {
-                detailmovie = value;
+                _CurrentVideo = value;
                 RaisePropertyChanged();
             }
         }
@@ -120,86 +122,74 @@ namespace Jvedio.ViewModel
         }
 
 
-        public RelayCommand<string> QueryCommand { get; set; }
+
 
 
         public void SaveLove()
         {
 
-            DataBase.UpdateMovieByID(DetailMovie.id, "favorites", DetailMovie.favorites, "string");
+            //DataBase.UpdateMovieByID(CurrentVideo.id, "favorites", CurrentVideo.favorites, "string");
         }
 
         public void SaveLabel()
         {
-            DataBase.UpdateMovieByID(DetailMovie.id, "label", string.Join(" ", DetailMovie.labellist), "string");
+            //DataBase.UpdateMovieByID(CurrentVideo.id, "label", string.Join(" ", CurrentVideo.labellist), "string");
         }
 
 
         public void onLabelChanged()
         {
-            RaisePropertyChanged("DetailMovie");
+            RaisePropertyChanged("CurrentVideo");
         }
 
 
 
-        public void Query(string movieid)
+        public void Load(long dataID)
         {
-            ((WindowDetails)FileProcess.GetWindowByName("WindowDetails")).SetStatus(false);
-            DetailMovie detailMovie = null;
-            detailMovie = DataBase.SelectDetailMovieById(movieid);
-            //访问次数+1
-            if (detailMovie != null)
-            {
-                detailMovie.visits += 1;
-                DataBase.UpdateMovieByID(movieid, "visits", detailMovie.visits);
-            }
+            //((WindowDetails)FileProcess.GetWindowByName("WindowDetails")).SetStatus(false);
+            metaDataMapper.increaseFieldById("ViewCount", dataID); //访问次数+1
+            CurrentVideo = videoMapper.SelectVideoByID(dataID);
+
+            // 磁力
+            List<Magnet> magnets = magnetsMapper.selectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
+            CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size).ThenByDescending(arg => arg.Releasedate).ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList(); ;
 
             //释放图片内存
-            if (DetailMovie != null)
-            {
-                DetailMovie.smallimage = null;
-                DetailMovie.bigimage = null;
-                for (int i = 0; i < DetailMovie.extraimagelist.Count; i++)
-                {
-                    DetailMovie.extraimagelist[i] = null;
-                }
+            //CurrentVideo.SmallImage = null;
+            //CurrentVideo.BigImage = null;
+            //for (int i = 0; i < CurrentVideo.PreviewImageList.Count; i++)
+            //{
+            //    CurrentVideo.PreviewImageList[i] = null;
+            //}
+            // todo 释放演员头像
 
-                for (int i = 0; i < DetailMovie.actorlist.Count; i++)
-                {
-                    DetailMovie.actorlist[i].bigimage = null;
-                    DetailMovie.actorlist[i].smallimage = null;
-                }
-            }
-            GC.Collect();
+            //GC.Collect();
 
 
-            DetailMovie = new DetailMovie();
-            if (detailMovie != null)
-            {
-                BitmapImage bigimage = ImageProcess.GetBitmapImage(detailMovie.id, "BigPic");
-                if (bigimage == null) bigimage = DefaultBigImage;
-                detailMovie.bigimage = bigimage;
-                MySqlite db = new MySqlite("Translate");
-                //加载翻译结果
-                if (Properties.Settings.Default.TitleShowTranslate)
-                {
-                    string translate_title = db.GetInfoBySql($"select translate_title from youdao where id='{detailMovie.id}'");
-                    if (translate_title != "") detailMovie.title = translate_title;
-                }
 
-                if (Properties.Settings.Default.PlotShowTranslate)
-                {
-                    string translate_plot = db.GetInfoBySql($"select translate_plot from youdao where id='{detailMovie.id}'");
-                    if (translate_plot != "") detailMovie.plot = translate_plot;
-                }
-                db.CloseDB();
+            CurrentVideo.BigImage = ImageProcess.BitmapImageFromFile(Video.parseImagePath(CurrentVideo.BigImagePath));
+            if (CurrentVideo.BigImage == null) CurrentVideo.BigImage = DefaultBigImage;
+            //MySqlite db = new MySqlite("Translate");
+            ////加载翻译结果
+            //if (Properties.Settings.Default.TitleShowTranslate)
+            //{
+            //    string translate_title = db.GetInfoBySql($"select translate_title from youdao where id='{CurrentVideo.id}'");
+            //    if (translate_title != "") CurrentVideo.title = translate_title;
+            //}
 
-                DetailMovie = detailMovie;
-                detailMovie.tagstamps = "";
-                FileProcess.addTag(ref detailMovie);
-                if (string.IsNullOrEmpty(DetailMovie.title)) DetailMovie.title = Path.GetFileNameWithoutExtension(DetailMovie.filepath);
-                QueryCompleted?.Invoke(this, new EventArgs());
-            }
+            //if (Properties.Settings.Default.PlotShowTranslate)
+            //{
+            //    string translate_plot = db.GetInfoBySql($"select translate_plot from youdao where id='{CurrentVideo.id}'");
+            //    if (translate_plot != "") CurrentVideo.plot = translate_plot;
+            //}
+            //db.CloseDB();
+
+            //CurrentVideo = CurrentVideo;
+            //CurrentVideo.tagstamps = "";
+            //FileProcess.addTag(ref CurrentVideo);
+            //if (string.IsNullOrEmpty(CurrentVideo.title)) CurrentVideo.title = Path.GetFileNameWithoutExtension(CurrentVideo.filepath);
+            QueryCompleted?.Invoke(this, new EventArgs());
+
         }
     }
 

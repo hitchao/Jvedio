@@ -31,17 +31,27 @@ namespace Jvedio
             movie.smallimage = smallimage;
             movie.bigimage = bigimage;
         }
-        public static void SetImage(ref Video video)
+        public static void SetImage(ref Video video, int imageMode = 0)
         {
+            if (imageMode < 2)
+            {
+                string bigImagePath = Video.parseImagePath(video.BigImagePath);
+                string smallImagePath = Video.parseImagePath(video.SmallImagePath);
+                BitmapImage smallimage = ReadImageFromFile(smallImagePath);
+                BitmapImage bigimage = ReadImageFromFile(bigImagePath);
+                if (smallimage == null) smallimage = DefaultSmallImage;
+                if (bigimage == null) bigimage = DefaultBigImage;
+                video.SmallImage = smallimage;
+                video.BigImage = bigimage;
+            }
+            else if (imageMode == 2)
+            {
+
+                string gifpath = Video.parseImagePath(video.GifImagePath);
+                if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
+            }
             //加载图片
-            string bigImagePath = Video.parseImagePath(video.BigImagePath);
-            string smallImagePath = Video.parseImagePath(video.SmallImagePath);
-            BitmapImage smallimage = ReadImageFromFile(smallImagePath);
-            BitmapImage bigimage = ReadImageFromFile(bigImagePath);
-            if (smallimage == null) smallimage = DefaultSmallImage;
-            if (bigimage == null) bigimage = DefaultBigImage;
-            video.SmallImage = smallimage;
-            video.BigImage = bigimage;
+
         }
 
 

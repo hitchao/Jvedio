@@ -36,7 +36,7 @@ namespace Jvedio.Core.SimpleORM
 
         bool insert(T entity);
 
-        bool deleteById(object id);
+        int deleteById(object id);
 
         int deleteByDict(Dictionary<string, object> dict);
 

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using Jvedio.Core.Enums;
+using Jvedio.Entity;
 using Jvedio.Utils;
 
 namespace Jvedio
@@ -93,6 +94,28 @@ namespace Jvedio
 
 
 
+    public class ParseImagePathConverter : IValueConverter
+    {
+        public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string path = "";
+            if (value == null || string.IsNullOrEmpty(value.ToString())) return null;
+            bool OnlyDir = false;
+            if (parameter != null && parameter.ToString() == "OnlyDir") OnlyDir = true;
+            path = Video.parseImagePath(value.ToString());
+            if (OnlyDir)
+                return System.IO.Path.GetDirectoryName(path);
+            else
+                return path;
+        }
+
+        public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+
     public class TagStampsConverter : IValueConverter
     {
         public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -116,27 +139,46 @@ namespace Jvedio
     {
         public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value == null) return Jvedio.Language.Resources.Uncensored;
-
-            int.TryParse(value.ToString(), out int vt);
-            if (vt == 1)
+            if (value == null) return Jvedio.Language.Resources.Normal;
+            Enum.TryParse(value.ToString(), out VideoType videoType);
+            if (videoType == VideoType.Normal)
+            {
+                return Jvedio.Language.Resources.Normal;
+            }
+            else if (videoType == VideoType.UnCensored)
             {
                 return Jvedio.Language.Resources.Uncensored;
             }
-            else if (vt == 2)
+            else if (videoType == VideoType.Censored)
             {
                 return Jvedio.Language.Resources.Censored;
             }
-            else if (vt == 3)
+            else if (videoType == VideoType.Europe)
             {
                 return Jvedio.Language.Resources.Europe;
             }
-            return Jvedio.Language.Resources.All;
+            return Jvedio.Language.Resources.Normal;
         }
 
         public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return null;
+        }
+    }
+    public class VidioTypeToIntConverter : IValueConverter
+    {
+        public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return Jvedio.Language.Resources.Normal;
+            Enum.TryParse(value.ToString(), out VideoType videoType);
+            return (int)videoType;
+        }
+
+        public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return VideoType.Normal;
+            int.TryParse(value.ToString(), out int videoType);
+            return (VideoType)videoType;
         }
     }
 

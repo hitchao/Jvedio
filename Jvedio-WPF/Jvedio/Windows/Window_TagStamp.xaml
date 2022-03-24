@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="新建标记"
+    Title="标记"
     Width="400"
     Height="260"
     Background="{DynamicResource BackgroundMain}"
