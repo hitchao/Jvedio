@@ -2582,6 +2582,17 @@ namespace Jvedio.ViewModel
                 long dbid = GlobalConfig.Main.CurrentDBId;
                 AllVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
                 FavoriteVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
+
+
+                string sql = "SELECT ActorID from actor_info " +
+                            "JOIN actor_name_to_metadatas " +
+                            "on actor_info.ActorName=actor_name_to_metadatas.ActorName " +
+                            "and actor_info.NameFlag=actor_name_to_metadatas.NameFlag " +
+                            "where DataID in " +
+                            $"( SELECT DataID FROM metadata where DBId ={dbid} and DataType={0}) " +
+                            "GROUP BY actor_name_to_metadatas.ActorName,actor_name_to_metadatas.NameFlag ;";
+                AllActorCount = actorMapper.select(sql).Count;
+                AllLabelCount = metaDataMapper.selectCount();
                 //VedioTypeACount = DataBase.SelectCountBySql("where vediotype=1");
                 //VedioTypeBCount = DataBase.SelectCountBySql("where vediotype=2");
                 //VedioTypeCCount = DataBase.SelectCountBySql("where vediotype=3");
@@ -2592,37 +2603,6 @@ namespace Jvedio.ViewModel
 
             });
         }
-
-
-        // 统计演员
-        public void StatisticActors()
-        {
-            Task.Run(() =>
-            {
-                long dbid = GlobalConfig.Main.CurrentDBId;
-                AllVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
-
-            });
-        }
-        // 统计标签
-        public void StatisticLabels()
-        {
-            Task.Run(() =>
-            {
-                long dbid = GlobalConfig.Main.CurrentDBId;
-                AllVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
-                FavoriteVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
-                //VedioTypeACount = DataBase.SelectCountBySql("where vediotype=1");
-                //VedioTypeBCount = DataBase.SelectCountBySql("where vediotype=2");
-                //VedioTypeCCount = DataBase.SelectCountBySql("where vediotype=3");
-                DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
-                DateTime date2 = DateTime.Now;
-                RecentWatchCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
-
-
-            });
-        }
-
 
 
 

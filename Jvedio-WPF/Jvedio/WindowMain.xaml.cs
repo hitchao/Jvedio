@@ -120,7 +120,6 @@ namespace Jvedio
             setRecentWatched();// 显示最近播放
             //vieModel.GetFilterInfo(); //todo 筛选器
             vieModel.Statistic();
-            vieModel.StatisticActors();
             //// todo 设置图片类型
             //await vieModel.InitLettersNavigation(); // todo 
             InitMovie();
