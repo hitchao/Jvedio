@@ -37,6 +37,7 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Sqlite;
 using Jvedio.Utils.Visual;
 using Jvedio.Core.Enums;
+using Jvedio.Utils.Common;
 
 namespace Jvedio
 {
@@ -119,6 +120,7 @@ namespace Jvedio
             setRecentWatched();// 显示最近播放
             //vieModel.GetFilterInfo(); //todo 筛选器
             vieModel.Statistic();
+            vieModel.StatisticActors();
             //// todo 设置图片类型
             //await vieModel.InitLettersNavigation(); // todo 
             InitMovie();
@@ -2062,7 +2064,11 @@ namespace Jvedio
                     success = FileHelper.TryOpenFile(filepath, token);
                 }
 
-                if (success && dataID > 0) vieModel.AddToRecentWatch(dataID);
+                if (success && dataID > 0)
+                {
+                    metaDataMapper.updateFieldById("ViewDate", DateHelper.Now(), dataID);
+                    vieModel.Statistic();
+                }
             }
             else
             {
@@ -5407,10 +5413,6 @@ namespace Jvedio
             textBox.ScrollToEnd();
         }
 
-        private void ShowClassifyGrid(object sender, RoutedEventArgs e)
-        {
-            vieModel.TabSelectedIndex = 1;
-        }
 
         private void RefreshClassify(object sender, MouseButtonEventArgs e)
         {

@@ -33,6 +33,7 @@ using Jvedio.Utils;
 using Jvedio.Entity;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity.CommonSQL;
+using Jvedio.Utils.Common;
 
 namespace Jvedio.ViewModel
 {
@@ -65,6 +66,8 @@ namespace Jvedio.ViewModel
 
         #region "RelayCommand"
         public RelayCommand<object> SelectCommand { get; set; }
+        public RelayCommand<object> ShowActorsCommand { get; set; }
+        public RelayCommand<object> ShowLabelsCommand { get; set; }
         public RelayCommand GenreCommand { get; set; }
         public RelayCommand ActorCommand { get; set; }
         public RelayCommand LabelCommand { get; set; }
@@ -82,6 +85,8 @@ namespace Jvedio.ViewModel
         public VieModel_Main()
         {
             SelectCommand = new RelayCommand<object>(t => Select(t));
+            ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
+            ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
             GenreCommand = new RelayCommand(GetGenreList);
             ActorCommand = new RelayCommand(GetActorList);
             LabelCommand = new RelayCommand(GetLabelList);
@@ -705,10 +710,6 @@ namespace Jvedio.ViewModel
         #endregion
 
 
-
-
-
-
         #region "Variable"
 
 
@@ -834,6 +835,28 @@ namespace Jvedio.ViewModel
             set
             {
                 _RecentWatchCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private long _AllActorCount = 0;
+        public long AllActorCount
+        {
+            get { return _AllActorCount; }
+            set
+            {
+                _AllActorCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private long _AllLabelCount = 0;
+        public long AllLabelCount
+        {
+            get { return _AllLabelCount; }
+            set
+            {
+                _AllLabelCount = value;
                 RaisePropertyChanged();
             }
         }
@@ -1297,6 +1320,18 @@ namespace Jvedio.ViewModel
             Select();
         }
 
+
+        public void ShowAllActors(object o)
+        {
+            TabSelectedIndex = 1;
+
+        }
+
+        public void ShowAllLabels(object o)
+        {
+            TabSelectedIndex = 2;
+
+        }
 
 
 
@@ -1969,37 +2004,6 @@ namespace Jvedio.ViewModel
 
 
 
-        public void AddToRecentWatch(long dataID)
-        {
-            // todo AddToRecentWatch
-            //DateTime dateTime = DateTime.Now.Date;
-            //if (!string.IsNullOrEmpty(ID))
-            //{
-            //    if (RecentWatched.ContainsKey(dateTime))
-            //    {
-            //        if (!RecentWatched[dateTime].Contains(ID))
-            //            RecentWatched[dateTime].Add(ID);
-
-            //    }
-            //    else
-            //    {
-            //        RecentWatched.Add(dateTime, new List<string>() { ID });
-            //    }
-            //}
-
-
-
-            //List<string> total = new List<string>();
-
-            //foreach (var keyvalue in RecentWatched)
-            //{
-            //    total = total.Union(keyvalue.Value).ToList();
-            //}
-
-
-            //RecentWatchedCount = total.Count;
-
-        }
 
 
 
@@ -2276,7 +2280,7 @@ namespace Jvedio.ViewModel
 
         public async void Select(object o = null)
         {
-
+            TabSelectedIndex = 0; // 影片
             // 判断当前获取的队列
             while (pageQueue.Count > 1)
             {
@@ -2304,6 +2308,7 @@ namespace Jvedio.ViewModel
             setSortOrder(wrapper);
             wrapper.Select(SelectFields).Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0);
 
+            // 侧边栏参数
             if (o != null && !string.IsNullOrEmpty(o.ToString()))
             {
                 switch (o.ToString())
@@ -2580,9 +2585,39 @@ namespace Jvedio.ViewModel
                 //VedioTypeACount = DataBase.SelectCountBySql("where vediotype=1");
                 //VedioTypeBCount = DataBase.SelectCountBySql("where vediotype=2");
                 //VedioTypeCCount = DataBase.SelectCountBySql("where vediotype=3");
-                string date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays).Date.ToString("yyyy-MM-dd");
-                string date2 = DateTime.Now.ToString("yyyy-MM-dd");
-                RecentWatchCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", date1, date2));
+                DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
+                DateTime date2 = DateTime.Now;
+                RecentWatchCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
+
+
+            });
+        }
+
+
+        // 统计演员
+        public void StatisticActors()
+        {
+            Task.Run(() =>
+            {
+                long dbid = GlobalConfig.Main.CurrentDBId;
+                AllVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
+
+            });
+        }
+        // 统计标签
+        public void StatisticLabels()
+        {
+            Task.Run(() =>
+            {
+                long dbid = GlobalConfig.Main.CurrentDBId;
+                AllVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
+                FavoriteVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
+                //VedioTypeACount = DataBase.SelectCountBySql("where vediotype=1");
+                //VedioTypeBCount = DataBase.SelectCountBySql("where vediotype=2");
+                //VedioTypeCCount = DataBase.SelectCountBySql("where vediotype=3");
+                DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
+                DateTime date2 = DateTime.Now;
+                RecentWatchCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
 
 
             });
