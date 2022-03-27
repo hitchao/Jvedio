@@ -30,7 +30,7 @@ namespace Jvedio.Mapper
             "Genre",
             "Tag",
             "Grade",
-            "Label",
+            $"(select group_concat(LabelName,'{GlobalVariable.Separator}') from metadata_to_label where metadata_to_label.DataID=metadata.DataID) as Label",
             "ViewDate",
             "FirstScanDate",
             "LastScanDate",
@@ -72,6 +72,43 @@ namespace Jvedio.Mapper
             List<Video> videos = toEntity<Video>(list, typeof(Video).GetProperties(), false);
             if (videos.Count > 0) return videos[0];
             return null;
+        }
+
+        public void SaveLabel(Video video, List<string> oldLabels)
+        {
+            List<string> newLabels = video.LabelList;
+            if (oldLabels == null) oldLabels = new List<string>();
+            if (newLabels == null) newLabels = new List<string>();
+            if (newLabels.SequenceEqual(oldLabels)) return;
+            // 删除，新增
+            oldLabels = oldLabels.OrderBy(arg => arg).ToList();
+            newLabels = newLabels.OrderBy(arg => arg).ToList();
+            List<string> to_delete = oldLabels.Except(newLabels).ToList();
+            List<string> to_create = newLabels.Except(oldLabels).ToList();
+
+            //删除
+            if (to_delete.Count > 0)
+            {
+                // ('1','2','3')
+                string sql = $"delete from metadata_to_label " +
+                    $"where DataID={video.DataID} " +
+                    $"and LabelName in ('{string.Join("','", to_delete)}')";
+                executeNonQuery(sql);
+            }
+
+            // 新增
+            if (to_create.Count > 0)
+            {
+                List<string> create = new List<string>();
+                to_create.ForEach(arg =>
+                {
+                    create.Add($"({video.DataID},'{arg}')");
+                });
+
+                string sql = $"insert or ignore into metadata_to_label(DataID,LabelName) " +
+                    $"values {string.Join(",", create)}";
+                executeNonQuery(sql);
+            }
         }
 
         public int deleteVideoByIds(List<string> idList)

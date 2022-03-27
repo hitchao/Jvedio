@@ -56,6 +56,7 @@ namespace Jvedio.Entity
             set
             {
                 _Genre = value;
+                GenreList = new List<string>();
                 if (!string.IsNullOrEmpty(value))
                 {
                     GenreList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -70,12 +71,14 @@ namespace Jvedio.Entity
         public float Grade { get; set; }
 
         private string _Label;
+        [TableField(exist: false)]
         public string Label
         {
             get { return _Label; }
             set
             {
                 _Label = value;
+                LabelList = new List<string>();
                 if (!string.IsNullOrEmpty(value))
                 {
                     LabelList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();

@@ -478,20 +478,6 @@ namespace Jvedio
 
 
 
-        public void ScorllToTop()
-        {
-
-        }
-
-
-        public async Task<bool> InitActor()
-        {
-            vieModel.GetActorList();
-            await Task.Delay(1);
-            return true;
-        }
-
-
 
 
         private void ResizingTimer_Tick(object sender, EventArgs e)
@@ -1429,67 +1415,67 @@ namespace Jvedio
 
         public async void ShowSameActor(object sender, MouseButtonEventArgs e)
         {
-            Image image = sender as Image;
-            StackPanel stackPanel = image.Parent as StackPanel;
-            TextBox textBox = stackPanel.Children.OfType<TextBox>().First();
-            string name = textBox.Text.Split('(')[0];
-            if (Properties.Settings.Default.ActorEditMode)
-            {
-                (Actress currentActress, int selectIdx) = GetActressFromCurrentActors(name);
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                {
-                    if (firstidx == -1)
-                        firstidx = selectIdx;
-                    else
-                        secondidx = selectIdx;
-                }
+            //Image image = sender as Image;
+            //StackPanel stackPanel = image.Parent as StackPanel;
+            //TextBox textBox = stackPanel.Children.OfType<TextBox>().First();
+            //string name = textBox.Text.Split('(')[0];
+            //if (Properties.Settings.Default.ActorEditMode)
+            //{
+            //    (Actress currentActress, int selectIdx) = GetActressFromCurrentActors(name);
+            //    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+            //    {
+            //        if (firstidx == -1)
+            //            firstidx = selectIdx;
+            //        else
+            //            secondidx = selectIdx;
+            //    }
 
 
-                if (firstidx >= 0 && secondidx >= 0)
-                {
-                    if (firstidx > secondidx)
-                    {
-                        //交换一下顺序
-                        int temp = firstidx;
-                        firstidx = secondidx - 1;
-                        secondidx = temp - 1;
-                    }
+            //    if (firstidx >= 0 && secondidx >= 0)
+            //    {
+            //        if (firstidx > secondidx)
+            //        {
+            //            //交换一下顺序
+            //            int temp = firstidx;
+            //            firstidx = secondidx - 1;
+            //            secondidx = temp - 1;
+            //        }
 
-                    for (int i = firstidx + 1; i <= secondidx; i++)
-                    {
-                        var m = vieModel.CurrentActorList[i];
-                        if (SelectedActress.Contains(m))
-                            SelectedActress.Remove(m);
-                        else
-                            SelectedActress.Add(m);
-                    }
-                    firstidx = -1;
-                    secondidx = -1;
-                }
-                else
-                {
-                    if (SelectedActress.Contains(currentActress))
-                        SelectedActress.Remove(currentActress);
-                    else
-                        SelectedActress.Add(currentActress);
-                }
+            //        for (int i = firstidx + 1; i <= secondidx; i++)
+            //        {
+            //            var m = vieModel.CurrentActorList[i];
+            //            if (SelectedActress.Contains(m))
+            //                SelectedActress.Remove(m);
+            //            else
+            //                SelectedActress.Add(m);
+            //        }
+            //        firstidx = -1;
+            //        secondidx = -1;
+            //    }
+            //    else
+            //    {
+            //        if (SelectedActress.Contains(currentActress))
+            //            SelectedActress.Remove(currentActress);
+            //        else
+            //            SelectedActress.Add(currentActress);
+            //    }
 
 
-                ActorSetSelected();
-            }
-            else
-            {
-                vieModel.ActorInfoGrid = Visibility.Visible;
-                vieModel.IsLoadingMovie = true;
-                vieModel.TabSelectedIndex = 0;
-                var currentActress = vieModel.ActorList.Where(arg => arg.name == name).First();
-                Actress actress = DataBase.SelectInfoByActress(currentActress);
-                actress.id = "";//不按照 id 选取演员
-                await vieModel.AsyncGetMoviebyActress(actress);
-                vieModel.Actress = actress;
-                vieModel.AsyncFlipOver();
-                vieModel.TextType = actress.name;
-            }
+            //    ActorSetSelected();
+            //}
+            //else
+            //{
+            //    vieModel.ActorInfoGrid = Visibility.Visible;
+            //    vieModel.IsLoadingMovie = true;
+            //    vieModel.TabSelectedIndex = 0;
+            //    var currentActress = vieModel.ActorList.Where(arg => arg.name == name).First();
+            //    Actress actress = DataBase.SelectInfoByActress(currentActress);
+            //    actress.id = "";//不按照 id 选取演员
+            //    await vieModel.AsyncGetMoviebyActress(actress);
+            //    vieModel.Actress = actress;
+            //    vieModel.AsyncFlipOver();
+            //    vieModel.TextType = actress.name;
+            //}
         }
 
 
@@ -1498,15 +1484,15 @@ namespace Jvedio
         {
             Actress result = null;
             int idx = 0;
-            for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
-            {
-                if (vieModel.CurrentActorList[i].name == name)
-                {
-                    result = vieModel.CurrentActorList[i];
-                    idx = i;
-                    break;
-                }
-            }
+            //for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
+            //{
+            //    if (vieModel.CurrentActorList[i].name == name)
+            //    {
+            //        result = vieModel.CurrentActorList[i];
+            //        idx = i;
+            //        break;
+            //    }
+            //}
             return (result, idx);
         }
 
@@ -3198,20 +3184,20 @@ namespace Jvedio
 
         private void GoToActorPage(object sender, KeyEventArgs e)
         {
-            if (vieModel.TotalActorPage <= 1) return;
-            if (e.Key == Key.Enter)
-            {
-                string pagestring = ((TextBox)sender).Text;
-                int page = 1;
-                if (pagestring == null) { page = 1; }
-                else
-                {
-                    var isnumeric = int.TryParse(pagestring, out page);
-                }
-                if (page > vieModel.TotalActorPage) { page = vieModel.TotalActorPage; } else if (page <= 0) { page = 1; }
-                vieModel.CurrentActorPage = page;
-                vieModel.ActorFlipOver();
-            }
+            //if (vieModel.TotalActorPage <= 1) return;
+            //if (e.Key == Key.Enter)
+            //{
+            //    string pagestring = ((TextBox)sender).Text;
+            //    int page = 1;
+            //    if (pagestring == null) { page = 1; }
+            //    else
+            //    {
+            //        var isnumeric = int.TryParse(pagestring, out page);
+            //    }
+            //    if (page > vieModel.TotalActorPage) { page = vieModel.TotalActorPage; } else if (page <= 0) { page = 1; }
+            //    vieModel.CurrentActorPage = page;
+            //    vieModel.ActorFlipOver();
+            //}
         }
 
         private void GoToPage(object sender, KeyEventArgs e)
@@ -3250,27 +3236,6 @@ namespace Jvedio
         }
 
 
-        private void PreviousActorPage(object sender, MouseButtonEventArgs e)
-        {
-            if (vieModel.TotalActorPage <= 1) return;
-            if (vieModel.CurrentActorPage - 1 <= 0)
-                vieModel.CurrentActorPage = vieModel.TotalActorPage;
-            else
-                vieModel.CurrentActorPage -= 1;
-            vieModel.ActorFlipOver();
-
-
-        }
-
-        private void NextActorPage(object sender, MouseButtonEventArgs e)
-        {
-            if (vieModel.TotalActorPage <= 1) return;
-            if (vieModel.CurrentActorPage + 1 > vieModel.TotalActorPage)
-                vieModel.CurrentActorPage = 1;
-            else
-                vieModel.CurrentActorPage += 1;
-            vieModel.ActorFlipOver();
-        }
 
 
 
@@ -3351,18 +3316,18 @@ namespace Jvedio
 
         private void ActorGrid_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.A & Properties.Settings.Default.ActorEditMode)
-            {
-                foreach (var item in vieModel.ActorList)
-                {
-                    if (!SelectedActress.Contains(item))
-                    {
-                        SelectedActress.Add(item);
+            //if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.A & Properties.Settings.Default.ActorEditMode)
+            //{
+            //    foreach (var item in vieModel.ActorList)
+            //    {
+            //        if (!SelectedActress.Contains(item))
+            //        {
+            //            SelectedActress.Add(item);
 
-                    }
-                }
-                ActorSetSelected();
-            }
+            //        }
+            //    }
+            //    ActorSetSelected();
+            //}
         }
 
         private void Grid_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -3439,12 +3404,12 @@ namespace Jvedio
 
         public void SelectAllActor(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.ActorEditMode) { ActorCancelSelect(); return; }
-            Properties.Settings.Default.ActorEditMode = true;
-            foreach (var item in vieModel.CurrentActorList)
-                if (!SelectedActress.Contains(item)) SelectedActress.Add(item);
+            //if (Properties.Settings.Default.ActorEditMode) { ActorCancelSelect(); return; }
+            //Properties.Settings.Default.ActorEditMode = true;
+            //foreach (var item in vieModel.CurrentActorList)
+            //    if (!SelectedActress.Contains(item)) SelectedActress.Add(item);
 
-            ActorSetSelected();
+            //ActorSetSelected();
         }
 
         public void ActorCancelSelect()
@@ -3454,42 +3419,42 @@ namespace Jvedio
 
         public void RefreshCurrentActressPage(object sender, RoutedEventArgs e)
         {
-            ActorCancelSelect();
-            if ((bool)LoveCheckBox.IsChecked)
-            {
-                ShowLoveActors(null, null);
-            }
-            else
-            {
-                vieModel.RefreshActor();
-            }
+            //ActorCancelSelect();
+            //if ((bool)LoveCheckBox.IsChecked)
+            //{
+            //    ShowLoveActors(null, null);
+            //}
+            //else
+            //{
+            //    vieModel.RefreshActor();
+            //}
 
         }
 
         public void StartDownLoadActor(List<Actress> actresses)
         {
-            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "BusActress.sqlite")) return;
+            //if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "BusActress.sqlite")) return;
 
-            downLoadActress = new DownLoadActress(actresses);
-
-
-            downLoadActress.InfoUpdate += (s, ev) =>
-                {
-                    ActressUpdateEventArgs ae = ev as ActressUpdateEventArgs;
-                    var actores = vieModel.ActorList.Where(arg => arg.name.ToUpper() == ae.Actress.name.ToUpper()).ToList();
-                    if (actores == null || actores.Count == 0) return;
-                    int idx = vieModel.ActorList.IndexOf(actores.First());
-                    if (idx >= vieModel.ActorList.Count) return;
-
-                    vieModel.ActorList[idx] = ae.Actress;
-                    vieModel.ActorProgressBarValue = (int)(ae.progressBarUpdate.value / ae.progressBarUpdate.maximum * 100);
-                    if (vieModel.ActorProgressBarValue == 100) downLoadActress.State = DownLoadState.Completed;
-                    if (vieModel.ActorProgressBarValue == 100 || ae.state == DownLoadState.Fail || ae.state == DownLoadState.Completed) vieModel.ActorProgressBarVisibility = Visibility.Hidden;
-                };
+            //downLoadActress = new DownLoadActress(actresses);
 
 
+            //downLoadActress.InfoUpdate += (s, ev) =>
+            //    {
+            //        ActressUpdateEventArgs ae = ev as ActressUpdateEventArgs;
+            //        var actores = vieModel.ActorList.Where(arg => arg.name.ToUpper() == ae.Actress.name.ToUpper()).ToList();
+            //        if (actores == null || actores.Count == 0) return;
+            //        int idx = vieModel.ActorList.IndexOf(actores.First());
+            //        if (idx >= vieModel.ActorList.Count) return;
 
-            downLoadActress?.BeginDownLoad();
+            //        vieModel.ActorList[idx] = ae.Actress;
+            //        vieModel.ActorProgressBarValue = (int)(ae.progressBarUpdate.value / ae.progressBarUpdate.maximum * 100);
+            //        if (vieModel.ActorProgressBarValue == 100) downLoadActress.State = DownLoadState.Completed;
+            //        if (vieModel.ActorProgressBarValue == 100 || ae.state == DownLoadState.Fail || ae.state == DownLoadState.Completed) vieModel.ActorProgressBarVisibility = Visibility.Hidden;
+            //    };
+
+
+
+            //downLoadActress?.BeginDownLoad();
         }
 
 
@@ -3502,18 +3467,18 @@ namespace Jvedio
         /// <param name="e"></param>
         public void StartDownLoadActress(object sender, RoutedEventArgs e)
         {
-            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.ActressDownloadAttention, GrowlToken);
-            DownloadActorPopup.IsOpen = false;
-            if (!JvedioServers.Bus.IsEnable)
-            {
-                HandyControl.Controls.Growl.Info($"BUS {Jvedio.Language.Resources.Message_NotOpenOrNotEnable}", GrowlToken);
-                return;
-            }
+            //HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.ActressDownloadAttention, GrowlToken);
+            //DownloadActorPopup.IsOpen = false;
+            //if (!JvedioServers.Bus.IsEnable)
+            //{
+            //    HandyControl.Controls.Growl.Info($"BUS {Jvedio.Language.Resources.Message_NotOpenOrNotEnable}", GrowlToken);
+            //    return;
+            //}
 
-            if (DownLoader?.State == DownLoadState.DownLoading)
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
-            else
-                StartDownLoadActor(vieModel.CurrentActorList.ToList());
+            //if (DownLoader?.State == DownLoadState.DownLoading)
+            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //else
+            //    StartDownLoadActor(vieModel.CurrentActorList.ToList());
 
 
 
@@ -3812,8 +3777,8 @@ namespace Jvedio
                 }
                 else
                 {
-                    vieModel.CurrentActorPage = vieModel.TotalActorPage;
-                    vieModel.ActorFlipOver();
+                    //vieModel.CurrentActorPage = vieModel.TotalActorPage;
+                    //vieModel.ActorFlipOver();
                     ActorSetSelected();
                 }
 
@@ -3831,7 +3796,7 @@ namespace Jvedio
                 else
                 {
                     vieModel.CurrentActorPage = 1;
-                    vieModel.ActorFlipOver();
+                    //vieModel.ActorFlipOver();
                     ActorSetSelected();
                 }
 
@@ -3846,14 +3811,14 @@ namespace Jvedio
                 //滑倒底端
 
             }
-            else if (vieModel.TabSelectedIndex == 0 && e.Key == Key.Right)
-                NextPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            else if (vieModel.TabSelectedIndex == 0 && e.Key == Key.Left)
-                PreviousPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            else if (vieModel.TabSelectedIndex == 1 && e.Key == Key.Right)
-                NextActorPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            else if (vieModel.TabSelectedIndex == 1 && e.Key == Key.Left)
-                PreviousActorPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            //else if (vieModel.TabSelectedIndex == 0 && e.Key == Key.Right)
+            //    NextPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            //else if (vieModel.TabSelectedIndex == 0 && e.Key == Key.Left)
+            //    PreviousPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            //else if (vieModel.TabSelectedIndex == 1 && e.Key == Key.Right)
+            //    NextActorPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            //else if (vieModel.TabSelectedIndex == 1 && e.Key == Key.Left)
+            //    PreviousActorPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
 
 
 
@@ -4423,38 +4388,38 @@ namespace Jvedio
 
         private void Image_Drop(object sender, DragEventArgs e)
         {
-            string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            string file = dragdropFiles[0];
+            //string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            //string file = dragdropFiles[0];
 
-            if (IsFile(file))
-            {
-                FileInfo fileInfo = new FileInfo(file);
-                if (fileInfo.Extension.ToLower() == ".jpg")
-                {
-                    FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"Actresses\\{vieModel.Actress.name}.jpg", true);
-                    Actress actress = vieModel.Actress;
-                    actress.smallimage = null;
-                    actress.smallimage = GetActorImage(actress.name);
-                    vieModel.Actress = null;
-                    vieModel.Actress = actress;
+            //if (IsFile(file))
+            //{
+            //    FileInfo fileInfo = new FileInfo(file);
+            //    if (fileInfo.Extension.ToLower() == ".jpg")
+            //    {
+            //        FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"Actresses\\{vieModel.Actress.name}.jpg", true);
+            //        Actress actress = vieModel.Actress;
+            //        actress.smallimage = null;
+            //        actress.smallimage = GetActorImage(actress.name);
+            //        vieModel.Actress = null;
+            //        vieModel.Actress = actress;
 
-                    if (vieModel.ActorList == null || vieModel.ActorList.Count == 0) return;
+            //        if (vieModel.ActorList == null || vieModel.ActorList.Count == 0) return;
 
-                    for (int i = 0; i < vieModel.ActorList.Count; i++)
-                    {
-                        if (vieModel.ActorList[i].name == actress.name)
-                        {
-                            vieModel.ActorList[i] = actress;
-                            break;
-                        }
-                    }
+            //        for (int i = 0; i < vieModel.ActorList.Count; i++)
+            //        {
+            //            if (vieModel.ActorList[i].name == actress.name)
+            //            {
+            //                vieModel.ActorList[i] = actress;
+            //                break;
+            //            }
+            //        }
 
-                }
-                else
-                {
-                    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_OnlySupportJPG, GrowlToken);
-                }
-            }
+            //    }
+            //    else
+            //    {
+            //        HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_OnlySupportJPG, GrowlToken);
+            //    }
+            //}
         }
 
         private void ActorImage_DragOver(object sender, DragEventArgs e)
@@ -4465,65 +4430,65 @@ namespace Jvedio
 
         private void ActorImage_Drop(object sender, DragEventArgs e)
         {
-            string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            string file = dragdropFiles[0];
+            //    string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            //    string file = dragdropFiles[0];
 
-            Image image = sender as Image;
-            StackPanel stackPanel = image.Parent as StackPanel;
-            TextBox textBox = stackPanel.Children.OfType<TextBox>().First();
-            string name = textBox.Text.Split('(')[0];
+            //    Image image = sender as Image;
+            //    StackPanel stackPanel = image.Parent as StackPanel;
+            //    TextBox textBox = stackPanel.Children.OfType<TextBox>().First();
+            //    string name = textBox.Text.Split('(')[0];
 
-            Actress currentActress = null;
-            for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
-            {
-                if (vieModel.CurrentActorList[i].name == name)
-                {
-                    currentActress = vieModel.CurrentActorList[i];
-                    break;
-                }
-            }
+            //    Actress currentActress = null;
+            //    for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
+            //    {
+            //        if (vieModel.CurrentActorList[i].name == name)
+            //        {
+            //            currentActress = vieModel.CurrentActorList[i];
+            //            break;
+            //        }
+            //    }
 
-            if (currentActress == null) return;
+            //    if (currentActress == null) return;
 
 
-            if (IsFile(file))
-            {
-                FileInfo fileInfo = new FileInfo(file);
-                if (fileInfo.Extension.ToLower() == ".jpg")
-                {
-                    FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"Actresses\\{currentActress.name}.jpg", true);
-                    Actress actress = currentActress;
-                    actress.smallimage = null;
-                    actress.smallimage = GetActorImage(actress.name);
+            //    if (IsFile(file))
+            //    {
+            //        FileInfo fileInfo = new FileInfo(file);
+            //        if (fileInfo.Extension.ToLower() == ".jpg")
+            //        {
+            //            FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"Actresses\\{currentActress.name}.jpg", true);
+            //            Actress actress = currentActress;
+            //            actress.smallimage = null;
+            //            actress.smallimage = GetActorImage(actress.name);
 
-                    if (vieModel.ActorList == null || vieModel.ActorList.Count == 0) return;
+            //            if (vieModel.ActorList == null || vieModel.ActorList.Count == 0) return;
 
-                    for (int i = 0; i < vieModel.ActorList.Count; i++)
-                    {
-                        if (vieModel.ActorList[i].name == actress.name)
-                        {
-                            vieModel.ActorList[i] = null;
-                            vieModel.ActorList[i] = actress;
-                            break;
-                        }
-                    }
+            //            for (int i = 0; i < vieModel.ActorList.Count; i++)
+            //            {
+            //                if (vieModel.ActorList[i].name == actress.name)
+            //                {
+            //                    vieModel.ActorList[i] = null;
+            //                    vieModel.ActorList[i] = actress;
+            //                    break;
+            //                }
+            //            }
 
-                    for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
-                    {
-                        if (vieModel.CurrentActorList[i].name == actress.name)
-                        {
-                            vieModel.CurrentActorList[i] = null;
-                            vieModel.CurrentActorList[i] = actress;
-                            break;
-                        }
-                    }
+            //            for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
+            //            {
+            //                if (vieModel.CurrentActorList[i].name == actress.name)
+            //                {
+            //                    vieModel.CurrentActorList[i] = null;
+            //                    vieModel.CurrentActorList[i] = actress;
+            //                    break;
+            //                }
+            //            }
 
-                }
-                else
-                {
-                    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_OnlySupportJPG, GrowlToken);
-                }
-            }
+            //        }
+            //        else
+            //        {
+            //            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_OnlySupportJPG, GrowlToken);
+            //        }
+            //    }
         }
 
         private void ClearFilter(object sender, RoutedEventArgs e)
@@ -5109,30 +5074,30 @@ namespace Jvedio
         private void ShowLoveActors(object sender, RoutedEventArgs e)
         {
 
-            vieModel.CurrentActorPage = 1;
-            List<string> actressNames = DataBase.SelectActressNameByLove(1);
+            //vieModel.CurrentActorPage = 1;
+            //List<string> actressNames = DataBase.SelectActressNameByLove(1);
 
-            List<Actress> oldActress = vieModel.ActorList.ToList();
-            List<Actress> newActress = new List<Actress>();
-            vieModel.ActorList = new ObservableCollection<Actress>();
-            foreach (Actress actress in oldActress)
-            {
-                if (actressNames.Contains(actress.name))
-                {
-                    newActress.Add(actress);
-                }
-            }
+            //List<Actress> oldActress = vieModel.ActorList.ToList();
+            //List<Actress> newActress = new List<Actress>();
+            //vieModel.ActorList = new ObservableCollection<Actress>();
+            //foreach (Actress actress in oldActress)
+            //{
+            //    if (actressNames.Contains(actress.name))
+            //    {
+            //        newActress.Add(actress);
+            //    }
+            //}
 
-            vieModel.ActorList = new ObservableCollection<Actress>();
-            vieModel.ActorList.AddRange(newActress);
+            //vieModel.ActorList = new ObservableCollection<Actress>();
+            //vieModel.ActorList.AddRange(newActress);
 
-            vieModel.ActorFlipOver();
+            //vieModel.ActorFlipOver();
 
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            vieModel.GetActorList();
+            //vieModel.GetActorList();
         }
 
         private void OpenLogPath(object sender, EventArgs e)
@@ -5294,48 +5259,48 @@ namespace Jvedio
 
         private void SetClassify(bool refresh = false)
         {
-            if (ActorTabControl != null)
-            {
-                vieModel.ShowActorTools = false;
-                switch (ActorTabControl.SelectedIndex)
-                {
-                    case 0:
-                        vieModel.ShowActorTools = true;
-                        if (vieModel.ActorList != null && vieModel.ActorList.Count > 0 && !refresh) return;
-                        vieModel.GetActorList();
-                        break;
+            //if (ActorTabControl != null)
+            //{
+            //    vieModel.ShowActorTools = false;
+            //    switch (ActorTabControl.SelectedIndex)
+            //    {
+            //        case 0:
+            //            vieModel.ShowActorTools = true;
+            //            if (vieModel.ActorList != null && vieModel.ActorList.Count > 0 && !refresh) return;
+            //            vieModel.GetActorList();
+            //            break;
 
-                    case 1:
-                        if (vieModel.GenreList != null && vieModel.GenreList.Count > 0 && !refresh) return;
-                        vieModel.GetGenreList();
-                        break;
+            //        case 1:
+            //            if (vieModel.GenreList != null && vieModel.GenreList.Count > 0 && !refresh) return;
+            //            vieModel.GetGenreList();
+            //            break;
 
-                    case 2:
-                        if (vieModel.LabelList != null && vieModel.LabelList.Count > 0 && !refresh) return;
-                        vieModel.GetLabelList();
-                        break;
+            //        case 2:
+            //            if (vieModel.LabelList != null && vieModel.LabelList.Count > 0 && !refresh) return;
+            //            vieModel.GetLabelList();
+            //            break;
 
-                    case 3:
-                        if (vieModel.TagList != null && vieModel.TagList.Count > 0 && !refresh) return;
-                        vieModel.GetTagList();
-                        break;
+            //        case 3:
+            //            if (vieModel.TagList != null && vieModel.TagList.Count > 0 && !refresh) return;
+            //            vieModel.GetTagList();
+            //            break;
 
-                    case 4:
-                        if (vieModel.StudioList != null && vieModel.StudioList.Count > 0 && !refresh) return;
-                        vieModel.GetStudioList();
-                        break;
+            //        case 4:
+            //            if (vieModel.StudioList != null && vieModel.StudioList.Count > 0 && !refresh) return;
+            //            vieModel.GetStudioList();
+            //            break;
 
 
-                    case 5:
-                        if (vieModel.DirectorList != null && vieModel.DirectorList.Count > 0 && !refresh) return;
-                        vieModel.GetDirectoroList();
-                        break;
+            //        case 5:
+            //            if (vieModel.DirectorList != null && vieModel.DirectorList.Count > 0 && !refresh) return;
+            //            vieModel.GetDirectoroList();
+            //            break;
 
-                    default:
+            //        default:
 
-                        break;
-                }
-            }
+            //            break;
+            //    }
+            //}
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -5631,16 +5596,16 @@ namespace Jvedio
 
         public async void ShowSameActors(string name)
         {
-            vieModel.ActorInfoGrid = Visibility.Visible;
-            vieModel.IsLoadingMovie = true;
-            vieModel.TabSelectedIndex = 0;
-            var currentActress = vieModel.ActorList.Where(arg => arg.name == name).First();
-            Actress actress = DataBase.SelectInfoByActress(currentActress);
-            actress.id = "";//不按照 id 选取演员
-            await vieModel.AsyncGetMoviebyActress(actress);
-            vieModel.Actress = actress;
-            vieModel.AsyncFlipOver();
-            vieModel.TextType = actress.name;
+            //vieModel.ActorInfoGrid = Visibility.Visible;
+            //vieModel.IsLoadingMovie = true;
+            //vieModel.TabSelectedIndex = 0;
+            //var currentActress = vieModel.ActorList.Where(arg => arg.name == name).First();
+            //Actress actress = DataBase.SelectInfoByActress(currentActress);
+            //actress.id = "";//不按照 id 选取演员
+            //await vieModel.AsyncGetMoviebyActress(actress);
+            //vieModel.Actress = actress;
+            //vieModel.AsyncFlipOver();
+            //vieModel.TextType = actress.name;
         }
 
 
@@ -5983,7 +5948,7 @@ namespace Jvedio
             MoreListPopup.IsOpen = true;
         }
 
-        private void ShowSortPopup(object sender, MouseButtonEventArgs e)
+        private void ShowContextMenu(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
@@ -6035,6 +6000,22 @@ namespace Jvedio
         {
             Pagination pagination = sender as Pagination;
             vieModel.PageSize = pagination.PageSize;
+            //vieModel.LoadData();
+        }
+
+        private void CurrentActorPageChange(object sender, EventArgs e)
+        {
+
+            Pagination pagination = sender as Pagination;
+            vieModel.CurrentActorPage = pagination.CurrentPage;
+            VieModel_Main.ActorPageQueue.Enqueue(pagination.CurrentPage);
+            vieModel.LoadActor();
+        }
+
+        private void ActorPageSizeChange(object sender, EventArgs e)
+        {
+            Pagination pagination = sender as Pagination;
+            vieModel.ActorPageSize = pagination.PageSize;
             //vieModel.LoadData();
         }
 

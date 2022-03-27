@@ -63,17 +63,21 @@ namespace Jvedio.ViewModel
 
             if (dataid <= 0) return;
             DataID = dataid;
-            CurrentVideo = GlobalMapper.videoMapper.SelectVideoByID(dataid);
+            Reset();
         }
 
+
+        private List<string> oldLabels;
 
         public void Reset()
         {
             CurrentVideo = null;
             CurrentVideo = GlobalMapper.videoMapper.SelectVideoByID(DataID);
+            oldLabels = CurrentVideo.LabelList?.Select(arg => arg).ToList();
         }
 
 
+        // todo 演员
         public bool Save()
         {
             if (CurrentVideo == null) return false;
@@ -81,6 +85,9 @@ namespace Jvedio.ViewModel
             data.DataID = DataID;
             int update1 = GlobalMapper.metaDataMapper.updateById(data);
             int update2 = GlobalMapper.videoMapper.updateById(CurrentVideo);
+
+            // 标签
+            GlobalMapper.videoMapper.SaveLabel(CurrentVideo, oldLabels);
             return update1 > 0 & update2 > 0;
 
         }

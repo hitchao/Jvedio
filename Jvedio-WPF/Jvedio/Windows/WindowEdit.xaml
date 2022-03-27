@@ -167,13 +167,23 @@
                             <Label
                                 Margin="0,5"
                                 VerticalAlignment="Top"
-                                Content="{x:Static lang:Resources.Label}"
+                                Content="标签（清单）"
                                 Style="{StaticResource BaseInfoLabel}" />
-                            <chao:TagPanel
-                                Name="labelTagPanel"
-                                AddButtonVerticalAlignment="Top"
-                                OnAddNewLabel="NewLabel"
-                                TagChanged="LabelChanged" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Click="AddToLabel" Content="添加到" />
+                                <chao:TagPanel
+                                    Name="labelTagPanel"
+                                    Grid.Column="1"
+                                    AddButtonVerticalAlignment="Top"
+                                    OnAddNewLabel="NewLabel"
+                                    TagChanged="LabelChanged" />
+                            </Grid>
+
                         </DockPanel>
 
                         <Grid>
@@ -379,8 +389,9 @@
             <Button
                 Grid.Row="1"
                 MinWidth="100"
-                Margin="10"
-                HorizontalAlignment="Right"
+                Margin="690,0,0,10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
                 Click="Button_Click"
                 Content="{x:Static lang:Resources.Save}"
                 Style="{StaticResource ButtonSuccess}" />

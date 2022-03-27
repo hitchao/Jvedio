@@ -8,5 +8,12 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Mapper
 {
-    public class ActorMapper : BaseMapper<ActorInfo> { }
+    public class ActorMapper : BaseMapper<ActorInfo>
+    {
+
+
+
+
+
+    }
 }

@@ -37,5 +37,12 @@ namespace Jvedio.Entity
 
         [TableField(exist: false)]
         public long ImageID { get; set; }
+
+
+        /// <summary>
+        /// 出演的作品的数量
+        /// </summary>
+        [TableField(exist: false)]
+        public long Count { get; set; }
     }
 }

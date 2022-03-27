@@ -1338,7 +1338,7 @@
 
                                             <Border
                                                 Name="SortBorder"
-                                                MouseUp="ShowSortPopup"
+                                                MouseUp="ShowContextMenu"
                                                 Style="{StaticResource ToolsBarBorderStyle}"
                                                 ToolTip="{x:Static lang:Resources.Sorting}">
                                                 <Border.ContextMenu>
@@ -2716,103 +2716,254 @@
 
                         </TabItem>
                         <TabItem Header="演员">
-                            <Grid Margin="10">
-                                <Grid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem
-                                            Click="RefreshCurrentActressPage"
-                                            Header="{x:Static lang:Resources.Refresh}"
-                                            Icon="pack://application:,,,/Resources/menuitem/refresh.png" />
-                                        <MenuItem
-                                            Click="SelectAllActor"
-                                            Header="{x:Static lang:Resources.SelectAll}"
-                                            Icon="pack://application:,,,/Resources/menuitem/selectall.png" />
-                                    </ContextMenu>
-                                </Grid.ContextMenu>
+                            <Grid>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
 
 
-                                <ItemsControl
-                                    x:Name="ActorItemsControl"
-                                    Margin="5,5,5,5"
+                                <!--  工具栏  -->
+                                <Grid
+                                    Grid.Row="0"
+                                    Panel.ZIndex="4"
                                     Background="Transparent"
-                                    ItemsSource="{Binding CurrentActorList}"
-                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <WrapPanel Name="ActorWrapPanel" Orientation="Horizontal">
-                                                <Grid Height="200" Margin="5">
-                                                    <Border
-                                                        Background="{DynamicResource BackgroundSide}"
-                                                        CornerRadius="0"
-                                                        Effect="{StaticResource BlueDropShadowEffect}"
-                                                        Style="{StaticResource ActorBorder}" />
-                                                    <StackPanel
-                                                        Margin="2"
-                                                        Orientation="Vertical"
-                                                        Tag="{Binding name, Mode=OneWay}">
-                                                        <StackPanel.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem
-                                                                    Click="DownLoadSelectedActor"
-                                                                    Header="{x:Static lang:Resources.SyncInfo}"
-                                                                    Icon="pack://application:,,,/Resources/menuitem/download.png" />
-                                                                <MenuItem
-                                                                    Click="LikeSelectedActor"
-                                                                    Header="{x:Static lang:Resources.AddToFavorites}"
-                                                                    Icon="pack://application:,,,/Resources/menuitem/like.png" />
-                                                            </ContextMenu>
-                                                        </StackPanel.ContextMenu>
+                                    IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}"
+                                    MouseLeftButtonDown="ToolsGrid_MouseLeftButtonDown"
+                                    Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVis}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
 
-                                                        <Image
-                                                            Width="125"
-                                                            Height="125"
-                                                            Margin="0,0,0,10"
-                                                            VerticalAlignment="Top"
-                                                            AllowDrop="True"
-                                                            Cursor="Hand"
-                                                            DragOver="ActorImage_DragOver"
-                                                            Drop="ActorImage_Drop"
-                                                            FocusVisualStyle="{x:Null}"
-                                                            MouseEnter="ActorBorderMouseEnter"
-                                                            MouseLeave="ActorBorderMouseLeave"
-                                                            MouseLeftButtonUp="ShowSameActor"
-                                                            Source="{Binding smallimage}"
-                                                            Stretch="UniformToFill" />
-                                                        <TextBox
-                                                            Name="ActorNameTextBox"
-                                                            Width="125"
-                                                            MaxHeight="60"
-                                                            Margin="0"
-                                                            FontSize="18"
-                                                            Foreground="{DynamicResource ForegroundSearch}"
-                                                            Opacity="0.7"
-                                                            Style="{StaticResource ReadOnlyWrapTextBox}"
-                                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
-                                                            <TextBox.Text>
-                                                                <MultiBinding StringFormat="{}{0}({1})">
-                                                                    <Binding Path="name" />
-                                                                    <Binding Path="num" />
-                                                                    <!--<Binding trace:PresentationTraceSources.TraceLevel="High"></Binding>-->
-                                                                </MultiBinding>
-                                                            </TextBox.Text>
-                                                        </TextBox>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
 
-                                                    </StackPanel>
-                                                </Grid>
-                                            </WrapPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+
+
+
+                                    <Grid Grid.Row="0">
+
+                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                            <chao:Switch
+                                                Height="25"
+                                                Background="{DynamicResource Window.Side.Background}"
+                                                CheckedBackground="Green"
+                                                Click="SetSelectMode"
+                                                IsChecked="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BaseTextBlock}"
+                                                Text="{x:Static lang:Resources.MultiSelect}" />
+
+
+                                            <Border
+                                                VerticalAlignment="Center"
+                                                Background="{DynamicResource Window.Side.Background}"
+                                                CornerRadius="5">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <chao:PathRadioButton
+                                                        CornerRadius="5,0,0,5"
+                                                        Path="M886.680128 13.86578H136.468464c-37.340302 0-62.274379 24.934078-62.274379 62.274379v871.841311c0 37.340302 24.934078 62.274379 62.274379 62.27438h750.211664c37.340302 0 62.274379-24.934078 62.27438-62.27438V76.140159c0-37.340302-24.934078-62.274379-62.27438-62.274379zM136.468464 76.140159h750.211664V617.878608L710.682029 451.002732 442.731916 730.021143 318.061527 617.878608 136.468464 792.295522V76.140159z m0 871.841311v-78.572752l184.025656-170.524765L599.75579 947.98147H136.468464z m549.401117 0l-200.688918-181.836322 225.501366-234.258701 175.998099 164.321654v251.65174H685.869581z m0 0"
+                                                        PathHeight="17"
+                                                        Style="{StaticResource PathGroupRadioButton}"
+                                                        ToolTip="{x:Static lang:Resources.Thumbnail}" />
+                                                    <chao:PathRadioButton
+                                                        CornerRadius="0,5,5,0"
+                                                        Path="M64 480h352V128H64v352z m64-288h224v224H128V192zM64 928h352V576H64v352z m64-288h224v224H128v-224zM526.848 224H928a32 32 0 1 0 0-64H526.848a32 32 0 0 0 0 64zM928 608H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64zM928 384H526.848a32 32 0 0 0 0 64H928a32 32 0 1 0 0-64zM928 832H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64z"
+                                                        PathHeight="17"
+                                                        Style="{StaticResource PathGroupRadioButton}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border
+                                                MouseUp="ShowContextMenu"
+                                                Style="{StaticResource ToolsBarBorderStyle}"
+                                                ToolTip="{x:Static lang:Resources.Sorting}">
+                                                <Border.ContextMenu>
+                                                    <ContextMenu HorizontalOffset="-50">
+                                                        <MenuItem Header="{x:Static lang:Resources.Name}" IsCheckable="True" />
+                                                        <MenuItem Header="作品数量" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Country}" IsCheckable="True" />
+                                                        <MenuItem Header="民族" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Actress_Birthday}" IsCheckable="True" />
+                                                        <MenuItem Header="血型" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Height}" IsCheckable="True" />
+                                                        <MenuItem Header="体重" IsCheckable="True" />
+                                                        <MenuItem Header="性别" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Actress_Hobby}" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Actress_Cup}" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Actress_Chest}" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Actress_Waist}" IsCheckable="True" />
+                                                        <MenuItem Header="{x:Static lang:Resources.Actress_Hipline}" IsCheckable="True" />
+                                                    </ContextMenu>
+                                                </Border.ContextMenu>
+                                                <Viewbox Width="auto" Height="18">
+                                                    <Path
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Data="M44.032 451.584c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m0 302.592c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m519.68-484.352c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68z m170.496-120.832c-22.528 0-40.96 18.432-40.96 40.96V834.56c0 22.528 18.432 40.96 40.96 40.96h38.912c15.36 0 28.16-8.192 35.328-20.48l212.48-212.48c0-22.528-18.432-40.96-40.96-40.96H814.08V189.952c0-22.528-18.432-40.96-40.96-40.96h-38.912z"
+                                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                </Viewbox>
+                                            </Border>
+
+                                        </StackPanel>
+
+
+                                    </Grid>
+
+
+
+
+
+                                </Grid>
+                                <!--  演员展示  -->
+
+                                <Grid Grid.Row="1">
+
+                                    <Grid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem
+                                                Click="RefreshCurrentActressPage"
+                                                Header="{x:Static lang:Resources.Refresh}"
+                                                Icon="pack://application:,,,/Resources/menuitem/refresh.png" />
+                                            <MenuItem
+                                                Click="SelectAllActor"
+                                                Header="{x:Static lang:Resources.SelectAll}"
+                                                Icon="pack://application:,,,/Resources/menuitem/selectall.png" />
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
+
+
+                                    <ScrollViewer
+                                        x:Name="ActorScrollViewer"
+                                        CanContentScroll="True"
+                                        FocusVisualStyle="{x:Null}"
+                                        IsDeferredScrollingEnabled="False"
+                                        VerticalScrollBarVisibility="Auto">
+
+
+                                        <ItemsControl
+                                            x:Name="ActorItemsControl"
+                                            Margin="5,5,5,5"
+                                            Background="Transparent"
+                                            ItemsSource="{Binding CurrentActorList}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <WrapPanel Name="ActorWrapPanel" Orientation="Horizontal">
+                                                        <Grid Height="200" Margin="5">
+                                                            <Border
+                                                                Background="{DynamicResource BackgroundSide}"
+                                                                CornerRadius="0"
+                                                                Effect="{StaticResource BlueDropShadowEffect}"
+                                                                Style="{StaticResource ActorBorder}" />
+                                                            <StackPanel
+                                                                Margin="2"
+                                                                Orientation="Vertical"
+                                                                Tag="{Binding ActorName, Mode=OneWay}">
+                                                                <StackPanel.ContextMenu>
+                                                                    <ContextMenu>
+                                                                        <MenuItem
+                                                                            Click="DownLoadSelectedActor"
+                                                                            Header="{x:Static lang:Resources.SyncInfo}"
+                                                                            Icon="pack://application:,,,/Resources/menuitem/download.png" />
+                                                                        <MenuItem
+                                                                            Click="LikeSelectedActor"
+                                                                            Header="{x:Static lang:Resources.AddToFavorites}"
+                                                                            Icon="pack://application:,,,/Resources/menuitem/like.png" />
+                                                                    </ContextMenu>
+                                                                </StackPanel.ContextMenu>
+
+                                                                <Image
+                                                                    Width="125"
+                                                                    Height="125"
+                                                                    Margin="0,0,0,10"
+                                                                    VerticalAlignment="Top"
+                                                                    AllowDrop="True"
+                                                                    Cursor="Hand"
+                                                                    DragOver="ActorImage_DragOver"
+                                                                    Drop="ActorImage_Drop"
+                                                                    FocusVisualStyle="{x:Null}"
+                                                                    MouseEnter="ActorBorderMouseEnter"
+                                                                    MouseLeave="ActorBorderMouseLeave"
+                                                                    MouseLeftButtonUp="ShowSameActor"
+                                                                    Source="{Binding smallimage}"
+                                                                    Stretch="UniformToFill" />
+                                                                <TextBox
+                                                                    Name="ActorNameTextBox"
+                                                                    Width="125"
+                                                                    MaxHeight="60"
+                                                                    Margin="0"
+                                                                    FontSize="18"
+                                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                                    Opacity="0.7"
+                                                                    Style="{StaticResource ReadOnlyWrapTextBox}"
+                                                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                                                    <TextBox.Text>
+                                                                        <MultiBinding StringFormat="{}{0}({1})">
+                                                                            <Binding Path="ActorName" />
+                                                                            <Binding Path="Count" />
+                                                                        </MultiBinding>
+                                                                    </TextBox.Text>
+                                                                </TextBox>
+
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </WrapPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+
+                                <!--  底部  -->
+                                <Grid
+                                    Grid.Row="2"
+                                    Panel.ZIndex="5"
+                                    Visibility="{Binding DisplayStatusBar, Converter={StaticResource BoolToVis}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+
+
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding CurrentCount}" />
+                                    <!--  页码  -->
+                                    <chao:Pagination
+                                        Name="actorPagination"
+                                        Grid.Column="2"
+                                        Background="{DynamicResource Window.Background}"
+                                        BorderBrush="{DynamicResource Window.Title.Foreground}"
+                                        CurrentPage="1"
+                                        CurrentPageBackground="#409EFF"
+                                        CurrentPageChange="CurrentActorPageChange"
+                                        Foreground="{DynamicResource Global.Foreground}"
+                                        PageBackground="{DynamicResource Window.Side.Background}"
+                                        PageCount="5"
+                                        PageHoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                        PageSize="40"
+                                        PageSizeChange="ActorPageSizeChange"
+                                        PageSizes="[10,20,40,50,100,200]"
+                                        Total="{Binding ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
 
                             </Grid>
+
                         </TabItem>
 
-                        <TabItem Header="标签">
+                        <TabItem Header="标签（清单）">
                             <Grid Margin="10">
                                 <ItemsControl
                                     Margin="5"
@@ -3447,7 +3598,7 @@
                                     </StackPanel>
 
                                     <!--  页码  -->
-                                    <StackPanel
+                                    <!--<StackPanel
                                         Grid.Column="2"
                                         Width="auto"
                                         Height="40"
@@ -3518,7 +3669,7 @@
                                                 Visibility="Visible" />
                                         </Border>
 
-                                    </StackPanel>
+                                    </StackPanel>-->
                                 </Grid>
 
 

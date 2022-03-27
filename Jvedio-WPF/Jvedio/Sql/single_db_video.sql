@@ -40,11 +40,7 @@ create table if not exists metadata (
     FavoriteCount INT DEFAULT 0,
     Genre TEXT,
     Tag TEXT,
-
-    
-
     Grade FLOAT DEFAULT 0.0,
-    Label TEXT,
 
     ViewDate VARCHAR(30),
     FirstScanDate VARCHAR(30),
@@ -143,6 +139,19 @@ create table metadata_to_tagstamp(
 );
 CREATE INDEX metadata_to_tagstamp_idx_DataID ON metadata_to_tagstamp (DataID);
 CREATE INDEX metadata_to_tagstamp_idx_TagID ON metadata_to_tagstamp (TagID);
+COMMIT;
+
+
+drop table if exists metadata_to_label;
+BEGIN;
+create table metadata_to_label(
+    id INTEGER PRIMARY KEY autoincrement,
+    DataID INTEGER,
+    LabelName VARCHAR(200),
+    unique(DataID,LabelName)
+);
+CREATE INDEX metadata_to_label_idx_DataID ON metadata_to_label (DataID);
+CREATE INDEX metadata_to_label_idx_LabelName ON metadata_to_label (LabelName);
 COMMIT;
 
 

@@ -311,7 +311,10 @@ namespace Jvedio
             return path;
         }
 
+        private void AddToLabel(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 
 

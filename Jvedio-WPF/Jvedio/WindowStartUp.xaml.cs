@@ -111,7 +111,7 @@ namespace Jvedio
                 Jvedio4ToJvedio5.MoveRecentWatch();
                 Jvedio4ToJvedio5.MoveMagnets();
                 Jvedio4ToJvedio5.MoveTranslate();
-                //Jvedio4ToJvedio5.MoveMyList();
+                Jvedio4ToJvedio5.MoveMyList();// 清单和 Label 合并，统一为 Label
                 Jvedio4ToJvedio5.MoveSearchHistory();
             }
 
