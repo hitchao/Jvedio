@@ -38,7 +38,6 @@ namespace Jvedio.Mapper
             "UpdateDate",
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
             $"(select group_concat(ActorName,'{GlobalVariable.Separator}') from actor_name_to_metadatas where actor_name_to_metadatas.DataID=metadata.DataID) as ActorNames" ,
-            "(select group_concat(NameFlag,',') from actor_name_to_metadatas where actor_name_to_metadatas.DataID=metadata.DataID) as NameFlags",
 
             "VID",
             "MVID",

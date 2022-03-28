@@ -271,6 +271,14 @@ namespace Jvedio.Core.SimpleORM
                     {
                         p.SetValue(entity, value);
                     }
+                    else if (p.PropertyType == typeof(char))
+                    {
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            p.SetValue(entity, value[0]);
+                        }
+
+                    }
                 }
                 result.Add(entity);
             }

@@ -82,6 +82,9 @@ namespace Jvedio
 
         public int firstidx = -1;
         public int secondidx = -1;
+
+        public int actorfirstidx = -1;
+        public int actorsecondidx = -1;
         WindowDetails windowDetails;
 
 
@@ -122,10 +125,12 @@ namespace Jvedio
             vieModel.Statistic();
             //// todo 设置图片类型
             //await vieModel.InitLettersNavigation(); // todo 
-            InitMovie();
+            //InitMovie();
 
             BindingEventAfterRender(); // render 后才绑定的事件
             initTagStamp();
+
+            vieModel.ShowAllActors(null);
         }
 
 
@@ -301,6 +306,17 @@ namespace Jvedio
                 MenuItems[i].IsCheckable = true;
                 if (i == sortType) MenuItems[i].IsChecked = true;
             }
+            //设置演员排序类型
+            int ActorSortType = Properties.Settings.Default.ActorSortType;
+            var ActorMenuItems = ActorSortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
+            for (int i = 0; i < ActorMenuItems.Count; i++)
+            {
+                ActorMenuItems[i].Click += ActorSortMenu_Click;
+                ActorMenuItems[i].IsCheckable = true;
+                if (i == ActorSortType) ActorMenuItems[i].IsChecked = true;
+            }
+
+            //ActorSortBorder.ismouse
 
             //设置图片显示模式
             var rbs = ViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
@@ -309,6 +325,14 @@ namespace Jvedio
             {
                 rbs[i].Click += SetViewMode;
                 if (i == viewMode) rbs[i].IsChecked = true;
+            }
+
+            //设置演员显示模式
+            var arbs = ActorViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
+            for (int i = 0; i < arbs.Count; i++)
+            {
+                arbs[i].Click += SetActorViewMode;
+                if (i == Properties.Settings.Default.ActorViewMode) arbs[i].IsChecked = true;
             }
 
             //设置分类中的视频格式
@@ -1318,57 +1342,56 @@ namespace Jvedio
 
         public void ActorSetSelected()
         {
-            for (int i = 0; i < ActorItemsControl.Items.Count; i++)
+            ItemsControl itemsControl;
+            //if (Properties.Settings.Default.EasyMode)
+            //    itemsControl = SimpleMovieItemsControl;
+            //else
+            itemsControl = ActorItemsControl;
+
+            for (int i = 0; i < itemsControl.Items.Count; i++)
             {
-                ContentPresenter c = (ContentPresenter)ActorItemsControl.ItemContainerGenerator.ContainerFromItem(ActorItemsControl.Items[i]);
-                WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "ActorWrapPanel");
-                if (wrapPanel != null)
+                ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                Border border = FindElementByName<Border>(c, "rootBorder");
+                Grid grid = border.Parent as Grid;
+                long actorID = getDataID(border);
+                if (border != null)
                 {
-                    Grid grid = wrapPanel.Children[0] as Grid;
-                    Border border = grid.Children[0] as Border;
-                    if (c.ContentTemplate.FindName("ActorNameTextBox", c) is TextBox textBox)
+
+                    border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
+                    border.BorderBrush = Brushes.Transparent;
+                    if (Properties.Settings.Default.ActorEditMode && vieModel.SelectedActors.Where(arg => arg.ActorID == actorID).Any())
                     {
-                        //DropShadowEffect dropShadowEffect = new DropShadowEffect() { Color = Colors.SkyBlue, BlurRadius = 10, Direction = -90, RenderingBias = RenderingBias.Quality, ShadowDepth = 0 };
-                        //border.Effect = dropShadowEffect;
-                        border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
-                        foreach (Actress actress in SelectedActress)
-                        {
-                            if (actress.name == textBox.Text.Split('(')[0])
-                            {
-                                border.Background = GlobalStyle.Common.HighLight.Background;
-                                break;
-                                //dropShadowEffect = new DropShadowEffect() { Color = Colors.OrangeRed, BlurRadius = 10, Direction = -90, RenderingBias = RenderingBias.Quality, ShadowDepth = 0 };
-                                //border.Effect = dropShadowEffect;
-                            }
-                        }
+                        border.Background = GlobalStyle.Common.HighLight.Background;
+                        border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+
                     }
                 }
-            }
 
+            }
         }
 
 
-        public void BorderMouseEnter(object sender, MouseEventArgs e)
+        public void ActorBorderMouseEnter(object sender, MouseEventArgs e)
         {
-            if (Properties.Settings.Default.EditMode)
+            FrameworkElement element = sender as FrameworkElement;
+            Grid grid = element.FindParentOfType<Grid>("rootGrid");
+            if (Properties.Settings.Default.ActorEditMode)
             {
-                GifImage image = sender as GifImage;
-                Grid grid = image.FindParentOfType<Grid>("rootGrid");
                 Border border = grid.Children[0] as Border;
                 border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
             }
         }
 
-        public void BorderMouseLeave(object sender, MouseEventArgs e)
+        public void ActorBorderMouseLeave(object sender, MouseEventArgs e)
         {
-
-            if (Properties.Settings.Default.EditMode)
+            FrameworkElement element = sender as FrameworkElement;
+            Grid grid = element.FindParentOfType<Grid>("rootGrid");
+            if (Properties.Settings.Default.ActorEditMode)
             {
-                GifImage image = sender as GifImage;
-                long dataID = getDataID(image);
-                Grid grid = image.FindParentOfType<Grid>("rootGrid");
+
+                long actorID = getDataID(element);
                 Border border = grid.Children[0] as Border;
-                if (vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
+                if (vieModel.SelectedActors.Where(arg => arg.ActorID == actorID).Any())
                 {
                     border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
                 }
@@ -1415,6 +1438,63 @@ namespace Jvedio
 
         public async void ShowSameActor(object sender, MouseButtonEventArgs e)
         {
+            FrameworkElement element = sender as FrameworkElement;//点击 border 也能选中
+            long actorID = getDataID(element);
+            if (Properties.Settings.Default.ActorEditMode)
+            {
+                ActorInfo actorInfo = vieModel.CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
+                int selectIdx = vieModel.CurrentActorList.IndexOf(actorInfo);
+
+                // 多选
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    if (actorfirstidx == -1)
+                        actorfirstidx = selectIdx;
+                    else
+                        actorsecondidx = selectIdx;
+                }
+
+
+                Console.WriteLine("actorfirstidx=" + actorfirstidx);
+                Console.WriteLine("actorsecondidx=" + actorsecondidx);
+                if (actorfirstidx >= 0 && actorsecondidx >= 0)
+                {
+                    if (actorfirstidx > actorsecondidx)
+                    {
+                        //交换一下顺序
+                        int temp = actorfirstidx;
+                        actorfirstidx = actorsecondidx - 1;
+                        actorsecondidx = temp - 1;
+                    }
+
+                    for (int i = actorfirstidx + 1; i <= actorsecondidx; i++)
+                    {
+                        ActorInfo m = vieModel.CurrentActorList[i];
+                        if (vieModel.SelectedActors.Contains(m))
+                            vieModel.SelectedActors.Remove(m);
+                        else
+                            vieModel.SelectedActors.Add(m);
+                    }
+                    actorfirstidx = -1;
+                    actorsecondidx = -1;
+                }
+                else
+                {
+                    if (vieModel.SelectedActors.Contains(actorInfo))
+                        vieModel.SelectedActors.Remove(actorInfo);
+                    else
+                        vieModel.SelectedActors.Add(actorInfo);
+                }
+
+
+                ActorSetSelected();
+
+            }
+
+
+
+
+
             //Image image = sender as Image;
             //StackPanel stackPanel = image.Parent as StackPanel;
             //TextBox textBox = stackPanel.Children.OfType<TextBox>().First();
@@ -1424,24 +1504,24 @@ namespace Jvedio
             //    (Actress currentActress, int selectIdx) = GetActressFromCurrentActors(name);
             //    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             //    {
-            //        if (firstidx == -1)
-            //            firstidx = selectIdx;
+            //        if (actorfirstidx == -1)
+            //            actorfirstidx = selectIdx;
             //        else
-            //            secondidx = selectIdx;
+            //            actorsecondidx = selectIdx;
             //    }
 
 
-            //    if (firstidx >= 0 && secondidx >= 0)
+            //    if (actorfirstidx >= 0 && actorsecondidx >= 0)
             //    {
-            //        if (firstidx > secondidx)
+            //        if (actorfirstidx > actorsecondidx)
             //        {
             //            //交换一下顺序
-            //            int temp = firstidx;
-            //            firstidx = secondidx - 1;
-            //            secondidx = temp - 1;
+            //            int temp = actorfirstidx;
+            //            actorfirstidx = actorsecondidx - 1;
+            //            actorsecondidx = temp - 1;
             //        }
 
-            //        for (int i = firstidx + 1; i <= secondidx; i++)
+            //        for (int i = actorfirstidx + 1; i <= actorsecondidx; i++)
             //        {
             //            var m = vieModel.CurrentActorList[i];
             //            if (SelectedActress.Contains(m))
@@ -1449,8 +1529,8 @@ namespace Jvedio
             //            else
             //                SelectedActress.Add(m);
             //        }
-            //        firstidx = -1;
-            //        secondidx = -1;
+            //        actorfirstidx = -1;
+            //        actorsecondidx = -1;
             //    }
             //    else
             //    {
@@ -1832,6 +1912,15 @@ namespace Jvedio
             }
 
             Console.WriteLine(Properties.Settings.Default.ShowImageMode);
+        }
+
+        public void SetActorViewMode(object sender, RoutedEventArgs e)
+        {
+            PathRadioButton radioButton = sender as PathRadioButton;
+            var rbs = ActorViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
+            int idx = rbs.IndexOf(radioButton);
+            Properties.Settings.Default.ActorViewMode = idx;
+            Properties.Settings.Default.Save();
         }
 
 
@@ -3882,6 +3971,11 @@ namespace Jvedio
         {
             vieModel.SelectedVideo.Clear();
             SetSelected();
+        }
+        private void SetActorSelectMode(object sender, RoutedEventArgs e)
+        {
+            vieModel.SelectedActors.Clear();
+            ActorSetSelected();
         }
 
 
@@ -5937,16 +6031,6 @@ namespace Jvedio
             Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
         }
 
-        private void ShowMoreList(object sender, RoutedEventArgs e)
-        {
-            PathRadioButton radioButton = sender as PathRadioButton;
-            if (radioButton != null)
-            {
-                radioButton.IsChecked = false;
-            }
-            MoreListPopup.PlacementTarget = radioButton;
-            MoreListPopup.IsOpen = true;
-        }
 
         private void ShowContextMenu(object sender, MouseButtonEventArgs e)
         {
@@ -5981,6 +6065,28 @@ namespace Jvedio
                 else item.IsChecked = false;
             }
             vieModel.Reset();
+        }
+
+        private void ActorSortMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+            for (int i = 0; i < contextMenu.Items.Count; i++)
+            {
+                MenuItem item = (MenuItem)contextMenu.Items[i];
+                if (item == menuItem)
+                {
+                    item.IsChecked = true;
+                    if (i == Properties.Settings.Default.ActorSortType)
+                    {
+                        Properties.Settings.Default.ActorSortDescending = !Properties.Settings.Default.ActorSortDescending;
+                    }
+                    Properties.Settings.Default.ActorSortType = i;
+
+                }
+                else item.IsChecked = false;
+            }
+            vieModel.LoadActor();
         }
 
 
@@ -6165,6 +6271,37 @@ namespace Jvedio
 
         private void NewList(object sender, MouseButtonEventArgs e)
         {
+        }
+
+        public void BorderMouseEnter(object sender, MouseEventArgs e)
+        {
+            if (Properties.Settings.Default.EditMode)
+            {
+                GifImage image = sender as GifImage;
+                Grid grid = image.FindParentOfType<Grid>("rootGrid");
+                Border border = grid.Children[0] as Border;
+                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+            }
+        }
+
+        public void BorderMouseLeave(object sender, MouseEventArgs e)
+        {
+
+            if (Properties.Settings.Default.EditMode)
+            {
+                GifImage image = sender as GifImage;
+                long dataID = getDataID(image);
+                Grid grid = image.FindParentOfType<Grid>("rootGrid");
+                Border border = grid.Children[0] as Border;
+                if (vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
+                {
+                    border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                }
+                else
+                {
+                    border.BorderBrush = Brushes.Transparent;
+                }
+            }
         }
     }
     public class ScrollViewerBehavior

@@ -155,20 +155,20 @@ namespace Jvedio.ViewModel
             CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size).ThenByDescending(arg => arg.Releasedate).ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList(); ;
 
             // 演员：懒加载模式
-            string[] actorNames = CurrentVideo.ActorNames.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries);
-            string[] nameFlags = CurrentVideo.NameFlags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (actorNames.Length == nameFlags.Length)
-            {
-                CurrentVideo.ActorInfos = new List<ActorInfo>();
-                for (int i = 0; i < actorNames.Length; i++)
-                {
-                    string actorName = actorNames[i];
-                    string nameFlag = nameFlags[i];
-                    IWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>().Eq("ActorName", actorName).Eq("NameFlag", nameFlag);
-                    ActorInfo actorInfo = actorMapper.selectOne(wrapper);
-                    CurrentVideo.ActorInfos.Add(actorInfo);
-                }
-            }
+            //string[] actorNames = CurrentVideo.ActorNames.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries);
+            //string[] nameFlags = CurrentVideo.NameFlags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            //if (actorNames.Length == nameFlags.Length)
+            //{
+            //    CurrentVideo.ActorInfos = new List<ActorInfo>();
+            //    for (int i = 0; i < actorNames.Length; i++)
+            //    {
+            //        string actorName = actorNames[i];
+            //        string nameFlag = nameFlags[i];
+            //        IWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>().Eq("ActorName", actorName).Eq("NameFlag", nameFlag);
+            //        ActorInfo actorInfo = actorMapper.selectOne(wrapper);
+            //        CurrentVideo.ActorInfos.Add(actorInfo);
+            //    }
+            //}
 
             //释放图片内存
             //CurrentVideo.SmallImage = null;

@@ -309,6 +309,8 @@ namespace Jvedio
                         Video video = arg.toVideo();
                         video.DataID = before;
                         video.Path = arg.filepath;
+                        video.ActorNames = arg.actor;
+                        video.OldActorIDs = arg.actorid;
                         video.Size = (long)arg.filesize;
                         video.Genre = arg.genre;
                         video.Tag = arg.tag;
@@ -323,7 +325,7 @@ namespace Jvedio
 
 
                     handleChinesetitle(detailMovies);
-                    handleActor(detailMovies, nextID);
+                    handleActor(videos);
                     handleLabel(videos);
 
                     Console.WriteLine($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
@@ -424,11 +426,11 @@ namespace Jvedio
 
         }
 
-        private static void handleActor(List<DetailMovie> list, long beforeID)
+        private static void handleActor(List<Video> list)
         {
             // 新增不存在的
             List<ActorInfo> actorInfos = actorMapper.selectList();
-            HashSet<string> names = list.Select(x => x.actor).ToHashSet();
+            HashSet<string> names = list.Select(x => x.ActorNames).ToHashSet();// 演员名字
             HashSet<string> to_insert = new HashSet<string>();
             foreach (string name in names)
             {
@@ -440,25 +442,23 @@ namespace Jvedio
             if (to_insert.Count > 0)
             {
                 string sql = $"insert into actor_info(WebType,Gender,ActorName) values ('bus',1,'{string.Join("'),('bus',1,'", to_insert)}')";
-                metaDataMapper.executeNonQuery(sql);
+                actorMapper.executeNonQuery(sql);
             }
             actorInfos = actorMapper.selectList();
             Dictionary<string, long> dict = actorInfos.ToDictionary(x => x.ActorName, x => x.ActorID);
             List<UrlCode> urlCodes = new List<UrlCode>();
 
-            List<object[]> actor_name_to_metadatas = new List<object[]>();
-
+            List<string> insert_list = new List<string>();
             long count = metaDataMapper.selectCount();
-
             for (int i = 0; i < list.Count; i++)
             {
 
-                string actor = list[i].actor; // 演员A 演员B 演员C
-                string actorid = list[i].actorid;
+                string actor = list[i].ActorNames; // 演员A 演员B 演员C
+                string actorid = list[i].OldActorIDs;
                 if (string.IsNullOrEmpty(actor)) continue;
                 UrlCode urlCode = new UrlCode();
                 string[] actorNames = actor.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                string[] actorIds = list[i].actorid.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] actorIds = list[i].OldActorIDs.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (actorIds.Length == actorNames.Length)
                 {
                     // 如果 id 和名字数量一样，插入  urlCode
@@ -468,7 +468,7 @@ namespace Jvedio
                         if (string.IsNullOrEmpty(actorName)) continue;
                         urlCode.LocalValue = actorName;
                         urlCode.RemoteValue = actorIds[j];
-                        urlCode.WebType = !string.IsNullOrEmpty(list[i].source) ? list[i].source.Replace("jav", "") : "";
+                        urlCode.WebType = list[i].WebType;
                         urlCode.ValueType = "actor";
                         urlCodes.Add(urlCode);
 
@@ -478,13 +478,8 @@ namespace Jvedio
                 for (int j = 0; j < actorNames.Length; j++)
                 {
                     string actorName = actorNames[j];
-                    if (dict.ContainsKey(actorName))
-                    {
-                        object[] o = new object[2];
-                        o[0] = actorName;
-                        o[1] = beforeID + i; // DataID
-                        actor_name_to_metadatas.Add(o);
-                    }
+                    if (!dict.ContainsKey(actorName)) continue;
+                    insert_list.Add($"({dict[actorName]},{list[i].DataID})");
                 }
 
 
@@ -492,19 +487,16 @@ namespace Jvedio
             }
             urlCodeMapper.insertBatch(urlCodes, InsertMode.Ignore);
 
-            if (actor_name_to_metadatas.Count > 0)
+            if (insert_list.Count > 0)
             {
-                StringBuilder builder = new StringBuilder();
-                foreach (object[] item in actor_name_to_metadatas)
-                {
-                    builder.Append($"('{item[0]}','{item[1]}'),");
-                }
-                if (builder[builder.Length - 1] == ',') builder.Remove(builder.Length - 1, 1);
-                string sql = $"insert or ignore into actor_name_to_metadatas(ActorName,DataID) values {builder};";
+                string sql = $"insert or ignore into metadatas_to_actor(ActorID,DataID) " +
+                    $"values {string.Join(",", insert_list)};";
                 metaDataMapper.executeNonQuery(sql);
-
-
             }
+
+            // 设置演员头像路径
+            string update_sql = "update actor_info set SmallImagePath='*PicPath*/Actresses/' || ActorName || '.jpg';";
+            actorMapper.executeNonQuery(update_sql);
         }
 
 

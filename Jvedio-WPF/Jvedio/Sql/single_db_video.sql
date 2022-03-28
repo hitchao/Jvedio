@@ -154,4 +154,16 @@ CREATE INDEX metadata_to_label_idx_DataID ON metadata_to_label (DataID);
 CREATE INDEX metadata_to_label_idx_LabelName ON metadata_to_label (LabelName);
 COMMIT;
 
+-- 演员出演的作品和演员对应关系（多对多）
+-- 作品可以是：影视、写真、游戏等
+BEGIN;
+create table metadatas_to_actor(
+    ID INTEGER PRIMARY KEY autoincrement,
+    ActorID INTEGER,
+    DataID INT,
+    unique(ActorID,DataID)
+);
+CREATE INDEX metadatas_to_actor_idx_ActorID ON metadatas_to_actor (ActorID,DataID);
+CREATE INDEX metadatas_to_actor_idx_DataID ON metadatas_to_actor (DataID,ActorID);
+COMMIT;
 

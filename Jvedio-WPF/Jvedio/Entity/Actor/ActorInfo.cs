@@ -1,20 +1,23 @@
-﻿using Jvedio.Core.Attributes;
+﻿using DynamicData.Annotations;
+using Jvedio.Core.Attributes;
 using Jvedio.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
 {
     [Table(tableName: "actor_info")]
-    public class ActorInfo
+    public class ActorInfo : INotifyPropertyChanged
     {
         [TableId(IdType.AUTO)]
         public long ActorID { get; set; }
         public string ActorName { get; set; }
-        public int NameFlag { get; set; }
         public string Country { get; set; }
         public string Nation { get; set; }
         public string BirthPlace { get; set; }
@@ -30,7 +33,9 @@ namespace Jvedio.Entity
         public int Hipline { get; set; }
         public string WebType { get; set; }
         public string WebUrl { get; set; }
-        public string ImagePath { get; set; }
+        public float Grade { get; set; }
+        public string SmallImagePath { get; set; }
+        public string PreviewImagePath { get; set; }
         public string ExtraInfo { get; set; }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
@@ -44,5 +49,21 @@ namespace Jvedio.Entity
         /// </summary>
         [TableField(exist: false)]
         public long Count { get; set; }
+
+        private BitmapSource _smallimage;
+
+        [TableField(exist: false)]
+        public BitmapSource SmallImage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
+
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

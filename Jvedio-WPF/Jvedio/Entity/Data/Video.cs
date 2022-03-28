@@ -134,8 +134,11 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public List<string> ActorNameList { get; set; }
 
+        /// <summary>
+        /// 旧数据库的 actorID 列表
+        /// </summary>
         [TableField(exist: false)]
-        public string NameFlags { get; set; }
+        public string OldActorIDs { get; set; }
 
         [TableField(exist: false)]
         public List<ActorInfo> ActorInfos { get; set; }

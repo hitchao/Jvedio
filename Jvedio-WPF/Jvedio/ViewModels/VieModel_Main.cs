@@ -104,7 +104,7 @@ namespace Jvedio.ViewModel
             DataBases = new ObservableCollection<AppDatabase>();
 
             refreshVideoRenderToken();
-
+            refreshActorRenderToken();
 
             //获得所有数据库
             //LoadDataBaseList();
@@ -542,6 +542,18 @@ namespace Jvedio.ViewModel
             }
         }
 
+        private List<ActorInfo> _SelectedActors = new List<ActorInfo>();
+
+        public List<ActorInfo> SelectedActors
+        {
+            get { return _SelectedActors; }
+            set
+            {
+                _SelectedActors = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         private ObservableCollection<TagStamp> _TagStamps = new ObservableCollection<TagStamp>();
 
@@ -927,13 +939,25 @@ namespace Jvedio.ViewModel
         }
 
 
-        public double _CurrentCount = 0;
-        public double CurrentCount
+        public int _CurrentCount = 0;
+        public int CurrentCount
         {
             get { return _CurrentCount; }
             set
             {
                 _CurrentCount = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+        public int _CurrentActorCount = 0;
+        public int CurrentActorCount
+        {
+            get { return _CurrentActorCount; }
+            set
+            {
+                _CurrentActorCount = value;
                 RaisePropertyChanged();
 
             }
@@ -976,8 +1000,8 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private double _ActorCurrentCount = 0;
-        public double ActorCurrentCount
+        private long _ActorCurrentCount = 0;
+        public long ActorCurrentCount
         {
             get { return _ActorCurrentCount; }
             set
@@ -989,8 +1013,8 @@ namespace Jvedio.ViewModel
         }
 
 
-        private double _ActorTotalCount = 0;
-        public double ActorTotalCount
+        private long _ActorTotalCount = 0;
+        public long ActorTotalCount
         {
             get { return _ActorTotalCount; }
             set
@@ -1727,10 +1751,18 @@ namespace Jvedio.ViewModel
 
 
 
-        private delegate void LoadActorDelegate(ActorInfo actress, int idx);
-        private void LoadActor(ActorInfo actress, int idx)
+        private delegate void LoadActorDelegate(ActorInfo actor, int idx);
+        private void LoadActor(ActorInfo actor, int idx)
         {
-            CurrentActorList.Add(actress);
+            if (renderActorCTS.IsCancellationRequested) return;
+            if (CurrentActorList.Count < ActorPageSize)
+                CurrentActorList.Add(actor);
+            else
+            {
+                CurrentActorList[idx] = null;
+                CurrentActorList[idx] = actor;
+            }
+            CurrentActorCount = CurrentActorList.Count;
         }
 
 
@@ -1913,9 +1945,9 @@ namespace Jvedio.ViewModel
         #region "演员 => 翻页" 
         public static Dictionary<int, string> ActorSortDict = new Dictionary<int, string>()
         {
-            { 0, "ActorName" },
+            { 0, "actor_info.ActorName" },
             { 1, "Count" },
-            { 2, "Country" },
+            { 2, "actor_info.Country" },
             { 3, "Nation" },
             { 4, "BirthPlace" },
             { 5, "Birthday" },
@@ -1928,12 +1960,41 @@ namespace Jvedio.ViewModel
             { 12, "Chest" },
             { 13, "Waist" },
             { 14, "Hipline" },
+            { 15, "actor_info.Grade" },
+        };
+
+        public static string[] ActorSelectedField = new string[]
+        {
+            "count(ActorName) as Count",
+            "actor_info.ActorID",
+            "actor_info.ActorName",
+            "actor_info.Country",
+            "Nation",
+            "BirthPlace",
+            "Birthday",
+            "BloodType",
+            "Height",
+            "Weight",
+            "Gender",
+            "Hobby",
+            "Cup",
+            "Chest",
+            "Waist",
+            "Hipline",
+            "WebType",
+            "WebUrl",
+            "actor_info.Grade",
+            "SmallImagePath",
+            "PreviewImagePath",
+            "actor_info.ExtraInfo",
+            "actor_info.CreateDate",
+            "actor_info.UpdateDate",
         };
 
         public void ActorSetActorSortOrder<T>(IWrapper<T> wrapper)
         {
             if (wrapper == null) return;
-            string sortField = SortDict[Properties.Settings.Default.ActorSortType];
+            string sortField = ActorSortDict[Properties.Settings.Default.ActorSortType];
             if (Properties.Settings.Default.ActorSortDescending) wrapper.Desc(sortField);
             else wrapper.Asc(sortField);
         }
@@ -1978,23 +2039,27 @@ namespace Jvedio.ViewModel
                 main.ActorScrollViewer.ScrollToTop();//滚到顶部
             });
 
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             ActorSetActorSortOrder(wrapper);
-            wrapper.Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0);
 
-            string sql = "select actor_info.*,Count(actor_name_to_metadatas.ActorName) as Count " +
-                "from actor_name_to_metadatas join actor_info " +
-                "on actor_info.ActorName=actor_name_to_metadatas.ActorName and actor_info.NameFlag=actor_name_to_metadatas.NameFlag " +
-                "GROUP BY actor_name_to_metadatas.ActorName" + wrapper.toWhere();
-
+            string count_sql = "SELECT count(*) as Count " +
+                         "from (SELECT actor_info.ActorID FROM actor_info join metadatas_to_actor " +
+                         "on metadatas_to_actor.ActorID=actor_info.ActorID " +
+                         "join metadata " +
+                         "on metadatas_to_actor.DataID=metadata.DataID " +
+                         $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                         "GROUP BY actor_info.ActorID );";
 
             ActorTotalCount = actorMapper.selectCount(count_sql);
 
-            string sql = $"{wrapper.toSelect(false)} FROM metadata_video " +
-                        "JOIN metadata " +
-                        "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false) + wrapper.toOrder() + ActorToLimit();
+            string sql = $"{wrapper.Select(ActorSelectedField).toSelect(false)} FROM actor_info " +
+                $"join metadatas_to_actor on metadatas_to_actor.ActorID=actor_info.ActorID " +
+                $"join metadata on metadatas_to_actor.DataID=metadata.DataID " +
+                $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                $"GROUP BY actor_info.ActorID "
+                + wrapper.toOrder() + ActorToLimit();
             // 只能手动设置页码，很奇怪
-            App.Current.Dispatcher.Invoke(() => { main.actorPagination.Total = TotalActorPage; });
+            App.Current.Dispatcher.Invoke(() => { main.actorPagination.Total = ActorTotalCount; });
             RenderCurrentActors(sql);
         }
 
@@ -2005,15 +2070,11 @@ namespace Jvedio.ViewModel
         public void RenderCurrentActors(string sql)
         {
             List<Dictionary<string, object>> list = actorMapper.select(sql);
-            actorMapper.toEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
+            List<ActorInfo> actors = actorMapper.toEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
             ActorList = new List<ActorInfo>();
-
-
             if (actors == null || actors.Count <= 0) return;
             ActorList.AddRange(actors);
             renderActor();
-            //await Task.Run(() => Thread.Sleep(1000));
-            //if (renderVideoCT.IsCancellationRequested) refreshVideoRenderToken();
 
         }
 
@@ -2029,7 +2090,11 @@ namespace Jvedio.ViewModel
                 catch (OperationCanceledException ex) { renderVideoCTS?.Dispose(); break; }
                 renderingActor = true;
                 ActorInfo actorInfo = ActorList[i];
-                //SetImage(ref video, imageMode);
+                //加载图片
+                string smallImagePath = Video.parseImagePath(actorInfo.SmallImagePath);
+                BitmapImage smallimage = ReadImageFromFile(smallImagePath);
+                if (smallimage == null) smallimage = DefaultActorImage;
+                actorInfo.SmallImage = smallimage;
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
             }
 
@@ -2669,14 +2734,14 @@ namespace Jvedio.ViewModel
                 FavoriteVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
 
 
-                string sql = "SELECT ActorID from actor_info " +
-                            "JOIN actor_name_to_metadatas " +
-                            "on actor_info.ActorName=actor_name_to_metadatas.ActorName " +
-                            "and actor_info.NameFlag=actor_name_to_metadatas.NameFlag " +
-                            "where DataID in " +
-                            $"( SELECT DataID FROM metadata where DBId ={dbid} and DataType={0}) " +
-                            "GROUP BY actor_name_to_metadatas.ActorName,actor_name_to_metadatas.NameFlag ;";
-                AllActorCount = actorMapper.select(sql).Count;
+                string sql = "SELECT count(*) as Count " +
+                "from (SELECT actor_info.ActorID FROM actor_info join metadatas_to_actor " +
+                "on metadatas_to_actor.ActorID=actor_info.ActorID " +
+                "join metadata " +
+                "on metadatas_to_actor.DataID=metadata.DataID " +
+                $"WHERE metadata.DBId={dbid} and metadata.DataType={0} " +
+                "GROUP BY actor_info.ActorID );";
+                AllActorCount = actorMapper.selectCount(sql);
                 AllLabelCount = metaDataMapper.selectCount("SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label");
                 DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                 DateTime date2 = DateTime.Now;
