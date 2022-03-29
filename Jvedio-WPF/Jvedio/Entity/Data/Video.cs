@@ -140,8 +140,25 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public string OldActorIDs { get; set; }
 
+
+        private List<ActorInfo> _ActorInfos;
+
         [TableField(exist: false)]
-        public List<ActorInfo> ActorInfos { get; set; }
+        public List<ActorInfo> ActorInfos
+        {
+            get { return _ActorInfos; }
+            set
+            {
+                _ActorInfos = value;
+                if (value != null)
+                {
+
+                    ActorNames = string.Join(GlobalVariable.Separator.ToString(),
+                        value.Select(arg => arg.ActorName).ToList());
+                }
+                OnPropertyChanged();
+            }
+        }
         [TableField(exist: false)]
         public List<Magnet> Magnets { get; set; }
 

@@ -13,11 +13,8 @@
     Title="{x:Static lang:Resources.Edit}"
     Width="800"
     MinWidth="800"
-    MinHeight="200"
-    MaxHeight="600"
     Closing="BaseWindow_Closing"
     Foreground="{DynamicResource Global.Foreground}"
-    SizeToContent="Height"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -121,7 +118,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="{x:Static lang:Resources.Favorites}" Style="{StaticResource BaseInfoLabel}" />
+                            <Label Content="打分" Style="{StaticResource BaseInfoLabel}" />
                             <StackPanel
                                 Margin="10,0"
                                 VerticalAlignment="Center"
@@ -143,10 +140,280 @@
                                 VerticalAlignment="Top"
                                 Content="{x:Static lang:Resources.Actor}"
                                 Style="{StaticResource BaseInfoLabel}" />
-                            <chao:TagPanel
-                                Name="actorTagPanel"
-                                AddButtonVerticalAlignment="Top"
-                                OnAddNewLabel="NewActor" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+
+
+                                </Grid.ColumnDefinitions>
+
+                                <Border
+                                    Grid.Column="0"
+                                    Margin="5"
+                                    HorizontalAlignment="Left"
+                                    Panel.ZIndex="6"
+                                    PreviewMouseLeftButtonDown="NewActor"
+                                    Style="{StaticResource RoundBorder}"
+                                    Tag="{DynamicResource Window.Title.Hover.Background}">
+
+                                    <Viewbox Width="auto" Height="14">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M867.7 423.8H599.8V155.9c0-49.3-40-89.3-89.3-89.3s-89.3 40-89.3 89.3v267.9H153.3c-49.3 0-89.3 40-89.3 89.3s40 89.3 89.3 89.3h267.9v267.9c0 49.3 40 89.3 89.3 89.3s89.3-40 89.3-89.3V602.4h267.9c49.3 0 89.3-40 89.3-89.3s-40-89.3-89.3-89.3z"
+                                            Fill="{DynamicResource Global.Foreground}" />
+                                    </Viewbox>
+                                </Border>
+                                <ItemsControl Grid.Column="1" ItemsSource="{Binding ViewActors}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+
+                                            <Grid Name="rootGrid" Tag="{Binding ActorID}">
+                                                <Border
+                                                    Margin="5"
+                                                    CornerRadius="5"
+                                                    Cursor="Hand"
+                                                    Style="{StaticResource TagBarBorderStyle}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBox
+                                                            ContextMenu="{StaticResource CopyContextMenu}"
+                                                            Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                                            Text="{Binding ActorName, Mode=OneWay}" />
+                                                        <Border
+                                                            Width="20"
+                                                            Height="20"
+                                                            CornerRadius="10"
+                                                            PreviewMouseLeftButtonUp="DeleteActor"
+                                                            Style="{StaticResource CloseBorderStyle}">
+                                                            <Viewbox
+                                                                Width="12"
+                                                                Height="auto"
+                                                                Margin="0,0,0,0">
+                                                                <Path
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
+                                                                    Fill="{DynamicResource Global.Foreground}" />
+                                                            </Viewbox>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
+
+
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                            <Popup
+                                x:Name="searchActorPopup"
+                                Width="800"
+                                MinHeight="300"
+                                AllowsTransparency="True"
+                                HorizontalOffset="-5"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=actorTagPanel}"
+                                PopupAnimation="Fade"
+                                StaysOpen="True"
+                                VerticalOffset="-5">
+                                <Grid Margin="5">
+                                    <Border
+                                        Margin="5"
+                                        Background="{DynamicResource Menu.Background}"
+                                        CornerRadius="5"
+                                        Effect="{StaticResource PopupDropShadowEffect}" />
+                                    <Grid Margin="4,5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <chao:SearchBox
+                                            Name="searchBox"
+                                            Grid.Row="0"
+                                            Width="auto"
+                                            Height="30"
+                                            Margin="0"
+                                            Padding="3,0"
+                                            HorizontalAlignment="Stretch"
+                                            Background="{DynamicResource Window.Side.Background}"
+                                            BorderBrush="#326CF3"
+                                            BorderThickness="0"
+                                            Foreground="White"
+                                            PlaceHolder="搜索"
+                                            PlaceHolderForeground="Gray"
+                                            SearchOnTextChanged="False"
+                                            ShowClearButton="True"
+                                            ShowSearchButton="True"
+                                            Text="{Binding SearchText, Mode=TwoWay}" />
+
+                                        <Grid Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0">
+                                                <StackPanel Orientation="Vertical">
+                                                    <Border
+                                                        Grid.Column="3"
+                                                        Width="100"
+                                                        Height="100"
+                                                        Margin="10,20"
+                                                        VerticalAlignment="Top"
+                                                        Style="{StaticResource DropBorderStyle}">
+                                                        <Image Source="{Binding CurrentImage}" />
+                                                    </Border>
+                                                    <TextBox
+                                                        Width="auto"
+                                                        Margin="5,0"
+                                                        Padding="10"
+                                                        HorizontalAlignment="Stretch"
+                                                        HorizontalContentAlignment="Center"
+                                                        Background="{DynamicResource Window.Side.Background}"
+                                                        BorderBrush="#326CF3"
+                                                        BorderThickness="0"
+                                                        Foreground="White"
+                                                        IsReadOnly="True"
+                                                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                                        Text="{Binding ActorName, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </Grid>
+                                            <ScrollViewer
+                                                x:Name="ActorScrollViewer"
+                                                Grid.Column="1"
+                                                CanContentScroll="True"
+                                                FocusVisualStyle="{x:Null}"
+                                                IsDeferredScrollingEnabled="False"
+                                                VerticalScrollBarVisibility="Auto">
+
+
+                                                <ItemsControl
+                                                    x:Name="ActorItemsControl"
+                                                    Margin="5,5,5,5"
+                                                    Background="Transparent"
+                                                    ItemsSource="{Binding CurrentActorList}"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid
+                                                                Name="rootGrid"
+                                                                Width="auto"
+                                                                Margin="5"
+                                                                Tag="{Binding ActorID, Mode=OneWay}">
+                                                                <Border
+                                                                    Name="rootBorder"
+                                                                    Padding="0"
+                                                                    Background="{DynamicResource ListBoxItem.Background}"
+                                                                    BorderThickness="2"
+                                                                    CornerRadius="0 0 2 2 "
+                                                                    Effect="{StaticResource BlueDropShadowEffect}" />
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="auto" />
+                                                                        <RowDefinition Height="auto" />
+                                                                        <RowDefinition Height="*" />
+                                                                    </Grid.RowDefinitions>
+
+
+                                                                    <Image
+                                                                        Grid.Row="0"
+                                                                        Width="125"
+                                                                        Height="125"
+                                                                        Margin="0,0,0,10"
+                                                                        VerticalAlignment="Top"
+                                                                        AllowDrop="True"
+                                                                        Cursor="Hand"
+                                                                        FocusVisualStyle="{x:Null}"
+                                                                        MouseEnter="Image_MouseEnter"
+                                                                        MouseLeave="Image_MouseLeave"
+                                                                        MouseUp="Image_MouseUp"
+                                                                        Source="{Binding SmallImage}"
+                                                                        Stretch="UniformToFill" />
+
+
+
+
+                                                                    <TextBox
+                                                                        Name="ActorNameTextBox"
+                                                                        Grid.Row="1"
+                                                                        Width="125"
+                                                                        MaxHeight="60"
+                                                                        Margin="0"
+                                                                        FontSize="18"
+                                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                                        Opacity="0.7"
+                                                                        Style="{StaticResource ReadOnlyWrapTextBox}"
+                                                                        Text="{Binding ActorName}"
+                                                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                                                                    <Label
+                                                                        Grid.Row="2"
+                                                                        Width="120"
+                                                                        MaxHeight="60"
+                                                                        VerticalAlignment="Bottom"
+                                                                        Background="{DynamicResource Window.Detail.Background}"
+                                                                        BorderThickness="0"
+                                                                        Content="{Binding Count}"
+                                                                        FontSize="18"
+                                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                                        Opacity="0.7"
+                                                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />
+
+                                                                </Grid>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                        </Grid>
+
+
+
+                                        <StackPanel
+                                            Grid.Row="2"
+                                            Margin="5"
+                                            Orientation="Horizontal">
+                                            <Button
+                                                HorizontalAlignment="Center"
+                                                Click="newActor_Cancel"
+                                                Content="取消" />
+                                            <Button
+                                                HorizontalAlignment="Center"
+                                                Click="newActor_Confirm"
+                                                Content="确认" />
+
+                                            <chao:Pagination
+                                                Name="actorPagination"
+                                                Grid.Column="2"
+                                                Background="{DynamicResource Menu.Background}"
+                                                BorderBrush="{DynamicResource Window.Title.Foreground}"
+                                                CurrentPage="1"
+                                                CurrentPageBackground="#409EFF"
+                                                CurrentPageChange="CurrentActorPageChange"
+                                                Foreground="{DynamicResource Global.Foreground}"
+                                                PageBackground="{DynamicResource Window.Side.Background}"
+                                                PageCount="5"
+                                                PageHoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                                PageSize="40"
+                                                PageSizeChange="ActorPageSizeChange"
+                                                PageSizes="[10,20,40,50,100,200]"
+                                                Total="{Binding ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Popup>
+
                         </DockPanel>
 
 
@@ -167,7 +434,7 @@
                             <Label
                                 Margin="0,5"
                                 VerticalAlignment="Top"
-                                Content="标签（清单）"
+                                Content="标签"
                                 Style="{StaticResource BaseInfoLabel}" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -175,13 +442,89 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Click="AddToLabel" Content="添加到" />
+                                <Button
+                                    Margin="15,0"
+                                    Click="AddToLabel"
+                                    Content="添加到" />
                                 <chao:TagPanel
                                     Name="labelTagPanel"
                                     Grid.Column="1"
                                     AddButtonVerticalAlignment="Top"
                                     OnAddNewLabel="NewLabel"
                                     TagChanged="LabelChanged" />
+
+                                <Popup
+                                    x:Name="searchLabelPopup"
+                                    Width="800"
+                                    MinHeight="300"
+                                    AllowsTransparency="True"
+                                    HorizontalOffset="-5"
+                                    Placement="Bottom"
+                                    PlacementTarget="{Binding ElementName=labelTagPanel}"
+                                    PopupAnimation="Fade"
+                                    StaysOpen="False"
+                                    VerticalOffset="-5">
+                                    <Grid Margin="5">
+                                        <Border
+                                            Margin="5"
+                                            Background="{DynamicResource Menu.Background}"
+                                            CornerRadius="5"
+                                            Effect="{StaticResource PopupDropShadowEffect}" />
+                                        <Grid Margin="4,5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+
+                                            <chao:SearchBox
+                                                Name="labelSearchBox"
+                                                Grid.Row="0"
+                                                Width="auto"
+                                                Height="30"
+                                                Margin="0"
+                                                Padding="3,0"
+                                                HorizontalAlignment="Stretch"
+                                                Background="{DynamicResource Window.Side.Background}"
+                                                BorderBrush="#326CF3"
+                                                BorderThickness="0"
+                                                Foreground="White"
+                                                PlaceHolder="搜索"
+                                                PlaceHolderForeground="Gray"
+                                                SearchOnTextChanged="False"
+                                                ShowClearButton="True"
+                                                ShowSearchButton="True"
+                                                Text="{Binding LabelText, Mode=TwoWay}" />
+
+
+                                            <ScrollViewer
+                                                Grid.Row="1"
+                                                CanContentScroll="True"
+                                                FocusVisualStyle="{x:Null}"
+                                                IsDeferredScrollingEnabled="False"
+                                                VerticalScrollBarVisibility="Auto">
+                                                <ItemsControl
+                                                    Name="labelItemsControl"
+                                                    Margin="5"
+                                                    Background="Transparent"
+                                                    ItemsSource="{Binding CurrentLabelList}"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border MouseUp="Border_MouseUp" Style="{StaticResource GenreBorderStyle}">
+                                                                <TextBlock Style="{StaticResource GenreTextBlock}" Text="{Binding}" />
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </Grid>
+                                </Popup>
                             </Grid>
 
                         </DockPanel>

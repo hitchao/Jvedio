@@ -29,6 +29,7 @@ namespace Jvedio.Core.WindowConfig
         public double Height { get; set; }
         public long WindowState { get; set; }
         public long CurrentDBId { get; set; }
+        public long SearchSelectedIndex { get; set; }
 
 
     }

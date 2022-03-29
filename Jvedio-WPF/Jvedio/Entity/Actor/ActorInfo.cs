@@ -65,5 +65,12 @@ namespace Jvedio.Entity
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public override bool Equals(object obj)
+        {
+            ActorInfo actorInfo = obj as ActorInfo;
+            if (actorInfo == null) return false;
+            return this.ActorID == actorInfo.ActorID;
+        }
     }
 }

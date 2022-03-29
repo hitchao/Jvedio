@@ -303,5 +303,10 @@ namespace Jvedio.Core.SimpleORM
             if (!Wheres.Contains(where)) Wheres.Add(where);
             return this;
         }
+
+        public void Join(SelectWrapper<T> wrapper)
+        {
+            this.Wheres.AddRange(wrapper.Wheres);
+        }
     }
 }

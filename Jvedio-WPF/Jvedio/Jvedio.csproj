@@ -269,6 +269,7 @@
     <Compile Include="Core\Enums\SearchField.cs" />
     <Compile Include="Core\Enums\PathType.cs" />
     <Compile Include="Core\Enums\RelevanceType.cs" />
+    <Compile Include="Core\Enums\SearchType.cs" />
     <Compile Include="Core\Enums\TranslationPlatform.cs" />
     <Compile Include="Core\Enums\VideoType.cs" />
     <Compile Include="Core\Enums\ViewMode.cs" />

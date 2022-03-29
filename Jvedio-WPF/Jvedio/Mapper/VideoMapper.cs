@@ -37,7 +37,6 @@ namespace Jvedio.Mapper
             "CreateDate",
             "UpdateDate",
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
-            $"(select group_concat(ActorName,'{GlobalVariable.Separator}') from actor_name_to_metadatas where actor_name_to_metadatas.DataID=metadata.DataID) as ActorNames" ,
 
             "VID",
             "MVID",
@@ -69,7 +68,18 @@ namespace Jvedio.Mapper
                         "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false);
             List<Dictionary<string, object>> list = select(sql);
             List<Video> videos = toEntity<Video>(list, typeof(Video).GetProperties(), false);
-            if (videos.Count > 0) return videos[0];
+            if (videos != null && videos.Count > 0)
+            {
+                Video video = videos[0];
+                string actor_sql = "select actor_info.* from actor_info " +
+                    "JOIN metadatas_to_actor on metadatas_to_actor.ActorID=actor_info.ActorID " +
+                    "join metadata_video on metadata_video.DataID=metadatas_to_actor.DataID " +
+                    $"where metadata_video.DataID={dataid};";
+                List<Dictionary<string, object>> actor_list = select(actor_sql);
+                List<ActorInfo> actorInfos = toEntity<ActorInfo>(actor_list, typeof(ActorInfo).GetProperties());
+                video.ActorInfos = actorInfos;
+                return video;
+            }
             return null;
         }
 
@@ -105,6 +115,42 @@ namespace Jvedio.Mapper
                 });
 
                 string sql = $"insert or ignore into metadata_to_label(DataID,LabelName) " +
+                    $"values {string.Join(",", create)}";
+                executeNonQuery(sql);
+            }
+        }
+        public void SaveActor(Video video, List<ActorInfo> newActorInfos)
+        {
+            List<ActorInfo> oldActorInfos = video.ActorInfos;
+            if (oldActorInfos == null) oldActorInfos = new List<ActorInfo>();
+            if (newActorInfos == null) newActorInfos = new List<ActorInfo>();
+            if (newActorInfos.SequenceEqual(oldActorInfos)) return;
+            // 删除，新增
+            oldActorInfos = oldActorInfos.OrderBy(arg => arg.ActorID).ToList();
+            newActorInfos = newActorInfos.OrderBy(arg => arg.ActorID).ToList();
+            List<ActorInfo> to_delete = oldActorInfos.Except(newActorInfos).ToList();
+            List<ActorInfo> to_create = newActorInfos.Except(oldActorInfos).ToList();
+
+            //删除
+            if (to_delete.Count > 0)
+            {
+                // ('1','2','3')
+                string sql = $"delete from metadatas_to_actor " +
+                    $"where DataID={video.DataID} " +
+                    $"and ActorID in ('{string.Join("','", to_delete.Select(arg => arg.ActorID))}')";
+                executeNonQuery(sql);
+            }
+
+            // 新增
+            if (to_create.Count > 0)
+            {
+                List<string> create = new List<string>();
+                to_create.ForEach(arg =>
+                {
+                    create.Add($"({video.DataID},{arg.ActorID})");
+                });
+
+                string sql = $"insert or ignore into metadatas_to_actor(DataID,ActorID) " +
                     $"values {string.Join(",", create)}";
                 executeNonQuery(sql);
             }

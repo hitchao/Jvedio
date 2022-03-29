@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
 using Jvedio.Entity;
+using Jvedio.Entity.CommonSQL;
 
 namespace Jvedio
 {
@@ -52,6 +53,19 @@ namespace Jvedio
             }
             //加载图片
 
+        }
+
+        public static void setTagStamps(ref Video video)
+        {
+            if (!string.IsNullOrEmpty(video.TagIDs))
+            {
+                video.TagStamp = new List<TagStamp>();
+                foreach (var tagID in video.TagIDs.Split(','))
+                {
+                    long.TryParse(tagID.Trim(), out long id);
+                    if (id > 0) video.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault());
+                }
+            }
         }
 
 

@@ -64,5 +64,8 @@ namespace Jvedio.Core.SimpleORM
         string toWhere(bool existField = true);
         string toOrder();
 
+
+
+
     }
 }

@@ -218,6 +218,19 @@ namespace Jvedio
                 return "";
         }
 
+        public static string GetEuVID(string str)
+        {
+            if (string.IsNullOrEmpty(str)) return "";
+            string pattern = @"[A-Za-z]+\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}";
+            string FileName = File.Exists(str) ? new FileInfo(str).Name : str;
+            //BigWetButts.20.06.16
+            MatchCollection mc = Regex.Matches(FileName, pattern, RegexOptions.IgnoreCase);
+            if (mc.Count > 0)
+                return mc[0].Value;
+            else
+                return "";
+        }
+
 
 
 
@@ -227,6 +240,102 @@ namespace Jvedio
         /// <param name="str"></param>
         /// <returns></returns>
         public static string GetFanhao(string str)
+        {
+            // 未解决
+            // baidu123.com_SMD-124.mp4
+            // feichai9831@第第第第@SKY-227.avi
+
+            string FileName = File.Exists(str) ? new FileInfo(str).Name : str; ;
+            FileName = FileName.ToLower();
+            string Fanhao;
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"t28(-|_)?\d{3}");
+            if (Fanhao != "") return "T28-" + Fanhao.Replace("-", "").Replace("_", "").Substring(3);
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"heyzo\s?\)?\(?_?(hd|lt)?\+?-?_?\d{4}");
+            if (Fanhao != "") return AddGang(Fanhao.Replace("hd", "").Replace("lt", "").Replace("_", ""));
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"heydouga(-|_)?\d{4}(-|_)?\d{3,}");
+            if (Fanhao != "") return AddGang(Fanhao.Replace("_", ""));
+
+
+            //TODO FC2数字少于 4 位数没法导入
+            if (FileName.IndexOf("fc2") >= 0 || FileName.IndexOf("fc") >= 0)
+            {
+                Fanhao = GetFanhaoByRegExp(FileName, @"\d{4,}");
+                if (Fanhao != "") return "FC2-" + Fanhao;
+            }
+
+            //ABCD-S12
+            Fanhao = GetFanhaoByRegExp(FileName, @"[a-z]{3,4}-s(-|_)?\d{2,}");
+            if (Fanhao != "") return GetFanhaoByRegExp(Fanhao, @"[a-z]{3,4}-s") + GetFanhaoByRegExp(Fanhao, @"\d{2,}");
+
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"s2m[a-z]{0,2}(-|_)?\d{2,}");
+            if (Fanhao != "") return GetFanhaoByRegExp(Fanhao, @"s2m[a-z]{0,2}") + "-" + GetFanhaoByRegExp(Fanhao, @"\d{2,}");
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"cw3d2dbd(-|_)?\d{2,}");
+            if (Fanhao != "") return "cw3d2dbd".ToUpper() + "-" + GetFanhaoByRegExp(Fanhao, @"\d{2,}");
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"ibw(-|_)?\d{2,}z?");
+            if (Fanhao != "") return "IBW-" + GetFanhaoByRegExp(Fanhao, @"\d{2,}z?");
+
+
+
+            //メス豚 000000_000_00
+            Fanhao = GetFanhaoByRegExp(FileName, @"(?![0-9])*\d{6}(_|-)\d{3}(_|-)\d{2}(?![0-9])");
+            if (Fanhao != "") return Fanhao.Replace("-", "_");
+
+            //一本道 000000_000，中间连接符为 _ 前6位，后3位
+            //加勒比 000000-000，中间连接符为 - 前6位，后3位
+            Fanhao = GetFanhaoByRegExp(FileName, @"(?![0-9])*\d{6}(_|-)\d{3}(?![0-9])");
+            if (Fanhao != "") return Fanhao;
+
+            //天然むすめ 000000_00
+            Fanhao = GetFanhaoByRegExp(FileName, @"(?![0-9])*\d{6}(_|-)\d{2}(?![0-9])");
+            if (Fanhao != "") return Fanhao.Replace("-", "_");
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"(k|n)\d{4}");
+            if (Fanhao != "")
+            {
+                if (!IsEnglishExistBefore(FileName, Fanhao)) return Fanhao;
+            }
+
+            Fanhao = GetFanhaoByRegExp(FileName, @"[A-Za-z]{2,}(-|_)?\d{2,}");
+            if (Fanhao != "") return AddGang(Fanhao.Replace("_", "-"));
+
+
+            //如果番号仍然为空，识别特殊番号
+            //XXXX-123X
+            Fanhao = GetFanhaoByRegExp(FileName, @"[A-Za-z]{2,}(-|_)?\d+[A-Za-z]");
+            if (Fanhao != "") return GetFanhaoByRegExp(Fanhao, @"[A-Za-z]{2,}") + "-" + GetFanhaoByRegExp(Fanhao, @"\d+[A-Za-z]");
+
+
+            // 1000girl
+            //141212-MIO
+            Fanhao = GetFanhaoByRegExp(FileName, @"\d+-[A-Za-z]+");
+            if (Fanhao != "") return GetFanhaoByRegExp(Fanhao, @"\d+-[A-Za-z]+");
+
+            //C-1234
+            Fanhao = GetFanhaoByRegExp(FileName, @"C-\d+");
+            if (Fanhao != "") return GetFanhaoByRegExp(Fanhao, @"C-\d+");
+
+            //自定义增加正则
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.ScanRe))
+            {
+                foreach (var item in Properties.Settings.Default.ScanRe.Split(';'))
+                {
+                    if (item?.Length > 0)
+                    {
+                        Fanhao = GetFanhaoByRegExp(FileName, item);
+                        if (Fanhao != "") return GetFanhaoByRegExp(Fanhao, item);
+                    }
+                }
+            }
+            return "";
+        }
+
+        public static string GetVID(string str)
         {
             // 未解决
             // baidu123.com_SMD-124.mp4

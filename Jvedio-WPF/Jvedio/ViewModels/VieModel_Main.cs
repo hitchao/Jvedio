@@ -34,6 +34,7 @@ using Jvedio.Entity;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
+using Jvedio.Core.Enums;
 
 namespace Jvedio.ViewModel
 {
@@ -48,7 +49,6 @@ namespace Jvedio.ViewModel
         public event EventHandler ActorPageChangedCompleted;
 
         public bool IsFlipOvering = false;
-        public VedioType CurrentVedioType = VedioType.所有;
 
         public static string PreviousSql = "";
         public static double PreviousOffset = 0;
@@ -89,7 +89,7 @@ namespace Jvedio.ViewModel
 
         public VieModel_Main()
         {
-            SelectCommand = new RelayCommand<object>(t => Select(t));
+            SelectCommand = new RelayCommand<object>(t => GenerateSelect(t));
             ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
             ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
             GenreCommand = new RelayCommand(GetGenreList);
@@ -261,18 +261,6 @@ namespace Jvedio.ViewModel
 
 
 
-
-        private bool _ShowSearchPopup = false;
-
-        public bool ShowSearchPopup
-        {
-            get { return _ShowSearchPopup; }
-            set
-            {
-                _ShowSearchPopup = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private bool _ShowMoreListBtn = false;
 
@@ -492,8 +480,8 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<Video> _VideoList;
-        public ObservableCollection<Video> VideoList
+        private List<Video> _VideoList;
+        public List<Video> VideoList
         {
             get { return _VideoList; }
             set
@@ -670,6 +658,21 @@ namespace Jvedio.ViewModel
 
             }
         }
+        private bool _Searching = false;
+
+
+        public bool Searching
+        {
+            get { return _Searching; }
+            set
+            {
+                _Searching = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+
 
 
         private ObservableCollection<string> _FilePathClassification;
@@ -699,38 +702,6 @@ namespace Jvedio.ViewModel
 
             }
         }
-
-
-        private ObservableCollection<string> _CurrentSearchCandidate;
-
-
-        public ObservableCollection<string> CurrentSearchCandidate
-        {
-            get { return _CurrentSearchCandidate; }
-            set
-            {
-                _CurrentSearchCandidate = value;
-                RaisePropertyChanged();
-
-            }
-        }
-
-
-
-        private ObservableCollection<Movie> _SearchCandidate;
-
-
-        public ObservableCollection<Movie> SearchCandidate
-        {
-            get { return _SearchCandidate; }
-            set
-            {
-                _SearchCandidate = value;
-                RaisePropertyChanged();
-
-            }
-        }
-
         #endregion
 
 
@@ -1100,17 +1071,17 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string search = string.Empty;
+        private string _SearchText = string.Empty;
 
 
-        public string Search
+        public string SearchText
         {
-            get { return search; }
+            get { return _SearchText; }
             set
             {
-                search = value;
+                _SearchText = value;
                 RaisePropertyChanged();
-                BeginSearch();
+                //BeginSearch();
             }
         }
 
@@ -1495,84 +1466,56 @@ namespace Jvedio.ViewModel
             return result;
         }
 
-        private delegate void LoadSearchDelegate(string str);
-        private void LoadSearch(string str)
+        //private delegate void LoadSearchDelegate(string str);
+        //private void LoadSearch(string str)
+        //{
+        //    if (!CurrentSearchCandidate.Contains(str)) CurrentSearchCandidate.Add(str);
+        //}
+
+
+
+
+        public async Task<List<string>> GetSearchCandidate()
         {
-            if (!CurrentSearchCandidate.Contains(str)) CurrentSearchCandidate.Add(str);
-        }
-
-
-
-
-        public async Task<bool> GetSearchCandidate(string Search)
-        {
-            return await Task.Run(async () =>
+            return await Task.Run(() =>
             {
+                SearchType searchType = (SearchType)GlobalConfig.Main.SearchSelectedIndex;
+                string field = searchType.ToString();
 
-                CurrentSearchCandidate = new ObservableCollection<string>();
-                if (Search == "") return false;
+                List<string> result = new List<string>();
+                if (string.IsNullOrEmpty(SearchText)) return result;
+                SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+                setSortOrder(wrapper);//按照当前排序
+                wrapper.Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0);
+                SelectWrapper<Video> selectWrapper = getWrapper(searchType);
+                if (selectWrapper != null) wrapper.Join(selectWrapper);
 
-                //提取出英文和数字
-                string extraSearch = "";
-                string number = Identify.GetNum(Search);
-                string eng = Identify.GetEng(Search);
+                string actor_join_sql = " join metadatas_to_actor on metadatas_to_actor.DataID=metadata.DataID " +
+                "JOIN actor_info on metadatas_to_actor.ActorID=actor_info.ActorID ";
 
-                Search = Search.Replace("%", "").Replace("'", "");
-                if (!string.IsNullOrEmpty(number)) extraSearch = eng + "-" + number;
-                List<Movie> movies = new List<Movie>();
-                if (AllSearchType == MySearchType.名称)
+                string label_join_sql = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
+
+                string condition_sql = wrapper.toWhere(false) + wrapper.toOrder()
+                            + $" LIMIT 0,{Properties.Settings.Default.SearchCandidateMaxCount}";
+
+                string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
+                            "JOIN metadata " +
+                            "on metadata.DataID=metadata_video.DataID ";
+                if (searchType == SearchType.ActorName)
+                    sql += actor_join_sql;
+                else if (searchType == SearchType.LabelName)
+                    sql += label_join_sql;
+                List<Dictionary<string, object>> list = metaDataMapper.select(sql + condition_sql);
+                if (list != null && list.Count > 0)
                 {
-                    if (SearchInCurrent)
-                        movies = MovieList.Where(m => m.title.ToUpper().Contains(Search.ToUpper())).ToList();
-                    else
-                        movies = DataBase.SelectMoviesBySql($"SELECT * from movie where title like '%{Search}%'");
-
-                    foreach (Movie movie in movies)
+                    foreach (Dictionary<string, object> dict in list)
                     {
-                        await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadSearchDelegate(LoadSearch), movie.title);
-                        if (CurrentSearchCandidate.Count >= Properties.Settings.Default.SearchCandidateMaxCount) break;
+                        string value = dict[field].ToString();
+                        if (string.IsNullOrEmpty(value)) continue;
+                        result.Add(value);
                     }
                 }
-                else if (AllSearchType == MySearchType.演员)
-                {
-                    if (SearchInCurrent)
-                        movies = MovieList.Where(m => m.actor.ToUpper().Contains(Search.ToUpper())).ToList();
-                    else
-                        movies = DataBase.SelectMoviesBySql($"SELECT * from movie where actor like '%{Search}%'");
-
-                    foreach (Movie movie in movies)
-                    {
-                        string[] actor = movie.actor.Split(actorSplitDict[movie.vediotype]);
-                        foreach (var item in actor)
-                        {
-                            if (!string.IsNullOrEmpty(item) & item.IndexOf(' ') < 0)
-                            {
-                                if (!CurrentSearchCandidate.Contains(item) & item.ToUpper().IndexOf(Search.ToUpper()) >= 0)
-                                {
-                                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadSearchDelegate(LoadSearch), item);
-                                }
-                                if (CurrentSearchCandidate.Count >= Properties.Settings.Default.SearchCandidateMaxCount) break;
-                            }
-                        }
-                        if (CurrentSearchCandidate.Count >= Properties.Settings.Default.SearchCandidateMaxCount) break;
-                    }
-                }
-                else if (AllSearchType == MySearchType.识别码)
-                {
-                    if (SearchInCurrent)
-                        movies = MovieList.Where(m => m.id.ToUpper().Contains(Search.ToUpper())).ToList();
-                    else
-                        movies = DataBase.SelectMoviesBySql($"SELECT * from movie where id like '%{Search}%'");
-
-                    if (movies.Count == 0 && extraSearch != "") movies = MovieList.Where(m => m.id.ToUpper().Contains(extraSearch.ToUpper())).ToList();
-                    foreach (Movie movie in movies)
-                    {
-                        await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadSearchDelegate(LoadSearch), movie.id);
-                        if (CurrentSearchCandidate.Count >= Properties.Settings.Default.SearchCandidateMaxCount) break;
-                    }
-                }
-                return true;
-
+                return result;
             });
         }
 
@@ -1585,7 +1528,7 @@ namespace Jvedio.ViewModel
                 if (SearchHistory.Count <= 0)
                 {
                     File.Delete("SearchHistory");
-                    main.SearchHistoryStackPanel.Visibility = Visibility.Collapsed;
+                    //main.SearchHistoryStackPanel.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -1593,7 +1536,7 @@ namespace Jvedio.ViewModel
                     {
                         sw.Write(string.Join("'", SearchHistory));
                     }
-                    main.SearchHistoryStackPanel.Visibility = Visibility.Visible;
+                    //main.SearchHistoryStackPanel.Visibility = Visibility.Visible;
                 }
             }
             catch (Exception ex)
@@ -1756,7 +1699,18 @@ namespace Jvedio.ViewModel
         {
             if (renderActorCTS.IsCancellationRequested) return;
             if (CurrentActorList.Count < ActorPageSize)
-                CurrentActorList.Add(actor);
+            {
+                if (idx < CurrentActorList.Count)
+                {
+                    CurrentActorList[idx] = null;
+                    CurrentActorList[idx] = actor;
+                }
+                else
+                {
+                    CurrentActorList.Add(actor);
+                }
+
+            }
             else
             {
                 CurrentActorList[idx] = null;
@@ -1859,13 +1813,24 @@ namespace Jvedio.ViewModel
         {
             if (renderVideoCT.IsCancellationRequested) return;
             if (CurrentVideoList.Count < PageSize)
-                CurrentVideoList.Add(video);
+            {
+                if (idx < CurrentVideoList.Count)
+                {
+                    CurrentVideoList[idx] = null;
+                    CurrentVideoList[idx] = video;
+                }
+                else
+                {
+                    CurrentVideoList.Add(video);
+                }
+
+            }
             else
             {
                 CurrentVideoList[idx] = null;
                 CurrentVideoList[idx] = video;
             }
-            CurrentCount = CurrentVideoList.Count;
+            //CurrentCount = CurrentVideoList.Count;
             //Console.WriteLine($"渲染第 {CurrentPage} 页的数据");
         }
 
@@ -1881,7 +1846,9 @@ namespace Jvedio.ViewModel
         public async void GetLabelList()
         {
             List<string> labels = new List<string>();
-            string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label GROUP BY LabelName";
+            string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
+                "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
+                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.select(sql);
             foreach (Dictionary<string, object> item in list)
             {
@@ -2072,7 +2039,7 @@ namespace Jvedio.ViewModel
             List<Dictionary<string, object>> list = actorMapper.select(sql);
             List<ActorInfo> actors = actorMapper.toEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
             ActorList = new List<ActorInfo>();
-            if (actors == null || actors.Count <= 0) return;
+            if (actors == null) actors = new List<ActorInfo>();
             ActorList.AddRange(actors);
             renderActor();
 
@@ -2097,6 +2064,14 @@ namespace Jvedio.ViewModel
                 actorInfo.SmallImage = smallimage;
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
             }
+
+            // 清除
+            for (int i = CurrentActorList.Count - 1; i > ActorList.Count - 1; i--)
+            {
+                CurrentActorList.RemoveAt(i);
+            }
+
+
 
             if (renderActorCT.IsCancellationRequested) refreshActorRenderToken();
             renderingActor = false;
@@ -2158,74 +2133,52 @@ namespace Jvedio.ViewModel
 
 
 
+        public SelectWrapper<Video> getWrapper(SearchType searchType)
+        {
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            if (string.IsNullOrEmpty(SearchText)) return null;
+            string FormatSearch = SearchText.ToProperSql().Trim();
+            if (string.IsNullOrEmpty(FormatSearch)) return null;
+            string searchContent = FormatSearch;
+
+            switch (searchType)
+            {
+                case SearchType.VID:
+
+                    string vid = Identify.GetVID(FormatSearch);
+                    if (string.IsNullOrEmpty(vid)) searchContent = FormatSearch;
+                    else searchContent = vid;
+                    wrapper.Like("VID", searchContent);
+                    break;
+                default:
+                    wrapper.Like(searchType.ToString(), searchContent);
+                    break;
+            }
+
+            return wrapper;
+        }
+
 
         /// <summary>
         /// 在数据库中搜索影片
         /// </summary>
-        public async Task<bool> Query()
+        public async Task<bool> Query(SearchType searchType = SearchType.VID)
         {
-            if (!DataBase.IsTableExist("movie")) { return false; }
-            if (Search == "") return false;
-            string FormatSearch = Search.ToProperSql();
-
-            if (string.IsNullOrEmpty(FormatSearch)) { return false; }
-
-
-
-            string searchContent = FormatSearch;
-
-
-            List<Movie> oldMovieList = MovieList.ToList();
-
-            if (AllSearchType == MySearchType.识别码)
-            {
-                string fanhao;
-                if (CurrentVedioType == VedioType.欧美)
-                    fanhao = Identify.GetEuFanhao(FormatSearch);
-                else
-                    fanhao = Identify.GetFanhao(FormatSearch);
-
-                if (string.IsNullOrEmpty(fanhao)) searchContent = FormatSearch;
-                else searchContent = fanhao;
-
-                TextType = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.ID + " " + searchContent;
-
-                if (SearchInCurrent)
-                    MovieList = oldMovieList.Where(arg => arg.id.IndexOf(searchContent) >= 0).ToList();
-                else
-                {
-                    if (SearchFirstLetter)
-                        MovieList = DataBase.SelectPartialInfo($"SELECT * FROM movie where id like '%{searchContent}%'").Where(arg => arg.id.ToUpper()[0] == searchContent.ToUpper()[0]).ToList();
-                    else
-                        MovieList = DataBase.SelectPartialInfo($"SELECT * FROM movie where id like '%{searchContent}%'");
-                }
-
-
-
-            }
-
-            else if (AllSearchType == MySearchType.名称)
-            {
-                TextType = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.Title + " " + searchContent;
-                if (SearchInCurrent)
-                    MovieList = oldMovieList.Where(arg => arg.title.IndexOf(searchContent) >= 0).ToList();
-                else
-                    MovieList = DataBase.SelectPartialInfo($"SELECT * FROM movie where title like '%{searchContent}%'");
-            }
-
-            else if (AllSearchType == MySearchType.演员)
-            {
-                TextType = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.Actor + " " + searchContent;
-                if (SearchInCurrent)
-                    MovieList = oldMovieList.Where(arg => arg.actor.IndexOf(searchContent) >= 0).ToList();
-                else
-                    MovieList = DataBase.SelectPartialInfo($"SELECT * FROM movie where actor like '%{searchContent}%'");
-            }
-            if (!SearchHistory.Contains(searchContent) && !SearchFirstLetter)
-            {
-                SearchHistory.Add(searchContent);
-                SaveSearchHistory();
-            }
+            extraWrapper = getWrapper(searchType);
+            Select();
+            //else if (AllSearchType == MySearchType.演员)
+            //{
+            //    TextType = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.Actor + " " + searchContent;
+            //    if (SearchInCurrent)
+            //        MovieList = oldMovieList.Where(arg => arg.actor.IndexOf(searchContent) >= 0).ToList();
+            //    else
+            //        MovieList = DataBase.SelectPartialInfo($"SELECT * FROM movie where actor like '%{searchContent}%'");
+            //}
+            //if (!SearchHistory.Contains(searchContent) && !SearchFirstLetter)
+            //{
+            //    SearchHistory.Add(searchContent);
+            //    SaveSearchHistory();
+            //}
             return true;
         }
 
@@ -2384,7 +2337,7 @@ namespace Jvedio.ViewModel
             "metadata.DataID",
             "MVID",
             "VID",
-            "Grade",
+            "metadata.Grade",
             "Title",
             "Path",
             "SubSection",
@@ -2392,10 +2345,10 @@ namespace Jvedio.ViewModel
             "ReleaseDate",
             "GifImagePath",
             "BigImagePath",
-            "SmallImagePath",
-            "PreviewImagePath",
-            "WebUrl",
-            "WebType",
+            "metadata_video.SmallImagePath",
+            "metadata_video.PreviewImagePath",
+            "metadata_video.WebUrl",
+            "metadata_video.WebType",
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
         };
 
@@ -2425,7 +2378,30 @@ namespace Jvedio.ViewModel
 
 
 
-        public async void Select(object o = null)
+        public SelectWrapper<Video> extraWrapper;
+
+
+        public void GenerateSelect(object o = null)
+        {
+            extraWrapper = new SelectWrapper<Video>();
+            // 侧边栏参数
+            if (o != null && !string.IsNullOrEmpty(o.ToString()))
+            {
+                switch (o.ToString())
+                {
+                    case "Favorite": extraWrapper.Gt("metadata.Grade", 0); break;
+                    case "RecentWatch":
+                        DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
+                        DateTime date2 = DateTime.Now;
+                        extraWrapper.Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2));
+                        break;
+                    default: break;
+                }
+            }
+            Select();
+        }
+
+        public async void Select()
         {
             TabSelectedIndex = 0; // 影片
             // 判断当前获取的队列
@@ -2455,31 +2431,36 @@ namespace Jvedio.ViewModel
             setSortOrder(wrapper);
             wrapper.Select(SelectFields).Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0);
 
-            // 侧边栏参数
-            if (o != null && !string.IsNullOrEmpty(o.ToString()))
-            {
-                switch (o.ToString())
-                {
-                    case "Favorite": wrapper.Gt("Grade", 0); break;
-                    case "RecentWatch":
-                        string date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays).Date.ToString("yyyy-MM-dd");
-                        string date2 = DateTime.Now.ToString("yyyy-MM-dd");
-                        wrapper.Between("ViewDate", date1, date2);
-                        break;
-                    default: break;
-                }
-            }
+            if (extraWrapper != null) wrapper.Join(extraWrapper);
 
-            string count_sql = $"select count(*) FROM metadata_video " +
-                                 "JOIN metadata " +
-                                 "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false);
+            string actor_join_sql = " join metadatas_to_actor on metadatas_to_actor.DataID=metadata.DataID " +
+                "JOIN actor_info on metadatas_to_actor.ActorID=actor_info.ActorID ";
+
+            string label_join_sql = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
+
+            string condition_sql = wrapper.toWhere(false) + wrapper.toOrder() + toLimit();
+
+            string sql = $" FROM metadata_video " +
+                        "JOIN metadata " +
+                        "on metadata.DataID=metadata_video.DataID ";
+
+
+
+            SearchType searchType = (SearchType)GlobalConfig.Main.SearchSelectedIndex;
+            if (searchType == SearchType.ActorName)
+                sql += actor_join_sql;
+            else if (searchType == SearchType.LabelName)
+                sql += label_join_sql;
+
+
+            string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
 
 
             TotalCount = metaDataMapper.selectCount(count_sql);
 
-            string sql = $"{wrapper.toSelect(false)} FROM metadata_video " +
-                        "JOIN metadata " +
-                        "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false) + wrapper.toOrder() + toLimit();
+
+
+            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + toLimit();
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { main.pagination.Total = TotalCount; });
             RenderCurrentVideo(sql);
@@ -2494,10 +2475,10 @@ namespace Jvedio.ViewModel
             //if (rendering) return;
             List<Dictionary<string, object>> list = metaDataMapper.select(sql);
             List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
-            VideoList = new ObservableCollection<Video>();
-
-            if (Videos == null || Videos.Count <= 0) return;
-            Videos.ForEach(video => VideoList.Add(video));
+            VideoList = new List<Video>();
+            if (Videos == null) Videos = new List<Video>();
+            VideoList.AddRange(Videos);
+            CurrentCount = VideoList.Count;
             render();
             //await Task.Run(() => Thread.Sleep(1000));
             //if (renderVideoCT.IsCancellationRequested) refreshVideoRenderToken();
@@ -2505,18 +2486,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        public void setTag(ref Video video)
-        {
-            if (!string.IsNullOrEmpty(video.TagIDs))
-            {
-                video.TagStamp = new List<TagStamp>();
-                foreach (var tagID in video.TagIDs.Split(','))
-                {
-                    long.TryParse(tagID.Trim(), out long id);
-                    if (id > 0) video.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault());
-                }
-            }
-        }
+
 
 
 
@@ -2531,8 +2501,14 @@ namespace Jvedio.ViewModel
                 rendering = true;
                 Video video = VideoList[i];
                 SetImage(ref video, imageMode);
-                setTag(ref video);// 设置标签戳
+                setTagStamps(ref video);// 设置标签戳
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
+            }
+
+            // 清除
+            for (int i = CurrentVideoList.Count - 1; i > VideoList.Count - 1; i--)
+            {
+                CurrentVideoList.RemoveAt(i);
             }
 
             if (renderVideoCT.IsCancellationRequested) refreshVideoRenderToken();

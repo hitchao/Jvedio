@@ -89,12 +89,11 @@ namespace Jvedio
                     //加载信息在所有
                     await Task.Run(() => vieModel.VideoInfo = MediaParse.GetMediaInfo(vieModel.CurrentVideo.Path));
                     //加载图片
-                    if ((bool)ExtraImageRadioButton.IsChecked) await LoadImage();
-                    else await LoadScreenShotImage();
+                    await LoadImage(!(bool)ExtraImageRadioButton.IsChecked);
 
                     //显示标签
-                    tagPanel.TagList = vieModel.CurrentVideo.LabelList;
-                    tagPanel.Refresh();
+                    //tagPanel.TagList = vieModel.CurrentVideo.LabelList;
+                    //tagPanel.Refresh();
 
                     // 显示磁力
                     renderMagnets();
@@ -158,9 +157,9 @@ namespace Jvedio
         private void initTag()
         {
             //tagPanel.TagChanged += SaveTags;
-            tagPanel.onTagClick += ShowSameLabel;
-            tagPanel.OnAddExistsLabel += AddNewLabel;
-            tagPanel.OnAddNewLabel += AddNewTag;
+            //tagPanel.onTagClick += ShowSameLabel;
+            //tagPanel.OnAddExistsLabel += AddNewLabel;
+            //tagPanel.OnAddNewLabel += AddNewTag;
         }
 
 
@@ -182,14 +181,19 @@ namespace Jvedio
             if (e != null) vieModel.CurrentVideo.LabelList = e.List;
             vieModel.SaveLabel();
 
-            tagPanel.TagList = vieModel.CurrentVideo.LabelList;
-            tagPanel.Refresh();
+            //tagPanel.TagList = vieModel.CurrentVideo.LabelList;
+            //tagPanel.Refresh();
 
             // todo 显示到主界面
             //Main main = App.Current.Windows[0] as Main;
             //main.RefreshMovieByID(vieModel.CurrentVideo.DataID);
         }
 
+
+        public void Refresh()
+        {
+            vieModel.Load(DataID);
+        }
 
         private void Screenshot_Snapped(object sender, FunctionEventArgs<ImageSource> e)
         {
@@ -889,29 +893,7 @@ namespace Jvedio
         }
 
 
-        public void RefreshFavorites()
-        {
-            //windowMain = App.Current.Windows[0] as Main;
-            //for (int i = 0; i < windowMain.vieModel.CurrentMovieList.Count; i++)
-            //{
-            //    try
-            //    {
-            //        if (windowMain.vieModel.CurrentMovieList[i]?.id == vieModel.CurrentVideo.id)
-            //        {
-            //            Movie movie = windowMain.vieModel.CurrentMovieList[i];
-            //            windowMain.vieModel.CurrentMovieList[i] = null;
-            //            movie.favorites = vieModel.CurrentVideo.favorites;
-            //            windowMain.vieModel.CurrentMovieList[i] = movie;
-            //            windowMain.vieModel.Statistic();
-            //        }
-            //    }
-            //    catch (Exception ex1)
-            //    {
-            //        Console.WriteLine(ex1.StackTrace);
-            //        Console.WriteLine(ex1.Message);
-            //    }
-            //}
-        }
+
 
 
         public void CopyFile(object sender, RoutedEventArgs e)
@@ -1239,7 +1221,6 @@ namespace Jvedio
 
         private void Grid_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if (LabelGrid.Visibility == Visibility.Visible) return;
             if (e.Key == Key.Escape)
                 this.Close();
             else if (e.Key == Key.Left)
@@ -1425,10 +1406,20 @@ namespace Jvedio
             {
                 vieModel.SaveLove();
                 //更新主界面
-                RefreshFavorites();
+                windowMain?.RefreshGrade(vieModel.CurrentVideo);
             }
 
 
+
+        }
+
+        public void RefreshVideo(Video newVideo)
+        {
+
+            if (vieModel.CurrentVideo.DataID == newVideo.DataID)
+            {
+                vieModel.CurrentVideo = newVideo;
+            }
 
         }
 
@@ -1606,7 +1597,7 @@ namespace Jvedio
             //cancelLoadImage = false;
         }
 
-        private async Task<bool> LoadImage()
+        private async Task<bool> LoadImage(bool isScreenShot = false)
         {
             scrollViewer.ScrollToHorizontalOffset(0);
             //加载大图到预览图
@@ -1614,7 +1605,7 @@ namespace Jvedio
             vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
             vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
             string BigImagePath = Video.parseImagePath(vieModel.CurrentVideo.BigImagePath);
-            if (File.Exists(BigImagePath))
+            if (!isScreenShot && File.Exists(BigImagePath))
             {
                 vieModel.CurrentVideo.PreviewImageList.Add(vieModel.CurrentVideo.BigImage);
                 vieModel.CurrentVideo.PreviewImagePathList.Add(BigImagePath);
@@ -1630,20 +1621,21 @@ namespace Jvedio
 
             //扫描预览图目录
             List<string> imagePathList = new List<string>();
-            string PreviewImagePath = Video.parseImagePath(vieModel.CurrentVideo.PreviewImagePath);
+            string imagePath = Video.parseImagePath(vieModel.CurrentVideo.PreviewImagePath);
+            if (isScreenShot) imagePath = Video.parseImagePath(vieModel.CurrentVideo.ScreenShotPath);
             await Task.Run(() =>
             {
-                if (Directory.Exists(PreviewImagePath))
+                if (Directory.Exists(imagePath))
                 {
 
-                    foreach (var path in FileHelper.TryScanDIr(PreviewImagePath, "*.*", System.IO.SearchOption.AllDirectories))
+                    foreach (var path in FileHelper.TryScanDIr(imagePath, "*.*", System.IO.SearchOption.AllDirectories))
                         imagePathList.Add(path);
 
                     if (imagePathList.Count > 0) imagePathList = imagePathList.Where(arg => Scan.ImagePattern.Contains(Path.GetExtension(arg))).CustomSort().ToList();
                 }
             });
 
-            ////加载预览图
+            //加载预览图/截图
             foreach (var path in imagePathList)
             {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraImageDelegate(LoadExtraImage), GetExtraImage(path));
@@ -1652,49 +1644,6 @@ namespace Jvedio
             }
             SetImage(0);
             return true;
-        }
-
-
-
-        // todo LoadScreenShotImage
-
-        private async Task<bool> LoadScreenShotImage()
-        {
-            return false;
-            //DisposeImage();
-            //scrollViewer.ScrollToHorizontalOffset(0);
-            //vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
-            //vieModel.CurrentVideo.PreviewImagePath = new ObservableCollection<string>();
-            //await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
-            //{
-            //    imageItemsControl.ItemsSource = vieModel.CurrentVideo.extraimagelist;
-            //});
-            ////扫描截图目录
-            //List<string> imagePathList = new List<string>();
-            //await Task.Run(() =>
-            //{
-            //    if (Directory.Exists(GlobalVariable.BasePicPath + $"ScreenShot\\{vieModel.CurrentVideo.id}\\"))
-            //    {
-            //        try
-            //        {
-            //            foreach (var path in Directory.GetFiles(GlobalVariable.BasePicPath + $"ScreenShot\\{vieModel.CurrentVideo.id}\\")) imagePathList.Add(path);
-            //        }
-            //        catch { }
-            //        if (imagePathList.Count > 0) imagePathList = imagePathList.CustomSort().ToList();
-            //    }
-            //});
-
-            ////加载影片截图
-
-            //foreach (var path in imagePathList)
-            //{
-            //    if (Path.GetDirectoryName(path).Split('\\').Last().ToUpper() != vieModel.CurrentVideo.id) break;
-            //    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraImageDelegate(LoadExtraImage), GetExtraImage(path));
-            //    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraPathDelegate(LoadExtraPath), path);
-            //    if (cancelLoadImage) break;
-            //}
-            //SetImage(0);
-            //return true;
         }
 
 
@@ -1722,77 +1671,10 @@ namespace Jvedio
         private async void ScreenShotRadioButton_Click(object sender, RoutedEventArgs e)
         {
             //切换为截图
-            await LoadScreenShotImage();
+            await LoadImage(true);
             scrollViewer.ScrollToHorizontalOffset(0);
         }
 
-
-        private void AddNewLabel(object sender, RoutedEventArgs e)
-        {
-            vieModel.GetLabelList();
-            LabelGrid.Visibility = Visibility.Visible;
-            SelectedLabel = new List<string>();
-            for (int i = 0; i < LabelItemsControl.Items.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)LabelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelItemsControl.Items[i]);
-                WrapPanel wrapPanel = VisualHelper.FindElementByName<WrapPanel>(c, "LabelWrapPanel");
-                if (wrapPanel != null)
-                {
-                    ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
-                    toggleButton.IsChecked = false;
-                }
-            }
-
-        }
-
-
-        private void LabelConfirm(object sender, RoutedEventArgs e)
-        {
-            LabelGrid.Visibility = Visibility.Hidden;
-
-            //获得选中的标签
-            //List<string> originLabels = new List<string>();
-            //for (int i = 0; i < LabelItemsControl.Items.Count; i++)
-            //{
-            //    ContentPresenter c = (ContentPresenter)LabelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelItemsControl.Items[i]);
-            //    WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
-            //    if (wrapPanel != null)
-            //    {
-            //        ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
-            //        if ((bool)toggleButton.IsChecked)
-            //        {
-            //            Match match = Regex.Match(toggleButton.Content.ToString(), @"\( \d+ \)");
-            //            if (match != null && match.Value != "")
-            //            {
-            //                string label = toggleButton.Content.ToString().Replace(match.Value, "");
-            //                if (!originLabels.Contains(label)) originLabels.Add(label);
-            //            }
-
-            //        }
-            //    }
-            //}
-
-            //if (SelectedLabel.Count <= 0) return;
-            //List<string> labels = vieModel.CurrentVideo.labellist.Union(SelectedLabel).ToList();
-            //vieModel.CurrentVideo.label = string.Join(" ", labels);
-            //vieModel.CurrentVideo.labellist = labels;
-            //SaveTags(null, null);
-
-        }
-
-        private void LabelCancel(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            StackPanel stackPanel = (StackPanel)button.Parent;
-            Grid grid = (Grid)stackPanel.Parent;
-            ((Grid)grid.Parent).Visibility = Visibility.Hidden;
-        }
-
-        private void HideGrid(object sender, MouseButtonEventArgs e)
-        {
-            LabelGrid.Visibility = Visibility.Hidden;
-
-        }
 
 
         private void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -1869,114 +1751,6 @@ namespace Jvedio
             new Msgbox(this, "开发中").ShowDialog();
         }
 
-        #region "Label 操作" 
-        private void SortByLetter(object sender, RoutedEventArgs e)
-        {
-            if (SortIndex == 0)
-                SortDescend = !SortDescend;
-            else
-                SortIndex = 0;
-            List<string> labels = LabelItemsControl.ItemsSource.OfType<string>().ToList();
-
-            if (SortDescend)
-                labels = labels.OrderByDescending(arg => arg).ToList();
-            else
-                labels = labels.OrderBy(arg => arg).ToList();
-
-            LabelItemsControl.ItemsSource = null;
-            LabelItemsControl.ItemsSource = labels;
-            SetSelected();
-
-        }
-
-        private void SortByCount(object sender, RoutedEventArgs e)
-        {
-            if (SortIndex == 1)
-                SortDescend = !SortDescend;
-            else
-                SortIndex = 1;
-
-            List<string> labels = LabelItemsControl.ItemsSource.OfType<string>().ToList();
-            if (SortDescend)
-                labels = labels.OrderByDescending(arg => int.Parse(arg.Split('(').Last().Replace(" ", "").Replace(")", ""))).ToList();
-            else
-                labels = labels.OrderBy(arg => int.Parse(arg.Split('(').Last().Replace(" ", "").Replace(")", ""))).ToList();
-            LabelItemsControl.ItemsSource = null;
-            LabelItemsControl.ItemsSource = labels;
-            SetSelected();
-        }
-
-        private void SearchBar_SearchStarted(object sender, FunctionEventArgs<string> e)
-        {
-            HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            LabelItemsControl.ItemsSource = null;
-            LabelItemsControl.ItemsSource = vieModel.LabelList.Where(arg => arg.IndexOf(SearchBar.Text) >= 0);
-            SetSelected();
-        }
-
-
-        private void SearchBar_MouseEnter(object sender, MouseEventArgs e)
-        {
-            HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            Color color = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["ForegroundSearch"].ToString());
-            searchBar.BorderBrush = new SolidColorBrush(color);
-        }
-
-        private void SearchBar_MouseLeave(object sender, MouseEventArgs e)
-        {
-            HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            searchBar.BorderBrush = Brushes.Transparent;
-        }
-
-        private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            if (searchBar.Text == "")
-            {
-                LabelItemsControl.ItemsSource = null;
-                LabelItemsControl.ItemsSource = vieModel.LabelList;
-                SetSelected();
-            }
-            else
-            {
-                SearchBar_SearchStarted(sender, null);
-            }
-        }
-
-        public List<string> SelectedLabel = new List<string>();
-        private void AddToSelected(object sender, RoutedEventArgs e)
-        {
-            string value = (sender as ToggleButton).Content.ToString().Split('(')[0];
-            if (!SelectedLabel.Contains(value))
-                SelectedLabel.Add(value);
-            else
-                SelectedLabel.Remove(value);
-
-            Console.WriteLine(value);
-        }
-
-        public async void SetSelected()
-        {
-            await Task.Delay(200);
-            for (int i = 0; i < LabelItemsControl.Items.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)LabelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelItemsControl.Items[i]);
-                WrapPanel wrapPanel = VisualHelper.FindElementByName<WrapPanel>(c, "LabelWrapPanel");
-                if (wrapPanel != null)
-                {
-                    ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
-                    string value = toggleButton.Content.ToString().Split('(')[0];
-
-                    if (SelectedLabel.Contains(value))
-                        toggleButton.IsChecked = true;
-                }
-            }
-
-        }
-
-        #endregion
-
-
         public void ShowSubsection(object sender)
         {
             ContextMenu contextMenu = (sender as Canvas).ContextMenu;
@@ -2014,6 +1788,11 @@ namespace Jvedio
         {
             ComboBox comboBox = sender as ComboBox;
             videoMapper.updateField("VideoType", comboBox.SelectedIndex.ToString(), new SelectWrapper<Video>().Eq("DataID", DataID));
+        }
+
+        private void DownLoadInfo(object sender, MouseButtonEventArgs e)
+        {
+            DownLoad(null, null);
         }
     }
 

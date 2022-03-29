@@ -7,6 +7,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using static Jvedio.GlobalVariable;
 using static Jvedio.GlobalMapper;
+using static Jvedio.ImageProcess;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.IO;
@@ -127,7 +128,7 @@ namespace Jvedio.ViewModel
 
         public void SaveLove()
         {
-
+            metaDataMapper.updateFieldById("Grade", CurrentVideo.Grade.ToString(), CurrentVideo.DataID);
             //DataBase.UpdateMovieByID(CurrentVideo.id, "favorites", CurrentVideo.favorites, "string");
         }
 
@@ -148,13 +149,16 @@ namespace Jvedio.ViewModel
         {
             //((WindowDetails)FileProcess.GetWindowByName("WindowDetails")).SetStatus(false);
             metaDataMapper.increaseFieldById("ViewCount", dataID); //访问次数+1
-            CurrentVideo = videoMapper.SelectVideoByID(dataID);
-
+            Video video = videoMapper.SelectVideoByID(dataID);
+            setTagStamps(ref video);// 设置标签戳
+            CurrentVideo = video;
             // 磁力
             List<Magnet> magnets = magnetsMapper.selectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
             CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size).ThenByDescending(arg => arg.Releasedate).ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList(); ;
 
             // 演员：懒加载模式
+            //            $"(select group_concat(ActorName,'{GlobalVariable.Separator}') from actor_name_to_metadatas where actor_name_to_metadatas.DataID=metadata.DataID) as ActorNames" ,
+
             //string[] actorNames = CurrentVideo.ActorNames.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries);
             //string[] nameFlags = CurrentVideo.NameFlags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             //if (actorNames.Length == nameFlags.Length)

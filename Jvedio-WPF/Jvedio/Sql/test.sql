@@ -1,1 +1,4 @@
-SELECT count(ActorName) as Count,actor_info.ActorID,actor_info.ActorName,actor_info.Country FROM actor_info join metadatas_to_actor on metadatas_to_actor.ActorID=actor_info.ActorID join metadata on metadatas_to_actor.DataID=metadata.DataID WHERE metadata.DBId=4 and metadata.DataType=0 GROUP BY actor_info.ActorID ORDER BY Count DESC
+SELECT LabelName,Count(LabelName) as Count  from metadata_to_label 
+JOIN metadata on metadata.DataID=metadata_to_label.DataID
+where metadata.DBId=1 and metadata.DataType=0
+GROUP BY LabelName

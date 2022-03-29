@@ -125,14 +125,21 @@ namespace Jvedio
             vieModel.Statistic();
             //// todo 设置图片类型
             //await vieModel.InitLettersNavigation(); // todo 
-            //InitMovie();
+            InitMovie();
 
             BindingEventAfterRender(); // render 后才绑定的事件
             initTagStamp();
+            setConfig();// 加载设置项
 
-            vieModel.ShowAllActors(null);
+            //vieModel.ShowAllActors(null);
+            //vieModel.Searching = true;
+
         }
 
+        private void setConfig()
+        {
+            searchTabControl.SelectedIndex = (int)GlobalConfig.Main.SearchSelectedIndex;
+        }
 
         private void initTagStamp()
         {
@@ -153,7 +160,49 @@ namespace Jvedio
             if (idx < 0 || idx > DatabaseComboBox.Items.Count) idx = 0;
             DatabaseComboBox.SelectedIndex = idx;
             DatabaseComboBox.SelectionChanged += DatabaseComboBox_SelectionChanged;
+
+            // 搜索框事件
+            searchBox.TextChanged += RefreshCandiadte;
+
+            searchTabControl.SelectionChanged += (s, e) =>
+            {
+                if (GlobalConfig.Main.SearchSelectedIndex == searchTabControl.SelectedIndex) return;
+                GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+                RefreshCandiadte(null, null);
+            };
+
         }
+
+        private async void RefreshCandiadte(object sender, TextChangedEventArgs e)
+        {
+            List<string> list = await vieModel.GetSearchCandidate();
+            int idx = (int)GlobalConfig.Main.SearchSelectedIndex;
+            TabItem tabItem = searchTabControl.Items[idx] as TabItem;
+            addOrRefreshItem(tabItem, list);
+        }
+
+
+        private void addOrRefreshItem(TabItem tabItem, List<string> list)
+        {
+            ListBox listBox;
+            if (tabItem.Content == null)
+            {
+                listBox = new ListBox();
+                tabItem.Content = listBox;
+            }
+            else
+            {
+                listBox = tabItem.Content as ListBox;
+            }
+            listBox.Margin = new Thickness(0, 0, 0, 5);
+            listBox.Style = (System.Windows.Style)App.Current.Resources["NormalListBox"];
+            listBox.ItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
+            listBox.Background = Brushes.Transparent;
+            listBox.ItemsSource = list;
+            vieModel.Searching = true;
+        }
+
+
 
         private void setDataBases()
         {
@@ -336,14 +385,113 @@ namespace Jvedio
             }
 
             //设置分类中的视频格式
-            var rbs2 = ClassifyVedioTypeStackPanel.Children.OfType<RadioButton>().ToList();
-            foreach (RadioButton item in rbs2)
-            {
-                item.Click += SetTypeValue;
-            }
+            //var rbs2 = ClassifyVedioTypeStackPanel.Children.OfType<RadioButton>().ToList();
+            //foreach (RadioButton item in rbs2)
+            //{
+            //    item.Click += SetTypeValue;
+            //}
 
             ResizingTimer.Interval = TimeSpan.FromSeconds(0.5);
             ResizingTimer.Tick += new EventHandler(ResizingTimer_Tick);
+
+
+
+            vieModel.CurrentMovieListHideOrChanged += (s, ev) => { StopDownLoad(); };
+            vieModel.MovieFlipOverCompleted += (s, ev) =>
+            {
+                //等待加载
+                Dispatcher.BeginInvoke((Action)delegate
+                {
+                    //vieModel.TotalCount = vieModel.FilterMovieList.Count;
+                    if (Properties.Settings.Default.EditMode) SetSelected();
+
+                    if (Properties.Settings.Default.ShowImageMode == "2") AsyncLoadGif();
+                    else AsyncLoadImage();
+                    SetLoadingStatus(false);
+                    //滚动到指定位置
+                    if (autoScroll)
+                    {
+                        DoubleAnimation verticalAnimation = new DoubleAnimation();
+                        verticalAnimation.From = 0;
+                        verticalAnimation.To = VieModel_Main.PreviousOffset;
+                        verticalAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                        Storyboard storyboard = new Storyboard();
+                        storyboard.Children.Add(verticalAnimation);
+
+                        //if (Properties.Settings.Default.EasyMode)
+                        //    Storyboard.SetTarget(verticalAnimation, SimpleMovieScrollViewer);
+                        //else
+                        Storyboard.SetTarget(verticalAnimation, MovieScrollViewer);
+
+                        Storyboard.SetTargetProperty(verticalAnimation, new PropertyPath(ScrollViewerBehavior.VerticalOffsetProperty));
+                        storyboard.Begin();
+                        autoScroll = false;
+                    }
+
+
+                }, DispatcherPriority.ContextIdle, null);
+            };
+
+            vieModel.PageChangedCompleted += (s, ev) =>
+            {
+                GC.Collect();
+                //AsyncLoadImage();
+                // 清除不在列表中的影片
+                AdjustCurrentData();
+            };
+
+
+
+            vieModel.OnCurrentMovieListRemove += (s, ev) =>
+            {
+                ItemsControl itemsControl;
+                //if (Properties.Settings.Default.EasyMode)
+                //    itemsControl = SimpleMovieItemsControl;
+                //else
+                itemsControl = MovieItemsControl;
+
+                //清除gif
+                for (int i = 0; i < itemsControl.Items.Count; i++)
+                {
+                    ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                    if (c.ContentTemplate.FindName("GifImage", c) is GifImage GifImage)
+                    {
+                        if (GifImage.Tag.ToString() == s.ToString())
+                        {
+                            GifImage.Source = null;
+                            GC.Collect();
+                            break;
+                        }
+
+                    }
+                }
+                //清除预览图
+                for (int i = 0; i < itemsControl.Items.Count; i++)
+                {
+                    ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                    if (c.ContentTemplate.FindName("myImage", c) is Image myImage && c.ContentTemplate.FindName("myImage2", c) is Image myImage2)
+                    {
+                        if (myImage.Tag.ToString() == s.ToString())
+                        {
+                            myImage.Source = null;
+                            myImage2.Source = null;
+                            break;
+                        }
+                    }
+                }
+            };
+
+            vieModel.ActorFlipOverCompleted += (s, ev) =>
+            {
+                //等待加载
+                Dispatcher.BeginInvoke((Action)delegate
+                {
+                    vieModel.ActorCurrentCount = vieModel.CurrentActorList.Count;
+                    //vieModel.ActorTotalCount = vieModel.ActorList.Count;
+                    if (Properties.Settings.Default.ActorEditMode) ActorSetSelected();
+                    vieModel.SetClassifyLoadingStatus(false);
+                }, DispatcherPriority.ContextIdle, null);
+            };
         }
 
         private childItem FindVisualChild<childItem>(DependencyObject obj)
@@ -386,105 +534,30 @@ namespace Jvedio
                     //vieModel.GetFilterInfo(); // todo
                 });
 
-                vieModel.CurrentMovieListHideOrChanged += (s, ev) => { StopDownLoad(); };
-                vieModel.MovieFlipOverCompleted += (s, ev) =>
-                {
-                    //等待加载
-                    Dispatcher.BeginInvoke((Action)delegate
-                {
-                    vieModel.CurrentCount = vieModel.CurrentVideoList.Count;
-                    //vieModel.TotalCount = vieModel.FilterMovieList.Count;
-                    if (Properties.Settings.Default.EditMode) SetSelected();
-
-                    if (Properties.Settings.Default.ShowImageMode == "2") AsyncLoadGif();
-                    else AsyncLoadImage();
-                    SetLoadingStatus(false);
-                    //滚动到指定位置
-                    if (autoScroll)
-                    {
-                        DoubleAnimation verticalAnimation = new DoubleAnimation();
-                        verticalAnimation.From = 0;
-                        verticalAnimation.To = VieModel_Main.PreviousOffset;
-                        verticalAnimation.Duration = TimeSpan.FromMilliseconds(500);
-                        Storyboard storyboard = new Storyboard();
-                        storyboard.Children.Add(verticalAnimation);
-
-                        //if (Properties.Settings.Default.EasyMode)
-                        //    Storyboard.SetTarget(verticalAnimation, SimpleMovieScrollViewer);
-                        //else
-                        Storyboard.SetTarget(verticalAnimation, MovieScrollViewer);
-
-                        Storyboard.SetTargetProperty(verticalAnimation, new PropertyPath(ScrollViewerBehavior.VerticalOffsetProperty));
-                        storyboard.Begin();
-                        autoScroll = false;
-                    }
-
-
-                }, DispatcherPriority.ContextIdle, null);
-                };
-
-                vieModel.PageChangedCompleted += (s, ev) =>
-                {
-                    GC.Collect();
-                    //AsyncLoadImage();
-                };
-
-
-
-                vieModel.OnCurrentMovieListRemove += (s, ev) =>
-                {
-                    ItemsControl itemsControl;
-                    //if (Properties.Settings.Default.EasyMode)
-                    //    itemsControl = SimpleMovieItemsControl;
-                    //else
-                    itemsControl = MovieItemsControl;
-
-                    //清除gif
-                    for (int i = 0; i < itemsControl.Items.Count; i++)
-                    {
-                        ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                        if (c.ContentTemplate.FindName("GifImage", c) is GifImage GifImage)
-                        {
-                            if (GifImage.Tag.ToString() == s.ToString())
-                            {
-                                GifImage.Source = null;
-                                GC.Collect();
-                                break;
-                            }
-
-                        }
-                    }
-                    //清除预览图
-                    for (int i = 0; i < itemsControl.Items.Count; i++)
-                    {
-                        ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                        if (c.ContentTemplate.FindName("myImage", c) is Image myImage && c.ContentTemplate.FindName("myImage2", c) is Image myImage2)
-                        {
-                            if (myImage.Tag.ToString() == s.ToString())
-                            {
-                                myImage.Source = null;
-                                myImage2.Source = null;
-                                break;
-                            }
-                        }
-                    }
-                };
-
-                vieModel.ActorFlipOverCompleted += (s, ev) =>
-                {
-                    //等待加载
-                    Dispatcher.BeginInvoke((Action)delegate
-                        {
-                            vieModel.ActorCurrentCount = vieModel.CurrentActorList.Count;
-                            //vieModel.ActorTotalCount = vieModel.ActorList.Count;
-                            if (Properties.Settings.Default.ActorEditMode) ActorSetSelected();
-                            vieModel.SetClassifyLoadingStatus(false);
-                        }, DispatcherPriority.ContextIdle, null);
-                };
             });
 
         }
 
+
+        public void AdjustCurrentData()
+        {
+            //Dispatcher.BeginInvoke((Action)delegate
+            //{
+            //    ItemsControl itemsControl = MovieItemsControl;
+            //    for (int i = itemsControl.Items.Count - 1; i >= 0; i--)
+            //    {
+            //        ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+            //        Grid border = FindElementByName<Grid>(c, "rootGrid");
+            //        long dataID = getDataID(border);
+            //        if (!vieModel.CurrentVideoList.Where(arg => arg.DataID == dataID).Any())
+            //        {
+            //            itemsControl.Items.RemoveAt(i);
+            //        }
+
+            //    }
+            //});
+
+        }
 
 
 
@@ -1049,7 +1122,6 @@ namespace Jvedio
 
         private void MoveWindow(object sender, MouseEventArgs e)
         {
-            vieModel.ShowSearchPopup = false;
             Border border = sender as Border;
 
             //移动窗口
@@ -1163,108 +1235,97 @@ namespace Jvedio
 
         private void SetSearchValue(object sender, MouseButtonEventArgs e)
         {
-            SearchBar.Text = ((TextBlock)sender).Text;
-            SearchBar.Select(SearchBar.Text.Length, 0);
-            vieModel.ShowSearchPopup = false;
-            Resizing = true;
-            ResizingTimer.Start();
-            vieModel.Search = SearchBar.Text;
+            //SearchBar.Text = ((TextBlock)sender).Text;
+            //SearchBar.Select(SearchBar.Text.Length, 0);
+            //vieModel.ShowSearchPopup = false;
+            //Resizing = true;
+            //ResizingTimer.Start();
+            //vieModel.Search = SearchBar.Text;
         }
 
-        public void SearchBar_GotFocus(object sender, RoutedEventArgs e)
-        {
-            HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            Border border = ((Grid)searchBar.Parent).Children[0] as Border;
-            Color color1 = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["BackgroundSide"].ToString());
-            Color color2 = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["ForegroundSearch"].ToString());
-            border.BorderBrush = new SolidColorBrush(color1);
-            ColorAnimation colorAnimation = new ColorAnimation(color1, color2, new Duration(TimeSpan.FromMilliseconds(200)));
-            border.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
-        }
-
-        public void SearchBar_LostFocus(object sender, RoutedEventArgs e)
-        {
-            vieModel.ShowSearchPopup = false;
-            HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            Border border = ((Grid)searchBar.Parent).Children[0] as Border;
-            Color color1 = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["BackgroundSide"].ToString());
-            Color color2 = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["ForegroundSearch"].ToString());
-            border.BorderBrush = new SolidColorBrush(color2);
-            ColorAnimation colorAnimation = new ColorAnimation(color2, color1, new Duration(TimeSpan.FromMilliseconds(200)));
-            border.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
-
-        }
 
 
         public bool CanSearch = false;
 
-        private async void RefreshCandiadte(object sender, TextChangedEventArgs e)
-        {
-            vieModel.ShowSearchPopup = true;
-            await vieModel?.GetSearchCandidate(SearchBar.Text);
-
-        }
 
 
 
-        private int SearchSelectIdex = -1;
 
         private void SearchBar_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 //SearchBar_SearchStarted(null, null);
+                doSearch(sender, null);
             }
             else if (e.Key == Key.Down)
             {
-                int count = vieModel.CurrentSearchCandidate.Count;
+                //int count = vieModel.CurrentSearchCandidate.Count;
 
-                SearchSelectIdex += 1;
-                if (SearchSelectIdex >= count) SearchSelectIdex = 0;
-                SetSearchSelect();
+                //SearchSelectIdex += 1;
+                //if (SearchSelectIdex >= count) SearchSelectIdex = 0;
+                //SetSearchSelect();
 
             }
             else if (e.Key == Key.Up)
             {
-                int count = vieModel.CurrentSearchCandidate.Count;
-                SearchSelectIdex -= 1;
-                if (SearchSelectIdex < 0) SearchSelectIdex = count - 1;
-                SetSearchSelect();
+                //int count = vieModel.CurrentSearchCandidate.Count;
+                //SearchSelectIdex -= 1;
+                //if (SearchSelectIdex < 0) SearchSelectIdex = count - 1;
+                //SetSearchSelect();
 
 
             }
             else if (e.Key == Key.Escape)
             {
-                vieModel.ShowSearchPopup = false;
+                vieModel.Searching = false;
             }
             else if (e.Key == Key.Delete)
             {
-                SearchBar.Clear();
+                //searchBox.clearte();
+                searchBox.ClearText();
+            }
+            else if (e.Key == Key.Tab)
+            {
+                //int maxIndex = searchTabControl.Items.Count - 1;
+                //int idx = searchTabControl.SelectedIndex;
+                //if (idx + 1 > maxIndex)
+                //{
+                //    idx = 0;
+                //}
+                //else
+                //{
+                //    idx++;
+                //}
+                //searchTabControl.SelectedIndex = idx;
+                //e.Handled = true;
+                //searchBox.Focus();
+                //searchTabControl.Focus();
             }
         }
 
         private void SetSearchSelect()
         {
-            for (int i = 0; i < SearchItemsControl.Items.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)SearchItemsControl.ItemContainerGenerator.ContainerFromItem(SearchItemsControl.Items[i]);
-                StackPanel stackPanel = FindElementByName<StackPanel>(c, "SearchStackPanel");
-                if (stackPanel != null)
-                {
+            //for (int i = 0; i < SearchItemsControl.Items.Count; i++)
+            //{
+            //    ContentPresenter c = (ContentPresenter)SearchItemsControl.ItemContainerGenerator.ContainerFromItem(SearchItemsControl.Items[i]);
+            //    StackPanel stackPanel = FindElementByName<StackPanel>(c, "SearchStackPanel");
+            //    if (stackPanel != null)
+            //    {
 
-                    Border border = stackPanel.Children[0] as Border;
-                    TextBlock textBlock = border.Child as TextBlock;
-                    if (i == SearchSelectIdex)
-                    {
-                        border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundMain"];
-                    }
-                    else
-                    {
-                        border.Background = new SolidColorBrush(Colors.Transparent);
-                    }
+            //        Border border = stackPanel.Children[0] as Border;
+            //        TextBlock textBlock = border.Child as TextBlock;
+            //        if (i == SearchSelectIdex)
+            //        {
+            //            border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundMain"];
+            //        }
+            //        else
+            //        {
+            //            border.Background = new SolidColorBrush(Colors.Transparent);
+            //        }
 
-                }
-            }
+            //    }
+            //}
 
         }
 
@@ -1706,7 +1767,7 @@ namespace Jvedio
 
         public void ShowSearchMenu(object sender, MouseButtonEventArgs e)
         {
-            SearchOptionPopup.IsOpen = true;
+            //SearchOptionPopup.IsOpen = true;
         }
 
 
@@ -1720,11 +1781,11 @@ namespace Jvedio
         /// <param name="e"></param>
         public void SetTypeValue(object sender, RoutedEventArgs e)
         {
-            RadioButton radioButton = sender as RadioButton;
-            int idx = ClassifyVedioTypeStackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
-            vieModel.ClassifyVedioType = (VedioType)idx;
-            //刷新侧边栏显示
-            SetClassify(true);
+            //RadioButton radioButton = sender as RadioButton;
+            //int idx = ClassifyVedioTypeStackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
+            //vieModel.ClassifyVedioType = (VedioType)idx;
+            ////刷新侧边栏显示
+            //SetClassify(true);
         }
 
 
@@ -3240,6 +3301,7 @@ namespace Jvedio
             GlobalConfig.Main.Width = this.Width;
             GlobalConfig.Main.Height = this.Height;
             GlobalConfig.Main.WindowState = (long)baseWindowState;
+            GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
 
             GlobalConfig.Main.Save();
         }
@@ -3252,8 +3314,9 @@ namespace Jvedio
                 if (this.WindowState == System.Windows.WindowState.Normal) baseWindowState = BaseWindowState.Normal;
                 else if (this.WindowState == System.Windows.WindowState.Maximized) baseWindowState = BaseWindowState.FullScreen;
                 else if (this.Width == SystemParameters.WorkArea.Width & this.Height == SystemParameters.WorkArea.Height) baseWindowState = BaseWindowState.Maximized;
-                SetConfigValue();
+
             }
+            SetConfigValue();
             Properties.Settings.Default.EditMode = false;
             Properties.Settings.Default.ActorEditMode = false;
             Properties.Settings.Default.Save();
@@ -4071,10 +4134,7 @@ namespace Jvedio
         }
 
 
-        private void ShowSearchPopup(object sender, MouseButtonEventArgs e)
-        {
-            vieModel.ShowSearchPopup = true;
-        }
+
 
         private void TextBlock_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -5402,10 +5462,6 @@ namespace Jvedio
             SetClassify();
         }
 
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            vieModel.ShowSearchPopup = false;
-        }
 
         private void HideBeginScanGrid(object sender, RoutedEventArgs e)
         {
@@ -5460,7 +5516,7 @@ namespace Jvedio
         {
             vieModel.SearchHistory.Clear();
             vieModel.SaveSearchHistory();
-            SearchHistoryStackPanel.Visibility = Visibility.Collapsed;
+            //SearchHistoryStackPanel.Visibility = Visibility.Collapsed;
         }
 
 
@@ -5489,8 +5545,8 @@ namespace Jvedio
 
         private void NavigationToLetter(object sender, RoutedEventArgs e)
         {
-            vieModel.SearchFirstLetter = true;
-            vieModel.Search = ((Button)sender).Content.ToString();
+            //vieModel.SearchFirstLetter = true;
+            //vieModel.Search = ((Button)sender).Content.ToString();
 
         }
 
@@ -5944,19 +6000,19 @@ namespace Jvedio
 
         private void SearchBar_SearchStarted(object sender, HandyControl.Data.FunctionEventArgs<string> e)
         {
-            vieModel.SearchFirstLetter = false;
-            if (vieModel.CurrentSearchCandidate != null && (SearchSelectIdex >= 0 & SearchSelectIdex < vieModel.CurrentSearchCandidate.Count))
-                SearchBar.Text = vieModel.CurrentSearchCandidate[SearchSelectIdex];
-            if (SearchBar.Text == "") return;
-            if (SearchBar.Text.ToUpper() == "JVEDIO")
-            {
-                Properties.Settings.Default.ShowSecret = true;
-            }
-            else
-            {
-                vieModel.Search = SearchBar.Text;
-                vieModel.ShowSearchPopup = false;
-            }
+            //vieModel.SearchFirstLetter = false;
+            //if (vieModel.CurrentSearchCandidate != null && (SearchSelectIdex >= 0 & SearchSelectIdex < vieModel.CurrentSearchCandidate.Count))
+            //    SearchBar.Text = vieModel.CurrentSearchCandidate[SearchSelectIdex];
+            //if (SearchBar.Text == "") return;
+            //if (SearchBar.Text.ToUpper() == "JVEDIO")
+            //{
+            //    Properties.Settings.Default.ShowSecret = true;
+            //}
+            //else
+            //{
+            //    vieModel.Search = SearchBar.Text;
+            //    vieModel.ShowSearchPopup = false;
+            //}
         }
 
         private void SearchBar_SearchStarted_1(object sender, FunctionEventArgs<string> e)
@@ -6095,7 +6151,6 @@ namespace Jvedio
 
         private void Pagination_CurrentPageChange(object sender, EventArgs e)
         {
-
             Pagination pagination = sender as Pagination;
             vieModel.CurrentPage = pagination.CurrentPage;
             VieModel_Main.pageQueue.Enqueue(pagination.CurrentPage);
@@ -6273,6 +6328,21 @@ namespace Jvedio
         {
         }
 
+        public void RefreshGrade(Video newVideo)
+        {
+            for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
+            {
+                if (vieModel.CurrentVideoList[i]?.DataID == newVideo.DataID)
+                {
+                    Video video = vieModel.CurrentVideoList[i];
+                    vieModel.CurrentVideoList[i] = null;
+                    video.Grade = newVideo.Grade;
+                    vieModel.CurrentVideoList[i] = video;
+                    vieModel.Statistic();
+                }
+            }
+        }
+
         public void BorderMouseEnter(object sender, MouseEventArgs e)
         {
             if (Properties.Settings.Default.EditMode)
@@ -6303,6 +6373,29 @@ namespace Jvedio
                 }
             }
         }
+
+        private async void doSearch(object sender, RoutedEventArgs e)
+        {
+            vieModel.Searching = true;
+            GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+            await vieModel.Query((SearchType)searchTabControl.SelectedIndex);
+        }
+
+        private void searchBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+            {
+                (searchTabControl.Items[(int)GlobalConfig.Main.SearchSelectedIndex] as TabItem).Focus();
+            }
+        }
+
+        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+            vieModel.SearchText = (sender as ListBoxItem).Content.ToString();
+            doSearch(null, null);
+        }
+
     }
     public class ScrollViewerBehavior
     {

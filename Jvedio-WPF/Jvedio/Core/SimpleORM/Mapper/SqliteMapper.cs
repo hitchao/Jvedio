@@ -131,16 +131,22 @@ namespace Jvedio.Core.SimpleORM
             if (TableName == null) return null;
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
 
-            cmd.CommandText = sql;
-            Log.Info(sql);
-            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            using (SQLiteCommand cmd = new SQLiteCommand(sql))
             {
-                while (reader.Read())
+                cmd.Connection = cn;
+                cmd.CommandText = sql;
+                Log.Info(sql);
+                using (SQLiteDataReader reader = cmd.ExecuteReader())
                 {
-                    Dictionary<string, object> values = Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
-                    list.Add(values);
+                    while (reader.Read())
+                    {
+                        Dictionary<string, object> values = Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
+                        list.Add(values);
+                    }
                 }
             }
+
+
             return list;
         }
 
