@@ -1,4 +1,1 @@
-SELECT LabelName,Count(LabelName) as Count  from metadata_to_label 
-JOIN metadata on metadata.DataID=metadata_to_label.DataID
-where metadata.DBId=1 and metadata.DataType=0
-GROUP BY LabelName
+SELECT common_tagstamp.*,count(common_tagstamp.TagID) as Count from metadata_to_tagstamp join common_tagstamp on metadata_to_tagstamp.TagID=common_tagstamp.TagID join metadata on metadata.DataID=metadata_to_tagstamp.DataID where metadata.DBId=4 and metadata.DataType=0 GROUP BY common_tagstamp.TagID;

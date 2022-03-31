@@ -11,5 +11,10 @@ namespace Jvedio.Mapper
 {
     public class TagStampMapper : BaseMapper<TagStamp>
     {
+        public List<TagStamp> getAllTagStamp()
+        {
+            return GlobalMapper.tagStampMapper.selectList();
+
+        }
     }
 }

@@ -274,6 +274,7 @@
     <Compile Include="Core\Enums\VideoType.cs" />
     <Compile Include="Core\Enums\ViewMode.cs" />
     <Compile Include="Core\Enums\WindowState.cs" />
+    <Compile Include="Core\EventArgs\WrapperEventArg.cs" />
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\GlobalMapper.cs" />
@@ -290,9 +291,10 @@
     <Compile Include="Core\DataBase\Tables.cs" />
     <Compile Include="Core\SimpleORM\Wrapper\UpdateWrapper.cs" />
     <Compile Include="Core\WindowConfig\Base\AbstractConfig.cs" />
-    <Compile Include="Core\WindowConfig\Base\GlobalConfig.cs" />
+    <Compile Include="Core\GlobalConfig.cs" />
     <Compile Include="Core\WindowConfig\Base\IConfig.cs" />
     <Compile Include="Core\WindowConfig\Edit.cs" />
+    <Compile Include="Core\WindowConfig\Detail.cs" />
     <Compile Include="Core\WindowConfig\Main.cs" />
     <Compile Include="Core\WindowConfig\StartUp.cs" />
     <Compile Include="Entity\Actor.cs" />
@@ -457,6 +459,9 @@
     <Compile Include="Windows\Window_DBManagement.xaml.cs">
       <DependentUpon>Window_DBManagement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Window_LabelManagement.xaml.cs">
+      <DependentUpon>Window_LabelManagement.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Window_Progress.xaml.cs">
       <DependentUpon>Window_Progress.xaml</DependentUpon>
     </Compile>
@@ -506,6 +511,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Window_DBManagement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_LabelManagement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

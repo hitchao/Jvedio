@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Attributes;
 using Jvedio.Core.Enums;
+using Jvedio.Core.SimpleORM;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using System;
@@ -33,6 +34,32 @@ namespace Jvedio.Entity
             BigImage = GlobalVariable.DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
             PreviewImageList = new ObservableCollection<BitmapSource>();
+        }
+
+        public static SelectWrapper<Video> initWrapper()
+        {
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId)
+                .Eq("metadata.DataType", 0);
+            return wrapper;
+        }
+
+        public static void setTagStamps(ref Video video)
+        {
+            if (!string.IsNullOrEmpty(video.TagIDs))
+            {
+                List<long> list = video.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
+                if (list != null && list.Count > 0)
+                {
+                    video.TagStamp = new ObservableCollection<TagStamp>();
+                    foreach (var item in GlobalVariable.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
+                    {
+                        video.TagStamp.Add(item);
+                    }
+                }
+
+
+            }
         }
 
 
@@ -108,7 +135,7 @@ namespace Jvedio.Entity
 
 
         [TableField(exist: false)]
-        public List<TagStamp> TagStamp { get; set; }
+        public ObservableCollection<TagStamp> TagStamp { get; set; }
         [TableField(exist: false)]
         public string TagIDs { get; set; }
 
@@ -176,6 +203,13 @@ namespace Jvedio.Entity
         public override string ToString()
         {
             return ClassUtils.toString(this);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            Video video = obj as Video;
+            return video != null && (video.DataID == this.DataID || video.MVID == this.MVID);
         }
 
     }

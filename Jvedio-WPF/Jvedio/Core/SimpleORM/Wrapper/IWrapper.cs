@@ -57,6 +57,7 @@ namespace Jvedio.Core.SimpleORM
         IWrapper<T> Limit(long offset, long row_count);
         IWrapper<T> Limit(long row_count);
         IWrapper<T> In(string field, IEnumerable<string> items);
+        IWrapper<T> NotIn(string field, IEnumerable<string> items);
         IWrapper<T> Between(string field, object value1, object value2);
 
 

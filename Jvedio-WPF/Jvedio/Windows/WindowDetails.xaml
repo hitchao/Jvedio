@@ -32,15 +32,7 @@
         <local:VidioTypeToIntConverter x:Key="VidioTypeToIntConverter" />
 
 
-        <ContextMenu x:Key="ImageContextMenu">
-            <MenuItem Click="OpenExtraImagePath" Header="{x:Static lang:Resources.OpenPath}" />
-            <MenuItem Header="{x:Static lang:Resources.SetAs}">
-                <MenuItem Click="SetToBigAndSmallPic" Header="{x:Static lang:Resources.ThumbnailAndPoster}" />
-                <MenuItem Click="SetToSmallPic" Header="{x:Static lang:Resources.Thumbnail}" />
-                <MenuItem Click="SetToBigPic" Header="{x:Static lang:Resources.Poster}" />
-            </MenuItem>
-            <MenuItem Click="DeleteImage" Header="{x:Static lang:Resources.DeleteImage}" />
-        </ContextMenu>
+
 
         <Style x:Key="ExtraPic" TargetType="Image">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
@@ -119,7 +111,7 @@
 
 
     <Grid
-        x:Name="FatherGrid"
+        x:Name="rootGrid"
         Focusable="True"
         PreviewKeyUp="Grid_PreviewKeyUp">
 
@@ -154,6 +146,7 @@
             <Grid
                 x:Name="PreviousGrid"
                 Grid.Column="0"
+                Background="{DynamicResource Window.Detail.Background}"
                 PreviewMouseWheel="Border_PreviewMouseWheel">
                 <Border
                     x:Name="PreviousBorder"
@@ -190,14 +183,13 @@
                     VerticalAlignment="Bottom"
                     Orientation="Vertical">
                     <RadioButton
-                        x:Name="ExtraImageRadioButton"
                         Height="30"
                         Margin="5,5,5,0"
                         Background="{DynamicResource BackgroundSide}"
                         Click="ExtraImageRadioButton_Click"
                         FocusVisualStyle="{x:Null}"
                         GroupName="ExtraImageView"
-                        IsChecked="True"
+                        IsChecked="{Binding ShowScreenShot, Mode=TwoWay, Converter={StaticResource OppositeBooleanConverter}}"
                         Style="{StaticResource FlatRadioButton}"
                         ToolTip="{x:Static lang:Resources.Poster}">
                         <Image
@@ -206,12 +198,12 @@
                             Source="/Resources/Picture/图像.png" />
                     </RadioButton>
                     <RadioButton
-                        x:Name="ScreenShotRadioButton"
                         Height="30"
                         Margin="5,5,5,0"
                         Click="ScreenShotRadioButton_Click"
                         FocusVisualStyle="{x:Null}"
                         GroupName="ExtraImageView"
+                        IsChecked="{Binding ShowScreenShot, Mode=TwoWay}"
                         Style="{StaticResource FlatRadioButton}"
                         ToolTip="{x:Static lang:Resources.ScreenShot}">
                         <Image
@@ -433,7 +425,7 @@
 
                                     <MenuItem
                                         Click="OpenWeb"
-                                        Header="{x:Static lang:Resources.Menu_OpenWebSite}"
+                                        Header="访问所在网址"
                                         Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
                                     <MenuItem x:Name="OpenOtherUrlMenuItem" Header="{x:Static lang:Resources.OpenOtherUrl}" />
 
@@ -511,13 +503,26 @@
                                                         <Border
                                                             Panel.ZIndex="5"
                                                             Background="Black"
-                                                            ContextMenu="{StaticResource ImageContextMenu}"
                                                             Cursor="Hand"
                                                             MouseEnter="Border_MouseEnter"
                                                             MouseLeave="Border_MouseLeave"
                                                             MouseLeftButtonUp="ShowExtraImage"
                                                             Opacity="0.5"
-                                                            Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}" />
+                                                            Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}">
+                                                            <Border.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Click="OpenExtraImagePath" Header="{x:Static lang:Resources.OpenPath}" />
+                                                                    <MenuItem Header="{x:Static lang:Resources.SetAs}">
+                                                                        <MenuItem Click="SetToBigAndSmallPic" Header="{x:Static lang:Resources.ThumbnailAndPoster}" />
+                                                                        <MenuItem Click="SetToSmallPic" Header="{x:Static lang:Resources.Thumbnail}" />
+                                                                        <MenuItem Click="SetToBigPic" Header="{x:Static lang:Resources.Poster}" />
+                                                                    </MenuItem>
+                                                                    <MenuItem Click="DeleteImage" Header="{x:Static lang:Resources.DeleteImage}" />
+                                                                    <MenuItem Click="DeleteAllImage" Header="删除所有列表中的图片" />
+                                                                </ContextMenu>
+                                                            </Border.ContextMenu>
+                                                        </Border>
+
                                                         <Image Style="{StaticResource ExtraPic}" />
                                                     </Grid>
                                                 </StackPanel>
@@ -589,6 +594,7 @@
                             <TabControl
                                 Margin="10,5"
                                 Background="Transparent"
+                                SelectedIndex="{Binding InfoSelectedIndex,Mode=TwoWay}"
                                 Style="{DynamicResource TapControlStyle}">
                                 <TabItem
                                     Margin="5"
@@ -596,7 +602,7 @@
                                     Header="{x:Static lang:Resources.MovieInfo}"
                                     Style="{DynamicResource TopTabItemStyle}">
 
-                                    <Grid>
+                                    <Grid Name="infoGrid">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto" />
                                             <RowDefinition Height="*" />
@@ -682,53 +688,103 @@
                                         <ScrollViewer
                                             Grid.Row="1"
                                             FocusVisualStyle="{x:Null}"
+                                            HorizontalScrollBarVisibility="Disabled"
                                             VerticalScrollBarVisibility="Hidden">
                                             <StackPanel FocusVisualStyle="{x:Null}">
                                                 <!--  演员  -->
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="auto" />
-                                                        <ColumnDefinition Width="auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock
-                                                        Grid.Column="0"
-                                                        Margin="0,5,0,0"
-                                                        VerticalAlignment="Top"
-                                                        Style="{StaticResource BaseTextBlock}"
-                                                        Text="{x:Static lang:Resources.Actor}" />
-                                                    <TextBlock
-                                                        Grid.Column="1"
-                                                        Margin="0,5,0,0"
-                                                        VerticalAlignment="Top"
-                                                        Style="{StaticResource BaseTextBlock}"
-                                                        Text="：" />
+
+                                                <ScrollViewer
+                                                    Name="actorScrollViewer"
+                                                    Width="{Binding ElementName=infoGrid, Path=ActualWidth, Converter={StaticResource SmallerValueConverter}, ConverterParameter=20}"
+                                                    HorizontalAlignment="Left"
+                                                    FocusVisualStyle="{x:Null}"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    PreviewMouseWheel="ScrollViewer_MouseWheel"
+                                                    VerticalScrollBarVisibility="Hidden">
+
+
                                                     <ItemsControl
                                                         Grid.Column="2"
                                                         Height="auto"
                                                         VerticalAlignment="Top"
                                                         Background="Transparent"
-                                                        ItemsSource="{Binding CurrentVideo.ActorInfos}">
+                                                        ItemsSource="{Binding CurrentActorList}">
                                                         <ItemsControl.ItemsPanel>
                                                             <ItemsPanelTemplate>
-                                                                <WrapPanel Orientation="Horizontal" />
+                                                                <StackPanel Orientation="Horizontal" />
                                                             </ItemsPanelTemplate>
                                                         </ItemsControl.ItemsPanel>
 
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <Label
-                                                                    Content="{Binding ActorName}"
-                                                                    MouseEnter="ShowActor"
-                                                                    MouseLeave="HideActor"
-                                                                    MouseLeftButtonUp="ShowSameActor"
-                                                                    MouseMove="ActorMouseMove"
-                                                                    Style="{StaticResource HoverLabel}"
-                                                                    ToolTip="{x:Null}" />
+                                                                <Grid
+                                                                    Name="rootGrid"
+                                                                    Width="auto"
+                                                                    Margin="5"
+                                                                    Tag="{Binding ActorID, Mode=OneWay}">
+                                                                    <Border
+                                                                        Name="rootBorder"
+                                                                        Padding="0"
+                                                                        Background="{DynamicResource ListBoxItem.Background}"
+                                                                        BorderThickness="2"
+                                                                        CornerRadius="0 0 2 2 "
+                                                                        Effect="{StaticResource BlueDropShadowEffect}" />
+                                                                    <Grid>
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition Height="auto" />
+                                                                            <RowDefinition Height="auto" />
+                                                                            <RowDefinition Height="*" />
+                                                                        </Grid.RowDefinitions>
+
+
+                                                                        <Image
+                                                                            Grid.Row="0"
+                                                                            Width="80"
+                                                                            Height="80"
+                                                                            Margin="0,0,0,10"
+                                                                            VerticalAlignment="Top"
+                                                                            AllowDrop="True"
+                                                                            Cursor="Hand"
+                                                                            FocusVisualStyle="{x:Null}"
+                                                                            MouseEnter="Image_MouseEnter"
+                                                                            MouseLeave="Image_MouseLeave"
+                                                                            Source="{Binding SmallImage}"
+                                                                            Stretch="UniformToFill" />
+
+
+
+
+                                                                        <TextBox
+                                                                            Name="ActorNameTextBox"
+                                                                            Grid.Row="1"
+                                                                            Width="80"
+                                                                            MaxHeight="60"
+                                                                            Margin="0"
+                                                                            FontSize="12"
+                                                                            Foreground="{DynamicResource ForegroundSearch}"
+                                                                            Opacity="0.7"
+                                                                            Style="{StaticResource ReadOnlyWrapTextBox}"
+                                                                            Text="{Binding ActorName}"
+                                                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                                                                        <!--<Label
+                                                                        Grid.Row="2"
+                                                                        Width="120"
+                                                                        MaxHeight="60"
+                                                                        VerticalAlignment="Bottom"
+                                                                        Background="{DynamicResource Window.Detail.Background}"
+                                                                        BorderThickness="0"
+                                                                        Content="{Binding Count}"
+                                                                        FontSize="18"
+                                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                                        Opacity="0.7"
+                                                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />-->
+
+                                                                    </Grid>
+                                                                </Grid>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
-                                                </Grid>
+                                                </ScrollViewer>
 
 
                                                 <StackPanel Style="{StaticResource InfoStackPanel}" Tag="{Binding CurrentVideo.Director}">
@@ -767,7 +823,7 @@
                                                     Style="{StaticResource InfoStackPanel}"
                                                     Tag="{Binding CurrentVideo.VideoType}"
                                                     Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=OneWay}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.VedioType}" />
+                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="修正" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <ComboBox
                                                         Height="30"
@@ -784,8 +840,8 @@
                                                         Style="{StaticResource NormalComboBox}"
                                                         Tag="{DynamicResource Window.Side.Hover.Background}">
                                                         <ComboBoxItem Content="{x:Static lang:Resources.Normal}" />
-                                                        <ComboBoxItem Content="{x:Static lang:Resources.Uncensored}" />
-                                                        <ComboBoxItem Content="{x:Static lang:Resources.Censored}" />
+                                                        <ComboBoxItem Content="无修正" />
+                                                        <ComboBoxItem Content="修正" />
                                                         <ComboBoxItem Content="{x:Static lang:Resources.Europe}" />
                                                     </ComboBox>
 
@@ -806,7 +862,7 @@
 
 
                                                 <StackPanel Style="{StaticResource InfoStackPanel}" Tag="{Binding CurrentVideo.Studio}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.Studio}" />
+                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="制作" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <Border
                                                         Width="240"
@@ -1161,6 +1217,7 @@
                         <Grid
                             x:Name="NextGrid"
                             Grid.Column="1"
+                            Background="{DynamicResource Window.Detail.Background}"
                             PreviewMouseWheel="Border_PreviewMouseWheel">
                             <Border
                                 x:Name="NextBorder"

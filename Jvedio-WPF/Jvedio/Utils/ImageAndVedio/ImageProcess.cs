@@ -55,18 +55,7 @@ namespace Jvedio
 
         }
 
-        public static void setTagStamps(ref Video video)
-        {
-            if (!string.IsNullOrEmpty(video.TagIDs))
-            {
-                video.TagStamp = new List<TagStamp>();
-                foreach (var tagID in video.TagIDs.Split(','))
-                {
-                    long.TryParse(tagID.Trim(), out long id);
-                    if (id > 0) video.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault());
-                }
-            }
-        }
+
 
 
         public static void SetGif(ref Video video)

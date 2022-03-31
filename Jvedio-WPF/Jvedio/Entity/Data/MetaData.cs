@@ -115,5 +115,17 @@ namespace Jvedio.Entity
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            MetaData metaData = obj as MetaData;
+            return metaData != null && metaData.DataID == this.DataID;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.DataID.GetHashCode();
+        }
     }
 }

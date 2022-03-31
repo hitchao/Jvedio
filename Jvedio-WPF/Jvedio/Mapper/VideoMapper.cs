@@ -166,8 +166,9 @@ namespace Jvedio.Mapper
             builder.Append("begin;");
             builder.Append($"delete from metadata_to_translation where DataID in ({ids});");
             builder.Append($"delete from metadata_to_tagstamp where DataID in ({ids});");
-            builder.Append($"delete from actor_name_to_metadatas where DataID in ({ids});");
-            builder.Append($"delete from common_custom_list_to_metadata where DataID in ({ids});");
+            builder.Append($"delete from metadatas_to_actor where DataID in ({ids});");
+            builder.Append($"delete from metadata_to_label where DataID in ({ids});");
+            builder.Append($"delete from metadata_to_translation where DataID in ({ids});");
             builder.Append("commit;");
             GlobalMapper.videoMapper.executeNonQuery(builder.ToString());
             if (c1 == c2 && idList.Count == c1) return c1;

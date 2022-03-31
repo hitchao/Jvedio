@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using static Jvedio.GlobalVariable;
 using static Jvedio.GlobalMapper;
 using static Jvedio.ImageProcess;
+using static Jvedio.FileProcess;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.IO;
@@ -17,12 +18,13 @@ using System.Windows.Media.Imaging;
 using Jvedio.Utils;
 using Jvedio.Entity;
 using Jvedio.Core.SimpleORM;
+using System.Windows.Threading;
 
 namespace Jvedio.ViewModel
 {
     public class VieModel_Details : ViewModelBase
     {
-
+        WindowDetails windowDetails = GetWindowByName("WindowDetails") as WindowDetails;
         public event EventHandler QueryCompleted;
         public VieModel_Details()
         {
@@ -40,6 +42,31 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private int _InfoSelectedIndex = (int)GlobalConfig.Detail.InfoSelectedIndex;
+
+        public int InfoSelectedIndex
+        {
+            get { return _InfoSelectedIndex; }
+            set
+            {
+                _InfoSelectedIndex = value;
+                if (value == 1 && VideoInfo == null)
+                    LoadVideoInfo();
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _ShowScreenShot = GlobalConfig.Detail.ShowScreenShot;
+
+        public bool ShowScreenShot
+        {
+            get { return _ShowScreenShot; }
+            set
+            {
+                _ShowScreenShot = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
 
@@ -54,18 +81,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private VideoInfo _VideoInfo;
-
-        public VideoInfo VideoInfo
-        {
-            get { return _VideoInfo; }
-            set
-            {
-                _VideoInfo = value;
-                RaisePropertyChanged();
-            }
-        }
-
 
 
         private Video _CurrentVideo;
@@ -76,6 +91,19 @@ namespace Jvedio.ViewModel
             set
             {
                 _CurrentVideo = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private VideoInfo _VideoInfo;
+
+        public VideoInfo VideoInfo
+        {
+            get { return _VideoInfo; }
+            set
+            {
+                _VideoInfo = value;
                 RaisePropertyChanged();
             }
         }
@@ -105,90 +133,73 @@ namespace Jvedio.ViewModel
             }
         }
 
+
+
+        private ObservableCollection<ActorInfo> _CurrentActorList = new ObservableCollection<ActorInfo>();
+
+
+        public ObservableCollection<ActorInfo> CurrentActorList
+        {
+            get { return _CurrentActorList; }
+            set
+            {
+                _CurrentActorList = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public void CleanUp()
         {
             MessengerInstance.Unregister(this);
         }
 
-        public void GetLabelList()
+
+        public void LoadVideoInfo()
         {
-            //TextType = "标签";
-            List<string> labels = DataBase.SelectLabelByVedioType(VedioType.所有);
-
-            App.Current.Dispatcher.Invoke((Action)delegate
-            {
-                LabelList = new ObservableCollection<string>();
-                LabelList.AddRange(labels);
-            });
+            // todo 分段视频
+            VideoInfo = MediaParse.GetMediaInfo(CurrentVideo.Path);
         }
-
-
 
 
 
         public void SaveLove()
         {
             metaDataMapper.updateFieldById("Grade", CurrentVideo.Grade.ToString(), CurrentVideo.DataID);
-            //DataBase.UpdateMovieByID(CurrentVideo.id, "favorites", CurrentVideo.favorites, "string");
         }
 
-        public void SaveLabel()
+
+
+        public void LoadTagStamp(ref Video video)
         {
-            //DataBase.UpdateMovieByID(CurrentVideo.id, "label", string.Join(" ", CurrentVideo.labellist), "string");
+
         }
-
-
-        public void onLabelChanged()
-        {
-            RaisePropertyChanged("CurrentVideo");
-        }
-
 
 
         public void Load(long dataID)
         {
+            windowDetails.DataID = dataID;
             //((WindowDetails)FileProcess.GetWindowByName("WindowDetails")).SetStatus(false);
             metaDataMapper.increaseFieldById("ViewCount", dataID); //访问次数+1
             Video video = videoMapper.SelectVideoByID(dataID);
-            setTagStamps(ref video);// 设置标签戳
+            Video.setTagStamps(ref video);// 设置标签戳
             CurrentVideo = video;
             // 磁力
             List<Magnet> magnets = magnetsMapper.selectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
             CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size).ThenByDescending(arg => arg.Releasedate).ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList(); ;
 
-            // 演员：懒加载模式
-            //            $"(select group_concat(ActorName,'{GlobalVariable.Separator}') from actor_name_to_metadatas where actor_name_to_metadatas.DataID=metadata.DataID) as ActorNames" ,
-
-            //string[] actorNames = CurrentVideo.ActorNames.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries);
-            //string[] nameFlags = CurrentVideo.NameFlags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //if (actorNames.Length == nameFlags.Length)
-            //{
-            //    CurrentVideo.ActorInfos = new List<ActorInfo>();
-            //    for (int i = 0; i < actorNames.Length; i++)
-            //    {
-            //        string actorName = actorNames[i];
-            //        string nameFlag = nameFlags[i];
-            //        IWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>().Eq("ActorName", actorName).Eq("NameFlag", nameFlag);
-            //        ActorInfo actorInfo = actorMapper.selectOne(wrapper);
-            //        CurrentVideo.ActorInfos.Add(actorInfo);
-            //    }
-            //}
-
             //释放图片内存
-            //CurrentVideo.SmallImage = null;
-            //CurrentVideo.BigImage = null;
-            //for (int i = 0; i < CurrentVideo.PreviewImageList.Count; i++)
-            //{
-            //    CurrentVideo.PreviewImageList[i] = null;
-            //}
-            // todo 释放演员头像
+            CurrentVideo.SmallImage = null;
+            CurrentVideo.BigImage = null;
+            for (int i = 0; i < CurrentVideo.PreviewImageList.Count; i++)
+            {
+                CurrentVideo.PreviewImageList[i] = null;
+            }
+            //todo 释放演员头像
+            GC.Collect();
 
-            //GC.Collect();
-
-
-
-            CurrentVideo.BigImage = ImageProcess.BitmapImageFromFile(Video.parseImagePath(CurrentVideo.BigImagePath));
-            if (CurrentVideo.BigImage == null) CurrentVideo.BigImage = DefaultBigImage;
+            BitmapImage image = ImageProcess.BitmapImageFromFile(Video.parseImagePath(CurrentVideo.BigImagePath));
+            if (image == null) image = DefaultBigImage;
+            CurrentVideo.BigImage = image;
             //MySqlite db = new MySqlite("Translate");
             ////加载翻译结果
             //if (Properties.Settings.Default.TitleShowTranslate)
@@ -203,14 +214,15 @@ namespace Jvedio.ViewModel
             //    if (translate_plot != "") CurrentVideo.plot = translate_plot;
             //}
             //db.CloseDB();
-
-            //CurrentVideo = CurrentVideo;
-            //CurrentVideo.tagstamps = "";
-            //FileProcess.addTag(ref CurrentVideo);
             //if (string.IsNullOrEmpty(CurrentVideo.title)) CurrentVideo.title = Path.GetFileNameWithoutExtension(CurrentVideo.filepath);
+
+            if (InfoSelectedIndex == 1) LoadVideoInfo();
             QueryCompleted?.Invoke(this, new EventArgs());
 
         }
+
+
+
     }
 
 

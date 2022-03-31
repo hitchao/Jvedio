@@ -16,10 +16,12 @@ namespace Jvedio.Core.SimpleORM
         /// 为空的时候默认为 select * 
         /// </summary>
         protected HashSet<string> SelectColumns { get; set; }
+        public string LimitSql { get; set; }
 
         private class Where
         {
             public string Field { get; set; }
+
             public List<object> Values { get; set; }
             public WhereCondition Condition { get; set; }
 
@@ -104,7 +106,8 @@ namespace Jvedio.Core.SimpleORM
 
         public IWrapper<T> Limit(long offset, long row_count)
         {
-            throw new NotImplementedException();
+            LimitSql = $" Limit {offset},{row_count}";
+            return this;
         }
 
         public IWrapper<T> Limit(long row_count)
@@ -294,6 +297,14 @@ namespace Jvedio.Core.SimpleORM
             return "";
         }
 
+        public string toLimit()
+        {
+            if (!string.IsNullOrEmpty(LimitSql))
+                return LimitSql;
+
+            return "";
+        }
+
         public IWrapper<T> Between(string field, object value1, object value2)
         {
             Where where = new Where();
@@ -307,6 +318,11 @@ namespace Jvedio.Core.SimpleORM
         public void Join(SelectWrapper<T> wrapper)
         {
             this.Wheres.AddRange(wrapper.Wheres);
+        }
+
+        public IWrapper<T> NotIn(string field, IEnumerable<string> items)
+        {
+            return In(field + " NOT ", items);
         }
     }
 }

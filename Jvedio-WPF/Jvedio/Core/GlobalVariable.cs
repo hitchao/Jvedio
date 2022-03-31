@@ -133,7 +133,7 @@ namespace Jvedio
 
         public static Dictionary<string, string> Jav321IDDict = new Dictionary<string, string>();
 
-        // 标签戳
+        // 标签戳，全局缓存，避免每次都查询
         public static List<TagStamp> TagStamps = new List<TagStamp>();
 
         //按类别中分类

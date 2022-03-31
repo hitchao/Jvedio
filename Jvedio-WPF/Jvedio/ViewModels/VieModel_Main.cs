@@ -35,6 +35,7 @@ using Jvedio.Core.SimpleORM;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using Jvedio.Core.Enums;
+using Jvedio.Core;
 
 namespace Jvedio.ViewModel
 {
@@ -47,12 +48,16 @@ namespace Jvedio.ViewModel
         public event EventHandler OnCurrentMovieListRemove;
         public event EventHandler PageChangedCompleted;
         public event EventHandler ActorPageChangedCompleted;
+        public event EventHandler RenderSqlChanged;
+
 
         public bool IsFlipOvering = false;
 
         public static string PreviousSql = "";
         public static double PreviousOffset = 0;
         public static int PreviousPage = 1;
+
+
 
         Main main = GetWindowByName("Main") as Main;
 
@@ -255,6 +260,30 @@ namespace Jvedio.ViewModel
             set
             {
                 _ProgressBarValue = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _SearchSelectedIndex = (int)GlobalConfig.Main.SearchSelectedIndex;
+
+        public int SearchSelectedIndex
+        {
+            get { return _SearchSelectedIndex; }
+            set
+            {
+                _SearchSelectedIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private double _SideGridWidth = GlobalConfig.Main.SideGridWidth;
+
+        public double SideGridWidth
+        {
+            get { return _SideGridWidth; }
+            set
+            {
+                _SideGridWidth = value;
                 RaisePropertyChanged();
             }
         }
@@ -1339,6 +1368,7 @@ namespace Jvedio.ViewModel
         public void Reset()
         {
             Select();
+
         }
 
 
@@ -1354,6 +1384,33 @@ namespace Jvedio.ViewModel
             GetLabelList();
         }
 
+
+        public void initCurrentTagStamps()
+        {
+            string sql = "SELECT common_tagstamp.*,count(common_tagstamp.TagID) as Count from metadata_to_tagstamp " +
+                "join common_tagstamp " +
+                "on metadata_to_tagstamp.TagID=common_tagstamp.TagID " +
+                "join metadata " +
+                "on metadata.DataID=metadata_to_tagstamp.DataID " +
+                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                "GROUP BY common_tagstamp.TagID;";
+
+            List<Dictionary<string, object>> list = tagStampMapper.select(sql);
+            List<TagStamp> tagStamps = tagStampMapper.toEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
+            TagStamps = new ObservableCollection<TagStamp>();
+            // 先增加默认的：高清、中文
+            foreach (TagStamp item in GlobalVariable.TagStamps)
+            {
+                TagStamp tagStamp = tagStamps.Where(arg => arg.TagID == item.TagID).FirstOrDefault();
+                if (tagStamp != null) TagStamps.Add(tagStamp);
+                else
+                {
+                    // 无该标记
+                    item.Count = 0;
+                    TagStamps.Add(item);
+                }
+            }
+        }
 
 
         public async Task<bool> InitLettersNavigation()
@@ -2362,12 +2419,12 @@ namespace Jvedio.ViewModel
         }
 
 
-        public string toLimit()
+        public void toLimit<T>(IWrapper<T> wrapper)
         {
 
             int row_count = PageSize;
             long offset = PageSize * (CurrentPage - 1);
-            return $" LIMIT {offset},{row_count}";
+            wrapper.Limit(offset, row_count);
         }
 
         public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>() {
@@ -2425,12 +2482,15 @@ namespace Jvedio.ViewModel
                 main.MovieScrollViewer.ScrollToTop();//滚到顶部
             });
 
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            SelectWrapper<Video> wrapper = Video.initWrapper();
             if (Properties.Settings.Default.OnlyShowSubSection)
                 wrapper.NotEq("SubSection", "");
-            setSortOrder(wrapper);
-            wrapper.Select(SelectFields).Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0);
 
+
+
+            setSortOrder(wrapper);
+            toLimit(wrapper);
+            wrapper.Select(SelectFields);
             if (extraWrapper != null) wrapper.Join(extraWrapper);
 
             string actor_join_sql = " join metadatas_to_actor on metadatas_to_actor.DataID=metadata.DataID " +
@@ -2438,7 +2498,10 @@ namespace Jvedio.ViewModel
 
             string label_join_sql = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
 
-            string condition_sql = wrapper.toWhere(false) + wrapper.toOrder() + toLimit();
+
+
+
+            string condition_sql = wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
 
             string sql = $" FROM metadata_video " +
                         "JOIN metadata " +
@@ -2452,6 +2515,22 @@ namespace Jvedio.ViewModel
             else if (searchType == SearchType.LabelName)
                 sql += label_join_sql;
 
+            // 标记
+            // todo 标记全排除
+            //bool allFalse = TagStamps.All(item => item.Selected == false);
+            bool falseAndTrue = TagStamps.Any(item => item.Selected == false) && TagStamps.Any(item => item.Selected == false);
+            //if (!allFalse && falseAndTrue)
+            if (falseAndTrue)
+            {
+                string tagstamp_join_sql = " join metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
+                wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
+                sql += tagstamp_join_sql;
+            }
+            //else if (allFalse)
+            //{
+            //    string tagstamp_join_sql = " join metadata_to_tagstamp on metadata_to_tagstamp.DataID!=metadata.DataID ";
+            //    sql += tagstamp_join_sql;
+            //}
 
             string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
 
@@ -2459,8 +2538,11 @@ namespace Jvedio.ViewModel
             TotalCount = metaDataMapper.selectCount(count_sql);
 
 
+            WrapperEventArg<Video> arg = new WrapperEventArg<Video>();
+            arg.Wrapper = wrapper;
+            RenderSqlChanged?.Invoke(null, arg);
 
-            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + toLimit();
+            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { main.pagination.Total = TotalCount; });
             RenderCurrentVideo(sql);
@@ -2472,6 +2554,7 @@ namespace Jvedio.ViewModel
 
         public void RenderCurrentVideo(string sql)
         {
+
             //if (rendering) return;
             List<Dictionary<string, object>> list = metaDataMapper.select(sql);
             List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
@@ -2501,7 +2584,7 @@ namespace Jvedio.ViewModel
                 rendering = true;
                 Video video = VideoList[i];
                 SetImage(ref video, imageMode);
-                setTagStamps(ref video);// 设置标签戳
+                Video.setTagStamps(ref video);// 设置标签戳
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
             }
 

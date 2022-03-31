@@ -816,6 +816,16 @@
                 BorderThickness="0"
                 MouseMove="MoveWindow"
                 PreviewMouseLeftButtonDown="TopBorder_MouseLeftButtonUp">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="MinWindow" Header="最小化" />
+                        <MenuItem
+                            Name="MaxMenuItem"
+                            Click="OnMaxWindow"
+                            Header="最大化" />
+                        <MenuItem Click="CloseWindow" Header="关闭" />
+                    </ContextMenu>
+                </Border.ContextMenu>
                 <Grid Panel.ZIndex="50">
 
 
@@ -823,6 +833,23 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
+
+                        <Border
+                            Name="SideTriggerBorder"
+                            Margin="5,0"
+                            CornerRadius="0"
+                            MouseUp="ShowSideGrid"
+                            Style="{StaticResource ToolsBarBorderStyle}"
+                            ToolTip="{x:Static lang:Resources.Sorting}">
+
+                            <Viewbox Width="auto" Height="14">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M897.427256 249.003144 126.57172 249.003144c-34.673707 0-62.73174-28.088732-62.73174-62.73174s28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174S932.101987 249.003144 897.427256 249.003144z M897.427256 574.73174 126.57172 574.73174c-34.673707 0-62.73174-28.088732-62.73174-62.73174s28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174S932.101987 574.73174 897.427256 574.73174z M897.427256 900.460336 126.57172 900.460336c-34.673707 0-62.73174-28.088732-62.73174-62.73174 0-34.643008 28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174C960.16002 872.371604 932.101987 900.460336 897.427256 900.460336z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                        </Border>
                         <Image
                             Height="20"
                             Margin="10,0"
@@ -926,8 +953,8 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="{Binding SideGridWidth, Source={x:Static p:Settings.Default}, FallbackValue=200, Mode=OneWay}"
-                            MinWidth="30"
+                            Name="SideGridColumn"
+                            Width="{Binding SideGridWidth, FallbackValue=200, Mode=OneWay}"
                             MaxWidth="500" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
@@ -936,7 +963,8 @@
                         x:Name="SideBorder"
                         Grid.Column="0"
                         Background="{DynamicResource Window.Side.Background}"
-                        IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}">
+                        IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}"
+                        SizeChanged="SideBorder_SizeChanged">
                         <Grid SizeChanged="Grid_SizeChanged">
 
                             <Grid.RowDefinitions>
@@ -1069,10 +1097,12 @@
                                                             Height="30"
                                                             Margin="0"
                                                             CheckedBrush="{DynamicResource Window.Side.Hover.Background}"
+                                                            Click="PathCheckButton_Click"
                                                             CornerRadius="0"
                                                             Fill="{Binding BackgroundBrush}"
                                                             FontSize="12"
                                                             Foreground="{DynamicResource Global.Foreground}"
+                                                            IsChecked="{Binding Selected, Mode=TwoWay}"
                                                             MainText="{Binding TagName}"
                                                             Path="M121.6 247.872h780.8c23.488 0 42.496 19.008 42.496 42.496v417.92a42.496 42.496 0 0 1-42.496 42.496H121.6a42.496 42.496 0 0 1-42.496-42.496v-417.92a42.496 42.496 0 0 1 42.496-42.496z"
                                                             PathHeight="20"
@@ -1270,6 +1300,7 @@
                                             Background="Transparent"
                                             FocusVisualStyle="{x:Null}"
                                             ItemContainerStyle="{StaticResource FlatTabItem}"
+                                            SelectedIndex="{Binding SearchSelectedIndex, Mode=TwoWay}"
                                             Style="{StaticResource FlatTabControl}">
                                             <TabItem Header="识别码" />
                                             <TabItem Header="名称" />
@@ -2451,7 +2482,7 @@
                                             <Grid.ContextMenu>
                                                 <ContextMenu IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}">
                                                     <MenuItem Click="RefreshCurrentPage" Header="{x:Static lang:Resources.Refresh}" />
-                                                    <MenuItem Click="SelectAll" Header="{x:Static lang:Resources.SelectAll}" />
+                                                    <MenuItem Click="SelectAll" Header="选中/取消当前页" />
                                                     <MenuItem
                                                         Command="{Binding FlipOverCommand}"
                                                         Header="{x:Static lang:Resources.ShowExists}"
@@ -2596,20 +2627,12 @@
                                                                                         <MenuItem Click="RenameFile" Header="{x:Static lang:Resources.Menu_RenameFile}" />
                                                                                         <MenuItem Click="ReMoveZero" Header="{x:Static lang:Resources.Menu_RemoveZero}" />
                                                                                     </MenuItem>
-
-                                                                                    <MenuItem Name="ListMenuItem" Header="{x:Static lang:Resources.Menu_AddToList}" />
                                                                                     <MenuItem
                                                                                         Click="RemoveFromList"
                                                                                         Header="{x:Static lang:Resources.Menu_RemoveFromList}"
                                                                                         Visibility="Collapsed" />
 
-                                                                                    <MenuItem Click="ShowLabelEditGrid" Header="{x:Static lang:Resources.Menu_LabelManagement}">
-                                                                                        <MenuItem Click="ManageLabel" Header="{x:Static lang:Resources.Menu_LabelManage1}" />
-                                                                                        <MenuItem Click="DelSingleLabel" Header="{x:Static lang:Resources.Menu_LabelManage2}" />
-                                                                                        <MenuItem Click="AddLabel" Header="{x:Static lang:Resources.Menu_LabelManage3}" />
-                                                                                        <MenuItem Click="DelLabel" Header="{x:Static lang:Resources.Menu_LabelManage4}" />
-                                                                                        <MenuItem Click="ClearLabel" Header="{x:Static lang:Resources.Menu_LabelManage5}" />
-                                                                                    </MenuItem>
+                                                                                    <MenuItem Click="ShowLabelManagement" Header="{x:Static lang:Resources.Menu_LabelManagement}" />
                                                                                     <MenuItem Header="{x:Static lang:Resources.OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                                                         <MenuItem
                                                                                             Command="cmd:File.OpenSelectFile"
@@ -2643,7 +2666,7 @@
                                                                                     <MenuItem Name="TagMenuItems" Header="添加标记" />
                                                                                     <MenuItem
                                                                                         Click="OpenWeb"
-                                                                                        Header="{x:Static lang:Resources.Menu_OpenWebSite}"
+                                                                                        Header="访问所在网址"
                                                                                         Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
                                                                                     <MenuItem Click="CopyFile" Header="{x:Static lang:Resources.Menu_CopyFile}" />
                                                                                     <MenuItem
