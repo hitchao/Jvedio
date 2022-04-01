@@ -12,6 +12,7 @@ create table actor_info(
     Nation VARCHAR(500),
     BirthPlace VARCHAR(500),
     Birthday VARCHAR(100),
+    Age INT,
     BloodType VARCHAR(100),
     Height INT,
     Weight INT,

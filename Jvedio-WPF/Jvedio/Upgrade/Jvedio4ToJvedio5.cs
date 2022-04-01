@@ -312,9 +312,9 @@ namespace Jvedio
                         video.ActorNames = arg.actor;
                         video.OldActorIDs = arg.actorid;
                         video.Size = (long)arg.filesize;
-                        video.Genre = arg.genre;
-                        video.Tag = arg.tag;
-                        video.Label = arg.label;
+                        video.Genre = arg.genre.Replace(' ', GlobalVariable.Separator);
+                        video.Series = arg.tag.Replace(' ', GlobalVariable.Separator);
+                        video.Label = arg.label.Replace(' ', GlobalVariable.Separator);
                         videos.Add(video);
                     });
 
@@ -350,12 +350,12 @@ namespace Jvedio
                 List<string> list = new List<string>();
                 foreach (Video video in videos)
                 {
-                    if (Identify.IsHDV(video.Size) || video.Genre?.IndexOfAnyString(TagStrings_HD) >= 0 || video.Tag?.IndexOfAnyString(TagStrings_HD) >= 0 || video.Label?.IndexOfAnyString(TagStrings_HD) >= 0)
+                    if (Identify.IsHDV(video.Size) || video.Genre?.IndexOfAnyString(TagStrings_HD) >= 0 || video.Series?.IndexOfAnyString(TagStrings_HD) >= 0 || video.Label?.IndexOfAnyString(TagStrings_HD) >= 0)
                     {
                         list.Add($"({video.DataID},1)");
                     }
 
-                    if (Identify.IsCHS(video.Path) || video.Genre?.IndexOfAnyString(TagStrings_Translated) >= 0 || video.Tag?.IndexOfAnyString(TagStrings_Translated) >= 0 || video.Label?.IndexOfAnyString(TagStrings_Translated) >= 0)
+                    if (Identify.IsCHS(video.Path) || video.Genre?.IndexOfAnyString(TagStrings_Translated) >= 0 || video.Series?.IndexOfAnyString(TagStrings_Translated) >= 0 || video.Label?.IndexOfAnyString(TagStrings_Translated) >= 0)
                     {
                         list.Add($"({video.DataID},2)");
                     }

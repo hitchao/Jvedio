@@ -120,11 +120,11 @@ namespace Jvedio
                 // 更新到主界面和详情界面
                 main?.RefreshGrade(vieModel.CurrentVideo);
                 windowDetails?.Refresh();
-                HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, "EditGrowl");
+                ChaoControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
             }
             else
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_Fail, "EditGrowl");
+                ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
             }
 
         }

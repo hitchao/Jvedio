@@ -28,7 +28,6 @@ namespace Jvedio.Mapper
             "RatingCount",
             "FavoriteCount",
             "Genre",
-            "Tag",
             "Grade",
             $"(select group_concat(LabelName,'{GlobalVariable.Separator}') from metadata_to_label where metadata_to_label.DataID=metadata.DataID) as Label",
             "ViewDate",
@@ -41,6 +40,7 @@ namespace Jvedio.Mapper
             "VID",
             "MVID",
             "VideoType",
+            "Series",
             "Director",
             "Studio",
             "Publisher",
@@ -180,5 +180,18 @@ namespace Jvedio.Mapper
             return 0;
 
         }
+
+
+        public static string BASE_SQL =
+            $" FROM metadata_video JOIN metadata on metadata.DataID=metadata_video.DataID ";
+
+        public static string ACTOR_JOIN_SQL =
+            " join metadatas_to_actor on metadatas_to_actor.DataID=metadata.DataID " +
+               "JOIN actor_info on metadatas_to_actor.ActorID=actor_info.ActorID ";
+
+        public static string LABEL_JOIN_SQL =
+            " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
+
+        public static string TAGSTAMP_JOIN_SQL = " join metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
     }
 }

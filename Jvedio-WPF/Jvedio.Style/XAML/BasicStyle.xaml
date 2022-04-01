@@ -218,6 +218,15 @@
         </Style.Triggers>
     </Style>
 
+    <Style
+        x:Key="FlatBorderStyle"
+        BasedOn="{StaticResource ToolsBarBorderStyle}"
+        TargetType="Border">
+
+        <Setter Property="CornerRadius" Value="0" />
+
+    </Style>
+
 
 
     <Style x:Key="TagBarBorderStyle" TargetType="Border">
@@ -282,20 +291,21 @@
     </Style>
 
 
-    <Style x:Key="GenreBorderStyle" TargetType="Border">
+    <Style x:Key="RoundBorderStyle" TargetType="Border">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="CornerRadius" Value="3" />
         <Setter Property="Margin" Value="10" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundSide}" />
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <!--<Setter Property="Background" Value="{DynamicResource BackgroundTitle}"/>-->
-                <Setter Property="Background" Value="#EAFCFA" />
-                <Setter Property="BorderBrush" Value="#79DFD5" />
+                <Setter Property="Background" Value="{DynamicResource ListBoxItem.Hover.Background}" />
+
+                <!--<Setter Property="Background" Value="#EAFCFA" />
+                <Setter Property="BorderBrush" Value="#79DFD5" />-->
             </Trigger>
         </Style.Triggers>
     </Style>

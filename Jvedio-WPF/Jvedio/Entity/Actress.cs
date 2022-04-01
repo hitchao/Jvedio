@@ -180,6 +180,7 @@ namespace Jvedio.Entity
                 Nation = "",
                 BirthPlace = birthplace,
                 Birthday = birthday,
+                Age = age,
                 BloodType = "",
                 Height = height,
                 Gender = Core.Enums.Gender.Girl,

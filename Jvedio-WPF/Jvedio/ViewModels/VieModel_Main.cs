@@ -36,6 +36,7 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using Jvedio.Core.Enums;
 using Jvedio.Core;
+using Jvedio.Mapper;
 
 namespace Jvedio.ViewModel
 {
@@ -51,12 +52,17 @@ namespace Jvedio.ViewModel
         public event EventHandler RenderSqlChanged;
 
 
+
         public bool IsFlipOvering = false;
 
         public static string PreviousSql = "";
         public static double PreviousOffset = 0;
         public static int PreviousPage = 1;
 
+        public string ClickFilterType = string.Empty;
+
+
+        //public bool canRender = false;
 
 
         Main main = GetWindowByName("Main") as Main;
@@ -79,7 +85,7 @@ namespace Jvedio.ViewModel
         public RelayCommand<object> SelectCommand { get; set; }
         public RelayCommand<object> ShowActorsCommand { get; set; }
         public RelayCommand<object> ShowLabelsCommand { get; set; }
-        public RelayCommand GenreCommand { get; set; }
+        public RelayCommand<object> ShowClassifyCommand { get; set; }
         public RelayCommand LabelCommand { get; set; }
 
         public RelayCommand FavoritesCommand { get; set; }
@@ -97,7 +103,7 @@ namespace Jvedio.ViewModel
             SelectCommand = new RelayCommand<object>(t => GenerateSelect(t));
             ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
             ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
-            GenreCommand = new RelayCommand(GetGenreList);
+            ShowClassifyCommand = new RelayCommand<object>(t => ShowClassify(t));
             LabelCommand = new RelayCommand(GetLabelList);
             FlipOverCommand = new RelayCommand(AsyncFlipOver);
             FavoritesCommand = new RelayCommand(GetFavoritesMovie);
@@ -167,14 +173,14 @@ namespace Jvedio.ViewModel
         }
 
 
-        private Visibility _ActorInfoGrid = Visibility.Collapsed;
+        private Visibility _ShowActorGrid = Visibility.Collapsed;
 
-        public Visibility ActorInfoGrid
+        public Visibility ShowActorGrid
         {
-            get { return _ActorInfoGrid; }
+            get { return _ShowActorGrid; }
             set
             {
-                _ActorInfoGrid = value;
+                _ShowActorGrid = value;
                 RaisePropertyChanged();
             }
         }
@@ -272,6 +278,17 @@ namespace Jvedio.ViewModel
             set
             {
                 _SearchSelectedIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _ClassifySelectedIndex = (int)GlobalConfig.Main.ClassifySelectedIndex;
+
+        public int ClassifySelectedIndex
+        {
+            get { return _ClassifySelectedIndex; }
+            set
+            {
+                _ClassifySelectedIndex = value;
                 RaisePropertyChanged();
             }
         }
@@ -472,6 +489,27 @@ namespace Jvedio.ViewModel
 
 
         #region "ObservableCollection"
+
+
+
+
+
+
+
+
+
+        private ObservableCollection<Message> _Message = new ObservableCollection<Message>();
+        public ObservableCollection<Message> Message
+        {
+            get { return _Message; }
+            set
+            {
+                _Message = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
         private ObservableCollection<char> _LettersNavigation;
         public ObservableCollection<char> LettersNavigation
         {
@@ -589,13 +627,13 @@ namespace Jvedio.ViewModel
 
         public List<Movie> FilterMovieList;
 
-        private ObservableCollection<Genre> genrelist;
-        public ObservableCollection<Genre> GenreList
+        private ObservableCollection<string> _GenreList;
+        public ObservableCollection<string> GenreList
         {
-            get { return genrelist; }
+            get { return _GenreList; }
             set
             {
-                genrelist = value;
+                _GenreList = value;
                 RaisePropertyChanged();
 
             }
@@ -639,13 +677,13 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<string> tagllist;
-        public ObservableCollection<string> TagList
+        private ObservableCollection<string> _SeriesList;
+        public ObservableCollection<string> SeriesList
         {
-            get { return tagllist; }
+            get { return _SeriesList; }
             set
             {
-                tagllist = value;
+                _SeriesList = value;
                 RaisePropertyChanged();
             }
         }
@@ -1128,13 +1166,13 @@ namespace Jvedio.ViewModel
         }
 
 
-        private Actress actress;
-        public Actress Actress
+        private ActorInfo _CurrentActorInfo;
+        public ActorInfo CurrentActorInfo
         {
-            get { return actress; }
+            get { return _CurrentActorInfo; }
             set
             {
-                actress = value;
+                _CurrentActorInfo = value;
                 RaisePropertyChanged();
             }
         }
@@ -1382,6 +1420,11 @@ namespace Jvedio.ViewModel
         {
             TabSelectedIndex = 2;
             GetLabelList();
+        }
+
+        public void ShowClassify(object o)
+        {
+            TabSelectedIndex = 3;
         }
 
 
@@ -1893,11 +1936,17 @@ namespace Jvedio.ViewModel
 
 
 
-        private delegate void LoadLabelDelegate(string str);
-        private void LoadLabel(string str) => LabelList.Add(str);
-        private void LoadTag(string str) => TagList.Add(str);
-        private void LoadStudio(string str) => StudioList.Add(str);
-        private void LoadDirector(string str) => DirectorList.Add(str);
+        //private delegate void LoadLabelDelegate(string str);
+
+        //private void LoadLabel(string str) => LabelList.Add(str);
+        //private void LoadTag(string str) => TagList.Add(str);
+        //private void LoadStudio(string str) => StudioList.Add(str);
+        //private void LoadDirector(string str) => DirectorList.Add(str);
+
+
+
+        private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
+        private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
 
         //获得标签
         public async void GetLabelList()
@@ -1916,7 +1965,7 @@ namespace Jvedio.ViewModel
             LabelList = new ObservableCollection<string>();
             for (int i = 0; i < labels.Count; i++)
             {
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
+                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), LabelList, labels[i]);
             }
         }
 
@@ -1924,43 +1973,111 @@ namespace Jvedio.ViewModel
 
 
 
-        public async void GetTagList()
+
+
+
+        public async void SetClassify(bool refresh = false)
         {
-            List<string> labels = DataBase.SelectLabelByVedioType(ClassifyVedioType, "tag");
-            TagList = new ObservableCollection<string>();
-            SetClassifyLoadingStatus(true);
-            for (int i = 0; i < labels.Count; i++)
+
+            List<string> list;
+
+            if (ClassifySelectedIndex == 0)
             {
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadTag), labels[i]);
+                // todo 这里可以考虑使用 SQLITE 的 WITH RECURSIVE
+                // 官方：https://www.sqlite.org/lang_with.html
+                // 中文：https://www.jianshu.com/p/135ce4e5b11f
+                if (GenreList != null && GenreList.Count > 0 && !refresh) return;
+
+                Dictionary<string, long> genreDict = new Dictionary<string, long>();
+                string sql = $"SELECT Genre from metadata " +
+                    $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND Genre !='' ";
+
+                List<Dictionary<string, object>> lists = metaDataMapper.select(sql);
+                foreach (Dictionary<string, object> item in lists)
+                {
+                    string genre = item["Genre"].ToString();
+                    if (string.IsNullOrEmpty(genre)) continue;
+                    List<string> genres = genre.Split(GlobalVariable.Separator).ToList();
+                    foreach (string g in genres)
+                    {
+                        if (genreDict.ContainsKey(g))
+                        {
+                            genreDict[g] = genreDict[g] + 1;
+                        }
+                        else
+                        {
+                            genreDict.Add(g, 1);
+                        }
+                    }
+                }
+
+                var ordered = genreDict.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+                SetClassifyLoadingStatus(true);
+                GenreList = new ObservableCollection<string>();
+                foreach (var key in ordered.Keys)
+                {
+                    string v = $"{key}({ordered[key]})";
+                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), GenreList, v);
+                }
+
+                SetClassifyLoadingStatus(false);
             }
-            SetClassifyLoadingStatus(false);
+            else if (ClassifySelectedIndex == 1)
+            {
+                if (SeriesList != null && SeriesList.Count > 0 && !refresh) return;
+                list = GetListByField("Series");
+                SetClassifyLoadingStatus(true);
+                SeriesList = new ObservableCollection<string>();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), SeriesList, list[i]);
+                }
+                SetClassifyLoadingStatus(false);
+            }
+            else if (ClassifySelectedIndex == 2)
+            {
+                if (StudioList != null && StudioList.Count > 0 && !refresh) return;
+                list = GetListByField("Studio");
+                SetClassifyLoadingStatus(true);
+                StudioList = new ObservableCollection<string>();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), StudioList, list[i]);
+                }
+                SetClassifyLoadingStatus(false);
+            }
+            else if (ClassifySelectedIndex == 3)
+            {
+                if (DirectorList != null && DirectorList.Count > 0 && !refresh) return;
+                list = GetListByField("Director");
+                SetClassifyLoadingStatus(true);
+                DirectorList = new ObservableCollection<string>();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), DirectorList, list[i]);
+                }
+                SetClassifyLoadingStatus(false);
+            }
+
         }
 
 
-
-        public async void GetStudioList()
+        public List<string> GetListByField(string field)
         {
-            List<string> labels = DataBase.SelectLabelByVedioType(ClassifyVedioType, "studio");
-            StudioList = new ObservableCollection<string>();
-            SetClassifyLoadingStatus(true);
-            for (int i = 0; i < labels.Count; i++)
+            List<string> result = new List<string>();
+            string sql = $"SELECT {field},Count({field}) as Count from metadata " +
+                "JOIN metadata_video on metadata.DataID=metadata_video.DataID " +
+                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
+                $"GROUP BY {field} ORDER BY Count DESC";
+            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            foreach (Dictionary<string, object> item in list)
             {
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadStudio), labels[i]);
+                string name = item[field].ToString();
+                long.TryParse(item["Count"].ToString(), out long count);
+                result.Add($"{name}({count})");
             }
-            SetClassifyLoadingStatus(false);
-        }
-
-
-        public async void GetDirectoroList()
-        {
-            List<string> labels = DataBase.SelectLabelByVedioType(ClassifyVedioType, "director");
-            DirectorList = new ObservableCollection<string>();
-            SetClassifyLoadingStatus(true);
-            for (int i = 0; i < labels.Count; i++)
-            {
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadDirector), labels[i]);
-            }
-            SetClassifyLoadingStatus(false);
+            return result;
         }
 
 
@@ -1985,6 +2102,7 @@ namespace Jvedio.ViewModel
             { 13, "Waist" },
             { 14, "Hipline" },
             { 15, "actor_info.Grade" },
+            { 16, "Age" },
         };
 
         public static string[] ActorSelectedField = new string[]
@@ -2114,11 +2232,7 @@ namespace Jvedio.ViewModel
                 catch (OperationCanceledException ex) { renderVideoCTS?.Dispose(); break; }
                 renderingActor = true;
                 ActorInfo actorInfo = ActorList[i];
-                //加载图片
-                string smallImagePath = Video.parseImagePath(actorInfo.SmallImagePath);
-                BitmapImage smallimage = ReadImageFromFile(smallImagePath);
-                if (smallimage == null) smallimage = DefaultActorImage;
-                actorInfo.SmallImage = smallimage;
+                ActorInfo.SetImage(ref actorInfo);
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
             }
 
@@ -2149,29 +2263,6 @@ namespace Jvedio.ViewModel
 
 
 
-
-
-
-        private delegate void LoadGenreDelegate(Genre genre);
-        private void LoadGenre(Genre genre)
-        {
-            GenreList.Add(genre);
-        }
-
-
-        //获得类别
-        public async void GetGenreList()
-        {
-            Statistic();
-            List<Genre> Genres = DataBase.SelectGenreByVedioType(ClassifyVedioType);
-            SetClassifyLoadingStatus(true);
-            GenreList = new ObservableCollection<Genre>();
-            for (int i = 0; i < Genres.Count; i++)
-            {
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadGenreDelegate(LoadGenre), Genres[i]);
-            }
-            SetClassifyLoadingStatus(false);
-        }
 
 
 
@@ -2455,11 +2546,15 @@ namespace Jvedio.ViewModel
                     default: break;
                 }
             }
+            main.pagination.CurrentPage = 1;
+            ClickFilterType = string.Empty;
             Select();
         }
 
         public async void Select()
         {
+            Console.WriteLine("Select");
+
             TabSelectedIndex = 0; // 影片
             // 判断当前获取的队列
             while (pageQueue.Count > 1)
@@ -2493,27 +2588,35 @@ namespace Jvedio.ViewModel
             wrapper.Select(SelectFields);
             if (extraWrapper != null) wrapper.Join(extraWrapper);
 
-            string actor_join_sql = " join metadatas_to_actor on metadatas_to_actor.DataID=metadata.DataID " +
-                "JOIN actor_info on metadatas_to_actor.ActorID=actor_info.ActorID ";
-
-            string label_join_sql = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
+            string sql = VideoMapper.BASE_SQL;
 
 
-
-
-            string condition_sql = wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
-
-            string sql = $" FROM metadata_video " +
-                        "JOIN metadata " +
-                        "on metadata.DataID=metadata_video.DataID ";
-
-
-
+            // todo 如果搜索框选中了标签，搜索出来的结果不一致
             SearchType searchType = (SearchType)GlobalConfig.Main.SearchSelectedIndex;
-            if (searchType == SearchType.ActorName)
-                sql += actor_join_sql;
-            else if (searchType == SearchType.LabelName)
-                sql += label_join_sql;
+            if (Searching)
+            {
+                if (searchType == SearchType.ActorName)
+                    sql += VideoMapper.ACTOR_JOIN_SQL;
+                else if (searchType == SearchType.LabelName)
+                    sql += VideoMapper.LABEL_JOIN_SQL;
+            }
+            else if (!string.IsNullOrEmpty(ClickFilterType))
+            {
+                if (ClickFilterType == "Label")
+                {
+                    sql += VideoMapper.LABEL_JOIN_SQL;
+                }
+                else if (ClickFilterType == "Actor")
+                {
+                    sql += VideoMapper.ACTOR_JOIN_SQL;
+                }
+                else
+                {
+
+                }
+
+            }
+
 
             // 标记
             // todo 标记全排除
@@ -2522,15 +2625,9 @@ namespace Jvedio.ViewModel
             //if (!allFalse && falseAndTrue)
             if (falseAndTrue)
             {
-                string tagstamp_join_sql = " join metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
                 wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
-                sql += tagstamp_join_sql;
+                sql += VideoMapper.TAGSTAMP_JOIN_SQL;
             }
-            //else if (allFalse)
-            //{
-            //    string tagstamp_join_sql = " join metadata_to_tagstamp on metadata_to_tagstamp.DataID!=metadata.DataID ";
-            //    sql += tagstamp_join_sql;
-            //}
 
             string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
 
@@ -2540,6 +2637,7 @@ namespace Jvedio.ViewModel
 
             WrapperEventArg<Video> arg = new WrapperEventArg<Video>();
             arg.Wrapper = wrapper;
+            arg.SQL = sql;
             RenderSqlChanged?.Invoke(null, arg);
 
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
@@ -2793,15 +2891,21 @@ namespace Jvedio.ViewModel
                 FavoriteVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
 
 
-                string sql = "SELECT count(*) as Count " +
-                "from (SELECT actor_info.ActorID FROM actor_info join metadatas_to_actor " +
-                "on metadatas_to_actor.ActorID=actor_info.ActorID " +
-                "join metadata " +
-                "on metadatas_to_actor.DataID=metadata.DataID " +
-                $"WHERE metadata.DBId={dbid} and metadata.DataType={0} " +
-                "GROUP BY actor_info.ActorID );";
-                AllActorCount = actorMapper.selectCount(sql);
-                AllLabelCount = metaDataMapper.selectCount("SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label");
+                string actor_count_sql = "SELECT count(*) as Count " +
+                            "from (SELECT actor_info.ActorID FROM actor_info join metadatas_to_actor " +
+                            "on metadatas_to_actor.ActorID=actor_info.ActorID " +
+                            "join metadata " +
+                            "on metadatas_to_actor.DataID=metadata.DataID " +
+                            $"WHERE metadata.DBId={dbid} and metadata.DataType={0} " +
+                            "GROUP BY actor_info.ActorID );";
+                AllActorCount = actorMapper.selectCount(actor_count_sql);
+
+                string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +
+                                        "join metadata on metadata_to_label.DataID=metadata.DataID " +
+                                         $"WHERE metadata.DBId={dbid} and metadata.DataType={0} ";
+
+
+                AllLabelCount = metaDataMapper.selectCount(label_count_sql);
                 DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                 DateTime date2 = DateTime.Now;
                 RecentWatchCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));

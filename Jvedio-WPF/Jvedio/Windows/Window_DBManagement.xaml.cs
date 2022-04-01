@@ -1,4 +1,5 @@
-﻿using Jvedio.Plot.Bar;
+﻿using ChaoControls.Style;
+using Jvedio.Plot.Bar;
 using Jvedio.Style;
 using Jvedio.Utils;
 using Jvedio.ViewModel;
@@ -259,7 +260,7 @@ namespace Jvedio
                 //清空最近播放和最近创建
                 ClearDateBefore(0);
                 db.Vacuum();
-                HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
+                MessageCard.Success(Jvedio.Language.Resources.Message_Success);
             }
 
             if ((bool)cb[1].IsChecked)
@@ -295,7 +296,7 @@ namespace Jvedio
                     }
                 }, ct);
 
-                HandyControl.Controls.Growl.Success($"{ Jvedio.Language.Resources.SuccessDelete} {num}", GrowlToken);
+                MessageCard.Success($"{ Jvedio.Language.Resources.SuccessDelete} {num}");
             }
 
             if ((bool)cb[2].IsChecked)
@@ -332,7 +333,7 @@ namespace Jvedio
                 }, ct);
 
 
-                HandyControl.Controls.Growl.Success($"{Jvedio.Language.Resources.SuccessDelete} {num}", GrowlToken);
+                MessageCard.Success($"{Jvedio.Language.Resources.SuccessDelete} {num}");
             }
 
 
@@ -360,11 +361,11 @@ namespace Jvedio
                             Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {ex.Message}");
                         }
                     }, ct);
-                    HandyControl.Controls.Growl.Success($"{Jvedio.Language.Resources.Message_Success}", GrowlToken);
+                    MessageCard.Success($"{Jvedio.Language.Resources.Message_Success}");
                 }
                 else
                 {
-                    HandyControl.Controls.Growl.Success($"{Jvedio.Language.Resources.setnfo}", GrowlToken);
+                    MessageCard.Success($"{Jvedio.Language.Resources.setnfo}");
                 }
 
             }
@@ -500,7 +501,7 @@ namespace Jvedio
             if (!File.Exists(srcToCopy) || !File.Exists(dstToCopy)) return;
             if (srcToCopy == dstToCopy)
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.SamePathError, GrowlToken);
+                MessageCard.Error(Jvedio.Language.Resources.SamePathError);
                 return;
             }
             cts_copy = new CancellationTokenSource();
@@ -518,7 +519,7 @@ namespace Jvedio
                             CopyProgressBar.Value = value;
                             if (value == 100)
                             {
-                                HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
+                                MessageCard.Success(Jvedio.Language.Resources.Message_Success);
                                 cts_copy.Dispose();
                                 CopyButton.IsEnabled = true;
                             }
@@ -528,7 +529,7 @@ namespace Jvedio
                 catch (OperationCanceledException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Cancel, GrowlToken);
+                    MessageCard.Error(Jvedio.Language.Resources.Cancel);
                 }
 
             });
@@ -550,7 +551,7 @@ namespace Jvedio
             StackPanel sp = button.Parent as StackPanel;
             ComboBox comboBox = sp.Children.OfType<ComboBox>().First();
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", comboBox.Text + ".sqlite");
-            FileHelper.TryOpenSelectPath(path, GrowlToken);
+            FileHelper.TryOpenSelectPath(path);
         }
 
         private void currentDatabase_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -95,6 +95,24 @@ namespace Jvedio
     }
 
 
+    public class LargerThanVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || parameter == null) return Visibility.Collapsed;
+            double.TryParse(value.ToString(), out double d1);
+            double.TryParse(parameter.ToString(), out double d2);
+            if (d1 > d2) return Visibility.Visible;
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+
     public class NullToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

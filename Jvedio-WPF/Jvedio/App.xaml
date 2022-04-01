@@ -46,6 +46,8 @@
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/Style/ChaoControls/Pagination.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/Style/ChaoControls/Basic.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/HandyControlStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseDialogStyle.xaml" />

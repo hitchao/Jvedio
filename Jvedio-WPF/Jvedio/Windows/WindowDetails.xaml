@@ -379,11 +379,17 @@
                             PreviewMouseWheel="Grid_PreviewMouseWheel">
                             <Grid.ContextMenu>
                                 <ContextMenu Opacity="0.8" PreviewKeyUp="ContextMenu_PreviewKeyUp">
-                                    <MenuItem Click="DownLoad" Header="{x:Static lang:Resources.Menu_SyncInfo}" />
-                                    <MenuItem Header="{x:Static lang:Resources.Menu_SyncExtra}" Visibility="{Binding ShowSecret, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource bool2VisibilityConverter}}">
+                                    <MenuItem
+                                        Click="DownLoad"
+                                        Header="{x:Static lang:Resources.Menu_SyncInfo}"
+                                        IsEnabled="False" />
+                                    <MenuItem
+                                        Header="{x:Static lang:Resources.Menu_SyncExtra}"
+                                        IsEnabled="False"
+                                        Visibility="{Binding ShowSecret, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource bool2VisibilityConverter}}">
                                         <MenuItem Click="DownLoadMagnets" Header="{x:Static lang:Resources.SyncMagnets}" />
                                     </MenuItem>
-                                    <MenuItem Header="{x:Static lang:Resources.Menu_Advance}">
+                                    <MenuItem Header="{x:Static lang:Resources.Menu_Advance}" IsEnabled="False">
                                         <MenuItem Click="TranslateMovie" Header="{x:Static lang:Resources.Menu_Translate}" />
                                         <MenuItem Click="GenerateSmallImage" Header="{x:Static lang:Resources.Menu_GenerateThumbnail}" />
                                         <MenuItem Click="GenerateActor" Header="{x:Static lang:Resources.Menu_GenerateActressImage}" />
@@ -419,8 +425,8 @@
 
                                     <MenuItem
                                         Header="{x:Static lang:Resources.ScreenShot}"
-                                        PreviewMouseLeftButtonUp="StartScreenShot"
-                                        Visibility="Collapsed" />
+                                        IsEnabled="False"
+                                        PreviewMouseLeftButtonUp="StartScreenShot" />
 
 
                                     <MenuItem
@@ -594,7 +600,7 @@
                             <TabControl
                                 Margin="10,5"
                                 Background="Transparent"
-                                SelectedIndex="{Binding InfoSelectedIndex,Mode=TwoWay}"
+                                SelectedIndex="{Binding InfoSelectedIndex, Mode=TwoWay}"
                                 Style="{DynamicResource TapControlStyle}">
                                 <TabItem
                                     Margin="5"
@@ -721,6 +727,7 @@
                                                                     Name="rootGrid"
                                                                     Width="auto"
                                                                     Margin="5"
+                                                                    MouseLeftButtonUp="ShowSameActor"
                                                                     Tag="{Binding ActorID, Mode=OneWay}">
                                                                     <Border
                                                                         Name="rootBorder"
@@ -741,7 +748,7 @@
                                                                             Grid.Row="0"
                                                                             Width="80"
                                                                             Height="80"
-                                                                            Margin="0,0,0,10"
+                                                                            Margin="2.5,2.5,2.5,10"
                                                                             VerticalAlignment="Top"
                                                                             AllowDrop="True"
                                                                             Cursor="Hand"
@@ -809,11 +816,11 @@
                                                     <Border
                                                         Width="250"
                                                         Margin="2"
-                                                        MouseLeftButtonUp="ShowSameTag"
+                                                        MouseLeftButtonUp="ShowSameSeries"
                                                         Style="{StaticResource HoverBorder}">
                                                         <TextBlock
                                                             Style="{StaticResource BaseTextBlock}"
-                                                            Text="{Binding CurrentVideo.Tag}"
+                                                            Text="{Binding CurrentVideo.Series}"
                                                             TextWrapping="WrapWithOverflow" />
                                                     </Border>
                                                 </StackPanel>
@@ -917,9 +924,9 @@
                                                                     Padding="5,2"
                                                                     CornerRadius="3"
                                                                     Cursor="Hand"
+                                                                    MouseLeftButtonUp="ShowSameGenre"
                                                                     Style="{StaticResource BorderStyle}">
                                                                     <TextBlock
-                                                                        MouseLeftButtonUp="ShowSameGenre"
                                                                         Style="{StaticResource BaseTextBlock}"
                                                                         Text="{Binding}"
                                                                         ToolTip="{x:Null}" />
@@ -971,7 +978,7 @@
                                                                     Cursor="Hand"
                                                                     Style="{StaticResource BorderStyle}">
                                                                     <TextBlock
-                                                                        MouseLeftButtonUp="ShowSameGenre"
+                                                                        MouseLeftButtonUp="ShowSameLabel"
                                                                         Style="{StaticResource BaseTextBlock}"
                                                                         Text="{Binding}"
                                                                         ToolTip="{x:Null}" />

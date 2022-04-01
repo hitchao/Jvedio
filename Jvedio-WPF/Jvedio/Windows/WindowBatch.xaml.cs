@@ -24,6 +24,7 @@ using System.Threading;
 using Jvedio.Style;
 using Jvedio.Utils.Net;
 using Jvedio.Entity;
+using ChaoControls.Style;
 
 namespace Jvedio
 {
@@ -69,7 +70,7 @@ namespace Jvedio
             InitializeComponent();
             if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
             cts = new CancellationTokenSource();
-            cts.Token.Register(() => { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Cancel, "BatchGrowl"); });
+            cts.Token.Register(() => { MessageCard.Info(Jvedio.Language.Resources.Cancel); });
             ct = cts.Token;
             ProgressBar.Visibility = Visibility.Hidden;
             TabControl.SelectedIndex = Properties.Settings.Default.BatchIndex;
@@ -454,7 +455,7 @@ namespace Jvedio
         {
             if (Properties.Settings.Default.RenameFormat.IndexOf("{") < 0)
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetRenameRule);
+                MessageCard.Error(Jvedio.Language.Resources.Message_SetRenameRule);
                 cts.Dispose();
                 Running = false;
                 return;
@@ -481,7 +482,7 @@ namespace Jvedio
         {
             if (Running)
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.OtherTaskIsRunning, "BatchGrowl");
+                MessageCard.Error(Jvedio.Language.Resources.OtherTaskIsRunning);
                 return;
             }
 
@@ -489,12 +490,12 @@ namespace Jvedio
 
             if ((idx == 1 || idx == 2) && !File.Exists(Properties.Settings.Default.FFMPEG_Path))
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetFFmpeg, "BatchGrowl");
+                MessageCard.Error(Jvedio.Language.Resources.Message_SetFFmpeg);
                 return;
             }
 
             cts = new CancellationTokenSource();
-            cts.Token.Register(() => { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_CancelCurrentTask, "BatchGrowl"); });
+            cts.Token.Register(() => { MessageCard.Info(Jvedio.Language.Resources.Message_CancelCurrentTask); });
             ct = cts.Token;
 
 

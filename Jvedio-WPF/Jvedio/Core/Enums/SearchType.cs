@@ -13,7 +13,7 @@ namespace Jvedio.Core.Enums
         ActorName,
         LabelName,
         Genre,
-        Tag,
+        Series,
         Studio,
         Director,
     }

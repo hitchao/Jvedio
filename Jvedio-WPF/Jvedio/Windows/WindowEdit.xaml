@@ -659,7 +659,7 @@
 
                                 <DockPanel>
                                     <Label Content="{x:Static lang:Resources.Tag}" Style="{StaticResource BaseInfoLabel}" />
-                                    <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Tag, Mode=TwoWay}" />
+                                    <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Series, Mode=TwoWay}" />
                                 </DockPanel>
 
                                 <DockPanel>

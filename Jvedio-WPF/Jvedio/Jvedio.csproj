@@ -311,6 +311,7 @@
     <Compile Include="Entity\Data\Video.cs" />
     <Compile Include="Entity\DetailMovie.cs" />
     <Compile Include="Entity\Genre.cs" />
+    <Compile Include="Entity\Message.cs" />
     <Compile Include="Entity\Movie.cs" />
     <Compile Include="Entity\MyListItem.cs" />
     <Compile Include="Entity\SampleMovies.cs" />
@@ -459,6 +460,9 @@
     <Compile Include="Windows\Window_DBManagement.xaml.cs">
       <DependentUpon>Window_DBManagement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Window_EditActor.xaml.cs">
+      <DependentUpon>Window_EditActor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Window_LabelManagement.xaml.cs">
       <DependentUpon>Window_LabelManagement.xaml</DependentUpon>
     </Compile>
@@ -511,6 +515,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Window_DBManagement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_EditActor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -584,6 +592,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\Picture\Empty.png" />
     <Content Include="Sql\app_configs.sql" />
     <Content Include="Sql\app_datas.sql" />
     <Content Include="Sql\single_db_actor.sql" />

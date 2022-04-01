@@ -8,8 +8,7 @@
 -- DataType: 0-Video 1-Picture 2-Game 3-Comics
 -- Rating 刮削的评分，满分 5 分
 -- RatingCount 评分的人数
--- Genre 类别，以符号 / 分割
--- Tag 标签，以符号 / 分割
+-- Genre 类别
 -- FavoriteCount 收藏该资源的人数
 
 
@@ -39,7 +38,6 @@ create table if not exists metadata (
     RatingCount INT DEFAULT 0,
     FavoriteCount INT DEFAULT 0,
     Genre TEXT,
-    Tag TEXT,
     Grade FLOAT DEFAULT 0.0,
 
     ViewDate VARCHAR(30),
@@ -65,6 +63,7 @@ COMMIT;
 -- PreviewImages 预览图路径
 -- VideoType: 0-Normal 1-Censored 2-UnCensored
 -- ImageUrls: {"actress":[],"smallimage":"","bigimage":"","extraimages":[]}
+-- Series ：系列，对应旧数据的 Series
 -- web_type : 所属网址 => [db,library,bus]
 -- WebUrl : 对应的网址
 -- SubSection: 分段视频位置
@@ -75,6 +74,7 @@ create table metadata_video(
     DataID INTEGER,
     VID VARCHAR(500),
     VideoType INT DEFAULT 0,
+    Series TEXT,
     Director VARCHAR(100),
     Studio TEXT,
     Publisher TEXT,
@@ -82,7 +82,7 @@ create table metadata_video(
     Outline TEXT,
     Duration INT DEFAULT 0,
     SubSection TEXT,
-
+    
     ImageUrls TEXT DEFAULT '',
     
     PreviewImagePath TEXT,

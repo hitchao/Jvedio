@@ -67,7 +67,7 @@ namespace Jvedio.Entity
 
         [TableField(exist: false)]
         public List<string> GenreList { get; set; }
-        public string Tag { get; set; }
+
         public float Grade { get; set; }
 
         private string _Label;

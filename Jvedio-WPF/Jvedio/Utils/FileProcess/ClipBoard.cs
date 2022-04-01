@@ -14,38 +14,38 @@ namespace Jvedio
 {
     public static class ClipBoard
     {
-        public static bool TrySetDataObject(object o, string token, bool showsuccess = true)
+        public static bool TrySetDataObject(object o, bool showsuccess = true)
         {
             try
             {
                 System.Windows.Forms.Clipboard.SetDataObject(o, false, 5, 200);
-                if (showsuccess)
-                    HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.HasCopy, token);
+
+                // todo 
+                //if (showsuccess)
+                //    HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.HasCopy, token);
 
                 return true;
             }
             catch (Exception ex)
             {
-                HandyControl.Controls.Growl.Error(ex.Message, token);
+                //HandyControl.Controls.Growl.Error(ex.Message, token);
                 return false;
             }
         }
 
         //TODO
         //复制文件显示成功，却无法粘贴
-        public static bool TrySetFileDropList(StringCollection filePaths, string token, bool showsuccess = true)
+        public static bool TrySetFileDropList(StringCollection filePaths, Action<string> callBack = null)
         {
             try
             {
                 System.Windows.Clipboard.Clear();
                 System.Windows.Clipboard.SetFileDropList(filePaths);
-                if (showsuccess)
-                    HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.HasCopy, token);
                 return true;
             }
             catch (Exception ex)
             {
-                HandyControl.Controls.Growl.Error(ex.Message, token);
+                callBack.Invoke(ex.Message);
                 return false;
             }
         }

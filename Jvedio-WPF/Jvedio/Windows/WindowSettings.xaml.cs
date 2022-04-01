@@ -168,7 +168,7 @@ namespace Jvedio
 
             if (!containsFunKey | _key == Key.None)
             {
-                HandyControl.Controls.Growl.Error("必须为 功能键 + 数字/字母", GrowlToken);
+                ChaoControls.Style.MessageCard.Error("必须为 功能键 + 数字/字母");
             }
             else
             {
@@ -195,7 +195,7 @@ namespace Jvedio
                         Properties.Settings.Default.HotKey_Enable = true;
                         Properties.Settings.Default.HotKey_String = hotkeyTextBox.Text;
                         Properties.Settings.Default.Save();
-                        HandyControl.Controls.Growl.Success("设置热键成功", GrowlToken);
+                        ChaoControls.Style.MessageCard.Success("设置热键成功");
                     }
 
                 }
@@ -225,7 +225,7 @@ namespace Jvedio
                 }
                 else
                 {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.FilePathIntersection, GrowlToken);
+                    ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
                 }
 
 
@@ -480,7 +480,7 @@ namespace Jvedio
                 if (!TestListen())
                     checkBox.IsChecked = false;
                 else
-                    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.RebootToTakeEffect, GrowlToken);
+                    ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.RebootToTakeEffect);
             }
         }
 
@@ -508,7 +508,7 @@ namespace Jvedio
                 }
                 catch
                 {
-                    HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.NoPermissionToListen} {drives[i]}", GrowlToken);
+                    ChaoControls.Style.MessageCard.Error($"{Jvedio.Language.Resources.NoPermissionToListen} {drives[i]}");
                     return false;
                 }
             }
@@ -542,7 +542,7 @@ namespace Jvedio
 
             GlobalVariable.InitVariable();
             Scan.InitSearchPattern();
-            HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            ChaoControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
         }
 
         private void SetFFMPEGPath(object sender, RoutedEventArgs e)
@@ -593,7 +593,7 @@ namespace Jvedio
                 hint = "再起動後に有効になります";
             else
                 hint = "重启后生效";
-            HandyControl.Controls.Growl.Success(hint, GrowlToken);
+            ChaoControls.Style.MessageCard.Success(hint);
 
 
             //SetLanguageDictionary();
@@ -772,7 +772,7 @@ namespace Jvedio
                     }
                     else
                     {
-                        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.FilePathIntersection, GrowlToken);
+                        ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
                     }
                 }
 
@@ -794,7 +794,7 @@ namespace Jvedio
             }
             else
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_CanNotBeNull, GrowlToken);
+                ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_CanNotBeNull);
             }
 
         }
@@ -859,7 +859,7 @@ namespace Jvedio
             {
                 await Dispatcher.BeginInvoke((Action)delegate
                 {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_TestError, GrowlToken);
+                    ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_TestError);
                 });
                 callback.Invoke(0);
             }
@@ -1003,7 +1003,7 @@ namespace Jvedio
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success)
                 {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.BossKeyError, GrowlToken);
+                    ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.BossKeyError);
                     Properties.Settings.Default.HotKey_Enable = false;
                 }
             }
@@ -1165,7 +1165,7 @@ namespace Jvedio
 
         private void CopyFFmpegUrl(object sender, MouseButtonEventArgs e)
         {
-            FileHelper.TryOpenUrl(ffmpeg_url, GrowlToken);
+            FileHelper.TryOpenUrl(ffmpeg_url);
         }
 
         private void LoadTranslate(object sender, RoutedEventArgs e)
@@ -1259,7 +1259,7 @@ namespace Jvedio
 
         private void OpenDIY(object sender, RoutedEventArgs e)
         {
-            FileHelper.TryOpenUrl(ThemeDIY, GrowlToken);
+            FileHelper.TryOpenUrl(ThemeDIY);
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
@@ -1278,7 +1278,7 @@ namespace Jvedio
             }
             else
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_CanNotBeNull, GrowlToken);
+                ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_CanNotBeNull);
             }
         }
     }

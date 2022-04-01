@@ -67,6 +67,8 @@ namespace Jvedio.Entity
         public long MVID { get; set; }
         public long DataID { get; set; }
         public string VID { get; set; }
+
+        public string Series { get; set; }
         private VideoType _VideoType;
 
         public VideoType VideoType

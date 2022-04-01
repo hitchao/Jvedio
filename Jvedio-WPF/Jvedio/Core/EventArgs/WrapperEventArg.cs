@@ -10,6 +10,7 @@ namespace Jvedio.Core
     public class WrapperEventArg<T> : EventArgs
     {
         public IWrapper<T> Wrapper { get; set; }
+        public string SQL { get; set; }
     }
 
 }

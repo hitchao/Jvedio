@@ -30,6 +30,7 @@ namespace Jvedio.Core.WindowConfig
         public long WindowState { get; set; }
         public long CurrentDBId { get; set; }
         public long SearchSelectedIndex { get; set; }
+        public long ClassifySelectedIndex { get; set; }
         public double SideGridWidth { get; set; }
 
 

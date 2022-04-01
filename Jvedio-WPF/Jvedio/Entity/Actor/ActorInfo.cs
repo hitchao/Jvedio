@@ -1,6 +1,7 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.Core.Attributes;
 using Jvedio.Core.Enums;
+using Jvedio.Utils.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,7 @@ namespace Jvedio.Entity
         public string Nation { get; set; }
         public string BirthPlace { get; set; }
         public string Birthday { get; set; }
+        public int Age { get; set; }
         public string BloodType { get; set; }
         public int Height { get; set; }
         public int Weight { get; set; }
@@ -71,6 +73,25 @@ namespace Jvedio.Entity
             ActorInfo actorInfo = obj as ActorInfo;
             if (actorInfo == null) return false;
             return this.ActorID == actorInfo.ActorID;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ActorID.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return ClassUtils.toString(this);
+        }
+
+        public static void SetImage(ref ActorInfo actorInfo)
+        {
+            //加载图片
+            string smallImagePath = Video.parseImagePath(actorInfo.SmallImagePath);
+            BitmapImage smallimage = ImageProcess.ReadImageFromFile(smallImagePath);
+            if (smallimage == null) smallimage = GlobalVariable.DefaultActorImage;
+            actorInfo.SmallImage = smallimage;
         }
     }
 }

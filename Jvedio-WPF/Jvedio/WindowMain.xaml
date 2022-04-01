@@ -47,6 +47,7 @@
         <local:NotEqualConverter x:Key="NotEqualConverter" />
         <local:MultiLargerConverter x:Key="MultiLargerConverter" />
         <local:MultiUnitConverter x:Key="MultiUnitConverter" />
+        <local:LargerThanVisibilityConverter x:Key="LargerThanVisibilityConverter" />
         <!--<local:LargerThanConverter x:Key="LargerThanConverter" />-->
 
         <!--  ContextMenu  -->
@@ -58,18 +59,28 @@
             HorizontalOffset="-45"
             VerticalOffset="-5">
             <MenuItem Click="OpenSet_MouseDown" Header="{x:Static lang:Resources.Settings}" />
-            <MenuItem Click="OpenTools" Header="{x:Static lang:Resources.Tools}" />
-            <MenuItem Click="OpenDataBase" Header="{x:Static lang:Resources.MovieManagement}" />
-            <MenuItem Click="OpenBatching" Header="{x:Static lang:Resources.BatchProcessing}" />
+            <MenuItem
+                Click="OpenTools"
+                Header="{x:Static lang:Resources.Tools}"
+                IsEnabled="False" />
+            <MenuItem
+                Click="OpenDataBase"
+                Header="{x:Static lang:Resources.MovieManagement}"
+                IsEnabled="False" />
+            <MenuItem
+                Click="OpenBatching"
+                Header="{x:Static lang:Resources.BatchProcessing}"
+                IsEnabled="False" />
             <MenuItem
                 Click="MenuItem_Click"
                 Header="{x:Static lang:Resources.EasyMode}"
                 IsCheckable="True"
-                IsChecked="{Binding EasyMode, Source={x:Static p:Settings.Default}, Mode=TwoWay}" />
+                IsChecked="{Binding EasyMode, Source={x:Static p:Settings.Default}, Mode=TwoWay}"
+                IsEnabled="False" />
             <MenuItem
                 Click="ManageImage"
                 Header="{x:Static lang:Resources.ManageImage}"
-                Visibility="Collapsed" />
+                IsEnabled="False" />
 
             <MenuItem Header="Jvedio">
                 <MenuItem Click="ShowAbout" Header="{x:Static lang:Resources.About}" />
@@ -85,8 +96,8 @@
             </MenuItem>
             <MenuItem
                 Header="{x:Static lang:Resources.ScreenShot}"
-                PreviewMouseLeftButtonUp="ScreenShot"
-                Visibility="Collapsed" />
+                IsEnabled="False"
+                PreviewMouseLeftButtonUp="ScreenShot" />
             <MenuItem Click="CheckUpgrade" Header="{x:Static lang:Resources.Upgrade}" />
 
         </ContextMenu>
@@ -119,7 +130,7 @@
                     Effect="{StaticResource BlueDropShadowEffect}"
                     MouseEnter="ActorBorderMouseEnter"
                     MouseLeave="ActorBorderMouseLeave"
-                    MouseLeftButtonUp="ShowSameActor" />
+                    MouseLeftButtonUp="SelectActor" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -130,14 +141,14 @@
                         Grid.Column="0"
                         Width="125"
                         Height="125"
-                        Margin="0"
+                        Margin="3"
                         VerticalAlignment="Top"
                         AllowDrop="True"
                         Cursor="Hand"
                         DragOver="ActorImage_DragOver"
                         Drop="ActorImage_Drop"
                         FocusVisualStyle="{x:Null}"
-                        MouseLeftButtonUp="ShowSameActor"
+                        MouseLeftButtonUp="SelectActor"
                         Source="{Binding SmallImage}"
                         Stretch="UniformToFill">
                         <Image.ContextMenu>
@@ -152,6 +163,7 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
+
                         </Grid.RowDefinitions>
                         <StackPanel
                             Grid.Row="0"
@@ -180,9 +192,29 @@
                                 Foreground="{DynamicResource ForegroundSearch}"
                                 Opacity="0.7"
                                 ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />
+
+
+
+
+
+
                         </StackPanel>
-                        <StackPanel
+                        <hc:Rate
                             Grid.Row="1"
+                            Margin="5"
+                            VerticalAlignment="Center"
+                            AllowClear="True"
+                            AllowHalf="True"
+                            Background="{DynamicResource Window.Background}"
+                            Count="5"
+                            Foreground="#FF7B3B"
+                            Tag="{Binding ActorID, Mode=OneWay}"
+                            ToolTip="{x:Static lang:Resources.DoubleClickToCancel}"
+                            ValueChanged="Rate_ValueChanged_2"
+                            Visibility="Visible"
+                            Value="{Binding CurrentActorInfo.Grade, Mode=TwoWay}" />
+                        <StackPanel
+                            Grid.Row="2"
                             Margin="0,5"
                             Orientation="Horizontal">
                             <StackPanel.Style>
@@ -235,8 +267,7 @@
                                 <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}" Text="{Binding Cup}" />
 
                             </Border>
-                        </StackPanel>
-                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+
                             <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}">
                                 <TextBox.Text>
                                     <MultiBinding StringFormat="{} {0}  {1}  {2}">
@@ -265,6 +296,7 @@
                         </StackPanel>
 
 
+
                     </Grid>
                     <StackPanel
                         Grid.Column="2"
@@ -288,8 +320,16 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <Button MinWidth="100" Content="编辑" />
-                        <Button MinWidth="100" Content="查看" />
+                        <Button
+                            MinWidth="100"
+                            Click="EditActor"
+                            Content="编辑"
+                            Tag="{Binding ActorID, Mode=OneWay}" />
+                        <Button
+                            MinWidth="100"
+                            Click="ShowSameActor"
+                            Content="查看"
+                            Tag="{Binding ActorID, Mode=OneWay}" />
                     </StackPanel>
 
                 </Grid>
@@ -328,7 +368,6 @@
                             FocusVisualStyle="{x:Null}"
                             MouseEnter="ActorBorderMouseEnter"
                             MouseLeave="ActorBorderMouseLeave"
-                            MouseLeftButtonUp="ShowSameActor"
                             Source="{Binding SmallImage}"
                             Stretch="UniformToFill">
                             <Image.ContextMenu>
@@ -359,8 +398,14 @@
                                     </Style.Triggers>
                                 </Style>
                             </StackPanel.Style>
-                            <Button Content="编辑" />
-                            <Button Content="查看" />
+                            <Button
+                                Click="EditActor"
+                                Content="编辑"
+                                Tag="{Binding ActorID, Mode=OneWay}" />
+                            <Button
+                                Click="ShowSameActor"
+                                Content="查看"
+                                Tag="{Binding ActorID, Mode=OneWay}" />
                         </StackPanel>
                     </Grid>
 
@@ -807,6 +852,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
             <Border
@@ -1043,6 +1089,7 @@
                                         Style="{StaticResource BasePathRadioButton}"
                                         SubText="{Binding AllLabelCount}" />
                                     <chao:PathRadioButton
+                                        Command="{Binding ShowClassifyCommand}"
                                         MainText="{x:Static lang:Resources.AutoClassification}"
                                         Path="M928.687158 816.316632l64.053895 56.966736-53.733053 60.416-55.457684-49.313684a202.105263 202.105263 0 1 1 45.136842-68.042105zM134.736842 134.736842v242.526316h242.526316V134.736842H134.736842zM53.894737 53.894737h404.210526v404.210526H53.894737V53.894737z m80.842105 565.894737v242.526315h242.526316v-242.526315H134.736842z m-80.842105-80.842106h404.210526v404.210527H53.894737V538.947368zM619.789474 134.736842v242.526316h242.526315V134.736842h-242.526315z m-80.842106-80.842105h404.210527v404.210526H538.947368V53.894737z m202.105264 808.421052a121.263158 121.263158 0 1 0 0-242.526315 121.263158 121.263158 0 0 0 0 242.526315z"
                                         Style="{StaticResource BasePathRadioButton}"
@@ -1149,6 +1196,7 @@
                                     Padding="0,5"
                                     FontSize="15"
                                     Header="快速访问"
+                                    IsEnabled="False"
                                     IsExpanded="True"
                                     IsSelected="False"
                                     LineWidth="0"
@@ -1252,10 +1300,10 @@
                                 Width="auto"
                                 Height="30"
                                 Margin="0"
-                                Padding="3,0"
+                                Padding="0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
-                                Background="Transparent"
+                                Background="{DynamicResource Window.Detail.Background}"
                                 BorderBrush="#326CF3"
                                 BorderThickness="0"
                                 Foreground="White"
@@ -1267,7 +1315,8 @@
                                 SearchOnTextChanged="False"
                                 ShowClearButton="True"
                                 ShowSearchButton="True"
-                                Text="{Binding SearchText, Mode=TwoWay}" />
+                                Text="{Binding SearchText, Mode=TwoWay}"
+                                TextPadding="5 0" />
 
                             <Popup
                                 x:Name="searchResultPopup"
@@ -1333,7 +1382,7 @@
                             Style="{StaticResource FlatTabControl}">
                             <TabItem Header="影片">
                                 <!--  影片  -->
-                                <Grid>
+                                <Grid HorizontalAlignment="Stretch">
 
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="auto" />
@@ -1365,13 +1414,7 @@
 
                                             <StackPanel Orientation="Horizontal">
 
-                                                <Button
-                                                    x:Name="BackBtn"
-                                                    Margin="10,0"
-                                                    Click="BackTo"
-                                                    Content="返回"
-                                                    Style="{StaticResource ButtonStyleFill}"
-                                                    Visibility="Collapsed" />
+
 
 
 
@@ -1626,12 +1669,14 @@
                                                     VerticalAlignment="Center"
                                                     Click="LoadFromPage"
                                                     Content="{x:Static lang:Resources.LoadFromNet}"
+                                                    IsEnabled="False"
                                                     Style="{StaticResource FlatButton}" />
                                                 <Button
                                                     HorizontalAlignment="Stretch"
                                                     VerticalAlignment="Center"
                                                     Command="{Binding AddNewMovie}"
                                                     Content="{x:Static lang:Resources.FastImport}"
+                                                    IsEnabled="False"
                                                     Style="{StaticResource ButtonPrimary}" />
 
                                                 <!--<chao:Switch
@@ -1657,7 +1702,7 @@
                                                     VerticalAlignment="Center"
                                                     Background="Transparent"
                                                     CornerRadius="5">
-                                                    <StackPanel Orientation="Horizontal">
+                                                    <StackPanel IsEnabled="False" Orientation="Horizontal">
 
                                                         <Border
                                                             MouseLeftButtonUp="ShowDownloadPopup"
@@ -2296,7 +2341,7 @@
                                             x:Name="ActorInfoGrid"
                                             Grid.Column="0"
                                             Margin="10"
-                                            Visibility="{Binding ActorInfoGrid, FallbackValue=Collapsed}">
+                                            Visibility="{Binding ShowActorGrid, FallbackValue=Visible}">
                                             <Border
                                                 Margin="5"
                                                 Background="{DynamicResource BackgroundTitle}"
@@ -2324,6 +2369,7 @@
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="auto" />
                                                     <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
 
@@ -2337,7 +2383,7 @@
                                                         AllowDrop="True"
                                                         DragOver="Image_DragOver"
                                                         Drop="Image_Drop"
-                                                        Source="{Binding Actress.smallimage}">
+                                                        Source="{Binding CurrentActorInfo.SmallImage}">
                                                         <Image.ContextMenu>
                                                             <ContextMenu>
                                                                 <MenuItem Click="OpenActorPath" Header="{x:Static lang:Resources.OpenPath}" />
@@ -2358,14 +2404,18 @@
                                                         Foreground="{DynamicResource ForegroundSearch}"
                                                         IsReadOnly="True"
                                                         Style="{StaticResource ActorTextBox}"
-                                                        Text="{Binding Actress.name, Mode=OneWay}"
+                                                        Text="{Binding CurrentActorInfo.ActorName, Mode=OneWay}"
                                                         TextAlignment="Center" />
 
 
                                                 </StackPanel>
 
 
-                                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    IsEnabled="False"
+                                                    Orientation="Horizontal">
                                                     <Border MouseLeftButtonUp="EditActress" Style="{StaticResource ActorInfoBorderStyle}">
                                                         <Image
                                                             Height="15"
@@ -2381,7 +2431,7 @@
                                                     <Border
                                                         PreviewMouseLeftButtonUp="LoadActorOtherMovie"
                                                         Style="{StaticResource ActorInfoBorderStyle}"
-                                                        Tag="{Binding Actress.name, Mode=OneWay}"
+                                                        Tag="{Binding CurrentActorInfo.ActorName, Mode=OneWay}"
                                                         ToolTip="{x:Static lang:Resources.LoadActorOtherMovie}"
                                                         Visibility="Visible">
                                                         <Image
@@ -2389,79 +2439,78 @@
                                                             Margin="5"
                                                             Source="pack://application:,,,/Resources/Picture/其他.png" />
                                                     </Border>
-                                                    <hc:Rate
-                                                        Margin="10,0"
-                                                        VerticalAlignment="Center"
-                                                        AllowClear="True"
-                                                        Background="{DynamicResource BackgroundSide}"
-                                                        Count="1"
-                                                        Foreground="#FF7B3B"
-                                                        ToolTip="{x:Static lang:Resources.DoubleClickToCancel}"
-                                                        ValueChanged="Rate_ValueChanged_1"
-                                                        Visibility="Visible"
-                                                        Value="{Binding Actress.like, Mode=TwoWay}" />
-
-
 
                                                 </StackPanel>
+
+                                                <hc:Rate
+                                                    Grid.Row="2"
+                                                    Margin="5"
+                                                    VerticalAlignment="Center"
+                                                    AllowClear="True"
+                                                    AllowHalf="True"
+                                                    Background="{DynamicResource BackgroundSide}"
+                                                    Count="5"
+                                                    Foreground="#FF7B3B"
+                                                    ToolTip="{x:Static lang:Resources.DoubleClickToCancel}"
+                                                    ValueChanged="Rate_ValueChanged_1"
+                                                    Visibility="Visible"
+                                                    Value="{Binding CurrentActorInfo.Grade, Mode=TwoWay}" />
 
 
 
                                                 <ScrollViewer
-                                                    Grid.Row="2"
+                                                    Grid.Row="3"
                                                     Margin="0,5"
                                                     VerticalScrollBarVisibility="Visible">
                                                     <StackPanel x:Name="ActorInfoStackPanel">
-                                                        <TextBox Text="{Binding Actress.id}" Visibility="Collapsed" />
-
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Birthday}" />
                                                             <TextBox
                                                                 Style="{StaticResource ActorTextBox}"
-                                                                Text="{Binding Actress.birthday, Mode=TwoWay}"
+                                                                Text="{Binding CurrentActorInfo.Birthday, Mode=TwoWay}"
                                                                 ToolTip="【0000-00-00】" />
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Age}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.age, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Age, Mode=TwoWay}" />
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Birthplace}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.birthplace, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.BirthPlace, Mode=TwoWay}" />
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Height}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.height, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Cup}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.cup, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}" />
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Chest}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.chest, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Chest, Mode=TwoWay}" />
                                                         </StackPanel>
 
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Waist}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.waist, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Waist, Mode=TwoWay}" />
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Hipline}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.hipline, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Hipline, Mode=TwoWay}" />
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{x:Static lang:Resources.Actress_Hobby}" />
-                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding Actress.hobby, Mode=TwoWay}" />
+                                                            <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}" />
                                                         </StackPanel>
 
                                                     </StackPanel>
@@ -2481,20 +2530,24 @@
                                             PreviewKeyUp="Grid_PreviewKeyUp">
                                             <Grid.ContextMenu>
                                                 <ContextMenu IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}">
-                                                    <MenuItem Click="RefreshCurrentPage" Header="{x:Static lang:Resources.Refresh}" />
+                                                    <MenuItem
+                                                        Click="RefreshCurrentPage"
+                                                        Header="{x:Static lang:Resources.Refresh}"
+                                                        IsEnabled="False" />
                                                     <MenuItem Click="SelectAll" Header="选中/取消当前页" />
                                                     <MenuItem
                                                         Command="{Binding FlipOverCommand}"
                                                         Header="{x:Static lang:Resources.ShowExists}"
                                                         IsCheckable="True"
-                                                        IsChecked="{Binding OnlyShowPlay, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                                        IsChecked="{Binding OnlyShowPlay, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                                        IsEnabled="False" />
                                                     <MenuItem
                                                         Command="{Binding FlipOverCommand}"
                                                         Header="{x:Static lang:Resources.ShowSubSection}"
                                                         IsCheckable="True"
-                                                        IsChecked="{Binding OnlyShowSubSection, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                                        IsChecked="{Binding OnlyShowSubSection, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                                        IsEnabled="False" />
 
-                                                    <MenuItem Click="ShowRestMovie" Header="{x:Static lang:Resources.ShowRest}" />
                                                 </ContextMenu>
                                             </Grid.ContextMenu>
 
@@ -2593,7 +2646,7 @@
                                                                             Visibility="{Binding ShowImageMode, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=2, Source={x:Static p:Settings.Default}, Mode=OneWay}">-->
                                                                         <local:GifImage
                                                                             x:Name="GifImage"
-                                                                            Margin="0"
+                                                                            Margin="2"
                                                                             HorizontalAlignment="Center"
                                                                             VerticalAlignment="Center"
                                                                             BigImageSource="{Binding BigImage, Mode=OneWay}"
@@ -2611,14 +2664,20 @@
                                                                                     ContextMenuOpening="ContextMenu_ContextMenuOpening"
                                                                                     Opacity="0.9"
                                                                                     PreviewKeyUp="ContextMenu_PreviewKeyUp">
-                                                                                    <MenuItem Click="DownLoadSelectMovie" Header="{x:Static lang:Resources.Menu_SyncInfo}" />
-                                                                                    <MenuItem Header="{x:Static lang:Resources.Menu_SyncExtra}" Visibility="Visible">
+                                                                                    <MenuItem
+                                                                                        Click="DownLoadSelectMovie"
+                                                                                        Header="{x:Static lang:Resources.Menu_SyncInfo}"
+                                                                                        IsEnabled="False" />
+                                                                                    <MenuItem
+                                                                                        Header="{x:Static lang:Resources.Menu_SyncExtra}"
+                                                                                        IsEnabled="False"
+                                                                                        Visibility="Visible">
                                                                                         <MenuItem Click="DownLoadWithUrl" Header="{x:Static lang:Resources.Menu_CustomUrl}" />
                                                                                         <MenuItem Click="ForceToDownLoad" Header="{x:Static lang:Resources.Menu_EnforceSync}" />
 
                                                                                     </MenuItem>
                                                                                     <MenuItem Click="EditInfo" Header="{x:Static lang:Resources.Menu_EditInfo}" />
-                                                                                    <MenuItem Header="{x:Static lang:Resources.Menu_Advance}">
+                                                                                    <MenuItem Header="{x:Static lang:Resources.Menu_Advance}" IsEnabled="False">
                                                                                         <MenuItem Click="TranslateMovie" Header="{x:Static lang:Resources.Menu_Translate}" />
                                                                                         <MenuItem Click="GenerateSmallImage" Header="{x:Static lang:Resources.Menu_GenerateThumbnail}" />
                                                                                         <MenuItem Click="GenerateActor" Header="{x:Static lang:Resources.Menu_GenerateActressImage}" />
@@ -2627,12 +2686,12 @@
                                                                                         <MenuItem Click="RenameFile" Header="{x:Static lang:Resources.Menu_RenameFile}" />
                                                                                         <MenuItem Click="ReMoveZero" Header="{x:Static lang:Resources.Menu_RemoveZero}" />
                                                                                     </MenuItem>
-                                                                                    <MenuItem
-                                                                                        Click="RemoveFromList"
-                                                                                        Header="{x:Static lang:Resources.Menu_RemoveFromList}"
-                                                                                        Visibility="Collapsed" />
 
-                                                                                    <MenuItem Click="ShowLabelManagement" Header="{x:Static lang:Resources.Menu_LabelManagement}" />
+
+                                                                                    <MenuItem
+                                                                                        Click="ShowLabelManagement"
+                                                                                        Header="{x:Static lang:Resources.Menu_LabelManagement}"
+                                                                                        IsEnabled="False" />
                                                                                     <MenuItem Header="{x:Static lang:Resources.OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                                                         <MenuItem
                                                                                             Command="cmd:File.OpenSelectFile"
@@ -2964,8 +3023,14 @@
                                         <TextBlock
                                             Grid.Column="1"
                                             VerticalAlignment="Center"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding CurrentCount}" />
+                                            Style="{StaticResource BaseTextBlock}">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{} {0}/{1}">
+                                                    <Binding Path="CurrentCount" />
+                                                    <Binding Path="TotalCount" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
 
 
                                         <!--  进度条  -->
@@ -3005,18 +3070,10 @@
                                         <chao:Pagination
                                             Name="pagination"
                                             Grid.Column="2"
-                                            Background="{DynamicResource Window.Background}"
-                                            BorderBrush="{DynamicResource Window.Title.Foreground}"
-                                            CurrentPage="1"
-                                            CurrentPageBackground="#409EFF"
+                                            CurrentPage="{Binding CurrentPage, Mode=OneWay}"
                                             CurrentPageChange="Pagination_CurrentPageChange"
-                                            Foreground="{DynamicResource Global.Foreground}"
-                                            PageBackground="{DynamicResource Window.Side.Background}"
-                                            PageCount="5"
-                                            PageHoverBackground="{DynamicResource Window.Title.Hover.Background}"
-                                            PageSize="40"
                                             PageSizeChange="Pagination_PageSizeChange"
-                                            PageSizes="[10,20,40,50,100,200]"
+                                            Style="{StaticResource NormalPagination}"
                                             Total="{Binding TotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <!--<StackPanel
                                         Grid.Column="3"
@@ -3183,6 +3240,8 @@
                                                             <MenuItem Header="{x:Static lang:Resources.Actress_Waist}" IsCheckable="True" />
                                                             <MenuItem Header="{x:Static lang:Resources.Actress_Hipline}" IsCheckable="True" />
                                                             <MenuItem Header="打分" IsCheckable="True" />
+                                                            <MenuItem Header="{x:Static lang:Resources.Actress_Age}" IsCheckable="True" />
+
                                                         </ContextMenu>
                                                     </Border.ContextMenu>
                                                     <Viewbox Width="auto" Height="18">
@@ -3275,24 +3334,22 @@
                                         <TextBlock
                                             Grid.Column="1"
                                             VerticalAlignment="Center"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding CurrentActorCount}" />
+                                            Style="{StaticResource BaseTextBlock}">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{} {0}/{1}">
+                                                    <Binding Path="CurrentActorCount" />
+                                                    <Binding Path="ActorTotalCount" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                         <!--  页码  -->
                                         <chao:Pagination
                                             Name="actorPagination"
                                             Grid.Column="2"
-                                            Background="{DynamicResource Window.Background}"
-                                            BorderBrush="{DynamicResource Window.Title.Foreground}"
                                             CurrentPage="1"
-                                            CurrentPageBackground="#409EFF"
                                             CurrentPageChange="CurrentActorPageChange"
-                                            Foreground="{DynamicResource Global.Foreground}"
-                                            PageBackground="{DynamicResource Window.Side.Background}"
-                                            PageCount="5"
-                                            PageHoverBackground="{DynamicResource Window.Title.Hover.Background}"
-                                            PageSize="40"
                                             PageSizeChange="ActorPageSizeChange"
-                                            PageSizes="[10,20,40,50,100,200]"
+                                            Style="{StaticResource NormalPagination}"
                                             Total="{Binding ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
 
@@ -3301,8 +3358,9 @@
                             </TabItem>
 
                             <TabItem Header="标签（清单）">
-                                <Grid Margin="10">
+                                <Grid Margin="10" HorizontalAlignment="Stretch">
                                     <ItemsControl
+                                        Name="LabelListItemsControl"
                                         Margin="5"
                                         Background="Transparent"
                                         ItemsSource="{Binding LabelList}"
@@ -3314,7 +3372,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Style="{StaticResource GenreBorderStyle}">
+                                                <Border Style="{StaticResource RoundBorderStyle}">
                                                     <TextBlock
                                                         MouseUp="Label_MouseDown"
                                                         Style="{StaticResource GenreTextBlock}"
@@ -3330,21 +3388,12 @@
 
                             </TabItem>
                             <TabItem Header="其他分类">
-                                <!--  演员、类别、标签  -->
                                 <Grid
-                                    Grid.Column="1"
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     Background="Transparent"
                                     PreviewKeyDown="ActorGrid_PreviewKeyDown">
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="auto" />
-                                    </Grid.RowDefinitions>
-
 
                                     <!--  等待  -->
                                     <Grid
@@ -3399,161 +3448,29 @@
 
                                     </Grid>
 
-                                    <!--  工具栏  -->
-                                    <Grid
-                                        Grid.Row="0"
-                                        Panel.ZIndex="4"
-                                        Background="Transparent"
-                                        IsEnabled="{Binding IsLoadingClassify, Converter={StaticResource OppositeBooleanConverter}}"
-                                        Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVis}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
 
-                                        <StackPanel Orientation="Horizontal">
-
-                                            <!--<Border Background="Transparent" CornerRadius="5">
-                                            <StackPanel
-                                                x:Name="ClassifyVedioTypeStackPanel"
-                                                Margin="5"
-                                                Orientation="Horizontal">
-                                                <RadioButton
-                                                    Content="{x:Static lang:Resources.All}"
-                                                    FocusVisualStyle="{x:Null}"
-                                                    GroupName="VedioTypeRadioButton"
-                                                    IsChecked="True"
-                                                    Style="{StaticResource FlatRadioButton}" />
-                                                <RadioButton
-                                                    Content="{x:Static lang:Resources.Uncensored}"
-                                                    FocusVisualStyle="{x:Null}"
-                                                    GroupName="VedioTypeRadioButton"
-                                                    Style="{StaticResource FlatRadioButton}" />
-                                                <RadioButton
-                                                    Content="{x:Static lang:Resources.Censored}"
-                                                    FocusVisualStyle="{x:Null}"
-                                                    GroupName="VedioTypeRadioButton"
-                                                    Style="{StaticResource FlatRadioButton}" />
-                                                <RadioButton
-                                                    Content="{x:Static lang:Resources.Europe}"
-                                                    FocusVisualStyle="{x:Null}"
-                                                    GroupName="VedioTypeRadioButton"
-                                                    Style="{StaticResource FlatRadioButton}" />
-                                            </StackPanel>
-                                        </Border>-->
-
-                                            <StackPanel
-                                                Margin="5,0"
-                                                Orientation="Horizontal"
-                                                Visibility="{Binding ShowActorTools, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                <Border
-                                                    MouseLeftButtonUp="ShowDownloadActorMenu"
-                                                    Style="{StaticResource ToolsBarBorderStyle}"
-                                                    ToolTip="{x:Static lang:Resources.SyncInfo}">
-                                                    <Image
-                                                        Width="20"
-                                                        Height="20"
-                                                        Source="{Binding Themes, Mode=OneWay, ConverterParameter=download, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                                </Border>
-                                                <CheckBox
-                                                    Height="30"
-                                                    Margin="5,0"
-                                                    HorizontalAlignment="Left"
-                                                    HorizontalContentAlignment="Center"
-                                                    VerticalContentAlignment="Center"
-                                                    Click="ActorCheckBox_Click"
-                                                    Content="{x:Static lang:Resources.MultiSelect}"
-                                                    Foreground="{DynamicResource ForegroundGlobal}"
-                                                    IsChecked="{Binding ActorEditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                                <CheckBox
-                                                    x:Name="LoveCheckBox"
-                                                    Checked="ShowLoveActors"
-                                                    Content="{x:Static lang:Resources.ShowFavoriteActor}"
-                                                    IsChecked="False"
-                                                    Unchecked="CheckBox_Unchecked" />
-
-                                                <Popup
-                                                    x:Name="DownloadActorPopup"
-                                                    AllowsTransparency="True"
-                                                    HorizontalOffset="-50"
-                                                    IsOpen="False"
-                                                    Placement="Mouse"
-                                                    PopupAnimation="Fade"
-                                                    StaysOpen="False">
-                                                    <Grid Margin="5">
-                                                        <Border
-                                                            Margin="5"
-                                                            Background="{DynamicResource BackgroundMenu}"
-                                                            CornerRadius="5"
-                                                            Effect="{StaticResource PopupDropShadowEffect}" />
-                                                        <StackPanel
-                                                            Height="auto"
-                                                            MinWidth="100"
-                                                            Margin="15"
-                                                            Panel.ZIndex="7"
-                                                            Background="Transparent"
-                                                            Orientation="Vertical">
-                                                            <Button
-                                                                Click="StartDownLoadActress"
-                                                                Content="{x:Static lang:Resources.SyncInfo}"
-                                                                Style="{StaticResource MenuButton}" />
-                                                            <Button
-                                                                Click="StopDownLoadActress"
-                                                                Content="{x:Static lang:Resources.StopSync}"
-                                                                Style="{StaticResource MenuButton}" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Popup>
-
-                                            </StackPanel>
-
-                                            <Border
-                                                MouseLeftButtonUp="RefreshClassify"
-                                                Style="{StaticResource ToolsBarBorderStyle}"
-                                                ToolTip="{x:Static lang:Resources.Refresh}"
-                                                Visibility="{Binding ShowActorTools, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
-                                                <Image
-                                                    Width="20"
-                                                    Height="20"
-                                                    Source="/Resources/menuitem/refresh.png" />
-                                            </Border>
-
-
-                                            <!--<hc:SearchBar
-                                            x:Name="ActorSearchBar"
-                                            Width="200"
-                                            Margin="5,5,5,5"
-                                            Padding="5"
-                                            hc:InfoElement.Placeholder="{x:Static lang:Resources.Search}"
-                                            hc:InfoElement.Title=""
-                                            hc:InfoElement.TitleWidth="140"
-                                            Background="Transparent"
-                                            BorderBrush="{DynamicResource ForegroundGlobal}"
-                                            BorderThickness="2"
-                                            CaretBrush="{DynamicResource ForegroundSearch}"
-                                            ContextMenu="{StaticResource TextBoxContextMenu}"
-                                            Focusable="True"
-                                            Foreground="{DynamicResource ForegroundSearch}"
-                                            MouseEnter="SearchBar_MouseEnter_1"
-                                            MouseLeave="SearchBar_MouseLeave_1"
-                                            SearchStarted="SearchBar_SearchStarted_1"
-                                            ShowClearButton="True"
-                                            Style="{StaticResource SearchBarPlus}"
-                                            TextChanged="SearchBar_TextChanged_1" />-->
-
-
-                                        </StackPanel>
-                                    </Grid>
-
-
-
-
-
+                                    <Border
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Panel.ZIndex="10"
+                                        MouseLeftButtonUp="RefreshClassify"
+                                        Style="{StaticResource ToolsBarBorderStyle}"
+                                        ToolTip="{x:Static lang:Resources.Refresh}"
+                                        Visibility="{Binding ShowActorTools, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                                        <Image
+                                            Width="20"
+                                            Height="20"
+                                            Source="/Resources/menuitem/refresh.png" />
+                                    </Border>
 
                                     <TabControl
-                                        x:Name="ActorTabControl"
                                         Grid.Row="1"
                                         Margin="5"
                                         Background="Transparent"
                                         BorderBrush="{DynamicResource BackgroundSearch}"
                                         IsEnabled="{Binding IsLoadingClassify, Converter={StaticResource OppositeBooleanConverter}}"
-                                        SelectionChanged="TabControl_SelectionChanged"
+                                        SelectedIndex="{Binding ClassifySelectedIndex, Mode=TwoWay}"
+                                        SelectionChanged="ClassifyTabControl_SelectionChanged"
                                         Style="{DynamicResource BaseHcTabControlStyle}"
                                         TabStripPlacement="Top">
 
@@ -3564,193 +3481,31 @@
                                             FontSize="15"
                                             Header="{x:Static lang:Resources.Genre}">
                                             <Grid Margin="10">
-                                                <ItemsControl ItemsSource="{Binding GenreList}">
+                                                <ItemsControl
+                                                    Margin="5"
+                                                    Background="Transparent"
+                                                    ItemsSource="{Binding GenreList}"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Name="LabelWrapPanel" Orientation="Horizontal" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <StackPanel>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Theme}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding theme}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Role}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding role}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Clothing}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding clothing}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Body}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding body}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Behaviour}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding behavior}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Play}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding playmethod}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Scene}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding scene}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <TextBlock Style="{StaticResource CenterTextBlock}" Text="{x:Static lang:Resources.Other}" />
-                                                                <ItemsControl
-                                                                    Margin="5,5,5,5"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding other}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border
-                                                                                Width="auto"
-                                                                                Height="50"
-                                                                                Style="{StaticResource GenreBorderStyle}">
-                                                                                <TextBlock
-                                                                                    MouseUp="Genre_MouseDown"
-                                                                                    Style="{StaticResource GenreTextBlock}"
-                                                                                    Text="{Binding}" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                            </StackPanel>
+
+                                                            <Border Style="{StaticResource RoundBorderStyle}">
+                                                                <TextBlock
+                                                                    MouseUp="ShowSameString"
+                                                                    Style="{StaticResource GenreTextBlock}"
+                                                                    Text="{Binding}" />
+                                                            </Border>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
+
+
+
 
                                             </Grid>
 
@@ -3766,7 +3521,7 @@
                                                 <ItemsControl
                                                     Margin="5"
                                                     Background="Transparent"
-                                                    ItemsSource="{Binding TagList}"
+                                                    ItemsSource="{Binding SeriesList}"
                                                     ScrollViewer.VerticalScrollBarVisibility="Auto">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
@@ -3776,9 +3531,9 @@
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
 
-                                                            <Border Style="{StaticResource GenreBorderStyle}">
+                                                            <Border Style="{StaticResource RoundBorderStyle}">
                                                                 <TextBlock
-                                                                    MouseUp="Label_MouseDown"
+                                                                    MouseUp="ShowSameString"
                                                                     Style="{StaticResource GenreTextBlock}"
                                                                     Text="{Binding}" />
                                                             </Border>
@@ -3810,9 +3565,9 @@
                                                     </ItemsControl.ItemsPanel>
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Border Style="{StaticResource GenreBorderStyle}">
+                                                            <Border Style="{StaticResource RoundBorderStyle}">
                                                                 <TextBlock
-                                                                    MouseUp="Label_MouseDown"
+                                                                    MouseUp="ShowSameString"
                                                                     Style="{StaticResource GenreTextBlock}"
                                                                     Text="{Binding}" />
                                                             </Border>
@@ -3846,9 +3601,9 @@
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
 
-                                                            <Border Style="{StaticResource GenreBorderStyle}">
+                                                            <Border Style="{StaticResource RoundBorderStyle}">
                                                                 <TextBlock
-                                                                    MouseUp="Label_MouseDown"
+                                                                    MouseUp="ShowSameString"
                                                                     Style="{StaticResource GenreTextBlock}"
                                                                     Text="{Binding}" />
                                                             </Border>
@@ -3863,155 +3618,6 @@
 
                                         </TabItem>
                                     </TabControl>
-
-
-                                    <!--  底部  -->
-                                    <Grid Grid.Row="2" Visibility="{Binding ShowActorTools, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-
-
-
-                                        <!--  进度条  -->
-
-                                        <Grid Grid.Column="0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <ProgressBar
-                                                x:Name="ActorProgressBar"
-                                                Grid.Column="0"
-                                                Height="15"
-                                                MinWidth="100"
-                                                Margin="20,0,5,0"
-                                                VerticalAlignment="Center"
-                                                Background="{DynamicResource BackgroundSide}"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{StaticResource ProgressBarSuccessStripe}"
-                                                ValueChanged="ActorProgressBar_ValueChanged"
-                                                Visibility="{Binding ActorProgressBarVisibility, FallbackValue=Collapsed}"
-                                                Value="{Binding ActorProgressBarValue, FallbackValue=0}" />
-                                            <TextBlock
-                                                Grid.Column="1"
-                                                Margin="5,0"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource BaseTextBlock}"
-                                                Text="{Binding ActorProgressBarValue, StringFormat={}{0}%, FallbackValue=20%}"
-                                                Visibility="{Binding ElementName=ActorProgressBar, Path=Visibility}" />
-                                        </Grid>
-
-
-                                        <!--  当前页信息  -->
-                                        <StackPanel
-                                            Grid.Column="1"
-                                            HorizontalAlignment="Right"
-                                            Orientation="Horizontal"
-                                            Visibility="{Binding ShowActorTools, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <Image
-                                                Height="27"
-                                                Margin="5"
-                                                HorizontalAlignment="Left"
-                                                Source="{Binding Themes, Mode=OneWay, ConverterParameter=info, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                            <TextBlock
-                                                Width="auto"
-                                                Height="auto"
-                                                Margin="10,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Foreground="{DynamicResource ForegroundSearch}"
-                                                TextAlignment="Center">
-                                                <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0}/{1} ">
-                                                        <Binding Path="ActorCurrentCount" />
-                                                        <Binding Path="ActorTotalCount" />
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
-                                        </StackPanel>
-
-                                        <!--  页码  -->
-                                        <!--<StackPanel
-                                        Grid.Column="2"
-                                        Width="auto"
-                                        Height="40"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Background="Transparent"
-                                        IsEnabled="{Binding IsLoadingClassify, Converter={StaticResource OppositeBooleanConverter}, FallbackValue=False}"
-                                        Orientation="Horizontal">
-
-                                        <Border
-                                            Margin="5,0"
-                                            Padding="3"
-                                            VerticalAlignment="Center"
-                                            BorderBrush="{DynamicResource BackgroundSide}"
-                                            BorderThickness="0"
-                                            CornerRadius="3"
-                                            Cursor="Hand"
-                                            PreviewMouseLeftButtonDown="PreviousActorPage"
-                                            Style="{StaticResource BorderStyle}"
-                                            ToolTip="{x:Static lang:Resources.PreviewPage}">
-                                            <Image
-                                                Width="20"
-                                                Height="20"
-                                                Source="{Binding Themes, Mode=OneWay, ConverterParameter=left, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                        </Border>
-                                        <StackPanel
-                                            Width="auto"
-                                            Height="40"
-                                            Orientation="Horizontal">
-                                            <TextBox
-                                                Margin="10,1,10,1"
-                                                Padding="10,0"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Center"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                ContextMenu="{StaticResource TextBoxContextMenu}"
-                                                GotFocus="TextBox_GotFocus"
-                                                PreviewKeyDown="GoToActorPage"
-                                                Style="{StaticResource BaseTextBox}"
-                                                Text="{Binding CurrentActorPage}" />
-                                            <TextBlock
-                                                Margin="10,1,10,1"
-                                                Padding="10,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                FontSize="15"
-                                                Foreground="{DynamicResource ForegroundSearch}"
-                                                Text="{Binding TotalActorPage, StringFormat=/\{0\}}" />
-                                        </StackPanel>
-
-                                        <Border
-                                            Margin="5,0"
-                                            Padding="3"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            BorderBrush="{DynamicResource BackgroundSide}"
-                                            BorderThickness="0"
-                                            CornerRadius="3"
-                                            Cursor="Hand"
-                                            PreviewMouseLeftButtonDown="NextActorPage"
-                                            Style="{StaticResource BorderStyle}"
-                                            ToolTip="{x:Static lang:Resources.NextPage}">
-                                            <Image
-                                                Width="20"
-                                                Height="20"
-                                                Source="{Binding Themes, Mode=OneWay, ConverterParameter=right, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}"
-                                                Visibility="Visible" />
-                                        </Border>
-
-                                    </StackPanel>-->
-                                    </Grid>
-
-
-
-
                                 </Grid>
 
 
@@ -4290,6 +3896,158 @@
 
 
                 </Grid>
+
+
+            </Grid>
+            <Grid
+                Grid.Row="2"
+                Height="30"
+                Background="{DynamicResource Window.Title.Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBox
+                        Margin="10,0"
+                        Padding="0"
+                        VerticalContentAlignment="Center"
+                        FontSize="12"
+                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                        Text="就绪" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Column="2"
+                    Margin="5,0"
+                    Orientation="Horizontal">
+                    <chao:PathMsg
+                        Name="downloadPathMsg"
+                        MsgCount="100"
+                        Path="M942.545455 676.584727a34.909091 34.909091 0 0 1 34.90909 34.909091v139.636364c0 70.562909-57.437091 128-128 128h-674.90909a128.139636 128.139636 0 0 1-128-128v-139.636364a34.909091 34.909091 0 1 1 69.818181 0v139.636364c0 32.046545 26.088727 58.181818 58.181819 58.181818h674.90909c32.093091 0 58.181818-26.135273 58.181819-58.181818v-139.636364a34.909091 34.909091 0 0 1 34.909091-34.909091z m-455.214546 129.396364l-164.584727-164.561455a34.909091 34.909091 0 1 1 49.361454-49.361454l104.983273 104.96V81.454545a34.909091 34.909091 0 1 1 69.818182 0v615.563637l104.96-104.96a34.909091 34.909091 0 1 1 49.361454 49.361454l-164.538181 164.561455a34.792727 34.792727 0 0 1-24.669091 10.216727c-8.96 0-17.873455-3.397818-24.715637-10.216727z"
+                        Style="{StaticResource NormalPathMsg}" />
+                    <chao:PathMsg
+                        Name="msgPathMsg"
+                        MouseLeftButtonUp="ShowMessage"
+                        MsgCount="{Binding Message.Count}"
+                        Path="M864 64H160C107.072 64 64 107.072 64 160v608c0 52.928 43.072 96 96 96h61.92v123.232L443.84 864H864c52.928 0 96-43.072 96-96V160c0-52.928-43.072-96-96-96z m32 704a32 32 0 0 1-32 32H443.84c-10.912 0-21.664 2.816-31.072 8.064l-126.88 70.4V864c0-35.296-28.704-64-64-64H160c-17.632 0-32-14.336-32-32V160c0-17.632 14.368-32 32-32h704c17.664 0 32 14.368 32 32v608z M640 520H256a32 32 0 1 0 0 64h384a32 32 0 1 0 0-64zM768 296H256a32 32 0 0 0 0 64h512a32 32 0 1 0 0-64z"
+                        Style="{StaticResource NormalPathMsg}" />
+                </StackPanel>
+
+
+                <Popup
+                    x:Name="msgPopup"
+                    Width="350"
+                    MaxHeight="600"
+                    AllowsTransparency="True"
+                    HorizontalOffset="-300"
+                    Placement="Top"
+                    PlacementTarget="{Binding ElementName=msgPathMsg}"
+                    PopupAnimation="Fade"
+                    StaysOpen="True"
+                    VerticalOffset="0">
+                    <Grid Margin="5">
+                        <Border
+                            Margin="5"
+                            Background="{DynamicResource Menu.Background}"
+                            CornerRadius="0 0 5 5"
+                            Effect="{StaticResource PopupDropShadowEffect}" />
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid
+                                Grid.Row="0"
+                                Height="35"
+                                Background="{DynamicResource Window.Title.Background}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Margin="10,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="最近消息" />
+
+                                <Border
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    MouseLeftButtonUp="ClearMsg"
+                                    Style="{StaticResource ToolsBarBorderStyle}">
+
+                                    <Viewbox Width="15" Height="15">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M187.118702 146.498562l771.355932 0.002047v60.796667l-771.355932-0.002046v-60.796668z m0 222.286666l771.355932 0.002046v60.796668l-771.355932-0.002047v-60.796667z m0 224.186945l406.576948 0.001023v60.796668l-406.576948-0.001023v-60.796668z m0 222.286666l406.576948 0.001023v60.796668l-406.576948-0.001024v-60.796667zM65.525366 146.497539h60.796668v60.796668H65.525366v-60.796668z m0 222.287689h60.796668v60.796667H65.525366v-60.796667z m0 224.186945h60.796668v60.796668H65.525366v-60.796668z m0 222.286666h60.796668v60.796667H65.525366v-60.796667z m873.494171 4.916986l-85.97614-85.97614 85.97614-85.976141-57.326637-57.326636-85.97614 85.97614-85.97614-85.97614-57.325613 57.325613 85.97614 85.97614-85.97614 85.97614 57.325613 57.326637 85.97614-85.97614 85.977164 85.97614"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+                                <Border
+                                    Grid.Column="2"
+                                    Margin="5,0"
+                                    MouseLeftButtonUp="HideMsgPopup"
+                                    Style="{StaticResource ToolsBarBorderStyle}">
+
+                                    <Viewbox
+                                        Width="15"
+                                        Height="15"
+                                        RenderTransformOrigin="0.5,0.5">
+                                        <Viewbox.RenderTransform>
+                                            <RotateTransform x:Name="rotateTransform" Angle="90" />
+                                        </Viewbox.RenderTransform>
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M312.889 995.556c-17.067 0-28.445-5.69-39.822-17.067-22.756-22.756-17.067-56.889 5.689-79.645L642.844 568.89c11.378-11.378 17.067-22.756 17.067-34.133 0-11.378-5.689-22.756-17.067-34.134L273.067 187.733c-22.756-22.755-28.445-56.889-5.69-79.644 22.756-22.756 56.89-28.445 79.645-5.689l364.09 312.889C745.243 443.733 768 489.244 768 534.756s-17.067 85.333-51.2 119.466L352.711 984.178c-11.378 5.689-28.444 11.378-39.822 11.378z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+
+
+                            </Grid>
+
+                            <ScrollViewer
+                                Grid.Row="1"
+                                Margin="10"
+                                HorizontalScrollBarVisibility="Hidden"
+                                VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Message}">
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <chao:MessageCard
+                                                Width="280"
+                                                Height="80"
+                                                Margin="0,10"
+                                                Foreground="{DynamicResource Global.Foreground}"
+                                                Message="{Binding Text}"
+                                                MessageType="{Binding Type}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                </ItemsControl>
+                            </ScrollViewer>
+
+
+
+
+
+
+                        </Grid>
+                    </Grid>
+                </Popup>
+
 
 
             </Grid>

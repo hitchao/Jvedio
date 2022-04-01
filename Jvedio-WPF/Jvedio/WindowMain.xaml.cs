@@ -39,6 +39,7 @@ using Jvedio.Utils.Visual;
 using Jvedio.Core.Enums;
 using Jvedio.Utils.Common;
 using Jvedio.Core;
+using static Jvedio.Main.Msg;
 
 namespace Jvedio
 {
@@ -71,6 +72,7 @@ namespace Jvedio
         public VieModel_Main vieModel;
 
         public SelectWrapper<Video> CurrentWrapper;
+        public string CurrentSQL;
 
         public DetailMovie CurrentLabelMovie;
         public bool IsFlowing = false;
@@ -89,6 +91,8 @@ namespace Jvedio
         public int actorsecondidx = -1;
         WindowDetails windowDetails;
         Window_LabelManagement labelManagement;
+
+        public static Msg msgCard = new Msg();
 
         public Main()
         {
@@ -134,6 +138,47 @@ namespace Jvedio
         }
 
 
+        public class Msg
+        {
+
+            public EventHandler MsgShown;
+
+            public class MessageEventArg : EventArgs
+            {
+
+                public MessageEventArg(Message message)
+                {
+                    this.Message = message;
+                }
+                public Message Message { get; set; }
+            }
+
+            public void Success(string msg)
+            {
+                MessageCard.Success(msg);
+                Message message = new Message(MessageCard.MessageCardType.Succes, msg);
+                MsgShown?.Invoke(this, new MessageEventArg(message));
+
+            }
+            public void Error(string msg)
+            {
+                MessageCard.Error(msg);
+                Message message = new Message(MessageCard.MessageCardType.Succes, msg);
+                MsgShown?.Invoke(this, new MessageEventArg(message));
+            }
+            public void Warning(string msg)
+            {
+                MessageCard.Warning(msg);
+                Message message = new Message(MessageCard.MessageCardType.Warning, msg);
+                MsgShown?.Invoke(this, new MessageEventArg(message));
+            }
+            public void Info(string msg)
+            {
+                MessageCard.Info(msg);
+                Message message = new Message(MessageCard.MessageCardType.Info, msg);
+                MsgShown?.Invoke(this, new MessageEventArg(message));
+            }
+        }
         private void initTagStamp()
         {
             GlobalVariable.TagStamps = tagStampMapper.getAllTagStamp();
@@ -424,6 +469,7 @@ namespace Jvedio
                 //GC.Collect();
                 if (Properties.Settings.Default.EditMode) SetSelected();
 
+                //vieModel.canRender = true;
             };
 
 
@@ -481,7 +527,17 @@ namespace Jvedio
 
             vieModel.RenderSqlChanged += (s, ev) =>
             {
-                CurrentWrapper = (ev as WrapperEventArg<Video>).Wrapper as SelectWrapper<Video>;
+                WrapperEventArg<Video> arg = ev as WrapperEventArg<Video>;
+                CurrentWrapper = arg.Wrapper as SelectWrapper<Video>;
+                CurrentSQL = arg.SQL;
+
+            };
+
+            // 绑定消息
+            msgCard.MsgShown += (s, ev) =>
+            {
+                MessageEventArg eventArg = ev as MessageEventArg;
+                vieModel.Message.Add(eventArg.Message);
             };
         }
 
@@ -678,7 +734,7 @@ namespace Jvedio
             DownLoader.MessageCallBack += (s, e) =>
             {
                 MessageCallBackEventArgs eventArgs = e as MessageCallBackEventArgs;
-                if (eventArgs != null) HandyControl.Controls.Growl.Error(eventArgs.Message, GrowlToken);
+                if (eventArgs != null) msgCard.Error(eventArgs.Message);
             };
 
             DownLoader.StartThread();
@@ -688,7 +744,7 @@ namespace Jvedio
         {
             if (DownLoader?.State == DownLoadState.DownLoading)
             {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_StopAndTry, GrowlToken);
+                msgCard.Info(Jvedio.Language.Resources.Message_StopAndTry);
                 return;
             }
 
@@ -752,7 +808,7 @@ namespace Jvedio
                 this.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     //vieModel.Reset();
-                    if (num > 0) HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_ScanNum} {num} --- {Jvedio.Language.Resources.Message_ViewLog}", GrowlToken);
+                    if (num > 0) msgCard.Info($"{Jvedio.Language.Resources.Message_ScanNum} {num} --- {Jvedio.Language.Resources.Message_ViewLog}");
                 }), System.Windows.Threading.DispatcherPriority.Render);
 
 
@@ -886,7 +942,7 @@ namespace Jvedio
             }
 
             if (failwatcherMessage != "")
-                HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_WatchFail} {failwatcherMessage}", GrowlToken);
+                msgCard.Info($"{Jvedio.Language.Resources.Message_WatchFail} {failwatcherMessage}");
         }
 
 
@@ -1286,26 +1342,55 @@ namespace Jvedio
 
         public void Label_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            string type = sender.GetType().ToString();
-            string label = "";
-            if (type == "System.Windows.Controls.TextBlock")
-            {
-                TextBlock textBlock = (TextBlock)sender;
-                label = textBlock.Text;
-                Match match = Regex.Match(label, @"\( \d+ \)");
-                if (match != null && match.Value != "")
-                {
-                    label = label.Replace(match.Value, "");
-                }
-                TabItem tabItem = ActorTabControl.SelectedItem as TabItem;
-                vieModel.GetMoviebyLabel(label, tabItem.Header.ToString().ToSqlString());
-            }
-            else if (type == "System.Windows.Controls.TextBox")
-            {
-                TextBox textBox = (TextBox)sender;
-                label = textBox.Text;
-                vieModel.GetMoviebyLabel(label);
-            }
+            TextBlock tb = sender as TextBlock;
+            string text = tb.Text;
+            if (string.IsNullOrEmpty(text) || text.IndexOf("(") <= 0) return;
+            string labelName = text.Substring(0, text.IndexOf("("));
+            ShowSameLabel(labelName);
+        }
+
+        public void ShowSameLabel(string label)
+        {
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("LabelName", label);
+            vieModel.extraWrapper = wrapper;
+            vieModel.ClickFilterType = "Label";
+            pagination.CurrentPageChange -= Pagination_CurrentPageChange;
+            vieModel.CurrentPage = 1;
+            vieModel.LoadData();
+            pagination.CurrentPageChange += Pagination_CurrentPageChange;
+        }
+
+
+        public static Dictionary<int, string> ClickFilterDict = new Dictionary<int, string>() {
+
+            {  0,"Genre"},
+            {  1,"Series"},
+            {  2,"Studio"},
+            {  3,"Director"},
+
+        };
+
+
+        public void ShowSameString(string str, string clickFilterType = "")
+        {
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            if (string.IsNullOrEmpty(clickFilterType)) clickFilterType = ClickFilterDict[vieModel.ClassifySelectedIndex];
+            wrapper.Like(clickFilterType, str);
+            vieModel.extraWrapper = wrapper;
+            vieModel.ClickFilterType = clickFilterType;
+            vieModel.CurrentPage = 1;
+            vieModel.LoadData();
+        }
+
+        private void ShowSameString(object sender, MouseButtonEventArgs e)
+        {
+            // todo 存在一些问题：like '%demo%' => '%demo-xxx%'，导致数目多出
+            TextBlock tb = sender as TextBlock;
+            string text = tb.Text;
+            if (string.IsNullOrEmpty(text) || text.IndexOf("(") <= 0) return;
+            string labelName = text.Substring(0, text.IndexOf("("));
+            ShowSameString(labelName);
 
         }
 
@@ -1321,14 +1406,7 @@ namespace Jvedio
             vieModel.TextType = genre;
         }
 
-        public void ShowActorMovieFromDetailWindow(Actress actress)
-        {
-            vieModel.GetMoviebyActress(actress);
-            actress = DataBase.SelectInfoByActress(actress);
-            actress.smallimage = GetActorImage(actress.name);
-            vieModel.Actress = actress;
-            vieModel.ActorInfoGrid = Visibility.Visible;
-        }
+
 
         public void ActorCheckBox_Click(object sender, RoutedEventArgs e)
         {
@@ -1432,7 +1510,7 @@ namespace Jvedio
             }
         }
 
-        public async void ShowSameActor(object sender, MouseButtonEventArgs e)
+        public void SelectActor(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;//点击 border 也能选中
             long actorID = getDataID(element);
@@ -1724,10 +1802,7 @@ namespace Jvedio
         }
 
 
-        public void ShowDownloadActorMenu(object sender, MouseButtonEventArgs e)
-        {
-            DownloadActorPopup.IsOpen = true;
-        }
+
 
 
 
@@ -1793,37 +1868,37 @@ namespace Jvedio
 
         public void DisposeGif(string id, bool disposeAll = false)
         {
-            ItemsControl itemsControl;
-            //if (Properties.Settings.Default.EasyMode)
-            //    itemsControl = SimpleMovieItemsControl;
-            //else
-            itemsControl = MovieItemsControl;
-            for (int i = 0; i < itemsControl.Items.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                if (c == null) continue;
-                if (c.ContentTemplate.FindName("GifImage", c) is HandyControl.Controls.GifImage GifImage && c.ContentTemplate.FindName("IDTextBox", c) is TextBox textBox)
-                {
-                    if (disposeAll)
-                    {
-                        GifImage.Source = null;
-                        GifImage.Dispose();
-                        GC.Collect();
-                    }
-                    else
-                    {
-                        if (id.ToUpper() == textBox.Text.ToUpper())
-                        {
-                            GifImage.Source = null;
-                            GifImage.Dispose();
-                            GC.Collect();
-                            break;
-                        }
-                    }
+            //ItemsControl itemsControl;
+            ////if (Properties.Settings.Default.EasyMode)
+            ////    itemsControl = SimpleMovieItemsControl;
+            ////else
+            //itemsControl = MovieItemsControl;
+            //for (int i = 0; i < itemsControl.Items.Count; i++)
+            //{
+            //    ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+            //    if (c == null) continue;
+            //    if (c.ContentTemplate.FindName("GifImage", c) is HandyControl.Controls.GifImage GifImage && c.ContentTemplate.FindName("IDTextBox", c) is TextBox textBox)
+            //    {
+            //        if (disposeAll)
+            //        {
+            //            GifImage.Source = null;
+            //            GifImage.Dispose();
+            //            GC.Collect();
+            //        }
+            //        else
+            //        {
+            //            if (id.ToUpper() == textBox.Text.ToUpper())
+            //            {
+            //                GifImage.Source = null;
+            //                GifImage.Dispose();
+            //                GC.Collect();
+            //                break;
+            //            }
+            //        }
 
-                }
+            //    }
 
-            }
+            //}
         }
 
         public T FindElementByName<T>(FrameworkElement element, string sChildName) where T : FrameworkElement
@@ -2142,7 +2217,7 @@ namespace Jvedio
             }
             else
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_OpenFail + "：" + filepath, token);
+                msgCard.Error(Jvedio.Language.Resources.Message_OpenFail + "：" + filepath);
             }
         }
 
@@ -2150,7 +2225,7 @@ namespace Jvedio
         {
             //if (!Properties.Settings.Default.Enable_TL_BAIDU & !Properties.Settings.Default.Enable_TL_YOUDAO)
             //{
-            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetYoudao, GrowlToken);
+            //    msgCard.Info(Jvedio.Language.Resources.Message_SetYoudao);
             //    return;
             //}
 
@@ -2219,9 +2294,9 @@ namespace Jvedio
 
             //}
             //dataBase.CloseDB();
-            //HandyControl.Controls.Growl.Success($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum}", GrowlToken);
-            //HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.Message_FailNum} {failNum}", GrowlToken);
-            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SkipNum} {translatedNum}", GrowlToken);
+            //msgCard.Success($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum}");
+            //msgCard.Error($"{Jvedio.Language.Resources.Message_FailNum} {failNum}");
+            //msgCard.Info($"{Jvedio.Language.Resources.Message_SkipNum} {translatedNum}");
 
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
@@ -2230,7 +2305,7 @@ namespace Jvedio
 
         public async void GenerateActor(object sender, RoutedEventArgs e)
         {
-            //if (!Properties.Settings.Default.Enable_BaiduAI) { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetBaiduAI, GrowlToken); return; }
+            //if (!Properties.Settings.Default.Enable_BaiduAI) { msgCard.Info(Jvedio.Language.Resources.Message_SetBaiduAI); return; }
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
 
             //string id = GetIDFromMenuItem(sender, 1);
@@ -2269,10 +2344,10 @@ namespace Jvedio
             //    }
             //    else
             //    {
-            //        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_PosterMustExist, GrowlToken);
+            //        msgCard.Error(Jvedio.Language.Resources.Message_PosterMustExist);
             //    }
             //}
-            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
+            //msgCard.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}");
             ////更新到窗口中
             //foreach (Movie movie1 in vieModel.SelectedVideo)
             //{
@@ -2295,7 +2370,7 @@ namespace Jvedio
         {
             //if (!File.Exists(Properties.Settings.Default.FFMPEG_Path))
             //{
-            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetFFmpeg, GrowlToken);
+            //    msgCard.Info(Jvedio.Language.Resources.Message_SetFFmpeg);
             //    return;
             //}
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
@@ -2341,7 +2416,7 @@ namespace Jvedio
 
             //        });
             //}
-            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
+            //msgCard.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}");
 
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
             //this.Cursor = Cursors.Arrow;
@@ -2365,7 +2440,7 @@ namespace Jvedio
 
             //if (!File.Exists(Properties.Settings.Default.FFMPEG_Path))
             //{
-            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetFFmpeg, GrowlToken);
+            //    msgCard.Info(Jvedio.Language.Resources.Message_SetFFmpeg);
             //    return;
             //}
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
@@ -2394,7 +2469,7 @@ namespace Jvedio
             //    if (success) successNum++;
             //    else this.Dispatcher.Invoke((Action)delegate { vieModel.CmdText += $"{movie.id} {Jvedio.Language.Resources.Message_Fail}，{Jvedio.Language.Resources.Reason}：{message}\n"; });
             //}
-            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
+            //msgCard.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}");
 
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
             //this.Cursor = Cursors.Arrow;
@@ -2409,7 +2484,7 @@ namespace Jvedio
 
         public async void GenerateSmallImage(object sender, RoutedEventArgs e)
         {
-            //if (!Properties.Settings.Default.Enable_BaiduAI) { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_SetBaiduAI, GrowlToken); return; }
+            //if (!Properties.Settings.Default.Enable_BaiduAI) { msgCard.Info(Jvedio.Language.Resources.Message_SetBaiduAI); return; }
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
             //string id = GetIDFromMenuItem(sender, 1);
             //Movie CurrentMovie = GetMovieFromVieModel(id);
@@ -2473,11 +2548,11 @@ namespace Jvedio
             //    }
             //    else
             //    {
-            //        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_PosterMustExist, GrowlToken);
+            //        msgCard.Error(Jvedio.Language.Resources.Message_PosterMustExist);
             //    }
 
             //}
-            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}", GrowlToken);
+            //msgCard.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successNum} / {vieModel.SelectedVideo.Count}");
 
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
             //this.Cursor = Cursors.Arrow;
@@ -2488,7 +2563,7 @@ namespace Jvedio
         {
             //if (Properties.Settings.Default.RenameFormat.IndexOf("{") < 0)
             //{
-            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetRenameRule, GrowlToken);
+            //    msgCard.Error(Jvedio.Language.Resources.Message_SetRenameRule);
             //    return;
             //}
 
@@ -2537,7 +2612,7 @@ namespace Jvedio
             //            catch (ArgumentNullException) { }
             //            DataBase.UpdateMovieByID(movie.id, "filepath", movie.filepath, "string");//保存
             //            DataBase.UpdateMovieByID(movie.id, "subsection", movie.subsection, "string");//保存
-            //            if (vieModel.SelectedVideo.Count == 1) HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //            if (vieModel.SelectedVideo.Count == 1) msgCard.Success(Jvedio.Language.Resources.Message_Success);
             //        }
             //        else
             //        {
@@ -2558,12 +2633,12 @@ namespace Jvedio
             //                }
             //                catch (ArgumentNullException) { }
             //                DataBase.UpdateMovieByID(movie.id, "filepath", movie.filepath, "string");//保存
-            //                if (vieModel.SelectedVideo.Count == 1) HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //                if (vieModel.SelectedVideo.Count == 1) msgCard.Success(Jvedio.Language.Resources.Message_Success);
             //            }
             //            else
             //            {
             //                //存在同名文件
-            //                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_Fail, GrowlToken);
+            //                msgCard.Error(Jvedio.Language.Resources.Message_Fail);
             //            }
 
             //        }
@@ -2571,16 +2646,16 @@ namespace Jvedio
 
             //        //}catch(Exception ex)
             //        //{
-            //        //    HandyControl.Controls.Growl.Error(ex.Message);
+            //        //    msgCard.Error(ex.Message);
             //        //    continue;
             //        //}
             //    }
-            //    HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {num}/{vieModel.SelectedVideo.Count} ", GrowlToken);
+            //    msgCard.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {num}/{vieModel.SelectedVideo.Count} ");
             //}
             //else
             //{
             //    //文件不存在！无法重命名！
-            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_FileNotExist, GrowlToken);
+            //    msgCard.Error(Jvedio.Language.Resources.Message_FileNotExist);
             //}
 
 
@@ -2629,7 +2704,7 @@ namespace Jvedio
             //    }
             //}
 
-            //HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successnum}/{vieModel.SelectedVideo.Count}", GrowlToken);
+            //msgCard.Info($"{Jvedio.Language.Resources.Message_SuccessNum} {successnum}/{vieModel.SelectedVideo.Count}");
 
 
 
@@ -2725,13 +2800,14 @@ namespace Jvedio
 
             if (paths.Count <= 0)
             {
-                HandyControl.Controls.Growl.Warning($"需要复制文件的个数为 0，文件可能不存在", GrowlToken);
+                msgCard.Warning($"需要复制文件的个数为 0，文件可能不存在");
                 return;
             }
-            bool success = ClipBoard.TrySetFileDropList(paths, GrowlToken, false);
+            bool success = ClipBoard.TrySetFileDropList(paths, (error) => { msgCard.Error(error); });
 
             if (success)
-                HandyControl.Controls.Growl.Success($"{Jvedio.Language.Resources.Message_Copied} {count}/{total}", GrowlToken);
+                msgCard.Success($"{Jvedio.Language.Resources.Message_Copied} {count}/{total}");
+
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
@@ -2791,7 +2867,7 @@ namespace Jvedio
                     }
                 }
             });
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_DeleteToRecycleBin} {num}/{totalCount}", GrowlToken);
+            msgCard.Info($"{Jvedio.Language.Resources.Message_DeleteToRecycleBin} {num}/{totalCount}");
 
             if (num > 0 && Properties.Settings.Default.DelInfoAfterDelFile)
                 deleteIDs(vieModel.SelectedVideo, false);
@@ -2858,7 +2934,7 @@ namespace Jvedio
                 }
             }
 
-            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.SuccessDelete} {count}/{to_delete.Count} ", GrowlToken);
+            msgCard.Info($"{Jvedio.Language.Resources.SuccessDelete} {count}/{to_delete.Count} ");
             //修复数字显示
             vieModel.CurrentCount -= to_delete.Count;
             vieModel.TotalCount -= to_delete.Count;
@@ -2948,7 +3024,7 @@ namespace Jvedio
             {
                 string url = video.WebUrl;
                 if (url.IsProperUrl())
-                    FileHelper.TryOpenUrl(url, GrowlToken);
+                    FileHelper.TryOpenUrl(url);
             }
         }
 
@@ -2977,11 +3053,11 @@ namespace Jvedio
         {
             //if (DownLoader?.State == DownLoadState.DownLoading)
             //{
-            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //    msgCard.Info(Jvedio.Language.Resources.Message_WaitForDownload);
             //}
             //else if (!JvedioServers.IsProper())
             //{
-            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
+            //    msgCard.Error(Jvedio.Language.Resources.Message_SetUrl);
             //}
             //else
             //{
@@ -3007,11 +3083,11 @@ namespace Jvedio
         {
             //if (DownLoader?.State == DownLoadState.DownLoading)
             //{
-            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //    msgCard.Info(Jvedio.Language.Resources.Message_WaitForDownload);
             //}
             //else if (!JvedioServers.IsProper())
             //{
-            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
+            //    msgCard.Error(Jvedio.Language.Resources.Message_SetUrl);
             //}
             //else
             //{
@@ -3044,45 +3120,38 @@ namespace Jvedio
         private void SaveActress(object sender, KeyEventArgs e)
         {
 
-            if (vieModel.EnableEditActress && e.Key == Key.Enter)
-            {
-                FocusTextBox.Focus();
-                vieModel.EnableEditActress = false;
-                //Console.WriteLine(vieModel.Actress.age);
-                DataBase.InsertActress(vieModel.Actress);
-            }
 
 
         }
 
         private void BeginDownLoadActress(object sender, MouseButtonEventArgs e)
         {
-            List<Actress> actresses = new List<Actress>();
-            actresses.Add(vieModel.Actress);
-            DownLoadActress downLoadActress = new DownLoadActress(actresses);
-            downLoadActress.BeginDownLoad();
-            downLoadActress.InfoUpdate += (s, ev) =>
-            {
-                ActressUpdateEventArgs actressUpdateEventArgs = ev as ActressUpdateEventArgs;
-                try
-                {
-                    Dispatcher.Invoke((Action)delegate ()
-                    {
-                        vieModel.Actress = null;
-                        vieModel.Actress = actressUpdateEventArgs.Actress;
-                        downLoadActress.State = DownLoadState.Completed;
-                    });
-                }
-                catch (TaskCanceledException ex) { Logger.LogE(ex); }
+            //List<Actress> actresses = new List<Actress>();
+            //actresses.Add(vieModel.Actress);
+            //DownLoadActress downLoadActress = new DownLoadActress(actresses);
+            //downLoadActress.BeginDownLoad();
+            //downLoadActress.InfoUpdate += (s, ev) =>
+            //{
+            //    ActressUpdateEventArgs actressUpdateEventArgs = ev as ActressUpdateEventArgs;
+            //    try
+            //    {
+            //        Dispatcher.Invoke((Action)delegate ()
+            //        {
+            //            vieModel.Actress = null;
+            //            vieModel.Actress = actressUpdateEventArgs.Actress;
+            //            downLoadActress.State = DownLoadState.Completed;
+            //        });
+            //    }
+            //    catch (TaskCanceledException ex) { Logger.LogE(ex); }
 
-            };
+            //};
 
-            downLoadActress.MessageCallBack += (s, ev) =>
-            {
-                MessageCallBackEventArgs actressUpdateEventArgs = ev as MessageCallBackEventArgs;
-                HandyControl.Controls.Growl.Info(actressUpdateEventArgs.Message, GrowlToken);
+            //downLoadActress.MessageCallBack += (s, ev) =>
+            //{
+            //    MessageCallBackEventArgs actressUpdateEventArgs = ev as MessageCallBackEventArgs;
+            //    msgCard.Info(actressUpdateEventArgs.Message);
 
-            };
+            //};
 
 
         }
@@ -3120,6 +3189,7 @@ namespace Jvedio
             GlobalConfig.Main.Height = this.Height;
             GlobalConfig.Main.WindowState = (long)baseWindowState;
             GlobalConfig.Main.SearchSelectedIndex = vieModel.SearchSelectedIndex;
+            GlobalConfig.Main.ClassifySelectedIndex = vieModel.ClassifySelectedIndex;
             GlobalConfig.Main.SideGridWidth = SideGridColumn.ActualWidth;
 
             GlobalConfig.Main.Save();
@@ -3192,7 +3262,7 @@ namespace Jvedio
 
         public void StopDownLoad()
         {
-            if (DownLoader != null && DownLoader.State == DownLoadState.DownLoading) HandyControl.Controls.Growl.Warning(Jvedio.Language.Resources.Message_Stop, GrowlToken);
+            if (DownLoader != null && DownLoader.State == DownLoadState.DownLoading) msgCard.Warning(Jvedio.Language.Resources.Message_Stop);
             DownLoader?.CancelDownload();
             downLoadActress?.CancelDownload();
             this.Dispatcher.BeginInvoke((Action)delegate { vieModel.ProgressBarVisibility = Visibility.Hidden; });
@@ -3321,19 +3391,12 @@ namespace Jvedio
 
         }
 
-        public void StopDownLoadActress(object sender, RoutedEventArgs e)
-        {
-            DownloadActorPopup.IsOpen = false;
-            downLoadActress?.CancelDownload();
-            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Stop, GrowlToken);
-            vieModel.ActorProgressBarVisibility = Visibility.Collapsed;
-        }
 
         public void DownLoadSelectedActor(object sender, RoutedEventArgs e)
         {
             //if (downLoadActress?.State == DownLoadState.DownLoading)
             //{
-            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken); return;
+            //    msgCard.Info(Jvedio.Language.Resources.Message_WaitForDownload); return;
             //}
 
             //if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
@@ -3438,16 +3501,16 @@ namespace Jvedio
         /// <param name="e"></param>
         public void StartDownLoadActress(object sender, RoutedEventArgs e)
         {
-            //HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.ActressDownloadAttention, GrowlToken);
+            //msgCard.Info(Jvedio.Language.Resources.ActressDownloadAttention);
             //DownloadActorPopup.IsOpen = false;
             //if (!JvedioServers.Bus.IsEnable)
             //{
-            //    HandyControl.Controls.Growl.Info($"BUS {Jvedio.Language.Resources.Message_NotOpenOrNotEnable}", GrowlToken);
+            //    msgCard.Info($"BUS {Jvedio.Language.Resources.Message_NotOpenOrNotEnable}");
             //    return;
             //}
 
             //if (DownLoader?.State == DownLoadState.DownLoading)
-            //    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //    msgCard.Info(Jvedio.Language.Resources.Message_WaitForDownload);
             //else
             //    StartDownLoadActor(vieModel.CurrentActorList.ToList());
 
@@ -3564,7 +3627,7 @@ namespace Jvedio
 
                 if (files.Count > 0) filepaths.AddRange(files);
 
-                Scan.InsertWithNfo(filepaths, scan_ct, (message) => { HandyControl.Controls.Growl.Info(message, GrowlToken); });
+                Scan.InsertWithNfo(filepaths, scan_ct, (message) => { msgCard.Info(message); });
                 Task.Delay(300).Wait();
             });
             //WaitingPanel.Visibility = Visibility.Hidden;
@@ -3594,13 +3657,13 @@ namespace Jvedio
 
             //if (!JvedioServers.IsProper())
             //{
-            //    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_SetUrl, GrowlToken);
+            //    msgCard.Error(Jvedio.Language.Resources.Message_SetUrl);
 
             //}
             //else
             //{
             //    if (DownLoader?.State == DownLoadState.DownLoading)
-            //        HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_WaitForDownload, GrowlToken);
+            //        msgCard.Info(Jvedio.Language.Resources.Message_WaitForDownload);
             //    else
             //        StartDownload(vieModel.CurrentVideoList.ToList());
             //}
@@ -3685,7 +3748,7 @@ namespace Jvedio
                 DatabaseComboBox.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Opacity.Background"];
                 TitleBorder.Background = Brushes.Transparent;
                 //MainProgressBar.Background = Brushes.Transparent;
-                ActorProgressBar.Background = Brushes.Transparent;
+                //ActorProgressBar.Background = Brushes.Transparent;
                 foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
                 {
                     expander.Background = Brushes.Transparent;
@@ -3701,7 +3764,7 @@ namespace Jvedio
                 DatabaseComboBox.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
                 SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
                 //MainProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-                ActorProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
+                //ActorProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
                 foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
                 {
                     expander.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
@@ -3814,7 +3877,7 @@ namespace Jvedio
 
             //vieModel.InitLettersNavigation();
             //vieModel.GetFilterInfo();
-
+            AllRadioButton.IsChecked = true;
 
 
 
@@ -4048,7 +4111,7 @@ namespace Jvedio
 
             //if (originLabels.Count <= 0)
             //{
-            //    //HandyControl.Controls.Growl.Warning("请选择标签！", GrowlToken);
+            //    //msgCard.Warning("请选择标签！");
             //    return;
             //}
 
@@ -4060,7 +4123,7 @@ namespace Jvedio
             //    movie.label = string.Join(" ", labels);
             //    DataBase.UpdateMovieByID(movie.id, "label", movie.label, "String");
             //}
-            //HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //msgCard.Info(Jvedio.Language.Resources.Message_Success);
             //if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
             //LabelGrid.Visibility = Visibility.Hidden;
 
@@ -4089,7 +4152,7 @@ namespace Jvedio
 
             if (originLabels.Count <= 0)
             {
-                //HandyControl.Controls.Growl.Warning("请选择标签！", GrowlToken);
+                //msgCard.Warning("请选择标签！");
                 return;
             }
 
@@ -4110,7 +4173,7 @@ namespace Jvedio
 
             if (vieModel.CurrentVideoList.Count == 0)
             {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+                msgCard.Info(Jvedio.Language.Resources.Message_Success);
                 LabelDelGrid.Visibility = Visibility.Hidden;
                 vieModel.GetLabelList();
             }
@@ -4178,7 +4241,7 @@ namespace Jvedio
 
             if (originLabels.Count <= 0)
             {
-                //HandyControl.Controls.Growl.Warning("请选择标签！", GrowlToken);
+                //msgCard.Warning("请选择标签！");
                 return;
             }
 
@@ -4199,7 +4262,7 @@ namespace Jvedio
 
             if (vieModel.CurrentVideoList.Count == 0)
             {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+                msgCard.Info(Jvedio.Language.Resources.Message_Success);
                 LabelDelGrid.Visibility = Visibility.Hidden;
                 vieModel.GetLabelList();
             }
@@ -4265,7 +4328,7 @@ namespace Jvedio
             //    string url = dialogInput.Text;
             //    if (!url.StartsWith("http"))
             //    {
-            //        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_WrongUrl, GrowlToken);
+            //        msgCard.Error(Jvedio.Language.Resources.Message_WrongUrl);
             //    }
             //    else
             //    {
@@ -4274,21 +4337,21 @@ namespace Jvedio
             //        WebSite webSite = await new MyNet().CheckUrlType(url.Split(':')[0] + "://" + host);
             //        if (webSite == WebSite.None)
             //        {
-            //            HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_NotRecognize, GrowlToken);
+            //            msgCard.Error(Jvedio.Language.Resources.Message_NotRecognize);
             //        }
             //        else
             //        {
             //            if (webSite == WebSite.DMM || webSite == WebSite.Jav321)
             //            {
-            //                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.NotSupport, GrowlToken);
+            //                msgCard.Info(Jvedio.Language.Resources.NotSupport);
             //            }
             //            else
             //            {
-            //                HandyControl.Controls.Growl.Info($"{webSite} {Jvedio.Language.Resources.Message_BeginParse}", GrowlToken);
+            //                msgCard.Info($"{webSite} {Jvedio.Language.Resources.Message_BeginParse}");
             //                bool result = await MyNet.ParseSpecifiedInfo(webSite, id, url);
             //                if (result)
             //                {
-            //                    HandyControl.Controls.Growl.Success(Jvedio.Language.Resources.Message_BeginDownloadImage, GrowlToken);
+            //                    msgCard.Success(Jvedio.Language.Resources.Message_BeginDownloadImage);
             //                    //更新到主界面
             //                    RefreshMovieByID(id);
 
@@ -4320,7 +4383,7 @@ namespace Jvedio
             //                }
             //                else
             //                {
-            //                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_Fail, GrowlToken);
+            //                    msgCard.Error(Jvedio.Language.Resources.Message_Fail);
             //                }
             //            }
             //        }
@@ -4367,7 +4430,7 @@ namespace Jvedio
             //    }
             //    else
             //    {
-            //        HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_OnlySupportJPG, GrowlToken);
+            //        msgCard.Info(Jvedio.Language.Resources.Message_OnlySupportJPG);
             //    }
             //}
         }
@@ -4436,7 +4499,7 @@ namespace Jvedio
             //        }
             //        else
             //        {
-            //            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_OnlySupportJPG, GrowlToken);
+            //            msgCard.Info(Jvedio.Language.Resources.Message_OnlySupportJPG);
             //        }
             //    }
         }
@@ -4711,7 +4774,7 @@ namespace Jvedio
                 {
                     if (vieModel.MyList.Where(arg => arg.Name == text).Count() > 0)
                     {
-                        HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_AlreadyExist, GrowlToken);
+                        msgCard.Error(Jvedio.Language.Resources.Message_AlreadyExist);
                         return;
                     }
                     //重命名
@@ -4746,7 +4809,7 @@ namespace Jvedio
             }
             catch
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.NotSupport, GrowlToken);
+                msgCard.Error(Jvedio.Language.Resources.NotSupport);
                 return false;
             }
             finally
@@ -4788,7 +4851,7 @@ namespace Jvedio
             //    {
             //        if (vieModel.MyList.Where(arg => arg.Name == text).Count() > 0)
             //        {
-            //            HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Message_AlreadyExist, GrowlToken);
+            //            msgCard.Error(Jvedio.Language.Resources.Message_AlreadyExist);
             //            return;
             //        }
             //        if (AddToMyList(text)) vieModel.MyList.Add(new MyListItem(text, 0));
@@ -4814,7 +4877,7 @@ namespace Jvedio
             }
             catch
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.NotSupport, GrowlToken);
+                msgCard.Error(Jvedio.Language.Resources.NotSupport);
                 return false;
             }
             finally
@@ -5014,36 +5077,10 @@ namespace Jvedio
 
         private void Rate_ValueChanged_1(object sender, HandyControl.Data.FunctionEventArgs<double> e)
         {
-            if (vieModel.Actress != null)
-            {
-                DataBase.CreateTable(DataBase.SQLITETABLE_ACTRESS_LOVE);
-                DataBase.SaveActressLikeByName(vieModel.Actress.name, vieModel.Actress.like);
-            }
+            HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
+            actorMapper.updateFieldById("Grade", rate.Value.ToString(), vieModel.CurrentActorInfo.ActorID);
         }
 
-        private void ShowLoveActors(object sender, RoutedEventArgs e)
-        {
-
-            //vieModel.CurrentActorPage = 1;
-            //List<string> actressNames = DataBase.SelectActressNameByLove(1);
-
-            //List<Actress> oldActress = vieModel.ActorList.ToList();
-            //List<Actress> newActress = new List<Actress>();
-            //vieModel.ActorList = new ObservableCollection<Actress>();
-            //foreach (Actress actress in oldActress)
-            //{
-            //    if (actressNames.Contains(actress.name))
-            //    {
-            //        newActress.Add(actress);
-            //    }
-            //}
-
-            //vieModel.ActorList = new ObservableCollection<Actress>();
-            //vieModel.ActorList.AddRange(newActress);
-
-            //vieModel.ActorFlipOver();
-
-        }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -5053,17 +5090,17 @@ namespace Jvedio
         private void OpenLogPath(object sender, EventArgs e)
         {
             string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
-            FileHelper.TryOpenPath(path, GrowlToken);
+            FileHelper.TryOpenPath(path);
         }
 
         private void OpenImageSavePath(object sender, EventArgs e)
         {
-            FileHelper.TryOpenPath(Properties.Settings.Default.BasePicPath, GrowlToken);
+            FileHelper.TryOpenPath(Properties.Settings.Default.BasePicPath);
         }
 
         private void OpenApplicationPath(object sender, EventArgs e)
         {
-            FileHelper.TryOpenPath(AppDomain.CurrentDomain.BaseDirectory, GrowlToken);
+            FileHelper.TryOpenPath(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         private void MenuItem_Click_3(object sender, RoutedEventArgs e)
@@ -5074,7 +5111,7 @@ namespace Jvedio
         private void HideActressGrid(object sender, MouseButtonEventArgs e)
         {
             var anim = new DoubleAnimation(1, 0, (Duration)FadeInterval, FillBehavior.Stop);
-            anim.Completed += (s, _) => vieModel.ActorInfoGrid = Visibility.Collapsed; ;
+            anim.Completed += (s, _) => vieModel.ShowActorGrid = Visibility.Collapsed; ;
             ActorInfoGrid.BeginAnimation(UIElement.OpacityProperty, anim);
 
         }
@@ -5137,7 +5174,7 @@ namespace Jvedio
             //    }
             //}
 
-            //HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Message_Success, GrowlToken);
+            //msgCard.Info(Jvedio.Language.Resources.Message_Success);
             ////修复数字显示
             //vieModel.CurrentCount -= vieModel.SelectedVideo.Count;
             ////vieModel.TotalCount -= vieModel.SelectedVideo.Count;
@@ -5180,82 +5217,26 @@ namespace Jvedio
 
         private void ClearActressInfo(object sender, RoutedEventArgs e)
         {
-            string name = vieModel.Actress.name;
-            DataBase.DeleteByField("actress", "name", name);
+            //string name = vieModel.Actress.name;
+            //DataBase.DeleteByField("actress", "name", name);
 
-            Actress actress = new Actress(vieModel.Actress.name);
-            actress.like = vieModel.Actress.like;
-            actress.smallimage = vieModel.Actress.smallimage;
+            //Actress actress = new Actress(vieModel.Actress.name);
+            //actress.like = vieModel.Actress.like;
+            //actress.smallimage = vieModel.Actress.smallimage;
 
-            vieModel.Actress = actress;
-
-        }
-
-
-
-        private void ShowRestMovie(object sender, RoutedEventArgs e)
-        {
-            int low = ++vieModel.FlowNum;
-
-            for (int i = low; i < 5; i++)
-            {
-                vieModel.FlowNum = i;
-                vieModel.Flow();
-            }
-
-
+            //vieModel.Actress = actress;
 
         }
 
-        private void SetClassify(bool refresh = false)
+
+
+
+
+
+
+        private void ClassifyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if (ActorTabControl != null)
-            //{
-            //    vieModel.ShowActorTools = false;
-            //    switch (ActorTabControl.SelectedIndex)
-            //    {
-            //        case 0:
-            //            vieModel.ShowActorTools = true;
-            //            if (vieModel.ActorList != null && vieModel.ActorList.Count > 0 && !refresh) return;
-            //            vieModel.GetActorList();
-            //            break;
-
-            //        case 1:
-            //            if (vieModel.GenreList != null && vieModel.GenreList.Count > 0 && !refresh) return;
-            //            vieModel.GetGenreList();
-            //            break;
-
-            //        case 2:
-            //            if (vieModel.LabelList != null && vieModel.LabelList.Count > 0 && !refresh) return;
-            //            vieModel.GetLabelList();
-            //            break;
-
-            //        case 3:
-            //            if (vieModel.TagList != null && vieModel.TagList.Count > 0 && !refresh) return;
-            //            vieModel.GetTagList();
-            //            break;
-
-            //        case 4:
-            //            if (vieModel.StudioList != null && vieModel.StudioList.Count > 0 && !refresh) return;
-            //            vieModel.GetStudioList();
-            //            break;
-
-
-            //        case 5:
-            //            if (vieModel.DirectorList != null && vieModel.DirectorList.Count > 0 && !refresh) return;
-            //            vieModel.GetDirectoroList();
-            //            break;
-
-            //        default:
-
-            //            break;
-            //    }
-            //}
-        }
-
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            SetClassify();
+            vieModel.SetClassify();
         }
 
 
@@ -5266,27 +5247,27 @@ namespace Jvedio
 
         private void OpenActorPath(object sender, RoutedEventArgs e)
         {
-            string filepath = System.IO.Path.Combine(BasePicPath, "Actresses", $"{vieModel.Actress.name}.jpg");
-            FileHelper.TryOpenSelectPath(filepath, GrowlToken);
+            //string filepath = System.IO.Path.Combine(BasePicPath, "Actresses", $"{vieModel.Actress.name}.jpg");
+            //FileHelper.TryOpenSelectPath(filepath);
         }
 
         private void OpenWebsite(object sender, RoutedEventArgs e)
         {
-            if (vieModel.Actress.sourceurl.IsProperUrl())
-                FileHelper.TryOpenUrl(vieModel.Actress.sourceurl);
+            //if (vieModel.Actress.sourceurl.IsProperUrl())
+            //    FileHelper.TryOpenUrl(vieModel.Actress.sourceurl);
 
-            else
-            {
-                if (JvedioServers.Bus.Url.IsProperUrl())
-                {
-                    string url = $"{JvedioServers.Bus.Url}searchstar/{System.Web.HttpUtility.UrlEncode(vieModel.Actress.name)}&type=&parent=ce";
-                    FileHelper.TryOpenUrl(url);
-                }
-                else
-                {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.CannotOpen + $" {vieModel.Actress.sourceurl}", GrowlToken);
-                }
-            }
+            //else
+            //{
+            //    if (JvedioServers.Bus.Url.IsProperUrl())
+            //    {
+            //        string url = $"{JvedioServers.Bus.Url}searchstar/{System.Web.HttpUtility.UrlEncode(vieModel.Actress.name)}&type=&parent=ce";
+            //        FileHelper.TryOpenUrl(url);
+            //    }
+            //    else
+            //    {
+            //        msgCard.Error(Jvedio.Language.Resources.CannotOpen + $" {vieModel.Actress.sourceurl}");
+            //    }
+            //}
 
 
         }
@@ -5326,7 +5307,7 @@ namespace Jvedio
 
         private void RefreshClassify(object sender, MouseButtonEventArgs e)
         {
-            SetClassify(true);
+            vieModel.SetClassify(true);
         }
 
         private void WaitingPanel_Cancel(object sender, RoutedEventArgs e)
@@ -5354,7 +5335,7 @@ namespace Jvedio
         private void CopyText(object sender, MouseButtonEventArgs e)
         {
             TextBlock textBlock = sender as TextBlock;
-            ClipBoard.TrySetDataObject(textBlock.Text, GrowlToken);
+            ClipBoard.TrySetDataObject(textBlock.Text);
         }
 
 
@@ -5398,7 +5379,7 @@ namespace Jvedio
         {
             if (!JvedioServers.Bus.IsEnable || JvedioServers.Bus.Url.IsProperUrl())
             {
-                HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.OnlySupportBus, GrowlToken);
+                msgCard.Info(Jvedio.Language.Resources.OnlySupportBus);
                 LoadSearchWaitingPanel.Visibility = Visibility.Collapsed;
                 LoadSearchCTS?.Dispose();
                 return;
@@ -5419,7 +5400,7 @@ namespace Jvedio
                     List<ActorSearch> toDownload = new List<ActorSearch>();
                     if (actorSearches.Count == 0)
                     {
-                        HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.NoResult, GrowlToken);
+                        msgCard.Info(Jvedio.Language.Resources.NoResult);
                     }
                     else
                     {
@@ -5446,7 +5427,7 @@ namespace Jvedio
 
                         if (toDownload.Count > 3)
                         {
-                            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.MoreThanThree, GrowlToken);
+                            msgCard.Info(Jvedio.Language.Resources.MoreThanThree);
                         }
                         else
                         {
@@ -5510,14 +5491,14 @@ namespace Jvedio
                                     {
                                         Console.WriteLine(Jvedio.Language.Resources.HttpFail);
                                         break;
-                                        //HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.HttpFail, GrowlToken);
+                                        //msgCard.Error(Jvedio.Language.Resources.HttpFail);
                                     }
 
                                     await Task.Delay(5000);
                                 }
                                 await Task.Delay(5000);
                             }
-                            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Complete, GrowlToken);
+                            msgCard.Info(Jvedio.Language.Resources.Complete);
                         }
 
 
@@ -5525,7 +5506,7 @@ namespace Jvedio
                 }
                 else
                 {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.HttpFail, GrowlToken);
+                    msgCard.Error(Jvedio.Language.Resources.HttpFail);
                 }
             }, LoadSearchCT);
             LoadSearchWaitingPanel.Visibility = Visibility.Collapsed;
@@ -5585,7 +5566,7 @@ namespace Jvedio
             }
             catch (OperationCanceledException ex)
             {
-                HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.Cancel, GrowlToken);
+                msgCard.Error(Jvedio.Language.Resources.Cancel);
                 Console.WriteLine(ex.Message);
                 LoadSearchCTS?.Dispose();
                 return true;
@@ -5695,7 +5676,7 @@ namespace Jvedio
                             {
                                 Console.WriteLine(Jvedio.Language.Resources.HttpFail);
                                 break;
-                                //HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.HttpFail, GrowlToken);
+                                //msgCard.Error(Jvedio.Language.Resources.HttpFail);
                             }
                             await Task.Delay(1000);
 
@@ -5704,7 +5685,7 @@ namespace Jvedio
 
 
                     });
-                    HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Complete, GrowlToken);
+                    msgCard.Info(Jvedio.Language.Resources.Complete);
                     LoadSearchWaitingPanel.Visibility = Visibility.Collapsed;
                     LoadSearchCTS?.Dispose();
 
@@ -5715,7 +5696,7 @@ namespace Jvedio
                 }
                 else
                 {
-                    HandyControl.Controls.Growl.Error(Jvedio.Language.Resources.ErrorUrl, GrowlToken);
+                    msgCard.Error(Jvedio.Language.Resources.ErrorUrl);
                 }
             }
 
@@ -5813,35 +5794,35 @@ namespace Jvedio
 
         private void SearchBar_SearchStarted_1(object sender, FunctionEventArgs<string> e)
         {
-            HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            int idx = ActorTabControl.SelectedIndex;
-            switch (idx)
-            {
-                case 0:
+            //HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
+            //int idx = ActorTabControl.SelectedIndex;
+            //switch (idx)
+            //{
+            //    case 0:
 
-                    break;
-                case 1:
+            //        break;
+            //    case 1:
 
-                    break;
-                case 2:
+            //        break;
+            //    case 2:
 
-                    break;
-                case 3:
+            //        break;
+            //    case 3:
 
-                    break;
-                case 4:
+            //        break;
+            //    case 4:
 
-                    break;
-                case 5:
+            //        break;
+            //    case 5:
 
-                    break;
-                case 6:
+            //        break;
+            //    case 6:
 
-                    break;
-                case 7:
+            //        break;
+            //    case 7:
 
-                    break;
-            }
+            //        break;
+            //}
         }
 
 
@@ -5880,7 +5861,7 @@ namespace Jvedio
 
         private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
+            //Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
         }
 
 
@@ -5947,8 +5928,10 @@ namespace Jvedio
 
         private void Pagination_CurrentPageChange(object sender, EventArgs e)
         {
+            //Console.WriteLine("Pagination_CurrentPageChange =>  vieModel.canRender=" + vieModel.canRender);
             Pagination pagination = sender as Pagination;
             vieModel.CurrentPage = pagination.CurrentPage;
+            //if (!vieModel.canRender) return;
             VieModel_Main.pageQueue.Enqueue(pagination.CurrentPage);
             vieModel.LoadData();
         }
@@ -6263,7 +6246,72 @@ namespace Jvedio
             SideGridColumn.Width = new GridLength(200);
             SideTriggerBorder.Visibility = Visibility.Collapsed;
         }
+
+        private void ShowMessage(object sender, MouseButtonEventArgs e)
+        {
+            msgPopup.IsOpen = true;
+        }
+
+        private void HideMsgPopup(object sender, MouseButtonEventArgs e)
+        {
+            msgPopup.IsOpen = false;
+        }
+
+        private void ClearMsg(object sender, MouseButtonEventArgs e)
+        {
+            vieModel.Message.Clear();
+        }
+
+        private void ShowSameActor(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            long.TryParse(button.Tag.ToString(), out long actorID);
+            ShowSameActor(actorID);
+        }
+
+
+        public void ShowSameActor(long actorID)
+        {
+            if (actorID <= 0) return;
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("actor_info.ActorID", actorID);
+            vieModel.extraWrapper = wrapper;
+            vieModel.ClickFilterType = "Actor";
+            pagination.CurrentPageChange -= Pagination_CurrentPageChange;
+            vieModel.CurrentPage = 1;
+            vieModel.LoadData();
+            ActorInfo actorInfo = actorMapper.selectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
+            ActorInfo.SetImage(ref actorInfo);
+            vieModel.CurrentActorInfo = actorInfo;
+            vieModel.ShowActorGrid = Visibility.Visible;
+            pagination.CurrentPageChange += Pagination_CurrentPageChange;
+
+        }
+
+        private void EditActor(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            long.TryParse(button.Tag.ToString(), out long actorID);
+            if (actorID <= 0) return;
+
+            Window_EditActor window_EditActor = new Window_EditActor(actorID);
+            window_EditActor.ShowDialog();
+
+        }
+
+        private void Rate_ValueChanged_2(object sender, FunctionEventArgs<double> e)
+        {
+            HandyControl.Controls.Rate rate = sender as HandyControl.Controls.Rate;
+            long.TryParse(rate.Tag.ToString(), out long actorID);
+            actorMapper.updateFieldById("Grade", rate.Value.ToString(), actorID);
+
+        }
     }
+
+
+
+
+
     public class ScrollViewerBehavior
     {
         public static DependencyProperty VerticalOffsetProperty =

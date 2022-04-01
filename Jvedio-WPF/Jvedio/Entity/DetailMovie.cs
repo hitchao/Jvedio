@@ -76,7 +76,7 @@ namespace Jvedio.Entity
                 RatingCount = 0,
                 FavoriteCount = 0,
                 Genre = genre.Replace(' ', GlobalVariable.Separator),
-                Tag = tag.Replace(' ', GlobalVariable.Separator),
+
                 Label = label.Replace(' ', GlobalVariable.Separator),
                 Grade = favorites,
                 ViewDate = "",
@@ -98,7 +98,9 @@ namespace Jvedio.Entity
             Video result = new Video(false)
             {
                 VID = id,
+
                 VideoType = (VideoType)vediotype,
+                Series = tag.Replace(' ', GlobalVariable.Separator),
                 Director = director,
                 Studio = studio,
                 Publisher = studio,
