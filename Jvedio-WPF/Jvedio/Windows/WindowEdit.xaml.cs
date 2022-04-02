@@ -158,7 +158,7 @@ namespace Jvedio
                 foreach (var file in dragdropFiles)
                 {
                     if (vieModel.CurrentVideo.SubSectionList.Contains(file)) continue;
-                    if (IsFile(file) && Scan.IsProperMovie(file))
+                    if (FileHelper.IsFile(file) && Scan.IsProperMovie(file))
                     {
                         vieModel.CurrentVideo.SubSectionList.Add(file);
                     }

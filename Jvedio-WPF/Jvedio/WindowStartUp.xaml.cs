@@ -193,27 +193,27 @@ namespace Jvedio
 
         public async void OpenDefaultDatabase()
         {
-            try
-            {
-                if (Properties.Settings.Default.ScanGivenPath)
-                {
-                    // todo 开启是扫描文件夹
-                    await Task.Run(() =>
-                    {
-                        this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            //statusText.Text = Jvedio.Language.Resources.Status_ScanDir; 
-                        }), System.Windows.Threading.DispatcherPriority.Render);
-                        List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), ct);
-                        Scan.InsertWithNfo(filepaths, ct);
-                    }, cts.Token);
+            //try
+            //{
+            //    if (Properties.Settings.Default.ScanGivenPath)
+            //    {
+            //        // todo 开启是扫描文件夹
+            //        await Task.Run(() =>
+            //        {
+            //            this.Dispatcher.BeginInvoke(new Action(() =>
+            //            {
+            //                //statusText.Text = Jvedio.Language.Resources.Status_ScanDir; 
+            //            }), System.Windows.Threading.DispatcherPriority.Render);
+            //            List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), ct);
+            //            Scan.InsertWithNfo(filepaths, ct);
+            //        }, cts.Token);
 
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogE(ex);
-            }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogE(ex);
+            //}
         }
 
 
@@ -437,27 +437,27 @@ namespace Jvedio
                 id = info.DBId;
             }
             vieModel_StartUp.Loading = true;
-            if (Properties.Settings.Default.ScanGivenPath)
-            {
-                try
-                {
-                    await Task.Run(() =>
-                    {
+            //if (Properties.Settings.Default.ScanGivenPath)
+            //{
+            //    try
+            //    {
+            //        await Task.Run(() =>
+            //        {
 
-                        this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            //statusText.Text = Jvedio.Language.Resources.Status_ScanDir; 
-                        }), System.Windows.Threading.DispatcherPriority.Background);
-                        List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), ct);
-                        Scan.InsertWithNfo(filepaths, ct);
-                    }, cts.Token);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogF(ex);
-                }
+            //            this.Dispatcher.BeginInvoke(new Action(() =>
+            //            {
+            //                //statusText.Text = Jvedio.Language.Resources.Status_ScanDir; 
+            //            }), System.Windows.Threading.DispatcherPriority.Background);
+            //            List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), ct);
+            //            Scan.InsertWithNfo(filepaths, ct);
+            //        }, cts.Token);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Logger.LogF(ex);
+            //    }
 
-            }
+            //}
             vieModel_StartUp.Loading = false;
             // 次数+1
             appDatabaseMapper.increaseFieldById("ViewCount", id);

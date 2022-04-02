@@ -213,59 +213,59 @@ namespace Jvedio
                     //扫描
                     double totalnum = 0;//扫描出的视频总数
                     double insertnum = 0;//导入的视频总数
-                    try
-                    {
-                        //全盘扫描
-                        if ((bool)ScanAll.IsChecked)
-                        {
-                            LoadingStackPanel.Visibility = Visibility.Visible;
-                            await Task.Run(() =>
-                            {
-                                ct.ThrowIfCancellationRequested();
+                    //try
+                    //{
+                    //    //全盘扫描
+                    //    if ((bool)ScanAll.IsChecked)
+                    //    {
+                    //        LoadingStackPanel.Visibility = Visibility.Visible;
+                    //        await Task.Run(() =>
+                    //        {
+                    //            ct.ThrowIfCancellationRequested();
 
-                                List<string> filepaths = Scan.ScanAllDrives();
-                                totalnum = filepaths.Count;
-                                insertnum = Scan.InsertWithNfo(filepaths, ct);
-                            });
-                        }
-                        else
-                        {
-                            if (vieModel.ScanPath.Count == 0) { break; }
-                            LoadingStackPanel.Visibility = Visibility.Visible;
+                    //            List<string> filepaths = Scan.ScanAllDrives();
+                    //            totalnum = filepaths.Count;
+                    //            insertnum = Scan.InsertWithNfo(filepaths, ct);
+                    //        });
+                    //    }
+                    //    else
+                    //    {
+                    //        if (vieModel.ScanPath.Count == 0) { break; }
+                    //        LoadingStackPanel.Visibility = Visibility.Visible;
 
 
 
-                            await Task.Run(() =>
-                        {
-                            ct.ThrowIfCancellationRequested();
+                    //        await Task.Run(() =>
+                    //    {
+                    //        ct.ThrowIfCancellationRequested();
 
-                            StringCollection stringCollection = new StringCollection();
-                            foreach (var item in vieModel.ScanPath)
-                            {
-                                if (Directory.Exists(item)) { stringCollection.Add(item); }
-                            }
-                            List<string> filepaths = Scan.ScanPaths(stringCollection, ct);
-                            totalnum = filepaths.Count;
-                            insertnum = Scan.InsertWithNfo(filepaths, ct);
-                        }, cts.Token);
+                    //        StringCollection stringCollection = new StringCollection();
+                    //        foreach (var item in vieModel.ScanPath)
+                    //        {
+                    //            if (Directory.Exists(item)) { stringCollection.Add(item); }
+                    //        }
+                    //        List<string> filepaths = Scan.ScanPaths(stringCollection, ct);
+                    //        totalnum = filepaths.Count;
+                    //        insertnum = Scan.InsertWithNfo(filepaths, ct);
+                    //    }, cts.Token);
 
-                        }
+                    //    }
 
-                        LoadingStackPanel.Visibility = Visibility.Hidden;
-                        if (!cts.IsCancellationRequested)
-                        {
-                            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_ScanNum} {totalnum}  {Jvedio.Language.Resources.ImportNumber} {insertnum}", GrowlToken);
-                        }
-                    }
-                    catch (OperationCanceledException ex)
-                    {
-                        Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {ex.Message}");
-                    }
-                    finally
-                    {
-                        cts.Dispose();
-                        Running = false;
-                    }
+                    //    LoadingStackPanel.Visibility = Visibility.Hidden;
+                    //    if (!cts.IsCancellationRequested)
+                    //    {
+                    //        HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Message_ScanNum} {totalnum}  {Jvedio.Language.Resources.ImportNumber} {insertnum}", GrowlToken);
+                    //    }
+                    //}
+                    //catch (OperationCanceledException ex)
+                    //{
+                    //    Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {ex.Message}");
+                    //}
+                    //finally
+                    //{
+                    //    cts.Dispose();
+                    //    Running = false;
+                    //}
 
 
                     break;
@@ -319,24 +319,24 @@ namespace Jvedio
                         else
                         {
                             //扫描所有nfo文件
-                            await Task.Run(() =>
-                            {
-                                this.Dispatcher.Invoke((Action)delegate
-                                {
-                                    StatusTextBlock.Visibility = Visibility.Visible;
-                                    StatusTextBlock.Text = Jvedio.Language.Resources.BeginScan;
-                                });
+                            //await Task.Run(() =>
+                            //{
+                            //    this.Dispatcher.Invoke((Action)delegate
+                            //    {
+                            //        StatusTextBlock.Visibility = Visibility.Visible;
+                            //        StatusTextBlock.Text = Jvedio.Language.Resources.BeginScan;
+                            //    });
 
-                                StringCollection stringCollection = new StringCollection();
-                                foreach (var item in vieModel.NFOScanPath)
-                                {
-                                    if (Directory.Exists(item)) { stringCollection.Add(item); }
-                                }
-                                nfoFiles = Scan.ScanNFO(stringCollection, ct, (filepath) =>
-                                {
-                                    this.Dispatcher.Invoke((Action)delegate { StatusTextBlock.Text = filepath; });
-                                });
-                            }, cts.Token);
+                            //    StringCollection stringCollection = new StringCollection();
+                            //    foreach (var item in vieModel.NFOScanPath)
+                            //    {
+                            //        if (Directory.Exists(item)) { stringCollection.Add(item); }
+                            //    }
+                            //    nfoFiles = Scan.ScanNFO(stringCollection, ct, (filepath) =>
+                            //    {
+                            //        this.Dispatcher.Invoke((Action)delegate { StatusTextBlock.Text = filepath; });
+                            //    });
+                            //}, cts.Token);
                         }
 
 
@@ -395,29 +395,29 @@ namespace Jvedio
                     totalnum = 0;
                     insertnum = 0;
 
-                    try
-                    {
-                        await Task.Run(() =>
-                        {
-                            StringCollection stringCollection = new StringCollection();
-                            foreach (var item in vieModel.ScanEuPath) if (Directory.Exists(item)) { stringCollection.Add(item); }
-                            List<string> filepaths = Scan.ScanPaths(stringCollection, ct);
-                            totalnum = filepaths.Count;
-                            insertnum = Scan.InsertWithNfo(filepaths, ct, IsEurope: true);
-                        });
+                    //try
+                    //{
+                    //    await Task.Run(() =>
+                    //    {
+                    //        StringCollection stringCollection = new StringCollection();
+                    //        foreach (var item in vieModel.ScanEuPath) if (Directory.Exists(item)) { stringCollection.Add(item); }
+                    //        List<string> filepaths = Scan.ScanPaths(stringCollection, ct);
+                    //        totalnum = filepaths.Count;
+                    //        insertnum = Scan.InsertWithNfo(filepaths, ct, IsEurope: true);
+                    //    });
 
-                        LoadingStackPanel.Visibility = Visibility.Hidden;
-                        if (!cts.IsCancellationRequested)
-                        {
-                            HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Scan}{Jvedio.Language.Resources.Number} {totalnum}  {Jvedio.Language.Resources.ImportNumber} {insertnum} ", GrowlToken);
-                        }
-                    }
-                    finally
+                    //    LoadingStackPanel.Visibility = Visibility.Hidden;
+                    //    if (!cts.IsCancellationRequested)
+                    //    {
+                    //        HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Scan}{Jvedio.Language.Resources.Number} {totalnum}  {Jvedio.Language.Resources.ImportNumber} {insertnum} ", GrowlToken);
+                    //    }
+                    //}
+                    //finally
 
-                    {
-                        cts.Dispose();
-                        Running = false;
-                    }
+                    //{
+                    //    cts.Dispose();
+                    //    Running = false;
+                    //}
 
                     break;
 
@@ -447,25 +447,25 @@ namespace Jvedio
 
                     totalnum = 0;
                     insertnum = 0;
-                    try
-                    {
-                        await Task.Run(() =>
-                        {
-                            StringCollection stringCollection = new StringCollection();
-                            stringCollection.Add(path);
-                            List<string> filepaths = Scan.ScanPaths(stringCollection, ct);
-                            totalnum = filepaths.Count;
-                            insertnum = Scan.InsertWithNfo(filepaths, ct, IsEurope: IsEurope);
-                        });
+                    //try
+                    //{
+                    //    await Task.Run(() =>
+                    //    {
+                    //        StringCollection stringCollection = new StringCollection();
+                    //        stringCollection.Add(path);
+                    //        List<string> filepaths = Scan.ScanPaths(stringCollection, ct);
+                    //        totalnum = filepaths.Count;
+                    //        insertnum = Scan.InsertWithNfo(filepaths, ct, IsEurope: IsEurope);
+                    //    });
 
-                        LoadingStackPanel.Visibility = Visibility.Hidden;
-                        if (!cts.IsCancellationRequested) { HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Scan}{Jvedio.Language.Resources.Number} {totalnum}  {Jvedio.Language.Resources.ImportNumber} {insertnum} ", GrowlToken); }
-                    }
-                    finally
-                    {
-                        cts.Dispose();
-                        Running = false;
-                    }
+                    //    LoadingStackPanel.Visibility = Visibility.Hidden;
+                    //    if (!cts.IsCancellationRequested) { HandyControl.Controls.Growl.Info($"{Jvedio.Language.Resources.Scan}{Jvedio.Language.Resources.Number} {totalnum}  {Jvedio.Language.Resources.ImportNumber} {insertnum} ", GrowlToken); }
+                    //}
+                    //finally
+                    //{
+                    //    cts.Dispose();
+                    //    Running = false;
+                    //}
                     break;
 
                 default:
@@ -644,7 +644,7 @@ namespace Jvedio
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var dragdropFile in dragdropFiles)
             {
-                if (!IsFile(dragdropFile))
+                if (!FileHelper.IsFile(dragdropFile))
                 {
                     if (!vieModel.ScanPath.Contains(dragdropFile) && !vieModel.ScanPath.IsIntersectWith(dragdropFile))
                     {
@@ -670,7 +670,7 @@ namespace Jvedio
 
             foreach (var dragdropFile in dragdropFiles)
             {
-                if (IsFile(dragdropFile))
+                if (FileHelper.IsFile(dragdropFile))
                 {
                     if (new FileInfo(dragdropFile).Extension == ".mdb")
                     {
@@ -692,7 +692,7 @@ namespace Jvedio
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var dragdropFile in dragdropFiles)
             {
-                if (!IsFile(dragdropFile))
+                if (!FileHelper.IsFile(dragdropFile))
                 {
                     if (!vieModel.NFOScanPath.Contains(dragdropFile) && !vieModel.NFOScanPath.IsIntersectWith(dragdropFile))
                     {
@@ -718,7 +718,7 @@ namespace Jvedio
 
             foreach (var dragdropFile in dragdropFiles)
             {
-                if (IsFile(dragdropFile))
+                if (FileHelper.IsFile(dragdropFile))
                 {
                     if (new FileInfo(dragdropFile).Extension == ".nfo")
                     {
@@ -740,7 +740,7 @@ namespace Jvedio
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var dragdropFile in dragdropFiles)
             {
-                if (!IsFile(dragdropFile))
+                if (!FileHelper.IsFile(dragdropFile))
                 {
                     if (!vieModel.ScanEuPath.Contains(dragdropFile) && !vieModel.ScanEuPath.IsIntersectWith(dragdropFile))
                     {
@@ -766,7 +766,7 @@ namespace Jvedio
 
             foreach (var dragdropFile in dragdropFiles)
             {
-                if (!IsFile(dragdropFile))
+                if (!FileHelper.IsFile(dragdropFile))
                 {
                     UNCPathTextBox.Text = dragdropFile;
                     break;

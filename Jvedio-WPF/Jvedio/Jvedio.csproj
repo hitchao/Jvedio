@@ -266,6 +266,7 @@
     <Compile Include="Core\Enums\IdType.cs" />
     <Compile Include="Core\Enums\InsertMode.cs" />
     <Compile Include="Core\Enums\Language.cs" />
+    <Compile Include="Core\Enums\ScanStatus.cs" />
     <Compile Include="Core\Enums\SearchField.cs" />
     <Compile Include="Core\Enums\PathType.cs" />
     <Compile Include="Core\Enums\RelevanceType.cs" />
@@ -279,6 +280,8 @@
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\GlobalMapper.cs" />
     <Compile Include="Core\GlobalStyle.cs" />
+    <Compile Include="Core\Scan\ITask.cs" />
+    <Compile Include="Core\Scan\ScanResult.cs" />
     <Compile Include="Core\SimpleMarkDown\MarkDown.cs" />
     <Compile Include="Core\SimpleORM\AbstractMapper.cs" />
     <Compile Include="Core\SimpleORM\BaseMapper.cs" />
@@ -300,6 +303,7 @@
     <Compile Include="Entity\Actor.cs" />
     <Compile Include="Entity\Actor\ActorInfo.cs" />
     <Compile Include="Entity\Actress.cs" />
+    <Compile Include="Core\Scan\ScanTask.cs" />
     <Compile Include="Entity\CommonSQL\AIFaceInfo.cs" />
     <Compile Include="Entity\CommonSQL\SearchHistory.cs" />
     <Compile Include="Entity\CommonSQL\AppConfig.cs" />
@@ -360,6 +364,7 @@
     <Compile Include="Mapper\UrlCodeMapper.cs" />
     <Compile Include="Mapper\VideoMapper.cs" />
     <Compile Include="Test\TestMapper.cs" />
+    <Compile Include="Test\TestUtils.cs" />
     <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
     <Compile Include="Utils\AI\Baidu.cs" />
     <Compile Include="App.xaml.cs">
@@ -426,7 +431,7 @@
     <Compile Include="Utils\FileProcess\Logger.cs" />
     <Compile Include="Utils\Net\CrawlerParse.cs" />
     <Compile Include="Utils\FileProcess\NFO.cs" />
-    <Compile Include="Utils\FileProcess\Scan.cs" />
+    <Compile Include="Core\Scan\Scan.cs" />
     <Compile Include="Utils\Config\WindowConfig.cs" />
     <Compile Include="Windows\Msgbox.xaml.cs">
       <DependentUpon>Msgbox.xaml</DependentUpon>
@@ -924,7 +929,9 @@
       <Name>Jvedio.Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Entity\Base\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

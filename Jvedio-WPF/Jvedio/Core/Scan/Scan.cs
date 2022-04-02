@@ -14,9 +14,9 @@ using Jvedio.Entity;
 
 namespace Jvedio
 {
-    public static class Scan
+    public class Scan
     {
-        public static double MinFileSize = Properties.Settings.Default.ScanMinFileSize * 1024 * 1024;//最小文件大小
+        public static double MinFileSize = Properties.Settings.Default.ScanMinFileSize * 1024 * 1024;//最小文件大小吗，单位 B
         public static List<string> FilePattern = new List<string>();//文件格式
         public static List<string> ImagePattern = new List<string>() { ".jpg", ".png", ".jpeg", ".bmp" };
 
@@ -30,7 +30,7 @@ namespace Jvedio
         }
 
 
-        public static double InsertWithNfo(List<string> filepaths, CancellationToken ct, Action<string> messageCallBack = null, bool IsEurope = false)
+        public double InsertWithNfo(List<string> filepaths, CancellationToken ct, Action<string> messageCallBack = null, bool IsEurope = false)
         {
             if (filepaths == null || filepaths.Count == 0) return 0;
             List<string> nfoPaths = new List<string>();
@@ -108,7 +108,7 @@ namespace Jvedio
 
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public static List<string> ScanAllDrives()
+        public List<string> ScanAllDrives()
         {
             List<string> result = new List<string>();
             try
@@ -147,7 +147,7 @@ namespace Jvedio
 
 
         //根据 视频后缀文件大小筛选
-        public static List<string> FirstFilter(List<string> FilePathList, string ID = "")
+        public List<string> FirstFilter(List<string> FilePathList, string ID = "")
         {
             if (FilePathList == null || FilePathList.Count == 0) return new List<string>();
             try
@@ -175,7 +175,7 @@ namespace Jvedio
             return new List<string>();
         }
 
-        public static List<string> ScanTopPaths(StringCollection stringCollection)
+        public List<string> ScanTopPaths(StringCollection stringCollection)
         {
             List<string> result = new List<string>();
             if (stringCollection == null || stringCollection.Count == 0) return result;
@@ -292,8 +292,8 @@ namespace Jvedio
 
 
 
-
-        public static List<string> ScanPaths(StringCollection stringCollection, CancellationToken cancellationToken)
+        // 必须整合在
+        public List<string> ScanPaths(StringCollection stringCollection, CancellationToken cancellationToken)
         {
             List<string> result = new List<string>();
             if (stringCollection == null || stringCollection.Count == 0) return result;
@@ -314,7 +314,7 @@ namespace Jvedio
                     .Where(s => !File.Exists(s) || new System.IO.FileInfo(s).Length >= MinFileSize).OrderBy(s => s).ToList();
         }
 
-        public static List<string> ScanNFO(StringCollection stringCollection, CancellationToken cancellationToken, Action<string> callBack)
+        public List<string> ScanNFO(StringCollection stringCollection, CancellationToken cancellationToken, Action<string> callBack)
         {
             List<string> result = new List<string>();
             if (stringCollection == null || stringCollection.Count == 0) return result;
@@ -336,7 +336,7 @@ namespace Jvedio
 
 
 
-        public static List<string> GetAllFilesFromFolder(string root, CancellationToken cancellationToken, string pattern = "", Action<string> callBack = null)
+        public List<string> GetAllFilesFromFolder(string root, CancellationToken cancellationToken, string pattern = "", Action<string> callBack = null)
         {
             Queue<string> folders = new Queue<string>();
             List<string> files = new List<string>();
@@ -379,7 +379,7 @@ namespace Jvedio
         /// <param name="ct"></param>
         /// <param name="IsEurope"></param>
         /// <returns></returns>
-        public static double DistinctMovieAndInsert(List<string> MoviePaths, CancellationToken ct, bool IsEurope = false)
+        public double DistinctMovieAndInsert(List<string> MoviePaths, CancellationToken ct, bool IsEurope = false)
         {
             Logger.LogScanInfo(Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----");
             Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.ScanVideo} => {MoviePaths.Count} " + Environment.NewLine);
@@ -568,7 +568,7 @@ namespace Jvedio
             return insertCount;
         }
 
-        public static (string, List<string>) ExcludeMaximumSize(List<string> pathlist)
+        public (string, List<string>) ExcludeMaximumSize(List<string> pathlist)
         {
             double maxsize = 0;
             int maxsizeindex = 0;

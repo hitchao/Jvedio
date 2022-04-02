@@ -13,6 +13,31 @@ namespace Jvedio
     public static class FileHelper
     {
 
+
+
+        /// <summary>
+        /// 判断拖入的是文件夹还是文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool IsFile(string path)
+        {
+            try
+            {
+                FileAttributes attr = File.GetAttributes(path);
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                    return false;
+                else
+                    return true;
+            }
+            catch
+            {
+                return true;
+            }
+
+        }
+
+
         public static void TryWriteToFile(string filePath, string content)
         {
             try

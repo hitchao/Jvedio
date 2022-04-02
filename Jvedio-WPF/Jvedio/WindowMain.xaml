@@ -1659,9 +1659,12 @@
 
                                             <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
                                                 <Button
-                                                    Click="StopLoad"
-                                                    Content="停止加载"
-                                                    Visibility="Collapsed" />
+                                                    Margin="5"
+                                                    Click="Test_1"
+                                                    Content="测试扫描"
+                                                    Style="{StaticResource ButtonWarning}" />
+                                                <Button Click="StopLoad" Content="停止加载" />
+
 
                                                 <Button
                                                     Margin="5,0"
@@ -3921,6 +3924,268 @@
                     Grid.Column="2"
                     Margin="5,0"
                     Orientation="Horizontal">
+                    <Grid>
+                        <Border
+                            Name="msgScan"
+                            Width="30"
+                            Height="30"
+                            Margin="0"
+                            MouseLeftButtonUp="ShowMsgScanPopup"
+                            Style="{StaticResource FlatBorderStyle}">
+
+                            <Viewbox Height="15" Margin="-5,0,0,0">
+                                <Path Data="M232 64c-30.928 0-56 25.072-56 56v784c0 30.928 25.072 56 56 56h560c30.928 0 56-25.072 56-56V120c0-30.928-25.072-56-56-56H232z m0 840V120h560v784H232z m112-736h-64v64h64V168z m168 120c-123.712 0-224 100.288-224 224s100.288 224 224 224 224-100.288 224-224-100.288-224-224-224z m-168 224c0-92.784 75.216-168 168-168s168 75.216 168 168-75.216 168-168 168-168-75.216-168-168z m168-112c-61.856 0-112 50.144-112 112s50.144 112 112 112 112-50.144 112-112-50.144-112-112-112zM744 168h-64v64h64V168zM316 792v56h392v-56H316z" Fill="{DynamicResource Global.Foreground}" />
+
+                            </Viewbox>
+                        </Border>
+                        <Viewbox
+                            Height="14"
+                            Margin="3"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Path RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <RotateTransform CenterX="0" CenterY="0" />
+                                </Path.RenderTransform>
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ScanStatus}" Value="Scanning">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                                RepeatBehavior="Forever"
+                                                                Storyboard.TargetProperty="RenderTransform.Angle"
+                                                                From="0"
+                                                                To="360"
+                                                                Duration="0:0:1" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                                Storyboard.TargetProperty="RenderTransform.Angle"
+                                                                To="0"
+                                                                Duration="0:0:0" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Setter Property="Fill" Value="{DynamicResource Common.HighLight.Hover.Background}" />
+                                                <Setter Property="Data" Value="M171.292444 548.977778a337.464889 337.464889 0 0 1 210.488889-367.445334c111.616-43.52 231.992889-22.698667 317.212445 39.480889L626.460444 338.488889l325.233778-1.251556L835.470222 0l-59.562666 96.426667C650.353778 15.075556 479.175111-11.491556 329.272889 46.933333 121.628444 127.886222 2.048 337.351111 25.6 549.034667h145.635556zM852.764444 465.009778a337.464889 337.464889 0 0 1-210.488888 367.502222c-102.627556 39.992889-215.836444 24.917333-302.819556-29.013333l65.536-106.211556-349.752889-20.48L203.093333 1024l62.065778-100.465778c125.553778 81.351111 279.608889 102.001778 429.511111 43.52 207.644444-80.952889 327.224889-290.304 303.616-502.044444h-145.635555z" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ScanStatus}" Value="Complete">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Setter Property="Fill" Value="Green" />
+                                                <Setter Property="Data" Value="M947.605 139.803c-15.766-15.763-39.836-14.107-57.1 0-133.71 109.263-541.798 419.618-541.798 419.618s-165.018-71.128-216.268-94.163c-20.338-9.14-41.328-15.766-57.101 0-15.763 15.763-15.763 41.326 0 57.087 0 0 242.992 244.252 244.157 245.415 8.052 8.052 18.652 11.867 29.212 11.693 10.554 0.175 21.154-3.64 29.211-11.693 1.159-1.163 427.18-428.238 569.686-570.87 15.759-15.772 15.768-41.324 0.001-57.087z m0 0" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ScanStatus}" Value="None">
+                                                <Setter Property="Visibility" Value="Hidden" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+
+                        </Viewbox>
+
+                        <Popup
+                            x:Name="scanStatusPopup"
+                            Width="350"
+                            MaxHeight="600"
+                            AllowsTransparency="True"
+                            HorizontalOffset="-300"
+                            Placement="Top"
+                            PlacementTarget="{Binding ElementName=msgScan}"
+                            PopupAnimation="Fade"
+                            StaysOpen="True"
+                            VerticalOffset="0">
+                            <Grid Margin="5">
+                                <Border
+                                    Margin="5"
+                                    Background="{DynamicResource Menu.Background}"
+                                    CornerRadius="0 0 5 5"
+                                    Effect="{StaticResource PopupDropShadowEffect}" />
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid
+                                        Grid.Row="0"
+                                        Height="35"
+                                        Background="{DynamicResource Window.Title.Background}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock
+                                            Margin="10,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="扫描任务" />
+
+                                        <Border
+                                            Grid.Column="1"
+                                            Margin="0"
+                                            MouseLeftButtonUp="ClearScanTasks"
+                                            Style="{StaticResource ToolsBarBorderStyle}">
+
+                                            <Viewbox Width="15" Height="15">
+                                                <Path
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Data="M187.118702 146.498562l771.355932 0.002047v60.796667l-771.355932-0.002046v-60.796668z m0 222.286666l771.355932 0.002046v60.796668l-771.355932-0.002047v-60.796667z m0 224.186945l406.576948 0.001023v60.796668l-406.576948-0.001023v-60.796668z m0 222.286666l406.576948 0.001023v60.796668l-406.576948-0.001024v-60.796667zM65.525366 146.497539h60.796668v60.796668H65.525366v-60.796668z m0 222.287689h60.796668v60.796667H65.525366v-60.796667z m0 224.186945h60.796668v60.796668H65.525366v-60.796668z m0 222.286666h60.796668v60.796667H65.525366v-60.796667z m873.494171 4.916986l-85.97614-85.97614 85.97614-85.976141-57.326637-57.326636-85.97614 85.97614-85.97614-85.97614-57.325613 57.325613 85.97614 85.97614-85.97614 85.97614 57.325613 57.326637 85.97614-85.97614 85.977164 85.97614"
+                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                            </Viewbox>
+                                        </Border>
+                                        <Border
+                                            Grid.Column="2"
+                                            Margin="5,0"
+                                            MouseLeftButtonUp="HideScanPopup"
+                                            Style="{StaticResource ToolsBarBorderStyle}">
+
+                                            <Viewbox
+                                                Width="15"
+                                                Height="15"
+                                                RenderTransformOrigin="0.5,0.5">
+                                                <Viewbox.RenderTransform>
+                                                    <RotateTransform Angle="90" />
+                                                </Viewbox.RenderTransform>
+                                                <Path
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Data="M312.889 995.556c-17.067 0-28.445-5.69-39.822-17.067-22.756-22.756-17.067-56.889 5.689-79.645L642.844 568.89c11.378-11.378 17.067-22.756 17.067-34.133 0-11.378-5.689-22.756-17.067-34.134L273.067 187.733c-22.756-22.755-28.445-56.889-5.69-79.644 22.756-22.756 56.89-28.445 79.645-5.689l364.09 312.889C745.243 443.733 768 489.244 768 534.756s-17.067 85.333-51.2 119.466L352.711 984.178c-11.378 5.689-28.444 11.378-39.822 11.378z"
+                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                            </Viewbox>
+                                        </Border>
+
+
+                                    </Grid>
+
+                                    <ScrollViewer
+                                        Grid.Row="1"
+                                        Margin="10"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl ItemsSource="{Binding ScanTasks}">
+
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Name="rootGrid">
+                                                        <Border
+                                                            Margin="5"
+                                                            Background="{DynamicResource Menu.Background}"
+                                                            CornerRadius="0 0 5 5"
+                                                            Effect="{StaticResource PopupDropShadowEffect}" />
+                                                        <Grid Margin="5">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Viewbox
+                                                                Grid.Column="0"
+                                                                Width="25"
+                                                                Margin="10"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center">
+                                                                <Path RenderTransformOrigin="0.5,0.5">
+                                                                    <Path.RenderTransform>
+                                                                        <RotateTransform x:Name="transform" Angle="0" CenterX="0" CenterY="0" />
+
+                                                                    </Path.RenderTransform>
+                                                                    <Path.Style>
+                                                                        <Style TargetType="Path">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
+
+                                                                                    <Setter Property="Fill" Value="{DynamicResource Common.HighLight.Hover.Background}" />
+                                                                                    <Setter Property="Data" Value="M171.292444 548.977778a337.464889 337.464889 0 0 1 210.488889-367.445334c111.616-43.52 231.992889-22.698667 317.212445 39.480889L626.460444 338.488889l325.233778-1.251556L835.470222 0l-59.562666 96.426667C650.353778 15.075556 479.175111-11.491556 329.272889 46.933333 121.628444 127.886222 2.048 337.351111 25.6 549.034667h145.635556zM852.764444 465.009778a337.464889 337.464889 0 0 1-210.488888 367.502222c-102.627556 39.992889-215.836444 24.917333-302.819556-29.013333l65.536-106.211556-349.752889-20.48L203.093333 1024l62.065778-100.465778c125.553778 81.351111 279.608889 102.001778 429.511111 43.52 207.644444-80.952889 327.224889-290.304 303.616-502.044444h-145.635555z" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="RanToCompletion">
+
+                                                                                    <Setter Property="Fill" Value="Green" />
+                                                                                    <Setter Property="Data" Value="M947.605 139.803c-15.766-15.763-39.836-14.107-57.1 0-133.71 109.263-541.798 419.618-541.798 419.618s-165.018-71.128-216.268-94.163c-20.338-9.14-41.328-15.766-57.101 0-15.763 15.763-15.763 41.326 0 57.087 0 0 242.992 244.252 244.157 245.415 8.052 8.052 18.652 11.867 29.212 11.693 10.554 0.175 21.154-3.64 29.211-11.693 1.159-1.163 427.18-428.238 569.686-570.87 15.759-15.772 15.768-41.324 0.001-57.087z m0 0" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="Canceled">
+
+                                                                                    <Setter Property="Fill" Value="Red" />
+                                                                                    <Setter Property="Data" Value="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Path.Style>
+                                                                </Path>
+
+                                                            </Viewbox>
+
+                                                            <StackPanel
+                                                                Grid.Column="1"
+                                                                Margin="5"
+                                                                Orientation="Vertical">
+                                                                <TextBlock Margin="5,10" Text="{Binding CreateTime}" />
+
+                                                                <TextBlock Margin="5,10" Text="{Binding StatusText}" />
+
+                                                            </StackPanel>
+                                                            <StackPanel
+                                                                Grid.Column="2"
+                                                                Width="100"
+                                                                VerticalAlignment="Center"
+                                                                Orientation="Vertical">
+                                                                <StackPanel.Style>
+                                                                    <Style TargetType="StackPanel">
+                                                                        <Setter Property="Visibility" Value="Hidden" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </StackPanel.Style>
+                                                                <Button
+                                                                    Click="CancelScanTask"
+                                                                    Content="取消"
+                                                                    IsEnabled="{Binding Running}"
+                                                                    Tag="{Binding CreateTime}" />
+                                                                <Button
+                                                                    Click="ShowScanDetail"
+                                                                    Content="详情"
+                                                                    Tag="{Binding CreateTime}" />
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Vertical" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+
+                                        </ItemsControl>
+                                    </ScrollViewer>
+
+
+
+
+
+
+                                </Grid>
+                            </Grid>
+                        </Popup>
+
+                    </Grid>
                     <chao:PathMsg
                         Name="downloadPathMsg"
                         MsgCount="100"

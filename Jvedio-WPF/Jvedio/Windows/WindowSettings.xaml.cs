@@ -764,7 +764,7 @@ namespace Jvedio
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var item in dragdropFiles)
             {
-                if (!IsFile(item))
+                if (!FileHelper.IsFile(item))
                 {
                     if (!vieModel_Settings.ScanPath.Contains(item) && !vieModel_Settings.ScanPath.IsIntersectWith(item))
                     {

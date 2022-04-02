@@ -39,7 +39,10 @@ using Jvedio.Utils.Visual;
 using Jvedio.Core.Enums;
 using Jvedio.Utils.Common;
 using Jvedio.Core;
+using Jvedio.Core.Scan;
 using static Jvedio.Main.Msg;
+using System.Diagnostics;
+using Jvedio.Test;
 
 namespace Jvedio
 {
@@ -93,6 +96,8 @@ namespace Jvedio
         Window_LabelManagement labelManagement;
 
         public static Msg msgCard = new Msg();
+
+        public static bool CheckingScanStatus = false;
 
         public Main()
         {
@@ -781,39 +786,39 @@ namespace Jvedio
 
         public async Task<bool> ScanWhenRefresh()
         {
-            vieModel.IsScanning = true;
-            RefreshScanCTS = new CancellationTokenSource();
-            RefreshScanCTS.Token.Register(() => { Console.WriteLine("取消任务"); this.Cursor = Cursors.Arrow; });
-            RefreshScanCT = RefreshScanCTS.Token;
-            await Task.Run(() =>
-            {
-                List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(System.IO.Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), RefreshScanCT);
-                double num = Scan.InsertWithNfo(filepaths, RefreshScanCT);
-                vieModel.IsScanning = false;
+            //vieModel.IsScanning = true;
+            //RefreshScanCTS = new CancellationTokenSource();
+            //RefreshScanCTS.Token.Register(() => { Console.WriteLine("取消任务"); this.Cursor = Cursors.Arrow; });
+            //RefreshScanCT = RefreshScanCTS.Token;
+            //await Task.Run(() =>
+            //{
+            //    List<string> filepaths = Scan.ScanPaths(ReadScanPathFromConfig(System.IO.Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath)), RefreshScanCT);
+            //    double num = Scan.InsertWithNfo(filepaths, RefreshScanCT);
+            //    vieModel.IsScanning = false;
 
-                if (Properties.Settings.Default.AutoDeleteNotExistMovie)
-                {
-                    //删除不存在影片
-                    var movies = DataBase.SelectMoviesBySql("select * from movie");
-                    movies.ForEach(movie =>
-                    {
-                        if (!File.Exists(movie.filepath))
-                        {
-                            DataBase.DeleteByField("movie", "id", movie.id);
-                        }
-                    });
+            //    if (Properties.Settings.Default.AutoDeleteNotExistMovie)
+            //    {
+            //        //删除不存在影片
+            //        var movies = DataBase.SelectMoviesBySql("select * from movie");
+            //        movies.ForEach(movie =>
+            //        {
+            //            if (!File.Exists(movie.filepath))
+            //            {
+            //                DataBase.DeleteByField("movie", "id", movie.id);
+            //            }
+            //        });
 
-                }
+            //    }
 
-                this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    //vieModel.Reset();
-                    if (num > 0) msgCard.Info($"{Jvedio.Language.Resources.Message_ScanNum} {num} --- {Jvedio.Language.Resources.Message_ViewLog}");
-                }), System.Windows.Threading.DispatcherPriority.Render);
+            //    this.Dispatcher.BeginInvoke(new Action(() =>
+            //    {
+            //        //vieModel.Reset();
+            //        if (num > 0) msgCard.Info($"{Jvedio.Language.Resources.Message_ScanNum} {num} --- {Jvedio.Language.Resources.Message_ViewLog}");
+            //    }), System.Windows.Threading.DispatcherPriority.Render);
 
 
-            }, RefreshScanCTS.Token);
-            RefreshScanCTS.Dispose();
+            //}, RefreshScanCTS.Token);
+            //RefreshScanCTS.Dispose();
             return true;
         }
 
@@ -3601,39 +3606,63 @@ namespace Jvedio
         private CancellationTokenSource scan_cts;
         private async void Grid_Drop(object sender, DragEventArgs e)
         {
+
+            vieModel.ScanStatus = "Scanning";
+
+
+
+
+
             //WaitingPanel.Visibility = Visibility.Visible;
-            vieModel.IsScanning = true;
-            scan_cts = new CancellationTokenSource();
-            scan_cts.Token.Register(() => { Console.WriteLine("取消任务"); });
-            scan_ct = scan_cts.Token;
+            //vieModel.IsScanning = true;
+            //scan_cts = new CancellationTokenSource();
+            //scan_cts.Token.Register(() => { Console.WriteLine("取消任务"); });
+            //scan_ct = scan_cts.Token;
 
-            await Task.Run(() =>
+            //await Task.Run(() =>
+            //{
+            //    //分为文件夹和文件
+            string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            List<string> files = new List<string>();
+            List<string> paths = new List<string>();
+
+            foreach (var item in dragdropFiles)
             {
-                //分为文件夹和文件
-                string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-                List<string> files = new List<string>();
-                StringCollection stringCollection = new StringCollection();
-                foreach (var item in dragdropFiles)
+                if (FileHelper.IsFile(item))
+                    files.Add(item);
+                else
+                    paths.Add(item);
+            }
+            Core.Scan.ScanTask scanTask = new Core.Scan.ScanTask(paths, files);
+            vieModel.ScanTasks.Add(scanTask);
+            scanTask.Start();
+            if (!CheckingScanStatus)
+            {
+                CheckingScanStatus = true;
+#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+                Task.Run(() =>
                 {
-                    if (IsFile(item))
-                        files.Add(item);
-                    else
-                        stringCollection.Add(item);
-                }
-                List<string> filepaths = new List<string>();
-                //扫描导入
-                if (stringCollection.Count > 0)
-                    filepaths = Scan.ScanPaths(stringCollection, scan_ct);
+                    while (true)
+                    {
+                        Console.WriteLine("检查状态");
+                        if (vieModel.ScanTasks.All(arg =>
+                         arg.Status == System.Threading.Tasks.TaskStatus.Canceled ||
+                         arg.Status == System.Threading.Tasks.TaskStatus.RanToCompletion
+                        ))
+                        {
+                            vieModel.ScanStatus = "Complete";
+                            CheckingScanStatus = false;
+                            break;
+                        }
+                        else
+                        {
+                            Task.Delay(1000).Wait();
+                        }
 
-                if (files.Count > 0) filepaths.AddRange(files);
-
-                Scan.InsertWithNfo(filepaths, scan_ct, (message) => { msgCard.Info(message); });
-                Task.Delay(300).Wait();
-            });
-            //WaitingPanel.Visibility = Visibility.Hidden;
-            scan_cts.Dispose();
-            vieModel.IsScanning = false;
-            vieModel.Reset();
+                    }
+                });
+#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            }
         }
 
 
@@ -6305,6 +6334,55 @@ namespace Jvedio
             long.TryParse(rate.Tag.ToString(), out long actorID);
             actorMapper.updateFieldById("Grade", rate.Value.ToString(), actorID);
 
+        }
+
+        private void Test_1(object sender, RoutedEventArgs e)
+        {
+            TestUtils.TestScanFiles();
+        }
+
+        private void ShowMsgScanPopup(object sender, MouseButtonEventArgs e)
+        {
+            scanStatusPopup.IsOpen = true;
+
+        }
+
+        private void HideScanPopup(object sender, MouseButtonEventArgs e)
+        {
+            scanStatusPopup.IsOpen = false;
+        }
+
+        private void ClearScanTasks(object sender, MouseButtonEventArgs e)
+        {
+
+            for (int i = vieModel.ScanTasks.Count - 1; i >= 0; i--)
+            {
+                Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
+                if (scanTask.Status == System.Threading.Tasks.TaskStatus.Canceled ||
+                    scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion
+                    )
+                {
+                    vieModel.ScanTasks.RemoveAt(i);
+                }
+            }
+            vieModel.ScanStatus = "None";
+        }
+
+        private void CancelScanTask(object sender, RoutedEventArgs e)
+        {
+            string createTime = (sender as Button).Tag.ToString();
+            ScanTask scanTask = vieModel.ScanTasks.Where(arg => arg.CreateTime.Equals(createTime)).FirstOrDefault();
+            scanTask.Cancel();
+        }
+
+        private void ShowScanDetail(object sender, RoutedEventArgs e)
+        {
+            string createTime = (sender as Button).Tag.ToString();
+            ScanTask scanTask = vieModel.ScanTasks.Where(arg => arg.CreateTime.Equals(createTime)).FirstOrDefault();
+            if (scanTask.Status != System.Threading.Tasks.TaskStatus.Running)
+            {
+                //todo 显示扫描详情
+            }
         }
     }
 

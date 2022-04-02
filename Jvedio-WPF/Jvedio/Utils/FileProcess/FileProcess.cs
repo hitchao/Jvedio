@@ -314,26 +314,6 @@ namespace Jvedio
 
 
 
-        /// <summary>
-        /// 判断拖入的是文件夹还是文件
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static bool IsFile(string path)
-        {
-            try
-            {
-                FileAttributes attr = File.GetAttributes(path);
-                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                    return false;
-                else
-                    return true;
-            }
-            catch
-            {
-                return true;
-            }
-        }
 
 
         public static Movie GetInfoFromNfo(string path)
@@ -400,19 +380,19 @@ namespace Jvedio
 
                 if (files != null)
                 {
-                    var movielist = Scan.FirstFilter(files.ToList(), movie.id);
-                    if (movielist.Count == 1 && !movielist[0].ToLower().EndsWith(".nfo"))
-                    {
-                        movie.filepath = movielist[0];
-                    }
-                    else if (movielist.Count > 1)
-                    {
-                        //分段视频
-                        movie.filepath = movielist[0];
-                        string subsection = "";
-                        movielist.ForEach(arg => { subsection += arg + ";"; });
-                        movie.subsection = subsection;
-                    }
+                    //var movielist = Scan.FirstFilter(files.ToList(), movie.id);
+                    //if (movielist.Count == 1 && !movielist[0].ToLower().EndsWith(".nfo"))
+                    //{
+                    //    movie.filepath = movielist[0];
+                    //}
+                    //else if (movielist.Count > 1)
+                    //{
+                    //    //分段视频
+                    //    movie.filepath = movielist[0];
+                    //    string subsection = "";
+                    //    movielist.ForEach(arg => { subsection += arg + ";"; });
+                    //    movie.subsection = subsection;
+                    //}
                 }
 
 

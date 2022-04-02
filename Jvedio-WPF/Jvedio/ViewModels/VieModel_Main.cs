@@ -37,6 +37,7 @@ using Jvedio.Utils.Common;
 using Jvedio.Core.Enums;
 using Jvedio.Core;
 using Jvedio.Mapper;
+using Jvedio.Core.Scan;
 
 namespace Jvedio.ViewModel
 {
@@ -498,6 +499,20 @@ namespace Jvedio.ViewModel
 
 
 
+        private ObservableCollection<ScanTask> _ScanTasks = new ObservableCollection<ScanTask>();
+        public ObservableCollection<ScanTask> ScanTasks
+        {
+            get { return _ScanTasks; }
+            set
+            {
+                _ScanTasks = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
+
         private ObservableCollection<Message> _Message = new ObservableCollection<Message>();
         public ObservableCollection<Message> Message
         {
@@ -773,6 +788,29 @@ namespace Jvedio.ViewModel
 
 
         #region "Variable"
+
+
+
+
+
+
+
+
+
+        private string _ScanStatus;
+
+        public string ScanStatus
+        {
+            get { return _ScanStatus; }
+            set
+            {
+                _ScanStatus = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+
 
 
 
