@@ -10,6 +10,7 @@ using static Jvedio.GlobalVariable;
 using System.IO;
 using System.Net;
 using Jvedio.Utils.Net;
+using Jvedio.Core.Enums;
 
 namespace Jvedio
 {
@@ -72,7 +73,7 @@ namespace Jvedio
     {
 
 
-        public VedioType VedioType { get; set; }
+        public VideoType VideoType { get; set; }
         public BusActorCrawler(string Id) : base(Id)
         {
 
@@ -107,7 +108,7 @@ namespace Jvedio
                 if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
             }
             string cookie = string.Join(";", Cookies);
-            if (VedioType == VedioType.欧美)
+            if (VideoType == VideoType.Europe)
                 JvedioServers.BusEurope.Cookie = cookie;
             else
                 JvedioServers.Bus.Cookie = cookie;
@@ -119,7 +120,7 @@ namespace Jvedio
         {
             headers = new CrawlerHeader()
             {
-                Cookies = VedioType == VedioType.欧美 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie
+                Cookies = VideoType == VideoType.Europe ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie
             };
         }
 

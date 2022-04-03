@@ -95,31 +95,27 @@ namespace Jvedio.Entity
             string json = "";
             if (dict.Count > 0) json = JsonConvert.SerializeObject(dict);
 
-            Video result = new Video(false)
-            {
-                VID = id,
+            Video video = (Video)toMetaData();
+            video.VID = id;
+            video.VideoType = (VideoType)vediotype;
+            video.Series = tag.Replace(' ', GlobalVariable.Separator);
+            video.Director = director;
+            video.Studio = studio;
+            video.Publisher = studio;
+            video.Plot = plot;
+            video.Outline = outline;
+            video.Duration = runtime;
+            video.SubSection = subsection.Replace(';', GlobalVariable.Separator);
+            video.WebType = source.Replace("jav", "");
+            video.WebUrl = sourceurl;
+            video.PreviewImagePath = "*PicPath*/ExtraPic/" + id;
+            video.ScreenShotPath = "*PicPath*/ScreenShot/" + id;
+            video.GifImagePath = "*PicPath*/Gif/" + $"{id}.gif";
+            video.BigImagePath = "*PicPath*/BigPic/" + $"{id}.jpg";
+            video.SmallImagePath = "*PicPath*/SmallPic/" + $"{id}.jpg";
+            video.ImageUrls = json;
 
-                VideoType = (VideoType)vediotype,
-                Series = tag.Replace(' ', GlobalVariable.Separator),
-                Director = director,
-                Studio = studio,
-                Publisher = studio,
-                Plot = plot,
-                Outline = outline,
-                Duration = runtime,
-                SubSection = subsection.Replace(';', GlobalVariable.Separator),
-
-                WebType = source.Replace("jav", ""),
-                WebUrl = sourceurl,
-
-                PreviewImagePath = "*PicPath*/ExtraPic/" + id,
-                ScreenShotPath = "*PicPath*/ScreenShot/" + id,
-                GifImagePath = "*PicPath*/Gif/" + $"{id}.gif",
-                BigImagePath = "*PicPath*/BigPic/" + $"{id}.jpg",
-                SmallImagePath = "*PicPath*/SmallPic/" + $"{id}.jpg",
-                ImageUrls = json,
-            };
-            return result;
+            return video;
         }
 
     }

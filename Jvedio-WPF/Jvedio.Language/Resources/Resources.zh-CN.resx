@@ -144,7 +144,7 @@
   <data name="SearchHint" xml:space="preserve">
     <value>搜索 识别码、演员、名称</value>
   </data>
-  <data name="VedioType" xml:space="preserve">
+  <data name="VideoType" xml:space="preserve">
     <value>视频类型</value>
   </data>
   <data name="WithActress" xml:space="preserve">

@@ -431,7 +431,7 @@
     <Compile Include="Utils\FileProcess\Logger.cs" />
     <Compile Include="Utils\Net\CrawlerParse.cs" />
     <Compile Include="Utils\FileProcess\NFO.cs" />
-    <Compile Include="Core\Scan\Scan.cs" />
+    <Compile Include="Core\Scan\ScanHelper.cs" />
     <Compile Include="Utils\Config\WindowConfig.cs" />
     <Compile Include="Windows\Msgbox.xaml.cs">
       <DependentUpon>Msgbox.xaml</DependentUpon>
@@ -597,6 +597,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Test\SqliteTest\main.py" />
     <Resource Include="Resources\Picture\Empty.png" />
     <Content Include="Sql\app_configs.sql" />
     <Content Include="Sql\app_datas.sql" />
@@ -931,6 +932,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entity\Base\" />
+    <Folder Include="Test\ScanTest\NFO\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

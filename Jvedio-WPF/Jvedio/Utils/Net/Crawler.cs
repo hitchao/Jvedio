@@ -14,6 +14,7 @@ using Jvedio.Utils.Net;
 using static Jvedio.Utils.Net.Net;
 using Jvedio.Entity;
 using Jvedio.Mapper;
+using Jvedio.Core.Enums;
 
 namespace Jvedio
 {
@@ -63,10 +64,10 @@ namespace Jvedio
     {
 
 
-        public VedioType VedioType { get; set; }
-        public DouBanCrawler(string Id, VedioType vedioType) : base(Id)
+        public VideoType VideoType { get; set; }
+        public DouBanCrawler(string Id, VideoType vedioType) : base(Id)
         {
-            VedioType = vedioType;
+            VideoType = vedioType;
             if ((int)vedioType == 3)
             {
                 Url = JvedioServers.BusEurope.Url + ID.Replace(".", "-");
@@ -84,12 +85,12 @@ namespace Jvedio
             httpResult = await new MyNet().Http(Url, headers);
             if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
             {
-                FileProcess.SaveInfo(GetInfo(), ID, (int)VedioType);
+                FileProcess.SaveInfo(GetInfo(), ID, (int)VideoType);
                 httpResult.Success = true;
                 ParseCookies(httpResult.Headers.SetCookie);
                 Movie movie = DataBase.SelectMovieByID(ID);
                 //保存磁力
-                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
+                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VideoType).ParseMagnet(movie.bigimageurl);
                 if (magnets.Count > 0)
                     magnetsMapper.insertBatch(magnets);
             }
@@ -109,7 +110,7 @@ namespace Jvedio
                 if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
             }
             string cookie = string.Join(";", Cookies);
-            if (VedioType == VedioType.欧美)
+            if (VideoType == VideoType.Europe)
                 JvedioServers.BusEurope.Cookie = cookie;
             else
                 JvedioServers.Bus.Cookie = cookie;
@@ -119,13 +120,13 @@ namespace Jvedio
 
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() { Cookies = (int)VedioType == 3 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
+            headers = new CrawlerHeader() { Cookies = (int)VideoType == 3 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
         }
 
 
         protected override Dictionary<string, string> GetInfo()
         {
-            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VedioType).Parse();
+            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VideoType).Parse();
             if (Info.Count > 0)
             {
                 Info.Add("sourceurl", Url);
@@ -142,10 +143,10 @@ namespace Jvedio
     {
 
 
-        public VedioType VedioType { get; set; }
-        public IMDBBanCrawler(string Id, VedioType vedioType) : base(Id)
+        public VideoType VideoType { get; set; }
+        public IMDBBanCrawler(string Id, VideoType vedioType) : base(Id)
         {
-            VedioType = vedioType;
+            VideoType = vedioType;
             if ((int)vedioType == 3)
             {
                 Url = JvedioServers.BusEurope.Url + ID.Replace(".", "-");
@@ -163,12 +164,12 @@ namespace Jvedio
             httpResult = await new MyNet().Http(Url, headers);
             if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
             {
-                FileProcess.SaveInfo(GetInfo(), ID, (int)VedioType);
+                FileProcess.SaveInfo(GetInfo(), ID, (int)VideoType);
                 httpResult.Success = true;
                 ParseCookies(httpResult.Headers.SetCookie);
                 Movie movie = DataBase.SelectMovieByID(ID);
                 //保存磁力
-                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
+                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VideoType).ParseMagnet(movie.bigimageurl);
                 if (magnets.Count > 0) magnetsMapper.insertBatch(magnets);
             }
             return httpResult;
@@ -187,7 +188,7 @@ namespace Jvedio
                 if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
             }
             string cookie = string.Join(";", Cookies);
-            if (VedioType == VedioType.欧美)
+            if (VideoType == VideoType.Europe)
                 JvedioServers.BusEurope.Cookie = cookie;
             else
                 JvedioServers.Bus.Cookie = cookie;
@@ -197,13 +198,13 @@ namespace Jvedio
 
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() { Cookies = (int)VedioType == 3 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
+            headers = new CrawlerHeader() { Cookies = (int)VideoType == 3 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
         }
 
 
         protected override Dictionary<string, string> GetInfo()
         {
-            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VedioType).Parse();
+            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VideoType).Parse();
             if (Info.Count > 0)
             {
                 Info.Add("sourceurl", Url);
@@ -221,11 +222,11 @@ namespace Jvedio
     {
 
 
-        public VedioType VedioType { get; set; }
-        public BusCrawler(string Id, VedioType vedioType) : base(Id)
+        public VideoType VideoType { get; set; }
+        public BusCrawler(string Id, VideoType vedioType) : base(Id)
         {
-            VedioType = vedioType;
-            if (vedioType == VedioType.欧美)
+            VideoType = vedioType;
+            if (vedioType == VideoType.Europe)
             {
                 Url = JvedioServers.BusEurope.Url + ID.Replace(".", "-");
             }
@@ -242,12 +243,12 @@ namespace Jvedio
             httpResult = await new MyNet().Http(Url, headers);
             if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
             {
-                FileProcess.SaveInfo(GetInfo(), ID, (int)VedioType);
+                FileProcess.SaveInfo(GetInfo(), ID, (int)VideoType);
                 httpResult.Success = true;
                 ParseCookies(httpResult.Headers.SetCookie);
                 Movie movie = DataBase.SelectMovieByID(ID);
                 //保存磁力
-                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
+                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VideoType).ParseMagnet(movie.bigimageurl);
                 if (magnets.Count > 0)
                     magnetsMapper.insertBatch(magnets);
             }
@@ -267,7 +268,7 @@ namespace Jvedio
                 if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
             }
             string cookie = string.Join(";", Cookies);
-            if (VedioType == VedioType.欧美)
+            if (VideoType == VideoType.Europe)
                 JvedioServers.BusEurope.Cookie = cookie;
             else
                 JvedioServers.Bus.Cookie = cookie;
@@ -277,13 +278,13 @@ namespace Jvedio
 
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() { Cookies = VedioType == VedioType.欧美 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
+            headers = new CrawlerHeader() { Cookies = VideoType == VideoType.Europe ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
         }
 
 
         protected override Dictionary<string, string> GetInfo()
         {
-            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VedioType).Parse();
+            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VideoType).Parse();
             if (Info.Count > 0)
             {
                 Info.Add("sourceurl", Url);
@@ -680,7 +681,7 @@ namespace Jvedio
                     string link = node.Attributes["href"]?.Value;
                     if (link.IsProperUrl())
                     {
-                        string fanhao = Identify.GetFanhaoFromDMMUrl(link);
+                        string fanhao = Identify.GetVIDFromDMMUrl(link);
                         if (Identify.GetEng(fanhao).ToUpper() == Identify.GetEng(ID).ToUpper())
                         {
                             string str1 = Identify.GetNum(fanhao);

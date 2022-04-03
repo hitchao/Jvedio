@@ -85,7 +85,7 @@
                             <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.VID, Mode=TwoWay}" />
                         </DockPanel>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=TwoWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
-                            <Label Content="{x:Static lang:Resources.VedioType}" Style="{StaticResource BaseInfoLabel}" />
+                            <Label Content="{x:Static lang:Resources.VideoType}" Style="{StaticResource BaseInfoLabel}" />
                             <StackPanel Orientation="Horizontal">
                                 <RadioButton
                                     Content="{x:Static lang:Resources.Normal}"

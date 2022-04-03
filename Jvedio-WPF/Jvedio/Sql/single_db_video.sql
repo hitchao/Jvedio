@@ -4,7 +4,8 @@
 
 -- 存储导入的信息，公有的
 -- Path 绝对路径
--- Hash 计算的文件哈希值
+-- Hash 哈希值 = MD5Hash(Size.toString() + 文件的前 64 位字节 + 文件总长度/2 后的 64 位字节 + 文件的后 64 位字节)
+--      理论上相同 Size 下最大支持的文件 2^128  
 -- DataType: 0-Video 1-Picture 2-Game 3-Comics
 -- Rating 刮削的评分，满分 5 分
 -- RatingCount 评分的人数

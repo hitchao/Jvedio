@@ -144,7 +144,7 @@
   <data name="SearchHint" xml:space="preserve">
     <value>検索ID、俳優、名前</value>
   </data>
-  <data name="VedioType" xml:space="preserve">
+  <data name="VideoType" xml:space="preserve">
     <value>ビデオタイプ</value>
   </data>
   <data name="WithActress" xml:space="preserve">

@@ -154,7 +154,7 @@ namespace Jvedio.ViewModel
                 if (arg.vediotype == 3)
                     id = Identify.GetEuFanhao(arg.id).Split('.')[0];
                 else
-                    id = Identify.GetFanhao(arg.id).Split('-')[0];
+                    id = Identify.GetVID(arg.id).Split('-')[0];
                 if (!dic.ContainsKey(id))
                     dic.Add(id, 1);
                 else

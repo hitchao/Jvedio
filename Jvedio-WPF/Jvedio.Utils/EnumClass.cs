@@ -13,7 +13,7 @@ namespace Jvedio.Utils
     public enum MyImageType { 缩略图, 海报图, 预览图, 动态图, 列表模式 }
     public enum MovieStampType { 无, 高清中字, 无码流出 }
 
-    public enum VedioType { 所有, 步兵, 骑兵, 欧美 }
+
 
     public enum ImageType { SmallImage, BigImage, ExtraImage, ActorImage }
 

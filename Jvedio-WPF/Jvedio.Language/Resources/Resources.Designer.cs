@@ -4804,15 +4804,6 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
-        ///   查找类似 视频类型 的本地化字符串。
-        /// </summary>
-        public static string VedioType {
-            get {
-                return ResourceManager.GetString("VedioType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 版本 的本地化字符串。
         /// </summary>
         public static string Version {
@@ -4827,6 +4818,15 @@ namespace Jvedio.Language {
         public static string VideoInfo {
             get {
                 return ResourceManager.GetString("VideoInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 视频类型 的本地化字符串。
+        /// </summary>
+        public static string VideoType {
+            get {
+                return ResourceManager.GetString("VideoType", resourceCulture);
             }
         }
         

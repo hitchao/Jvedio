@@ -541,7 +541,7 @@ namespace Jvedio
             ////UpdateServersEnable();
 
             GlobalVariable.InitVariable();
-            Scan.InitSearchPattern();
+            ScanHelper.InitSearchPattern();
             ChaoControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
         }
 

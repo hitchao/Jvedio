@@ -41,7 +41,7 @@
 
 
             <WrapPanel Grid.Row="1">
-                <Label Background="Transparent"  Content="{x:Static lang:Resources.VedioType}"  Foreground="{DynamicResource ForegroundSearch}"  Style="{StaticResource LabelPrimary}" Margin="20 10" />
+                <Label Background="Transparent"  Content="{x:Static lang:Resources.VideoType}"  Foreground="{DynamicResource ForegroundSearch}"  Style="{StaticResource LabelPrimary}" Margin="20 10" />
                 <StackPanel x:Name="RadioButtonStackPanel"  Orientation="Horizontal" >
                     <RadioButton Click="SetNewMovieType" FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"     Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
                     <RadioButton Click="SetNewMovieType" FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"     Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>

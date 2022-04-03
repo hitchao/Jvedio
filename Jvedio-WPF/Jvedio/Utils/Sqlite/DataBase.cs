@@ -12,6 +12,7 @@ using static Jvedio.Comparer;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
 using Jvedio.Entity;
+using Jvedio.Core.Enums;
 
 namespace Jvedio
 {
@@ -473,7 +474,7 @@ namespace Jvedio
         /// <param name="vediotype"></param>
         /// <returns></returns>
 
-        public static List<string> SelectLabelByVedioType(VedioType vediotype, string type = "label")
+        public static List<string> SelectLabelByVedioType(VideoType vediotype, string type = "label")
         {
             Dictionary<string, int> dicresult = SelectLabelLikeByVedioType(type, (int)vediotype);
             //降序
@@ -491,7 +492,7 @@ namespace Jvedio
         /// </summary>
         /// <param name="vediotype"></param>
         /// <returns></returns>
-        public static List<Genre> SelectGenreByVedioType(VedioType vediotype)
+        public static List<Genre> SelectGenreByVedioType(VideoType vediotype)
         {
             Dictionary<string, int> dicresult = SelectLabelLikeByVedioType("genre", (int)vediotype);
             //降序
@@ -500,7 +501,7 @@ namespace Jvedio
             Genre newgenre = new Genre();
             foreach (var item in dicSort)
             {
-                if (vediotype == VedioType.欧美)
+                if (vediotype == VideoType.Europe)
                 {
                     if (GenreEurope[0].IndexOf(item.Key) > 0) { newgenre.theme.Add(item.Key + "( " + item.Value + " )"); continue; }
                     if (GenreEurope[1].IndexOf(item.Key) > 0) { newgenre.role.Add(item.Key + "( " + item.Value + " )"); continue; }
@@ -512,7 +513,7 @@ namespace Jvedio
                     if (GenreEurope[7].IndexOf(item.Key) > 0) { newgenre.scene.Add(item.Key + "( " + item.Value + " )"); continue; }
                     newgenre.other.Add(item.Key + "( " + item.Value + " )");
                 }
-                else if (vediotype == VedioType.骑兵)
+                else if (vediotype == VideoType.Censored)
                 {
                     if (GenreCensored[0].IndexOf(item.Key) > 0) { newgenre.theme.Add(item.Key + "( " + item.Value + " )"); continue; }
                     if (GenreCensored[1].IndexOf(item.Key) > 0) { newgenre.role.Add(item.Key + "( " + item.Value + " )"); continue; }
@@ -523,7 +524,7 @@ namespace Jvedio
                     if (GenreCensored[6].IndexOf(item.Key) > 0) { newgenre.other.Add(item.Key + "( " + item.Value + " )"); continue; }
                     newgenre.other.Add(item.Key + "( " + item.Value + " )");
                 }
-                else if (vediotype == VedioType.步兵)
+                else if (vediotype == VideoType.UnCensored)
                 {
                     if (GenreUncensored[0].IndexOf(item.Key) > 0) { newgenre.theme.Add(item.Key + "( " + item.Value + " )"); continue; }
                     if (GenreUncensored[1].IndexOf(item.Key) > 0) { newgenre.role.Add(item.Key + "( " + item.Value + " )"); continue; }
@@ -535,7 +536,7 @@ namespace Jvedio
                     if (GenreUncensored[7].IndexOf(item.Key) > 0) { newgenre.scene.Add(item.Key + "( " + item.Value + " )"); continue; }
                     newgenre.other.Add(item.Key + "( " + item.Value + " )");
                 }
-                else if (vediotype == VedioType.所有)
+                else if (vediotype == VideoType.Normal)
                 {
                     if (GenreUncensored[0].IndexOf(item.Key) > 0 | GenreCensored[0].IndexOf(item.Key) > 0) { newgenre.theme.Add(item.Key + "( " + item.Value + " )"); continue; }
                     if (GenreUncensored[1].IndexOf(item.Key) > 0 | GenreCensored[1].IndexOf(item.Key) > 0) { newgenre.role.Add(item.Key + "( " + item.Value + " )"); continue; }
@@ -558,7 +559,7 @@ namespace Jvedio
         /// </summary>
         /// <param name="vediotype"></param>
         /// <returns></returns>
-        public static List<Actress> SelectAllActorName(VedioType vediotype)
+        public static List<Actress> SelectAllActorName(VideoType vediotype)
         {
             Dictionary<string, int> dicresult = SelectLabelLikeByVedioType("actor", (int)vediotype, actorSplitDict[(int)vediotype]);
             //降序

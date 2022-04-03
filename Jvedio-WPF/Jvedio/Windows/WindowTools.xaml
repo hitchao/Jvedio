@@ -286,7 +286,7 @@
 
 
                             <StackPanel Orientation="Horizontal" Margin="20 20">
-                                <TextBlock Text="{x:Static lang:Resources.VedioType}" FontSize="20" Foreground="{DynamicResource ForegroundSearch}" Margin="0 0 20 0"/>
+                                <TextBlock Text="{x:Static lang:Resources.VideoType}" FontSize="20" Foreground="{DynamicResource ForegroundSearch}" Margin="0 0 20 0"/>
                                 <RadioButton FocusVisualStyle="{x:Null}" x:Name="ScanTypeRadioButton" GroupName="ScanTypeGroup"  FontSize="15" IsChecked="True" Foreground="{DynamicResource ForegroundSearch}" Content="{x:Static lang:Resources.Normal}" Style="{StaticResource FlatRadioButton}"/>
                                 <RadioButton FocusVisualStyle="{x:Null}"  FontSize="15" GroupName="ScanTypeGroup"   Foreground="{DynamicResource ForegroundSearch}"   Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
                             </StackPanel>

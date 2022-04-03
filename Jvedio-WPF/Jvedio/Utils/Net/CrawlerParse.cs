@@ -11,6 +11,7 @@ using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
 using Jvedio.Utils.Net;
 using Jvedio.Entity;
+using Jvedio.Core.Enums;
 
 namespace Jvedio
 {
@@ -20,13 +21,13 @@ namespace Jvedio
     {
         protected string HtmlText { get; set; }
         public string ID { get; set; }
-        protected VedioType VedioType { get; set; }
+        protected VideoType VideoType { get; set; }
 
-        public InfoParse(string htmlText, string id = "", VedioType vedioType = VedioType.步兵)
+        public InfoParse(string htmlText, string id = "", VideoType vedioType = VideoType.UnCensored)
         {
             ID = id;
             HtmlText = htmlText;
-            VedioType = vedioType;
+            VideoType = vedioType;
         }
 
         public InfoParse()
@@ -40,7 +41,7 @@ namespace Jvedio
     }
     public class DouBanParse : InfoParse
     {
-        public DouBanParse(string id, string htmlText, VedioType vedioType) : base(htmlText, id, vedioType) { }
+        public DouBanParse(string id, string htmlText, VideoType vedioType) : base(htmlText, id, vedioType) { }
 
 
         public DouBanParse()
@@ -107,7 +108,7 @@ namespace Jvedio
             HtmlNodeCollection titleNodes = doc.DocumentNode.SelectNodes("//h3");
             if (titleNodes != null && titleNodes.Count > 0)
             {
-                if (VedioType == VedioType.欧美)
+                if (VideoType == VideoType.Europe)
                     result.Add("title", titleNodes[0].InnerText.Replace(ID, ""));
                 else
                 {
@@ -162,11 +163,11 @@ namespace Jvedio
                 foreach (var item in actorsid)
                 {
                     if (string.IsNullOrEmpty(item)) continue;
-                    if (VedioType == VedioType.骑兵)
+                    if (VideoType == VideoType.Censored)
                         url_a.Add($"{JvedioServers.Bus.Url}pics/actress/{item}_a.jpg");
-                    else if (VedioType == VedioType.欧美)
+                    else if (VideoType == VideoType.Europe)
                         url_a.Add(JvedioServers.BusEurope.Url.Replace("www", "images") + "actress/" + item + "_a.jpg");//https://images.javbus.one/actress/41r_a.jpg
-                    else if (VedioType == VedioType.步兵)
+                    else if (VideoType == VideoType.UnCensored)
                         url_a.Add($"{JvedioServers.Bus.Url}imgs/actress/{item}.jpg");
                 }
                 result.Add("actressimageurl", string.Join(";", url_a));
@@ -196,11 +197,11 @@ namespace Jvedio
                     result.Add("smallimageurl", bigimageurl.Replace("pl.jpg", "ps.jpg"));
                 else if (!string.IsNullOrEmpty(movieid))
                 {
-                    if ((int)VedioType == 2)
+                    if ((int)VideoType == 2)
                         result.Add("smallimageurl", $"{JvedioServers.Bus.Url}pics/thumb/{movieid}.jpg");
-                    else if ((int)VedioType == 1)
+                    else if ((int)VideoType == 1)
                         result.Add("smallimageurl", $"{JvedioServers.Bus.Url}imgs/thumbs/{movieid}.jpg");
-                    else if ((int)VedioType == 3)
+                    else if ((int)VideoType == 3)
                         result.Add("smallimageurl", $"{JvedioServers.BusEurope.Url}thumb/" + movieid + ".jpg");
                 }
             }
@@ -350,7 +351,7 @@ namespace Jvedio
 
     public class BusParse : InfoParse
     {
-        public BusParse(string id, string htmlText, VedioType vedioType) : base(htmlText, id, vedioType) { }
+        public BusParse(string id, string htmlText, VideoType vedioType) : base(htmlText, id, vedioType) { }
 
 
         public BusParse()
@@ -417,7 +418,7 @@ namespace Jvedio
             HtmlNodeCollection titleNodes = doc.DocumentNode.SelectNodes("//h3");
             if (titleNodes != null && titleNodes.Count > 0)
             {
-                if (VedioType == VedioType.欧美)
+                if (VideoType == VideoType.Europe)
                     result.Add("title", titleNodes[0].InnerText.Replace(ID, ""));
                 else
                 {
@@ -472,12 +473,12 @@ namespace Jvedio
                 foreach (var item in actorsid)
                 {
                     if (string.IsNullOrEmpty(item)) continue;
-                    if (VedioType == VedioType.骑兵)
+                    if (VideoType == VideoType.Censored)
                         url_a.Add($"{JvedioServers.Bus.Url}pics/actress/{item}_a.jpg");
-                    else if (VedioType == VedioType.欧美)
+                    else if (VideoType == VideoType.Europe)
                         url_a.Add(JvedioServers.BusEurope.Url.Replace("www", "images") + "actress/" + item + "_a.jpg");//https://images.javbus.one/actress/41r_a.jpg
-                    else if (VedioType == VedioType.步兵)
-                        url_a.Add($"{JvedioServers.Bus.Url}imgs/actress/{item}.jpg");//步兵没有 _a
+                    else if (VideoType == VideoType.UnCensored)
+                        url_a.Add($"{JvedioServers.Bus.Url}imgs/actress/{item}.jpg");//UnCensored没有 _a
                 }
                 result.Add("actressimageurl", string.Join(";", url_a));
             }
@@ -506,11 +507,11 @@ namespace Jvedio
                     result.Add("smallimageurl", bigimageurl.Replace("pl.jpg", "ps.jpg"));
                 else if (!string.IsNullOrEmpty(movieid))
                 {
-                    if (VedioType == VedioType.骑兵)
+                    if (VideoType == VideoType.Censored)
                         result.Add("smallimageurl", $"{JvedioServers.Bus.Url}pics/thumb/{movieid}.jpg");
-                    else if (VedioType == VedioType.步兵)
+                    else if (VideoType == VideoType.UnCensored)
                         result.Add("smallimageurl", $"{JvedioServers.Bus.Url}imgs/thumbs/{movieid}.jpg");
-                    else if (VedioType == VedioType.欧美)
+                    else if (VideoType == VideoType.Europe)
                         result.Add("smallimageurl", $"{JvedioServers.BusEurope.Url}thumb/" + movieid + ".jpg");
                 }
             }
@@ -735,7 +736,7 @@ namespace Jvedio
 
     public class LibraryParse : InfoParse
     {
-        public LibraryParse(string id, string htmlText, VedioType vedioType = 0) : base(htmlText, id, vedioType) { }
+        public LibraryParse(string id, string htmlText, VideoType vedioType = 0) : base(htmlText, id, vedioType) { }
 
         public override Dictionary<string, string> Parse()
         {
@@ -1140,7 +1141,7 @@ namespace Jvedio
 
     public class Fc2ClubParse : InfoParse
     {
-        public Fc2ClubParse(string id, string htmlText, VedioType vedioType = 0) : base(htmlText, id, vedioType) { }
+        public Fc2ClubParse(string id, string htmlText, VideoType vedioType = 0) : base(htmlText, id, vedioType) { }
 
 
         public override Dictionary<string, string> Parse()
@@ -1453,7 +1454,7 @@ namespace Jvedio
 
     public class FanzaParse : InfoParse
     {
-        public FanzaParse(string id, string htmlText, VedioType vedioType = 0) : base(htmlText, id, vedioType) { }
+        public FanzaParse(string id, string htmlText, VideoType vedioType = 0) : base(htmlText, id, vedioType) { }
 
         public override Dictionary<string, string> Parse()
         {

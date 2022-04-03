@@ -94,7 +94,36 @@ namespace Jvedio.Utils.Encrypt
                 Console.WriteLine(ex.Message);
                 return "";
             }
+        }
 
+        public static string FasterMd5(string filePath)
+        {
+            if (!File.Exists(filePath)) return null;
+            long minLength = 1024;
+            int BYTES_TO_READ = 64;
+            FileInfo fileInfo = new FileInfo(filePath);
+            double length = fileInfo.Length;
+            if (length <= minLength) return GetFileMD5(filePath);
+            byte[] B = new byte[BYTES_TO_READ * 3];
+
+
+            using (FileStream fs = fileInfo.OpenRead())
+            {
+                byte[] a = new byte[BYTES_TO_READ];
+                byte[] b = new byte[BYTES_TO_READ];
+                byte[] c = new byte[BYTES_TO_READ];
+                fs.Read(a, 0, BYTES_TO_READ);
+                fs.Seek((long)(length / 2), SeekOrigin.Begin);
+                fs.Read(b, 0, BYTES_TO_READ);
+                fs.Seek((long)(length - BYTES_TO_READ - 1), SeekOrigin.Begin);
+                fs.Read(c, 0, BYTES_TO_READ);
+                a.CopyTo(B, 0);
+                b.CopyTo(B, BYTES_TO_READ);
+                c.CopyTo(B, BYTES_TO_READ * 2);
+            }
+            string str = BitConverter.ToString(B);
+            str = length + str;
+            return CalculateMD5Hash(str);
         }
 
 

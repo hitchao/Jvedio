@@ -1,11 +1,14 @@
 ﻿using DynamicData.Annotations;
+using Jvedio.Core.Scan;
 using Jvedio.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
+using System.Xml;
 
 namespace Jvedio.Entity
 {
@@ -69,6 +72,16 @@ namespace Jvedio.Entity
         public bool IsToDownLoadInfo()
         {
             return this != null && (this.title == "" || this.sourceurl == "" || this.smallimageurl == "" || this.bigimageurl == "");
+        }
+
+
+        public bool isNullMovie()
+        {
+            return
+                string.IsNullOrEmpty(title) &&
+                string.IsNullOrEmpty(id) &&
+                string.IsNullOrEmpty(filepath) &&
+                filesize == 0;
         }
 
 
@@ -236,32 +249,147 @@ namespace Jvedio.Entity
             return result;
         }
 
-        public static List<Movie> parse(List<Dictionary<string, object>> list)
+        public static Movie GetInfoFromNfo(string path, long minFileSize = 0)
         {
+            XmlDocument doc = new XmlDocument();
+            XmlNode rootNode = null;
+            try
+            {
+                doc.Load(path);
+                rootNode = doc.SelectSingleNode("movie");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogE(ex);
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            if (rootNode == null || rootNode.ChildNodes == null || rootNode.ChildNodes.Count == 0) return null;
+            Movie movie = new Movie();
+            foreach (XmlNode node in rootNode.ChildNodes)
+            {
+                try
+                {
+                    switch (node.Name)
+                    {
+                        case "id": movie.id = node.InnerText.ToUpper(); break;
+                        case "num": movie.id = node.InnerText.ToUpper(); break;
+                        case "title": movie.title = node.InnerText; break;
+                        case "release": movie.releasedate = node.InnerText; break;
+                        case "releasedate": movie.releasedate = node.InnerText; break;
+                        case "director": movie.director = node.InnerText; break;
+                        case "studio": movie.studio = node.InnerText; break;
+                        case "rating": movie.rating = node.InnerText == "" ? 0 : float.Parse(node.InnerText); break;
+                        case "plot": movie.plot = node.InnerText; break;
+                        case "outline": movie.outline = node.InnerText; break;
+                        case "year": movie.year = node.InnerText == "" ? 1970 : int.Parse(node.InnerText); break;
+                        case "runtime": movie.runtime = node.InnerText == "" ? 0 : int.Parse(node.InnerText); break;
+                        case "country": movie.country = node.InnerText; break;
+                        case "source": movie.sourceurl = node.InnerText; break;
+                        default: break;
 
-            List<Movie> result = new List<Movie>();
-            if (list == null || list.Count == 0) return result;
-            //foreach (Dictionary<string, object> dict in list)
-            //{
-            //    Movie movie = new Movie();
-            //    List<System.Reflection.PropertyInfo> props = movie.GetType().GetProperties().ToList();
-            //    foreach (string key in dict.Keys)
-            //    {
-            //        if (props.Where(x => x.Name == key).Any())
-            //        {
-            //            props[i].setva
-            //        }
-            //    }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.StackTrace);
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
+            }
+            if (!string.IsNullOrEmpty(movie.id))
+                movie.vediotype = (int)Identify.GetVideoType(movie.id);
+            //扫描视频获得文件大小
+            if (File.Exists(path))
+            {
+                string fatherpath = new FileInfo(path).DirectoryName;
+                List<string> files = DirHelper.GetFileList(fatherpath).ToList();
+
+
+                if (files != null && files.Count > 0)
+                {
+                    var list = files.Where(arg => ScanTask.VIDEO_EXTENSIONS_LIST.Contains(Path.GetExtension(arg))).ToList();
+
+                    if (list != null || list.Count != 0)
+                    {
+                        if (list.Count == 1)
+                        {
+                            movie.filepath = list[0];// 默认取第一个
+                        }
+                        else
+                            movie.subsection = String.Join(GlobalVariable.Separator.ToString(), list); //分段视频
+                    }
+                    else
+                    {
+                        // 如果没扫到视频就不导入
+                        return null;
+                    }
+                }
 
 
 
-            //}
+            }
 
+            //tag
+            XmlNodeList tagNodes = doc.SelectNodes("/movie/tag");
+            List<string> tags = new List<string>();
+            if (tagNodes != null)
+            {
+                foreach (XmlNode item in tagNodes)
+                {
+                    if (item.InnerText != "") { tags.Add(item.InnerText.Replace(" ", "")); }
+                }
+                if (movie.id.IndexOf("FC2") >= 0)
+                    movie.genre = string.Join(" ", tags);
+                else
+                    movie.tag = string.Join(" ", tags);
+            }
 
-            return result;
+            //genre
+            XmlNodeList genreNodes = doc.SelectNodes("/movie/genre");
+            List<string> genres = new List<string>();
+            if (genreNodes != null)
+            {
+                foreach (XmlNode item in genreNodes)
+                {
+                    if (item.InnerText != "") { genres.Add(item.InnerText); }
 
+                }
+                movie.genre = string.Join(" ", genres);
+            }
 
+            //actor
+            XmlNodeList actorNodes = doc.SelectNodes("/movie/actor/name");
+            List<string> actors = new List<string>();
+            if (actorNodes != null)
+            {
+                foreach (XmlNode item in actorNodes)
+                {
+                    if (item.InnerText != "") { actors.Add(item.InnerText); }
+                }
+                movie.actor = string.Join(" ", actors);
+            }
+
+            //fanart
+            XmlNodeList fanartNodes = doc.SelectNodes("/movie/fanart/thumb");
+            List<string> extraimageurls = new List<string>();
+            if (fanartNodes != null)
+            {
+                foreach (XmlNode item in fanartNodes)
+                {
+                    if (item.InnerText != "") { extraimageurls.Add(item.InnerText); }
+                }
+                movie.extraimageurl = string.Join(" ", extraimageurls);
+            }
+
+            // 检查一下视频是否为空
+            if (movie.isNullMovie())
+                return null;
+            return movie;
         }
+
+
+
 
 
     }

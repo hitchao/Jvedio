@@ -355,7 +355,7 @@ namespace Jvedio
                             {
                                 if (File.Exists(item))
                                 {
-                                    Movie movie = GetInfoFromNfo(item);
+                                    Movie movie = Movie.GetInfoFromNfo(item);
                                     if (movie != null && !string.IsNullOrEmpty(movie.id))
                                     {
 

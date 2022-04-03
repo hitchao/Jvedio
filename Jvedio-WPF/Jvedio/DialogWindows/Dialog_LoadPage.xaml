@@ -39,7 +39,7 @@
 
 
             <StackPanel x:Name="VedioTypeStackPanel"   Orientation="Horizontal">
-                <Label  Content="{x:Static lang:Resources.VedioType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+                <Label  Content="{x:Static lang:Resources.VideoType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
                 <RadioButton  FontSize="15"  Foreground="{DynamicResource ForegroundSearch}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
                 <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
                 <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>

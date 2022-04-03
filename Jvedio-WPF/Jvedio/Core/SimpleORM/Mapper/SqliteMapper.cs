@@ -13,6 +13,7 @@ namespace Jvedio.Core.SimpleORM
     public class SqliteMapper<T> : AbstractMapper<T>
     {
         // todo 多 select 下会导致 datareader 报错
+        // todo 排它锁下的读问题：database is locked
         // 需要一个连接池
         protected SQLiteCommand cmd;
         protected SQLiteConnection cn;

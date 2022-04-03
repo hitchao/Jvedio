@@ -17,6 +17,7 @@ using static Jvedio.GlobalVariable;
 using static Jvedio.FileProcess;
 using Jvedio.Utils;
 using Jvedio.Style;
+using Jvedio.Core.Enums;
 
 namespace Jvedio
 {
@@ -61,7 +62,7 @@ namespace Jvedio
 
         private void SetFc2Checked(object sender, RoutedEventArgs e)
         {
-            AutoAddPrefix = (bool) (sender as CheckBox).IsChecked;
+            AutoAddPrefix = (bool)(sender as CheckBox).IsChecked;
         }
 
         private void SetNewMovieType(object sender, RoutedEventArgs e)
@@ -92,10 +93,10 @@ namespace Jvedio
     public class NewMovieDialogResult : JvedioDialogResult
     {
 
-        public VedioType VedioType {get;set;}
+        public VideoType VideoType { get; set; }
         public NewMovieDialogResult(string text, int option) : base(text, option)
         {
-            VedioType = (VedioType)(option+1);
+            VideoType = (VideoType)(option + 1);
         }
     }
 }

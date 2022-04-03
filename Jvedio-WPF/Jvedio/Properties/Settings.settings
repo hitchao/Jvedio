@@ -59,7 +59,7 @@
     <Setting Name="ScanMinFileSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="VedioType" Type="System.String" Scope="User">
+    <Setting Name="VideoType" Type="System.String" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="SubSectionFeature" Type="System.String" Scope="User">

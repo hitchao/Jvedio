@@ -254,12 +254,12 @@ namespace Jvedio.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string VedioType {
+        public string VideoType {
             get {
-                return ((string)(this["VedioType"]));
+                return ((string)(this["VideoType"]));
             }
             set {
-                this["VedioType"] = value;
+                this["VideoType"] = value;
             }
         }
         

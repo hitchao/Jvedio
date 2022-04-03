@@ -140,6 +140,11 @@ namespace Jvedio
             BindingEventAfterRender(); // render 后才绑定的事件
             initTagStamp();
             AllRadioButton.IsChecked = true;
+
+            // 测试
+            Core.Scan.ScanTask scanTask = new Core.Scan.ScanTask(new List<string> { @"E:\资料\FC2\1.3" }, null);
+            vieModel.ScanTasks.Add(scanTask);
+            scanTask.Start();
         }
 
 
@@ -873,7 +878,7 @@ namespace Jvedio
         {
             //导入数据库
 
-            if (Scan.IsProperMovie(e.FullPath))
+            if (ScanHelper.IsProperMovie(e.FullPath))
             {
                 FileInfo fileinfo = new FileInfo(e.FullPath);
 
@@ -886,9 +891,9 @@ namespace Jvedio
                 Movie movie = new Movie()
                 {
                     filepath = e.FullPath,
-                    id = Identify.GetFanhao(fileinfo.Name),
+                    id = Identify.GetVID(fileinfo.Name),
                     filesize = fileinfo.Length,
-                    vediotype = (int)Identify.GetVideoType(Identify.GetFanhao(fileinfo.Name)),
+                    vediotype = (int)Identify.GetVideoType(Identify.GetVID(fileinfo.Name)),
                     otherinfo = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     scandate = createDate
                 };
@@ -1801,7 +1806,7 @@ namespace Jvedio
         {
             //RadioButton radioButton = sender as RadioButton;
             //int idx = ClassifyVedioTypeStackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
-            //vieModel.ClassifyVedioType = (VedioType)idx;
+            //vieModel.ClassifyVedioType = (VideoType)idx;
             ////刷新侧边栏显示
             //SetClassify(true);
         }
@@ -3639,7 +3644,7 @@ namespace Jvedio
             if (!CheckingScanStatus)
             {
                 CheckingScanStatus = true;
-#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+
                 Task.Run(() =>
                 {
                     while (true)
@@ -3661,7 +3666,7 @@ namespace Jvedio
 
                     }
                 });
-#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+
             }
         }
 
@@ -5447,7 +5452,7 @@ namespace Jvedio
                                 {
                                     toDownload.Add(actorSearches.Where(arg => arg.ID == dialog.SelectedActor[i]).First());
                                 }
-                                vt = dialog.VedioType;
+                                vt = dialog.VideoType;
                                 startpage = dialog.StartPage;
                                 endpage = dialog.EndPage;
                             }
@@ -5503,7 +5508,7 @@ namespace Jvedio
                                             Actress actress = DataBase.SelectInfoByActress(new Actress() { name = actorSearch.Name });
                                             if (string.IsNullOrEmpty(actress.birthday))
                                             {
-                                                BusParse busParse = new BusParse("", newResult.SourceCode, VedioType.所有);
+                                                BusParse busParse = new BusParse("", newResult.SourceCode, VideoType.Normal);
                                                 Actress saveActress = busParse.ParseActress();
                                                 saveActress.sourceurl = url;
                                                 saveActress.source = "javbus";
@@ -5626,7 +5631,7 @@ namespace Jvedio
             {
                 int start = dialog_LoadPage.StartPage;
                 int end = dialog_LoadPage.EndPage;
-                int vt = dialog_LoadPage.VedioType;
+                int vt = dialog_LoadPage.VideoType;
                 string url = dialog_LoadPage.url;
                 string log = "";
                 if (url.IsProperUrl())

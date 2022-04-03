@@ -140,7 +140,7 @@ namespace Jvedio
             try
             {
                 Identify.InitFanhaoList();
-                Scan.InitSearchPattern();
+                ScanHelper.InitSearchPattern();
 
             }
             catch (Exception ex)

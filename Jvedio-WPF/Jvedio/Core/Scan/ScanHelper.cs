@@ -8,13 +8,14 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Security.Permissions;
-using Jvedio.Utils;
+using Jvedio.Core.Enums;
 using System.Text;
 using Jvedio.Entity;
+using Jvedio.Utils.Common;
 
 namespace Jvedio
 {
-    public class Scan
+    public class ScanHelper
     {
         public static double MinFileSize = Properties.Settings.Default.ScanMinFileSize * 1024 * 1024;//最小文件大小吗，单位 B
         public static List<string> FilePattern = new List<string>();//文件格式
@@ -30,68 +31,70 @@ namespace Jvedio
         }
 
 
-        public double InsertWithNfo(List<string> filepaths, CancellationToken ct, Action<string> messageCallBack = null, bool IsEurope = false)
+        public (List<Video> import, List<string> notImport, List<string> failNFO)
+            parseMovie(List<string> filepaths, List<string> FileExt, CancellationToken ct, bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
         {
-            if (filepaths == null || filepaths.Count == 0) return 0;
+            List<Video> import = new List<Video>();
+            List<string> failNFO = new List<string>();
+            List<string> notImport = new List<string>();
+
             List<string> nfoPaths = new List<string>();
             List<string> videoPaths = new List<string>();
 
-            foreach (var item in filepaths)
+            if (filepaths != null || filepaths.Count > 0)
             {
-                if (item.ToLower().EndsWith(".nfo"))
-                    nfoPaths.Add(item);
-                else
-                    videoPaths.Add(item);
-            }
-
-            //先导入 nfo 再导入视频，避免路径覆盖
-            if (Properties.Settings.Default.ScanNfo && nfoPaths.Count > 0)
-            {
-                Logger.LogScanInfo(Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----");
-                Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.ScanNFO} => {nfoPaths.Count}  " + Environment.NewLine);
-
-                double total = 0;
-                //导入 nfo 文件
-                nfoPaths.ForEach(item =>
+                foreach (var item in filepaths)
                 {
-                    if (File.Exists(item))
+                    if (item.ToLower().Trim().EndsWith(".nfo"))
+                        nfoPaths.Add(item);
+                    else
                     {
-                        Movie movie = FileProcess.GetInfoFromNfo(item);
-                        if (movie != null && !string.IsNullOrEmpty(movie.id))
+                        if (FileExt.Contains(Path.GetExtension(item)))
+                            videoPaths.Add(item);
+                        else
+                            notImport.Add(item);
+                    }
+
+                }
+
+                // 1. 先识别 nfo 再导入视频，避免路径覆盖
+                if (insertNFO && nfoPaths.Count > 0)
+                {
+                    foreach (var item in nfoPaths)
+                    {
+                        DetailMovie movie = (DetailMovie)Movie.GetInfoFromNfo(item, minFileSize);
+                        if (movie != null)
                         {
-                            DataBase.InsertFullMovie(movie);
-                            total += 1;
-                            Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.SuccessImportToDataBase} => {item}  ");
+                            Video video = movie.toVideo();
+                            video.Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(video.Path);
+                            import.Add(video);
                         }
 
+                        else
+                            failNFO.Add(item);// 未从 nfo 中识别出有效的信息
                     }
-                });
-
-
-                Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.ImportNFONumber}： {total}" + Environment.NewLine);
-                messageCallBack?.Invoke($"{Jvedio.Language.Resources.ImportNFONumber}： {total}");
-
-
-
-            }
-
-
-            //导入视频
-            if (videoPaths.Count > 0)
-            {
-                try
-                {
-                    double _num = DistinctMovieAndInsert(videoPaths, ct, IsEurope);
-                    messageCallBack?.Invoke($"{Jvedio.Language.Resources.ImportVideioNumber}：{_num}，详情请看日志");
-                    return _num;
                 }
-                catch (OperationCanceledException ex)
+
+
+                // 2. 导入视频
+                if (videoPaths.Count > 0)
                 {
-                    Logger.LogF(ex);
-                    messageCallBack?.Invoke($"{Jvedio.Language.Resources.Cancel}");
+                    try
+                    {
+                        List<Video> videos = DistinctMovie(videoPaths, ct, callBack);
+                        // 检查是否大于给定大小的影片
+                        notImport.AddRange(videos.Where(arg => arg.Size < minFileSize).Select(arg => arg.Path));
+                        videos.RemoveAll(arg => arg.Size < minFileSize);
+                        import.AddRange(videos);
+                    }
+                    catch (OperationCanceledException ex)
+                    {
+                        callBack?.Invoke($"{Jvedio.Language.Resources.Cancel}");
+                    }
                 }
             }
-            return 0;
+
+            return (import, notImport, failNFO);
         }
 
 
@@ -164,7 +167,7 @@ namespace Jvedio
                     return FilePathList
                         .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
                         .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize)
-                        .Where(s => { try { return Identify.GetFanhao(new FileInfo(s).Name).ToUpper() == ID.ToUpper(); } catch { Logger.LogScanInfo($"错误路径：{s}"); return false; } })
+                        .Where(s => { try { return Identify.GetVID(new FileInfo(s).Name).ToUpper() == ID.ToUpper(); } catch { Logger.LogScanInfo($"错误路径：{s}"); return false; } })
                         .OrderBy(s => s).ToList();
                 }
             }
@@ -212,7 +215,7 @@ namespace Jvedio
         /// <param name="FilePathList"></param>
         /// <returns></returns>
 
-        public static (bool, List<string>, List<string>) IsSubSection(List<string> FilePathList)
+        public static (bool, List<string>, List<string>) HandleSubSection(List<string> FilePathList)
         {
             bool result = true;
             List<string> notSubSection = new List<string>();
@@ -371,221 +374,138 @@ namespace Jvedio
         }
 
 
-
+        // todo Europe 影片
         /// <summary>
         /// 分类视频并导入
         /// </summary>
-        /// <param name="MoviePaths"></param>
+        /// <param name="VideoPaths"></param>
         /// <param name="ct"></param>
-        /// <param name="IsEurope"></param>
+        /// <param name="callBack"></param>
         /// <returns></returns>
-        public double DistinctMovieAndInsert(List<string> MoviePaths, CancellationToken ct, bool IsEurope = false)
+        public List<Video> DistinctMovie(List<string> VideoPaths, CancellationToken ct, Action<string> callBack)
         {
-            Logger.LogScanInfo(Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----");
-            Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.ScanVideo} => {MoviePaths.Count} " + Environment.NewLine);
+            List<Video> result = new List<Video>();
+            Dictionary<string, List<string>> VIDDict = new Dictionary<string, List<string>>();
 
-            List<string> properIdList = new List<string>();
-            StringBuilder logStr = new StringBuilder();
-            string id = "";
-            VedioType vt = 0;
-            double insertCount = 0;//总的导入数目
-            double unidentifyCount = 0;//无法识别的数目
-
+            List<string> noVIDList = new List<string>();
             //检查未识别出番号的视频
-            foreach (var item in MoviePaths)
+            foreach (string path in VideoPaths)
             {
-                if (File.Exists(item))
+                if (!File.Exists(path)) continue;
+
+
+                string VID = Identify.GetVID(Path.GetFileNameWithoutExtension(path));
+                if (string.IsNullOrEmpty(VID))
                 {
-                    id = IsEurope ? Identify.GetEuFanhao(new FileInfo(item).Name) : Identify.GetFanhao(new FileInfo(item).Name);
-
-                    if (IsEurope) { if (string.IsNullOrEmpty(id)) vt = 0; else vt = VedioType.欧美; }
-                    else vt = Identify.GetVideoType(id);
-
-
-                    if (vt != 0) properIdList.Add(item);
-                    else
-                    {
-                        logStr.Append("   " + item + Environment.NewLine);
-                        unidentifyCount++;
-                    }
+                    // 无识别码
+                    noVIDList.Add(path);
                 }
-            }
-            Logger.LogScanInfo(Environment.NewLine + $"【{Jvedio.Language.Resources.NotRecognizeNumber} ：{unidentifyCount}】" + Environment.NewLine + logStr.ToString());
-
-            //检查 重复|分段 视频
-            Dictionary<string, List<string>> repeatlist = new Dictionary<string, List<string>>();
-            StringBuilder logSubSection = new StringBuilder();
-            foreach (var item in properIdList)
-            {
-                if (File.Exists(item))
+                else
                 {
-
-                    id = IsEurope ? Identify.GetEuFanhao(new FileInfo(item).Name) : Identify.GetFanhao(new FileInfo(item).Name);
-                    if (!repeatlist.ContainsKey(id))
+                    // 有识别码
+                    //检查 重复或分段的视频
+                    if (!VIDDict.ContainsKey(VID))
                     {
-                        List<string> pathlist = new List<string> { item };
-                        repeatlist.Add(id, pathlist);
+                        List<string> pathlist = new List<string> { path };
+                        VIDDict.Add(VID, pathlist);
                     }
                     else
                     {
-                        repeatlist[id].Add(item);//每个 id 对应一组视频路径，视频路径最多的视为分段视频
+                        VIDDict[VID].Add(path);//每个 VID 对应一组视频路径，视频路径 >=2 的可能为分段视频
                     }
                 }
+
             }
 
-            List<string> removelist = new List<string>();
-            List<List<string>> subsectionlist = new List<List<string>>();
-            foreach (KeyValuePair<string, List<string>> kvp in repeatlist)
+            // 检查分段或者重复的视频
+            foreach (string VID in VIDDict.Keys)
             {
-                if (kvp.Value.Count > 1)
+                List<string> paths = VIDDict[VID];
+                if (paths.Count <= 1)
+                {
+                    // 仅含有一个路径
+                    string path = paths[0];
+                    FileInfo fileInfo = new FileInfo(path);// 原生的速度最快
+                    Video video = new Video()
+                    {
+                        Path = path,
+                        VID = VID,
+                        Size = fileInfo.Length,
+                        VideoType = Identify.GetVideoType(VID),
+                        FirstScanDate = DateHelper.Now(),
+                        CreateDate = DateHelper.toLocalDate(fileInfo.CreationTime),
+                        Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(path),
+                    };
+
+
+                    result.Add(video);
+                }
+                else
                 {
                     //路径个数大于1 才为分段视频
-                    (bool issubsection, List<string> filepathlist, List<string> notsubsection) = IsSubSection(kvp.Value);
+                    (bool issubsection, List<string> subsectionlist, List<string> notsubsection) = HandleSubSection(paths);
                     if (issubsection)
                     {
-                        subsectionlist.Add(filepathlist);
-                        if (filepathlist.Count < kvp.Value.Count)
+                        //文件大小视为所有文件之和
+                        long size = subsectionlist.Sum(arg => new FileInfo(arg).Length);
+                        string subsection = string.Join(GlobalVariable.Separator.ToString(), subsectionlist);
+
+                        string firstPath = subsectionlist[0];
+                        FileInfo fileInfo = new FileInfo(firstPath);// 原生的速度最快
+                        Video video = new Video()
                         {
-                            //其中几个不是分段视频
-                            logSubSection.Append($"   {Jvedio.Language.Resources.ID} ：{kvp.Key}" + Environment.NewLine);
-                            removelist.AddRange(notsubsection);
-                            logSubSection.Append($"      {Jvedio.Language.Resources.ImportSubSection}： {filepathlist.Count} ，：{string.Join(";", filepathlist)}" + Environment.NewLine);
-                            notsubsection.ForEach(arg =>
-                            {
-                                logSubSection.Append($"      {Jvedio.Language.Resources.NotImport} ：{arg}" + Environment.NewLine);
-                            });
-                        }
+                            Path = firstPath,
+                            VID = VID,
+                            Size = size,
+                            VideoType = Identify.GetVideoType(VID),
+                            FirstScanDate = DateHelper.Now(),
+                            CreateDate = DateHelper.toLocalDate(fileInfo.CreationTime),
+                            SubSection = subsection,
+                            Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(firstPath),
+                        };
+                        result.Add(video);
                     }
                     else
                     {
-                        //TODO
-                        logSubSection.Append($"   {Jvedio.Language.Resources.ID}：{kvp.Key}" + Environment.NewLine);
-                        (string maxfilepath, List<string> Excludelsist) = ExcludeMaximumSize(kvp.Value);
-                        removelist.AddRange(Excludelsist);
-                        logSubSection.Append($"      {Jvedio.Language.Resources.ImportFile} ：{maxfilepath}，{Jvedio.Language.Resources.FileSize} ：{new FileInfo(maxfilepath).Length}" + Environment.NewLine);
-                        Excludelsist.ForEach(arg =>
-                        {
-                            logSubSection.Append($"      {Jvedio.Language.Resources.NotImport} ：{arg}，{Jvedio.Language.Resources.FileSize} ：{new FileInfo(arg).Length}" + Environment.NewLine);
-                        });
+                        // todo 不是分段视频，但是几个视频的识别码一致，检测一下 hash，判断是否重复
+                        // todo 处理 notsubsection
+
                     }
-
                 }
-            }
-            Logger.LogScanInfo(Environment.NewLine + $"【 {Jvedio.Language.Resources.RepeatVideo}：{removelist.Count + subsectionlist.Count}】" + Environment.NewLine + logSubSection.ToString());
-
-            List<string> insertList = properIdList.Except(removelist).ToList();//需要导入的视频
-
-            //导入分段视频
-            foreach (var item in subsectionlist)
-            {
-                insertList = insertList.Except(item).ToList();
                 ct.ThrowIfCancellationRequested();
-                string subsection = "";
-                FileInfo fileinfo = new FileInfo(item[0]);//获得第一个视频的文件信息
-                id = IsEurope ? Identify.GetEuFanhao(fileinfo.Name) : Identify.GetFanhao(fileinfo.Name);
-                if (IsEurope) { if (string.IsNullOrEmpty(id)) continue; else vt = VedioType.欧美; } else { vt = Identify.GetVideoType(id); }
-                if (string.IsNullOrEmpty(id) || vt == 0) continue;
-
-                //文件大小视为所有文件之和
-                double filesize = 0;
-                for (int i = 0; i < item.Count; i++)
-                {
-                    if (!File.Exists(item[i])) { continue; }
-                    FileInfo fi = new FileInfo(item[i]);
-                    subsection += item[i] + ";";
-                    filesize += fi.Length;
-                }
-
-                //获取创建日期
-                //TODO 国际化
-                string createDate = "";
-                try { createDate = fileinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"); }
-                catch { }
-                if (createDate == "") createDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-                Movie movie = new Movie()
-                {
-                    filepath = item[0],
-                    id = id,
-                    filesize = filesize,
-                    vediotype = (int)vt,
-                    subsection = subsection.Substring(0, subsection.Length - 1),
-                    otherinfo = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    scandate = createDate
-                };
-
-                DataBase.InsertScanMovie(movie);
-                insertCount += 1;
             }
 
-            //导入剩余的所有视频
-            foreach (var item in insertList)
+
+            foreach (string path in noVIDList)
             {
-                ct.ThrowIfCancellationRequested();
-                if (!File.Exists(item)) continue;
-                FileInfo fileinfo = new FileInfo(item);
 
-                string createDate = "";
-                try { createDate = fileinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"); }
-                catch { }
-                if (createDate == "") createDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-                id = IsEurope ? Identify.GetEuFanhao(fileinfo.Name) : Identify.GetFanhao(fileinfo.Name);
-                if (string.IsNullOrEmpty(id)) continue;
-
-                if (IsEurope) vt = VedioType.欧美;
-                else vt = Identify.GetVideoType(id);
-
-                if (vt == 0) continue;
-
-                Movie movie = new Movie()
-                {
-                    filepath = item,
-                    id = id,
-                    filesize = fileinfo.Length,
-                    vediotype = (int)vt,
-                    otherinfo = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    scandate = createDate
-                };
-                DataBase.InsertScanMovie(movie);
-                insertCount += 1;
             }
 
-            Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.TotalImport} => {insertCount}，{Jvedio.Language.Resources.ImportAttention}" + Environment.NewLine);
 
-            //TODO 从主数据库中复制信息
-            //从 主数据库中 复制信息
-            //if (Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath).ToLower() != "info")
-            //{
-            //    try
-            //    {
-            //        string src = AppDomain.CurrentDomain.BaseDirectory + "DataBase\\info.sqlite";
-            //        string dst = AppDomain.CurrentDomain.BaseDirectory + $"DataBase\\{Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath).ToLower()}.sqlite"; ;
-            //        DataBase.CopyDatabaseInfo(src, dst);
-            //    }
-            //    catch { }
-            //}
-            return insertCount;
+
+            return result;
         }
 
-        public (string, List<string>) ExcludeMaximumSize(List<string> pathlist)
-        {
-            double maxsize = 0;
-            int maxsizeindex = 0;
-            int i = 0;
-            foreach (var item in pathlist)
-            {
-                if (File.Exists(item))
-                {
-                    double filesize = new FileInfo(item).Length;
-                    if (maxsize < filesize) { maxsize = filesize; maxsizeindex = i; }
-                }
-                i++;
-            }
-            string maxsizepth = pathlist[maxsizeindex];
-            pathlist.RemoveAt(maxsizeindex);
-            return (maxsizepth, pathlist);
-        }
+        //public (string, List<string>) ExcludeMaximumSize(List<string> pathlist)
+        //{
+        //    double maxsize = 0;
+        //    int maxsizeindex = 0;
+
+        //    for (int i = 0; i < pathlist.Count; i++)
+        //    {
+        //        string path = pathlist[i];
+        //        if (!File.Exists(path)) continue;
+        //        double filesize = new FileInfo(path).Length;
+        //        if (maxsize < filesize)
+        //        {
+        //            maxsize = filesize;
+        //            maxsizeindex = i;
+        //        }
+        //    }
+        //    string maxsizepth = pathlist[maxsizeindex];
+        //    pathlist.RemoveAt(maxsizeindex);
+        //    return (maxsizepth, pathlist);
+        //}
 
     }
 }

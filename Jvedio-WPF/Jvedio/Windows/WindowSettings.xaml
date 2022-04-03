@@ -1778,7 +1778,7 @@
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.VedioType}"
+                            Content="{x:Static lang:Resources.VideoType}"
                             Style="{StaticResource ToggleButtonStyle1}" />
 
                         <ToggleButton

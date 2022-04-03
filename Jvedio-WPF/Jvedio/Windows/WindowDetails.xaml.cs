@@ -1363,7 +1363,7 @@ namespace Jvedio
                     foreach (var path in FileHelper.TryScanDIr(imagePath, "*.*", System.IO.SearchOption.AllDirectories))
                         imagePathList.Add(path);
 
-                    if (imagePathList.Count > 0) imagePathList = imagePathList.Where(arg => Scan.ImagePattern.Contains(Path.GetExtension(arg))).CustomSort().ToList();
+                    if (imagePathList.Count > 0) imagePathList = imagePathList.Where(arg => ScanHelper.ImagePattern.Contains(Path.GetExtension(arg))).CustomSort().ToList();
                 }
             });
 

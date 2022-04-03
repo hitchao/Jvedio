@@ -1,7 +1,7 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.Utils;
 using Jvedio.Utils.Common;
-using Jvedio.Utils.FileProcess;
+using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Jvedio.Core.Scan
@@ -17,8 +18,8 @@ namespace Jvedio.Core.Scan
     public class ScanTask : ITask, INotifyPropertyChanged
     {
 
-        public static string VIDEO_EXTENSIONS = "3g2,3gp,3gp2,3gpp,amr,amv,asf,avi,bdmv,bik,d2v,divx,drc,dsa,dsm,dss,dsv,evo,f4v,flc,fli,flic,flv,hdmov,ifo,ivf,m1v,m2p,m2t,m2ts,m2v,m4b,m4p,m4v,mkv,mp2v,mp4,mp4v,mpe,mpeg,mpg,mpls,mpv2,mpv4,mov,mts,ogm,ogv,pss,pva,qt,ram,ratdvd,rm,rmm,rmvb,roq,rpm,smil,smk,swf,tp,tpr,ts,vob,vp6,webm,wm,wmp,wmv,nfo";
-        public static List<string> VIDEO_EXTENSIONS_LIST = VIDEO_EXTENSIONS.Split(',').ToList();
+        public static string VIDEO_EXTENSIONS = "3g2,3gp,3gp2,3gpp,amr,amv,asf,avi,bdmv,bik,d2v,divx,drc,dsa,dsm,dss,dsv,evo,f4v,flc,fli,flic,flv,hdmov,ifo,ivf,m1v,m2p,m2t,m2ts,m2v,m4b,m4p,m4v,mkv,mp2v,mp4,mp4v,mpe,mpeg,mpg,mpls,mpv2,mpv4,mov,mts,ogm,ogv,pss,pva,qt,ram,ratdvd,rm,rmm,rmvb,roq,rpm,smil,smk,swf,tp,tpr,ts,vob,vp6,webm,wm,wmp,wmv";
+        public static List<string> VIDEO_EXTENSIONS_LIST = VIDEO_EXTENSIONS.Split(',').Select(arg => "." + arg).ToList();
 
 
         public TaskStatus _Status;
@@ -101,7 +102,10 @@ namespace Jvedio.Core.Scan
         public List<string> ScanPaths { get; set; }
         public List<string> FilePaths { get; set; }
 
-        public string[] FileExt { get; set; }
+        public List<string> FileExt { get; set; }
+
+        private CancellationTokenSource tokenCTS;
+        private CancellationToken token;
 
         public System.IO.SearchOption SearchOption { get; set; }
 
@@ -113,15 +117,36 @@ namespace Jvedio.Core.Scan
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public ScanTask(List<string> scanPaths, List<string> filePaths)
+        public ScanTask(List<string> scanPaths, List<string> filePaths, IEnumerable<string> fileExt = null)
         {
             if (scanPaths != null && scanPaths.Count > 0)
                 ScanPaths = scanPaths.Where(arg => Directory.Exists(arg)).ToList();
             if (filePaths != null && filePaths.Count > 0)
                 FilePaths = filePaths.Where(arg => File.Exists(arg)).ToList();
+            if (fileExt != null)
+            {
+                foreach (var item in fileExt)
+                {
+                    string ext = item.Trim();
+                    if (string.IsNullOrEmpty(ext)) continue;
+                    if (!item.StartsWith("."))
+                        FileExt.Add("." + ext);
+                    else
+                        FileExt.Add(ext);
+                }
+            }
+
 
             if (ScanPaths == null) ScanPaths = new List<string>();
             if (FilePaths == null) FilePaths = new List<string>();
+            if (FileExt == null) FileExt = VIDEO_EXTENSIONS_LIST;// 默认导入视频
+
+            tokenCTS = new CancellationTokenSource();
+            tokenCTS.Token.Register(() =>
+            {
+                Console.WriteLine("取消任务");
+            });
+            token = tokenCTS.Token;
 
             stopwatch = new Stopwatch();
 
@@ -164,20 +189,28 @@ namespace Jvedio.Core.Scan
                    FilePaths.AddRange(paths);
                }
 
-               Task.Delay(2000).Wait();
-
                try { CheckStatus(); }
                catch (TaskCanceledException ex)
                {
                    Console.WriteLine(ex.Message);
                    return;
                }
-               // 处理
-               foreach (var item in FilePaths)
-               {
+               ScanHelper scanHelper = new ScanHelper();
+               (List<Video> import, List<string> notImport, List<string> failNFO) parseResult
+               = scanHelper.parseMovie(FilePaths, FileExt, token, Properties.Settings.Default.ScanNfo);
 
-               }
+               List<MetaData> metaDatas = parseResult.import.Select(arg => (MetaData)arg).ToList();
+               List<Video> videos = parseResult.import;
 
+               // 检查是否有重复
+
+
+
+               GlobalMapper.metaDataMapper.executeNonQuery("BEGIN EXCLUSIVE TRANSACTION;");//设置排它锁
+               GlobalMapper.metaDataMapper.insertBatch(metaDatas);
+               GlobalMapper.videoMapper.insertBatch(videos);
+
+               GlobalMapper.metaDataMapper.executeNonQuery("END TRANSACTION;");
 
                stopwatch.Stop();
                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
@@ -208,7 +241,10 @@ namespace Jvedio.Core.Scan
         public void Cancel()
         {
             if (Status == TaskStatus.Running)
+            {
                 Status = TaskStatus.Canceled;
+                tokenCTS.Cancel();
+            }
         }
     }
 }

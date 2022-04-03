@@ -431,8 +431,8 @@ namespace Jvedio.ViewModel
 
 
         #region "enum"
-        private VedioType _ClassifyVedioType = 0;
-        public VedioType ClassifyVedioType
+        private VideoType _ClassifyVedioType = 0;
+        public VideoType ClassifyVedioType
         {
             get { return _ClassifyVedioType; }
             set
@@ -1548,17 +1548,17 @@ namespace Jvedio.ViewModel
 
             if (b && !string.IsNullOrEmpty(result.Text))
             {
-                List<string> IDList = GetIDListFromString(result.Text, result.VedioType);
+                List<string> IDList = GetIDListFromString(result.Text, result.VideoType);
                 foreach (var item in IDList)
                 {
-                    InsertID(item, result.VedioType);
+                    InsertID(item, result.VideoType);
                 }
             }
 
 
         }
 
-        private void InsertID(string id, VedioType vedioType)
+        private void InsertID(string id, VideoType vedioType)
         {
             //Movie movie = DataBase.SelectMovieByID(id);
             //if (movie != null)
@@ -1582,7 +1582,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        public List<string> GetIDListFromString(string str, VedioType vedioType)
+        public List<string> GetIDListFromString(string str, VideoType vedioType)
         {
             List<string> result = new List<string>();
             foreach (var item in str.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None))
@@ -1592,7 +1592,7 @@ namespace Jvedio.ViewModel
                     id = Prefix + id;
 
 
-                if (vedioType == VedioType.欧美)
+                if (vedioType == VideoType.Europe)
                     id = id.Replace(" ", "");
                 else
                     id = id.ToUpper().Replace(" ", "");

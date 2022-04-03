@@ -28,15 +28,15 @@ namespace Jvedio
 
         public List<ActorSearch> ActorSearches;
         public string url = "";
-        public int VedioType = 1;
+        public int VideoType = 1;
         public int StartPage = 1;
         public int EndPage = 500;
 
-        public Dialog_LoadPage(Window owner,bool showbutton) : base(owner, showbutton)
+        public Dialog_LoadPage(Window owner, bool showbutton) : base(owner, showbutton)
         {
             InitializeComponent();
             cb.ItemsSource = Properties.Settings.Default.WebSiteList.Split(';');
-            if(cb.Items.Count>0)
+            if (cb.Items.Count > 0)
                 cb.SelectedIndex = 0;
 
             tb.Focus();
@@ -49,12 +49,12 @@ namespace Jvedio
         {
             var rbs = VedioTypeStackPanel.Children.OfType<RadioButton>().ToList();
             RadioButton rb = sender as RadioButton;
-            VedioType = rbs.IndexOf(rb) +1;
+            VideoType = rbs.IndexOf(rb) + 1;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            StartPage =(int)e.NewValue;
+            StartPage = (int)e.NewValue;
         }
 
         private void SliderEnd_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -84,7 +84,7 @@ namespace Jvedio
         private List<string> StringToList(string str)
         {
             if (str.Length == 0) return new List<string>();
-            if (str.IndexOf(";") < 0 && str.Length > 0) return new List<string>() { str};
+            if (str.IndexOf(";") < 0 && str.Length > 0) return new List<string>() { str };
 
             List<string> result = new List<string>();
             foreach (var item in str.Split(';'))
@@ -100,7 +100,7 @@ namespace Jvedio
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            tb.Text= e.AddedItems[0].ToString();
+            tb.Text = e.AddedItems[0].ToString();
         }
     }
 }

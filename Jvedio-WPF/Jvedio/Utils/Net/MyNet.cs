@@ -9,6 +9,7 @@ using Jvedio.Utils;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils.Net;
 using Jvedio.Entity;
+using Jvedio.Core.Enums;
 
 namespace Jvedio
 {
@@ -93,7 +94,7 @@ namespace Jvedio
             if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != "")
             {
                 //id搜索
-                BusParse busParse = new BusParse(ID, httpResult.SourceCode, VedioType.骑兵);
+                BusParse busParse = new BusParse(ID, httpResult.SourceCode, VideoType.Censored);
                 Actress actress = busParse.ParseActress();
                 if (actress == null && string.IsNullOrEmpty(actress.birthday) && actress.age == 0 && string.IsNullOrEmpty(actress.birthplace))
                 {
@@ -181,7 +182,7 @@ namespace Jvedio
                 }
                 else if (webSite == WebSite.BusEu)
                 {
-                    Info = new BusParse(id, content, VedioType.欧美).Parse();
+                    Info = new BusParse(id, content, VideoType.Europe).Parse();
                     Info.Add("source", "javbus");
                 }
                 else if (webSite == WebSite.DB)
@@ -236,10 +237,10 @@ namespace Jvedio
             HttpResult httpResult = null;
             string message = "";
 
-            if (movie.vediotype == (int)VedioType.欧美)
+            if (movie.vediotype == (int)VideoType.Europe)
             {
                 if (JvedioServers.BusEurope.IsEnable)
-                    httpResult = await new BusCrawler(movie.id, (VedioType)movie.vediotype).Crawl();
+                    httpResult = await new BusCrawler(movie.id, (VideoType)movie.vediotype).Crawl();
                 //else if (supportServices.BusEu.IsProperUrl() && !serviceEnables.BusEu) 
                 //    message = Jvedio.Language.Resources.UrlEuropeNotset;
             }
@@ -268,7 +269,7 @@ namespace Jvedio
                     //非FC2 影片
                     //优先从 Bus 下载
                     if (JvedioServers.Bus.IsEnable)
-                        httpResult = await new BusCrawler(movie.id, (VedioType)movie.vediotype).Crawl();
+                        httpResult = await new BusCrawler(movie.id, (VideoType)movie.vediotype).Crawl();
                     //else if (supportServices.Bus.IsProperUrl() && !serviceEnables.Bus)
                     //    message = Jvedio.Language.Resources.UrlBusNotset;
 

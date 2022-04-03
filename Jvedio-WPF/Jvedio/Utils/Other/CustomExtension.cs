@@ -111,7 +111,7 @@ namespace Jvedio
             {
                 return "chinesetitle";
             }
-            else if (content == Jvedio.Language.Resources.VedioType)
+            else if (content == Jvedio.Language.Resources.VideoType)
             {
                 return "vediotype";
             }

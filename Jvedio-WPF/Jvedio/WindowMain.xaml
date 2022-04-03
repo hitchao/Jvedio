@@ -1924,7 +1924,7 @@
 
 
                                                     <WrapPanel Margin="0,5">
-                                                        <TextBlock Style="{StaticResource BaseFilterTextBlock}" Text="{x:Static lang:Resources.VedioType}" />
+                                                        <TextBlock Style="{StaticResource BaseFilterTextBlock}" Text="{x:Static lang:Resources.VideoType}" />
                                                         <ToggleButton
                                                             Margin="10,0,0,0"
                                                             Content="{x:Static lang:Resources.Uncensored}"

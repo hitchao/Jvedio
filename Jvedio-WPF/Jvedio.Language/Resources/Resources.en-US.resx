@@ -144,8 +144,8 @@
   <data name="SearchHint" xml:space="preserve">
     <value>Search for ID, Title, Actress</value>
   </data>
-  <data name="VedioType" xml:space="preserve">
-    <value>VedioType</value>
+  <data name="VideoType" xml:space="preserve">
+    <value>VideoType</value>
   </data>
   <data name="WithActress" xml:space="preserve">
     <value>Actress</value>

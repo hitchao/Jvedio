@@ -5,6 +5,7 @@ using System.Xml;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
 using Jvedio.Entity;
+using Jvedio.Core.Enums;
 
 namespace Jvedio
 {
@@ -172,7 +173,7 @@ namespace Jvedio
             }
 
             // 演员
-            if (video.vediotype == (int)VedioType.欧美)
+            if (video.vediotype == (int)VideoType.Europe)
             {
                 foreach (var item in video.actor?.Split('/'))
                 {
