@@ -141,10 +141,10 @@ namespace Jvedio
             initTagStamp();
             AllRadioButton.IsChecked = true;
 
-            // 测试
-            Core.Scan.ScanTask scanTask = new Core.Scan.ScanTask(new List<string> { @"E:\资料\FC2\1.3" }, null);
-            vieModel.ScanTasks.Add(scanTask);
-            scanTask.Start();
+            //// 测试
+            //Core.Scan.ScanTask scanTask = new Core.Scan.ScanTask(new List<string> { @"E:\资料\测试用" }, null);
+            //vieModel.ScanTasks.Add(scanTask);
+            //scanTask.Start();
         }
 
 
@@ -3613,20 +3613,6 @@ namespace Jvedio
         {
 
             vieModel.ScanStatus = "Scanning";
-
-
-
-
-
-            //WaitingPanel.Visibility = Visibility.Visible;
-            //vieModel.IsScanning = true;
-            //scan_cts = new CancellationTokenSource();
-            //scan_cts.Token.Register(() => { Console.WriteLine("取消任务"); });
-            //scan_ct = scan_cts.Token;
-
-            //await Task.Run(() =>
-            //{
-            //    //分为文件夹和文件
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             List<string> files = new List<string>();
             List<string> paths = new List<string>();
@@ -3639,12 +3625,25 @@ namespace Jvedio
                     paths.Add(item);
             }
             Core.Scan.ScanTask scanTask = new Core.Scan.ScanTask(paths, files);
+
+            scanTask.onCanceled += (s, ev) =>
+            {
+                //msgCard.Warning("取消扫描任务");
+            };
+            scanTask.onError += (s, ev) =>
+            {
+                msgCard.Error((ev as MessageCallBackEventArgs).Message);
+            };
             vieModel.ScanTasks.Add(scanTask);
             scanTask.Start();
+            setScanStatus();
+        }
+
+        private void setScanStatus()
+        {
             if (!CheckingScanStatus)
             {
                 CheckingScanStatus = true;
-
                 Task.Run(() =>
                 {
                     while (true)
@@ -3666,7 +3665,6 @@ namespace Jvedio
 
                     }
                 });
-
             }
         }
 
@@ -6343,7 +6341,8 @@ namespace Jvedio
 
         private void Test_1(object sender, RoutedEventArgs e)
         {
-            TestUtils.TestScanFiles();
+            //TestUtils.TestScanFiles();
+            TestUtils.TestHash();
         }
 
         private void ShowMsgScanPopup(object sender, MouseButtonEventArgs e)
@@ -6386,7 +6385,8 @@ namespace Jvedio
             ScanTask scanTask = vieModel.ScanTasks.Where(arg => arg.CreateTime.Equals(createTime)).FirstOrDefault();
             if (scanTask.Status != System.Threading.Tasks.TaskStatus.Running)
             {
-                //todo 显示扫描详情
+                Window_ScanDetail scanDetail = new Window_ScanDetail(scanTask.ScanResult);
+                scanDetail.Show();
             }
         }
     }

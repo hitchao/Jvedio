@@ -297,6 +297,11 @@ namespace Jvedio.Entity
                     continue;
                 }
             }
+
+            // 对于 NFO ，只要没有 VID，就不导入
+            if (string.IsNullOrEmpty(movie.id)) return null;
+
+
             if (!string.IsNullOrEmpty(movie.id))
                 movie.vediotype = (int)Identify.GetVideoType(movie.id);
             //扫描视频获得文件大小

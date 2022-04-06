@@ -1894,5 +1894,17 @@ namespace Jvedio.Properties {
                 this["ActorViewMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowCreateDateIfReleaseDateEmpty {
+            get {
+                return ((bool)(this["ShowCreateDateIfReleaseDateEmpty"]));
+            }
+            set {
+                this["ShowCreateDateIfReleaseDateEmpty"] = value;
+            }
+        }
     }
 }

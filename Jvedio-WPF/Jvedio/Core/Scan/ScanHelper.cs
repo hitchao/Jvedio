@@ -66,7 +66,8 @@ namespace Jvedio
                         if (movie != null)
                         {
                             Video video = movie.toVideo();
-                            video.Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(video.Path);
+                            video.LastScanDate = DateHelper.Now();
+                            //video.Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(video.Path);
                             import.Add(video);
                         }
 
@@ -85,6 +86,7 @@ namespace Jvedio
                         // 检查是否大于给定大小的影片
                         notImport.AddRange(videos.Where(arg => arg.Size < minFileSize).Select(arg => arg.Path));
                         videos.RemoveAll(arg => arg.Size < minFileSize);
+
                         import.AddRange(videos);
                     }
                     catch (OperationCanceledException ex)
@@ -434,7 +436,8 @@ namespace Jvedio
                         VideoType = Identify.GetVideoType(VID),
                         FirstScanDate = DateHelper.Now(),
                         CreateDate = DateHelper.toLocalDate(fileInfo.CreationTime),
-                        Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(path),
+
+                        //Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(path),
                     };
 
 
@@ -461,7 +464,7 @@ namespace Jvedio
                             FirstScanDate = DateHelper.Now(),
                             CreateDate = DateHelper.toLocalDate(fileInfo.CreationTime),
                             SubSection = subsection,
-                            Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(firstPath),
+                            //Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(firstPath),
                         };
                         result.Add(video);
                     }
@@ -478,11 +481,21 @@ namespace Jvedio
 
             foreach (string path in noVIDList)
             {
+                FileInfo fileInfo = new FileInfo(path);// 原生的速度最快
 
+                // 无识别码的视频计算其 Hash
+                Video video = new Video()
+                {
+                    Path = path,
+                    VID = "",
+                    Size = fileInfo.Length,
+                    VideoType = VideoType.Normal,
+                    FirstScanDate = DateHelper.Now(),
+                    CreateDate = DateHelper.toLocalDate(fileInfo.CreationTime),
+                    Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(path),
+                };
+                result.Add(video);
             }
-
-
-
             return result;
         }
 

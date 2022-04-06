@@ -444,6 +444,9 @@
     <Compile Include="ViewModels\VieModel_DBManagement.cs" />
     <Compile Include="ViewModels\VieModel_StartUp.cs" />
     <Compile Include="ViewModels\VieModel_Settings.cs" />
+    <Compile Include="Windows\Simple\Window_ScanDetail.xaml.cs">
+      <DependentUpon>Window_ScanDetail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\WindowDetails.xaml.cs">
       <DependentUpon>WindowDetails.xaml</DependentUpon>
     </Compile>
@@ -514,6 +517,10 @@
     <Page Include="Utils\Plot\Bar\BarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Simple\Window_ScanDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\WindowBatch.xaml">
       <Generator>MSBuild:Compile</Generator>

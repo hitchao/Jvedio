@@ -38,9 +38,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TabControlStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ListBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ProgressBarStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ScrollViewStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/DataGridStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ToggleButtonStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ComboBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml" />

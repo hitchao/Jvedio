@@ -8,5 +8,29 @@ namespace Jvedio.Core.Scan
 {
     public class ScanResult
     {
+
+
+        public ScanResult()
+        {
+            Update = new List<string>();
+            Import = new List<string>();
+            NotImport = new Dictionary<string, string>();
+            FailNFO = new List<string>();
+        }
+
+
+        public List<string> Update { get; set; }
+        public List<string> Import { get; set; }
+
+        /// <summary>
+        /// （路径，原因）
+        /// </summary>
+        public Dictionary<string, string> NotImport { get; set; }
+        public List<string> FailNFO { get; set; }
+
+        public string ScanDate { get; set; }
+        public long ElapsedMilliseconds { get; set; }
+
+
     }
 }

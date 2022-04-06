@@ -30,6 +30,11 @@ namespace Jvedio.Core.SimpleORM
 
         public Key PrimaryKey = new Key();//主键
         protected PropertyInfo[] Properties;
+
+
+        /// <summary>
+        /// 注解定义 Field 为 exist=false 的列表
+        /// </summary>
         protected List<string> ExtraFields;
 
         public AbstractMapper()
@@ -217,6 +222,19 @@ namespace Jvedio.Core.SimpleORM
             return executeNonQuery(sql);
         }
 
+        /// <summary>
+        /// 批量更新
+        /// </summary>
+        /// <seealso cref="https://stackoverflow.com/questions/15501779/sqlite-bulk-update-statement"/>
+        /// <seealso cref="https://stackoverflow.com/questions/17079697/update-command-with-case-in-sqlite"/>
+        /// <param name="collections"></param>
+        /// <returns></returns>
+        public int updateBatch(ICollection<T> collections, params string[] updateFields)
+        {
+            if (collections == null || collections.Count == 0) return 0;
+            string sqltext = generateBatchUpdateSql(collections, updateFields);
+            return executeNonQuery(sqltext);
+        }
 
 
         public bool increaseFieldById(string field, object id)
@@ -463,6 +481,72 @@ namespace Jvedio.Core.SimpleORM
             else if (mode == InsertMode.Update) insert = "INSERT OR UPDATE INTO";
             string result = $"{insert} {TableName} ({string.Join(",", field_sql)}) values ({all_sql})";
             return result;
+        }
+
+
+        private string generateBatchUpdateSql(ICollection<T> collection, params string[] updateFields)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+
+            PropertyInfo[] updateProperties = Properties;
+            if (updateFields != null || updateFields.Length > 0)
+                updateProperties = Properties.Where(arg => updateFields.Contains(arg.Name)).ToArray();
+
+            /*
+             * 
+             * UPDATE  metadata
+                SET     
+                Path = CASE DataID
+                    WHEN 1 THEN 'E:\123.mp4'
+                    WHEN 2 THEN 'E:\456.mp4'
+                    END,
+                Title = CASE DataID
+                    WHEN 1 THEN '123'
+                    WHEN 2 THEN '456'
+                    END
+                WHERE DataID IN (1, 2)
+             * 
+             */
+
+            StringBuilder set_sql = new StringBuilder();
+            HashSet<object> primaryKeyValues = new HashSet<object>();
+            for (int i = 0; i <= updateProperties.Length - 1; i++)
+            {
+                string name = updateProperties[i].Name;
+                if (ExtraFields.Contains(name)) continue;
+                if (updateProperties[i].Name == PrimaryKey.Name
+                    || updateProperties[i].Name == "UpdateDate"
+                    ) continue;// 跳过主键 和 UpdateDate
+                set_sql.Append($" {name} = CASE {PrimaryKey.Name} ");
+                foreach (T entity in collection)
+                {
+                    PropertyInfo primaryKeyInfo = Properties.Where(arg => arg.Name == PrimaryKey.Name).First();
+                    object PrimaryKeyValue = primaryKeyInfo.GetValue(entity);
+                    primaryKeyValues.Add(PrimaryKeyValue);
+                    PropertyInfo property = Properties.Where(arg => arg.Name == updateProperties[i].Name).First();
+
+                    Type type = property.PropertyType;
+                    object value = property.GetValue(entity);
+                    if (value == null) continue;
+                    if (type.IsEnum)
+                    {
+                        if (value == null) value = 0;
+                        value = (int)value;
+                        set_sql.Append($"WHEN {PrimaryKeyValue} THEN {value} ");
+                    }
+                    else if (TypeHelper.IsNumeric(type))
+                    {
+                        set_sql.Append($"WHEN {PrimaryKeyValue} THEN {value} ");
+                    }
+                    else
+                    {
+                        set_sql.Append($"WHEN {PrimaryKeyValue} THEN '{value}' ");
+                    }
+                }
+                set_sql.Append("END,");
+            }
+            set_sql.Append($"UpdateDate='{DateHelper.Now()}'");
+            return $"UPDATE {TableName} SET {set_sql} WHERE {PrimaryKey.Name} in ('{string.Join("','", primaryKeyValues)}')";
         }
 
 

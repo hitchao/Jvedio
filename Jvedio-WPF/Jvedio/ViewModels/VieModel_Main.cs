@@ -2529,6 +2529,7 @@ namespace Jvedio.ViewModel
             "SubSection",
             "ImageUrls",
             "ReleaseDate",
+            "LastScanDate",
             "GifImagePath",
             "BigImagePath",
             "metadata_video.SmallImagePath",
@@ -2721,6 +2722,7 @@ namespace Jvedio.ViewModel
                 Video video = VideoList[i];
                 SetImage(ref video, imageMode);
                 Video.setTagStamps(ref video);// 设置标签戳
+                Video.handleEmpty(ref video);// 设置标题和发行日期
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
             }
 

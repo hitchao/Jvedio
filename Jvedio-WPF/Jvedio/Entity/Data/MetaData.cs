@@ -37,6 +37,7 @@ namespace Jvedio.Entity
             set
             {
                 _Path = value;
+
                 OnPropertyChanged();
             }
         }
@@ -91,7 +92,16 @@ namespace Jvedio.Entity
         public List<string> LabelList { get; set; }
 
         public string ViewDate { get; set; }
-        public string FirstScanDate { get; set; }
+        public string _FirstScanDate;
+        public string FirstScanDate
+        {
+            get { return _FirstScanDate; }
+            set
+            {
+                _FirstScanDate = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private string _LastScanDate;

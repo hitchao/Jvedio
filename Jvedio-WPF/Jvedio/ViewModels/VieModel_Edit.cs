@@ -300,7 +300,7 @@ namespace Jvedio.ViewModel
         public bool Save()
         {
             if (CurrentVideo == null) return false;
-            MetaData data = (MetaData)CurrentVideo;
+            MetaData data = CurrentVideo.toMetaData();
             data.DataID = DataID;
             int update1 = GlobalMapper.metaDataMapper.updateById(data);
             int update2 = GlobalMapper.videoMapper.updateById(CurrentVideo);

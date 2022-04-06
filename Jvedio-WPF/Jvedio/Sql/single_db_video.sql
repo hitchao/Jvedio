@@ -31,7 +31,7 @@ create table if not exists metadata (
     Path TEXT,
     Hash VARCHAR(32),
     Country VARCHAR(50),
-    ReleaseDate VARCHAR(30) DEFAULT '1900-01-01',
+    ReleaseDate VARCHAR(30),
     ReleaseYear INT DEFAULT 1900,
     ViewCount INT DEFAULT 0,
     DataType INT DEFAULT 0,

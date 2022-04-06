@@ -182,6 +182,7 @@ namespace Jvedio.ViewModel
             metaDataMapper.increaseFieldById("ViewCount", dataID); //访问次数+1
             Video video = videoMapper.SelectVideoByID(dataID);
             Video.setTagStamps(ref video);// 设置标签戳
+            Video.handleEmpty(ref video);
             CurrentVideo = video;
             // 磁力
             List<Magnet> magnets = magnetsMapper.selectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));

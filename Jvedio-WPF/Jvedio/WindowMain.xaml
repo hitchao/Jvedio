@@ -2565,6 +2565,7 @@
                                                 IsDeferredScrollingEnabled="False"
                                                 PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
                                                 ScrollChanged="ScrollViewer_ScrollChanged"
+                                                Style="{StaticResource FlatScrollViewer}"
                                                 VerticalScrollBarVisibility="Auto">
                                                 <!--  影片  -->
                                                 <ItemsControl
@@ -4160,6 +4161,7 @@
                                                                 <Button
                                                                     Click="ShowScanDetail"
                                                                     Content="详情"
+                                                                    IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
                                                                     Tag="{Binding CreateTime}" />
                                                             </StackPanel>
                                                         </Grid>

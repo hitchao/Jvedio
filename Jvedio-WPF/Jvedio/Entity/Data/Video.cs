@@ -62,6 +62,19 @@ namespace Jvedio.Entity
             }
         }
 
+        public static void handleEmpty(ref Video video)
+        {
+            if (Properties.Settings.Default.ShowFileNameIfTitleEmpty
+                && !string.IsNullOrEmpty(video.Path) && string.IsNullOrEmpty(video.Title))
+                video.Title = System.IO.Path.GetFileNameWithoutExtension(video.Path);
+            if (Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty
+                && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
+                video.ReleaseDate = DateHelper.toLocalDate(video.LastScanDate);
+
+
+
+        }
+
 
         [TableId(IdType.AUTO)]
         public long MVID { get; set; }
@@ -205,6 +218,13 @@ namespace Jvedio.Entity
         public override string ToString()
         {
             return ClassUtils.toString(this);
+        }
+
+        public MetaData toMetaData()
+        {
+            MetaData metaData = (MetaData)this;
+            metaData.DataID = this.DataID;
+            return metaData;
         }
 
         public override bool Equals(object obj)
