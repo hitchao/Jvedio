@@ -82,6 +82,7 @@ namespace Jvedio
                 if (i == vieModel_StartUp.CurrentSideIdx) radioButtons[i].IsChecked = true;
                 else radioButtons[i].IsChecked = false;
             }
+            GlobalVariable.CurrentDataType = (DataType)GlobalConfig.StartUp.SideIdx;
 
             if (!Properties.Settings.Default.OpenDataBaseDefault)
             {
@@ -424,6 +425,7 @@ namespace Jvedio
             int idx = stackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
             vieModel_StartUp.CurrentSideIdx = idx;
             GlobalVariable.CurrentDataType = (DataType)idx;
+            GlobalConfig.StartUp.SideIdx = idx;
             vieModel_StartUp.ReadFromDataBase();
         }
 
@@ -462,12 +464,21 @@ namespace Jvedio
             // 次数+1
             appDatabaseMapper.increaseFieldById("ViewCount", id);
             vieModel_StartUp.CurrentDBID = id;
+            GlobalConfig.StartUp.CurrentDBID = vieModel_StartUp.CurrentDBID;
+            GlobalConfig.Main.CurrentDBId = id;
             //启动主窗口
-            //Application.Current.MainWindow = new Main();
-            //Application.Current.MainWindow.Show();
-            var window = new Main();
-            Application.Current.MainWindow = window;
-            window.Show();
+            Main main = GetWindowByName("Main") as Main;
+            if (main == null)
+            {
+                main = new Main();
+                Application.Current.MainWindow = main;
+            }
+            else
+            {
+                main.setDataBases();
+                main.setComboboxID();
+            }
+            main.Show();
             this.Close();
         }
 
@@ -540,6 +551,10 @@ namespace Jvedio
             GlobalConfig.StartUp.Sort = vieModel_StartUp.Sort;
             GlobalConfig.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? "名称" : vieModel_StartUp.SortType;
             GlobalConfig.StartUp.Save();
+
+            Main main = GetWindowByName("Main") as Main;
+            if (main != null && !main.IsActive) main.Close();
+
         }
 
         private void listBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)

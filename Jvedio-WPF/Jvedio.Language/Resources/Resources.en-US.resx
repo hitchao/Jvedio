@@ -1743,4 +1743,7 @@
   <data name="Outline" xml:space="preserve">
     <value>Outline</value>
   </data>
+  <data name="AllGame" xml:space="preserve">
+    <value>All Game</value>
+  </data>
 </root>

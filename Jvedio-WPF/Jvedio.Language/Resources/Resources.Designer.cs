@@ -259,6 +259,15 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
+        ///   查找类似 所有游戏 的本地化字符串。
+        /// </summary>
+        public static string AllGame {
+            get {
+                return ResourceManager.GetString("AllGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 所有图片 的本地化字符串。
         /// </summary>
         public static string AllImage {

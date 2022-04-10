@@ -433,6 +433,9 @@
     <Compile Include="Utils\FileProcess\NFO.cs" />
     <Compile Include="Core\Scan\ScanHelper.cs" />
     <Compile Include="Utils\Config\WindowConfig.cs" />
+    <Compile Include="Windows\MetaData\Window_MetaDatas.xaml.cs">
+      <DependentUpon>Window_MetaDatas.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Msgbox.xaml.cs">
       <DependentUpon>Msgbox.xaml</DependentUpon>
     </Compile>
@@ -517,6 +520,10 @@
     <Page Include="Utils\Plot\Bar\BarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\MetaData\Window_MetaDatas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Simple\Window_ScanDetail.xaml">
       <SubType>Designer</SubType>

@@ -1743,4 +1743,7 @@
   <data name="Outline" xml:space="preserve">
     <value>要綱</value>
   </data>
+  <data name="AllGame" xml:space="preserve">
+    <value>すべてのゲーム</value>
+  </data>
 </root>

@@ -197,9 +197,7 @@ namespace Jvedio
 
         private void BindingEventAfterRender()
         {
-            int idx = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == GlobalConfig.Main.CurrentDBId);
-            if (idx < 0 || idx > DatabaseComboBox.Items.Count) idx = 0;
-            DatabaseComboBox.SelectedIndex = idx;
+            setComboboxID();
             DatabaseComboBox.SelectionChanged += DatabaseComboBox_SelectionChanged;
 
             // 搜索框事件
@@ -211,6 +209,13 @@ namespace Jvedio
                 RefreshCandiadte(null, null);
             };
 
+        }
+
+        public void setComboboxID()
+        {
+            int idx = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == GlobalConfig.Main.CurrentDBId);
+            if (idx < 0 || idx > DatabaseComboBox.Items.Count) idx = 0;
+            DatabaseComboBox.SelectedIndex = idx;
         }
 
         private async void RefreshCandiadte(object sender, TextChangedEventArgs e)
@@ -244,9 +249,10 @@ namespace Jvedio
 
 
 
-        private void setDataBases()
+        public void setDataBases()
         {
-            List<AppDatabase> appDatabases = appDatabaseMapper.selectList();
+            List<AppDatabase> appDatabases =
+                appDatabaseMapper.selectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)GlobalVariable.CurrentDataType));
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             appDatabases.ForEach(db => temp.Add(db));
             vieModel.DataBases = temp;
@@ -1819,10 +1825,9 @@ namespace Jvedio
         public void SetSelected()
         {
             ItemsControl itemsControl;
-            //if (Properties.Settings.Default.EasyMode)
-            //    itemsControl = SimpleMovieItemsControl;
-            //else
+
             itemsControl = MovieItemsControl;
+
 
             for (int i = 0; i < itemsControl.Items.Count; i++)
             {
@@ -3948,6 +3953,7 @@ namespace Jvedio
         private void SetSelectMode(object sender, RoutedEventArgs e)
         {
             vieModel.SelectedVideo.Clear();
+
             SetSelected();
         }
         private void SetActorSelectMode(object sender, RoutedEventArgs e)
@@ -6388,6 +6394,13 @@ namespace Jvedio
                 Window_ScanDetail scanDetail = new Window_ScanDetail(scanTask.ScanResult);
                 scanDetail.Show();
             }
+        }
+
+        private void GoToStartUp(object sender, RoutedEventArgs e)
+        {
+            WindowStartUp windowStartUp = new WindowStartUp();
+            windowStartUp.Show();
+            this.Hide();
         }
     }
 

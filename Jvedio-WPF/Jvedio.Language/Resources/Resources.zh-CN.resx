@@ -1740,4 +1740,7 @@
   <data name="Outline" xml:space="preserve">
     <value>大纲</value>
   </data>
+  <data name="AllGame" xml:space="preserve">
+    <value>所有游戏</value>
+  </data>
 </root>

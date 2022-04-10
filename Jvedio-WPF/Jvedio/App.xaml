@@ -6,7 +6,7 @@
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Jvedio"
     d1p1:Ignorable="d"
-    StartupUri="WindowStartUp.xaml">
+    StartupUri="Windows/MetaData/Window_MetaDatas.xaml">
 
 
 

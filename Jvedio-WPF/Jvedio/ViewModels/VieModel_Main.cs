@@ -584,6 +584,7 @@ namespace Jvedio.ViewModel
         }
 
 
+
         private ObservableCollection<Movie> _DetailsDataList;
 
 
@@ -611,6 +612,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+
 
         private List<ActorInfo> _SelectedActors = new List<ActorInfo>();
 

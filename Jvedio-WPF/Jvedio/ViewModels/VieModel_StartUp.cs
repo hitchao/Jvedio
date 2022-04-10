@@ -116,7 +116,7 @@ namespace Jvedio.ViewModel
             CurrentDatabases = new ObservableCollection<AppDatabase>();
             List<AppDatabase> appDatabases = new List<AppDatabase>();
             SelectWrapper<AppDatabase> wrapper = new SelectWrapper<AppDatabase>();
-            wrapper.Eq("DataType", (int)GlobalVariable.CurrentDataType);
+            wrapper.Eq("DataType", GlobalConfig.StartUp.SideIdx);
             appDatabases = appDatabaseMapper.selectList(wrapper);
 
             appDatabases.ForEach(item => Databases.Add(item));
