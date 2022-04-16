@@ -23,6 +23,10 @@ namespace Jvedio.Core.SimpleORM
             throw new NotImplementedException();
         }
 
+        public override object insertAndGetID(T entity)
+        {
+            throw new NotImplementedException();
+        }
 
         public override bool isTableExists(string tableName)
         {

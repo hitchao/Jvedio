@@ -70,5 +70,23 @@ namespace Jvedio.Utils
 
             return false;
         }
+
+        public static long getDirSize(DirectoryInfo d)
+        {
+            long size = 0;
+            // Add file sizes.
+            FileInfo[] fis = d.GetFiles();
+            foreach (FileInfo fi in fis)
+            {
+                size += fi.Length;
+            }
+            // Add subdirectory sizes.
+            DirectoryInfo[] dis = d.GetDirectories();
+            foreach (DirectoryInfo di in dis)
+            {
+                size += getDirSize(di);
+            }
+            return size;
+        }
     }
 }

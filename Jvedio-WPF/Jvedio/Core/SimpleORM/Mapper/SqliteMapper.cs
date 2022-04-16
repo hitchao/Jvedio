@@ -205,5 +205,11 @@ namespace Jvedio.Core.SimpleORM
             }
             return count;
         }
+
+        public override object insertAndGetID(T entity)
+        {
+            insert(entity);
+            return entity.GetType().GetProperty(PrimaryKey.Name).GetValue(entity);
+        }
     }
 }

@@ -433,11 +433,10 @@ namespace Jvedio
         {
             //加载数据库
             long id = vieModel_StartUp.CurrentDBID;
-            if (listBox.SelectedIndex >= 0)
-            {
-                AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-                id = info.DBId;
-            }
+            if (listBox.SelectedIndex < 0) return;
+            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            id = info.DBId;
+
             vieModel_StartUp.Loading = true;
             //if (Properties.Settings.Default.ScanGivenPath)
             //{
@@ -467,18 +466,38 @@ namespace Jvedio
             GlobalConfig.StartUp.CurrentDBID = vieModel_StartUp.CurrentDBID;
             GlobalConfig.Main.CurrentDBId = id;
             //启动主窗口
-            Main main = GetWindowByName("Main") as Main;
-            if (main == null)
+
+            if (CurrentDataType == DataType.Video)
             {
-                main = new Main();
-                Application.Current.MainWindow = main;
+                Main main = GetWindowByName("Main") as Main;
+                if (main == null)
+                {
+                    main = new Main();
+                    Application.Current.MainWindow = main;
+                }
+                else
+                {
+                    main.setDataBases();
+                    main.setComboboxID();
+                }
+                main.Show();
             }
             else
             {
-                main.setDataBases();
-                main.setComboboxID();
+                Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
+                if (metaData == null)
+                {
+                    metaData = new Window_MetaDatas();
+                    metaData.Title = "Jvedio-" + CurrentDataType.ToString();
+                    Application.Current.MainWindow = metaData;
+                }
+                else
+                {
+                    metaData.setDataBases();
+                    metaData.setComboboxID();
+                }
+                metaData.Show();
             }
-            main.Show();
             this.Close();
         }
 
@@ -508,7 +527,7 @@ namespace Jvedio
         {
             // 复制到 ProjectImagePath 下
             string name = Path.GetFileNameWithoutExtension(imagePath);
-            string ext = Path.GetExtension(imagePath);
+            string ext = Path.GetExtension(imagePath).ToLower();
             string newName = $"{id}_{name}{ext}";
             string newPath = Path.Combine(GlobalVariable.ProjectImagePath, newName);
             FileHelper.TryCopyFile(imagePath, newPath);
@@ -565,6 +584,22 @@ namespace Jvedio
         private void Window_StartUp_ContentRendered(object sender, EventArgs e)
         {
 
+        }
+
+        private void ShowHelpPicture(object sender, MouseButtonEventArgs e)
+        {
+            MessageCard.Info("新建库并打开后，将含有图片的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
+        }
+
+        private void ShowHelpGame(object sender, MouseButtonEventArgs e)
+        {
+            MessageCard.Info("新建库并打开后，将含有 EXE 的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
+
+        }
+
+        private void ShowHelpComics(object sender, MouseButtonEventArgs e)
+        {
+            MessageCard.Info("新建库并打开后，将含有漫画图片的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
         }
     }
 }

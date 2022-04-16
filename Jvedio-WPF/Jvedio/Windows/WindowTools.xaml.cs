@@ -575,7 +575,7 @@ namespace Jvedio
             //识别图片
             if (files != null)
             {
-                var piclist = files.Where(s => ImageExtList.Contains(Path.GetExtension(s))).ToList();
+                var piclist = files.Where(s => ImageExtList.Contains(Path.GetExtension(s).ToLower())).ToList();
                 if (piclist.Count <= 0) return;
                 foreach (var item in piclist)
                 {

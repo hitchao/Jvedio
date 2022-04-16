@@ -103,6 +103,8 @@ namespace Jvedio.Core.SimpleORM
             return 0;
         }
 
+
+
         public override long selectCount(string sql)
         {
             if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
@@ -186,6 +188,17 @@ namespace Jvedio.Core.SimpleORM
             return null;
         }
 
-
+        public override object insertAndGetID(T entity)
+        {
+            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            {
+                return SqliteMapper.insertAndGetID(entity);
+            }
+            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            {
+                return MySQLMapper.insertAndGetID(entity);
+            }
+            return null;
+        }
     }
 }

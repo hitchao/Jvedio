@@ -58,7 +58,7 @@ namespace Jvedio
 
         private string getExtension(string path)
         {
-            return System.IO.Path.GetExtension(path).Replace(".", "");
+            return System.IO.Path.GetExtension(path).ToLower().Replace(".", "");
         }
 
         private void BaseWindow_ContentRendered(object sender, EventArgs e)

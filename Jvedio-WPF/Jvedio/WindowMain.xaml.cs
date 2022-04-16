@@ -32,6 +32,7 @@ using static Jvedio.FileProcess;
 using static Jvedio.GlobalVariable;
 using static Jvedio.GlobalMapper;
 using static Jvedio.ImageProcess;
+using static Jvedio.Utils.Visual.VisualHelper;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Sqlite;
@@ -51,9 +52,6 @@ namespace Jvedio
     /// </summary>
     public partial class Main : ChaoControls.Style.BaseWindow
     {
-
-        public static string GrowlToken = "Main";
-
         public bool Resizing = false;
         public DispatcherTimer ResizingTimer = new DispatcherTimer();
 
@@ -1057,13 +1055,13 @@ namespace Jvedio
 
 
 
-                if (windowTools?.IsVisible == true)
-                {
-                }
-                else
-                {
-                    System.Windows.Application.Current.Shutdown();
-                }
+                //if (windowTools?.IsVisible == true)
+                //{
+                //}
+                //else
+                //{
+                //    System.Windows.Application.Current.Shutdown();
+                //}
 
 
             }
@@ -1833,6 +1831,7 @@ namespace Jvedio
             {
                 ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
                 Border border = FindElementByName<Border>(c, "rootBorder");
+                if (border == null) continue;
                 Grid grid = border.Parent as Grid;
                 long dataID = getDataID(border);
                 if (border != null)
@@ -1916,32 +1915,7 @@ namespace Jvedio
             //}
         }
 
-        public T FindElementByName<T>(FrameworkElement element, string sChildName) where T : FrameworkElement
-        {
-            T childElement = null;
-            if (element == null) return childElement;
-            var nChildCount = VisualTreeHelper.GetChildrenCount(element);
-            for (int i = 0; i < nChildCount; i++)
-            {
-                FrameworkElement child = VisualTreeHelper.GetChild(element, i) as FrameworkElement;
 
-                if (child == null)
-                    continue;
-
-                if (child is T && child.Name.Equals(sChildName))
-                {
-                    childElement = (T)child;
-                    break;
-                }
-
-                childElement = FindElementByName<T>(child, sChildName);
-
-                if (childElement != null)
-                    break;
-            }
-
-            return childElement;
-        }
 
 
 
@@ -5010,88 +4984,6 @@ namespace Jvedio
                 }
             }
 
-            //bool isInList = false;
-            //for (int i = 0; i < ListItemsControl.Items.Count; i++)
-            //{
-            //    ContentPresenter c = (ContentPresenter)ListItemsControl.ItemContainerGenerator.ContainerFromItem(ListItemsControl.Items[i]);
-            //    StackPanel sp = FindElementByName<StackPanel>(c, "ListStackPanel");
-            //    if (sp != null)
-            //    {
-            //        var grids = sp.Children.OfType<Grid>().ToList();
-            //        foreach (Grid grid in grids)
-            //        {
-            //            RadioButton radioButton = grid.Children.OfType<RadioButton>().First();
-            //            if (radioButton != null && (bool)radioButton.IsChecked)
-            //            {
-            //                isInList = true;
-            //                break;
-
-            //            }
-            //        }
-
-            //    }
-            //}
-
-            //StackPanel stackPanel = sender as StackPanel;
-            //ContextMenu contextMenu = stackPanel.ContextMenu;
-
-            //if (isInList)
-            //{
-            //    foreach (MenuItem item in contextMenu.Items)
-            //    {
-            //        if (item.Header.ToString() != Jvedio.Language.Resources.Menu_RemoveFromList)
-            //        {
-            //            item.Visibility = Visibility.Collapsed;
-            //        }
-            //        else
-            //        {
-            //            item.Visibility = Visibility.Visible;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    foreach (MenuItem item in contextMenu.Items)
-            //    {
-            //        if (item.Header.ToString() == Jvedio.Language.Resources.Menu_RemoveFromList)
-            //        {
-            //            item.Visibility = Visibility.Collapsed;
-            //        }
-            //        else
-            //        {
-            //            item.Visibility = Visibility.Visible;
-            //        }
-            //    }
-            //}
-
-
-
-
-
-            //// 我的清单
-            //if (contextMenu.Visibility != Visibility.Visible) return;
-            //Task.Run(() =>
-            //{
-            //    Task.Delay(100).Wait();
-            //    this.Dispatcher.Invoke(() =>
-            //    {
-            //        MenuItem menuItem = FindElementByName<MenuItem>(contextMenu, "ListMenuItem");
-            //        if (menuItem != null)
-            //        {
-            //            menuItem.Items.Clear();
-            //            foreach (var item in vieModel.MyList)
-            //            {
-            //                MenuItem menuItem1 = new MenuItem();
-            //                menuItem1.Header = item.Name;
-            //                //menuItem1.Name = item.Name;
-            //                menuItem1.Click += MyListItemClick;
-            //                menuItem.Items.Add(menuItem1);
-            //            }
-            //        }
-            //    });
-            //});
-
-
         }
 
 
@@ -6396,11 +6288,14 @@ namespace Jvedio
             }
         }
 
-        private void GoToStartUp(object sender, RoutedEventArgs e)
+
+
+        private void GoToStartUp(object sender, MouseButtonEventArgs e)
         {
             WindowStartUp windowStartUp = new WindowStartUp();
+            Application.Current.MainWindow = windowStartUp;
             windowStartUp.Show();
-            this.Hide();
+            this.Close();
         }
     }
 

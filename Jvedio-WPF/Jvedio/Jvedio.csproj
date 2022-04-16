@@ -260,6 +260,7 @@
     <Compile Include="Core\CustomSettingsProvider.cs" />
     <Compile Include="Core\DataBase\CommonConnection.cs" />
     <Compile Include="Core\DataBase\MysqlConnection.cs" />
+    <Compile Include="Core\Enums\ComicType.cs" />
     <Compile Include="Core\Enums\DataBaseType.cs" />
     <Compile Include="Core\Enums\DataType.cs" />
     <Compile Include="Core\Enums\Gender.cs" />
@@ -280,7 +281,11 @@
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\GlobalMapper.cs" />
     <Compile Include="Core\GlobalStyle.cs" />
+    <Compile Include="Core\Scan\ComicScan.cs" />
+    <Compile Include="Core\Scan\GameScan.cs" />
+    <Compile Include="Core\Scan\PictureScan.cs" />
     <Compile Include="Core\Scan\ITask.cs" />
+    <Compile Include="Core\Scan\ScanFactory.cs" />
     <Compile Include="Core\Scan\ScanResult.cs" />
     <Compile Include="Core\SimpleMarkDown\MarkDown.cs" />
     <Compile Include="Core\SimpleORM\AbstractMapper.cs" />
@@ -298,6 +303,7 @@
     <Compile Include="Core\WindowConfig\Base\IConfig.cs" />
     <Compile Include="Core\WindowConfig\Edit.cs" />
     <Compile Include="Core\WindowConfig\Detail.cs" />
+    <Compile Include="Core\WindowConfig\MetaData.cs" />
     <Compile Include="Core\WindowConfig\Main.cs" />
     <Compile Include="Core\WindowConfig\StartUp.cs" />
     <Compile Include="Entity\Actor.cs" />
@@ -311,6 +317,9 @@
     <Compile Include="Entity\CommonSQL\CommonImage.cs" />
     <Compile Include="Entity\CommonSQL\TagStamp.cs" />
     <Compile Include="Entity\Data\MetaData.cs" />
+    <Compile Include="Entity\Data\Comic.cs" />
+    <Compile Include="Entity\Data\Game.cs" />
+    <Compile Include="Entity\Data\Picture.cs" />
     <Compile Include="Entity\Data\UrlCode.cs" />
     <Compile Include="Entity\Data\Video.cs" />
     <Compile Include="Entity\DetailMovie.cs" />
@@ -355,6 +364,8 @@
     <Compile Include="Mapper\AIFaceMapper.cs" />
     <Compile Include="Mapper\AppConfigMapper.cs" />
     <Compile Include="Mapper\AppDatabaseMapper.cs" />
+    <Compile Include="Mapper\GameMapper.cs" />
+    <Compile Include="Mapper\ComicMapper.cs" />
     <Compile Include="Mapper\TagStampMapper.cs" />
     <Compile Include="Mapper\SearchHistoryMapper.cs" />
     <Compile Include="Mapper\ComImagesMapper.cs" />
@@ -362,6 +373,7 @@
     <Compile Include="Mapper\MetaDataMapper.cs" />
     <Compile Include="Mapper\TranslationMapper.cs" />
     <Compile Include="Mapper\UrlCodeMapper.cs" />
+    <Compile Include="Mapper\PictureMapper.cs" />
     <Compile Include="Mapper\VideoMapper.cs" />
     <Compile Include="Test\TestMapper.cs" />
     <Compile Include="Test\TestUtils.cs" />
@@ -420,6 +432,7 @@
     <Compile Include="Utils\Sqlite\SqliteHelper.cs" />
     <Compile Include="Utils\Visual\VisualHelper.cs" />
     <Compile Include="ViewModels\VieModel_Batch.cs" />
+    <Compile Include="ViewModels\VieModel_MetaData.cs" />
     <Compile Include="Windows\DialogInput.xaml.cs">
       <DependentUpon>DialogInput.xaml</DependentUpon>
     </Compile>
@@ -611,6 +624,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Sql\single_db_picture.sql" />
     <Content Include="Test\SqliteTest\main.py" />
     <Resource Include="Resources\Picture\Empty.png" />
     <Content Include="Sql\app_configs.sql" />

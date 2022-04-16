@@ -13,6 +13,7 @@ namespace Jvedio
         public static Jvedio.Core.WindowConfig.Main Main = Jvedio.Core.WindowConfig.Main.createInstance();
         public static Jvedio.Core.WindowConfig.Edit Edit = Jvedio.Core.WindowConfig.Edit.createInstance();
         public static Jvedio.Core.WindowConfig.Detail Detail = Jvedio.Core.WindowConfig.Detail.createInstance();
+        public static Jvedio.Core.WindowConfig.MetaData MetaData = Jvedio.Core.WindowConfig.MetaData.createInstance();
 
         static GlobalConfig()
         {
@@ -20,6 +21,7 @@ namespace Jvedio
             Main.Read();
             Edit.Read();
             Detail.Read();
+            MetaData.Read();
         }
     }
 }

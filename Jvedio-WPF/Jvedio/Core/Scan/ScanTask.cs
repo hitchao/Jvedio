@@ -22,10 +22,23 @@ namespace Jvedio.Core.Scan
     {
 
         public static string VIDEO_EXTENSIONS = "3g2,3gp,3gp2,3gpp,amr,amv,asf,avi,bdmv,bik,d2v,divx,drc,dsa,dsm,dss,dsv,evo,f4v,flc,fli,flic,flv,hdmov,ifo,ivf,m1v,m2p,m2t,m2ts,m2v,m4b,m4p,m4v,mkv,mp2v,mp4,mp4v,mpe,mpeg,mpg,mpls,mpv2,mpv4,mov,mts,ogm,ogv,pss,pva,qt,ram,ratdvd,rm,rmm,rmvb,roq,rpm,smil,smk,swf,tp,tpr,ts,vob,vp6,webm,wm,wmp,wmv";
+        public static string PICTURE_EXTENSIONS = "bmp,gif,ico,jpe,jpeg,jpg,png";
         public static List<string> VIDEO_EXTENSIONS_LIST = VIDEO_EXTENSIONS.Split(',').Select(arg => "." + arg).ToList();
+        public static List<string> PICTURE_EXTENSIONS_LIST = PICTURE_EXTENSIONS.Split(',').Select(arg => "." + arg).ToList();
 
         public event EventHandler onError;
         public event EventHandler onCanceled;
+
+
+        protected virtual void OnError(EventArgs e)
+        {
+            EventHandler error = onError;
+            error?.Invoke(this, e);
+
+        }
+
+        #region "property"
+
 
         public TaskStatus _Status;
         public TaskStatus Status
@@ -102,6 +115,7 @@ namespace Jvedio.Core.Scan
             }
         }
 
+        #endregion
         public Stopwatch stopwatch { get; set; }
 
         public long ElapsedMilliseconds { get; set; }
@@ -111,8 +125,8 @@ namespace Jvedio.Core.Scan
 
         public List<string> FileExt { get; set; }
 
-        private CancellationTokenSource tokenCTS;
-        private CancellationToken token;
+        protected CancellationTokenSource tokenCTS;
+        protected CancellationToken token;
 
         public System.IO.SearchOption SearchOption { get; set; }
 
@@ -124,6 +138,7 @@ namespace Jvedio.Core.Scan
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+
         public ScanTask(List<string> scanPaths, List<string> filePaths, IEnumerable<string> fileExt = null)
         {
             if (scanPaths != null && scanPaths.Count > 0)
@@ -132,6 +147,7 @@ namespace Jvedio.Core.Scan
                 FilePaths = filePaths.Where(arg => File.Exists(arg)).ToList();
             if (fileExt != null)
             {
+                FileExt = new List<string>();
                 foreach (var item in fileExt)
                 {
                     string ext = item.Trim();
@@ -177,7 +193,7 @@ namespace Jvedio.Core.Scan
 
         }
 
-        public void doWrok()
+        public virtual void doWrok()
         {
 
             Task.Run(() =>
@@ -314,8 +330,13 @@ namespace Jvedio.Core.Scan
                 ScanResult.Import.Add(video.Path);
             }
 
-            long before = metaDataMapper.selectCount();
+
+
             List<MetaData> toInsertData = toInsert.Select(arg => arg.toMetaData()).ToList();
+            if (toInsertData.Count <= 0) return;
+            long.TryParse(metaDataMapper.insertAndGetID(toInsertData[0]).ToString(), out long before);
+            toInsertData.RemoveAt(0);
+
             try
             {
 
@@ -326,7 +347,7 @@ namespace Jvedio.Core.Scan
             catch (Exception ex)
             {
                 Logger.LogD(ex);
-                onError?.Invoke(this, new MessageCallBackEventArgs(ex.Message));
+                OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
             {
@@ -336,8 +357,8 @@ namespace Jvedio.Core.Scan
             // 处理 DataID
             foreach (Video video in toInsert)
             {
-                before++;
                 video.DataID = before;
+                before++;
             }
 
             try
@@ -348,7 +369,7 @@ namespace Jvedio.Core.Scan
             catch (Exception ex)
             {
                 Logger.LogD(ex);
-                onError?.Invoke(this, new MessageCallBackEventArgs(ex.Message));
+                OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
             {

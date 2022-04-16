@@ -21,6 +21,9 @@ namespace Jvedio
 
         public static MetaDataMapper metaDataMapper = new MetaDataMapper();
         public static VideoMapper videoMapper = new VideoMapper();
+        public static PictureMapper pictureMapper = new PictureMapper();
+        public static ComicMapper comicMapper = new ComicMapper();
+        public static GameMapper gameMapper = new GameMapper();
         public static ActorMapper actorMapper = new ActorMapper();
         public static UrlCodeMapper urlCodeMapper = new UrlCodeMapper();
 
@@ -53,6 +56,9 @@ namespace Jvedio
 
             metaDataMapper.Init();
             videoMapper.Init();
+            pictureMapper.Init();
+            comicMapper.Init();
+            gameMapper.Init();
             actorMapper.Init();
             urlCodeMapper.Init();
 

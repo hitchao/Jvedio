@@ -126,6 +126,27 @@ namespace Jvedio.Utils.Encrypt
             return CalculateMD5Hash(str);
         }
 
+        public static string FasterDirMD5(List<string> filePathsInOneDir)
+        {
+            if (filePathsInOneDir == null || filePathsInOneDir.Count == 0) return null;
+            // 获取第 1,2,n/2,-2,-1 个文件的哈希
+            int count = filePathsInOneDir.Count;
+            string[] idx = filePathsInOneDir.ToArray();
+            if (count >= 5)
+            {
+                idx = new string[] { filePathsInOneDir[0],
+                    filePathsInOneDir[1], filePathsInOneDir[count / 2],
+                    filePathsInOneDir[count - 2], filePathsInOneDir[count - 1] };
+            }
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < idx.Length; i++)
+            {
+                string hash = FasterMd5(idx[i]);
+                builder.Append(hash);
+            }
+            return CalculateMD5Hash(builder.ToString());
+        }
+
 
         /// <summary>
         /// 计算所有文件的MD5

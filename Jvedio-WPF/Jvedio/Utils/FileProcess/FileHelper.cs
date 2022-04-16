@@ -92,13 +92,13 @@ namespace Jvedio
             return null;
         }
 
-        public static string[] TryGetAllFiles(string path, string pattern)
+        public static string[] TryGetAllFiles(string path, string pattern, SearchOption option = SearchOption.TopDirectoryOnly)
         {
             if (Directory.Exists(path))
             {
                 try
                 {
-                    return Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+                    return Directory.GetFiles(path, pattern, option);
                 }
                 catch (Exception ex)
                 {

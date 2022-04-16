@@ -545,7 +545,9 @@ namespace Jvedio.Core.SimpleORM
                 }
                 set_sql.Append("END,");
             }
-            set_sql.Append($"UpdateDate='{DateHelper.Now()}'");
+            if (Properties.Any(arg => arg.Name.Equals("UpdateDate")))
+                set_sql.Append($"UpdateDate='{DateHelper.Now()}'");
+            if (set_sql[set_sql.Length - 1] == ',') set_sql.Remove(set_sql.Length - 1, 1);
             return $"UPDATE {TableName} SET {set_sql} WHERE {PrimaryKey.Name} in ('{string.Join("','", primaryKeyValues)}')";
         }
 
@@ -585,5 +587,7 @@ namespace Jvedio.Core.SimpleORM
         {
             throw new NotImplementedException();
         }
+
+        public abstract object insertAndGetID(T entity);
     }
 }

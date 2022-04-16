@@ -27,6 +27,8 @@ namespace Jvedio.Core.SimpleORM
         long selectCount(IWrapper<T> wrapper);
         long selectCount(string sql);
 
+        object insertAndGetID(T entity);
+
         List<Dictionary<string, object>> select(IWrapper<T> wrapper);
         List<Dictionary<string, object>> select(string sql);
 

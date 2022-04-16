@@ -1021,30 +1021,49 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Button
-                                Grid.Row="0"
-                                Margin="10,5"
-                                HorizontalAlignment="Stretch"
-                                Click="GoToStartUp"
-                                Content="返回选择" />
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                            <ComboBox
-                                x:Name="DatabaseComboBox"
-                                Grid.Row="1"
-                                Height="30"
-                                Margin="5"
-                                HorizontalAlignment="Stretch"
-                                Background="{DynamicResource Window.Side.Background}"
-                                BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                                DisplayMemberPath="Name"
-                                FontSize="16"
-                                Foreground="{DynamicResource Global.Foreground}"
-                                ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
-                                ItemsSource="{Binding DataBases}"
-                                SelectedValuePath="DBId"
-                                Style="{StaticResource NormalComboBox}"
-                                Tag="{DynamicResource Window.Side.Hover.Background}"
-                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                                <Border
+                                    Grid.Column="0"
+                                    Margin="5"
+                                    VerticalAlignment="Center"
+                                    MouseLeftButtonDown="GoToStartUp"
+                                    Style="{StaticResource RoundBorder}"
+                                    Tag="{DynamicResource Window.Title.Hover.Background}"
+                                    ToolTip="返回">
+                                    <Viewbox Width="auto" Height="14">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M795.91835938 490.13457031c-49.66523437-60.0609375-111.53320313-102.77578125-179.10878907-123.73857422a439.74755859 439.74755859 0 0 0-102.54902344-19.37988281V162.25859375a30.79335937 30.79335937 0 0 0-11.46972656-27.40429688c-7.91015625-5.47910156-17.74160156-4.12382812-24.40898437 3.27832032L139.31914062 448.32324219a35.08769531 35.08769531 0 0 0-8.92792968 23.33496093c0 9.4359375 3.84257812 18.24960937 10.28320312 23.39121094l340.41972657 312.50742188a17.96748047 17.96748047 0 0 0 23.10820312 3.27832031 32.60039063 32.60039063 0 0 0 11.41347656-27.34804688v-174.3046875c128.03203125 4.63183594 213.74472656 49.77773437 273.80390625 130.0078125 28.81582031 36.66972656 49.94824219 81.36210937 61.47421875 130.29257813 2.71142578 13.78652344 12.825 23.50371094 24.40898438 23.39121094h2.48554687c12.20449219-1.29902344 21.58242187-13.73027344 21.75292969-28.75957032 1.35527344-159.33339844-33.22265625-284.65136719-103.62304688-374.26289062v0.22675781z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+
+
+                                <ComboBox
+                                    x:Name="DatabaseComboBox"
+                                    Grid.Column="1"
+                                    Height="30"
+                                    Margin="5"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{DynamicResource Window.Side.Background}"
+                                    BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                                    DisplayMemberPath="Name"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource Global.Foreground}"
+                                    ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                                    ItemsSource="{Binding DataBases}"
+                                    SelectedValuePath="DBId"
+                                    Style="{StaticResource NormalComboBox}"
+                                    Tag="{DynamicResource Window.Side.Hover.Background}"
+                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                            </Grid>
+
                             <chao:TogglePanel
                                 Grid.Row="2"
                                 Padding="0,5"

@@ -313,7 +313,7 @@ namespace Jvedio.Entity
 
                 if (files != null && files.Count > 0)
                 {
-                    var list = files.Where(arg => ScanTask.VIDEO_EXTENSIONS_LIST.Contains(Path.GetExtension(arg))).ToList();
+                    var list = files.Where(arg => ScanTask.VIDEO_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
 
                     if (list != null || list.Count != 0)
                     {

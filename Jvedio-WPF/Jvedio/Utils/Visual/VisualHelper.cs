@@ -10,6 +10,9 @@ namespace Jvedio.Utils.Visual
 {
     public static class VisualHelper
     {
+
+
+
         public static T FindParentOfType<T>(this FrameworkElement child, string name = "") where T : FrameworkElement
         {
             FrameworkElement parentDepObj = child;

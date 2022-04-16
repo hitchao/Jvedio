@@ -261,6 +261,7 @@
                         VerticalAlignment="Center"
                         Panel.ZIndex="20"
                         CornerRadius="5"
+                        PreviewMouseLeftButtonUp="ShowHelpPicture"
                         Style="{StaticResource RoundBorder}"
                         Tag="{DynamicResource Window.Title.Hover.Background}">
                         <Viewbox
@@ -283,6 +284,7 @@
                         VerticalAlignment="Center"
                         Panel.ZIndex="20"
                         CornerRadius="5"
+                        PreviewMouseLeftButtonUp="ShowHelpGame"
                         Style="{StaticResource RoundBorder}"
                         Tag="{DynamicResource Window.Title.Hover.Background}">
                         <Viewbox
@@ -304,6 +306,7 @@
                         VerticalAlignment="Center"
                         Panel.ZIndex="20"
                         CornerRadius="5"
+                        PreviewMouseLeftButtonUp="ShowHelpComics"
                         Style="{StaticResource RoundBorder}"
                         Tag="{DynamicResource Window.Title.Hover.Background}">
                         <Viewbox
@@ -390,6 +393,7 @@
                             VerticalAlignment="Center"
                             Background="Transparent"
                             Clear="SearchText_Changed"
+                            SearchOnTextChanged="True"
                             FontSize="15"
                             Foreground="#fff"
                             PlaceHolder="检索"

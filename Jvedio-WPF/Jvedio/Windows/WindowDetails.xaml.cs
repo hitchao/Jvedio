@@ -32,6 +32,7 @@ using ChaoControls.Style;
 using Jvedio.Core.Enums;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Utils.Visual;
+using Jvedio.Core.Scan;
 
 namespace Jvedio
 {
@@ -1363,7 +1364,7 @@ namespace Jvedio
                     foreach (var path in FileHelper.TryScanDIr(imagePath, "*.*", System.IO.SearchOption.AllDirectories))
                         imagePathList.Add(path);
 
-                    if (imagePathList.Count > 0) imagePathList = imagePathList.Where(arg => ScanHelper.ImagePattern.Contains(Path.GetExtension(arg))).CustomSort().ToList();
+                    if (imagePathList.Count > 0) imagePathList = imagePathList.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).CustomSort().ToList();
                 }
             });
 

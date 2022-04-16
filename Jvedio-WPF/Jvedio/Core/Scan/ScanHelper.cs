@@ -19,14 +19,14 @@ namespace Jvedio
     {
         public static double MinFileSize = Properties.Settings.Default.ScanMinFileSize * 1024 * 1024;//最小文件大小吗，单位 B
         public static List<string> FilePattern = new List<string>();//文件格式
-        public static List<string> ImagePattern = new List<string>() { ".jpg", ".png", ".jpeg", ".bmp" };
+                                                                    //public static string PictureExtension = "ani;bmp;gif;ico;jpe;jpeg;jpg;pcx;png;psd;tga;tif;tiff;webp;wmf";
 
         public static void InitSearchPattern()
         {
             //视频后缀来自 Everything (位置：搜索-管理筛选器-视频-编辑)
             FilePattern = new List<string>();
-            string ScanVetioType = Resource_String.ScanVetioType;
-            foreach (var item in ScanVetioType.Split(','))
+            string exts = Resource_String.ScanVideoExtensions;
+            foreach (var item in exts.Split(','))
                 FilePattern.Add("." + item.ToLower());
         }
 
@@ -49,7 +49,7 @@ namespace Jvedio
                         nfoPaths.Add(item);
                     else
                     {
-                        if (FileExt.Contains(Path.GetExtension(item)))
+                        if (FileExt.Contains(Path.GetExtension(item).ToLower()))
                             videoPaths.Add(item);
                         else
                             notImport.Add(item);
@@ -295,52 +295,6 @@ namespace Jvedio
 
 
 
-
-
-        // 必须整合在
-        public List<string> ScanPaths(StringCollection stringCollection, CancellationToken cancellationToken)
-        {
-            List<string> result = new List<string>();
-            if (stringCollection == null || stringCollection.Count == 0) return result;
-            foreach (var item in stringCollection)
-            {
-                try
-                {
-                    result.AddRange(GetAllFilesFromFolder(item, cancellationToken));
-                }
-                catch (OperationCanceledException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return result;
-                }
-            }
-            return result
-                    .Where(s => FilePattern.Contains(System.IO.Path.GetExtension(s).ToLower()))
-                    .Where(s => !File.Exists(s) || new System.IO.FileInfo(s).Length >= MinFileSize).OrderBy(s => s).ToList();
-        }
-
-        public List<string> ScanNFO(StringCollection stringCollection, CancellationToken cancellationToken, Action<string> callBack)
-        {
-            List<string> result = new List<string>();
-            if (stringCollection == null || stringCollection.Count == 0) return result;
-            foreach (var item in stringCollection)
-            {
-                try
-                {
-                    result.AddRange(GetAllFilesFromFolder(item, cancellationToken, "*.*", callBack));
-                }
-                catch (OperationCanceledException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return result.Where(s => Path.GetExtension(s).ToLower().IndexOf("nfo") > 0).ToList();
-                }
-            }
-            return result.Where(s => Path.GetExtension(s).ToLower().IndexOf("nfo") > 0).ToList();
-        }
-
-
-
-
         public List<string> GetAllFilesFromFolder(string root, CancellationToken cancellationToken, string pattern = "", Action<string> callBack = null)
         {
             Queue<string> folders = new Queue<string>();
@@ -499,26 +453,7 @@ namespace Jvedio
             return result;
         }
 
-        //public (string, List<string>) ExcludeMaximumSize(List<string> pathlist)
-        //{
-        //    double maxsize = 0;
-        //    int maxsizeindex = 0;
 
-        //    for (int i = 0; i < pathlist.Count; i++)
-        //    {
-        //        string path = pathlist[i];
-        //        if (!File.Exists(path)) continue;
-        //        double filesize = new FileInfo(path).Length;
-        //        if (maxsize < filesize)
-        //        {
-        //            maxsize = filesize;
-        //            maxsizeindex = i;
-        //        }
-        //    }
-        //    string maxsizepth = pathlist[maxsizeindex];
-        //    pathlist.RemoveAt(maxsizeindex);
-        //    return (maxsizepth, pathlist);
-        //}
 
     }
 }
