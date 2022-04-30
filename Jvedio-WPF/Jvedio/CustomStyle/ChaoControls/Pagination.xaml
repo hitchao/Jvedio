@@ -1,0 +1,28 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:chao="https://gitee.com/secret/chao-controls">
+
+
+
+
+
+
+
+    <Style x:Key="NormalPagination" TargetType="{x:Type chao:Pagination}">
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource Window.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Window.Title.Foreground}" />
+        <Setter Property="CurrentPageBackground" Value="#409EFF" />
+        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="PageBackground" Value="{DynamicResource Window.Side.Background}" />
+        <Setter Property="PageCount" Value="5" />
+        <Setter Property="PageHoverBackground" Value="{DynamicResource Window.Title.Hover.Background}" />
+        <Setter Property="PageSize" Value="40" />
+        <Setter Property="PageSizes" Value="[10,20,40,50,100,200]" />
+        <Setter Property="ShowCombobox" Value="False" />
+        <Setter Property="ShowTotal" Value="False" />
+    </Style>
+
+
+</ResourceDictionary>

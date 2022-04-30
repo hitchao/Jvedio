@@ -1,0 +1,126 @@
+﻿<chao:BaseWindow
+    x:Class="Jvedio.Window_TagStamp"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="标记"
+    Width="400"
+    Height="260"
+    Background="{DynamicResource BackgroundMain}"
+    CanMinimized="False"
+    CanResize="False"
+    Foreground="{DynamicResource Global.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                VerticalAlignment="Center"
+                FontSize="15"
+                Text="名称" />
+            <TextBox
+                Name="textBox"
+                Grid.Column="1"
+                Margin="20,0"
+                Padding="5,0"
+                Background="Transparent"
+                BorderBrush="#007FD4"
+                BorderThickness="1"
+                CaretBrush="{StaticResource Global.Foreground}"
+                Foreground="{StaticResource Global.Foreground}"
+                KeyDown="textBox_KeyDown"
+                TextChanged="textBox_TextChanged" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                VerticalAlignment="Center"
+                FontSize="15"
+                Text="背景色" />
+            <Border
+                Name="border"
+                Grid.Column="1"
+                Width="50"
+                Height="25"
+                Margin="25,10"
+                HorizontalAlignment="Left"
+                Background="Red"
+                CornerRadius="5"
+                Cursor="Hand"
+                MouseLeftButtonDown="border_MouseLeftButtonDown" />
+
+            <Popup
+                x:Name="colorPopup"
+                AllowsTransparency="True"
+                IsOpen="False"
+                Placement="Bottom"
+                PopupAnimation="Fade"
+                StaysOpen="True">
+                <Grid Background="Transparent">
+                    <hc:ColorPicker
+                        Name="ColorPicker"
+                        Margin="32"
+                        Canceled="ColorPicker_Canceled"
+                        SelectedColorChanged="ColorPicker_SelectedColorChanged" />
+                </Grid>
+            </Popup>
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                VerticalAlignment="Center"
+                FontSize="15"
+                Text="前景色" />
+            <Border
+                Name="border2"
+                Grid.Column="1"
+                Width="50"
+                Height="25"
+                Margin="25,10"
+                HorizontalAlignment="Left"
+                Background="Red"
+                CornerRadius="5"
+                Cursor="Hand"
+                MouseLeftButtonDown="border2_MouseLeftButtonDown" />
+
+        </Grid>
+
+        <StackPanel
+            Grid.Row="3"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Orientation="Horizontal">
+            <Button
+                Click="Button_Click"
+                Content="确认"
+                Style="{StaticResource FlatButton}" />
+            <Button
+                Click="Button_Click_1"
+                Content="取消"
+                Style="{StaticResource FlatButton}" />
+        </StackPanel>
+    </Grid>
+</chao:BaseWindow>

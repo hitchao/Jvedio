@@ -1,0 +1,555 @@
+﻿<chao:BaseWindow
+    x:Class="Jvedio.Window_MetaDataEdit"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+    xmlns:local="clr-namespace:Jvedio"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:Jvedio.Properties"
+    Title="{x:Static lang:Resources.Edit}"
+    Width="800"
+    MinWidth="800"
+    Closing="BaseWindow_Closing"
+    Foreground="{DynamicResource Global.Foreground}"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <chao:BaseWindow.Resources>
+
+
+
+        <local:VideoTypeConverter x:Key="VideoTypeConverter" />
+
+
+
+
+        <Style x:Key="BaseInfoLabel" TargetType="Label">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="Height" Value="auto" />
+            <!--  删除字体  -->
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+        </Style>
+
+    </chao:BaseWindow.Resources>
+    <Grid>
+
+        <!--  消息提示框  -->
+        <ScrollViewer
+            Width="auto"
+            Height="auto"
+            Margin="10,0,30,50"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Panel.ZIndex="6"
+            Background="Transparent"
+            VerticalScrollBarVisibility="Hidden">
+            <StackPanel
+                Margin="0,10,10,10"
+                VerticalAlignment="Bottom"
+                hc:Growl.GrowlParent="True"
+                hc:Growl.Token="EditGrowl" />
+        </ScrollViewer>
+
+
+        <Grid Background="{DynamicResource BackgroundMain}">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="5">
+                <!--<Border
+                    Background="{DynamicResource BackgroundSide}"
+                    BorderThickness="0"
+                    CornerRadius="5" />-->
+                <ScrollViewer FocusVisualStyle="{x:Null}">
+                    <StackPanel
+                        Width="auto"
+                        Height="auto"
+                        Margin="5,20,5,20"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+
+                        <DockPanel>
+                            <Label Content="{x:Static lang:Resources.Title}" Style="{StaticResource BaseInfoLabel}" />
+                            <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentData.Title, Mode=TwoWay}" />
+                        </DockPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Label Content="打分" Style="{StaticResource BaseInfoLabel}" />
+                            <StackPanel
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Cursor="Hand">
+                                <hc:Rate
+                                    AllowClear="True"
+                                    AllowHalf="True"
+                                    Background="{DynamicResource BackgroundTitle}"
+                                    DefaultValue="0"
+                                    FocusVisualStyle="{StaticResource FocusVisual}"
+                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                                    Value="{Binding CurrentData.Grade, Mode=TwoWay}" />
+                            </StackPanel>
+                        </StackPanel>
+
+
+
+
+                        <DockPanel>
+                            <Label
+                                Margin="0,5"
+                                VerticalAlignment="Top"
+                                Content="{x:Static lang:Resources.Genre}"
+                                Style="{StaticResource BaseInfoLabel}" />
+                            <chao:TagPanel
+                                Name="genreTagPanel"
+                                AddButtonVerticalAlignment="Top"
+                                OnAddNewLabel="NewGenre"
+                                TagChanged="GenreChanged" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Margin="0,5"
+                                VerticalAlignment="Top"
+                                Content="标签"
+                                Style="{StaticResource BaseInfoLabel}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button
+                                    Margin="15,0"
+                                    Click="AddToLabel"
+                                    Content="添加到" />
+                                <chao:TagPanel
+                                    Name="labelTagPanel"
+                                    Grid.Column="1"
+                                    AddButtonVerticalAlignment="Top"
+                                    OnAddNewLabel="NewLabel"
+                                    TagChanged="LabelChanged" />
+
+                                <Popup
+                                    x:Name="searchLabelPopup"
+                                    Width="800"
+                                    MinHeight="300"
+                                    AllowsTransparency="True"
+                                    HorizontalOffset="-5"
+                                    Placement="Bottom"
+                                    PlacementTarget="{Binding ElementName=labelTagPanel}"
+                                    PopupAnimation="Fade"
+                                    StaysOpen="False"
+                                    VerticalOffset="-5">
+                                    <Grid Margin="5">
+                                        <Border
+                                            Margin="5"
+                                            Background="{DynamicResource Menu.Background}"
+                                            CornerRadius="5"
+                                            Effect="{StaticResource PopupDropShadowEffect}" />
+                                        <Grid Margin="4,5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+
+                                            <chao:SearchBox
+                                                Name="labelSearchBox"
+                                                Grid.Row="0"
+                                                Width="auto"
+                                                Height="30"
+                                                Margin="0"
+                                                Padding="3,0"
+                                                HorizontalAlignment="Stretch"
+                                                Background="{DynamicResource Window.Side.Background}"
+                                                BorderBrush="#326CF3"
+                                                BorderThickness="0"
+                                                Foreground="White"
+                                                PlaceHolder="搜索"
+                                                PlaceHolderForeground="Gray"
+                                                SearchOnTextChanged="False"
+                                                ShowClearButton="True"
+                                                ShowSearchButton="True"
+                                                Text="{Binding LabelText, Mode=TwoWay}" />
+
+
+                                            <ScrollViewer
+                                                Grid.Row="1"
+                                                CanContentScroll="True"
+                                                FocusVisualStyle="{x:Null}"
+                                                IsDeferredScrollingEnabled="False"
+                                                VerticalScrollBarVisibility="Auto">
+                                                <ItemsControl
+                                                    Name="labelItemsControl"
+                                                    Margin="5"
+                                                    Background="Transparent"
+                                                    ItemsSource="{Binding CurrentLabelList}"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border MouseUp="Border_MouseUp" Style="{StaticResource GenreBorderStyle}">
+                                                                <TextBlock Style="{StaticResource GenreTextBlock}" Text="{Binding}" />
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+
+                        </DockPanel>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Content="{x:Static lang:Resources.FilePath}"
+                                Style="{StaticResource BaseInfoLabel}" />
+                            <chao:SearchBox
+                                Grid.Column="1"
+                                Style="{StaticResource BaseSearchTextBox}"
+                                Text="{Binding CurrentData.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
+
+                            <Border
+                                Grid.Column="2"
+                                Padding="3,2,5,5"
+                                MouseLeftButtonDown="ChooseFile"
+                                Style="{StaticResource ToolsBarBorderStyle}"
+                                ToolTip="{x:Static lang:Resources.Sorting}">
+                                <Viewbox Width="auto" Height="18">
+                                    <Path
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="M919.04 416.4608c0-17.8688-5.12-22.9888-22.9888-22.9888H130.304c-17.8688 0-25.6 5.12-25.6 25.6v400.7424c0 53.6064 22.9888 76.8 74.0352 76.8h668.8256c51.2 0 74.0352-22.9888 74.0352-74.0352-2.56-138.0864-2.56-270.848-2.56-406.1184zM125.184 352.6144H875.52c43.4176 0 43.4176 0 43.4176-40.96 0-48.4864-20.48-66.56-66.56-66.56h-323.8912c-40.96 0-40.96 0-40.96-40.96 0-43.4176-20.48-61.44-63.7952-61.44H168.6016c-46.08-2.56-63.7952 15.36-66.56 61.44v125.5424c0.3584 20.4288 5.4784 22.9376 23.1424 22.9376z"
+                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                </Viewbox>
+                            </Border>
+
+                            <Border
+                                x:Name="ChoseMovieBorder"
+                                Grid.Column="3"
+                                Width="100"
+                                DragOver="ChoseMovieBorder_DragOver"
+                                Drop="ChoseMovieBorder_Drop"
+                                Style="{StaticResource DropBorderStyle}"
+                                Visibility="Collapsed">
+                                <TextBlock
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Foreground="{DynamicResource ForegroundGlobal}"
+                                    Text="{x:Static lang:Resources.DragFileIn}" />
+
+                            </Border>
+                        </Grid>
+
+
+
+                        <DockPanel>
+                            <Label Content="资源大小" Style="{StaticResource BaseInfoLabel}" />
+
+                            <TextBox
+                                VerticalAlignment="Center"
+                                ContextMenu="{StaticResource CopyContextMenu}"
+                                Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                Text="{Binding CurrentData.Size, Converter={StaticResource BitToGBConverter}, Mode=OneWay}" />
+                        </DockPanel>
+                        <DockPanel>
+                            <Label Content="简易哈希" Style="{StaticResource BaseInfoLabel}" />
+
+                            <TextBox
+                                VerticalAlignment="Center"
+                                ContextMenu="{StaticResource CopyContextMenu}"
+                                Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                Text="{Binding CurrentData.Hash, Mode=OneWay}" />
+                        </DockPanel>
+
+
+                        <chao:TogglePanel
+                            Padding="0,5"
+                            FontSize="15"
+                            Header="{x:Static lang:Resources.ShowOtherOptions}"
+                            IsExpanded="{Binding MoreExpanded, Mode=TwoWay, FallbackValue=True}"
+                            IsSelected="False"
+                            LineWidth="0"
+                            Style="{StaticResource BaseTogglePanel}">
+
+
+                            <StackPanel Orientation="Vertical">
+                                <TabControl
+                                    Background="Transparent"
+                                    ItemContainerStyle="{StaticResource FlatTabItem}"
+                                    SelectedIndex="{Binding TabControlSelectedIndex}"
+                                    Style="{StaticResource HeaderHideTabControlStyle}">
+                                    <TabItem Header="Picture">
+                                        <StackPanel Orientation="Vertical">
+
+                                            <DockPanel>
+                                                <Label Content="{x:Static lang:Resources.Director}" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentPicture.Director, Mode=TwoWay}" />
+                                            </DockPanel>
+
+
+                                            <DockPanel>
+                                                <Label Content="{x:Static lang:Resources.Studio}" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentPicture.Studio, Mode=TwoWay}" />
+                                            </DockPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem Header="Game">
+                                        <StackPanel Orientation="Vertical">
+                                            <DockPanel>
+                                                <Label Content="封面" Style="{StaticResource BaseInfoLabel}" />
+                                                <Border
+                                                    Grid.Column="3"
+                                                    Width="100"
+                                                    Height="80"
+                                                    Margin="10,20"
+                                                    VerticalAlignment="Top"
+                                                    Style="{StaticResource DropBorderStyle}">
+                                                    <Grid>
+                                                        <Image Source="{Binding CurrentImage}" />
+                                                        <Border
+                                                            Grid.Column="2"
+                                                            Padding="3,2,5,5"
+                                                            HorizontalAlignment="Center"
+                                                            MouseLeftButtonDown="ChooseImage"
+                                                            Style="{StaticResource ToolsBarBorderStyle}"
+                                                            ToolTip="{x:Static lang:Resources.Sorting}">
+                                                            <Viewbox Width="auto" Height="18">
+                                                                <Path
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Data="M919.04 416.4608c0-17.8688-5.12-22.9888-22.9888-22.9888H130.304c-17.8688 0-25.6 5.12-25.6 25.6v400.7424c0 53.6064 22.9888 76.8 74.0352 76.8h668.8256c51.2 0 74.0352-22.9888 74.0352-74.0352-2.56-138.0864-2.56-270.848-2.56-406.1184zM125.184 352.6144H875.52c43.4176 0 43.4176 0 43.4176-40.96 0-48.4864-20.48-66.56-66.56-66.56h-323.8912c-40.96 0-40.96 0-40.96-40.96 0-43.4176-20.48-61.44-63.7952-61.44H168.6016c-46.08-2.56-63.7952 15.36-66.56 61.44v125.5424c0.3584 20.4288 5.4784 22.9376 23.1424 22.9376z"
+                                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                            </Viewbox>
+                                                        </Border>
+                                                    </Grid>
+
+                                                </Border>
+
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="品牌" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentData.Branch, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="原画" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.OriginalPainting, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="声优" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.VoiceActors, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="剧本" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.Play, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="音乐" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.Music, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="歌唱家" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.Singers, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="别名" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.ExtraName, Mode=TwoWay}" />
+                                            </DockPanel>
+
+
+
+                                            <DockPanel>
+                                                <Label Content="{x:Static lang:Resources.Studio}" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.Studio, Mode=TwoWay}" />
+                                            </DockPanel>
+
+
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem Header="Comics">
+                                        <StackPanel Orientation="Vertical">
+
+                                            <DockPanel>
+                                                <Label Content="{x:Static lang:Resources.Language}" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentComic.Language, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="漫画类型" Style="{StaticResource BaseInfoLabel}" />
+                                                <ComboBox
+                                                    Grid.Column="1"
+                                                    Height="30"
+                                                    MinWidth="300"
+                                                    Margin="5"
+                                                    HorizontalAlignment="Left"
+                                                    Background="{DynamicResource Window.Side.Background}"
+                                                    BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                                                    FontSize="16"
+                                                    Foreground="{DynamicResource Global.Foreground}"
+                                                    ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                                                    SelectedIndex="0"
+                                                    Style="{StaticResource NormalComboBox}"
+                                                    Tag="{DynamicResource Window.Side.Hover.Background}"
+                                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                                    <ComboBoxItem Content="同人志" />
+                                                    <ComboBoxItem Content="日本漫画" />
+                                                    <ComboBoxItem Content="ArtistCG" />
+                                                    <ComboBoxItem Content="游戏CG" />
+                                                    <ComboBoxItem Content="西方" />
+                                                    <ComboBoxItem Content="NonH" />
+                                                    <ComboBoxItem Content="画册集" />
+                                                    <ComboBoxItem Content="Cosplay" />
+                                                    <ComboBoxItem Content="亚洲" />
+                                                    <ComboBoxItem Content="混杂的" />
+                                                </ComboBox>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="作家" Style="{StaticResource BaseInfoLabel}" />
+                                                <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentComic.Artist, Mode=TwoWay}" />
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </TabItem>
+
+                                </TabControl>
+
+
+
+
+
+                                <DockPanel>
+                                    <Label Content="{x:Static lang:Resources.ImportDate}" Style="{StaticResource BaseInfoLabel}" />
+                                    <TextBox
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                        Text="{Binding CurrentData.LastScanDate}" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <Label Content="{x:Static lang:Resources.CreatedDate}" Style="{StaticResource BaseInfoLabel}" />
+                                    <TextBox
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                        Text="{Binding CurrentData.FirstScanDate}" />
+                                </DockPanel>
+
+
+                                <DockPanel>
+                                    <Label Content="{x:Static lang:Resources.Rating}" Style="{StaticResource BaseInfoLabel}" />
+                                    <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}" Text="{Binding CurrentData.Rating, Mode=TwoWay}" />
+                                </DockPanel>
+                                <DockPanel Panel.ZIndex="5">
+                                    <Label Content="{x:Static lang:Resources.ReleaseDate}" Style="{StaticResource BaseInfoLabel}" />
+                                    <chao:SearchBox
+                                        LostFocus="TextBox_LostFocus"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="{Binding CurrentData.ReleaseDate, Mode=OneWay}" />
+                                </DockPanel>
+
+
+
+
+
+
+                                <DockPanel>
+                                    <Label Content="{x:Static lang:Resources.Country}" Style="{StaticResource BaseInfoLabel}" />
+                                    <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentData.Country, Mode=TwoWay}" />
+                                </DockPanel>
+
+
+
+                                <DockPanel>
+                                    <Label
+                                        Margin="0,5"
+                                        VerticalAlignment="Top"
+                                        Content="{x:Static lang:Resources.Plot}"
+                                        Style="{StaticResource BaseInfoLabel}" />
+                                    <TextBox
+                                        Height="80"
+                                        Margin="15,10"
+                                        Padding="5"
+                                        Background="{DynamicResource ListBoxItem.Background}"
+                                        BorderThickness="0"
+                                        FontSize="14"
+                                        Style="{StaticResource MultiLineTextBox}"
+                                        Text="{Binding CurrentData.Plot, Mode=TwoWay}" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <Label
+                                        Margin="0,5"
+                                        VerticalAlignment="Top"
+                                        Content="{x:Static lang:Resources.Outline}"
+                                        Style="{StaticResource BaseInfoLabel}" />
+                                    <TextBox
+                                        Height="80"
+                                        Margin="15,10"
+                                        Padding="5"
+                                        Background="{DynamicResource ListBoxItem.Background}"
+                                        BorderThickness="0"
+                                        FontSize="14"
+                                        Style="{StaticResource MultiLineTextBox}"
+                                        Text="{Binding CurrentData.Outline, Mode=TwoWay}" />
+                                </DockPanel>
+
+
+
+                            </StackPanel>
+                        </chao:TogglePanel>
+
+
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Grid>
+
+
+
+
+            <Button
+                Grid.Row="1"
+                MinWidth="100"
+                Margin="690,0,0,10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Click="Button_Click"
+                Content="{x:Static lang:Resources.Save}"
+                Style="{StaticResource ButtonSuccess}" />
+
+
+        </Grid>
+
+
+
+
+
+    </Grid>
+</chao:BaseWindow>

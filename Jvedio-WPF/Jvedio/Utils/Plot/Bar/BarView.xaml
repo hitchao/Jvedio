@@ -1,0 +1,200 @@
+﻿<UserControl x:Class="Jvedio.Plot.Bar.BarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jvedio.Plot.Bar"
+             xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <local:ToolTipConverter x:Key="ToolTipConverter"/>
+        <local:WidthVisibilityConverter x:Key="WidthVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid >
+        <Grid Margin="10"    >
+            <Border  x:Name="MainBorder"   Background="LightGray" CornerRadius="5"   >
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" Direction="-90"  RenderingBias="Quality" ShadowDepth="0"/>
+                </Border.Effect>
+            </Border>
+
+            <Border  CornerRadius="10"    >
+                <ScrollViewer Margin="20 0 20 0"   x:Name="ScrollViewer"  VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+
+                    <Grid   >
+
+                        <Grid.RowDefinitions >
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+
+                        <ItemsControl     x:Name="ItemsControl1" Grid.Row="0"       >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel   Orientation="Horizontal" VerticalAlignment="Bottom" >
+
+                                    </StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Grid VerticalAlignment="Bottom" Margin="5 0" Height="{Binding ActualValue}"   Width="{Binding BarWidth}"     >
+                                        <Grid.Triggers>
+                                            <EventTrigger   RoutedEvent="FrameworkElement.Loaded">
+                                                <BeginStoryboard  >
+                                                    <Storyboard   AutoReverse="False" >
+                                                        <DoubleAnimation   From="0" To="{Binding ActualValue}" Duration="0:0:0.3" Storyboard.TargetProperty="Height"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Grid.Triggers>
+
+                                        <Border  Background="#0594B2"   CornerRadius="5" Margin="5 0"  >
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="10" Color="Gray" Direction="-90"  RenderingBias="Quality" ShadowDepth="0"/>
+                                            </Border.Effect>
+                                        </Border>
+
+                                        <Border  CornerRadius="5 5 0 0" Margin="5 0" BorderThickness="0"  >
+
+                                            <Border.ToolTip>
+                                                <MultiBinding   Converter="{StaticResource ToolTipConverter}">
+                                                    <Binding Path="Key" />
+                                                    <Binding Path="Value" />
+                                                </MultiBinding>
+                                            </Border.ToolTip>
+
+
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" >
+                                                        <Setter.Value>
+                                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                <GradientStop Color="#0594B2" Offset="0"/>
+                                                                <GradientStop Color="#006599" Offset="1"/>
+                                                            </LinearGradientBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" >
+                                                                <Setter.Value>
+                                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                        <GradientStop Color="#006599" Offset="0"/>
+                                                                        <GradientStop Color="#0594B2" Offset="1"/>
+                                                                    </LinearGradientBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+
+                                            <TextBox Background="Transparent"  IsReadOnly="True" BorderThickness="0"  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 -30" Text="{Binding Value}" FontSize="15" Foreground="Black">
+                                                <TextBox.Visibility>
+                                                    <MultiBinding Converter="{StaticResource WidthVisibilityConverter}" >
+                                                        <Binding Path="BarWidth"/>
+                                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+                                                    </MultiBinding>
+                                                </TextBox.Visibility>
+                                            </TextBox>
+                                        </Border>
+
+
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border CornerRadius="2" Grid.Row="1" Height="5" Background="#0594B2" VerticalAlignment="Bottom" />
+
+                        <ItemsControl Grid.Row="2"  x:Name="ItemsControl2"  >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel   Orientation="Horizontal" VerticalAlignment="Bottom" >
+
+                                    </StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" CornerRadius="2" Margin="5 0" Width="{Binding BarWidth}">
+                                       
+                                        <TextBox Background="Transparent"  IsReadOnly="True" BorderThickness="0"     Text="{Binding Key}" FontSize="15" Foreground="Black" HorizontalAlignment="Center">
+                                            <TextBox.Visibility>
+                                                <MultiBinding Converter="{StaticResource WidthVisibilityConverter}" >
+                                                    <Binding Path="BarWidth"/>
+                                                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+                                                </MultiBinding>
+                                            </TextBox.Visibility>
+                                        </TextBox>
+
+                                    </Border>
+
+
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+
+
+
+
+
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Panel.ZIndex="10" >
+                <Border   Opacity="0.7" Width="auto" Height="auto"   CornerRadius="5"  Background="Black" >
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Color="Gray" Direction="-90"  RenderingBias="Quality" ShadowDepth="0"/>
+                    </Border.Effect>
+                </Border>
+
+                <StackPanel Orientation="Vertical" Margin="10" >
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Width="10" Height="10"  Background="#0594B2"/>
+                        <TextBlock Text="{Binding Title}" Foreground="White" Margin="10 0"/>
+                    </StackPanel>
+                    <StackPanel >
+                        <TextBlock Text="{x:Static lang:Resources.CurrentAndTotal}" Foreground="White" Margin="10 5"/>
+                        <TextBlock  Foreground="White" Margin="10 5">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat=" {0} / {1} ">
+                                    <Binding Path="Current" />
+                                    <Binding Path="Total" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            <StackPanel x:Name="ToolStackPanel" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20 0 0 5">
+                <Button Opacity="0.7" x:Name="ResetButton" Content="{x:Static lang:Resources.Restore}" Margin="10"/>
+                <Button Opacity="0.7" x:Name="SortButton"  Content="{x:Static lang:Resources.SmallToBig}" Margin="10" />
+                <Button Opacity="0.7" x:Name="ApplyButton"  Content="{x:Static lang:Resources.Apply}" Margin="10" />
+                <TextBlock Margin="5 0" Text="{Binding ElementName=Slider,Path=Value,StringFormat=\{0\}}"  VerticalAlignment="Center"/>
+                <Slider x:Name="Slider" VerticalAlignment="Center" VerticalContentAlignment="Center" IsSnapToTickEnabled="True" TickFrequency="1"  Width="150" Height="auto" Maximum="100" Minimum="1" Value="{Binding Current,Mode=OneWay}" />
+
+                
+
+
+            </StackPanel>
+
+
+
+
+        </Grid>
+
+
+    </Grid>
+</UserControl>

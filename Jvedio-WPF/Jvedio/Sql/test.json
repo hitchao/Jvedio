@@ -1,0 +1,9 @@
+{
+	"LatestVersion":"4.6.1.1",
+    "ReleaseDate":"2022-02-14",
+    "ReleaseNote":{
+        "zh-CN":"修复：db的一些问题\r\n功能：自定义界面的颜色和字体\r\n优化：减少闪退",
+        "en-US":"Fix: Some issues with DB\r\n Function: Customize the colors and fonts of the interface\r\n Optimization: Reduces flashbacks\r\n",
+        "ja-JP":"修正:dbのいくつかの問題\r\n 機能:インターフェースの色とフォントをカスタマイズする\r\n 最適化:フラッシュバックを減らす\r\n"
+    }
+}

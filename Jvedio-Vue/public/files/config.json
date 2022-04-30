@@ -1,0 +1,23 @@
+{
+    "files": [
+        {
+            "device": "Windows",
+            "name": "Jvedio4.6.1.1.zip",
+            "date": "2021-06-16",
+            "version": "4.6.1.1",
+            "enable": true
+        },
+        {
+            "device": "Android",
+            "enable": false
+        },
+        {
+            "device": "Linux",
+            "enable": false
+        },
+        {
+            "device": "Mac",
+            "enable": false
+        }
+    ]
+}

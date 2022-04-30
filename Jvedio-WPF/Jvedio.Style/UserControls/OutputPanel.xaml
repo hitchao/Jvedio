@@ -1,0 +1,78 @@
+﻿<UserControl 
+            x:Class="Jvedio.Style.UserControls.OutputPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+             xmlns:local="clr-namespace:Jvedio.Style"
+             mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             d:DesignHeight="400" 
+             d:DesignWidth="500"
+             >
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml"/>
+
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideRadioButtonStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideComboBoxStyle.xaml"/>
+
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ContextMenuStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonFlatStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TabControlStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ListBoxStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ProgressBarStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ScrollViewStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/DataGridStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ToggleButtonStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ComboBoxStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/Color.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/BaseWindows/BaseWindowStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid x:Name="MainGrid"  AllowDrop="True" Margin="10"   >
+        <Border  x:Name="MainBorder"   Background="{DynamicResource BackgroundMain}" CornerRadius="5" Margin="5"  >
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" Direction="-90"  RenderingBias="Quality" ShadowDepth="0"/>
+            </Border.Effect>
+
+        </Border>
+
+        <Grid  Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{DynamicResource BackgroundTitle}" CornerRadius="5" Margin="5">
+                <Grid>
+                    <TextBlock  VerticalAlignment="Top"  Text="输出" Foreground="{DynamicResource ForegroundSearch}" HorizontalAlignment="Left" Margin="10"/>
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="ClearButton" Cursor="Hand"   Margin="5" Content="{x:Static lang:Resources.Clear}" Style="{StaticResource ButtonDanger}" />
+                        <Button Click="Button_Click"   Height="30" Width="40" Margin="5 0" Style="{StaticResource CloseButton}"  HorizontalContentAlignment="Left" VerticalContentAlignment="Top">
+                            <Viewbox   Width="12" Height="auto" Margin="14 9 0 0"        >
+                                <Path VerticalAlignment="Center" HorizontalAlignment="Center"      Fill="{DynamicResource ForegroundGlobal}" Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z" />
+                            </Viewbox>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+            <TextBox ContextMenu="{StaticResource CopyContextMenu}" FontSize="20" Grid.Row="1"  x:Name="StatusTextBox" IsReadOnly="True"   Text="test" Padding="5" VerticalContentAlignment="Top" TextWrapping="WrapWithOverflow" Background="{DynamicResource BackgroundMenu}" Opacity="0.8" Foreground="{DynamicResource ForegroundSearch}" Height="auto" Margin="5" Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+
+        </Grid>
+    </Grid>
+
+</UserControl>

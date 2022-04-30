@@ -1,0 +1,25 @@
+﻿<style:BaseDialog
+    x:Class="Jvedio.Dialog_Logs"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
+    Title="日志"
+    Width="800"
+    Height="500"
+    Background="{DynamicResource Global.Background}"
+    Foreground="{DynamicResource Global.Foreground}"
+    Topmost="True"
+    WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <TextBox
+            x:Name="textBox"
+            Margin="10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            FontSize="15"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            Style="{StaticResource ReadOnlyNoWrapTextBox}" />
+    </Grid>
+</style:BaseDialog>
