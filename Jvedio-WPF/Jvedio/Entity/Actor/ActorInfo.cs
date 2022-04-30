@@ -116,7 +116,7 @@ namespace Jvedio.Entity
             if (pathType != PathType.RelativeToData)
             {
                 if (pathType == PathType.RelativeToApp)
-                    basePicPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, basePicPath);
+                    basePicPath = System.IO.Path.Combine(GlobalVariable.CurrentUserFolder, basePicPath);
                 string saveDir = System.IO.Path.Combine(basePicPath, "Actresses");
                 if (!Directory.Exists(saveDir)) FileHelper.TryCreateDir(saveDir);
                 result = System.IO.Path.Combine(saveDir, $"{ActorName}.jpg");
