@@ -27,7 +27,7 @@ namespace Jvedio
             this.Owner = owner;
             this.Height = SystemParameters.PrimaryScreenHeight * 0.8;
             this.Width = SystemParameters.PrimaryScreenHeight * 0.8 * 1230 / 720;
-            ImageViewer.ImageSource= BitmapFrame.Create((BitmapSource)source);
+            ImageViewer.ImageSource = BitmapFrame.Create((BitmapSource)source);
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
@@ -50,13 +50,13 @@ namespace Jvedio
             base.OnClosed(e);
         }
 
-        //private void Grid_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (e.LeftButton == MouseButtonState.Pressed )
-        //    {
-        //        this.DragMove();
-        //    }
-        //}
+        private void Grid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
 
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
         {

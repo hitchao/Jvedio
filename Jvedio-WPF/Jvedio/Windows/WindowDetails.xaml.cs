@@ -1569,6 +1569,33 @@ namespace Jvedio
             actorScrollViewer.ScrollToHorizontalOffset(actorScrollViewer.HorizontalOffset - e.Delta);
             e.Handled = true;
         }
+
+        private void OpenPath(object sender, RoutedEventArgs e)
+        {
+            MenuItem menu = sender as MenuItem;
+            string header = menu.Header.ToString();
+            Video video = vieModel.CurrentVideo;
+            if (header.Equals(Jvedio.Language.Resources.Poster))
+            {
+                FileHelper.TryOpenSelectPath(video.getBigImage());
+            }
+            else if (header.Equals(Jvedio.Language.Resources.Thumbnail))
+            {
+                FileHelper.TryOpenSelectPath(video.getSmallImage());
+            }
+            else if (header.Equals(Jvedio.Language.Resources.Preview))
+            {
+                FileHelper.TryOpenSelectPath(video.getExtraImage());
+            }
+            else if (header.Equals(Jvedio.Language.Resources.ScreenShot))
+            {
+                FileHelper.TryOpenSelectPath(video.getScreenShot());
+            }
+            else if (header.Equals("GIF"))
+            {
+                FileHelper.TryOpenSelectPath(video.getGifPath());
+            }
+        }
     }
 
 

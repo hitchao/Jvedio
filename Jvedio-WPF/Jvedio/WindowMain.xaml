@@ -49,48 +49,8 @@
         <local:LargerThanVisibilityConverter x:Key="LargerThanVisibilityConverter" />
         <!--<local:LargerThanConverter x:Key="LargerThanConverter" />-->
 
-        <!--  ContextMenu  -->
-        <ContextMenu
-            x:Key="SettingsContextMenu"
-            Width="auto"
-            Margin="10,5"
-            Panel.ZIndex="7"
-            HorizontalOffset="-45"
-            VerticalOffset="-5">
-            <MenuItem Click="OpenSet_MouseDown" Header="{x:Static lang:Resources.Settings}" />
-            <MenuItem Header="{x:Static lang:Resources.Scan}" IsEnabled="False">
-                <MenuItem Header="扫描文件夹" />
-                <MenuItem Header="扫描 NFO" />
-                <MenuItem Header="扫描欧美影片" />
-                <MenuItem Header="扫描网络磁盘" />
-            </MenuItem>
-            <MenuItem
-                Click="OpenDataBase"
-                Header="{x:Static lang:Resources.MovieManagement}"
-                IsEnabled="False" />
 
 
-
-
-            <MenuItem Header="Jvedio">
-                <MenuItem Click="ShowAbout" Header="{x:Static lang:Resources.About}" />
-                <MenuItem Click="OpenHelp" Header="{x:Static lang:Resources.Help}" />
-                <MenuItem Click="OpenFeedBack" Header="{x:Static lang:Resources.FeedBack}" />
-                <MenuItem Click="OpenJvedioWebPage" Header="{x:Static lang:Resources.WebSite}" />
-                <MenuItem Click="ShowThanks" Header="{x:Static lang:Resources.Thanks}" />
-            </MenuItem>
-            <MenuItem Header="{x:Static lang:Resources.OpenPath}">
-                <MenuItem Click="OpenLogPath" Header="{x:Static lang:Resources.Log}" />
-                <MenuItem Click="OpenImageSavePath" Header="{x:Static lang:Resources.Picture}" />
-                <MenuItem Click="OpenApplicationPath" Header="{x:Static lang:Resources.SoftWare}" />
-            </MenuItem>
-
-            <MenuItem
-                Command="cmd:OpenWindow.Upgrade"
-                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                Header="{x:Static lang:Resources.CheckUpgrade}" />
-
-        </ContextMenu>
 
 
         <Style
@@ -631,22 +591,26 @@
 
     <Grid AllowDrop="True">
 
-        <!--  消息提示框  -->
-        <ScrollViewer
-            Width="auto"
-            Height="auto"
-            Margin="10,120,30,80"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Panel.ZIndex="6"
-            Background="Transparent"
-            VerticalScrollBarVisibility="Hidden">
-            <StackPanel
-                Margin="0,10,10,10"
-                VerticalAlignment="Bottom"
-                hc:Growl.GrowlParent="True"
-                hc:Growl.Token="Main" />
-        </ScrollViewer>
+
+        <Grid Panel.ZIndex="99" Visibility="{Binding RunningLongTask, Converter={StaticResource bool2VisibilityConverter}, FallbackValue=Hidden}">
+            <Border Background="{DynamicResource Global.Background}" Opacity="0.5" />
+            <Border
+                MinWidth="200"
+                MinHeight="100"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{DynamicResource Window.Title.Background}"
+                CornerRadius="10">
+                <StackPanel Orientation="Horizontal">
+                    <hc:LoadingCircle Margin="30,5" Foreground="{DynamicResource Global.Foreground}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Text="进行中" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
 
         <!--  托盘图标  -->
         <hc:NotifyIcon
@@ -667,215 +631,6 @@
                 </ContextMenu>
             </hc:NotifyIcon.ContextMenu>
         </hc:NotifyIcon>
-
-        <TextBox
-            Name="FocusTextBox"
-            Width="10"
-            Height="20"
-            Margin="-20"
-            HorizontalAlignment="Left"
-            Panel.ZIndex="-1"
-            Text=""
-            Visibility="Visible" />
-
-
-
-
-
-        <!--  筛选器  -->
-        <StackPanel
-            x:Name="ExpanderStackPanel"
-            Grid.Row="3"
-            Width="auto"
-            Margin="5"
-            Visibility="{Binding ShowFilter, Source={x:Static p:Settings.Default}, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay, FallbackValue=Hidden}">
-            <Expander
-                Margin="0,5,0,0"
-                Background="{DynamicResource BackgroundTitle}"
-                BorderThickness="0"
-                Foreground="{DynamicResource ForegroundGlobal}"
-                Header="{x:Static lang:Resources.ReleaseYear}">
-                <Border
-                    Background="{DynamicResource BackgroundMain}"
-                    BorderThickness="0"
-                    CornerRadius="0,0,4,4">
-                    <ScrollViewer MaxHeight="200">
-
-
-                        <ItemsControl x:Name="SideFilterYear">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        Name="CheckBox"
-                                        HorizontalAlignment="Left"
-                                        Click="FilterSide"
-                                        Content="{Binding}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </Border>
-
-            </Expander>
-            <Expander
-                Margin="0,5,0,0"
-                Background="{DynamicResource BackgroundTitle}"
-                BorderThickness="0"
-                Foreground="{DynamicResource ForegroundGlobal}"
-                Header="{x:Static lang:Resources.FileSize}">
-                <Border
-                    Background="{DynamicResource BackgroundMain}"
-                    BorderThickness="0"
-                    CornerRadius="0,0,4,4">
-                    <ItemsControl x:Name="SideFilterFileSize">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    Name="CheckBox"
-                                    HorizontalAlignment="Left"
-                                    Click="FilterSide"
-                                    Content="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
-
-            </Expander>
-            <Expander
-                Margin="0,5,0,0"
-                Background="{DynamicResource BackgroundTitle}"
-                BorderThickness="0"
-                Foreground="{DynamicResource ForegroundGlobal}"
-                Header="{x:Static lang:Resources.VedioDuration}">
-                <Border
-                    Background="{DynamicResource BackgroundMain}"
-                    BorderThickness="0"
-                    CornerRadius="0,0,4,4">
-                    <ItemsControl x:Name="SideFilterRuntime">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    Name="CheckBox"
-                                    HorizontalAlignment="Left"
-                                    Click="FilterSide"
-                                    Content="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
-            </Expander>
-            <Expander
-                Margin="0,5,0,0"
-                Background="{DynamicResource BackgroundTitle}"
-                BorderThickness="0"
-                Foreground="{DynamicResource ForegroundGlobal}"
-                Header="{x:Static lang:Resources.MovieRating}">
-                <Border
-                    Background="{DynamicResource BackgroundMain}"
-                    BorderThickness="0"
-                    CornerRadius="0,0,4,4">
-                    <ItemsControl x:Name="SideFilterRating">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    Name="CheckBox"
-                                    HorizontalAlignment="Left"
-                                    Click="FilterSide"
-                                    Content="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
-            </Expander>
-            <Expander
-                Margin="0,5,0,0"
-                Background="{DynamicResource BackgroundTitle}"
-                BorderThickness="0"
-                Foreground="{DynamicResource ForegroundGlobal}"
-                Header="{x:Static lang:Resources.MovieLabels}">
-                <Border
-                    Background="{DynamicResource BackgroundMain}"
-                    BorderThickness="0"
-                    CornerRadius="0,0,4,4">
-                    <ScrollViewer MaxHeight="200">
-                        <ItemsControl x:Name="SideFilterLabel">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        Name="CheckBox"
-                                        HorizontalAlignment="Left"
-                                        Click="FilterSide"
-                                        Content="{Binding}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </Border>
-            </Expander>
-
-        </StackPanel>
-
-
-
-
-        <!--  显示 ffmpeg 结果  -->
-        <Grid Panel.ZIndex="5" Visibility="{Binding CmdVisibility, FallbackValue=Hidden}">
-            <TextBox
-                Width="auto"
-                Height="auto"
-                Margin="50,100"
-                Padding="10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Background="{DynamicResource BackgroundMenu}"
-                ContextMenu="{StaticResource TextBoxContextMenu}"
-                DockPanel.Dock="Top"
-                Opacity="0.8"
-                Text="{Binding CmdText}"
-                TextChanged="CmdTextChanged"
-                TextWrapping="WrapWithOverflow" />
-            <Border
-                Width="27"
-                Height="27"
-                Margin="20,100"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                CornerRadius="3"
-                MouseLeftButtonUp="Border_MouseLeftButtonUp"
-                Style="{StaticResource CloseBorderStyle}">
-                <Image
-                    Width="20"
-                    Height="20"
-                    Source="{Binding Themes, Mode=OneWay, ConverterParameter=close, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-            </Border>
-        </Grid>
-
 
         <!--  背景  -->
         <Image
@@ -1353,11 +1108,63 @@
                                     Margin="0"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    ContextMenu="{StaticResource SettingsContextMenu}"
                                     MouseUp="ShowSettingsPopup"
                                     Style="{StaticResource RoundBorder}"
                                     Tag="{DynamicResource Window.Title.Hover.Background}"
                                     ToolTip="{x:Static lang:Resources.Settings}">
+                                    <Border.ContextMenu>
+                                        <ContextMenu
+                                            Width="auto"
+                                            Margin="10,5"
+                                            Panel.ZIndex="7"
+                                            HorizontalOffset="-45"
+                                            VerticalOffset="-5">
+                                            <MenuItem Click="OpenSet_MouseDown" Header="{x:Static lang:Resources.Settings}" />
+                                            <MenuItem Header="{x:Static lang:Resources.Scan}">
+                                                <MenuItem Click="ImportVideo" Header="扫描文件夹" />
+                                                <MenuItem Click="ImportVideo" Header="扫描网络磁盘" />
+                                            </MenuItem>
+                                            <MenuItem Header="{x:Static lang:Resources.MovieManagement}">
+                                                <MenuItem Click="DeleteNotExistVideo" Header="{x:Static lang:Resources.DeleteMovieNotExist}" />
+                                                <MenuItem Click="DeleteNotInScanPath" Header="{x:Static lang:Resources.DeleteMovieNotInScan}" />
+                                                <MenuItem
+                                                    Click="ExportToNFO"
+                                                    Header="{x:Static lang:Resources.exportnfo}"
+                                                    IsEnabled="False" />
+                                            </MenuItem>
+
+                                            <MenuItem
+                                                Click="ShowStatistic"
+                                                Header="{x:Static lang:Resources.Statistic}"
+                                                IsEnabled="False" />
+                                            <MenuItem
+                                                Click="ManageIndexAndCache"
+                                                Header="索引与缓存"
+                                                IsEnabled="False" />
+
+
+
+
+                                            <MenuItem Header="Jvedio">
+                                                <MenuItem Click="ShowAbout" Header="{x:Static lang:Resources.About}" />
+                                                <MenuItem Click="OpenHelp" Header="{x:Static lang:Resources.Help}" />
+                                                <MenuItem Click="OpenFeedBack" Header="{x:Static lang:Resources.FeedBack}" />
+                                                <MenuItem Click="OpenJvedioWebPage" Header="{x:Static lang:Resources.WebSite}" />
+                                                <MenuItem Click="ShowThanks" Header="{x:Static lang:Resources.Thanks}" />
+                                            </MenuItem>
+                                            <MenuItem Header="{x:Static lang:Resources.OpenPath}">
+                                                <MenuItem Click="OpenLogPath" Header="{x:Static lang:Resources.Log}" />
+                                                <MenuItem Click="OpenImageSavePath" Header="{x:Static lang:Resources.Picture}" />
+                                                <MenuItem Click="OpenApplicationPath" Header="{x:Static lang:Resources.SoftWare}" />
+                                            </MenuItem>
+
+                                            <MenuItem
+                                                Command="cmd:OpenWindow.Upgrade"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                                Header="{x:Static lang:Resources.CheckUpgrade}" />
+
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
                                     <Viewbox
                                         Width="20"
                                         Height="auto"
@@ -1601,7 +1408,6 @@
                                         Panel.ZIndex="4"
                                         Background="Transparent"
                                         IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}"
-                                        MouseLeftButtonDown="ToolsGrid_MouseLeftButtonDown"
                                         Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVis}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
 
                                         <Grid.RowDefinitions>
@@ -1876,6 +1682,7 @@
                                                 <Button
                                                     Width="auto"
                                                     MinWidth="0"
+                                                    Click="ImportVideo"
                                                     Style="{StaticResource ButtonPrimary}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <Image
@@ -2761,7 +2568,6 @@
                                                 CanContentScroll="True"
                                                 FocusVisualStyle="{x:Null}"
                                                 IsDeferredScrollingEnabled="False"
-                                                PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
                                                 ScrollChanged="ScrollViewer_ScrollChanged"
                                                 Style="{StaticResource FlatScrollViewer}"
                                                 VerticalScrollBarVisibility="Auto">
@@ -3367,7 +3173,6 @@
                                         Panel.ZIndex="4"
                                         Background="Transparent"
                                         IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}"
-                                        MouseLeftButtonDown="ToolsGrid_MouseLeftButtonDown"
                                         Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVis}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
 
                                         <Grid.RowDefinitions>
@@ -3864,9 +3669,8 @@
                                     Style="{StaticResource BaseTextBlock}"
                                     Text="{x:Static lang:Resources.DragFileInOr}" />
                                 <Button
-                                    Click="ShowScanWindow"
+                                    Click="ImportVideo"
                                     Content="{x:Static lang:Resources.Scan}"
-                                    IsEnabled="False"
                                     Style="{StaticResource ButtonStyleFill}" />
                             </StackPanel>
 

@@ -408,11 +408,11 @@
                                             Command="cmd:File.OpenSelectFile"
                                             CommandParameter="{Binding CurrentVideo.Path}"
                                             Header="{x:Static lang:Resources.Movie}" />
-                                        <MenuItem Command="cmd:File.OpenSelectFile" Header="{x:Static lang:Resources.Poster}" />
-                                        <MenuItem Command="cmd:File.OpenSelectFile" Header="{x:Static lang:Resources.Thumbnail}" />
-                                        <MenuItem Command="cmd:File.OpenSelectFile" Header="Gif" />
-                                        <MenuItem Command="cmd:File.OpenDir" Header="{x:Static lang:Resources.Preview}" />
-                                        <MenuItem Command="cmd:File.OpenDir" Header="{x:Static lang:Resources.ScreenShot}" />
+                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Poster}" />
+                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Thumbnail}" />
+                                        <MenuItem Click="OpenPath" Header="Gif" />
+                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Preview}" />
+                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.ScreenShot}" />
                                     </MenuItem>
 
                                     <MenuItem

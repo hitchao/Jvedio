@@ -21,10 +21,23 @@
     ContentRendered="Window_ContentRendered"
     Foreground="{DynamicResource Global.Foreground}"
     ResizeMode="CanResize"
+    SizeChanged="BaseWindow_SizeChanged"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
     <chao:BaseWindow.Resources>
+
+        <Style
+            x:Key="TogglePanelStyle"
+            BasedOn="{StaticResource BaseTogglePanel}"
+            TargetType="{x:Type chao:TogglePanel}">
+            <Setter Property="Padding" Value="0,5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="IsExpanded" Value="True" />
+            <Setter Property="LineWidth" Value="0" />
+        </Style>
 
 
         <local:CookieNothingConverter x:Key="CookieNothingConverter" />
@@ -774,7 +787,12 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Width="300">
+                    <Grid
+                        Name="pluginGrid"
+                        Grid.Column="0"
+                        Width="300"
+                        Height="auto"
+                        VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
@@ -786,10 +804,15 @@
                             </Grid.ColumnDefinitions>
                             <chao:SearchBox
                                 Grid.Column="0"
+                                Clear="SearchPlugin"
                                 PlaceHolder="搜索插件"
                                 PlaceHolderForeground="{DynamicResource RadioButton.Disabled.Background}"
+                                Search="SearchPlugin"
+                                SearchOnTextChanged="True"
+                                ShowSearchButton="True"
                                 Style="{StaticResource BaseSearchTextBox}" />
                             <Border
+                                Name="pluginSortBorder"
                                 Grid.Column="1"
                                 MouseUp="ShowContextMenu"
                                 Style="{StaticResource ToolsBarBorderStyle}"
@@ -811,24 +834,26 @@
                                 </Viewbox>
                             </Border>
                         </Grid>
-                        <Grid Grid.Row="1">
+                        <StackPanel
+                            Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+
                             <chao:TogglePanel
-                                Padding="0,5"
-                                HorizontalAlignment="Left"
-                                FontSize="15"
-                                Header="已安装"
-                                IsExpanded="True"
-                                LineWidth="0"
-                                Style="{StaticResource BaseTogglePanel}">
+                                Name="freshPlugin"
+                                Header="未安装"
+                                Style="{StaticResource TogglePanelStyle}">
+
                                 <ListBox
-                                    Height="auto"
+                                    Name="freshViewListBox"
                                     VerticalAlignment="Stretch"
-                                    d:ItemsSource="{d:SampleData ItemCount=5}"
+                                    d:ItemsSource="{d:SampleData ItemCount=3}"
                                     Background="Transparent"
                                     ItemContainerStyle="{StaticResource NormalListBoxItem}"
-                                    ItemsSource="{Binding InstalledPlugins}"
+                                    ItemsSource="{Binding CurrentFreshPlugins}"
+                                    MouseLeftButtonUp="freshViewListBox_MouseLeftButtonUp"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                    SelectionChanged="ListBox_SelectionChanged_1"
                                     Style="{StaticResource NormalListBox}">
                                     <ListBox.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -842,6 +867,106 @@
                                                     <ColumnDefinition Width="64" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
+                                                <Image
+                                                    Grid.Column="0"
+                                                    Height="64"
+                                                    Margin="5"
+                                                    Source="{Binding ImageUrl}" />
+                                                <StackPanel
+                                                    Grid.Column="1"
+                                                    Margin="5,0"
+                                                    Orientation="Vertical">
+                                                    <TextBlock
+                                                        Margin="0"
+                                                        Padding="2"
+                                                        FontWeight="Bold"
+                                                        Style="{StaticResource BaseTextBlock}"
+                                                        Text="{Binding Name}"
+                                                        TextAlignment="Left" />
+                                                    <TextBlock
+                                                        Margin="0"
+                                                        Padding="2"
+                                                        Style="{StaticResource BaseTextBlock}"
+                                                        Text="{Binding Description}"
+                                                        TextAlignment="Left" />
+                                                    <TextBlock
+                                                        Margin="0"
+                                                        Padding="2"
+                                                        FontStyle="Italic"
+                                                        Style="{StaticResource BaseTextBlock}"
+                                                        Text="{Binding Author}"
+                                                        TextAlignment="Left" />
+                                                </StackPanel>
+                                                <Border
+                                                    Grid.Column="1"
+                                                    Margin="2"
+                                                    Padding="5,2"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Bottom"
+                                                    CornerRadius="5">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Visibility" Value="Hidden" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Enabled}" Value="false">
+                                                                    <Setter Property="Background" Value="Red" />
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock Text="未启用" />
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+
+
+                            </chao:TogglePanel>
+                            <chao:TogglePanel
+                                Name="installedPlugin"
+                                Header="已安装"
+                                Style="{StaticResource TogglePanelStyle}">
+
+                                <ListBox
+                                    Name="pluginViewListBox"
+                                    VerticalAlignment="Stretch"
+                                    d:ItemsSource="{d:SampleData ItemCount=3}"
+                                    Background="Transparent"
+                                    ItemContainerStyle="{StaticResource NormalListBoxItem}"
+                                    ItemsSource="{Binding CurrentInstalledPlugins}"
+                                    MouseLeftButtonUp="pluginViewListBox_MouseLeftButtonUp"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    Style="{StaticResource NormalListBox}">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="64" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border
+                                                    Grid.Column="0"
+                                                    Width="auto"
+                                                    Padding="5"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    Panel.ZIndex="5"
+                                                    Background="Gold"
+                                                    CornerRadius="5"
+                                                    Visibility="{Binding HasNewVersion, Converter={StaticResource bool2VisibilityConverter}}">
+                                                    <TextBlock
+                                                        FontSize="10"
+                                                        Foreground="{DynamicResource Global.Background}"
+                                                        Text="可升级" />
+                                                </Border>
                                                 <Image
                                                     Grid.Column="0"
                                                     Height="64"
@@ -896,8 +1021,10 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
+
+
                             </chao:TogglePanel>
-                        </Grid>
+                        </StackPanel>
 
 
                     </Grid>
@@ -918,10 +1045,20 @@
                                 <ColumnDefinition Width="128" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Image
-                                Grid.Column="0"
-                                Height="128"
-                                Source="{Binding CurrentPlugin.Image, Converter={StaticResource Base64ImageConverter}}" />
+                            <Image Grid.Column="0" Height="128">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="false">
+                                                <Setter Property="Source" Value="{Binding CurrentPlugin.ImageUrl}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="true">
+                                                <Setter Property="Source" Value="{Binding CurrentPlugin.Image, Converter={StaticResource Base64ImageConverter}}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
                             <StackPanel
                                 Grid.Column="1"
                                 Margin="30,0"
@@ -947,6 +1084,7 @@
                                             Style="{StaticResource BaseTextBlock}"
                                             Text="{Binding CurrentPlugin.Version, StringFormat=v{0}}" />
                                     </Border>
+
                                 </StackPanel>
                                 <TextBlock
                                     Margin="0"
@@ -961,7 +1099,10 @@
                                     Style="{StaticResource BaseTextBlock}"
                                     Text="{Binding CurrentPlugin.Author, StringFormat=作者：{0}}"
                                     TextAlignment="Left" />
-                                <StackPanel Margin="0,5" Orientation="Horizontal">
+                                <StackPanel
+                                    Margin="0,5"
+                                    Orientation="Horizontal"
+                                    Visibility="{Binding CurrentPlugin.Installed, Converter={StaticResource bool2VisibilityConverter}}">
 
                                     <chao:Switch
                                         Height="20"
@@ -971,10 +1112,41 @@
                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="启用" />
 
                                 </StackPanel>
-                                <Button
-                                    Margin="5,10"
-                                    HorizontalAlignment="Left"
-                                    Content="安装" />
+                                <StackPanel Margin="5,10" Orientation="Horizontal">
+
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding CurrentPlugin.HasNewVersion}" Value="true">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="false">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <Button
+                                        MinWidth="50"
+                                        HorizontalAlignment="Left"
+                                        Click="DownloadPlugin"
+                                        Content="{x:Static lang:Resources.Get}"
+                                        Style="{StaticResource FillButton}" />
+                                    <Border
+                                        Margin="10,0"
+                                        Padding="0"
+                                        VerticalAlignment="Top"
+                                        Background="{DynamicResource Window.Side.Background}"
+                                        CornerRadius="5"
+                                        Visibility="{Binding CurrentPlugin.HasNewVersion, Converter={StaticResource bool2VisibilityConverter}}">
+                                        <TextBlock
+                                            FontSize="18"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding CurrentPlugin.NewVersion, StringFormat=v{0}}" />
+                                    </Border>
+                                </StackPanel>
+
                             </StackPanel>
                         </Grid>
                         <GridSplitter

@@ -287,9 +287,9 @@ namespace Jvedio
             return result;
         }
 
-        public static void ByteArrayToFile(byte[] byteArray, string fileName, Action<string> errorCallBack)
+        public static bool ByteArrayToFile(byte[] byteArray, string fileName, Action<string> errorCallBack)
         {
-            if (byteArray == null) return;
+            if (byteArray == null) return false;
             try
             {
                 //这里仍然会抛出异常
@@ -299,11 +299,13 @@ namespace Jvedio
                 {
                     fs.Write(byteArray, 0, byteArray.Length);
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 errorCallBack.Invoke(ex.Message);
             }
+            return false;
         }
 
 

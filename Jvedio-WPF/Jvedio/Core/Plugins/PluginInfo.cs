@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Utils.Encrypt;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -23,10 +26,31 @@ namespace Jvedio.Core.Plugins
         public string MarkDown { get; set; }
         public string License { get; set; }
         public string PublishDate { get; set; }
-        public string Path { get; set; }
+
 
         // 不在 dll 内的字段
         public bool Enabled { get; set; }
+        public bool HasNewVersion { get; set; }
+        public bool Installed { get; set; }
+        public string NewVersion { get; set; }
+        public string FileHash { get; set; }
+        public string FileName { get; set; }
+        public string ImageUrl { get; set; }
+
+        public PluginType Type { get; set; }
+
+
+        public string _Path;
+        public string Path
+        {
+            get { return _Path; }
+
+            set
+            {
+                _Path = value;
+                FileHash = Encrypt.GetFileMD5(value);
+            }
+        }
 
         public PluginInfo()
         {

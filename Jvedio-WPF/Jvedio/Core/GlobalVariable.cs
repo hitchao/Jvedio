@@ -52,6 +52,8 @@ namespace Jvedio
         public static readonly string WikiUrl = "https://github.com/hitchao/Jvedio/wiki";
         public static readonly string WebPageUrl = "https://hitchao.github.io/JvedioWebPage/";
         public static readonly string ThemeDIY = "https://hitchao.github.io/JvedioWebPage/theme.html";
+        public static readonly string PLUGIN_LIST_URL = "https://hitchao.github.io/Jvedio-Plugin/pluginlist.json";
+        public static readonly string PLUGIN_LIST_BASE_URL = "https://hitchao.github.io/Jvedio-Plugin/";
 
 
 

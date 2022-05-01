@@ -41,6 +41,7 @@ namespace Jvedio.Core.Plugins.Crawler
                 if (pluginInfo != null)
                 {
                     pluginInfo.Path = dllPath;
+                    pluginInfo.Installed = true;
                     Global.Plugins.Crawlers.Add(pluginInfo);
                 }
             }

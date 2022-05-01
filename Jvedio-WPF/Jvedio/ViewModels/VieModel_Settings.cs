@@ -34,12 +34,9 @@ namespace Jvedio.ViewModel
                 if (theme.Name == Skin.白色.ToString() || theme.Name == Skin.黑色.ToString() || theme.Name == Skin.蓝色.ToString()) continue;
                 ThemeList.Add(theme);
             }
-
             setServers();
             setPlugins();
             setBasePicPaths();
-
-
         }
 
 
@@ -66,11 +63,55 @@ namespace Jvedio.ViewModel
 
         public void setPlugins()
         {
-            InstalledPlugins = new ObservableCollection<PluginInfo>();
+
+            InstalledPlugins = new List<PluginInfo>();
             foreach (PluginInfo plugin in Global.Plugins.Crawlers)
-            {
                 InstalledPlugins.Add(plugin);
+
+
+            CurrentInstalledPlugins = new ObservableCollection<PluginInfo>();
+            foreach (var item in getSortResult(InstalledPlugins))
+                CurrentInstalledPlugins.Add(item);
+
+
+
+            if (AllFreshPlugins != null)
+            {
+                CurrentFreshPlugins = new ObservableCollection<PluginInfo>();
+                foreach (var item in getSortResult(AllFreshPlugins))
+                    CurrentFreshPlugins.Add(item);
+
             }
+
+
+        }
+
+
+        public List<PluginInfo> getSortResult(IEnumerable<PluginInfo> pluginInfos)
+        {
+            IEnumerable<PluginInfo> list = pluginInfos.Where(arg => arg.Name.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
+            if (PluginSortIndex == 0)
+            {
+                if (PluginSortDesc)
+                    list = list.OrderByDescending(arg => arg.Name);
+                else
+                    list = list.OrderBy(arg => arg.Name);
+            }
+            else if (PluginSortIndex == 1)
+            {
+                if (PluginSortDesc)
+                    list = list.OrderByDescending(arg => arg.Author);
+                else
+                    list = list.OrderBy(arg => arg.Author);
+            }
+            else if (PluginSortIndex == 2)
+            {
+                if (PluginSortDesc)
+                    list = list.OrderByDescending(arg => arg.PublishDate);
+                else
+                    list = list.OrderBy(arg => arg.PublishDate);
+            }
+            return list.ToList();
         }
 
         public void setServers()
@@ -200,17 +241,68 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private ObservableCollection<PluginInfo> _InstalledPlugins;
 
-        public ObservableCollection<PluginInfo> InstalledPlugins
+        public List<PluginInfo> InstalledPlugins;
+        public List<PluginInfo> AllFreshPlugins;
+        private ObservableCollection<PluginInfo> _CurrentInstalledPlugins;
+
+        public ObservableCollection<PluginInfo> CurrentInstalledPlugins
         {
-            get { return _InstalledPlugins; }
+            get { return _CurrentInstalledPlugins; }
             set
             {
-                _InstalledPlugins = value;
+                _CurrentInstalledPlugins = value;
                 RaisePropertyChanged();
             }
         }
+        private ObservableCollection<PluginInfo> _CurrentFreshPlugins;
+
+        public ObservableCollection<PluginInfo> CurrentFreshPlugins
+        {
+            get { return _CurrentFreshPlugins; }
+            set
+            {
+                _CurrentFreshPlugins = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _PluginSortDesc;
+
+        public bool PluginSortDesc
+        {
+            get { return _PluginSortDesc; }
+            set
+            {
+                _PluginSortDesc = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _PluginSortIndex;
+
+        public int PluginSortIndex
+        {
+            get { return _PluginSortIndex; }
+            set
+            {
+                _PluginSortIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _PluginSearch = "";
+
+        public string PluginSearch
+        {
+            get { return _PluginSearch; }
+            set
+            {
+                _PluginSearch = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
+
         private bool _PluginEnabled;
 
         public bool PluginEnabled

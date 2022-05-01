@@ -1,5 +1,6 @@
 ﻿using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
+using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Utils.Encrypt;
 using Newtonsoft.Json;
@@ -16,20 +17,9 @@ namespace Jvedio.Core.Net
     public static class UpgradeHelper
     {
 
-        public static RequestHeader Header;
 
 
 
-        static UpgradeHelper()
-        {
-            Header = new RequestHeader();
-            Header.Method = System.Net.Http.HttpMethod.Get;
-            Header.WebProxy = GlobalConfig.ProxyConfig.GetWebProxy();
-            Header.Headers = new Dictionary<string, string>()
-            {
-                {"User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36" },
-            };
-        }
 
         //public static string list_url = "https://hitchao.github.io/jvedioupdate/list";// 4.6 前的版本
         public const string LIST_URL = "https://hitchao.github.io/jvedioupdate/list.json";
@@ -56,7 +46,7 @@ namespace Jvedio.Core.Net
             string ReleaseNote = "";
             try
             {
-                HttpResult result = await HttpClient.Get(GlobalVariable.UpdateUrl, Header);
+                HttpResult result = await HttpClient.Get(GlobalVariable.UpdateUrl, CrawlerHeader.GitHub);
                 if (result.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     string sourceCode = result.SourceCode;
@@ -97,7 +87,7 @@ namespace Jvedio.Core.Net
             List<string> toDownload = new List<string>();
             try
             {
-                HttpResult httpResult = await HttpClient.Get(LIST_URL, Header);
+                HttpResult httpResult = await HttpClient.Get(LIST_URL, CrawlerHeader.GitHub);
                 if (httpResult.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
                 {
                     Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(httpResult.SourceCode);
@@ -179,7 +169,7 @@ namespace Jvedio.Core.Net
                 {
                     try
                     {
-                        HttpResult streamResult = await HttpHelper.AsyncDownLoadFile(file_url + item, Header);
+                        HttpResult streamResult = await HttpHelper.AsyncDownLoadFile(file_url + item, CrawlerHeader.GitHub);
                         //写入本地
                         if (streamResult.FileByte != null) WriteFile(streamResult.FileByte, filepath);
                     }

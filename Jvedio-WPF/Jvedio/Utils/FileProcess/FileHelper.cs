@@ -297,7 +297,7 @@ namespace Jvedio
             }
         }
 
-        public static bool TryOpenSelectPath(string path, string token = "")
+        public static bool TryOpenSelectPath(string path)
         {
             try
             {
@@ -308,10 +308,8 @@ namespace Jvedio
                         Process.Start("explorer.exe", "/select, \"" + path + "\"");
                         return true;
                     }
-
                     else
                     {
-                        //if (token != "") HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.Message_FileNotExist}：{path}", token);
                         MessageCard.Error($"{Jvedio.Language.Resources.Message_FileNotExist}：{path}");
                         return false;
                     }
@@ -334,7 +332,6 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                if (token != "") HandyControl.Controls.Growl.Error(ex.Message, token);
                 Logger.LogF(ex);
                 return false;
             }

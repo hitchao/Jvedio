@@ -11,8 +11,10 @@ using Jvedio.Entity;
 using Jvedio.Style;
 using Jvedio.Utils;
 using Jvedio.Utils.Encrypt;
+using Jvedio.Utils.FileProcess;
 using Jvedio.ViewModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -749,8 +751,137 @@ namespace Jvedio
                 vieModel.ProxyPwd = Encrypt.AesEncrypt(passwordBox.Password, Global.Security.PROXY_AES_KEY);
 
             };
+            adjustPluginViewListBox();
+
+            // 设置插件排序
+            var MenuItems = pluginSortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
+            for (int i = 0; i < MenuItems.Count; i++)
+            {
+                MenuItems[i].Click += SortMenu_Click;
+                MenuItems[i].IsCheckable = true;
+            }
+
+            // 同步远程插件
+            GlobalConfig.PluginConfig.FetchPluginInfo(() =>
+            {
+                // 更新插件状态
+                Dispatcher.Invoke(() => { setRemotePluginInfo(); });
+            });
+
+            vieModel.setPlugins();
+            setRemotePluginInfo();
+
+        }
 
 
+        private List<PluginInfo> parsePluginInfoFromJson(string pluginList)
+        {
+            List<PluginInfo> result = new List<PluginInfo>();
+            try
+            {
+                List<Dictionary<string, object>> list = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(pluginList);
+                if (list != null && list.Count > 0)
+                {
+                    foreach (Dictionary<string, object> dictionary in list)
+                    {
+                        if (!dictionary.ContainsKey("Type") || !dictionary.ContainsKey("Data")) continue;
+                        string type = dictionary["Type"].ToString().ToLower();
+                        if ("crawler".Equals(type))
+                        {
+                            JArray Data = (JArray)dictionary["Data"];
+                            List<Dictionary<string, string>> datas = Data.ToObject<List<Dictionary<string, string>>>();
+                            foreach (Dictionary<string, string> dict in datas)
+                            {
+                                if (!dict.ContainsKey("ServerName") || !dict.ContainsKey("Name") || !dict.ContainsKey("Version")) continue;
+                                PluginInfo pluginInfo = PluginInfo.ParseDict(dict);
+                                result.Add(pluginInfo);
+                            }
+
+                        }
+                        else if ("theme".Equals(type))
+                        {
+
+                        }
+
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogF(ex);
+            }
+            return null;
+        }
+
+        private void setRemotePluginInfo()
+        {
+            // 未安装创建
+            vieModel.AllFreshPlugins = new List<PluginInfo>();
+            string pluginList = GlobalConfig.PluginConfig.PluginList;
+            if (!string.IsNullOrEmpty(pluginList))
+            {
+                List<PluginInfo> pluginInfos = parsePluginInfoFromJson(pluginList);
+                if (pluginInfos != null && pluginInfos.Count > 0)
+                {
+                    foreach (PluginInfo info in pluginInfos)
+                    {
+
+                        PluginInfo installed = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
+                        if (installed == null)
+                        {
+                            // 新插件
+
+                            vieModel.AllFreshPlugins.Add(info);
+                        }
+                        else
+                        {
+                            // 检查更新
+                            if (installed.Version.CompareTo(info.Version) < 0)
+                            {
+                                installed.HasNewVersion = true;
+                                installed.NewVersion = info.Version;
+                                installed.FileName = info.FileName;
+                                PluginInfo currentInstalled = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
+                                if (currentInstalled != null) currentInstalled = installed;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
+            vieModel.CurrentFreshPlugins = new ObservableCollection<PluginInfo>();
+            foreach (var item in vieModel.getSortResult(vieModel.AllFreshPlugins))
+                vieModel.CurrentFreshPlugins.Add(item);
+
+        }
+
+
+
+
+
+        private void SortMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+            for (int i = 0; i < contextMenu.Items.Count; i++)
+            {
+                MenuItem item = (MenuItem)contextMenu.Items[i];
+                if (item == menuItem)
+                {
+                    item.IsChecked = true;
+                    if (i == vieModel.PluginSortIndex)
+                    {
+                        vieModel.PluginSortDesc = !vieModel.PluginSortDesc;
+                    }
+                    vieModel.PluginSortIndex = i;
+
+                }
+                else item.IsChecked = false;
+            }
+            vieModel.setPlugins();
         }
 
         private void SetCheckedBoxChecked()
@@ -1358,13 +1489,29 @@ namespace Jvedio
             e.Handled = true;
         }
 
-        private void ListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+
+
+        private void pluginViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            int idx = (sender as ListBox).SelectedIndex;
-            vieModel.CurrentPlugin = vieModel.InstalledPlugins[idx];
+            object item = pluginViewListBox.SelectedItem;
+            if (item == null) return;
+            PluginInfo pluginInfo = item as PluginInfo;
+            vieModel.CurrentPlugin = vieModel.InstalledPlugins.Where(arg => arg.FileHash.Equals(pluginInfo.FileHash)).FirstOrDefault();
             richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.MarkDown);
             pluginDetailGrid.Visibility = Visibility.Visible;
         }
+
+        private void freshViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            object item = freshViewListBox.SelectedItem;
+            if (item == null) return;
+            PluginInfo pluginInfo = item as PluginInfo;
+            vieModel.CurrentPlugin = vieModel.AllFreshPlugins.Where(arg => arg.getUID().Equals(pluginInfo.getUID())).FirstOrDefault();
+            richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.MarkDown);
+            pluginDetailGrid.Visibility = Visibility.Visible;
+        }
+
+
 
         private void ImageSelectComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1570,6 +1717,94 @@ namespace Jvedio
             MessageCard.Info(Jvedio.Language.Resources.Attention_Rename);
         }
 
+        private void BaseWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            adjustPluginViewListBox();
+        }
+
+        private void adjustPluginViewListBox()
+        {
+            if (this.ActualHeight > 0)
+            {
+                freshViewListBox.MaxHeight = this.ActualHeight - 220;
+                pluginViewListBox.MaxHeight = this.ActualHeight - 220;
+
+            }
+
+        }
+
+        private void SearchPlugin(object sender, RoutedEventArgs e)
+        {
+            SearchBox searchBox = sender as SearchBox;
+            vieModel.PluginSearch = searchBox.Text;
+            vieModel.setPlugins();
+        }
+
+        private void DownloadPlugin(object sender, RoutedEventArgs e)
+        {
+
+            PluginInfo pluginInfo = new PluginInfo();
+            pluginInfo.Name = vieModel.CurrentPlugin.Name;
+            pluginInfo.FileName = vieModel.CurrentPlugin.FileName;
+            pluginInfo.Type = vieModel.CurrentPlugin.Type;
+            //https://hitchao.github.io/Jvedio-Plugin/plugins/crawlers/testFile.txt
+            string remoteUrl = getPluginPath(GlobalVariable.PLUGIN_LIST_BASE_URL, pluginInfo).Replace("\\", "/");
+            if (!remoteUrl.IsProperUrl())
+            {
+                MessageCard.Error("地址不合理 => " + remoteUrl);
+                return;
+            }
+            Button button = sender as Button;
+            button.IsEnabled = false;
+            DownloadPlugin(remoteUrl, pluginInfo);
+        }
+
+
+        public string getPluginPath(string basePath, PluginInfo pluginInfo)
+        {
+            if (pluginInfo == null || pluginInfo.FileName == null) return "";
+            return Path.Combine(basePath, "plugins", pluginInfo.Type.ToString().ToLower() + "s", pluginInfo.FileName);
+        }
+
+
+
+        private void DownloadPlugin(string url, PluginInfo pluginInfo)
+        {
+            Task.Run(async () =>
+            {
+                HttpResult httpResult = await HttpHelper.AsyncDownLoadFile(url, CrawlerHeader.GitHub);
+                if (httpResult.StatusCode == HttpStatusCode.OK && httpResult.FileByte != null)
+                {
+                    byte[] fileByte = httpResult.FileByte;
+                    string saveFileName = getPluginPath(AppDomain.CurrentDomain.BaseDirectory, pluginInfo);
+                    if (string.IsNullOrEmpty(saveFileName)) return;
+
+                    string tempDir = Path.Combine(Path.GetDirectoryName(saveFileName), "temp");
+                    if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+                    string tempFileName = Path.Combine(tempDir, Path.GetFileName(saveFileName));
+                    bool success = FileProcess.ByteArrayToFile(fileByte, tempFileName, (error) =>
+                    {
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                MessageCard.Error(error);
+                            });
+                        }
+                    });
+                    if (success) Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show($"{pluginInfo.Name} 下载成功，即将重启", "插件下载");
+                        //执行命令
+                        string arg = $"xcopy /y/e \"{tempFileName}\" \"{saveFileName}*\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\" &exit";
+                        StreamHelper.TryWrite("upgrade-plugins.bat", arg, true, Encoding.GetEncoding("GB2312"));
+                        FileHelper.TryOpenFile("upgrade-plugins.bat");
+                        Application.Current.Shutdown();
+                    });
+                }
+            });
+
+        }
     }
 
 

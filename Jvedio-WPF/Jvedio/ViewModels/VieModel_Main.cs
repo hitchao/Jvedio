@@ -1471,6 +1471,17 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _RunningLongTask = false;
+
+        public bool RunningLongTask
+        {
+            get { return _RunningLongTask; }
+            set
+            {
+                _RunningLongTask = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         public List<List<string>> Filters;
@@ -1508,23 +1519,6 @@ namespace Jvedio.ViewModel
             main.LabelFilterItemsControl.ItemsSource = null;
             main.LabelFilterItemsControl.ItemsSource = Label;
 
-
-            //他妈的必须要强制指定，Expander 搞毛啊
-            main.SideFilterYear.ItemsSource = null;
-            main.SideFilterYear.ItemsSource = Year.OrderByDescending(arg => arg).ToList();
-
-            main.SideFilterFileSize.ItemsSource = null;
-            main.SideFilterFileSize.ItemsSource = FileSize;
-
-
-            main.SideFilterLabel.ItemsSource = null;
-            main.SideFilterLabel.ItemsSource = Label;
-
-            main.SideFilterRating.ItemsSource = null;
-            main.SideFilterRating.ItemsSource = Rating;
-
-            main.SideFilterRuntime.ItemsSource = null;
-            main.SideFilterRuntime.ItemsSource = Runtime;
 
 
         }

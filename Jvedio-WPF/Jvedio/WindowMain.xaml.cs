@@ -54,6 +54,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using JvedioLib;
 using Jvedio.Utils.Enums;
+using Jvedio.Core.Crawler;
 
 namespace Jvedio
 {
@@ -268,7 +269,11 @@ namespace Jvedio
             appDatabases.ForEach(db => temp.Add(db));
             vieModel.DataBases = temp;
             if (temp.Count > 0)
-                vieModel.CurrentAppDataBase = temp[0];
+            {
+                vieModel.CurrentAppDataBase = appDatabases.Where(arg => arg.DBId == GlobalConfig.Main.CurrentDBId).FirstOrDefault();
+                if (vieModel.CurrentAppDataBase == null) vieModel.CurrentAppDataBase = temp[0];
+            }
+
         }
 
         private void setRecentWatched()
@@ -632,7 +637,7 @@ namespace Jvedio
                 AppConfig appConfig = appConfigMapper.selectOne(wrapper);
                 if (appConfig != null && !string.IsNullOrEmpty(appConfig.ConfigValue))
                     notices = appConfig.ConfigValue;
-                HttpResult httpResult = await HttpClient.Get(NoticeUrl, UpgradeHelper.Header);
+                HttpResult httpResult = await HttpClient.Get(NoticeUrl, CrawlerHeader.GitHub);
                 //判断公告是否内容不同
                 if (httpResult.StatusCode == HttpStatusCode.OK && !httpResult.SourceCode.Equals(notices))
                 {
@@ -953,9 +958,7 @@ namespace Jvedio
                 vieModel.HideToIcon = true;
                 this.Hide();
                 WindowSet?.Hide();
-                WindowTools?.Hide();
                 WindowEdit?.Hide();
-                window_DBManagement?.Hide();
             }
             else
             {
@@ -1082,22 +1085,8 @@ namespace Jvedio
             }
         }
 
-        WindowTools WindowTools;
 
-        private void OpenTools(object sender, RoutedEventArgs e)
-        {
-            if (WindowTools != null) WindowTools.Close();
-            WindowTools = new WindowTools();
-            WindowTools.Show();
-        }
 
-        Window_DBManagement window_DBManagement;
-        private void OpenDataBase(object sender, RoutedEventArgs e)
-        {
-            if (window_DBManagement != null) window_DBManagement.Close();
-            window_DBManagement = new Window_DBManagement();
-            window_DBManagement.Show();
-        }
 
 
 
@@ -2013,16 +2002,6 @@ namespace Jvedio
 
 
 
-        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            //无进度条时
-            ScrollViewer sv = sender as ScrollViewer;
-            if (sv.VerticalOffset == 0 && sv.VerticalOffset == sv.ScrollableHeight && vieModel.CurrentVideoList.Count < Properties.Settings.Default.DisplayNumber && !IsFlowing)
-            {
-                IsFlowing = true;
-                LoadMovie();
-            }
-        }
 
         private void LoadMovie()
         {
@@ -2096,6 +2075,11 @@ namespace Jvedio
             FrameworkElement el = sender as FrameworkElement;
             long dataid = getDataID(el);
             Video video = getVideo(dataid);
+            if (video == null)
+            {
+                msgCard.Error("无法播放该视频！");
+                return;
+            }
             PlayVideoWithPlayer(video.Path, dataid);
 
         }
@@ -3537,7 +3521,7 @@ namespace Jvedio
 
         private Video getVideo(long dataID)
         {
-            if (dataID <= 0) return null;
+            if (dataID <= 0 || vieModel?.VideoList?.Count <= 0) return null;
             Video video = vieModel.VideoList.Where(item => item.DataID == dataID).First();
             if (video != null && video.DataID > 0) return video;
             return null;
@@ -3588,13 +3572,19 @@ namespace Jvedio
         private CancellationTokenSource scan_cts;
         private void Grid_Drop(object sender, DragEventArgs e)
         {
-
-            vieModel.ScanStatus = "Scanning";
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            AddScanTask(dragdropFiles);
+        }
+
+
+        private void AddScanTask(string[] toScanfiles)
+        {
+            vieModel.ScanStatus = "Scanning";
+
             List<string> files = new List<string>();
             List<string> paths = new List<string>();
 
-            foreach (var item in dragdropFiles)
+            foreach (var item in toScanfiles)
             {
                 if (FileHelper.IsFile(item))
                     files.Add(item);
@@ -3623,6 +3613,7 @@ namespace Jvedio
             scanTask.Start();
             setScanStatus();
         }
+
 
         private void setScanStatus()
         {
@@ -3765,12 +3756,12 @@ namespace Jvedio
                 TitleBorder.Background = Brushes.Transparent;
                 //MainProgressBar.Background = Brushes.Transparent;
                 //ActorProgressBar.Background = Brushes.Transparent;
-                foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
-                {
-                    expander.Background = Brushes.Transparent;
-                    Border border = expander.Content as Border;
-                    border.Background = Brushes.Transparent;
-                }
+                //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
+                //{
+                //    expander.Background = Brushes.Transparent;
+                //    Border border = expander.Content as Border;
+                //    border.Background = Brushes.Transparent;
+                //}
                 BgImage.Source = GlobalVariable.BackgroundImage;
             }
             else
@@ -3781,12 +3772,12 @@ namespace Jvedio
                 SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
                 //MainProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
                 //ActorProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-                foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
-                {
-                    expander.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-                    Border border = expander.Content as Border;
-                    border.SetResourceReference(Control.BackgroundProperty, "Window.Background");
-                }
+                //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
+                //{
+                //    expander.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+                //    Border border = expander.Content as Border;
+                //    border.SetResourceReference(Control.BackgroundProperty, "Window.Background");
+                //}
             }
             //设置背景图片
             BgImage.Source = GlobalVariable.BackgroundImage;
@@ -3804,11 +3795,7 @@ namespace Jvedio
 
 
 
-        private void ShowScanWindow(object sender, RoutedEventArgs e)
-        {
-            vieModel.ShowFirstRun = Visibility.Hidden;
-            OpenTools(sender, e);
-        }
+
 
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
         {
@@ -4972,15 +4959,8 @@ namespace Jvedio
         }
 
 
-        private void ToolsGrid_MouseMove(object sender, MouseEventArgs e)
-        {
 
-        }
 
-        private void ToolsGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            FocusTextBox.Focus();
-        }
 
         private void ClearSearchHistory(object sender, MouseButtonEventArgs e)
         {
@@ -5152,71 +5132,7 @@ namespace Jvedio
             //windowManageImage.Show();
         }
 
-        private void FilterSide(object sender, RoutedEventArgs e)
-        {
-            AllRadioButton.IsChecked = true;
-            //年份
-            List<string> year = GetFilterFromSideItemsControl(SideFilterYear);
-            //时长
-            List<string> runtime = GetFilterFromSideItemsControl(SideFilterRuntime);
 
-            //文件大小
-            List<string> filesize = GetFilterFromSideItemsControl(SideFilterFileSize);
-
-            //评分
-            List<string> rating = GetFilterFromSideItemsControl(SideFilterRating);
-
-            //标签
-            List<string> label = GetFilterFromSideItemsControl(SideFilterLabel);
-            string sql = "select * from movie where ";
-
-            string s = "";
-
-            year.ForEach(arg => { s += $"releasedate like '%{arg}%' or "; });
-            if (year.Count >= 1) s = s.Substring(0, s.Length - 4);
-            if (s != "") sql += "(" + s + ") and "; s = "";
-
-            label.ForEach(arg => { s += $"label like '%{arg}%' or "; });
-            if (label.Count >= 1) s = s.Substring(0, s.Length - 4);
-            if (s != "") sql += "(" + s + ") and "; s = "";
-
-
-            if (runtime.Count > 0 & rating.Count < 4)
-            {
-                runtime.ForEach(arg => { s += $"(runtime >={arg.Split('-')[0]} and runtime<={arg.Split('-')[1]}) or "; });
-                if (runtime.Count >= 1) s = s.Substring(0, s.Length - 4);
-                if (s != "") sql += "(" + s + ") and "; s = "";
-            }
-
-            if (filesize.Count > 0 & rating.Count < 4)
-            {
-                filesize.ForEach(arg => { s += $"(filesize >={double.Parse(arg.Split('-')[0]) * 1024 * 1024 * 1024} and filesize<={double.Parse(arg.Split('-')[1]) * 1024 * 1024 * 1024}) or "; });
-                if (filesize.Count >= 1) s = s.Substring(0, s.Length - 4);
-                if (s != "") sql += "(" + s + ") and "; s = "";
-            }
-
-            if (rating.Count > 0 & rating.Count < 5)
-            {
-                rating.ForEach(arg => { s += $"(rating >={arg.Split('-')[0]} and rating<={arg.Split('-')[1]}) or "; });
-                if (rating.Count >= 1) s = s.Substring(0, s.Length - 4);
-                if (s != "") sql += "(" + s + ") and "; s = "";
-            }
-            sql = sql.Substring(0, sql.Length - 5);
-            Console.WriteLine(sql);
-            vieModel.ExecutiveSqlCommand(0, Jvedio.Language.Resources.Filter, sql);
-
-        }
-
-        private bool autoScroll = false;
-        private void BackTo(object sender, RoutedEventArgs e)
-        {
-            (sender as Button).Visibility = Visibility.Collapsed;
-            autoScroll = true;
-            HideActressGrid(this, null);
-            vieModel.ExecutiveSqlCommand(0, vieModel.TextType, VieModel_Main.PreviousSql, istorecord: false, flip: false);
-            //TODO
-            //流动模式
-        }
 
         private void SearchBar_SearchStarted(object sender, HandyControl.Data.FunctionEventArgs<string> e)
         {
@@ -6093,6 +6009,168 @@ namespace Jvedio
             Button button = sender as Button;
             Border border = (button.Parent as Grid).Parent as Border;
             border.Visibility = Visibility.Collapsed;
+        }
+
+        private void ImportVideo(object sender, RoutedEventArgs e)
+        {
+            string path = FileHelper.SelectPath(this);
+            if (!string.IsNullOrEmpty(path))
+            {
+                AddScanTask(new string[] { path });
+                MessageCard.Success("已添加扫描任务：=> " + path);
+            }
+        }
+
+        private void DeleteNotExistVideo(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.DownLoadTasks.Count > 0 || vieModel.ScanTasks.Count > 0 || vieModel.ScreenShotTasks.Count > 0)
+            {
+                msgCard.Error("此操作需要清空下载任务、扫描任务、截图任务");
+                return;
+            }
+
+            vieModel.RunningLongTask = true;
+            Task.Run(async () =>
+            {
+                List<string> toDelete = new List<string>();
+                SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
+                wrapper.Select("DataID", "Path").Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", 0);
+                List<MetaData> metaDatas = metaDataMapper.selectList(wrapper);
+                foreach (MetaData data in metaDatas)
+                {
+                    if (!File.Exists(data.Path)) toDelete.Add(data.DataID.ToString());
+                }
+                if (toDelete.Count <= 0)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        msgCard.Info("所有影片都存在，无需操作");
+                    });
+                    vieModel.RunningLongTask = false;
+                    return;
+                }
+                MessageBoxResult messageBoxResult = MessageBox.Show($"确认从数据库删除 {toDelete.Count} 个不存在的影片", "提示", MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    videoMapper.deleteVideoByIds(toDelete);
+                    await Task.Delay(5000);
+                    vieModel.Statistic();
+                    vieModel.LoadData();
+                }
+                vieModel.RunningLongTask = false;
+            });
+        }
+
+        private void DeleteNotInScanPath(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.DownLoadTasks.Count > 0 || vieModel.ScanTasks.Count > 0 || vieModel.ScreenShotTasks.Count > 0)
+            {
+                msgCard.Error("此操作需要清空下载任务、扫描任务、截图任务");
+                return;
+            }
+
+
+
+            string scanPath = vieModel.CurrentAppDataBase.ScanPath;
+            if (string.IsNullOrEmpty(scanPath))
+            {
+                msgCard.Error("该库未设置目录");
+                return;
+            }
+            List<string> scanPaths = new List<string>();
+            bool success = false;
+            try
+            {
+                scanPaths = JsonConvert.DeserializeObject<List<string>>(scanPath).Where(arg => !string.IsNullOrEmpty(arg)).ToList();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogF(ex);
+                success = false;
+            }
+            success = scanPaths.Count > 0;
+            if (!success)
+            {
+                msgCard.Error("该库未设置目录");
+                return;
+            }
+
+            vieModel.RunningLongTask = true;
+            Task.Run(async () =>
+            {
+                List<string> toDelete = new List<string>();
+                SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
+                wrapper.Select("DataID", "Path").Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", 0);
+                List<MetaData> metaDatas = metaDataMapper.selectList(wrapper);
+                foreach (MetaData data in metaDatas)
+                {
+                    string path = data.Path;
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        toDelete.Add(data.DataID.ToString());
+                        continue;
+                    }
+                    foreach (string dir in scanPaths)
+                    {
+                        if (string.IsNullOrEmpty(dir)) continue;
+                        if (path.IndexOf(dir) < 0)
+                        {
+                            toDelete.Add(data.DataID.ToString());
+                            break;
+                        }
+                    }
+                }
+                if (toDelete.Count <= 0)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        msgCard.Info("所有影片都存在，无需操作");
+                    });
+                    vieModel.RunningLongTask = false;
+                    return;
+                }
+                MessageBoxResult messageBoxResult = MessageBox.Show($"确认从数据库删除 {toDelete.Count} 个不位于启动时扫描目录的影片", "提示", MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    videoMapper.deleteVideoByIds(toDelete);
+                    await Task.Delay(5000);
+                    vieModel.Statistic();
+                    vieModel.LoadData();
+
+                }
+                vieModel.RunningLongTask = false;
+            });
+
+
+        }
+
+        private void ExportToNFO(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.DownLoadTasks.Count > 0 || vieModel.ScanTasks.Count > 0 || vieModel.ScreenShotTasks.Count > 0)
+            {
+                msgCard.Error("此操作需要清空下载任务、扫描任务、截图任务");
+                return;
+            }
+
+
+
+
+
+
+        }
+
+        private void ShowStatistic(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ManageIndexAndCache(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.DownLoadTasks.Count > 0 || vieModel.ScanTasks.Count > 0 || vieModel.ScreenShotTasks.Count > 0)
+            {
+                msgCard.Error("此操作需要清空下载任务、扫描任务、截图任务");
+                return;
+            }
         }
     }
 

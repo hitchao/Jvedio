@@ -56,7 +56,10 @@ namespace Jvedio
             ct = cts.Token;
 
             FileHelper.TryDeleteFile("upgrade.bat");
+            FileHelper.TryDeleteFile("upgrade-plugins.bat");
             FileHelper.TryDeleteDir("Temp");
+            FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers", "temp"));
+            FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
             //testWithAssembly();
 
         }
@@ -101,7 +104,7 @@ namespace Jvedio
             SetSkin(Properties.Settings.Default.Themes);//设置皮肤
             InitAppData();// 初始化应用数据
             InitClean();//清理文件
-
+            GlobalConfig.PluginConfig.FetchPluginInfo(); // 同步远程插件
 
 
             vieModel_StartUp = new VieModel_StartUp();

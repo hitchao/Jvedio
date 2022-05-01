@@ -92,7 +92,7 @@
     </Reference>
     <Reference Include="ChaoControls.Style, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Reference\ChaoControls.Style.dll</HintPath>
+      <HintPath>..\..\..\..\Visual_Studio_Project\chao-controls\ChaoControls.Style\bin\Debug\ChaoControls.Style.dll</HintPath>
     </Reference>
     <Reference Include="CommonNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -276,10 +276,12 @@
     <Compile Include="Core\Config\ProxyConfig.cs" />
     <Compile Include="Core\Config\FFmpegConfig.cs" />
     <Compile Include="Core\Config\RenameConfig.cs" />
+    <Compile Include="Core\Config\PluginConfig.cs" />
     <Compile Include="Core\Config\ScanConfig.cs" />
     <Compile Include="Core\Config\ServerConfig.cs" />
     <Compile Include="Core\Config\WindowConfig\Settings.cs" />
     <Compile Include="Core\Crawler\ActorSearch.cs" />
+    <Compile Include="Core\Crawler\CrawlerHeader.cs" />
     <Compile Include="Core\CustomEventArgs\PreviewImageEventArgs.cs" />
     <Compile Include="Core\CustomEventArgs\ActressUpdateEventArgs.cs" />
     <Compile Include="Core\CustomEventArgs\InfoUpdateEventArgs.cs" />
@@ -288,6 +290,7 @@
     <Compile Include="Core\Enums\DownLoadState.cs" />
     <Compile Include="Core\Enums\ImageType.cs" />
     <Compile Include="Core\Enums\NoticeType.cs" />
+    <Compile Include="Core\Enums\PluginType.cs" />
     <Compile Include="Core\Exceptions\CrawlerNotFoundException.cs" />
     <Compile Include="Core\Exceptions\MediaCutOutOfRangeException.cs" />
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
@@ -504,9 +507,6 @@
     <Compile Include="Windows\WindowEdit.xaml.cs">
       <DependentUpon>WindowEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WindowTools.xaml.cs">
-      <DependentUpon>WindowTools.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\WindowSettings.xaml.cs">
       <DependentUpon>WindowSettings.xaml</DependentUpon>
     </Compile>
@@ -637,10 +637,6 @@
     <Page Include="WindowMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\WindowTools.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\WindowSettings.xaml">
       <SubType>Designer</SubType>
@@ -1016,8 +1012,7 @@
   <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>XCOPY  "$(ProjectDir)bin\Debug"  "$(SolutionDir)Release\public\File"    /E /Y /i
