@@ -4,6 +4,7 @@ using Jvedio.Entity.Data;
 using Jvedio.Mapper;
 using Jvedio.Utils;
 using Jvedio.Utils.Common;
+using JvedioLib.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +41,7 @@ namespace Jvedio.Core.Scan
                 game.Title = Path.GetFileName(path);
                 game.Path = getRealExe(list);
                 game.Size = DirHelper.getDirSize(new DirectoryInfo(path));
-                game.Hash = Jvedio.Utils.Encrypt.Encrypt.GetFileMD5(game.Path);// 计算哈希
+                game.Hash = Encrypt.GetFileMD5(game.Path);// 计算哈希
                 import.Add(game);
             }
 

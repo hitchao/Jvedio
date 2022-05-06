@@ -43,5 +43,10 @@ namespace Jvedio.Utils.Common
             DateTime.TryParse(str, out date);
             return date.ToString("yyyy-MM-dd");
         }
+
+        public static string NowDate()
+        {
+            return DateTime.Now.ToString("yyyy-MM-dd");
+        }
     }
 }

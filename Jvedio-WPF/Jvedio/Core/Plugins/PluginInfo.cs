@@ -1,5 +1,5 @@
 ﻿using Jvedio.Core.Enums;
-using Jvedio.Utils.Encrypt;
+using JvedioLib.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;

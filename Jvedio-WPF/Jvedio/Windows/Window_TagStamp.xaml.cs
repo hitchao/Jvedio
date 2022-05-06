@@ -42,21 +42,25 @@ namespace Jvedio
         {
             textBox.Text = name;
             border.Background = background;
+            border2.Background = foreground;
+            BackgroundBrush = background;
+            ForegroundBrush = foreground;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Confirm(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Cancel(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
         }
 
 
-        private void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            await Task.Delay(100);
             colorPopup.IsOpen = true;
             idx = 0;
         }
@@ -96,10 +100,17 @@ namespace Jvedio
             }
         }
 
-        private void border2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async void border2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            await Task.Delay(100);
             colorPopup.IsOpen = true;
             idx = 1;
+        }
+
+        private void BaseWindow_ContentRendered(object sender, EventArgs e)
+        {
+            textBox.Focus();
+            textBox.SelectAll();
         }
     }
 }

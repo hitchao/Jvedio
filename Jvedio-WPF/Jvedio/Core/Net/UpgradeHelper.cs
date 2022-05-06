@@ -2,7 +2,7 @@
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
-using Jvedio.Utils.Encrypt;
+using JvedioLib.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

@@ -50,7 +50,12 @@
         <!--<local:LargerThanConverter x:Key="LargerThanConverter" />-->
 
 
-
+        <Style
+            x:Key="MyListBoxItemStyle"
+            BasedOn="{StaticResource NormalListBoxItem}"
+            TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="10,5" />
+        </Style>
 
 
         <Style
@@ -592,6 +597,7 @@
     <Grid AllowDrop="True">
 
 
+        <!--  长任务遮罩  -->
         <Grid Panel.ZIndex="99" Visibility="{Binding RunningLongTask, Converter={StaticResource bool2VisibilityConverter}, FallbackValue=Hidden}">
             <Border Background="{DynamicResource Global.Background}" Opacity="0.5" />
             <Border
@@ -638,6 +644,748 @@
             Margin="0"
             Source="{Binding BackgroundImage}"
             Stretch="UniformToFill" />
+
+
+        <!--  影片关联编辑弹框  -->
+        <Popup
+            x:Name="searchDataPopup"
+            Width="650"
+            Height="500"
+            AllowsTransparency="True"
+            HorizontalOffset="-5"
+            Placement="MousePoint"
+            PopupAnimation="Fade"
+            StaysOpen="False"
+            VerticalOffset="-5">
+            <Grid Margin="5">
+                <Border
+                    Margin="5"
+                    Background="{DynamicResource Menu.Background}"
+                    CornerRadius="5"
+                    Effect="{StaticResource PopupDropShadowEffect}" />
+                <Grid Margin="4,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <chao:SearchBox
+                        Name="searchDataBox"
+                        Grid.Row="0"
+                        Width="auto"
+                        Height="30"
+                        Margin="0"
+                        Padding="3,0"
+                        HorizontalAlignment="Stretch"
+                        Background="{DynamicResource Window.Side.Background}"
+                        BorderBrush="#326CF3"
+                        BorderThickness="0"
+                        Foreground="White"
+                        PlaceHolder="搜索标题/路径/识别码"
+                        PlaceHolderForeground="Gray"
+                        Search="searchDataBox_Search"
+                        SearchOnTextChanged="False"
+                        ShowClearButton="True"
+                        ShowSearchButton="True" />
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Grid.Column="0"
+                            Margin="0,10"
+                            BorderBrush="{DynamicResource Control.Disabled.Background}"
+                            BorderThickness="0,0,1,0">
+                            <ScrollViewer>
+                                <StackPanel Orientation="Vertical">
+                                    <chao:TogglePanel
+                                        Width="150"
+                                        Padding="0,5"
+                                        FontSize="15"
+                                        Header="已关联"
+                                        IsExpanded="True"
+                                        LineWidth="0"
+                                        Style="{StaticResource BaseTogglePanel}">
+
+
+                                        <ListBox
+                                            Background="Transparent"
+                                            ItemContainerStyle="{StaticResource MyListBoxItemStyle}"
+                                            ItemsSource="{Binding Path=ExistAssociationDatas, Mode=OneWay, NotifyOnSourceUpdated=True}"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                            Style="{StaticResource NormalListBox}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Tag="{Binding DataID}">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Button
+                                                            Grid.Row="0"
+                                                            Grid.RowSpan="2"
+                                                            Grid.Column="0"
+                                                            Width="20"
+                                                            Height="20"
+                                                            Margin="0,0,5,0"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Top"
+                                                            Background="Transparent"
+                                                            Click="RemoveExistAssociation"
+                                                            Style="{StaticResource RoundNormalButton}"
+                                                            Tag="{DynamicResource Window.Title.Hover.Background}">
+                                                            <Viewbox
+                                                                Width="12"
+                                                                Height="auto"
+                                                                VerticalAlignment="Center">
+                                                                <Path
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
+                                                                    Fill="{DynamicResource Global.Foreground}" />
+                                                            </Viewbox>
+                                                        </Button>
+
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            Padding="0,0,10,0"
+                                                            FontWeight="Bold"
+                                                            Text="{Binding VID}"
+                                                            ToolTip="{Binding VID}" />
+                                                        <TextBlock
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            FontSize="12"
+                                                            Text="{Binding Title}"
+                                                            ToolTip="{Binding Title}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </chao:TogglePanel>
+                                    <chao:TogglePanel
+                                        Width="150"
+                                        Padding="0,5"
+                                        FontSize="15"
+                                        Header="待关联"
+                                        IsExpanded="True"
+                                        LineWidth="0"
+                                        Style="{StaticResource BaseTogglePanel}">
+                                        <ListBox
+                                            Background="Transparent"
+                                            ItemContainerStyle="{StaticResource MyListBoxItemStyle}"
+                                            ItemsSource="{Binding Path=AssociationSelectedDatas, Mode=OneWay, NotifyOnSourceUpdated=True}"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                            Style="{StaticResource NormalListBox}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Tag="{Binding DataID}">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Button
+                                                            Grid.Row="0"
+                                                            Grid.RowSpan="2"
+                                                            Grid.Column="0"
+                                                            Width="20"
+                                                            Height="20"
+                                                            Margin="0,0,5,0"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Top"
+                                                            Background="Transparent"
+                                                            Click="RemoveAssociation"
+                                                            Style="{StaticResource RoundNormalButton}"
+                                                            Tag="{DynamicResource Window.Title.Hover.Background}">
+                                                            <Viewbox
+                                                                Width="12"
+                                                                Height="auto"
+                                                                VerticalAlignment="Center">
+                                                                <Path
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
+                                                                    Fill="{DynamicResource Global.Foreground}" />
+                                                            </Viewbox>
+                                                        </Button>
+
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            Padding="0,0,10,0"
+                                                            FontWeight="Bold"
+                                                            Text="{Binding VID}"
+                                                            ToolTip="{Binding VID}" />
+                                                        <TextBlock
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            FontSize="12"
+                                                            Text="{Binding Title}"
+                                                            ToolTip="{Binding Title}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </chao:TogglePanel>
+                                </StackPanel>
+                            </ScrollViewer>
+
+                        </Border>
+
+                        <ScrollViewer
+                            Grid.Column="1"
+                            CanContentScroll="True"
+                            FocusVisualStyle="{x:Null}"
+                            IsDeferredScrollingEnabled="False"
+                            VerticalScrollBarVisibility="Auto">
+
+
+                            <ItemsControl
+                                Name="assoSearchItemsControl"
+                                Margin="5,5,5,5"
+                                Background="Transparent"
+                                ItemsSource="{Binding AssociationDatas}"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <!--  影片加载动画  -->
+                                        <DataTemplate.Triggers>
+                                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            FillBehavior="Stop"
+                                                            Storyboard.TargetName="rootGrid"
+                                                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                            From="0"
+                                                            To="1"
+                                                            Duration="0:0:0.3" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </DataTemplate.Triggers>
+
+                                        <Grid
+                                            Name="rootGrid"
+                                            Width="200"
+                                            Margin="10"
+                                            Tag="{Binding DataID, Mode=OneWay}">
+                                            <Border Name="rootBorder">
+                                                <Border.Style>
+                                                    <Style BasedOn="{StaticResource SimpleBorder}" TargetType="Border">
+                                                        <Setter Property="Effect" Value="{StaticResource BlueDropShadowEffect}" />
+                                                        <Setter Property="BorderThickness" Value="2" />
+                                                        <Setter Property="CornerRadius" Value="3" />
+                                                        <Setter Property="Margin" Value="0" />
+                                                        <Setter Property="MinWidth" Value="200" />
+                                                        <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ElementName=gifImage, Path=IsMouseOver}" Value="True">
+                                                                <!--<Setter Property="Background" Value="{DynamicResource Common.HighLight.Background}" />-->
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource Common.HighLight.BorderBrush}" />
+
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+                                            <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                </Grid.RowDefinitions>
+                                                <!--  图片  -->
+                                                <Grid Grid.Row="0">
+                                                    <local:GifImage
+                                                        x:Name="gifImage"
+                                                        Width="200"
+                                                        Height="136"
+                                                        Margin="2"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        BigImageSource="{Binding BigImage, Mode=OneWay}"
+                                                        Cursor="Hand"
+                                                        MouseEnter="AssoBorderMouseEnter"
+                                                        MouseLeave="AssoBorderMouseLeave"
+                                                        MouseLeftButtonDown="AddToAssociation"
+                                                        SourceType="BigImage"
+                                                        Stretch="UniformToFill" />
+
+                                                </Grid>
+
+
+                                                <!--  ID  -->
+                                                <Grid
+                                                    Name="idGrid"
+                                                    Grid.Row="1"
+                                                    Width="auto"
+                                                    HorizontalAlignment="Stretch"
+                                                    Background="Transparent"
+                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBox
+                                                        Grid.Column="0"
+                                                        Width="auto"
+                                                        Margin="0,5"
+                                                        Padding="10,0,0,0"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        FontFamily="微软雅黑"
+                                                        FontSize="15"
+                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                                        Text="{Binding VID, Mode=OneWay}"
+                                                        TextAlignment="Left"
+                                                        Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                    <Border
+                                                        Grid.Column="1"
+                                                        MouseLeftButtonDown="CopyVID"
+                                                        Tag="{Binding VID}">
+                                                        <Border.Style>
+                                                            <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
+                                                                <Setter Property="Visibility" Value="Hidden" />
+                                                                <Setter Property="Margin" Value="0" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+
+                                                        <Viewbox Width="auto" Height="13">
+                                                            <Path
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                                                Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                        </Viewbox>
+                                                    </Border>
+                                                </Grid>
+
+
+                                                <TextBox
+                                                    Grid.Row="4"
+                                                    Width="200"
+                                                    Height="35"
+                                                    Margin="10"
+                                                    Padding="10,0"
+                                                    HorizontalAlignment="Center"
+                                                    Background="Transparent"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                                    Opacity="0.5"
+                                                    Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                                    Text="{Binding Title, Mode=OneWay}"
+                                                    TextAlignment="Left"
+                                                    TextWrapping="Wrap"
+                                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                                                    Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+                                            </Grid>
+                                        </Grid>
+
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+
+
+
+                    <Grid Grid.Row="2" Margin="5">
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                MinWidth="80"
+                                HorizontalAlignment="Center"
+                                Click="associationCancel"
+                                Content="关闭"
+                                Style="{StaticResource ButtonDanger}" />
+                            <Button
+                                MinWidth="80"
+                                HorizontalAlignment="Center"
+                                Click="associationConfirm"
+                                Content="保存"
+                                Style="{StaticResource ButtonSuccess}" />
+                        </StackPanel>
+
+                        <chao:Pagination
+                            Name="assoPagination"
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            CurrentPageChange="AssoSearchPageChange"
+                            PageSizeChange="AssoSearchPageSizeChange"
+                            ShowJumpPage="True"
+                            Style="{StaticResource NormalPagination}"
+                            Total="{Binding AssoSearchTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Popup>
+
+        <!--  影片关联弹框  -->
+        <Popup
+            x:Name="AssoDataPopup"
+            Width="690"
+            Height="auto"
+            AllowsTransparency="True"
+            HorizontalOffset="-5"
+            Placement="MousePoint"
+            PopupAnimation="Fade"
+            StaysOpen="True"
+            VerticalOffset="0">
+            <Grid Margin="5">
+                <Border
+                    Margin="5"
+                    Background="{DynamicResource Menu.Background}"
+                    CornerRadius="5"
+                    Effect="{StaticResource PopupDropShadowEffect}" />
+
+                <StackPanel
+                    Margin="25,10"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Panel.ZIndex="10"
+                    Opacity="0.8"
+                    Orientation="Horizontal">
+                    <Button Click="HideAssoPopup" Content="关闭" />
+                    <Border
+                        Padding="10,5"
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource Window.Title.Background}"
+                        CornerRadius="5">
+                        <TextBlock Text="{Binding ViewAssociationDatas.Count}" />
+                    </Border>
+                </StackPanel>
+
+
+                <ScrollViewer
+                    Grid.Row="1"
+                    Margin="5"
+                    CanContentScroll="True"
+                    FocusVisualStyle="{x:Null}"
+                    HorizontalScrollBarVisibility="Auto"
+                    IsDeferredScrollingEnabled="False"
+                    PreviewMouseWheel="ScrollViewer_MouseWheel"
+                    VerticalScrollBarVisibility="Hidden">
+                    <ItemsControl
+                        Name="assoItemsControl"
+                        Margin="5,5,5,5"
+                        Background="Transparent"
+                        ItemsSource="{Binding ViewAssociationDatas}"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!--  影片加载动画  -->
+                                <DataTemplate.Triggers>
+                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    FillBehavior="Stop"
+                                                    Storyboard.TargetName="rootGrid"
+                                                    Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                    From="0"
+                                                    To="1"
+                                                    Duration="0:0:0.3" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </DataTemplate.Triggers>
+
+                                <Grid
+                                    Name="rootGrid"
+                                    Margin="10"
+                                    Tag="{Binding DataID, Mode=OneWay}">
+                                    <Border Name="rootBorder">
+                                        <Border.Style>
+                                            <Style BasedOn="{StaticResource SimpleBorder}" TargetType="Border">
+                                                <Setter Property="Effect" Value="{StaticResource BlueDropShadowEffect}" />
+                                                <Setter Property="BorderThickness" Value="2" />
+                                                <Setter Property="CornerRadius" Value="3" />
+                                                <Setter Property="Margin" Value="0" />
+                                                <Setter Property="MinWidth" Value="200" />
+                                                <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
+
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        <!--  图片  -->
+                                        <Grid Grid.Row="0">
+
+                                            <local:GifImage
+                                                x:Name="gifImage"
+                                                Width="{Binding BigImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                                                Height="{Binding BigImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                                                Margin="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                BigImageSource="{Binding BigImage, Mode=OneWay}"
+                                                Cursor="Hand"
+                                                MouseLeftButtonDown="CanShowDetails"
+                                                MouseLeftButtonUp="ShowDetails"
+                                                SourceType="BigImage"
+                                                Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
+
+                                            <Button
+                                                Height="auto"
+                                                Margin="0,5,5,5"
+                                                Padding="5"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Click="ShowAssoSubSection"
+                                                Cursor="Hand"
+                                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                                Style="{StaticResource RoundNormalButton}"
+                                                Tag="{DynamicResource Button.Hover.Background}"
+                                                Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                                <Button.ContextMenu>
+                                                    <ContextMenu
+                                                        Width="100"
+                                                        HorizontalOffset="-50"
+                                                        VerticalOffset="10" />
+                                                </Button.ContextMenu>
+                                                <Image
+                                                    Width="20"
+                                                    Height="20"
+                                                    Source="/Resources/Picture/subsection1.png" />
+                                            </Button>
+
+                                            <Canvas
+                                                Width="40"
+                                                Height="40"
+                                                Margin="10,0,10,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Cursor="Hand"
+                                                MouseLeftButtonUp="PlayAssoVideo"
+                                                Opacity="0.5"
+                                                Style="{StaticResource HoverCanvas}"
+                                                ToolTip="{Binding id, Mode=OneWay}">
+                                                <Ellipse
+                                                    Canvas.Left="3"
+                                                    Canvas.Top="3"
+                                                    Width="40"
+                                                    Height="40"
+                                                    Fill="#DD744C" />
+                                                <Polygon
+                                                    Cursor="Hand"
+                                                    Fill="#F6F7F7"
+                                                    Points="15,38 35,25 15,10"
+                                                    Stroke="{DynamicResource BackgroundMenu}" />
+                                            </Canvas>
+
+                                        </Grid>
+
+
+                                        <!--  ID  -->
+
+                                        <!--  标签戳+ID  -->
+                                        <Grid
+                                            Name="idGrid"
+                                            Grid.Row="1"
+                                            Width="auto"
+                                            HorizontalAlignment="Stretch"
+                                            Background="Transparent"
+                                            IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBox
+                                                Grid.Column="0"
+                                                Width="auto"
+                                                Margin="0,5"
+                                                Padding="10,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                FontFamily="微软雅黑"
+                                                FontSize="15"
+                                                Foreground="{DynamicResource ForegroundSearch}"
+                                                Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                                Text="{Binding VID, Mode=OneWay}"
+                                                TextAlignment="Left"
+                                                Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                            <Border
+                                                Grid.Column="1"
+                                                MouseLeftButtonDown="CopyVID"
+                                                Tag="{Binding VID}">
+                                                <Border.Style>
+                                                    <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Margin" Value="0" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+
+                                                <Viewbox Width="auto" Height="13">
+                                                    <Path
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                </Viewbox>
+                                            </Border>
+
+
+                                            <!--  标签戳  -->
+
+                                            <ItemsControl
+                                                Grid.Column="2"
+                                                Margin="5,5"
+                                                HorizontalAlignment="Right"
+                                                ItemsSource="{Binding TagStamp}"
+                                                Tag="{Binding DataID}"
+                                                Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Label
+                                                            Margin="2,0"
+                                                            Padding="4"
+                                                            Background="{Binding BackgroundBrush}"
+                                                            BorderThickness="0"
+                                                            Content="{Binding TagName}"
+                                                            Foreground="{Binding ForegroundBrush}"
+                                                            Tag="{Binding TagID}">
+                                                            <Label.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Click="DeleteVideoTagStamp" Header="删除该标记" />
+                                                                </ContextMenu>
+                                                            </Label.ContextMenu>
+                                                        </Label>
+
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                        </Grid>
+
+                                        <!--  日期  -->
+                                        <TextBox
+                                            Grid.Row="2"
+                                            Margin="0,0"
+                                            Padding="10,5"
+                                            HorizontalAlignment="Left"
+                                            Background="Transparent"
+                                            FontSize="15"
+                                            Foreground="{DynamicResource Global.Foreground}"
+                                            Opacity="0.5"
+                                            Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                            Text="{Binding ReleaseDate, Mode=OneWay}"
+                                            TextAlignment="Left"
+                                            Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+                                        <!--  评分  -->
+                                        <StackPanel
+                                            Grid.Row="3"
+                                            Width="auto"
+                                            Margin="15,5,0,10"
+                                            HorizontalAlignment="Left"
+                                            Cursor="Hand"
+                                            PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
+                                            Tag="{Binding DataID, Mode=OneWay}"
+                                            Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                            <hc:Rate
+                                                AllowClear="True"
+                                                AllowHalf="True"
+                                                Background="{DynamicResource BackgroundTitle}"
+                                                DefaultValue="0"
+                                                Foreground="#FF7B3B"
+                                                ItemHeight="15"
+                                                ItemMargin="3 0"
+                                                ValueChanged="Rate_ValueChanged"
+                                                Value="{Binding Grade, Mode=TwoWay}" />
+                                        </StackPanel>
+
+                                        <TextBox
+                                            Grid.Row="4"
+                                            Width="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, Converter={StaticResource BiggerWidthConverter}, Mode=OneWay}"
+                                            Height="35"
+                                            Margin="0,5,0,15"
+                                            Padding="10,0"
+                                            HorizontalAlignment="Center"
+                                            Background="Transparent"
+                                            FontSize="14"
+                                            Foreground="{DynamicResource ForegroundSearch}"
+                                            IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                            MouseLeftButtonDown="CopyText"
+                                            Opacity="0.5"
+                                            Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                            Text="{Binding Title, Mode=OneWay}"
+                                            TextAlignment="Left"
+                                            TextWrapping="Wrap"
+                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                                            Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+                                    </Grid>
+                                </Grid>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+
+
+            </Grid>
+        </Popup>
 
         <Grid Margin="0">
             <Grid.RowDefinitions>
@@ -1217,6 +1965,7 @@
                                 BorderBrush="#326CF3"
                                 BorderThickness="0"
                                 Foreground="White"
+                                HideClearButtonOnMouseLeave="False"
                                 PlaceHolder="搜索"
                                 PlaceHolderForeground="Gray"
                                 PreviewKeyDown="searchBox_PreviewKeyDown"
@@ -1703,7 +2452,7 @@
                                                             Height="13"
                                                             Margin="0,0,5,0"
                                                             Source="/Resources/Picture/新增.png" />
-                                                        <TextBlock Text="{x:Static lang:Resources.FastImport}" />
+                                                        <TextBlock Text="识别码" />
                                                     </StackPanel>
                                                 </Button>
 
@@ -2559,6 +3308,14 @@
                                                 </ContextMenu>
                                             </Grid.ContextMenu>
 
+                                            <Border
+                                                x:Name="dragOverBorder"
+                                                Panel.ZIndex="99"
+                                                Background="{DynamicResource Window.Title.Background}"
+                                                DragLeave="Grid_DragLeave"
+                                                Opacity="0.8"
+                                                Visibility="Collapsed" />
+
                                             <Canvas
                                                 x:Name="DragSelectCanvas"
                                                 Panel.ZIndex="-1"
@@ -2568,9 +3325,11 @@
                                                 CanContentScroll="True"
                                                 FocusVisualStyle="{x:Null}"
                                                 IsDeferredScrollingEnabled="False"
+                                                MouseEnter="MovieScrollViewer_MouseEnter"
+                                                MouseLeave="MovieScrollViewer_MouseLeave"
                                                 ScrollChanged="ScrollViewer_ScrollChanged"
-                                                Style="{StaticResource FlatScrollViewer}"
-                                                VerticalScrollBarVisibility="Auto">
+                                                Style="{StaticResource FlatScrollViewer}">
+
                                                 <!--  影片  -->
                                                 <ItemsControl
                                                     x:Name="MovieItemsControl"
@@ -2636,22 +3395,6 @@
                                                                     </Grid.RowDefinitions>
                                                                     <!--  图片  -->
                                                                     <Grid Grid.Row="0">
-
-                                                                        <!--  GIF图  -->
-
-                                                                        <!--<local:GifImage
-                                                                            x:Name="GifImage"
-                                                                            Width="{Binding Path=GifImage_Width, Mode=OneWay, Source={x:Static p:Settings.Default}}"
-                                                                            Height="{Binding Path=GifImage_Height, Mode=OneWay, Source={x:Static p:Settings.Default}}"
-                                                                            Margin="2"
-                                                                            Cursor="Hand"
-                                                                            GifSource="{Binding GifUri, Mode=OneWay}"
-                                                                            MouseLeftButtonDown="CanShowDetails"
-                                                                            MouseLeftButtonUp="ShowDetails"
-                                                                            Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
-                                                                            Tag="{Binding id, Mode=OneWay}"
-                                                                            ToolTip="{Binding id, Mode=OneWay}"
-                                                                            Visibility="{Binding ShowImageMode, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=2, Source={x:Static p:Settings.Default}, Mode=OneWay}">-->
                                                                         <local:GifImage
                                                                             x:Name="GifImage"
                                                                             Margin="2"
@@ -2672,6 +3415,8 @@
                                                                                     ContextMenuOpening="ContextMenu_ContextMenuOpening"
                                                                                     Opacity="0.9"
                                                                                     PreviewKeyUp="ContextMenu_PreviewKeyUp">
+
+
                                                                                     <MenuItem Click="DownLoadSelectMovie" Header="{x:Static lang:Resources.Menu_SyncInfo}" />
                                                                                     <MenuItem Header="{x:Static lang:Resources.Menu_SyncExtra}" IsEnabled="False">
                                                                                         <MenuItem Click="DownLoadWithUrl" Header="{x:Static lang:Resources.Menu_CustomUrl}" />
@@ -2679,7 +3424,9 @@
                                                                                     </MenuItem>
                                                                                     <MenuItem Click="EditInfo" Header="{x:Static lang:Resources.Menu_EditInfo}" />
                                                                                     <MenuItem Click="AddToPlayerList" Header="添加到播放列表" />
+                                                                                    <MenuItem Name="TagMenuItems" Header="添加标记" />
                                                                                     <MenuItem Header="{x:Static lang:Resources.Menu_Advance}">
+                                                                                        <MenuItem Click="AddDataAssociation" Header="影片关联" />
                                                                                         <MenuItem Click="GenerateScreenShot" Header="{x:Static lang:Resources.Menu_GenerateScreenShot}" />
                                                                                         <MenuItem Click="GenerateGif" Header="{x:Static lang:Resources.Menu_GenerateGif}" />
                                                                                         <MenuItem
@@ -2699,13 +3446,23 @@
                                                                                             Click="ReMoveZero"
                                                                                             Header="{x:Static lang:Resources.Menu_RemoveZero}"
                                                                                             IsEnabled="False" />
+
                                                                                     </MenuItem>
 
 
                                                                                     <MenuItem
                                                                                         Click="ShowLabelManagement"
                                                                                         Header="{x:Static lang:Resources.Menu_LabelManagement}"
-                                                                                        IsEnabled="False" />
+                                                                                        IsEnabled="False"
+                                                                                        Visibility="Collapsed" />
+
+
+                                                                                    <Separator />
+                                                                                    <MenuItem
+                                                                                        Click="OpenWeb"
+                                                                                        Header="访问所在网址"
+                                                                                        Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
+
                                                                                     <MenuItem Header="{x:Static lang:Resources.OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                                                         <MenuItem
                                                                                             Command="cmd:File.OpenSelectFile"
@@ -2718,12 +3475,10 @@
                                                                                         <MenuItem Click="OpenPath" Header="GIF" />
 
                                                                                     </MenuItem>
-                                                                                    <MenuItem Name="TagMenuItems" Header="添加标记" />
-                                                                                    <MenuItem
-                                                                                        Click="OpenWeb"
-                                                                                        Header="访问所在网址"
-                                                                                        Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
+
                                                                                     <MenuItem Click="CopyFile" Header="{x:Static lang:Resources.Menu_CopyFile}" />
+
+                                                                                    <Separator />
                                                                                     <MenuItem
                                                                                         Click="DeleteID"
                                                                                         Header="{x:Static lang:Resources.Menu_DeleteInfo}"
@@ -2740,30 +3495,52 @@
                                                                             </Image.ContextMenu>
                                                                         </local:GifImage>
                                                                         <!--  分段视频  -->
-                                                                        <Button
-                                                                            Height="auto"
-                                                                            Margin="5"
-                                                                            Padding="5"
+
+                                                                        <StackPanel
                                                                             HorizontalAlignment="Right"
                                                                             VerticalAlignment="Bottom"
                                                                             Panel.ZIndex="3"
-                                                                            Click="ShowSubSection"
-                                                                            Cursor="Hand"
-                                                                            IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                                            Style="{StaticResource RoundNormalButton}"
-                                                                            Tag="{DynamicResource Button.Hover.Background}"
-                                                                            Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                                                                            <Button.ContextMenu>
-                                                                                <ContextMenu
-                                                                                    Width="100"
-                                                                                    HorizontalOffset="-50"
-                                                                                    VerticalOffset="10" />
-                                                                            </Button.ContextMenu>
-                                                                            <Image
-                                                                                Width="20"
-                                                                                Height="20"
-                                                                                Source="/Resources/Picture/subsection1.png" />
-                                                                        </Button>
+                                                                            Orientation="Horizontal">
+                                                                            <Button
+                                                                                Height="auto"
+                                                                                Margin="5"
+                                                                                Padding="5"
+                                                                                Click="ViewAssoDatas"
+                                                                                Cursor="Hand"
+                                                                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                                                                Style="{StaticResource RoundNormalButton}"
+                                                                                Tag="{DynamicResource Button.Hover.Background}"
+                                                                                Visibility="{Binding HasAssociation, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+
+                                                                                <Image
+                                                                                    Width="20"
+                                                                                    Height="20"
+                                                                                    Source="/Resources/Picture/asso.png" />
+                                                                            </Button>
+                                                                            <Button
+                                                                                Height="auto"
+                                                                                Margin="0,5,5,5"
+                                                                                Padding="5"
+                                                                                Click="ShowSubSection"
+                                                                                Cursor="Hand"
+                                                                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                                                                Style="{StaticResource RoundNormalButton}"
+                                                                                Tag="{DynamicResource Button.Hover.Background}"
+                                                                                Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                                                                <Button.ContextMenu>
+                                                                                    <ContextMenu
+                                                                                        Width="100"
+                                                                                        HorizontalOffset="-50"
+                                                                                        VerticalOffset="10" />
+                                                                                </Button.ContextMenu>
+                                                                                <Image
+                                                                                    Width="20"
+                                                                                    Height="20"
+                                                                                    Source="/Resources/Picture/subsection1.png" />
+                                                                            </Button>
+
+                                                                        </StackPanel>
+
                                                                         <!--  播放按钮  -->
                                                                         <Canvas
                                                                             Width="40"
@@ -2793,11 +3570,14 @@
 
                                                                     <!--  标签戳+ID  -->
                                                                     <Grid
+                                                                        Name="idGrid"
                                                                         Grid.Row="1"
                                                                         Width="auto"
                                                                         HorizontalAlignment="Stretch"
+                                                                        Background="Transparent"
                                                                         IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
                                                                         <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="auto" />
                                                                             <ColumnDefinition Width="auto" />
                                                                             <ColumnDefinition Width="*" />
                                                                         </Grid.ColumnDefinitions>
@@ -2806,7 +3586,7 @@
                                                                             Grid.Column="0"
                                                                             Width="auto"
                                                                             Margin="0,5"
-                                                                            Padding="10,0"
+                                                                            Padding="10,0,0,0"
                                                                             HorizontalAlignment="Left"
                                                                             VerticalAlignment="Center"
                                                                             FontFamily="微软雅黑"
@@ -2816,14 +3596,40 @@
                                                                             Text="{Binding VID, Mode=OneWay}"
                                                                             TextAlignment="Left"
                                                                             Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                                        <Border
+                                                                            Grid.Column="1"
+                                                                            MouseLeftButtonDown="CopyVID"
+                                                                            Tag="{Binding VID}">
+                                                                            <Border.Style>
+                                                                                <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
+                                                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                                                    <Setter Property="Margin" Value="0" />
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true">
+                                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Border.Style>
+
+                                                                            <Viewbox Width="auto" Height="13">
+                                                                                <Path
+                                                                                    HorizontalAlignment="Center"
+                                                                                    VerticalAlignment="Center"
+                                                                                    Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                                            </Viewbox>
+                                                                        </Border>
+
 
                                                                         <!--  标签戳  -->
 
                                                                         <ItemsControl
-                                                                            Grid.Column="1"
+                                                                            Grid.Column="2"
                                                                             Margin="5,5"
                                                                             HorizontalAlignment="Right"
                                                                             ItemsSource="{Binding TagStamp}"
+                                                                            Tag="{Binding DataID}"
                                                                             Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                                                                             <ItemsControl.ItemsPanel>
                                                                                 <ItemsPanelTemplate>
@@ -2838,7 +3644,14 @@
                                                                                         Background="{Binding BackgroundBrush}"
                                                                                         BorderThickness="0"
                                                                                         Content="{Binding TagName}"
-                                                                                        Foreground="{Binding ForegroundBrush}" />
+                                                                                        Foreground="{Binding ForegroundBrush}"
+                                                                                        Tag="{Binding TagID}">
+                                                                                        <Label.ContextMenu>
+                                                                                            <ContextMenu>
+                                                                                                <MenuItem Click="DeleteVideoTagStamp" Header="删除该标记" />
+                                                                                            </ContextMenu>
+                                                                                        </Label.ContextMenu>
+                                                                                    </Label>
 
                                                                                 </DataTemplate>
                                                                             </ItemsControl.ItemTemplate>
@@ -2972,12 +3785,46 @@
                                                     VerticalAlignment="Bottom"
                                                     Style="{StaticResource Ellipse2}" />
                                                 <Image
-                                                    Canvas.Left="8"
-                                                    Canvas.Top="7"
+                                                    Canvas.Left="9"
+                                                    Canvas.Top="8"
                                                     Height="22"
                                                     HorizontalAlignment="Left"
                                                     Panel.ZIndex="2"
                                                     Source="{Binding Themes, Mode=OneWay, ConverterParameter=up, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
+                                            </Canvas>
+
+                                            <!--  去到底部  -->
+                                            <Canvas
+                                                Width="20"
+                                                Height="20"
+                                                Margin="10,10,70,40"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                Panel.ZIndex="5"
+                                                Cursor="Hand"
+                                                MouseLeftButtonUp="GotoBottom"
+                                                Visibility="{Binding GoToBottomCanvas}">
+                                                <Ellipse
+                                                    Width="40"
+                                                    Height="40"
+                                                    Margin="0,0,5,5"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Bottom"
+                                                    Style="{StaticResource Ellipse2}" />
+                                                <Image
+                                                    Canvas.Left="9"
+                                                    Canvas.Top="10"
+                                                    Height="22"
+                                                    HorizontalAlignment="Left"
+                                                    Panel.ZIndex="2"
+                                                    RenderTransformOrigin="0.5,0.5"
+                                                    Source="{Binding Themes, Mode=OneWay, ConverterParameter=up, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}">
+
+                                                    <Image.RenderTransform>
+                                                        <RotateTransform Angle="180" />
+                                                    </Image.RenderTransform>
+
+                                                </Image>
                                             </Canvas>
                                         </Grid>
                                     </Grid>

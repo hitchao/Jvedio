@@ -38,6 +38,7 @@ using Jvedio.CommonNet;
 using Jvedio.Core.Net;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.FFmpeg;
+using Jvedio.Entity.CommonSQL;
 
 namespace Jvedio
 {
@@ -1354,11 +1355,34 @@ namespace Jvedio
             vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
             vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
             string BigImagePath = vieModel.CurrentVideo.getBigImage();
-            if (!isScreenShot && File.Exists(BigImagePath))
+            if (!isScreenShot)
             {
-                vieModel.CurrentVideo.PreviewImageList.Add(vieModel.CurrentVideo.BigImage);
-                vieModel.CurrentVideo.PreviewImagePathList.Add(BigImagePath);
+                if (File.Exists(BigImagePath))
+                {
+                    vieModel.CurrentVideo.PreviewImageList.Add(vieModel.CurrentVideo.BigImage);
+                    vieModel.CurrentVideo.PreviewImagePathList.Add(BigImagePath);
+                }
+                else
+                {
+                    if (vieModel.CurrentVideo.BigImage == GlobalVariable.DefaultBigImage)
+                    {
+                        // 检查有无截图
+                        Video video = vieModel.CurrentVideo;
+                        string path = video.getScreenShot();
+                        if (Directory.Exists(path))
+                        {
+                            string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+                            if (array.Length > 0)
+                            {
+                                string imgPath = array[array.Length / 2];
+                                vieModel.CurrentVideo.PreviewImageList.Add(ImageProcess.BitmapImageFromFile(imgPath));
+                                vieModel.CurrentVideo.PreviewImagePathList.Add(imgPath);
+                            }
+                        }
+                    }
+                }
             }
+
             await Task.Run(async () =>
             {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
@@ -1566,7 +1590,8 @@ namespace Jvedio
 
         private void ScrollViewer_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            actorScrollViewer.ScrollToHorizontalOffset(actorScrollViewer.HorizontalOffset - e.Delta);
+            ScrollViewer scrollViewer = sender as ScrollViewer;
+            scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
             e.Handled = true;
         }
 
@@ -1595,6 +1620,133 @@ namespace Jvedio
             {
                 FileHelper.TryOpenSelectPath(video.getGifPath());
             }
+        }
+
+        private void ViewAssoDatas(object sender, RoutedEventArgs e)
+        {
+            AssoDataPopup.IsOpen = true;
+            vieModel.LoadViewAssoData();
+        }
+
+        private void HideAssoPopup(object sender, RoutedEventArgs e)
+        {
+            AssoDataPopup.IsOpen = false;
+        }
+
+        private void ShowAssoSubSection(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            long dataID = getDataID(button);
+            if (dataID <= 0) return;
+
+            ContextMenu contextMenu = button.ContextMenu;
+            contextMenu.Items.Clear();
+
+            Video video = vieModel.ViewAssociationDatas.Where(arg => arg.DataID == dataID).FirstOrDefault();
+            if (video != null)
+            {
+                for (int i = 0; i < video.SubSectionList.Count; i++)
+                {
+                    string filepath = video.SubSectionList[i];//这样可以，放在  PlayVideoWithPlayer 就超出索引
+                    MenuItem menuItem = new MenuItem();
+                    menuItem.Header = i + 1;
+                    menuItem.Click += (s, _) =>
+                    {
+                        (GetWindowByName("Main") as Main)?.PlayVideoWithPlayer(filepath, dataID);
+                    };
+                    contextMenu.Items.Add(menuItem);
+                }
+                contextMenu.IsOpen = true;
+            }
+        }
+
+        private void PlayAssoVideo(object sender, MouseButtonEventArgs e)
+        {
+            AssoDataPopup.IsOpen = false;
+            FrameworkElement el = sender as FrameworkElement;
+            long dataid = getDataID(el);
+            Video video = getAssoVideo(dataid);
+            if (video == null)
+            {
+                MessageCard.Error("无法播放该视频！");
+                return;
+            }
+            (GetWindowByName("Main") as Main)?.PlayVideoWithPlayer(video.Path, DataID);
+        }
+
+        private Video getAssoVideo(long dataID)
+        {
+            if (dataID <= 0 || vieModel?.ViewAssociationDatas?.Count <= 0) return null;
+            Video video = vieModel.ViewAssociationDatas.Where(item => item.DataID == dataID).First();
+            if (video != null && video.DataID > 0) return video;
+            return null;
+        }
+
+        private void CopyVID(object sender, MouseButtonEventArgs e)
+        {
+            string vid = (sender as Border).Tag.ToString();
+            ClipBoard.TrySetDataObject(vid);
+        }
+
+        private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            Label label = (menuItem.Parent as ContextMenu).PlacementTarget as Label;
+            long.TryParse(label.Tag.ToString(), out long TagID);
+
+            ItemsControl itemsControl = label.FindParentOfType<ItemsControl>();
+            long.TryParse(itemsControl.Tag.ToString(), out long DataID);
+            if (TagID <= 0 || DataID <= 0) return;
+            ObservableCollection<TagStamp> tagStamps = itemsControl.ItemsSource as ObservableCollection<TagStamp>;
+            TagStamp tagStamp = tagStamps.Where(arg => arg.TagID.Equals(TagID)).FirstOrDefault();
+            if (tagStamp != null)
+            {
+                tagStamps.Remove(tagStamp);
+                string sql = $"delete from metadata_to_tagstamp where TagID='{TagID}' and DataID='{DataID}'";
+                tagStampMapper.executeNonQuery(sql);
+            }
+
+        }
+        public bool CanRateChange = false;
+        private void StackPanel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            CanRateChange = true;
+        }
+
+        private void CopyText(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock textBlock = sender as TextBlock;
+            ClipBoard.TrySetDataObject(textBlock.Text);
+        }
+
+        private void ShowDetails(object sender, MouseButtonEventArgs e)
+        {
+            long dataid = getDataID(sender as FrameworkElement);
+            vieModel.Load(dataid);
+            AssoDataPopup.IsOpen = false;
+        }
+
+        private long getDataID(UIElement o)
+        {
+            FrameworkElement element = o as FrameworkElement;
+            if (element == null) return -1;
+            Grid grid = element.FindParentOfType<Grid>("rootGrid");
+            if (grid != null && grid.Tag != null)
+            {
+                long.TryParse(grid.Tag.ToString(), out long result);
+                return result;
+            }
+            return -1;
+        }
+
+        private void Rate_ValueChanged_1(object sender, FunctionEventArgs<double> e)
+        {
+            if (!CanRateChange) return;
+            HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
+            StackPanel stackPanel = rate.Parent as StackPanel;
+            long id = getDataID(stackPanel);
+            metaDataMapper.updateFieldById("Grade", rate.Value.ToString(), id);
+            CanRateChange = false;
         }
     }
 

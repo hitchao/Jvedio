@@ -6,6 +6,7 @@ using Jvedio.Entity.Data;
 using Jvedio.Mapper;
 using Jvedio.Utils;
 using Jvedio.Utils.Common;
+using JvedioLib.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,7 +65,7 @@ namespace Jvedio.Core.Scan
                 // 计算哈希
                 imgPaths.AddRange(videoPaths);
                 notImport.AddRange(list.Except(imgPaths));
-                picture.Hash = Jvedio.Utils.Encrypt.Encrypt.FasterDirMD5(imgPaths);
+                picture.Hash = Encrypt.FasterDirMD5(imgPaths);
                 import.Add(picture);
             }
 

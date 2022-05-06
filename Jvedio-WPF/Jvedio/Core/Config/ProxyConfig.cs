@@ -1,5 +1,5 @@
 ﻿using Jvedio.Core.WindowConfig;
-using Jvedio.Utils.Encrypt;
+using JvedioLib.Security;
 using MihaZupan;
 using System;
 using System.Collections.Generic;
@@ -126,7 +126,7 @@ namespace Jvedio.Core.Config
             {
                 try
                 {
-                    return Encrypt.AesDecrypt(Password, Global.Security.PROXY_AES_KEY);
+                    return Encrypt.AesDecrypt(Password, AesKey.PROXY);
                 }
                 catch (Exception ex)
                 {

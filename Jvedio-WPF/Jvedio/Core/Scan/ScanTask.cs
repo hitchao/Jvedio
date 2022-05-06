@@ -166,7 +166,7 @@ namespace Jvedio.Core.Scan
 
             // 1. 处理有识别码的
             string sql = VideoMapper.BASE_SQL;
-            sql = "select metadata.DataID,VID,Hash,Size,Path " + sql + $" and metadata.DBId={GlobalConfig.Main.CurrentDBId}";
+            sql = "select metadata.DataID,VID,Hash,Size,Path,MVID " + sql + $" and metadata.DBId={GlobalConfig.Main.CurrentDBId}";
             List<Dictionary<string, object>> list = videoMapper.select(sql);
             List<Video> existVideos = videoMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
 
@@ -203,6 +203,7 @@ namespace Jvedio.Core.Scan
                 {
 
                     video.DataID = existVideo.DataID;
+                    video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
                     ScanResult.Update.Add(video.Path);
@@ -241,8 +242,10 @@ namespace Jvedio.Core.Scan
             toInsert.AddRange(noVidList);
 
             // 1.更新
+            videoMapper.updateBatch(toUpdate, "SubSection");// 分段视频
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
             metaDataMapper.updateBatch(toUpdateData, "Path", "LastScanDate");
+
 
             // 2.导入
             foreach (Video video in toInsert)

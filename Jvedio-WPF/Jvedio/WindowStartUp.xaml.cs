@@ -30,6 +30,7 @@ using Jvedio.Core.CustomEventArgs;
 using Fare;
 using System.Text;
 using JvedioLib;
+using Jvedio.Utils.Common;
 
 namespace Jvedio
 {
@@ -105,6 +106,8 @@ namespace Jvedio
             InitAppData();// 初始化应用数据
             InitClean();//清理文件
             GlobalConfig.PluginConfig.FetchPluginInfo(); // 同步远程插件
+            await BackupData(); // 备份文件
+
 
 
             vieModel_StartUp = new VieModel_StartUp();
@@ -130,6 +133,53 @@ namespace Jvedio
                 this.TitleHeight = 30;
             }
             test();
+        }
+
+
+        private async Task<bool> BackupData()
+        {
+            if (GlobalConfig.Settings.AutoBackup)
+            {
+                int period = Jvedio.Core.WindowConfig.Settings.BackUpPeriodDict[GlobalConfig.Settings.AutoBackupPeriodIndex];
+                bool backup = false;
+                string[] arr = DirHelper.GetDirList(GlobalVariable.BackupPath);
+                if (arr != null && arr.Length > 0)
+                {
+                    for (int i = arr.Length - 1; i >= 0; i--)
+                    {
+                        string dirName = Path.GetFileName(arr[i]);
+                        DateTime before = DateTime.Now.AddDays(1);
+                        DateTime now = DateTime.Now;
+                        DateTime.TryParse(dirName, out before);
+                        if (now.CompareTo(before) < 0 || (now - before).TotalDays > period)
+                        {
+                            backup = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    backup = true;
+                }
+
+                if (backup)
+                {
+                    string dir = Path.Combine(GlobalVariable.BackupPath, DateHelper.NowDate());
+                    Directory.CreateDirectory(dir);
+                    string target1 = Path.Combine(dir, "app_configs.sqlite");
+                    string target2 = Path.Combine(dir, "app_datas.sqlite");
+                    string target3 = Path.Combine(dir, "image");
+                    FileHelper.TryCopyFile(GlobalVariable.DEFAULT_SQLITE_CONFIG_PATH, target1);
+                    FileHelper.TryCopyFile(GlobalVariable.DEFAULT_SQLITE_PATH, target2);
+                    string origin = Path.Combine(CurrentUserFolder, "image");
+                    DirHelper.TryCopy(origin, target3);
+                }
+
+            }
+
+            await Task.Delay(1);
+            return false;
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using Jvedio.Utils;
 using Jvedio.Utils.FileProcess;
+using JvedioLib.Security;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -54,7 +55,7 @@ namespace Jvedio.Test
             Dictionary<string, string> hash = new Dictionary<string, string>();
             foreach (string path in list)
             {
-                hash[path] = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(path);
+                hash[path] = Encrypt.FasterMd5(path);
             }
 
             Console.WriteLine($"计算 {list.Count} 个文件的 Hash 用时：{watch.ElapsedMilliseconds} ms");

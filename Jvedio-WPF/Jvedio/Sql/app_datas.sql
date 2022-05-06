@@ -171,7 +171,27 @@ create table common_tagstamp (
 insert into common_tagstamp(Background,Foreground,TagName) values('154,88,183,255','255,255,255,255','HD'),('154,205,50,255','255,255,255,255','Translated');
 COMMIT;
 
+-- 资源关联
+-- AssociationType 0-SameActor 1-Sequel（续集）
+--      0-SameActor 同一个人出演的资源，但是又没有演员名字
+--      1-Sequel 续集可能和分段视频冲突
 
+drop table if exists common_association;
+BEGIN;
+create table common_association (
+    AID INTEGER PRIMARY KEY autoincrement,
+    MainDataID INTEGER,
+    SubDataID INTEGER,
+    AssociationType INT DEFAULT 0,
+
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    unique(MainDataID,SubDataID,AssociationType)
+);
+CREATE INDEX common_association_idx_MainDataID ON common_association (MainDataID);
+CREATE INDEX common_association_idx_SubDataID ON common_association (SubDataID);
+CREATE INDEX common_association_idx_MainDataID_SubDataID ON common_association (MainDataID,SubDataID);
+COMMIT;
 
 
 -- 【存储刮削的图片】

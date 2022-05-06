@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="标记"
     Width="400"
+    ContentRendered="BaseWindow_ContentRendered"
     Height="260"
     Background="{DynamicResource BackgroundMain}"
     CanMinimized="False"
@@ -37,9 +38,9 @@
                 Grid.Column="1"
                 Margin="20,0"
                 Padding="5,0"
-                Background="Transparent"
+                Background="{DynamicResource Window.Side.Background}"
                 BorderBrush="#007FD4"
-                BorderThickness="1"
+                BorderThickness="0"
                 CaretBrush="{StaticResource Global.Foreground}"
                 Foreground="{StaticResource Global.Foreground}"
                 KeyDown="textBox_KeyDown"
@@ -71,9 +72,9 @@
                 x:Name="colorPopup"
                 AllowsTransparency="True"
                 IsOpen="False"
-                Placement="Bottom"
+                Placement="Mouse"
                 PopupAnimation="Fade"
-                StaysOpen="True">
+                StaysOpen="False">
                 <Grid Background="Transparent">
                     <hc:ColorPicker
                         Name="ColorPicker"
@@ -114,13 +115,15 @@
             VerticalAlignment="Bottom"
             Orientation="Horizontal">
             <Button
-                Click="Button_Click"
+                MinWidth="50"
+                Click="Confirm"
                 Content="确认"
-                Style="{StaticResource FlatButton}" />
+                Style="{StaticResource FillButton}" />
             <Button
-                Click="Button_Click_1"
+                MinWidth="50"
+                Click="Cancel"
                 Content="取消"
-                Style="{StaticResource FlatButton}" />
+                Style="{StaticResource FillButton}" />
         </StackPanel>
     </Grid>
 </chao:BaseWindow>

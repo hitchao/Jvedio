@@ -467,17 +467,6 @@ namespace Jvedio.ViewModel
 
 
 
-        private MySearchType _AllSearchType = 0;
-
-        public MySearchType AllSearchType
-        {
-            get { return _AllSearchType; }
-            set
-            {
-                _AllSearchType = value;
-                RaisePropertyChanged();
-            }
-        }
 
         #endregion
 

@@ -436,29 +436,7 @@ namespace Jvedio
         public void PlayVideoWithPlayer(string filepath, long dataID = 0, string token = "")
         {
 
-            if (File.Exists(filepath))
-            {
-                bool success = false;
-                if (!string.IsNullOrEmpty(Properties.Settings.Default.VedioPlayerPath) && File.Exists(Properties.Settings.Default.VedioPlayerPath))
-                {
-                    success = FileHelper.TryOpenFile(Properties.Settings.Default.VedioPlayerPath, filepath, token);
-                }
-                else
-                {
-                    //使用默认播放器
-                    success = FileHelper.TryOpenFile(filepath, token);
-                }
 
-                if (success && dataID > 0)
-                {
-                    metaDataMapper.updateFieldById("ViewDate", DateHelper.Now(), dataID);
-                    vieModel.Statistic();
-                }
-            }
-            else
-            {
-                msgCard.Error(Jvedio.Language.Resources.Message_OpenFail + "：" + filepath);
-            }
         }
 
         public void runGame(string exePath, long dataID)

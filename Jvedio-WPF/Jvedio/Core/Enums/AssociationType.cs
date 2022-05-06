@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Global
+namespace Jvedio.Core.Enums
 {
-    public static class Security
+    public enum AssociationType
     {
-        public static string PROXY_AES_KEY = "jjCobl3HKVVqiHTH";
-
+        SameActor,
+        Sequel,//续集
     }
 }

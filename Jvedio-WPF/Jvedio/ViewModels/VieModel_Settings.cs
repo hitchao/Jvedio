@@ -914,5 +914,30 @@ namespace Jvedio.ViewModel
 
 
 
+        #region "库"
+        private bool _AutoBackup = GlobalConfig.Settings.AutoBackup;
+
+        public bool AutoBackup
+        {
+            get { return _AutoBackup; }
+            set
+            {
+                _AutoBackup = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _AutoBackupPeriodIndex = (int)GlobalConfig.Settings.AutoBackupPeriodIndex;
+
+        public int AutoBackupPeriodIndex
+        {
+            get { return _AutoBackupPeriodIndex; }
+            set
+            {
+                _AutoBackupPeriodIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
     }
 }

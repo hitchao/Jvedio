@@ -10,9 +10,10 @@ using Jvedio.Core.SimpleMarkDown;
 using Jvedio.Entity;
 using Jvedio.Style;
 using Jvedio.Utils;
-using Jvedio.Utils.Encrypt;
+
 using Jvedio.Utils.FileProcess;
 using Jvedio.ViewModel;
+using JvedioLib.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -656,6 +657,12 @@ namespace Jvedio
         private void Window_ContentRendered(object sender, EventArgs e)
         {
 
+            //初次启动后不给设置默认打开上一次库，否则会提示无此数据库
+            if (GlobalConfig.Settings.DefaultDBID <= 0)
+                openDefaultCheckBox.IsEnabled = false;
+
+
+
             // 设置 crawlerIndex
             serverListBox.SelectedIndex = (int)GlobalConfig.Settings.CrawlerSelectedIndex;
 
@@ -748,7 +755,7 @@ namespace Jvedio
 
             passwordBox.PasswordChanged += (s, ev) =>
             {
-                vieModel.ProxyPwd = Encrypt.AesEncrypt(passwordBox.Password, Global.Security.PROXY_AES_KEY);
+                vieModel.ProxyPwd = Encrypt.AesEncrypt(passwordBox.Password, AesKey.PROXY);
 
             };
             adjustPluginViewListBox();
@@ -770,6 +777,8 @@ namespace Jvedio
 
             vieModel.setPlugins();
             setRemotePluginInfo();
+
+
 
         }
 
@@ -1318,7 +1327,8 @@ namespace Jvedio
             GlobalConfig.Settings.PicPathMode = vieModel.PicPathMode;
             GlobalConfig.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
             GlobalConfig.Settings.OverrideInfo = vieModel.OverrideInfo;
-            GlobalConfig.Settings.AutoHandleHeader = vieModel.AutoHandleHeader;
+            GlobalConfig.Settings.AutoBackup = vieModel.AutoBackup;
+            GlobalConfig.Settings.AutoBackupPeriodIndex = vieModel.AutoBackupPeriodIndex;
 
             // 代理
             GlobalConfig.ProxyConfig.Server = vieModel.ProxyServer;

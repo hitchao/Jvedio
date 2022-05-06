@@ -69,6 +69,11 @@ namespace Jvedio.Entity
             }
         }
 
+        public static void SetAssociation(ref Video video)
+        {
+
+        }
+
         public static void handleEmpty(ref Video video)
         {
             if (Properties.Settings.Default.ShowFileNameIfTitleEmpty
@@ -208,6 +213,12 @@ namespace Jvedio.Entity
         public List<Magnet> Magnets { get; set; }
 
 
+        [TableField(exist: false)]
+        public bool HasAssociation { get; set; }
+
+
+        [TableField(exist: false)]
+        public List<long> AssociationList { get; set; }
 
         public bool toDownload()
         {

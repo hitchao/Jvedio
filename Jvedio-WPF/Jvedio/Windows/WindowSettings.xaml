@@ -163,7 +163,10 @@
                         <CheckBox Content="{x:Static lang:Resources.CloseToBar}" IsChecked="{Binding CloseToTaskBar, Mode=TwoWay}" />
                         <CheckBox Content="{x:Static lang:Resources.TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay}" />
 
-                        <CheckBox Content="{x:Static lang:Resources.NotShowLibrary}" IsChecked="{Binding OpenDataBaseDefault, Mode=TwoWay}" />
+                        <CheckBox
+                            x:Name="openDefaultCheckBox"
+                            Content="{x:Static lang:Resources.NotShowLibrary}"
+                            IsChecked="{Binding OpenDataBaseDefault, Mode=TwoWay}" />
 
                         <CheckBox Content="{x:Static lang:Resources.DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="无封面时将已截取的图片作为封面" IsChecked="{Binding AutoGenScreenShot}" />
@@ -198,7 +201,6 @@
                     <StackPanel Margin="20,5" Orientation="Horizontal">
                         <Label Content="{x:Static lang:Resources.Language}" Style="{StaticResource InfoLabel}" />
                         <ComboBox
-                            Name="LanguageComboBox"
                             Grid.Column="1"
                             Height="30"
                             MinWidth="200"
@@ -2955,6 +2957,46 @@
 
 
 
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem
+                Background="Transparent"
+                FontSize="15"
+                Header="库">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox
+                            HorizontalAlignment="Left"
+                            Content="自动备份库"
+                            IsChecked="{Binding AutoBackup, Mode=TwoWay}" />
+                        <TextBlock
+                            Margin="20,0,0,0"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="备份周期（天）" />
+                        <ComboBox
+                            Grid.Column="1"
+                            Height="30"
+                            MinWidth="200"
+                            Margin="5"
+                            HorizontalAlignment="Stretch"
+                            Background="{DynamicResource Window.Side.Background}"
+                            BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                            FontSize="16"
+                            Foreground="{DynamicResource Global.Foreground}"
+                            ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                            SelectedIndex="{Binding AutoBackupPeriodIndex}"
+                            Style="{StaticResource NormalComboBox}"
+                            Tag="{DynamicResource Window.Side.Hover.Background}"
+                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                            <ComboBoxItem Content="1" />
+                            <ComboBoxItem Content="3" />
+                            <ComboBoxItem Content="7" />
+                            <ComboBoxItem Content="15" />
+                            <ComboBoxItem Content="30" />
+                        </ComboBox>
+                    </StackPanel>
 
                 </StackPanel>
             </TabItem>

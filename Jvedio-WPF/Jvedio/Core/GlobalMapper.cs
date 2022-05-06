@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.DataBase;
+using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Jvedio
         public static GameMapper gameMapper = new GameMapper();
         public static ActorMapper actorMapper = new ActorMapper();
         public static UrlCodeMapper urlCodeMapper = new UrlCodeMapper();
+        public static AssociationMapper associationMapper = new AssociationMapper();
 
         public static void Init()
         {
@@ -61,6 +63,7 @@ namespace Jvedio
             gameMapper.Init();
             actorMapper.Init();
             urlCodeMapper.Init();
+            associationMapper.Init();
 
             foreach (string key in Tables.Actor.TABLES.Keys)
             {
@@ -70,6 +73,11 @@ namespace Jvedio
             {
                 metaDataMapper.createTable(key, Tables.Data.TABLES[key]);
             }
+
+            //associationMapper.InitAdjacencyList();
+
+
+
         }
 
 

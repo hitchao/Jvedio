@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -337,7 +338,7 @@ namespace Jvedio
             }
         }
 
-        public static bool TryOpenFile(string filename, string token = "")
+        public static bool TryOpenFile(string filename)
         {
             try
             {
@@ -349,7 +350,7 @@ namespace Jvedio
 
                 else
                 {
-                    if (token != "") HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.Message_FileNotExist}：{filename}", token);
+                    MessageCard.Error($"{Jvedio.Language.Resources.Message_FileNotExist}：{filename}");
                     return false;
                 }
 
@@ -357,44 +358,65 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                if (token != "") HandyControl.Controls.Growl.Error(ex.Message, token);
+                MessageCard.Error(ex.Message);
                 Logger.LogF(ex);
                 return false;
             }
         }
 
-        public static bool TryOpenFile(string processPath, string filename, string token)
+        public static bool TryRunCommand(string arg)
+        {
+            try
+            {
+                Process.Start(arg);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageCard.Error(ex.Message);
+                Logger.LogF(ex);
+                return false;
+            }
+        }
+
+
+
+        public static bool TryOpenFile(string processPath, string filename)
         {
             try
             {
                 if (File.Exists(filename))
                 {
-                    string cmdCommand = $"\"{processPath}\" \"{filename}\" && pause";
-                    using (Process process = new Process())
+                    Process process = new Process
                     {
-                        process.StartInfo.FileName = "cmd.exe";
-                        process.StartInfo.CreateNoWindow = true;
-                        process.StartInfo.UseShellExecute = false;
-                        process.StartInfo.RedirectStandardOutput = true;
-                        process.StartInfo.RedirectStandardError = true;
-                        process.StartInfo.RedirectStandardInput = true;//接受来自调用程序的输入信息
-                        process.Start();
-                        process.StandardInput.WriteLine(cmdCommand);
-                        process.WaitForExit(1000);
-                    }
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = processPath,
+                            Arguments = filename,
+                            CreateNoWindow = true,
+                            UseShellExecute = false,
+                            // 重定向输出会导致打开视频很慢
+                            //RedirectStandardOutput = true,
+                            //StandardErrorEncoding = Encoding.UTF8,
+                            //StandardOutputEncoding = Encoding.UTF8,
+                            //RedirectStandardError = true
+                        },
+                        EnableRaisingEvents = true
+
+                    };
+
+                    process.Start();
+                    process.Dispose();
                     return true;
                 }
-
                 else
                 {
-                    HandyControl.Controls.Growl.Error($"{Jvedio.Language.Resources.Message_FileNotExist}：{filename}", token);
                     return false;
                 }
 
             }
             catch (Exception ex)
             {
-                HandyControl.Controls.Growl.Error(ex.Message, token);
                 Logger.LogF(ex);
                 return false;
             }

@@ -44,6 +44,7 @@ using Jvedio.Style;
 using Jvedio.Core.FFmpeg;
 using JvedioLib;
 using Jvedio.Utils.Enums;
+using Jvedio.Entity.Base;
 
 namespace Jvedio.ViewModel
 {
@@ -196,6 +197,17 @@ namespace Jvedio.ViewModel
             set
             {
                 _GoToTopCanvas = value;
+                RaisePropertyChanged();
+            }
+        }
+        private Visibility _GoToBottomCanvas = Visibility.Visible;
+
+        public Visibility GoToBottomCanvas
+        {
+            get { return _GoToBottomCanvas; }
+            set
+            {
+                _GoToBottomCanvas = value;
                 RaisePropertyChanged();
             }
         }
@@ -474,19 +486,6 @@ namespace Jvedio.ViewModel
         }
 
 
-
-
-        private MySearchType _AllSearchType = 0;
-
-        public MySearchType AllSearchType
-        {
-            get { return _AllSearchType; }
-            set
-            {
-                _AllSearchType = value;
-                RaisePropertyChanged();
-            }
-        }
 
         #endregion
 
@@ -1484,6 +1483,99 @@ namespace Jvedio.ViewModel
         }
 
 
+        // 影片关联
+        public ObservableCollection<Video> _AssociationDatas;
+        public ObservableCollection<Video> AssociationDatas
+        {
+            get { return _AssociationDatas; }
+            set
+            {
+                _AssociationDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+        public ObservableCollection<Video> _ViewAssociationDatas;
+        public ObservableCollection<Video> ViewAssociationDatas
+        {
+            get { return _ViewAssociationDatas; }
+            set
+            {
+                _ViewAssociationDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+        public long _AssoSearchTotalCount;
+        public long AssoSearchTotalCount
+        {
+            get { return _AssoSearchTotalCount; }
+            set
+            {
+                _AssoSearchTotalCount = value;
+                RaisePropertyChanged();
+            }
+        }
+        public int _AssoSearchPageSize = 20;
+        public int AssoSearchPageSize
+        {
+            get { return _AssoSearchPageSize; }
+            set
+            {
+                _AssoSearchPageSize = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private int _CurrentAssoSearchPage = 1;
+        public int CurrentAssoSearchPage
+        {
+            get { return _CurrentAssoSearchPage; }
+            set
+            {
+                _CurrentAssoSearchPage = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _AssoSearchText = "";
+        public string AssoSearchText
+        {
+            get { return _AssoSearchText; }
+            set
+            {
+                _AssoSearchText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        public ObservableCollection<Video> _AssociationSelectedDatas = new ObservableCollection<Video>();
+        public ObservableCollection<Video> AssociationSelectedDatas
+        {
+            get { return _AssociationSelectedDatas; }
+            set
+            {
+                _AssociationSelectedDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+        public ObservableCollection<Video> _ExistAssociationDatas = new ObservableCollection<Video>();
+        public ObservableCollection<Video> ExistAssociationDatas
+        {
+            get { return _ExistAssociationDatas; }
+            set
+            {
+                _ExistAssociationDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
+
+
+
+
+
         public List<List<string>> Filters;
 
         public async void GetFilterInfo()
@@ -2060,6 +2152,32 @@ namespace Jvedio.ViewModel
             //CurrentCount = CurrentVideoList.Count;
             //Console.WriteLine($"渲染第 {CurrentPage} 页的数据");
         }
+
+
+        private delegate void LoadAssoVideoDelegate(Video video, int idx);
+        private void LoadAssoVideo(Video video, int idx)
+        {
+            if (AssociationDatas.Count < main.assoPagination.PageSize)
+            {
+                if (idx < AssociationDatas.Count)
+                {
+                    AssociationDatas[idx] = null;
+                    AssociationDatas[idx] = video;
+                }
+                else
+                {
+                    AssociationDatas.Add(video);
+                }
+
+            }
+            else
+            {
+                AssociationDatas[idx] = null;
+                AssociationDatas[idx] = video;
+            }
+        }
+        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
+        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
 
 
@@ -2788,8 +2906,6 @@ namespace Jvedio.ViewModel
 
         public void RenderCurrentVideo(string sql)
         {
-
-            //if (rendering) return;
             List<Dictionary<string, object>> list = metaDataMapper.select(sql);
             List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
             VideoList = new List<Video>();
@@ -2797,8 +2913,6 @@ namespace Jvedio.ViewModel
             VideoList.AddRange(Videos);
             CurrentCount = VideoList.Count;
             render();
-            //await Task.Run(() => Thread.Sleep(1000));
-            //if (renderVideoCT.IsCancellationRequested) refreshVideoRenderToken();
 
         }
 
@@ -2820,6 +2934,10 @@ namespace Jvedio.ViewModel
                 SetImage(ref video, imageMode);
                 Video.setTagStamps(ref video);// 设置标签戳
                 Video.handleEmpty(ref video);// 设置标题和发行日期
+                // 设置关联
+                HashSet<long> set = associationMapper.getAssociationDatas(video.DataID);
+                video.HasAssociation = set.Count > 0;
+                video.AssociationList = set.ToList();
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
             }
 
@@ -2834,6 +2952,9 @@ namespace Jvedio.ViewModel
             //if (pageQueue.Count > 0) pageQueue.Dequeue();
             PageChangedCompleted?.Invoke(this, null);
         }
+
+
+
 
 
         #endregion
@@ -3084,7 +3205,183 @@ namespace Jvedio.ViewModel
 
         }
 
+        public void LoadViewAssoData(long dataID)
+        {
+            if (ViewAssociationDatas == null) ViewAssociationDatas = new ObservableCollection<Video>();
+            ViewAssociationDatas.Clear();
+            GC.Collect();
+            Video currentVideo = CurrentVideoList.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
+            if (currentVideo.AssociationList == null || currentVideo.AssociationList.Count <= 0) return;
+            SelectWrapper<Video> wrapper = Video.initWrapper();
+            wrapper.In("metadata.DataID", currentVideo.AssociationList.Select(arg => arg.ToString()));
+            wrapper.Select(SelectFields);
+
+            string sql = VideoMapper.BASE_SQL;
+
+            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
+
+            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
 
 
+
+
+
+            for (int i = 0; i < Videos.Count; i++)
+            {
+                Video video = Videos[i];
+                BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
+                BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
+                if (smallimage == null) smallimage = DefaultSmallImage;
+                if (bigimage == null) bigimage = smallimage;
+                video.BigImage = bigimage;
+                Video.setTagStamps(ref video);// 设置标签戳
+                Video.handleEmpty(ref video);// 设置标题和发行日期
+                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
+            }
+
+            // 清除
+            for (int i = ViewAssociationDatas.Count - 1; i > Videos.Count - 1; i--)
+            {
+                ViewAssociationDatas.RemoveAt(i);
+            }
+        }
+
+        public void LoadAssoMetaData()
+        {
+
+
+            string searchText = AssoSearchText.ToProperSql();
+
+            if (AssociationDatas == null) AssociationDatas = new ObservableCollection<Video>();
+
+            if (string.IsNullOrEmpty(searchText))
+            {
+
+                AssoSearchTotalCount = 0;
+                return;
+            }
+
+
+            SelectWrapper<Video> wrapper = Video.initWrapper();
+            wrapper.Like("Title", searchText).LeftBacket()
+                .Or().Like("Path", searchText)
+                .Or().Like("VID", searchText)
+                .RightBacket();
+
+            toAssoSearchLimit(wrapper);
+            wrapper.Select(SelectFields);
+
+            string sql = VideoMapper.BASE_SQL;
+
+            string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
+            AssoSearchTotalCount = metaDataMapper.selectCount(count_sql);
+            main.assoPagination.Total = AssoSearchTotalCount;
+
+            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
+
+            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+
+
+
+
+
+            for (int i = 0; i < Videos.Count; i++)
+            {
+                Video video = Videos[i];
+                BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
+                BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
+                if (smallimage == null) smallimage = DefaultSmallImage;
+                if (bigimage == null) bigimage = smallimage;
+                video.BigImage = bigimage;
+                Video.handleEmpty(ref video);// 设置标题和发行日期
+                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadAssoVideoDelegate(LoadAssoVideo), video, i);
+            }
+
+            // 清除
+            for (int i = AssociationDatas.Count - 1; i > Videos.Count - 1; i--)
+            {
+                AssociationDatas.RemoveAt(i);
+            }
+        }
+
+        public void toAssoSearchLimit<T>(IWrapper<T> wrapper)
+        {
+
+            int row_count = AssoSearchPageSize;
+            long offset = AssoSearchPageSize * (CurrentAssoSearchPage - 1);
+            wrapper.Limit(offset, row_count);
+        }
+
+        private List<Video> CurrentExistAssoData = new List<Video>();
+
+        public void LoadExistAssociationDatas(long dataID)
+        {
+            ExistAssociationDatas = new ObservableCollection<Video>();
+            CurrentExistAssoData = new List<Video>();
+            // 遍历邻接表，找到所有关联的 id
+            HashSet<long> set = associationMapper.getAssociationDatas(dataID);
+            if (set.Count > 0)
+            {
+                SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+                wrapper.Select("VID", "metadata.DataID", "Title", "MVID").In("metadata.DataID", set.Select(x => x.ToString()));
+                string sql = VideoMapper.BASE_SQL;
+                sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
+                List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+                CurrentExistAssoData = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+                CurrentExistAssoData.ForEach(t => ExistAssociationDatas.Add(t));
+            }
+        }
+
+
+
+
+
+
+
+
+
+        public void SaveAssociation(long dataID)
+        {
+            List<Association> toInsert = new List<Association>();
+            List<Association> toDelete = new List<Association>();
+            List<long> dataList = new List<long>();
+            if (ExistAssociationDatas != null && ExistAssociationDatas.Count > 0)
+            {
+                dataList = AssociationSelectedDatas.Union(ExistAssociationDatas).ToHashSet().Select(arg => arg.DataID).ToList();
+                foreach (long id in dataList)
+                    toInsert.Add(new Association(dataID, id));
+            }
+            else
+            {
+                if (AssociationSelectedDatas.Count > 0)
+                {
+                    foreach (Video item in AssociationSelectedDatas)
+                        toInsert.Add(new Association(dataID, item.DataID));
+                }
+            }
+
+
+            // 删除
+            List<long> list = CurrentExistAssoData.Select(arg => arg.DataID).Except(dataList).ToList();
+            foreach (long id in list)
+                toDelete.Add(new Association(dataID, id));
+
+
+
+
+            if (toInsert.Count > 0)
+                associationMapper.insertBatch(toInsert, InsertMode.Ignore);
+            if (toDelete.Count > 0)
+            {
+                foreach (Association item in toDelete)
+                {
+                    string sql = $"delete from common_association where MainDataID='{item.MainDataID}' and SubDataID='{item.SubDataID}'";
+                    associationMapper.executeNonQuery(sql);
+                }
+            }
+
+        }
     }
 }

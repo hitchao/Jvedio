@@ -70,5 +70,29 @@ namespace Jvedio.Core.WindowConfig
 
 
 
+        public bool _AutoBackup = true;
+        public bool AutoBackup
+        {
+
+            get { return _AutoBackup; }
+            set { _AutoBackup = value; }
+        }
+        public long _AutoBackupPeriodIndex;
+        public long AutoBackupPeriodIndex
+        {
+
+            get { return _AutoBackupPeriodIndex; }
+            set { _AutoBackupPeriodIndex = value; }
+        }
+
+        public static Dictionary<long, int> BackUpPeriodDict = new Dictionary<long, int>()
+        {
+            {0,1 },
+            {1,3 },
+            {2,7 },
+            {3,15 },
+            {4,30 },
+        };
+
     }
 }

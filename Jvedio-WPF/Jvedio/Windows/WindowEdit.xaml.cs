@@ -1,4 +1,5 @@
 ﻿using ChaoControls.Style;
+using Jvedio.Core.Enums;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Style;
@@ -427,7 +428,9 @@ namespace Jvedio
         {
             searchActorPopup.IsOpen = true;
             vieModel.SelectActor();
-            MessageCard.Info("由于你设置了图片资源文相对于影片的，因此该页面不显示头像");
+            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            if (pathType.Equals(PathType.RelativeToData))
+                MessageCard.Info("由于当前图片资源文相对于影片，因此该页面不显示头像");
         }
 
         private void DeleteActor(object sender, MouseButtonEventArgs e)

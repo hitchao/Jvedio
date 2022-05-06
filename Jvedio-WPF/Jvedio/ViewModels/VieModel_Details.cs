@@ -19,6 +19,7 @@ using Jvedio.Utils;
 using Jvedio.Entity;
 using Jvedio.Core.SimpleORM;
 using System.Windows.Threading;
+using Jvedio.Mapper;
 
 namespace Jvedio.ViewModel
 {
@@ -159,6 +160,18 @@ namespace Jvedio.ViewModel
             }
         }
 
+
+        public ObservableCollection<Video> _ViewAssociationDatas;
+        public ObservableCollection<Video> ViewAssociationDatas
+        {
+            get { return _ViewAssociationDatas; }
+            set
+            {
+                _ViewAssociationDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public void CleanUp()
         {
             MessengerInstance.Unregister(this);
@@ -216,6 +229,10 @@ namespace Jvedio.ViewModel
             Video video = videoMapper.SelectVideoByID(dataID);
             Video.setTagStamps(ref video);// 设置标签戳
             Video.handleEmpty(ref video);
+            // 设置关联
+            HashSet<long> set = associationMapper.getAssociationDatas(video.DataID);
+            video.HasAssociation = set.Count > 0;
+            video.AssociationList = set.ToList();
             CurrentVideo = video;
             // 磁力
             List<Magnet> magnets = magnetsMapper.selectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
@@ -247,6 +264,49 @@ namespace Jvedio.ViewModel
 
         }
 
+        public void LoadViewAssoData()
+        {
+            if (ViewAssociationDatas == null) ViewAssociationDatas = new ObservableCollection<Video>();
+            ViewAssociationDatas.Clear();
+            GC.Collect();
+            if (CurrentVideo.AssociationList == null || CurrentVideo.AssociationList.Count <= 0) return;
+            SelectWrapper<Video> wrapper = Video.initWrapper();
+            wrapper.In("metadata.DataID", CurrentVideo.AssociationList.Select(arg => arg.ToString()));
+            wrapper.Select(VieModel_Main.SelectFields);
+
+            string sql = VideoMapper.BASE_SQL;
+
+            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
+
+            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+
+
+
+
+
+            for (int i = 0; i < Videos.Count; i++)
+            {
+                Video video = Videos[i];
+                BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
+                BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
+                if (smallimage == null) smallimage = DefaultSmallImage;
+                if (bigimage == null) bigimage = smallimage;
+                video.BigImage = bigimage;
+                Video.setTagStamps(ref video);// 设置标签戳
+                Video.handleEmpty(ref video);// 设置标题和发行日期
+                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
+            }
+
+            // 清除
+            for (int i = ViewAssociationDatas.Count - 1; i > Videos.Count - 1; i--)
+            {
+                ViewAssociationDatas.RemoveAt(i);
+            }
+        }
+
+        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
+        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
 
     }

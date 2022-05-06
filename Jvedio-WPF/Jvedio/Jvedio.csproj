@@ -92,7 +92,7 @@
     </Reference>
     <Reference Include="ChaoControls.Style, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Visual_Studio_Project\chao-controls\ChaoControls.Style\bin\Debug\ChaoControls.Style.dll</HintPath>
+      <HintPath>Reference\ChaoControls.Style.dll</HintPath>
     </Reference>
     <Reference Include="CommonNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -287,6 +287,7 @@
     <Compile Include="Core\CustomEventArgs\InfoUpdateEventArgs.cs" />
     <Compile Include="Core\CustomEventArgs\MessageCallBackEventArgs.cs" />
     <Compile Include="Core\CustomTask\AbstractTask.cs" />
+    <Compile Include="Core\Enums\AssociationType.cs" />
     <Compile Include="Core\Enums\DownLoadState.cs" />
     <Compile Include="Core\Enums\ImageType.cs" />
     <Compile Include="Core\Enums\NoticeType.cs" />
@@ -359,7 +360,9 @@
     <Compile Include="Entity\Actor\ActorInfo.cs" />
     <Compile Include="Entity\Actress.cs" />
     <Compile Include="Core\Scan\ScanTask.cs" />
+    <Compile Include="Entity\Base\ListNode.cs" />
     <Compile Include="Entity\CommonSQL\AIFaceInfo.cs" />
+    <Compile Include="Entity\CommonSQL\Association.cs" />
     <Compile Include="Entity\CommonSQL\SearchHistory.cs" />
     <Compile Include="Entity\CommonSQL\AppConfig.cs" />
     <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
@@ -385,7 +388,6 @@
     <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
     <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\VideoInfo.cs" />
-    <Compile Include="Entity\Views\TagStamp.cs" />
     <Compile Include="Entity\WindowProperty.cs" />
     <Compile Include="Entity\Theme.cs" />
     <Compile Include="Core\SimpleORM\IMapper.cs" />
@@ -411,7 +413,7 @@
     <Compile Include="Global\FFmpeg.cs" />
     <Compile Include="Global\Download.cs" />
     <Compile Include="Global\Plugins.cs" />
-    <Compile Include="Global\Security.cs" />
+    <Compile Include="Mapper\AssociationMapper.cs" />
     <Compile Include="Mapper\ActorMapper.cs" />
     <Compile Include="Mapper\AIFaceMapper.cs" />
     <Compile Include="Mapper\AppConfigMapper.cs" />
@@ -678,6 +680,7 @@
     <Resource Include="Resources\Picture\新增.png" />
     <Resource Include="Resources\Picture\导入.png" />
     <Content Include="Reference\JvedioLib.dll" />
+    <Resource Include="Resources\Picture\asso.png" />
     <Content Include="Sql\app_cache.sql" />
     <Content Include="Sql\single_db_comic.sql" />
     <Content Include="Sql\single_db_game.sql" />

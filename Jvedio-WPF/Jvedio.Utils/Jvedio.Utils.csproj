@@ -70,9 +70,7 @@
   <ItemGroup>
     <Compile Include="Converter.cs" />
     <Compile Include="CustomExtensions.cs" />
-    <Compile Include="Encrypt\Encrypt.cs" />
     <Compile Include="Enums\MyImageType.cs" />
-    <Compile Include="Enums\MySearchType.cs" />
     <Compile Include="Enums\Skin.cs" />
     <Compile Include="Enums\Sort.cs" />
     <Compile Include="Enums\ViewType.cs" />

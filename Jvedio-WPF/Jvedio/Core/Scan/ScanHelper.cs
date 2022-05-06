@@ -14,6 +14,7 @@ using Jvedio.Entity;
 using Jvedio.Utils.Common;
 using Jvedio.Core.Scan;
 using JvedioLib;
+using JvedioLib.Security;
 
 namespace Jvedio
 {
@@ -449,7 +450,7 @@ namespace Jvedio
                     VideoType = VideoType.Normal,
                     FirstScanDate = DateHelper.Now(),
                     CreateDate = DateHelper.toLocalDate(fileInfo.CreationTime),
-                    Hash = Jvedio.Utils.Encrypt.Encrypt.FasterMd5(path),
+                    Hash = Encrypt.FasterMd5(path),
                 };
                 result.Add(video);
             }
