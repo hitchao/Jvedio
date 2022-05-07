@@ -209,6 +209,11 @@ namespace Jvedio
                 RefreshCandiadte(null, null);
             };
 
+            vieModel.LoadAssoMetaDataCompleted += (s, e) =>
+            {
+                SetAssoSelected();
+            };
+
             Global.Download.Dispatcher.onWorking += (s, e) =>
             {
                 vieModel.DownLoadProgress = Global.Download.Dispatcher.Progress;
@@ -220,6 +225,12 @@ namespace Jvedio
                 vieModel.ScreenShotProgress = Global.FFmpeg.Dispatcher.Progress;
                 vieModel.ScreenShotVisibility = Visibility.Visible;
             };
+
+            // 右键菜单栏点击事件
+            foreach (MenuItem item in VideoTypeMenuItem.Items.OfType<MenuItem>())
+            {
+                item.Click += (s, e) => vieModel.LoadData();
+            }
 
         }
 
@@ -2725,6 +2736,59 @@ namespace Jvedio
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
+
+
+
+
+
+        public void CopyAssoFile(object sender, RoutedEventArgs e)
+        {
+            handleMenuSelected((sender));
+            StringCollection paths = new StringCollection();
+            int count = 0;
+            int total = 0;
+            foreach (var video in vieModel.SelectedVideo)
+            {
+
+                if (video.SubSectionList?.Count > 0)
+                {
+                    total += video.SubSectionList.Count;
+                    foreach (var path in video.SubSectionList)
+                    {
+                        if (File.Exists(path))
+                        {
+                            paths.Add(path);
+                            count++;
+                        }
+                    }
+
+                }
+                else
+                {
+                    total++;
+                    if (File.Exists(video.Path))
+                    {
+                        paths.Add(video.Path);
+                        count++;
+                    }
+                }
+            }
+
+            if (paths.Count <= 0)
+            {
+                msgCard.Warning($"需要复制文件的个数为 0，文件可能不存在");
+                return;
+            }
+            bool success = ClipBoard.TrySetFileDropList(paths, (error) => { msgCard.Error(error); });
+
+            if (success)
+                msgCard.Success($"{Jvedio.Language.Resources.Message_Copied} {count}/{total}");
+
+
+            if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+        }
+
+
         /// <summary>
         /// 将点击的该项也加入到选中列表中
         /// </summary>
@@ -2793,6 +2857,7 @@ namespace Jvedio
 
         public void EditInfo(object sender, RoutedEventArgs e)
         {
+            AssoDataPopup.IsOpen = false;
             WindowEdit?.Close();
             WindowEdit = new WindowEdit(GetIDFromMenuItem(sender));
             WindowEdit.ShowDialog();
@@ -3541,6 +3606,7 @@ namespace Jvedio
             return -1;
         }
 
+        // todo 库界面双击会导致提前播放视频触发异常(VideoList 未初始化)
         private Video getVideo(long dataID)
         {
             if (dataID <= 0 || vieModel?.VideoList?.Count <= 0) return null;
@@ -3668,6 +3734,8 @@ namespace Jvedio
                 Dispatcher.Invoke(() =>
                 {
                     vieModel.Statistic();
+                    if (vieModel.CurrentVideoList?.Count <= 0)
+                        vieModel.LoadData();
                 });
                 (s as ScanTask).Running = false;
             };
@@ -4770,6 +4838,7 @@ namespace Jvedio
 
         private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
+
             if (vieModel.IsLoadingMovie)
             {
                 e.Handled = true;
@@ -4798,19 +4867,7 @@ namespace Jvedio
                             string sql = $"insert or replace into metadata_to_tagstamp (DataID,TagID)  values ({dataID},{arg.TagID})";
                             tagStampMapper.executeNonQuery(sql);
                             initTagStamp();
-                            for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
-                            {
-                                if (vieModel.CurrentVideoList[i].DataID == dataID)
-                                {
-                                    Video newVideo = videoMapper.SelectVideoByID(dataID);
-                                    Video video = vieModel.CurrentVideoList[i];
-                                    //video.TagIDs = newVideo.TagIDs;
-                                    refreshTagStamp(ref video, arg.TagID);
-                                    vieModel.CurrentVideoList[i] = null;
-                                    vieModel.CurrentVideoList[i] = video;
-
-                                }
-                            }
+                            RefreshTagStamp(dataID, arg.TagID);
 
                         };
                         menuItem.Items.Add(menu);
@@ -4822,7 +4879,29 @@ namespace Jvedio
         }
 
 
+        private void RefreshTagStamp(long dataID, long tagID)
+        {
+            ObservableCollection<Video> datas = vieModel.CurrentVideoList;
+            if (AssoDataPopup.IsOpen) datas = vieModel.ViewAssociationDatas;
 
+
+            for (int i = 0; i < datas.Count; i++)
+            {
+                if (datas[i].DataID == dataID)
+                {
+                    Video newVideo = videoMapper.SelectVideoByID(dataID);
+                    Video video = datas[i];
+                    //video.TagIDs = newVideo.TagIDs;
+                    refreshTagStamp(ref video, tagID);
+                    datas[i] = null;
+                    datas[i] = video;
+
+                }
+            }
+
+
+
+        }
 
 
 
@@ -5930,10 +6009,14 @@ namespace Jvedio
 
         private void OpenPath(object sender, RoutedEventArgs e)
         {
+            ObservableCollection<Video> datas = vieModel.CurrentVideoList;
+            if (AssoDataPopup.IsOpen) datas = vieModel.ViewAssociationDatas;
+
+
             MenuItem menu = sender as MenuItem;
             string header = menu.Header.ToString();
             long dataID = GetIDFromMenuItem(sender, 1);
-            Video video = vieModel.CurrentVideoList.Where(arg => arg.DataID == dataID).FirstOrDefault();
+            Video video = datas.Where(arg => arg.DataID == dataID).FirstOrDefault();
             if (header.Equals(Jvedio.Language.Resources.Poster))
             {
                 FileHelper.TryOpenSelectPath(video.getBigImage());
@@ -6252,6 +6335,9 @@ namespace Jvedio
 
         private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
         {
+            ObservableCollection<Video> datas = vieModel.CurrentVideoList;
+            if (AssoDataPopup.IsOpen) datas = vieModel.ViewAssociationDatas;
+
             MenuItem menuItem = sender as MenuItem;
             Label label = (menuItem.Parent as ContextMenu).PlacementTarget as Label;
             long.TryParse(label.Tag.ToString(), out long TagID);
@@ -6267,12 +6353,12 @@ namespace Jvedio
                 string sql = $"delete from metadata_to_tagstamp where TagID='{TagID}' and DataID='{DataID}'";
                 tagStampMapper.executeNonQuery(sql);
 
-                for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
+                for (int i = 0; i < datas.Count; i++)
                 {
-                    if (vieModel.CurrentVideoList[i].DataID.Equals(DataID))
+                    if (datas[i].DataID.Equals(DataID))
                     {
                         Video video = videoMapper.SelectVideoByID(DataID);
-                        vieModel.CurrentVideoList[i].TagIDs = video.TagIDs;
+                        datas[i].TagIDs = video.TagIDs;
                         break;
                     }
                 }
@@ -6341,15 +6427,11 @@ namespace Jvedio
         {
             long dataID = getDataID(sender as FrameworkElement);
             Video video = vieModel.AssociationDatas.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
-            if (vieModel.ExistAssociationDatas.Contains(video))
+            if (vieModel.ExistAssociationDatas.Contains(video) || dataID.Equals(CurrentAssoDataID))
                 return;
             if (!vieModel.AssociationSelectedDatas.Contains(video)) vieModel.AssociationSelectedDatas.Add(video);
             else vieModel.AssociationSelectedDatas.Remove(video);
             SetAssoSelected();
-
-
-
-
         }
 
         private void SetAssoSelected()
@@ -6434,6 +6516,8 @@ namespace Jvedio
             //(sender as ScrollViewer).VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
         }
 
+
+        private bool IsAsso = false;
         private void ViewAssoDatas(object sender, RoutedEventArgs e)
         {
             AssoDataPopup.IsOpen = true;
@@ -6451,6 +6535,39 @@ namespace Jvedio
         private void HideAssoPopup(object sender, RoutedEventArgs e)
         {
             AssoDataPopup.IsOpen = false;
+        }
+
+        private void LoadData(object sender, RoutedEventArgs e)
+        {
+            vieModel.LoadData();
+        }
+
+        private void LoadDataByPicureMode(object sender, RoutedEventArgs e)
+        {
+            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            if (pathType == PathType.RelativeToData)
+            {
+                MessageCard.Error("由于当前图片资源文相对于影片，因此不可用");
+                return;
+            }
+
+            if (!GlobalConfig.Settings.PictureIndexCreated)
+            {
+                MessageCard.Error("请在【选项-库】中建立图片索引！");
+                return;
+            }
+            vieModel.LoadData();
+        }
+
+        private void ShowExist(object sender, RoutedEventArgs e)
+        {
+            if (!GlobalConfig.Settings.PlayableIndexCreated)
+            {
+                MessageCard.Error("请在【选项-库】中建立播放索引！");
+                return;
+            }
+            vieModel.LoadData();
+
         }
     }
 

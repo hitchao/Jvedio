@@ -1323,6 +1323,7 @@ namespace Jvedio
             GlobalConfig.Settings.NFOSavePath = vieModel.NFOSavePath;
             GlobalConfig.Settings.OverriteNFO = vieModel.OverriteNFO;
             GlobalConfig.Settings.AutoHandleHeader = vieModel.AutoHandleHeader;
+            GlobalConfig.Settings.AutoCreatePlayableIndex = vieModel.AutoCreatePlayableIndex;
 
             GlobalConfig.Settings.PicPathMode = vieModel.PicPathMode;
             GlobalConfig.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
@@ -1814,6 +1815,39 @@ namespace Jvedio
                 }
             });
 
+        }
+
+        private void CreatePlayableIndex(object sender, RoutedEventArgs e)
+        {
+            MessageCard.Info("开发中");
+            return;
+            vieModel.IndexCreating = true;
+
+
+
+
+
+
+
+
+
+            GlobalConfig.Settings.PlayableIndexCreated = true;
+            vieModel.IndexCreating = false;
+        }
+
+        private void CreatePictureIndex(object sender, RoutedEventArgs e)
+        {
+            MessageCard.Info("开发中");
+            return;
+            vieModel.IndexCreating = true;
+
+
+
+
+
+
+            GlobalConfig.Settings.PictureIndexCreated = true;
+            vieModel.IndexCreating = false;
         }
     }
 

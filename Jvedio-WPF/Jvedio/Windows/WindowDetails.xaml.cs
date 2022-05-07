@@ -39,6 +39,7 @@ using Jvedio.Core.Net;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Entity.CommonSQL;
+using System.Text;
 
 namespace Jvedio
 {
@@ -1747,6 +1748,29 @@ namespace Jvedio
             long id = getDataID(stackPanel);
             metaDataMapper.updateFieldById("Grade", rate.Value.ToString(), id);
             CanRateChange = false;
+        }
+
+        private void CopyVideoInfo(object sender, MouseButtonEventArgs e)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (var item in infoStackPanel.Children)
+            {
+                if (item is StackPanel stackPanel)
+                {
+                    foreach (FrameworkElement element in stackPanel.Children)
+                    {
+                        if (element is TextBlock textBlock)
+                            builder.Append(textBlock.Text);
+                        else if (element is TextBox textBox)
+                            builder.Append(textBox.Text);
+                    }
+                    builder.Append(Environment.NewLine);
+                }
+            }
+            if (builder.Length > 0)
+                ClipBoard.TrySetDataObject(builder.ToString());
+            else
+                MessageCard.Error("无信息！");
         }
     }
 

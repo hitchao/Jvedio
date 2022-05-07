@@ -1166,11 +1166,38 @@
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
                                                 BigImageSource="{Binding BigImage, Mode=OneWay}"
+                                                ContextMenuOpening="ContextMenu_ContextMenuOpening"
                                                 Cursor="Hand"
                                                 MouseLeftButtonDown="CanShowDetails"
                                                 MouseLeftButtonUp="ShowDetails"
                                                 SourceType="BigImage"
-                                                Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
+                                                Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}">
+                                                <Image.ContextMenu>
+                                                    <ContextMenu Opacity="0.9">
+                                                        <MenuItem Click="EditInfo" Header="{x:Static lang:Resources.Menu_EditInfo}" />
+                                                        <MenuItem Name="TagMenuItems" Header="添加标记" />
+                                                        <MenuItem Header="{x:Static lang:Resources.OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                                                            <MenuItem
+                                                                Command="cmd:File.OpenSelectFile"
+                                                                CommandParameter="{Binding Path}"
+                                                                Header="{x:Static lang:Resources.Movie}" />
+                                                            <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Poster}" />
+                                                            <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Thumbnail}" />
+                                                            <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Preview}" />
+                                                            <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.ScreenShot}" />
+                                                            <MenuItem Click="OpenPath" Header="GIF" />
+
+                                                        </MenuItem>
+
+
+
+
+
+
+
+                                                    </ContextMenu>
+                                                </Image.ContextMenu>
+                                            </local:GifImage>
 
                                             <Button
                                                 Height="auto"
@@ -3285,23 +3312,51 @@
                                             PreviewKeyUp="Grid_PreviewKeyUp">
                                             <Grid.ContextMenu>
                                                 <ContextMenu IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}">
-                                                    <MenuItem Click="SelectAll" Header="选中/取消当前页" />
                                                     <MenuItem
-                                                        Header="{x:Static lang:Resources.ShowExists}"
-                                                        IsCheckable="True"
-                                                        IsEnabled="False" />
+                                                        Click="SelectAll"
+                                                        FontWeight="Bold"
+                                                        Header="选中/取消当前页" />
+                                                    <Separator />
+                                                    <MenuItem Click="ShowExist" Header="{x:Static lang:Resources.ShowExists}" IsCheckable="True" />
                                                     <MenuItem
+                                                        Click="LoadData"
                                                         Header="{x:Static lang:Resources.ShowSubSection}"
                                                         IsCheckable="True"
-                                                        IsEnabled="False" />
-                                                    <MenuItem
-                                                        Header="图片显示模式"
-                                                        IsCheckable="True"
-                                                        IsEnabled="False" />
-                                                    <MenuItem
-                                                        Header="{x:Static lang:Resources.VideoType}"
-                                                        IsCheckable="True"
-                                                        IsEnabled="False" />
+                                                        IsChecked="{Binding OnlyShowSubSection, Source={x:Static p:Settings.Default}, Mode=TwoWay}" />
+
+                                                    <MenuItem Name="VideoTypeMenuItem" Header="{x:Static lang:Resources.VideoType}">
+                                                        <MenuItem
+                                                            Header="{x:Static lang:Resources.Normal}"
+                                                            IsCheckable="True"
+                                                            IsChecked="True" />
+                                                        <MenuItem
+                                                            Header="无修正"
+                                                            IsCheckable="True"
+                                                            IsChecked="True" />
+                                                        <MenuItem
+                                                            Header="修正"
+                                                            IsCheckable="True"
+                                                            IsChecked="True" />
+                                                        <MenuItem
+                                                            Header="{x:Static lang:Resources.Europe}"
+                                                            IsCheckable="True"
+                                                            IsChecked="True" />
+                                                    </MenuItem>
+                                                    <MenuItem Header="图片显示模式">
+                                                        <MenuItem
+                                                            Click="LoadDataByPicureMode"
+                                                            Header="默认"
+                                                            IsCheckable="True" />
+                                                        <MenuItem
+                                                            Click="LoadDataByPicureMode"
+                                                            Header="有图"
+                                                            IsCheckable="True" />
+                                                        <MenuItem
+                                                            Click="LoadDataByPicureMode"
+                                                            Header="无图"
+                                                            IsCheckable="True" />
+                                                    </MenuItem>
+                                                    <Separator />
                                                     <MenuItem Header="全部影片">
                                                         <MenuItem Click="GenerateAllScreenShot" Header="{x:Static lang:Resources.Menu_GenerateScreenShot}" />
                                                     </MenuItem>
@@ -3381,10 +3436,7 @@
                                                                     MouseLeftButtonUp="ShowDetails"
                                                                     Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}}"
                                                                     Style="{StaticResource SimpleBorder}" />
-                                                                <Grid
-                                                                    Margin="0"
-                                                                    ContextMenuOpening="ContextMenu_ContextMenuOpening"
-                                                                    Tag="{Binding id, Mode=OneWay}">
+                                                                <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
 
                                                                     <Grid.RowDefinitions>
                                                                         <RowDefinition Height="auto" />
@@ -3401,6 +3453,7 @@
                                                                             HorizontalAlignment="Center"
                                                                             VerticalAlignment="Center"
                                                                             BigImageSource="{Binding BigImage, Mode=OneWay}"
+                                                                            ContextMenuOpening="ContextMenu_ContextMenuOpening"
                                                                             Cursor="Hand"
                                                                             GifSource="{Binding GifUri, Mode=OneWay}"
                                                                             MouseEnter="BorderMouseEnter"
@@ -3411,10 +3464,7 @@
                                                                             Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
                                                                             Style="{StaticResource GifImageStyle}">
                                                                             <Image.ContextMenu>
-                                                                                <ContextMenu
-                                                                                    ContextMenuOpening="ContextMenu_ContextMenuOpening"
-                                                                                    Opacity="0.9"
-                                                                                    PreviewKeyUp="ContextMenu_PreviewKeyUp">
+                                                                                <ContextMenu Opacity="0.9" PreviewKeyUp="ContextMenu_PreviewKeyUp">
 
 
                                                                                     <MenuItem Click="DownLoadSelectMovie" Header="{x:Static lang:Resources.Menu_SyncInfo}" />

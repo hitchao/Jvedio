@@ -231,6 +231,7 @@ namespace Jvedio.Core.Scan
                 if (existVideo != null)
                 {
                     video.DataID = existVideo.DataID;
+                    video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
                     ScanResult.Update.Add(video.Path);

@@ -937,6 +937,31 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _AutoCreatePlayableIndex = GlobalConfig.Settings.AutoCreatePlayableIndex;
+
+        public bool AutoCreatePlayableIndex
+        {
+            get { return _AutoCreatePlayableIndex; }
+            set
+            {
+                _AutoCreatePlayableIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _IndexCreating;
+
+        public bool IndexCreating
+        {
+            get { return _IndexCreating; }
+            set
+            {
+                _IndexCreating = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
         #endregion
 
     }

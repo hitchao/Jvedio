@@ -147,7 +147,7 @@ namespace Jvedio
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(content); } catch { }
+                    try { sr.Write(content + Environment.NewLine); } catch { }
                 }
             }
         }

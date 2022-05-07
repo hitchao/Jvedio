@@ -519,6 +519,7 @@
                             </StackPanel>
 
                             <ListBox
+                                Margin="5 0"
                                 Name="listBox"
                                 Grid.Row="2"
                                 HorizontalContentAlignment="Stretch"

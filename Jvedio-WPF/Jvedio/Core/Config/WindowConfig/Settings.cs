@@ -94,5 +94,10 @@ namespace Jvedio.Core.WindowConfig
             {4,30 },
         };
 
+        // 是否建立可播放索引
+        public bool PlayableIndexCreated { get; set; }
+        public bool PictureIndexCreated { get; set; }
+        public bool AutoCreatePlayableIndex { get; set; }
+
     }
 }

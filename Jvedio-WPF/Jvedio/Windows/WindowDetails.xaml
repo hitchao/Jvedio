@@ -1396,7 +1396,22 @@
                                     Padding="10,5"
                                     Header="{x:Static lang:Resources.VideoInfo}"
                                     Style="{DynamicResource TopTabItemStyle}">
-                                    <StackPanel>
+                                    <StackPanel Name="infoStackPanel">
+
+                                        <Border
+                                            Grid.Column="1"
+                                            Margin="0"
+                                            HorizontalAlignment="Left"
+                                            MouseLeftButtonDown="CopyVideoInfo"
+                                            Style="{StaticResource ToolsBarBorderStyle}">
+                                            <Viewbox Width="auto" Height="13">
+                                                <Path
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                            </Viewbox>
+                                        </Border>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
                                             <TextBlock
@@ -1481,7 +1496,7 @@
 
                                         <Rectangle
                                             Width="auto"
-                                            Height="2"
+                                            Height="1"
                                             Margin="0,5"
                                             Fill="{DynamicResource ForegroundGlobal}" />
 
@@ -1522,7 +1537,7 @@
 
                                         <Rectangle
                                             Width="auto"
-                                            Height="2"
+                                            Height="1"
                                             Margin="0,5"
                                             Fill="{DynamicResource ForegroundGlobal}" />
 

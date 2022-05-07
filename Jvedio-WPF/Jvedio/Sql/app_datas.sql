@@ -194,6 +194,30 @@ CREATE INDEX common_association_idx_MainDataID_SubDataID ON common_association (
 COMMIT;
 
 
+-- 播放、图片索引
+-- IndexType :0-PathExist 1-
+-- PathType: 0-绝对路径 1-相对于Jvedio路径 2-相对于影片路径
+-- Exist: 0-不存在 1-存在
+drop table if exists common_index;
+BEGIN;
+create table common_index (
+    id INTEGER PRIMARY KEY autoincrement,
+    DataID INTEGER,
+    IndexType INT DEFAULT 0,
+    PathType INT DEFAULT 0,
+    Exist INT 0,
+
+    CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
+    unique(MainDataID,SubDataID,AssociationType)
+);
+CREATE INDEX common_association_idx_MainDataID ON common_association (MainDataID);
+CREATE INDEX common_association_idx_SubDataID ON common_association (SubDataID);
+CREATE INDEX common_association_idx_MainDataID_SubDataID ON common_association (MainDataID,SubDataID);
+COMMIT;
+
+
+
 -- 【存储刮削的图片】
 -- PathType: 0-绝对路径 1-相对于Jvedio路径 2-相对于影片路径 3-网络绝对路径
 -- drop table if exists common_images;

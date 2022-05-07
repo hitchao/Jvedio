@@ -54,6 +54,7 @@ namespace Jvedio.ViewModel
         public event EventHandler PageChangedCompleted;
         public event EventHandler ActorPageChangedCompleted;
         public event EventHandler RenderSqlChanged;
+        public event EventHandler LoadAssoMetaDataCompleted;
 
 
 
@@ -1737,7 +1738,14 @@ namespace Jvedio.ViewModel
                 if (!string.IsNullOrEmpty(result.Text))
                 {
                     List<string> vidList = parseVIDList(result.Text, result.Prefix, result.VideoType);
-                    List<Video> videos = videoMapper.selectList(new SelectWrapper<Video>().Select("VID").In("VID", vidList));
+
+                    string sql = VideoMapper.BASE_SQL;
+                    IWrapper<Video> wrapper = new SelectWrapper<Video>();
+                    wrapper.Select("VID").Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0).In("VID", vidList);
+                    sql = wrapper.toSelect() + sql + wrapper.toWhere(false);
+                    List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+                    List<Video> videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), true);
+
                     List<string> exists = new List<string>();
                     if (videos != null && videos.Count > 0)
                         exists = videos.Select(arg => arg.VID).ToList();
@@ -2831,8 +2839,48 @@ namespace Jvedio.ViewModel
             });
 
             SelectWrapper<Video> wrapper = Video.initWrapper();
+
+            // 右侧菜单的一些筛选项
+
+            // 1. 仅显示分段视频
             if (Properties.Settings.Default.OnlyShowSubSection)
                 wrapper.NotEq("SubSection", "");
+
+            // 2. 视频类型
+            List<MenuItem> allMenus = main.VideoTypeMenuItem.Items.OfType<MenuItem>().ToList();
+            List<MenuItem> checkedMenus = new List<MenuItem>();
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                checkedMenus = allMenus.Where(t => t.IsChecked).ToList();
+            });
+
+            if (checkedMenus.Count > 0 && checkedMenus.Count < 4)
+            {
+                // VideoType = 0 or VideoType = 1 or VideoType=2
+
+                if (checkedMenus.Count == 1)
+                {
+                    int idx = allMenus.IndexOf(checkedMenus[0]);
+                    wrapper.Eq("VideoType", idx);
+                }
+                else if (checkedMenus.Count == 2)
+                {
+                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
+                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
+                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).RightBacket();
+                }
+                else if (checkedMenus.Count == 3)
+                {
+                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
+                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
+                    int idx3 = allMenus.IndexOf(checkedMenus[2]);
+                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBacket();
+                }
+            }
+            // 3. 是否可播放
+            //if (GlobalConfig.Settings.PlayableIndexCreated && )
+
 
 
 
@@ -2882,6 +2930,8 @@ namespace Jvedio.ViewModel
                 wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
                 sql += VideoMapper.TAGSTAMP_JOIN_SQL;
             }
+
+
 
             string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
 
@@ -3304,6 +3354,7 @@ namespace Jvedio.ViewModel
             {
                 AssociationDatas.RemoveAt(i);
             }
+            LoadAssoMetaDataCompleted?.Invoke(null, null);
         }
 
         public void toAssoSearchLimit<T>(IWrapper<T> wrapper)

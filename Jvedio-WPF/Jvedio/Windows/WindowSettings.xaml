@@ -2998,6 +2998,44 @@
                         </ComboBox>
                     </StackPanel>
 
+                    <CheckBox
+                        HorizontalAlignment="Left"
+                        Content="扫描后自动建立播放索引"
+                        IsChecked="{Binding AutoCreatePlayableIndex, Mode=TwoWay}" />
+
+                    <Border
+                        Margin="10"
+                        Padding="10"
+                        Background="{DynamicResource Window.Title.Background}"
+                        CornerRadius="5">
+                        <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="索引" />
+                                <hc:LoadingCircle
+                                    Height="20"
+                                    DotDiameter="3"
+                                    Foreground="{DynamicResource Global.Foreground}"
+                                    Visibility="{Binding IndexCreating, Converter={StaticResource bool2VisibilityConverter}}" />
+                            </StackPanel>
+                            <Button
+                                MinWidth="200"
+                                HorizontalAlignment="Left"
+                                Click="CreatePlayableIndex"
+                                Content="建立播放索引"
+                                IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}" />
+                            <Button
+                                MinWidth="200"
+                                HorizontalAlignment="Left"
+                                Click="CreatePictureIndex"
+                                Content="建立图片索引"
+                                IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}" />
+
+                        </StackPanel>
+                    </Border>
+
                 </StackPanel>
             </TabItem>
 

@@ -115,7 +115,7 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public List<string> SubSectionList { get; set; }
 
-        private string _SubSection;
+        private string _SubSection = "";
         public string SubSection
         {
             get { return _SubSection; }
