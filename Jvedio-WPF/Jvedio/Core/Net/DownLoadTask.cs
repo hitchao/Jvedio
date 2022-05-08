@@ -115,6 +115,8 @@ namespace Jvedio.Core.Net
                             {
                                 // todo 显示到界面上
                                 Message = ex.Message;
+                                finalizeWithCancel();
+                                return;
                             }
 
                         }
@@ -122,7 +124,7 @@ namespace Jvedio.Core.Net
                         {
                             // 无 VID 的
 
-
+                            Status = TaskStatus.Canceled;
 
 
                         }
@@ -153,6 +155,8 @@ namespace Jvedio.Core.Net
                         dict = null;
                         // 发生了错误，停止下载
                         finalizeWithCancel();
+                        // 但是已经请求了网址，所示视为完成，并加入到长时间等待队列
+                        Status = TaskStatus.RanToCompletion;
                         return;
                     }
 
@@ -210,7 +214,7 @@ namespace Jvedio.Core.Net
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
                         // todo 原来的 domain 可能没法用，得替换 domain
-                        string saveFileName = video.getBigImage(Path.GetExtension(imageUrl));
+                        string saveFileName = video.getBigImage(Path.GetExtension(imageUrl), false);
                         if (!File.Exists(saveFileName) || !string.IsNullOrEmpty(saveFileName))
                         {
                             byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
@@ -244,7 +248,7 @@ namespace Jvedio.Core.Net
                     // 2. 小图
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
-                        string saveFileName = video.getSmallImage(Path.GetExtension(imageUrl));
+                        string saveFileName = video.getSmallImage(Path.GetExtension(imageUrl), false);
                         if (!File.Exists(saveFileName))
                         {
                             byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
@@ -294,7 +298,7 @@ namespace Jvedio.Core.Net
                                 string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
                                 metaDataMapper.executeNonQuery(sql);
                                 // 下载图片
-                                string saveFileName = actorInfo.getImagePath(video.Path, Path.GetExtension(url));
+                                string saveFileName = actorInfo.getImagePath(video.Path, Path.GetExtension(url), false);
                                 if (!File.Exists(saveFileName))
                                 {
                                     byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>

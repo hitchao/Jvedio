@@ -7,7 +7,9 @@ using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.SimpleMarkDown;
+using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
+using Jvedio.Mapper;
 using Jvedio.Style;
 using Jvedio.Utils;
 
@@ -1817,37 +1819,95 @@ namespace Jvedio
 
         }
 
-        private void CreatePlayableIndex(object sender, RoutedEventArgs e)
+        private async void CreatePlayableIndex(object sender, RoutedEventArgs e)
         {
-            MessageCard.Info("开发中");
-            return;
             vieModel.IndexCreating = true;
-
-
-
-
-
-
-
-
-
+            IndexCanceled = false;
+            long total = 0;
+            bool result = await Task.Run(() =>
+              {
+                  List<MetaData> metaDatas = GlobalMapper.metaDataMapper.selectList();
+                  total = metaDatas.Count;
+                  if (total <= 0) return false;
+                  StringBuilder builder = new StringBuilder();
+                  List<string> list = new List<string>();
+                  for (int i = 0; i < total; i++)
+                  {
+                      MetaData metaData = metaDatas[i];
+                      if (!File.Exists(metaData.Path))
+                          builder.Append($"update metadata set PathExist=0 where DataID='{metaData.DataID}';");
+                      if (IndexCanceled) return false;
+                      App.Current.Dispatcher.Invoke(() =>
+                      {
+                          indexCreatingProgressBar.Value = Math.Round(((double)i + 1) / total * 100, 2);
+                      });
+                  }
+                  string sql = $"begin;update metadata set PathExist=1;{builder};commit;";// 因为大多数资源都是存在的，默认先设为1
+                  GlobalMapper.videoMapper.executeNonQuery(sql);
+                  return true;
+              });
             GlobalConfig.Settings.PlayableIndexCreated = true;
             vieModel.IndexCreating = false;
+            if (result)
+                MessageCard.Success($"成功建立 {total} 个资源的索引");
         }
 
-        private void CreatePictureIndex(object sender, RoutedEventArgs e)
+        private async void CreatePictureIndex(object sender, RoutedEventArgs e)
         {
-            MessageCard.Info("开发中");
-            return;
+            if (new Msgbox(this, $"当前图片模式为：{((PathType)GlobalConfig.Settings.PicPathMode).ToString()}，仅对当前图片模式生效，是否继续？")
+                .ShowDialog() == false)
+            {
+                return;
+            }
+
+
             vieModel.IndexCreating = true;
-
-
-
-
-
-
+            IndexCanceled = false;
+            long total = 0;
+            bool result = await Task.Run(() =>
+            {
+                string sql = VideoMapper.BASE_SQL;
+                IWrapper<Video> wrapper = new SelectWrapper<Video>();
+                wrapper.Select("metadata.DataID", "Path", "VID", "Hash");
+                sql = wrapper.toSelect(false) + sql;
+                List<Dictionary<string, object>> temp = GlobalMapper.metaDataMapper.select(sql);
+                List<Video> videos = GlobalMapper.metaDataMapper.toEntity<Video>(temp, typeof(Video).GetProperties(), true);
+                total = videos.Count;
+                if (total <= 0) return false;
+                List<string> list = new List<string>();
+                long pathType = GlobalConfig.Settings.PicPathMode;
+                for (int i = 0; i < total; i++)
+                {
+                    Video video = videos[i];
+                    // 小图
+                    list.Add($"({video.DataID},{pathType},0,{(File.Exists(video.getSmallImage()) ? 1 : 0)})");
+                    // 大图
+                    list.Add($"({video.DataID},{pathType},1,{(File.Exists(video.getBigImage()) ? 1 : 0)})");
+                    if (IndexCanceled) return false;
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        indexCreatingProgressBar.Value = Math.Round(((double)i + 1) / total * 100, 2);
+                    });
+                }
+                string insertSql = $"begin;insert or replace into common_picture_exist(DataID,PathType,ImageType,Exist) values {string.Join(",", list)};commit;";
+                GlobalMapper.videoMapper.executeNonQuery(insertSql);
+                return true;
+            });
+            if (result)
+                MessageCard.Success($"成功建立 {total} 个资源的索引");
             GlobalConfig.Settings.PictureIndexCreated = true;
             vieModel.IndexCreating = false;
+
+
+
+        }
+
+
+        private bool IndexCanceled = false;
+
+        private void CancelCreateIndex(object sender, RoutedEventArgs e)
+        {
+            IndexCanceled = true;
         }
     }
 

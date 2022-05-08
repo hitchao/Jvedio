@@ -64,7 +64,7 @@ namespace Jvedio.Core.SimpleORM
             if (string.IsNullOrEmpty(sql)) return 0;
             cmd.CommandText = sql;
             Console.WriteLine(DateHelper.Now() + " => " + sql);
-            Logger.LogScanInfo(sql);
+            //Logger.LogScanInfo(sql);
             try
             {
                 return cmd.ExecuteNonQuery();

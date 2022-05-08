@@ -56,6 +56,7 @@ namespace Jvedio
 
 
 
+
             metaDataMapper.Init();
             videoMapper.Init();
             pictureMapper.Init();
@@ -74,7 +75,13 @@ namespace Jvedio
                 metaDataMapper.createTable(key, Tables.Data.TABLES[key]);
             }
 
-            //associationMapper.InitAdjacencyList();
+
+            // 新增列
+            foreach (string sql in Tables.SQL.SqlCommands)
+            {
+                try { metaDataMapper.executeNonQuery(sql); }
+                catch (Exception ex) { Console.WriteLine(ex); }
+            }
 
 
 

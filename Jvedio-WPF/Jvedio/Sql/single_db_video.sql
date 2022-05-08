@@ -66,6 +66,11 @@ CREATE INDEX metadata_idx_DBId_DataType_Size ON metadata (DBId,DataType,Size);
 CREATE INDEX metadata_idx_DBId_DataType_ViewDate ON metadata (DBId,DataType,ViewDate);
 COMMIT;
 
+-- 【添加列索引】
+
+
+
+
 
 
 -- 影视信息表

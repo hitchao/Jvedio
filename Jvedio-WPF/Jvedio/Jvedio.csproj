@@ -256,6 +256,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\UsnOperation.dll</HintPath>
     </Reference>
+    <Reference Include="VirtualizingWrapPanel, Version=1.5.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VirtualizingWrapPanel.1.5.7\lib\net452\VirtualizingWrapPanel.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -440,6 +443,7 @@
     <Compile Include="Utils\Common\ClassUtils.cs" />
     <Compile Include="Utils\Common\DateHelper.cs" />
     <Compile Include="Utils\Common\JsonUtils.cs" />
+    <Compile Include="Utils\Common\NumberHelper.cs" />
     <Compile Include="Utils\Common\TypeHelper.cs" />
     <Compile Include="Utils\Common\Validation.cs" />
     <Compile Include="Utils\FileProcess\ClipBoard.cs" />

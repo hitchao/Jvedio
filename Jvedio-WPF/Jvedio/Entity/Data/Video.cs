@@ -248,7 +248,7 @@ namespace Jvedio.Entity
         /// <param name="imageType"></param>
         /// <param name="ext">ext 必须要带上 '.'</param>
         /// <returns></returns>
-        public string getImagePath(ImageType imageType, string ext = null)
+        private string getImagePath(ImageType imageType, string ext = null)
         {
             string result = "";
             PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
@@ -345,7 +345,7 @@ namespace Jvedio.Entity
             return path;
         }
 
-        public string getSmallImage(string ext = ".jpg")
+        public string getSmallImage(string ext = ".jpg", bool searchExt = true)
         {
             string smallImagePath = getImagePath(ImageType.Small, ext);
             PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
@@ -359,10 +359,13 @@ namespace Jvedio.Entity
                 smallImagePath = parseRelativeImageFileName(smallPath);
 
             }
+            // 替换成其他扩展名
+            if (searchExt && !File.Exists(smallImagePath))
+                smallImagePath = findWithExt(smallImagePath);
             return smallImagePath;
         }
 
-        public string getBigImage(string ext = ".jpg")
+        public string getBigImage(string ext = ".jpg", bool searchExt = true)
         {
             string bigImagePath = getImagePath(ImageType.Big, ext);
 
@@ -376,7 +379,29 @@ namespace Jvedio.Entity
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(bigPath))) bigPath += ext;
                 bigImagePath = parseRelativeImageFileName(bigPath);
             }
+            // 替换成其他扩展名
+            if (searchExt && !File.Exists(bigImagePath))
+                bigImagePath = findWithExt(bigImagePath);
             return bigImagePath;
+        }
+
+
+        public static string findWithExt(string path)
+        {
+            foreach (var item in ScanTask.PICTURE_EXTENSIONS_LIST)
+            {
+                path = changeExt(path, item);
+                if (File.Exists(path)) break;
+            }
+            return path;
+        }
+
+
+        private static string changeExt(string path, string ext)
+        {
+            string dir = System.IO.Path.GetDirectoryName(path);
+            string name = System.IO.Path.GetFileNameWithoutExtension(path);
+            return System.IO.Path.Combine(dir, name + ext);
         }
 
         public string getExtraImage()

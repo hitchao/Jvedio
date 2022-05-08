@@ -1,4 +1,6 @@
-﻿using Jvedio.Core.CustomTask;
+﻿using Jvedio.Core.CustomEventArgs;
+using Jvedio.Core.CustomTask;
+using Jvedio.Utils.Common;
 using Priority_Queue;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,10 @@ namespace Jvedio.Core.CustomTask
         private static int MAX_PRIORITY = 5;
         private static int NORMAL_PRIORITY = 3;
         private static int MIN_PRIORITY = 1;
-        private const int DEFAULT_TASKDELAY = 3000;
+
+        private const int DEFAULT_TASKDELAY = 3 * 1000; // 默认暂停时间
+        private const int DEFAULT_LONG_TASKDELAY = 60 * 1000;// 长任务的暂停默认时间 +-随机数
+        private const int DEFAULT_LONG_TASK_COUNT = 10;// 运行多少个任务后开始长暂停
 
         private static int MAX_TASK_COUNT = 3;// 每次同时下载的任务数量
 
@@ -24,28 +29,35 @@ namespace Jvedio.Core.CustomTask
 
         public bool Working = false;// 调度器是否在工作中
         public bool Cancel = false;// 调度器是否被取消了
+        private long beforeTaskCount = 0;// 上一次长暂停的 DoneList 数目，避免重复长暂停
 
         public double Progress { get; set; }// 总的工作进度
         private int TaskDelay { get; set; }// 每一批次任务完成后暂停的时间
+        private int LongTaskDelay { get; set; }// 每一批次任务完成后暂停的时间
+        private bool EnableLongTaskDelay { get; set; }// 每一批次任务完成后暂停的时间
 
         public event EventHandler onWorking;
+        public event EventHandler onLongDelay;
 
         // 具有优先级的队列
         public static SimplePriorityQueue<T> WaitingQueue = new SimplePriorityQueue<T>();
         public static List<T> WorkingList = new List<T>();
         public static List<T> DoneList = new List<T>();
+        public static List<T> CanceldList = new List<T>();
 
         private static TaskDispatcher<T> instance = null;
 
-        private TaskDispatcher(int taskDelay)
+        private TaskDispatcher(int taskDelay, int longTaskDelay, bool enableLongTaskDelay)
         {
             TaskDelay = taskDelay;
+            LongTaskDelay = longTaskDelay;
+            EnableLongTaskDelay = enableLongTaskDelay;
         }
 
 
-        public static TaskDispatcher<T> createInstance(int taskDelay = DEFAULT_TASKDELAY)
+        public static TaskDispatcher<T> createInstance(int taskDelay = DEFAULT_TASKDELAY, int longTaskDelay = DEFAULT_LONG_TASKDELAY, bool enableLongTaskDelay = false)
         {
-            if (instance == null) instance = new TaskDispatcher<T>(taskDelay);
+            if (instance == null) instance = new TaskDispatcher<T>(taskDelay, longTaskDelay, enableLongTaskDelay);
 
 
             return instance;
@@ -74,12 +86,14 @@ namespace Jvedio.Core.CustomTask
         public void ClearDoneList()
         {
             DoneList.Clear();
+            CanceldList.Clear();
         }
 
 
         public void BeginWork()
         {
             Working = true;
+            beforeTaskCount = 0;
             Task.Run(async () =>
             {
                 while (true && !Cancel)
@@ -90,20 +104,44 @@ namespace Jvedio.Core.CustomTask
                     {
                         if (Cancel) return;
                         T task = WorkingList[i];
-                        if (task.Status == TaskStatus.RanToCompletion || task.Status == TaskStatus.Canceled)
+                        if (task.Status == TaskStatus.RanToCompletion)
                         {
                             DoneList.Add(task);
                             WorkingList.RemoveAt(i);
                         }
+                        else if (task.Status == TaskStatus.Canceled)
+                        {
+                            CanceldList.Add(task);
+                            WorkingList.RemoveAt(i);
+                        }
                     }
-                    if (WorkingList.Count != 0 && TaskDelay > 0) await Task.Delay(TaskDelay);
+
+                    // 长暂停
+                    if (EnableLongTaskDelay && DoneList.Count > 0 && beforeTaskCount != DoneList.Count && DoneList.Count % DEFAULT_LONG_TASK_COUNT == 0)
+                    {
+                        beforeTaskCount = DoneList.Count;
+                        int delay = NumberHelper.generateRandomMS(LongTaskDelay);
+                        Console.WriteLine("开始长暂停 " + delay);
+                        onLongDelay?.Invoke(this, new MessageCallBackEventArgs(delay.ToString()));
+                        await Task.Delay(delay);
+                    }
+                    else
+                    {
+                        // 短暂停
+                        if (WorkingList.Count != 0 && TaskDelay > 0) await Task.Delay(NumberHelper.generateRandomMS(TaskDelay, 1));
+                    }
+
+                    onLongDelay?.Invoke(this, new MessageCallBackEventArgs("0"));// 隐藏提示
+
                     // 将等待队列中的下载任务添加到工作队列
                     while (WorkingList.Count < MAX_TASK_COUNT && WaitingQueue.Count > 0)
                     {
                         T task = WaitingQueue.Dequeue();
                         if (task.Status == TaskStatus.WaitingToRun)
                             WorkingList.Add(task);
-                        else
+                        else if (task.Status == TaskStatus.Canceled)
+                            CanceldList.Add(task);
+                        else if (task.Status == TaskStatus.RanToCompletion)
                             DoneList.Add(task);
                     }
 
@@ -115,8 +153,8 @@ namespace Jvedio.Core.CustomTask
                         }
                     }
 
-                    float totalcount = DoneList.Count + WaitingQueue.Count + WorkingList.Count;
-                    this.Progress = Math.Round((float)DoneList.Count / totalcount * 100, 2);
+                    float totalcount = CanceldList.Count + DoneList.Count + WaitingQueue.Count + WorkingList.Count;
+                    this.Progress = Math.Round((float)(CanceldList.Count + DoneList.Count) / totalcount * 100, 2);
                     onWorking?.Invoke(this, null);
                     await Task.Delay(CHECK_PERIOD);
 

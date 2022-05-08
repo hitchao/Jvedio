@@ -194,54 +194,23 @@ CREATE INDEX common_association_idx_MainDataID_SubDataID ON common_association (
 COMMIT;
 
 
--- 播放、图片索引
--- IndexType :0-PathExist 1-
+-- 【图片是否存在的索引】
 -- PathType: 0-绝对路径 1-相对于Jvedio路径 2-相对于影片路径
+-- ImageType: 0-smallpic 1-bigpic 
 -- Exist: 0-不存在 1-存在
-drop table if exists common_index;
+drop table if exists common_picture_exist;
 BEGIN;
-create table common_index (
+create table common_picture_exist (
     id INTEGER PRIMARY KEY autoincrement,
     DataID INTEGER,
-    IndexType INT DEFAULT 0,
     PathType INT DEFAULT 0,
-    Exist INT 0,
+    ImageType INT DEFAULT 0,
+    Exist INT DEFAULT 0,
 
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-    unique(MainDataID,SubDataID,AssociationType)
+    unique(DataID,PathType,ImageType,Exist)
 );
-CREATE INDEX common_association_idx_MainDataID ON common_association (MainDataID);
-CREATE INDEX common_association_idx_SubDataID ON common_association (SubDataID);
-CREATE INDEX common_association_idx_MainDataID_SubDataID ON common_association (MainDataID,SubDataID);
+CREATE INDEX common_picture_exist_idx_DataID_PathType_ImageType ON common_picture_exist (DataID,PathType,ImageType);
 COMMIT;
 
-
-
--- 【存储刮削的图片】
--- PathType: 0-绝对路径 1-相对于Jvedio路径 2-相对于影片路径 3-网络绝对路径
--- drop table if exists common_images;
--- create table common_images(
---     ImageID INTEGER PRIMARY KEY autoincrement,
-
---     Name VARCHAR(500),
---     Path VARCHAR(1000),
---     PathType INT DEFAULT 0,
---     Ext VARCHAR(100),
---     Size INTEGER,
---     Height INT,
---     Width INT,
-
---     Url TEXT,
---     ExtraInfo TEXT,
---     Source VARCHAR(100),
-
---     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
---     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
-
---     unique(PathType,Path)
--- );
-
--- insert into common_images
--- (Name,Path,PathType,Ext,Size,Height,Width,Url,ExtraInfo,Source)
--- values ('test','C:\test.jpg',0,'jpg',2431,720,1080,'http://www.demo.com/123.jpg','{"BitDepth":"32"}','IMDB');

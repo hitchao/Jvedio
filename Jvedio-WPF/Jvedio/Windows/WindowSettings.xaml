@@ -1989,6 +1989,7 @@
                         <CheckBox Content="{x:Static lang:Resources.ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="搜索栏" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="翻页调节栏" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="页码调节下拉菜单" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="{x:Static lang:Resources.StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="{x:Static lang:Resources.FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="{x:Static lang:Resources.Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
@@ -3019,19 +3020,44 @@
                                     DotDiameter="3"
                                     Foreground="{DynamicResource Global.Foreground}"
                                     Visibility="{Binding IndexCreating, Converter={StaticResource bool2VisibilityConverter}}" />
+                                <Button
+                                    Click="CancelCreateIndex"
+                                    Content="取消"
+                                    Style="{StaticResource ButtonDanger}"
+                                    Visibility="{Binding IndexCreating, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                                <ProgressBar
+                                    Name="indexCreatingProgressBar"
+                                    Width="300"
+                                    Height="10"
+                                    Maximum="100"
+                                    Style="{StaticResource ProgressBarFlat}"
+                                    Visibility="{Binding IndexCreating, Converter={StaticResource bool2VisibilityConverter}}" />
+
                             </StackPanel>
+
                             <Button
                                 MinWidth="200"
                                 HorizontalAlignment="Left"
                                 Click="CreatePlayableIndex"
-                                Content="建立播放索引"
-                                IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}" />
+                                Content="建立资源存在索引"
+                                IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}"
+                                Style="{StaticResource ButtonPrimary}" />
+
+
+
+
+
+
+
                             <Button
                                 MinWidth="200"
                                 HorizontalAlignment="Left"
                                 Click="CreatePictureIndex"
-                                Content="建立图片索引"
-                                IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}" />
+                                Content="建立视频资源的图片索引"
+                                IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}"
+                                Style="{StaticResource ButtonPrimary}" />
+
 
                         </StackPanel>
                     </Border>

@@ -240,11 +240,14 @@
                             Foreground="{DynamicResource ForegroundGlobal}" />
 
                         <TextBlock
-                            MaxWidth="300"
-                            HorizontalAlignment="Center"
+                            Margin="10,0"
+                            HorizontalAlignment="Stretch"
                             FontSize="15"
                             Text="{Binding LoadingText}"
-                            TextTrimming="WordEllipsis" />
+                            TextAlignment="Center"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding LoadingText}" />
+                        <Button Margin="20" Click="CancelScan" Content="取消" Style="{StaticResource ButtonDanger}" />
                     </StackPanel>
                 </Border>
             </TabItem>
@@ -519,9 +522,9 @@
                             </StackPanel>
 
                             <ListBox
-                                Margin="5 0"
                                 Name="listBox"
                                 Grid.Row="2"
+                                Margin="5,0"
                                 HorizontalContentAlignment="Stretch"
                                 d:ItemsSource="{d:SampleData ItemCount=5}"
                                 Background="Transparent"

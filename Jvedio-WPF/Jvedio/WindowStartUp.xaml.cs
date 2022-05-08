@@ -86,6 +86,10 @@ namespace Jvedio
         // todo
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //try
+            //{
+
+
             EnsureSettings();//修复设置错误
             EnsureFileExists(); //判断文件是否存在
             EnsureDirExists();//创建文件夹
@@ -133,6 +137,13 @@ namespace Jvedio
                 this.TitleHeight = 30;
             }
             test();
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    MessageBox.Show(ex.Message);
+            //    Logger.LogF(ex);
+            //}
         }
 
 
@@ -489,7 +500,7 @@ namespace Jvedio
             GlobalConfig.StartUp.SideIdx = idx;
             vieModel_StartUp.ReadFromDataBase();
         }
-
+        ScanTask scanTask = null;
         public async void LoadDataBase()
         {
             if (vieModel_StartUp.CurrentDatabases == null || vieModel_StartUp.CurrentDatabases.Count <= 0)
@@ -535,7 +546,7 @@ namespace Jvedio
             GlobalConfig.Main.CurrentDBId = id;
 
             // 是否需要扫描
-            ScanTask scanTask = null;
+
             if (GlobalConfig.ScanConfig.ScanOnStartUp)
             {
                 if (database != null && !string.IsNullOrEmpty(database.ScanPath))
@@ -546,20 +557,29 @@ namespace Jvedio
                     List<string> toScan = new List<string>();
                     try { toScan = JsonConvert.DeserializeObject<List<string>>(database.ScanPath); }
                     catch (Exception ex) { Console.WriteLine(ex.Message); }
-                    scanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
-                    scanTask.onScanning += (s, ev) =>
+                    try
                     {
-                        Dispatcher.Invoke(() =>
+                        scanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
+                        scanTask.onScanning += (s, ev) =>
                         {
-                            vieModel_StartUp.LoadingText = (ev as MessageCallBackEventArgs).Message;
-                        });
-                    };
-                    scanTask.Start();
-                    while (scanTask.Running)
-                    {
-                        await Task.Delay(100);
-                        Console.WriteLine("扫描中");
+                            Dispatcher.Invoke(() =>
+                            {
+                                vieModel_StartUp.LoadingText = (ev as MessageCallBackEventArgs).Message;
+                            });
+                        };
+                        scanTask.Start();
+                        while (scanTask.Running)
+                        {
+                            await Task.Delay(100);
+                            Console.WriteLine("扫描中");
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Logger.LogF(ex);
+                        MessageBox.Show(ex.Message);
+                    }
+
                 }
             }
 
@@ -706,6 +726,11 @@ namespace Jvedio
         private void ShowHelpComics(object sender, MouseButtonEventArgs e)
         {
             MessageCard.Info("新建库并打开后，将含有漫画图片的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
+        }
+
+        private void CancelScan(object sender, RoutedEventArgs e)
+        {
+            scanTask?.Cancel();
         }
     }
 }

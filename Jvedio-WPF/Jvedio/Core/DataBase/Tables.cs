@@ -9,6 +9,14 @@ namespace Jvedio.Core.DataBase
     public static class Tables
     {
 
+        public static class SQL
+        {
+            public static List<string> SqlCommands = new List<string>()
+            {
+                "ALTER TABLE metadata ADD COLUMN PathExist INT DEFAULT 0;",
+            };
+        }
+
         public static class AppConfig
         {
             public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
@@ -31,6 +39,7 @@ namespace Jvedio.Core.DataBase
                 TABLES.Add("common_search_history", "BEGIN; create table common_search_history ( id INTEGER PRIMARY KEY autoincrement, SearchValue TEXT, SearchField VARCHAR(200), ExtraInfo TEXT, CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')) ); CREATE INDEX common_search_history_idx_SearchField ON common_search_history (SearchField); COMMIT;");
                 TABLES.Add("common_tagstamp", "BEGIN; create table common_tagstamp ( TagID INTEGER PRIMARY KEY autoincrement, Foreground VARCHAR(100), Background VARCHAR(100), TagName VARCHAR(200), ExtraInfo TEXT, CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')) ); insert into common_tagstamp(Background,Foreground,TagName) values('154,88,183,255','255,255,255,255','HD'),('154,205,50,255','255,255,255,255','Translated'); COMMIT;");
                 TABLES.Add("common_association", "BEGIN; create table common_association ( AID INTEGER PRIMARY KEY autoincrement, MainDataID INTEGER, SubDataID INTEGER, AssociationType INT DEFAULT 0, CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), unique(MainDataID,SubDataID,AssociationType) ); CREATE INDEX common_association_idx_MainDataID ON common_association (MainDataID); CREATE INDEX common_association_idx_SubDataID ON common_association (SubDataID); CREATE INDEX common_association_idx_MainDataID_SubDataID ON common_association (MainDataID,SubDataID); COMMIT;");
+                TABLES.Add("common_picture_exist", "BEGIN; create table common_picture_exist ( id INTEGER PRIMARY KEY autoincrement, DataID INTEGER, PathType INT DEFAULT 0, ImageType INT DEFAULT 0, Exist INT DEFAULT 0, CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), unique(DataID,PathType,ImageType,Exist) ); CREATE INDEX common_picture_exist_idx_DataID_PathType_ImageType ON common_picture_exist (DataID,PathType,ImageType); COMMIT;");
             }
         }
 

@@ -89,7 +89,8 @@ namespace Jvedio.Utils
         {
             try
             {
-                Directory.Move(source, target);
+                if (Directory.Exists(source))
+                    Directory.Move(source, target);
             }
             catch (Exception ex)
             {

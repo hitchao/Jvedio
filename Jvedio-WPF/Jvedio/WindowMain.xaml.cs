@@ -197,6 +197,15 @@ namespace Jvedio
 
         private void BindingEventAfterRender()
         {
+            //翻页
+            pagination.PageSizeChange += (s, e) =>
+            {
+                Pagination pagination = s as Pagination;
+                vieModel.PageSize = pagination.PageSize;
+                vieModel.LoadData();
+            };
+
+
             setComboboxID();
             DatabaseComboBox.SelectionChanged += DatabaseComboBox_SelectionChanged;
 
@@ -231,6 +240,53 @@ namespace Jvedio
             {
                 item.Click += (s, e) => vieModel.LoadData();
             }
+
+
+            List<MenuItem> PictureFilterTypes = PictureFilterType.Items.OfType<MenuItem>().ToList();
+            foreach (MenuItem item in PictureFilterTypes)
+            {
+                item.Click += (s, e) =>
+                {
+                    if (!GlobalConfig.Settings.PictureIndexCreated)
+                    {
+                        MessageCard.Error("请在【选项-库】中建立图片索引！");
+                        return;
+                    }
+                    foreach (var t in PictureFilterTypes)
+                        t.IsChecked = false;
+                    MenuItem menuItem = s as MenuItem;
+                    menuItem.IsChecked = true;
+                    vieModel.PictureTypeIndex = PictureFilterTypes.IndexOf(menuItem);
+                    vieModel.LoadData();
+                };
+            }
+
+            List<MenuItem> DataExistMenuItems = DataExistMenuItem.Items.OfType<MenuItem>().ToList();
+            foreach (MenuItem menuItem in DataExistMenuItems)
+            {
+                menuItem.Click += (s, e) =>
+                {
+                    if (!GlobalConfig.Settings.PlayableIndexCreated)
+                    {
+                        MessageCard.Error("请在【选项-库】中建立播放索引！");
+                        return;
+                    }
+                    foreach (var t in DataExistMenuItems)
+                        t.IsChecked = false;
+                    MenuItem item = s as MenuItem;
+                    item.IsChecked = true;
+                    vieModel.DataExistIndex = DataExistMenuItems.IndexOf(item);
+                    vieModel.LoadData();
+                };
+            }
+
+            // 长时间暂停
+            Global.Download.Dispatcher.onLongDelay += (s, e) =>
+            {
+                string message = (e as MessageCallBackEventArgs).Message;
+                int.TryParse(message, out int value);
+                vieModel.DownloadLongTaskDelay = value / 1000;
+            };
 
         }
 
@@ -2318,6 +2374,21 @@ namespace Jvedio
             }
             if (!Global.FFmpeg.Dispatcher.Working)
                 Global.FFmpeg.Dispatcher.BeginWork();
+        }
+        public void DownloadAllVideo(object sender, RoutedEventArgs e)
+        {
+            MessageCard.Info("全库爬取可能会导致你的IP被封，请谨慎使用，尽量同步仅需要的资源");
+            vieModel.DownloadStatus = "Downloading";
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
+            List<Video> videos = videoMapper.selectList();
+            foreach (Video video in videos)
+            {
+                downloadVideo(video);
+            }
+            if (!Global.Download.Dispatcher.Working)
+                Global.Download.Dispatcher.BeginWork();
+            setDownloadStatus();
         }
 
 
@@ -5443,9 +5514,7 @@ namespace Jvedio
 
         private void Pagination_PageSizeChange(object sender, EventArgs e)
         {
-            Pagination pagination = sender as Pagination;
-            vieModel.PageSize = pagination.PageSize;
-            //vieModel.LoadData();
+
         }
 
         private void CurrentActorPageChange(object sender, EventArgs e)
@@ -5675,6 +5744,11 @@ namespace Jvedio
                         SetImage(ref video);
                         Video.setTagStamps(ref video);// 设置标签戳
                         Video.handleEmpty(ref video);// 设置标题和发行日期
+                        // 设置关联
+                        HashSet<long> set = associationMapper.getAssociationDatas(dataID);
+                        video.HasAssociation = set.Count > 0;
+                        video.AssociationList = set.ToList();
+
                         vieModel.CurrentVideoList[i] = video;
                         vieModel.CurrentVideoList[i].SmallImage = video.SmallImage;
                         vieModel.CurrentVideoList[i].BigImage = video.BigImage;
@@ -6379,6 +6453,9 @@ namespace Jvedio
 
         private void AddDataAssociation(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.EditMode = false;
+            vieModel.SelectedVideo.Clear();
+            SetSelected();
             long dataID = GetIDFromMenuItem(sender as MenuItem, 1);
             vieModel.LoadExistAssociationDatas(dataID);
             CurrentAssoDataID = dataID;
@@ -6398,7 +6475,16 @@ namespace Jvedio
         {
             searchDataPopup.IsOpen = false;
             if (CurrentAssoDataID <= 0) return;
-            vieModel.SaveAssociation(CurrentAssoDataID);
+            List<long> toDelete = vieModel.SaveAssociation(CurrentAssoDataID);
+            // 刷新关联的影片
+            HashSet<long> set = associationMapper.getAssociationDatas(CurrentAssoDataID);
+            set.Add(CurrentAssoDataID);
+            foreach (var item in toDelete)
+                set.Add(item);
+            foreach (var item in set)
+            {
+                RefreshData(item);
+            }
         }
 
         private void searchDataBox_Search(object sender, RoutedEventArgs e)
@@ -6542,33 +6628,9 @@ namespace Jvedio
             vieModel.LoadData();
         }
 
-        private void LoadDataByPicureMode(object sender, RoutedEventArgs e)
-        {
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData)
-            {
-                MessageCard.Error("由于当前图片资源文相对于影片，因此不可用");
-                return;
-            }
 
-            if (!GlobalConfig.Settings.PictureIndexCreated)
-            {
-                MessageCard.Error("请在【选项-库】中建立图片索引！");
-                return;
-            }
-            vieModel.LoadData();
-        }
 
-        private void ShowExist(object sender, RoutedEventArgs e)
-        {
-            if (!GlobalConfig.Settings.PlayableIndexCreated)
-            {
-                MessageCard.Error("请在【选项-库】中建立播放索引！");
-                return;
-            }
-            vieModel.LoadData();
 
-        }
     }
 
 

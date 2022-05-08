@@ -14,7 +14,7 @@ namespace Jvedio.Global
 
         static Download()
         {
-            Dispatcher = TaskDispatcher<DownLoadTask>.createInstance();
+            Dispatcher = TaskDispatcher<DownLoadTask>.createInstance(taskDelay: 3000, enableLongTaskDelay: true);
         }
 
 

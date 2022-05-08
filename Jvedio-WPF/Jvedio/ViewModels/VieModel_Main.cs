@@ -1080,7 +1080,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private int _PageSize = 10;
+        private int _PageSize = 40;
         public int PageSize
         {
             get { return _PageSize; }
@@ -1570,7 +1570,61 @@ namespace Jvedio.ViewModel
             }
         }
 
+        #region "右键筛选"
 
+        private int _DataExistIndex = 0;
+        public int DataExistIndex
+        {
+            get { return _DataExistIndex; }
+            set
+            {
+                if (value < 0 || value > 2)
+                    _DataExistIndex = 0;
+                else
+                    _DataExistIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _PictureTypeIndex = 0;
+        public int PictureTypeIndex
+        {
+            get { return _PictureTypeIndex; }
+            set
+            {
+                if (value < 0 || value > 2)
+                    _PictureTypeIndex = 0;
+                else
+                    _PictureTypeIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
+
+        private int _DownloadLongTaskDelay = 0;
+        public int DownloadLongTaskDelay
+        {
+            get { return _DownloadLongTaskDelay; }
+            set
+            {
+                _DownloadLongTaskDelay = value;
+                if (value > 0) DisplayDownloadLongTaskDelay = Visibility.Visible;
+                else DisplayDownloadLongTaskDelay = Visibility.Hidden;
+                RaisePropertyChanged();
+            }
+        }
+
+        private Visibility _DisplayDownloadLongTaskDelay = Visibility.Hidden;
+        public Visibility DisplayDownloadLongTaskDelay
+        {
+            get { return _DisplayDownloadLongTaskDelay; }
+            set
+            {
+                _DisplayDownloadLongTaskDelay = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
 
@@ -2154,8 +2208,12 @@ namespace Jvedio.ViewModel
             }
             else
             {
-                CurrentVideoList[idx] = null;
-                CurrentVideoList[idx] = video;
+                if (idx < CurrentVideoList.Count)
+                {
+                    CurrentVideoList[idx] = null;
+                    CurrentVideoList[idx] = video;
+                }
+
             }
             //CurrentCount = CurrentVideoList.Count;
             //Console.WriteLine($"渲染第 {CurrentPage} 页的数据");
@@ -2840,47 +2898,6 @@ namespace Jvedio.ViewModel
 
             SelectWrapper<Video> wrapper = Video.initWrapper();
 
-            // 右侧菜单的一些筛选项
-
-            // 1. 仅显示分段视频
-            if (Properties.Settings.Default.OnlyShowSubSection)
-                wrapper.NotEq("SubSection", "");
-
-            // 2. 视频类型
-            List<MenuItem> allMenus = main.VideoTypeMenuItem.Items.OfType<MenuItem>().ToList();
-            List<MenuItem> checkedMenus = new List<MenuItem>();
-
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                checkedMenus = allMenus.Where(t => t.IsChecked).ToList();
-            });
-
-            if (checkedMenus.Count > 0 && checkedMenus.Count < 4)
-            {
-                // VideoType = 0 or VideoType = 1 or VideoType=2
-
-                if (checkedMenus.Count == 1)
-                {
-                    int idx = allMenus.IndexOf(checkedMenus[0]);
-                    wrapper.Eq("VideoType", idx);
-                }
-                else if (checkedMenus.Count == 2)
-                {
-                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
-                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
-                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).RightBacket();
-                }
-                else if (checkedMenus.Count == 3)
-                {
-                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
-                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
-                    int idx3 = allMenus.IndexOf(checkedMenus[2]);
-                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBacket();
-                }
-            }
-            // 3. 是否可播放
-            //if (GlobalConfig.Settings.PlayableIndexCreated && )
-
 
 
 
@@ -2931,11 +2948,63 @@ namespace Jvedio.ViewModel
                 sql += VideoMapper.TAGSTAMP_JOIN_SQL;
             }
 
+            // 右侧菜单的一些筛选项
+
+            // 1. 仅显示分段视频
+            if (Properties.Settings.Default.OnlyShowSubSection)
+                wrapper.NotEq("SubSection", "");
+
+            // 2. 视频类型
+            List<MenuItem> allMenus = main.VideoTypeMenuItem.Items.OfType<MenuItem>().ToList();
+            List<MenuItem> checkedMenus = new List<MenuItem>();
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                checkedMenus = allMenus.Where(t => t.IsChecked).ToList();
+            });
+
+            if (checkedMenus.Count > 0 && checkedMenus.Count < 4)
+            {
+                // VideoType = 0 or VideoType = 1 or VideoType=2
+
+                if (checkedMenus.Count == 1)
+                {
+                    int idx = allMenus.IndexOf(checkedMenus[0]);
+                    wrapper.Eq("VideoType", idx);
+                }
+                else if (checkedMenus.Count == 2)
+                {
+                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
+                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
+                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).RightBacket();
+                }
+                else if (checkedMenus.Count == 3)
+                {
+                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
+                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
+                    int idx3 = allMenus.IndexOf(checkedMenus[2]);
+                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBacket();
+                }
+            }
+
+
+
+
+            // 图片显示模式
+            if (GlobalConfig.Settings.PictureIndexCreated && PictureTypeIndex > 0)
+            {
+                sql += VideoMapper.COMMON_PICTURE_EXIST_JOIN_SQL;
+                long pathType = GlobalConfig.Settings.PicPathMode;
+                int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageType);
+                if (imageType > 1) imageType = 0;
+                wrapper.Eq("common_picture_exist.PathType", pathType).Eq("common_picture_exist.ImageType", imageType).Eq("common_picture_exist.Exist", PictureTypeIndex - 1);
+            }
+            // 是否可播放
+            if (GlobalConfig.Settings.PlayableIndexCreated && DataExistIndex > 0)
+                wrapper.Eq("metadata.PathExist", DataExistIndex - 1);
 
 
             string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
-
-
             TotalCount = metaDataMapper.selectCount(count_sql);
 
 
@@ -2988,6 +3057,7 @@ namespace Jvedio.ViewModel
                 HashSet<long> set = associationMapper.getAssociationDatas(video.DataID);
                 video.HasAssociation = set.Count > 0;
                 video.AssociationList = set.ToList();
+
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
             }
 
@@ -3393,10 +3463,10 @@ namespace Jvedio.ViewModel
 
 
 
-        public void SaveAssociation(long dataID)
+        public List<long> SaveAssociation(long dataID)
         {
             List<Association> toInsert = new List<Association>();
-            List<Association> toDelete = new List<Association>();
+            List<long> toDelete = new List<long>();// 删除比较特殊，要删除所有该 id 的
             List<long> dataList = new List<long>();
             if (ExistAssociationDatas != null && ExistAssociationDatas.Count > 0)
             {
@@ -3417,7 +3487,7 @@ namespace Jvedio.ViewModel
             // 删除
             List<long> list = CurrentExistAssoData.Select(arg => arg.DataID).Except(dataList).ToList();
             foreach (long id in list)
-                toDelete.Add(new Association(dataID, id));
+                toDelete.Add(id);
 
 
 
@@ -3426,12 +3496,14 @@ namespace Jvedio.ViewModel
                 associationMapper.insertBatch(toInsert, InsertMode.Ignore);
             if (toDelete.Count > 0)
             {
-                foreach (Association item in toDelete)
+                foreach (long id in toDelete)
                 {
-                    string sql = $"delete from common_association where MainDataID='{item.MainDataID}' and SubDataID='{item.SubDataID}'";
+                    string sql = $"delete from common_association where MainDataID='{id}' or SubDataID='{id}'";
                     associationMapper.executeNonQuery(sql);
                 }
             }
+
+            return toDelete;
 
         }
     }

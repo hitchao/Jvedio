@@ -108,7 +108,7 @@ namespace Jvedio.Entity
             actorInfo.SmallImage = smallimage;
         }
 
-        public string getImagePath(string dataPath = "", string ext = ".jpg")
+        public string getImagePath(string dataPath = "", string ext = ".jpg", bool searchExt = true)
         {
             string result = "";
             PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
@@ -129,8 +129,12 @@ namespace Jvedio.Entity
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
                 result = parseRelativeImageFileName(smallPath);
             }
+            // 替换成其他扩展名
+            if (searchExt && !File.Exists(result))
+                result = Video.findWithExt(result);
             return result;
         }
+
 
         private string parseRelativeImageFileName(string path)
         {

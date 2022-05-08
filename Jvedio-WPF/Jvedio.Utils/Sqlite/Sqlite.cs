@@ -170,14 +170,23 @@ namespace Jvedio.Utils.Sqlite
         {
             double result = 0;
             cmd.CommandText = $"SELECT count({field}) FROM {table} " + sql;
-            using (SQLiteDataReader sr = cmd.ExecuteReader())
+            try
             {
-                while (sr.Read())
+                using (SQLiteDataReader sr = cmd.ExecuteReader())
                 {
-                    double.TryParse(sr[0].ToString(), out result);
+                    while (sr.Read())
+                    {
+                        double.TryParse(sr[0].ToString(), out result);
+                    }
+                    return result;
                 }
-                return result;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 0;
+            }
+
 
         }
 
