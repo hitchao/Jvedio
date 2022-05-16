@@ -232,6 +232,7 @@ namespace Jvedio.Core.CustomTask
 
         public virtual void finalizeWithCancel()
         {
+            Running = false;
             Status = TaskStatus.Canceled;// 抛出异常的任务都自动取消
             stopwatch.Stop();
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
@@ -260,6 +261,11 @@ namespace Jvedio.Core.CustomTask
         public virtual void Stop()
         {
             throw new NotImplementedException();
+        }
+
+        public virtual void Restart()
+        {
+            this.Status = TaskStatus.WaitingToRun;// 任务重新开始
         }
     }
 }

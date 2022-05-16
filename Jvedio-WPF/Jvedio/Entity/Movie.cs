@@ -5,6 +5,7 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
 using Jvedio.Utils;
 using JvedioLib;
+using JvedioLib.Security;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -215,7 +216,7 @@ namespace Jvedio.Entity
         }
 
 
-        public static Movie GetInfoFromNfo(string path, long minFileSize = 0)
+        public static Movie GetInfoFromNfo(string path)
         {
             XmlDocument doc = new XmlDocument();
             XmlNode rootNode = null;

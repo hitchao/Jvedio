@@ -115,8 +115,11 @@ namespace Jvedio.Core.Scan
                {
                    logger.Error(ex.Message);
                    Status = TaskStatus.Canceled;
+                   Running = false;
                    return;
                }
+
+
 
                ScanHelper scanHelper = new ScanHelper();
 
@@ -129,6 +132,7 @@ namespace Jvedio.Core.Scan
                    {
                        logger.Error(ex.Message);
                        Status = TaskStatus.Canceled;
+                       Running = false;
                        return;
                    }
 
@@ -145,7 +149,7 @@ namespace Jvedio.Core.Scan
 
 
 
-
+               Running = false;
                stopwatch.Stop();
                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
                ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;

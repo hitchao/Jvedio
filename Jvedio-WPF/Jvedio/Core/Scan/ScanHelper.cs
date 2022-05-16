@@ -40,7 +40,7 @@ namespace Jvedio
 
             List<string> nfoPaths = new List<string>();
             List<string> videoPaths = new List<string>();
-
+            minFileSize = (long)GlobalConfig.ScanConfig.MinFileSize * 1024 * 1024;
             if (filepaths != null || filepaths.Count > 0)
             {
                 foreach (var item in filepaths)
@@ -62,7 +62,7 @@ namespace Jvedio
                 {
                     foreach (var item in nfoPaths)
                     {
-                        Movie movie = Movie.GetInfoFromNfo(item, minFileSize);
+                        Movie movie = Movie.GetInfoFromNfo(item);
                         if (movie != null)
                         {
                             Video video = movie.toVideo();

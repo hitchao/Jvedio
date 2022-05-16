@@ -8,6 +8,7 @@ using Jvedio.Utils;
 using Jvedio.Utils.Common;
 using Jvedio.Windows;
 using JvedioLib;
+using JvedioLib.Security;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -130,200 +131,215 @@ namespace Jvedio
             {
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
-                Console.WriteLine($"=======开始迁移数据：{Path.GetFileName(origin)}=========");
+                Logger.Info($"=======开始迁移数据：{Path.GetFileName(origin)}=========");
                 string dbName = "ja";
                 MySqlite oldSqlite = new MySqlite(origin);
                 // 1. 迁移 Code
-                dbName += "v";
-                System.Data.SQLite.SQLiteDataReader db = oldSqlite.RunSql("select * from " + dbName + "db");
-                List<UrlCode> urlCodes = new List<UrlCode>();
-                if (db != null)
+                dbName += "vdb";
+                bool dbExist = oldSqlite.IsTableExist(dbName);
+                if (dbExist)
                 {
-                    while (db.Read())
+                    System.Data.SQLite.SQLiteDataReader db = oldSqlite.RunSql("select * from " + dbName);
+                    List<UrlCode> urlCodes = new List<UrlCode>();
+                    if (db != null)
                     {
-                        UrlCode urlCode = new UrlCode()
+                        while (db.Read())
                         {
-                            LocalValue = db["id"].ToString(),
-                            RemoteValue = db["code"].ToString(),
-                            WebType = "db",
-                            ValueType = "video",
-                        };
-                        urlCodes.Add(urlCode);
+                            UrlCode urlCode = new UrlCode()
+                            {
+                                // todo 列可能不存在
+                                LocalValue = db["id"].ToString(),
+                                RemoteValue = db["code"].ToString(),
+                                WebType = "db",
+                                ValueType = "video",
+                            };
+                            urlCodes.Add(urlCode);
+                        }
+                        urlCodeMapper.insertBatch(urlCodes);
                     }
-                    urlCodeMapper.insertBatch(urlCodes);
+                    db?.Close();
                 }
-                db?.Close();
 
-                System.Data.SQLite.SQLiteDataReader library = oldSqlite.RunSql("select * from library");
-                urlCodes = new List<UrlCode>();
-                if (library != null)
+                dbExist = oldSqlite.IsTableExist("library");
+                if (dbExist)
                 {
-                    while (library.Read())
+                    System.Data.SQLite.SQLiteDataReader library = oldSqlite.RunSql("select * from library");
+                    List<UrlCode> urlCodes = new List<UrlCode>();
+                    if (library != null)
                     {
-                        UrlCode urlCode = new UrlCode()
+                        while (library.Read())
                         {
-                            LocalValue = library["id"].ToString(),
-                            RemoteValue = library["code"].ToString(),
-                            WebType = "library",
-                            ValueType = "video",
-                        };
-                        urlCodes.Add(urlCode);
+                            UrlCode urlCode = new UrlCode()
+                            {
+                                LocalValue = library["id"].ToString(),
+                                RemoteValue = library["code"].ToString(),
+                                WebType = "library",
+                                ValueType = "video",
+                            };
+                            urlCodes.Add(urlCode);
+                        }
+                        urlCodeMapper.insertBatch(urlCodes);
                     }
-                    urlCodeMapper.insertBatch(urlCodes);
+                    library?.Close();
                 }
-                library?.Close();
-                Console.WriteLine($"urlCodeMapper 用时：{watch.ElapsedMilliseconds} ms");
+
+                Logger.Info($"urlCodeMapper 用时：{watch.ElapsedMilliseconds} ms");
                 watch.Restart();
 
                 // 2. 迁移 actress
-                System.Data.SQLite.SQLiteDataReader actressReader = oldSqlite.RunSql("select * from actress");
-                List<ActorInfo> actressList = new List<ActorInfo>();
-                if (actressReader != null)
+                dbExist = oldSqlite.IsTableExist("actress");
+                if (dbExist)
                 {
-                    while (actressReader.Read())
+                    System.Data.SQLite.SQLiteDataReader actressReader = oldSqlite.RunSql("select * from actress");
+                    List<ActorInfo> actressList = new List<ActorInfo>();
+                    if (actressReader != null)
                     {
-                        Actress actress = new Actress();
-                        actress.birthday = actressReader["birthday"].ToString();
-                        actress.id = actressReader["id"].ToString();
-                        actress.name = actressReader["name"].ToString();
-                        int.TryParse(actressReader["age"].ToString(), out int age); actress.age = age;
-                        int.TryParse(actressReader["height"].ToString(), out int height); actress.height = height;
-                        int.TryParse(actressReader["chest"].ToString(), out int chest); actress.chest = chest;
-                        int.TryParse(actressReader["waist"].ToString(), out int waist); actress.waist = waist;
-                        int.TryParse(actressReader["hipline"].ToString(), out int hipline); actress.hipline = hipline;
+                        while (actressReader.Read())
+                        {
+                            Actress actress = new Actress();
+                            actress.birthday = actressReader["birthday"].ToString();
+                            actress.id = actressReader["id"].ToString();
+                            actress.name = actressReader["name"].ToString();
+                            int.TryParse(actressReader["age"].ToString(), out int age); actress.age = age;
+                            int.TryParse(actressReader["height"].ToString(), out int height); actress.height = height;
+                            int.TryParse(actressReader["chest"].ToString(), out int chest); actress.chest = chest;
+                            int.TryParse(actressReader["waist"].ToString(), out int waist); actress.waist = waist;
+                            int.TryParse(actressReader["hipline"].ToString(), out int hipline); actress.hipline = hipline;
 
-                        actress.cup = actressReader["cup"].ToString();
-                        actress.birthplace = actressReader["birthplace"].ToString();
-                        actress.hobby = actressReader["hobby"].ToString();
-                        actress.source = actressReader["source"].ToString();
-                        actress.sourceurl = actressReader["sourceurl"].ToString();
-                        actress.imageurl = actressReader["imageurl"].ToString();
-                        ActorInfo actorInfo = actress.toActorInfo();
-                        actressList.Add(actorInfo);
+                            actress.cup = actressReader["cup"].ToString();
+                            actress.birthplace = actressReader["birthplace"].ToString();
+                            actress.hobby = actressReader["hobby"].ToString();
+                            actress.source = actressReader["source"].ToString();
+                            actress.sourceurl = actressReader["sourceurl"].ToString();
+                            actress.imageurl = actressReader["imageurl"].ToString();
+                            ActorInfo actorInfo = actress.toActorInfo();
+                            actressList.Add(actorInfo);
+                        }
+                        actorMapper.insertBatch(actressList);
                     }
-                    actorMapper.insertBatch(actressList);
+                    actressReader?.Close();
                 }
-                actressReader?.Close();
 
-                Console.WriteLine($"actorMapper 用时：{watch.ElapsedMilliseconds} ms");
+
+                Logger.Info($"actorMapper 用时：{watch.ElapsedMilliseconds} ms");
                 watch.Restart();
 
                 // 3. 迁移 movie
-                double total_count = oldSqlite.SelectCountByTable("movie");
-
-                // 新建库
-                AppDatabase appDatabase = new AppDatabase();
-                appDatabase.Name = Path.GetFileNameWithoutExtension(origin);
-                appDatabase.Count = (long)total_count;
-                appDatabase.DataType = DataType.Video;
-                appDatabaseMapper.insert(appDatabase);
-                System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from movie");
+                dbExist = oldSqlite.IsTableExist("movie");
                 List<Video> videos = new List<Video>();
-                if (sr != null)
+                if (dbExist)
                 {
-                    List<DetailMovie> detailMovies = new List<DetailMovie>();
-                    while (sr.Read())
+                    double total_count = oldSqlite.SelectCountByTable("movie");
+
+                    // 新建库
+                    AppDatabase appDatabase = new AppDatabase();
+                    appDatabase.Name = Path.GetFileNameWithoutExtension(origin);
+                    appDatabase.Count = (long)total_count;
+                    appDatabase.DataType = DataType.Video;
+                    appDatabaseMapper.insert(appDatabase);
+                    System.Data.SQLite.SQLiteDataReader sr = oldSqlite.RunSql("select * from movie");
+
+                    if (sr != null)
                     {
-                        DetailMovie detailMovie = new DetailMovie()
+                        List<DetailMovie> detailMovies = new List<DetailMovie>();
+                        while (sr.Read())
                         {
-                            id = sr["id"].ToString(),
-                            title = sr["title"].ToString(),
-                            filepath = sr["filepath"].ToString(),
-                            subsection = sr["subsection"].ToString(),
-                            scandate = sr["scandate"].ToString(),
-                            releasedate = sr["releasedate"].ToString(),
-                            director = sr["director"].ToString(),
-                            genre = sr["genre"].ToString(),
-                            tag = sr["tag"].ToString(),
-                            actor = sr["actor"].ToString(),
-                            actorid = sr["actorid"].ToString(),
-                            studio = sr["studio"].ToString(),
-                            chinesetitle = sr["chinesetitle"].ToString(),
-                            label = sr["label"].ToString(),
-                            plot = sr["plot"].ToString(),
-                            outline = sr["outline"].ToString(),
-                            country = sr["country"].ToString(),
-                            otherinfo = sr["otherinfo"].ToString(),
-                            actressimageurl = sr["actressimageurl"].ToString(),
-                            smallimageurl = sr["smallimageurl"].ToString(),
-                            bigimageurl = sr["bigimageurl"].ToString(),
-                            extraimageurl = sr["extraimageurl"].ToString(),
-                            sourceurl = sr["sourceurl"].ToString(),
-                            source = sr["source"].ToString()
-                        };
+                            DetailMovie detailMovie = new DetailMovie()
+                            {
+                                id = sr["id"].ToString(),
+                                title = sr["title"].ToString(),
+                                filepath = sr["filepath"].ToString(),
+                                subsection = sr["subsection"].ToString(),
+                                scandate = sr["scandate"].ToString(),
+                                releasedate = sr["releasedate"].ToString(),
+                                director = sr["director"].ToString(),
+                                genre = sr["genre"].ToString(),
+                                tag = sr["tag"].ToString(),
+                                actor = sr["actor"].ToString(),
+                                actorid = sr["actorid"].ToString(),
+                                studio = sr["studio"].ToString(),
+                                chinesetitle = sr["chinesetitle"].ToString(),
+                                label = sr["label"].ToString(),
+                                plot = sr["plot"].ToString(),
+                                outline = sr["outline"].ToString(),
+                                country = sr["country"].ToString(),
+                                otherinfo = sr["otherinfo"].ToString(),
+                                actressimageurl = sr["actressimageurl"].ToString(),
+                                smallimageurl = sr["smallimageurl"].ToString(),
+                                bigimageurl = sr["bigimageurl"].ToString(),
+                                extraimageurl = sr["extraimageurl"].ToString(),
+                                sourceurl = sr["sourceurl"].ToString(),
+                                source = sr["source"].ToString()
+                            };
 
-                        detailMovie.DBId = appDatabase.DBId;
+                            detailMovie.DBId = appDatabase.DBId;
 
-                        double.TryParse(sr["filesize"].ToString(), out double filesize);
-                        int.TryParse(sr["vediotype"].ToString(), out int vediotype);
-                        int.TryParse(sr["visits"].ToString(), out int visits);
-                        int.TryParse(sr["favorites"].ToString(), out int favorites);
-                        int.TryParse(sr["year"].ToString(), out int year);
-                        int.TryParse(sr["countrycode"].ToString(), out int countrycode);
-                        int.TryParse(sr["runtime"].ToString(), out int runtime);
-                        float.TryParse(sr["rating"].ToString(), out float rating);
-                        detailMovie.filesize = filesize;
-                        detailMovie.vediotype = vediotype;
-                        detailMovie.visits = visits;
-                        detailMovie.rating = rating;
-                        detailMovie.favorites = favorites;
-                        detailMovie.year = year;
-                        detailMovie.countrycode = countrycode;
-                        detailMovie.runtime = runtime;
-                        detailMovies.Add(detailMovie);
+                            double.TryParse(sr["filesize"].ToString(), out double filesize);
+                            int.TryParse(sr["vediotype"].ToString(), out int vediotype);
+                            int.TryParse(sr["visits"].ToString(), out int visits);
+                            int.TryParse(sr["favorites"].ToString(), out int favorites);
+                            int.TryParse(sr["year"].ToString(), out int year);
+                            int.TryParse(sr["countrycode"].ToString(), out int countrycode);
+                            int.TryParse(sr["runtime"].ToString(), out int runtime);
+                            float.TryParse(sr["rating"].ToString(), out float rating);
+                            detailMovie.filesize = filesize;
+                            detailMovie.vediotype = vediotype;
+                            detailMovie.visits = visits;
+                            detailMovie.rating = rating;
+                            detailMovie.favorites = favorites;
+                            detailMovie.year = year;
+                            detailMovie.countrycode = countrycode;
+                            detailMovie.runtime = runtime;
+                            detailMovies.Add(detailMovie);
+                        }
+
+                        long before = metaDataMapper.selectCount();
+                        long nextID = before + 1;
+                        metaDataMapper.insertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
+
+                        Logger.Info($"metaDataMapper 用时：{watch.ElapsedMilliseconds} ms");
+                        watch.Restart();
+                        //videos = new List<Video>();
+                        detailMovies.ForEach(arg =>
+                        {
+                            before++;
+                            Video video = arg.toVideo();
+                            video.DataID = before;
+                            video.Path = arg.filepath;
+                            video.ActorNames = arg.actor;
+                            video.OldActorIDs = arg.actorid;
+                            video.Size = (long)arg.filesize;
+                            video.Genre = arg.genre.Replace(' ', GlobalVariable.Separator);
+                            video.Series = arg.tag.Replace(' ', GlobalVariable.Separator);
+                            video.Label = arg.label.Replace(' ', GlobalVariable.Separator);
+                            videos.Add(video);
+                        });
+
+                        videoMapper.insertBatch(videos);
+
+                        Logger.Info($"videoMapper 用时：{watch.ElapsedMilliseconds} ms");
+                        watch.Restart();
+
+                        try
+                        {
+                            handleChinesetitle(detailMovies);
+                            handleActor(videos);
+                            handleLabel(videos);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
+
+
+                        Logger.Info($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
+                        watch.Restart();
                     }
-
-                    long before = metaDataMapper.selectCount();
-                    long nextID = before + 1;
-                    metaDataMapper.insertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
-
-                    Console.WriteLine($"metaDataMapper 用时：{watch.ElapsedMilliseconds} ms");
-                    watch.Restart();
-                    //videos = new List<Video>();
-                    detailMovies.ForEach(arg =>
-                    {
-                        before++;
-                        Video video = arg.toVideo();
-                        video.DataID = before;
-                        video.Path = arg.filepath;
-                        video.ActorNames = arg.actor;
-                        video.OldActorIDs = arg.actorid;
-                        video.Size = (long)arg.filesize;
-                        video.Genre = arg.genre.Replace(' ', GlobalVariable.Separator);
-                        video.Series = arg.tag.Replace(' ', GlobalVariable.Separator);
-                        video.Label = arg.label.Replace(' ', GlobalVariable.Separator);
-                        videos.Add(video);
-                    });
-
-                    videoMapper.insertBatch(videos);
-
-                    Console.WriteLine($"videoMapper 用时：{watch.ElapsedMilliseconds} ms");
-                    watch.Restart();
-
-
-                    handleChinesetitle(detailMovies);
-                    handleActor(videos);
-                    handleLabel(videos);
-
-                    Console.WriteLine($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
-                    watch.Restart();
+                    sr?.Close();
+                    oldSqlite.CloseDB();
                 }
-                sr?.Close();
-                oldSqlite.CloseDB();
+
                 watch.Stop();
-
-                // 建立标签戳索引
-
-                //SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-                //wrapper.Select("Size", "Genre", "Tag", "Label", "Path").Eq("metadata.DBId", appDatabase.DBId).Eq("metadata.DataType", 0);
-                //string sql = $"{wrapper.toSelect(false)} FROM metadata_video " +
-                //            "JOIN metadata " +
-                //            "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false);
-
-                //List<Dictionary<string, object>> temp = metaDataMapper.select(sql);
-                //videos = metaDataMapper.toEntity<Video>(temp, typeof(Video).GetProperties(), false);
-
-
                 List<string> list = new List<string>();
                 foreach (Video video in videos)
                 {
@@ -471,10 +487,6 @@ namespace Jvedio
                     $"values {string.Join(",", insert_list)};";
                 metaDataMapper.executeNonQuery(sql);
             }
-
-            // 设置演员头像路径
-            //string update_sql = "update actor_info set SmallImagePath='*PicPath*/Actresses/' || ActorName || '.jpg';";
-            //actorMapper.executeNonQuery(update_sql);
         }
 
 

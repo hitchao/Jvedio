@@ -126,7 +126,7 @@ namespace Jvedio.Core.Config
             {
                 try
                 {
-                    return Encrypt.AesDecrypt(Password, AesKey.PROXY);
+                    return Encrypt.AesDecrypt(Password, 0);
                 }
                 catch (Exception ex)
                 {

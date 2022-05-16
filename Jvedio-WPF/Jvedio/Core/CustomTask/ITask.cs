@@ -12,6 +12,7 @@ namespace Jvedio.Core.CustomTask
         void Stop();
         void Pause();
         void Cancel();
+        void Restart();
 
         void Finished();
 

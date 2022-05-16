@@ -45,6 +45,7 @@ using Jvedio.Core.FFmpeg;
 using JvedioLib;
 using Jvedio.Utils.Enums;
 using Jvedio.Entity.Base;
+using JvedioLib.Security;
 
 namespace Jvedio.ViewModel
 {
@@ -814,6 +815,19 @@ namespace Jvedio.ViewModel
             set
             {
                 _Searching = value;
+                RaisePropertyChanged();
+
+            }
+        }
+        private bool _SearchingActor = false;
+
+
+        public bool SearchingActor
+        {
+            get { return _SearchingActor; }
+            set
+            {
+                _SearchingActor = value;
                 RaisePropertyChanged();
 
             }
@@ -2078,7 +2092,7 @@ namespace Jvedio.ViewModel
         private delegate void LoadActorDelegate(ActorInfo actor, int idx);
         private void LoadActor(ActorInfo actor, int idx)
         {
-            if (renderActorCTS.IsCancellationRequested) return;
+            if (renderActorCT.IsCancellationRequested) return;
             if (CurrentActorList.Count < ActorPageSize)
             {
                 if (idx < CurrentActorList.Count)
@@ -2466,32 +2480,31 @@ namespace Jvedio.ViewModel
 
 
 
-        public async void SelectActor(object o = null)
+        public async void SelectActor()
         {
             TabSelectedIndex = 1; // 演员
             // 判断当前获取的队列
             while (ActorPageQueue.Count > 1)
             {
                 int page = ActorPageQueue.Dequeue();
-                Console.WriteLine("跳过该页码 ： " + page);
             }
 
             // 当前有视频在渲染的时候，打断渲染，等待结束
             while (renderingActor)
             {
-                //if (rendering && !renderVideoCTS.IsCancellationRequested)
                 renderActorCTS?.Cancel();// 取消加载
                 await Task.Delay(100);
             }
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                //main.SetLoadingStatus(true);//正在加载影片
                 main.ActorScrollViewer.ScrollToTop();//滚到顶部
             });
 
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             ActorSetActorSortOrder(wrapper);
+
+            bool search = SearchingActor && !string.IsNullOrEmpty(SearchText);
 
             string count_sql = "SELECT count(*) as Count " +
                          "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
@@ -2499,7 +2512,14 @@ namespace Jvedio.ViewModel
                          "join metadata " +
                          "on metadata_to_actor.DataID=metadata.DataID " +
                          $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
-                         "GROUP BY actor_info.ActorID );";
+                         $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : "")} " +
+                         "GROUP BY actor_info.ActorID " +
+                         "UNION " +
+                         "select actor_info.ActorID  " +
+                         "FROM actor_info WHERE NOT EXISTS " +
+                         "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
+                         $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : "")} " +
+                         "GROUP BY actor_info.ActorID)";
 
             ActorTotalCount = actorMapper.selectCount(count_sql);
 
@@ -2507,8 +2527,13 @@ namespace Jvedio.ViewModel
                 $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                 $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                 $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
-                $"GROUP BY actor_info.ActorID "
-                + wrapper.toOrder() + ActorToLimit();
+                $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : "")} " +
+                $"GROUP BY actor_info.ActorID " +
+                "UNION " +
+                $"{wrapper.Select(ActorSelectedField).toSelect(false)} FROM actor_info " +
+                "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
+                $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : "")} " +
+                wrapper.toOrder() + ActorToLimit();
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { main.actorPagination.Total = ActorTotalCount; });
             RenderCurrentActors(sql);
@@ -2535,6 +2560,7 @@ namespace Jvedio.ViewModel
         public async void renderActor()
         {
             if (CurrentActorList == null) CurrentActorList = new ObservableCollection<ActorInfo>();
+
             for (int i = 0; i < ActorList.Count; i++)
             {
                 try { renderActorCT.ThrowIfCancellationRequested(); }
@@ -2542,7 +2568,8 @@ namespace Jvedio.ViewModel
                 renderingActor = true;
                 ActorInfo actorInfo = ActorList[i];
                 ActorInfo.SetImage(ref actorInfo);
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
+                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
+                    new LoadActorDelegate(LoadActor), actorInfo, i);
             }
 
             // 清除
@@ -2885,15 +2912,14 @@ namespace Jvedio.ViewModel
             // 当前有视频在渲染的时候，打断渲染，等待结束
             while (rendering)
             {
-                //if (rendering && !renderVideoCTS.IsCancellationRequested)
                 renderVideoCTS?.Cancel();// 取消加载
                 await Task.Delay(100);
             }
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                //main.SetLoadingStatus(true);//正在加载影片
-                main.MovieScrollViewer.ScrollToTop();//滚到顶部
+                ScrollViewer scrollViewer = main.FindVisualChild<ScrollViewer>(main.MovieItemsControl);
+                scrollViewer.ScrollToTop();//滚到顶部
             });
 
             SelectWrapper<Video> wrapper = Video.initWrapper();
@@ -3272,12 +3298,19 @@ namespace Jvedio.ViewModel
 
 
                 string actor_count_sql = "SELECT count(*) as Count " +
-                            "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
-                            "on metadata_to_actor.ActorID=actor_info.ActorID " +
-                            "join metadata " +
-                            "on metadata_to_actor.DataID=metadata.DataID " +
-                            $"WHERE metadata.DBId={dbid} and metadata.DataType={0} " +
-                            "GROUP BY actor_info.ActorID );";
+                         "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
+                         "on metadata_to_actor.ActorID=actor_info.ActorID " +
+                         "join metadata " +
+                         "on metadata_to_actor.DataID=metadata.DataID " +
+                         $"WHERE metadata.DBId={dbid} and metadata.DataType={0} " +
+                         "GROUP BY actor_info.ActorID " +
+                         "UNION " +
+                         "select actor_info.ActorID  " +
+                         "FROM actor_info WHERE NOT EXISTS " +
+                         "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
+                         "GROUP BY actor_info.ActorID)";
+
+
                 AllActorCount = actorMapper.selectCount(actor_count_sql);
 
                 string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +

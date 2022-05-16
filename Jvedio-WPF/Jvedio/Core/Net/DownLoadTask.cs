@@ -215,7 +215,7 @@ namespace Jvedio.Core.Net
                     {
                         // todo 原来的 domain 可能没法用，得替换 domain
                         string saveFileName = video.getBigImage(Path.GetExtension(imageUrl), false);
-                        if (!File.Exists(saveFileName) || !string.IsNullOrEmpty(saveFileName))
+                        if (!File.Exists(saveFileName))
                         {
                             byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
                              {
@@ -383,12 +383,14 @@ namespace Jvedio.Core.Net
                     Status = TaskStatus.RanToCompletion;
                 }
                 Console.WriteLine("下载完成！");
+                Running = false;
                 Progress = 100.00f;
                 stopwatch.Stop();
                 ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
                 logger.Info($"总计耗时：{ElapsedMilliseconds} ms");
             });
         }
+
 
 
 

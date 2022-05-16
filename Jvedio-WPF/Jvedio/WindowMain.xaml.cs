@@ -225,8 +225,31 @@ namespace Jvedio
 
             Global.Download.Dispatcher.onWorking += (s, e) =>
             {
-                vieModel.DownLoadProgress = Global.Download.Dispatcher.Progress;
-                vieModel.DownLoadVisibility = Visibility.Visible;
+                double progress = Global.Download.Dispatcher.Progress; ;
+                vieModel.DownLoadProgress = progress;
+                if (progress < 100)
+                    vieModel.DownLoadVisibility = Visibility.Visible;
+                else
+                    vieModel.DownLoadVisibility = Visibility.Hidden;
+                // 任务栏进度条
+                Dispatcher.Invoke(() =>
+                {
+                    if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null)
+                    {
+
+                        taskbarInstance.SetProgressValue((int)progress, 100, this);
+                        if (progress >= 100 || progress <= 0)
+                            taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
+                        else
+                            taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal, this);
+
+                    }
+                });
+
+
+
+
+
             };
 
             Global.FFmpeg.Dispatcher.onWorking += (s, e) =>
@@ -323,7 +346,8 @@ namespace Jvedio
             listBox.ItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
             listBox.Background = Brushes.Transparent;
             listBox.ItemsSource = list;
-            vieModel.Searching = true;
+            if (vieModel.TabSelectedIndex == 0)
+                vieModel.Searching = true;
         }
 
 
@@ -567,7 +591,7 @@ namespace Jvedio
             };
         }
 
-        private childItem FindVisualChild<childItem>(DependencyObject obj)
+        public childItem FindVisualChild<childItem>(DependencyObject obj)
                                where childItem : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -1432,6 +1456,7 @@ namespace Jvedio
             {
                 ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
                 Border border = FindElementByName<Border>(c, "rootBorder");
+                if (border == null) continue;
                 Grid grid = border.Parent as Grid;
                 long actorID = getDataID(border);
                 if (border != null)
@@ -2081,13 +2106,20 @@ namespace Jvedio
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //流动模式
-            ScrollViewer sv = sender as ScrollViewer;
-            if (sv.VerticalOffset >= 500)
+            ItemsControl itemsControl = sender as ItemsControl;
+            ScrollViewer scrollViewer = FindVisualChild<ScrollViewer>(itemsControl);
+            if (scrollViewer == null) return;
+            //ScrollViewer sv = sender as ScrollViewer;
+            //if (sv == null) return;
+            double offset = scrollViewer.VerticalOffset;
+
+
+            if (offset >= 500)
                 vieModel.GoToTopCanvas = Visibility.Visible;
             else
                 vieModel.GoToTopCanvas = Visibility.Hidden;
 
-            if (sv.VerticalOffset == sv.ScrollableHeight)
+            if (offset == scrollViewer.ScrollableHeight)
                 vieModel.GoToBottomCanvas = Visibility.Hidden;
             else
                 vieModel.GoToBottomCanvas = Visibility.Visible;
@@ -2136,12 +2168,15 @@ namespace Jvedio
 
         public void GotoTop(object sender, MouseButtonEventArgs e)
         {
-            MovieScrollViewer.ScrollToTop();
+            ScrollViewer scrollViewer = FindVisualChild<ScrollViewer>(MovieItemsControl);
+            scrollViewer.ScrollToTop();
         }
 
         private void GotoBottom(object sender, MouseButtonEventArgs e)
         {
-            MovieScrollViewer.ScrollToBottom();
+            ScrollViewer scrollViewer = FindVisualChild<ScrollViewer>(MovieItemsControl);
+
+            scrollViewer.ScrollToBottom();
         }
 
         public void PlayVideo(object sender, MouseButtonEventArgs e)
@@ -3449,35 +3484,6 @@ namespace Jvedio
 
 
 
-        private void NextPage(object sender, MouseButtonEventArgs e)
-        {
-            if (vieModel.TotalPage <= 1) return;
-            if (vieModel.CurrentPage + 1 > vieModel.TotalPage) vieModel.CurrentPage = 1;
-            else vieModel.CurrentPage += 1;
-
-            vieModel.AsyncFlipOver();
-            //if (Properties.Settings.Default.EasyMode)
-            //    SimpleMovieScrollViewer.ScrollToTop();
-            //else
-            MovieScrollViewer.ScrollToTop();
-
-        }
-
-        private void PreviousPage(object sender, MouseButtonEventArgs e)
-        {
-
-            if (vieModel.TotalPage <= 1) return;
-            if (vieModel.CurrentPage - 1 <= 0) vieModel.CurrentPage = vieModel.TotalPage;
-            else vieModel.CurrentPage -= 1;
-
-            vieModel.AsyncFlipOver();
-            //if (Properties.Settings.Default.EasyMode)
-            //    SimpleMovieScrollViewer.ScrollToTop();
-            //else
-            MovieScrollViewer.ScrollToTop();
-
-        }
-
 
 
 
@@ -3573,6 +3579,21 @@ namespace Jvedio
             //    if (!SelectedActress.Contains(item)) SelectedActress.Add(item);
 
             //ActorSetSelected();
+
+            Properties.Settings.Default.ActorEditMode = true;
+            bool allContain = true;// 检测是否取消选中
+            foreach (var item in vieModel.CurrentActorList)
+            {
+                if (!vieModel.SelectedActors.Contains(item))
+                {
+                    vieModel.SelectedActors.Add(item);
+                    allContain = false;
+                }
+            }
+
+            if (allContain)
+                vieModel.SelectedActors.RemoveMany(vieModel.CurrentActorList);
+            ActorSetSelected();
         }
 
         public void ActorCancelSelect()
@@ -3649,17 +3670,6 @@ namespace Jvedio
 
 
 
-
-        // todo
-        private void ProgressBar_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            //if (vieModel.ProgressBarVisibility == Visibility.Hidden && Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null)
-            //{
-            //    taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
-            //}
-
-
-        }
 
 
 
@@ -4078,6 +4088,8 @@ namespace Jvedio
             //AppDatabase database = 
             vieModel.CurrentAppDataBase = (AppDatabase)e.AddedItems[0];
             GlobalConfig.Main.CurrentDBId = vieModel.CurrentAppDataBase.DBId;
+            GlobalConfig.Settings.DefaultDBID = vieModel.CurrentAppDataBase.DBId;
+
             //切换数据库
 
             vieModel.IsRefresh = true;
@@ -5017,15 +5029,6 @@ namespace Jvedio
 
         }
 
-        private void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null)
-            {
-                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal, this);
-                taskbarInstance.SetProgressValue((int)e.NewValue, 100, this);
-                if (e.NewValue >= 100 || e.NewValue <= 0) taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
-            }
-        }
 
         private void ActorProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -5797,9 +5800,22 @@ namespace Jvedio
 
         private async void doSearch(object sender, RoutedEventArgs e)
         {
-            vieModel.Searching = true;
-            GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
-            await vieModel.Query((SearchType)searchTabControl.SelectedIndex);
+            if (vieModel.TabSelectedIndex == 0)
+            {
+                vieModel.Searching = true;
+
+                GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+                await vieModel.Query((SearchType)searchTabControl.SelectedIndex);
+            }
+            else
+            {
+                // 搜寻演员
+                vieModel.SearchingActor = true;
+                vieModel.SelectActor();
+
+
+
+            }
         }
 
         private void searchBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -6228,7 +6244,11 @@ namespace Jvedio
 
         private void NewActor(object sender, RoutedEventArgs e)
         {
-            msgCard.Info("开发中");
+            bool? success = new Window_EditActor(0).ShowDialog();
+            if ((bool)success)
+            {
+                vieModel.Statistic();
+            }
         }
 
         private void ShowActorNotice(object sender, RoutedEventArgs e)
@@ -6630,7 +6650,43 @@ namespace Jvedio
 
 
 
+        private void RestartTask(object sender, RoutedEventArgs e)
+        {
+            string dataID = (sender as Button).Tag.ToString();
+            DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
+            task.Restart();
+            if (!Global.Download.Dispatcher.Working)
+                Global.Download.Dispatcher.BeginWork();
+        }
 
+        private void ShowSponsor(object sender, RoutedEventArgs e)
+        {
+            new Dialog_Sponsor(this).ShowDialog();
+        }
+
+        private void DeleteActors(object sender, RoutedEventArgs e)
+        {
+            if (new Msgbox(this, "即将删除演员信息，是否继续？").ShowDialog() == true)
+            {
+                MenuItem mnu = sender as MenuItem;
+                ContextMenu contextMenu = mnu.Parent as ContextMenu;
+                //FrameworkElement image = contextMenu.PlacementTarget as FrameworkElement;
+                long.TryParse(contextMenu.Tag.ToString(), out long actorID);
+                if (actorID <= 0) return;
+
+                if (!Properties.Settings.Default.ActorEditMode) vieModel.SelectedActors.Clear();
+                ActorInfo actor = vieModel.CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
+                if (!vieModel.SelectedActors.Where(arg => arg.ActorID == actorID).Any()) vieModel.SelectedActors.Add(actor);
+
+                foreach (ActorInfo actorInfo in vieModel.SelectedActors)
+                {
+                    actorMapper.deleteById(actorInfo.ActorID);
+                    string sql = $"delete from metadata_to_actor where metadata_to_actor.ActorID='{actorInfo.ActorID}'";
+                    actorMapper.executeNonQuery(sql);
+                }
+                vieModel.SelectActor();
+            }
+        }
     }
 
 

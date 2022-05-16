@@ -133,6 +133,26 @@ namespace Jvedio.Core.CustomTask
 
                     onLongDelay?.Invoke(this, new MessageCallBackEventArgs("0"));// 隐藏提示
 
+                    // 扫描一遍 doneList 和 cancelList，把标记位重新开始的任务添加到工作队列
+                    for (int i = DoneList.Count - 1; i >= 0; i--)
+                    {
+                        if (DoneList[i].Status == TaskStatus.WaitingToRun)
+                        {
+                            WaitingQueue.Enqueue(DoneList[i], MAX_PRIORITY);// 重新开始的任务优先值最高
+                            DoneList.RemoveAt(i);
+                        }
+                    }
+
+                    for (int i = CanceldList.Count - 1; i >= 0; i--)
+                    {
+                        if (CanceldList[i].Status == TaskStatus.WaitingToRun)
+                        {
+                            WaitingQueue.Enqueue(CanceldList[i], MAX_PRIORITY);// 重新开始的任务优先值最高
+                            CanceldList.RemoveAt(i);
+                        }
+                    }
+
+
                     // 将等待队列中的下载任务添加到工作队列
                     while (WorkingList.Count < MAX_TASK_COUNT && WaitingQueue.Count > 0)
                     {
@@ -147,7 +167,7 @@ namespace Jvedio.Core.CustomTask
 
                     foreach (T task in WorkingList)
                     {
-                        if (!task.Running && task.Status != TaskStatus.Canceled)
+                        if (task.Status == TaskStatus.WaitingToRun)
                         {
                             task.Start();
                         }

@@ -43,6 +43,7 @@ using Jvedio.Core.CustomEventArgs;
 using Jvedio.Style;
 using JvedioLib;
 using Jvedio.Utils.Enums;
+using JvedioLib.Security;
 
 namespace Jvedio.ViewModel
 {

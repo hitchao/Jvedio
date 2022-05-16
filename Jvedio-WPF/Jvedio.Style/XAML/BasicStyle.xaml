@@ -124,6 +124,19 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="BlueEllipse" TargetType="{x:Type Ellipse}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Canvas}, Mode=FindAncestor}}" Value="True">
+                <Setter Property="Fill" Value="#1177BB" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Canvas}, Mode=FindAncestor}}" Value="False">
+                <Setter Property="Fill" Value="#0E639C" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="OrangeEllipse" TargetType="Ellipse">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Cursor" Value="Hand" />

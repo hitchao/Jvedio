@@ -51,6 +51,7 @@ namespace Jvedio
             this.Width = SystemParameters.PrimaryScreenWidth * 2 / 3;
             this.Height = SystemParameters.PrimaryScreenHeight * 2 / 3;
 
+            test();
 
             cts = new CancellationTokenSource();
             cts.Token.Register(() => Console.WriteLine("取消任务"));
@@ -69,18 +70,13 @@ namespace Jvedio
 
         private void test()
         {
-            //Dictionary<string, string> dict = (Dictionary<string, string>)GlobalConfig.Settings.PicPaths[PathType.RelativeToData.ToString()];
-            //string bigPath = dict["BigImagePath"];
-
-            //string regex = bigPath.Split('/').Last();
-            //var xeger = new Xeger(regex);
-
-            //var sb = new StringBuilder();
-            //for (int i = 0; i < 10; ++i)
-            //    sb.AppendLine(xeger.Generate());
-            //Console.Write(sb.ToString());
-
-            //Console.WriteLine("123");
+            string dllPath = "JvedioLib.dll";
+            Assembly dll = Assembly.LoadFrom(dllPath);
+            Type[] types = dll.GetTypes();
+            Type type = types.Where(arg => arg.Name.Equals("Identify")).FirstOrDefault();
+            MethodInfo methodInfo = type.GetMethod("GetVID");
+            object value = methodInfo.Invoke(null, new object[] { "FC2-123456" });
+            Console.WriteLine(value);
         }
 
         // todo
@@ -136,7 +132,7 @@ namespace Jvedio
                 vieModel_StartUp.Loading = false;
                 this.TitleHeight = 30;
             }
-            test();
+
             //}
             //catch (Exception ex)
             //{
@@ -456,6 +452,7 @@ namespace Jvedio
         private void SearchText_Changed(object sender, RoutedEventArgs e)
         {
             ChaoControls.Style.SearchBox textBox = sender as ChaoControls.Style.SearchBox;
+            if (textBox == null) return;
             vieModel_StartUp.CurrentSearch = textBox.Text;
             vieModel_StartUp.Search();
         }
@@ -507,7 +504,7 @@ namespace Jvedio
                 return;
 
             //加载数据库
-            long id = vieModel_StartUp.CurrentDBID;
+            long id = GlobalConfig.Main.CurrentDBId;
             AppDatabase database = null;
             if (ClickGoBackToStartUp || !GlobalConfig.Settings.OpenDataBaseDefault)
             {
@@ -541,8 +538,7 @@ namespace Jvedio
             vieModel_StartUp.Loading = false;
             // 次数+1
             appDatabaseMapper.increaseFieldById("ViewCount", id);
-            vieModel_StartUp.CurrentDBID = id;
-            GlobalConfig.StartUp.CurrentDBID = vieModel_StartUp.CurrentDBID;
+
             GlobalConfig.Main.CurrentDBId = id;
 
             // 是否需要扫描
@@ -580,6 +576,10 @@ namespace Jvedio
                         MessageBox.Show(ex.Message);
                     }
 
+                }
+                else
+                {
+                    tabControl.SelectedIndex = 1;
                 }
             }
 
@@ -692,7 +692,7 @@ namespace Jvedio
             GlobalConfig.StartUp.Tile = vieModel_StartUp.Tile;
             GlobalConfig.StartUp.ShowHideItem = vieModel_StartUp.ShowHideItem;
             GlobalConfig.StartUp.SideIdx = vieModel_StartUp.CurrentSideIdx;
-            GlobalConfig.StartUp.CurrentDBID = vieModel_StartUp.CurrentDBID;
+
             GlobalConfig.StartUp.Sort = vieModel_StartUp.Sort;
             GlobalConfig.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? "名称" : vieModel_StartUp.SortType;
             GlobalConfig.StartUp.Save();

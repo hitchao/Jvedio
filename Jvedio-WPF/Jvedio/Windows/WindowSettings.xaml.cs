@@ -757,7 +757,7 @@ namespace Jvedio
 
             passwordBox.PasswordChanged += (s, ev) =>
             {
-                vieModel.ProxyPwd = Encrypt.AesEncrypt(passwordBox.Password, AesKey.PROXY);
+                vieModel.ProxyPwd = Encrypt.AesEncrypt(passwordBox.Password, 0);
 
             };
             adjustPluginViewListBox();

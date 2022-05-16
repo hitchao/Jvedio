@@ -26,7 +26,7 @@ namespace Jvedio.ViewModel
         public string SortType = GlobalConfig.StartUp.SortType;
         public string CurrentSearch = "";
         public long CurrentSideIdx = GlobalConfig.StartUp.SideIdx;
-        public long CurrentDBID = GlobalConfig.StartUp.CurrentDBID;
+
 
         #region "属性"
 
@@ -144,7 +144,16 @@ namespace Jvedio.ViewModel
         public void Search()
         {
             CurrentDatabases = null;
-            if (string.IsNullOrEmpty(CurrentSearch)) CurrentDatabases = Databases;
+            if (Databases == null || Databases.Count == 0)
+            {
+                CurrentDatabases = new ObservableCollection<AppDatabase>();
+                return;
+            }
+            if (string.IsNullOrEmpty(CurrentSearch))
+            {
+                CurrentSearch = "";
+                CurrentDatabases = Databases;
+            }
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             if (!ShowHideItem)
             {

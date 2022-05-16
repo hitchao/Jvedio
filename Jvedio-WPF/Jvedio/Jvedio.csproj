@@ -137,10 +137,6 @@
     <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="JvedioLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Reference\JvedioLib.dll</HintPath>
-    </Reference>
     <Reference Include="K4os.Compression.LZ4, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
       <HintPath>..\packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
     </Reference>
@@ -293,6 +289,7 @@
     <Compile Include="Core\Enums\AssociationType.cs" />
     <Compile Include="Core\Enums\DownLoadState.cs" />
     <Compile Include="Core\Enums\ImageType.cs" />
+    <Compile Include="Core\Enums\LogType.cs" />
     <Compile Include="Core\Enums\NoticeType.cs" />
     <Compile Include="Core\Enums\PluginType.cs" />
     <Compile Include="Core\Exceptions\CrawlerNotFoundException.cs" />
@@ -359,6 +356,9 @@
     <Compile Include="DialogWindows\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DialogWindows\Dialog_Sponsor.xaml.cs">
+      <DependentUpon>Dialog_Sponsor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Entity\Actor.cs" />
     <Compile Include="Entity\Actor\ActorInfo.cs" />
     <Compile Include="Entity\Actress.cs" />
@@ -413,6 +413,7 @@
     <Compile Include="DialogWindows\Dialog_About.xaml.cs">
       <DependentUpon>Dialog_About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extern\JvedioLib.cs" />
     <Compile Include="Global\FFmpeg.cs" />
     <Compile Include="Global\Download.cs" />
     <Compile Include="Global\Plugins.cs" />
@@ -561,6 +562,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="DialogWindows\Dialog_SelectActor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DialogWindows\Dialog_Sponsor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

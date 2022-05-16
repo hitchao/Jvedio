@@ -10,6 +10,7 @@ using System.IO;
 using Jvedio.Plot.Bar;
 using Jvedio.Entity;
 using JvedioLib;
+using JvedioLib.Security;
 
 namespace Jvedio.ViewModel
 {

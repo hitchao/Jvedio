@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Utils.Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -18,6 +20,7 @@ namespace Jvedio
         private static readonly object DataBaseLock = new object();
         private static readonly object ExceptionLock = new object();
         private static readonly object ScanLogLock = new object();
+        private static readonly object CommonLogLock = new object();
 
         private static readonly object ErrorLock = new object();
 
@@ -152,22 +155,82 @@ namespace Jvedio
             }
         }
 
-
-        public static void Error(string str)
+        public static void Info(string content)
         {
-            str += Environment.NewLine;
-            Console.WriteLine(str);
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\Error";
+            Log(LogType.Info, content);
+        }
+        public static void Error(string content)
+        {
+            Log(LogType.Error, content);
+        }
+        public static void Warning(string content)
+        {
+            Log(LogType.Warning, content);
+        }
+
+
+
+        public static void Error(Exception e)
+        {
+            Console.WriteLine(e.StackTrace);
+            Console.WriteLine(e.Message);
+            string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\File";
             if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-            lock (DataBaseLock)
+            string content;
+            content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
+            content += $"{Environment.NewLine }Message=>{ e.Message}";
+            content += $"{Environment.NewLine }StackTrace=>{Environment.NewLine }{ GetAllFootprints(e)}";
+
+            lock (ExceptionLock)
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(str); } catch { }
+                    try { sr.Write(content); } catch { }
                 }
             }
         }
+
+        private static void Log(LogType logType, string content)
+        {
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log");
+            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            string output = $"{DateHelper.Now()} => [{logType}] {content} {Environment.NewLine}";
+            string filepath = Path.Combine(path, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
+            lock (CommonLogLock)
+            {
+                try
+                {
+                    using (StreamWriter sr = new StreamWriter(filepath, true, Encoding.UTF8))
+                    {
+                        sr.Write(output);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                Console.WriteLine(content);
+            }
+
+        }
+
+
+        //public static void Error(string str)
+        //{
+        //    str += Environment.NewLine;
+        //    Console.WriteLine(str);
+        //    string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\Error";
+        //    if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+        //    string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+        //    lock (DataBaseLock)
+        //    {
+        //        using (StreamWriter sr = new StreamWriter(filepath, true))
+        //        {
+        //            try { sr.Write(str); } catch { }
+        //        }
+        //    }
+        //}
 
 
 

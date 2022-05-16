@@ -176,17 +176,7 @@
                 Grid.Row="1"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
-                <Button
-                    Height="30"
-                    MinWidth="100"
-                    Content="清空"
-                    IsEnabled="False"
-                    Style="{StaticResource ButtonDanger}" />
-                <Button
-                    Height="30"
-                    MinWidth="100"
-                    Content="新增"
-                    IsEnabled="False" />
+
                 <Button
                     MinWidth="100"
                     Margin="10"

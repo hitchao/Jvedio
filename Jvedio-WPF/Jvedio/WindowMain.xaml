@@ -25,6 +25,7 @@
     Closed="Window_Closed"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
+    DataContext="{Binding ElementName=main}"
     Foreground="{DynamicResource Global.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     PreviewKeyDown="Window_PreviewKeyDown"
@@ -35,7 +36,6 @@
     TitleMargin="5 0"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-
 
 
     <chao:BaseWindow.Resources>
@@ -146,6 +146,7 @@
                     MouseLeftButtonUp="SelectActor">
                     <Border.ContextMenu>
                         <ContextMenu>
+
                             <MenuItem
                                 Click="DownLoadSelectedActor"
                                 Header="{x:Static lang:Resources.SyncInfo}"
@@ -173,9 +174,11 @@
                         FocusVisualStyle="{x:Null}"
                         MouseLeftButtonUp="SelectActor"
                         Source="{Binding SmallImage}"
-                        Stretch="UniformToFill">
+                        Stretch="UniformToFill"
+                        Tag="{Binding ActorID}">
                         <Image.ContextMenu>
-                            <ContextMenu>
+                            <ContextMenu Tag="{Binding ActorID}">
+                                <MenuItem Click="DeleteActors" Header="删除" />
                                 <MenuItem
                                     Click="DownLoadSelectedActor"
                                     Header="{x:Static lang:Resources.SyncInfo}"
@@ -412,7 +415,8 @@
                             Source="{Binding SmallImage}"
                             Stretch="UniformToFill">
                             <Image.ContextMenu>
-                                <ContextMenu>
+                                <ContextMenu Tag="{Binding ActorID}">
+                                    <MenuItem Click="DeleteActors" Header="删除" />
                                     <MenuItem
                                         Click="DownLoadSelectedActor"
                                         Header="{x:Static lang:Resources.SyncInfo}"
@@ -1970,20 +1974,21 @@
                                                 Click="ShowStatistic"
                                                 Header="{x:Static lang:Resources.Statistic}"
                                                 IsEnabled="False" />
-                                            <MenuItem
-                                                Click="ManageIndexAndCache"
-                                                Header="索引与缓存"
-                                                IsEnabled="False" />
 
 
 
 
                                             <MenuItem Header="Jvedio">
+                                                <MenuItem
+                                                    Click="ShowSponsor"
+                                                    Header="赞助我"
+                                                    Icon="pack://application:,,,/Resources/menuitem/like.png" />
                                                 <MenuItem Click="ShowAbout" Header="{x:Static lang:Resources.About}" />
                                                 <MenuItem Click="OpenHelp" Header="{x:Static lang:Resources.Help}" />
                                                 <MenuItem Click="OpenFeedBack" Header="{x:Static lang:Resources.FeedBack}" />
                                                 <MenuItem Click="OpenJvedioWebPage" Header="{x:Static lang:Resources.WebSite}" />
                                                 <MenuItem Click="ShowThanks" Header="{x:Static lang:Resources.Thanks}" />
+
                                             </MenuItem>
                                             <MenuItem Header="{x:Static lang:Resources.OpenPath}">
                                                 <MenuItem Click="OpenLogPath" Header="{x:Static lang:Resources.Log}" />
@@ -2118,6 +2123,8 @@
                             </Popup>
 
 
+
+
                         </Grid>
                         <ItemsControl Grid.Row="1" ItemsSource="{Binding Notices}">
                             <ItemsControl.ItemTemplate>
@@ -2224,7 +2231,7 @@
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
                             SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}"
-                            Style="{StaticResource HeaderHideTabControlStyle}">
+                            Style="{StaticResource FlatTabControl}">
                             <TabItem Header="影片">
                                 <!--  影片  -->
                                 <Grid HorizontalAlignment="Stretch">
@@ -3423,36 +3430,13 @@
                                                 x:Name="DragSelectCanvas"
                                                 Panel.ZIndex="-1"
                                                 Background="Transparent" />
-                                            <ScrollViewer
-                                                x:Name="MovieScrollViewer"
-                                                CanContentScroll="True"
-                                                FocusVisualStyle="{x:Null}"
-                                                IsDeferredScrollingEnabled="False"
-                                                MouseEnter="MovieScrollViewer_MouseEnter"
-                                                MouseLeave="MovieScrollViewer_MouseLeave"
-                                                ScrollChanged="ScrollViewer_ScrollChanged"
-                                                Style="{StaticResource FlatScrollViewer}" />
-
                                             <!--  影片  -->
-                                            <!--<ItemsControl
-                                                x:Name="MovieItemsControl"
-                                                Background="{DynamicResource Window.Background}"
-                                                FocusVisualStyle="{x:Null}"
-                                                ItemsSource="{Binding CurrentVideoList}"
-                                                PreviewMouseLeftButtonDown="BeginDrawSelect"
-                                                PreviewMouseLeftButtonUp="DragSelectCanvas_MouseUp"
-                                                PreviewMouseMove="DrawSelect">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>-->
-
                                             <ItemsControl
                                                 x:Name="MovieItemsControl"
                                                 Background="{DynamicResource Window.Background}"
                                                 FocusVisualStyle="{x:Null}"
                                                 ItemsSource="{Binding CurrentVideoList}"
+                                                ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
                                                 Style="{StaticResource ItemsControlVirtualizedWrapPanelStyle}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
@@ -3893,7 +3877,7 @@
                                                     Margin="0,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Bottom"
-                                                    Style="{StaticResource Ellipse2}" />
+                                                    Style="{StaticResource BlueEllipse}" />
                                                 <Image
                                                     Canvas.Left="9"
                                                     Canvas.Top="8"
@@ -3920,7 +3904,7 @@
                                                     Margin="0,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Bottom"
-                                                    Style="{StaticResource Ellipse2}" />
+                                                    Style="{StaticResource BlueEllipse}" />
                                                 <Image
                                                     Canvas.Left="9"
                                                     Canvas.Top="10"
@@ -4029,8 +4013,8 @@
                                             Grid.Column="2"
                                             CurrentPage="{Binding CurrentPage, Mode=OneWay}"
                                             CurrentPageChange="Pagination_CurrentPageChange"
+                                            PageSize="{Binding PageSize, Source={x:Static p:Settings.Default}, Mode=TwoWay}"
                                             PageSizes="[10,20,40,50,100,200]"
-                                            PageSize="{Binding PageSize,Source={x:Static p:Settings.Default},Mode=TwoWay}"
                                             ShowCombobox="{Binding PaginationCombobox, Source={x:Static p:Settings.Default}}"
                                             Style="{StaticResource NormalPagination}"
                                             Total="{Binding TotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -4233,10 +4217,7 @@
 
                                         <Grid.ContextMenu>
                                             <ContextMenu>
-                                                <MenuItem
-                                                    Click="RefreshCurrentActressPage"
-                                                    Header="{x:Static lang:Resources.Refresh}"
-                                                    Icon="pack://application:,,,/Resources/menuitem/refresh.png" />
+
                                                 <MenuItem
                                                     Click="SelectAllActor"
                                                     Header="{x:Static lang:Resources.SelectAll}"
@@ -4265,7 +4246,7 @@
                                                         <WrapPanel />
                                                     </ItemsPanelTemplate>
                                                     <ItemsPanelTemplate x:Key="VerticalStackTemplate">
-                                                        <StackPanel Orientation="Vertical" />
+                                                        <VirtualizingStackPanel Orientation="Vertical" />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.Resources>
                                                 <ItemsControl.Style>
@@ -5677,12 +5658,13 @@
                                                             <Button
                                                                 Click="CancelDownloadTask"
                                                                 Content="取消"
+                                                                IsEnabled="{Binding Running}"
                                                                 Tag="{Binding DataID}" />
-                                                            <!--<Button
-                                                                    Click="PauseDownloadTask"
-                                                                    Content="暂停"
-                                                                    IsEnabled="{Binding Running}"
-                                                                    Tag="{Binding DataID}" />-->
+                                                            <Button
+                                                                Click="RestartTask"
+                                                                Content="重启"
+                                                                IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
+                                                                Tag="{Binding DataID}" />
                                                             <Button
                                                                 Click="ShowDownloadDetail"
                                                                 Content="详情"
@@ -5697,10 +5679,7 @@
 
 
 
-                                    <StackPanel
-                                        Grid.Row="2"
-                                        Orientation="Vertical"
-                                        Visibility="{Binding DownLoadVisibility}">
+                                    <StackPanel Grid.Row="2" Orientation="Vertical">
 
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -5714,11 +5693,13 @@
                                                 Maximum="100"
                                                 Minimum="0"
                                                 Style="{StaticResource NormalStaticProgressBar}"
+                                                Visibility="{Binding DownLoadVisibility}"
                                                 Value="{Binding DownLoadProgress}" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Margin="10,0"
-                                                Text="{Binding DownLoadProgress, StringFormat=\{0\} %}" />
+                                                Text="{Binding DownLoadProgress, StringFormat=\{0\} %}"
+                                                Visibility="{Binding DownLoadVisibility}" />
                                         </Grid>
 
                                         <StackPanel Orientation="Horizontal">

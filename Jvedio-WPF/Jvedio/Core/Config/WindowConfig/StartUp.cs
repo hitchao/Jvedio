@@ -28,7 +28,7 @@ namespace Jvedio.Core.WindowConfig
         public bool Tile { get; set; }
         public bool ShowHideItem { get; set; }
         public long SideIdx { get; set; }
-        public long CurrentDBID { get; set; }
+
         public string SortType { get; set; }
         public bool Sort { get; set; }
     }
