@@ -348,8 +348,16 @@ namespace Jvedio.ViewModel
             string like_sql = "";
 
             string search = SearchText.ToProperSql().Trim();
-            if (!string.IsNullOrEmpty(search))
-                like_sql = $" and ActorName like '%{search}%' ";
+            //if (!string.IsNullOrEmpty(search))
+            //    like_sql = $" and ActorName like '%{search}%' ";
+
+            //string count_sql = "SELECT count(*) as Count " +
+            //             "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
+            //             "on metadata_to_actor.ActorID=actor_info.ActorID " +
+            //             "join metadata " +
+            //             "on metadata_to_actor.DataID=metadata.DataID " +
+            //             $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+            //             like_sql + "GROUP BY actor_info.ActorID );";
 
             string count_sql = "SELECT count(*) as Count " +
                          "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
@@ -357,16 +365,38 @@ namespace Jvedio.ViewModel
                          "join metadata " +
                          "on metadata_to_actor.DataID=metadata.DataID " +
                          $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
-                         like_sql + "GROUP BY actor_info.ActorID );";
+                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
+                         "GROUP BY actor_info.ActorID " +
+                         "UNION " +
+                         "select actor_info.ActorID  " +
+                         "FROM actor_info WHERE NOT EXISTS " +
+                         "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
+                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
+                         "GROUP BY actor_info.ActorID)";
 
             ActorTotalCount = actorMapper.selectCount(count_sql);
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
+            //string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
+            //    $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
+            //    $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
+            //    $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+            //    like_sql +
+            //    $"GROUP BY actor_info.ActorID ORDER BY Count DESC"
+            //    + ActorToLimit();
+
             string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
-                $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
-                $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
-                $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " + like_sql +
-                $"GROUP BY actor_info.ActorID ORDER BY Count DESC"
-                + ActorToLimit();
+                        $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
+                        $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
+                        $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                       $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
+                        $"GROUP BY actor_info.ActorID " +
+                        "UNION " +
+                       $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
+                        "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
+                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} "
+                         + ActorToLimit();
+
+
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { windowEdit.actorPagination.Total = ActorTotalCount; });
 

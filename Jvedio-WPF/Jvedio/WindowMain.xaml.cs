@@ -5767,6 +5767,39 @@ namespace Jvedio
 
         }
 
+        public void RefreshActor(long actorID)
+        {
+            try
+            {
+                if (vieModel.CurrentActorList == null || vieModel.CurrentActorList.Count == 0) return;
+                for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
+                {
+                    if (vieModel.CurrentActorList[i]?.ActorID == actorID)
+                    {
+                        long count = vieModel.CurrentActorList[i].Count;
+                        vieModel.CurrentActorList[i].SmallImage = null;
+                        vieModel.CurrentActorList[i] = null;
+
+                        SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
+                        wrapper.Eq("ActorID", actorID);
+                        ActorInfo actorInfo = actorMapper.selectById(wrapper);
+                        ActorInfo.SetImage(ref actorInfo);
+                        actorInfo.Count = count;
+
+                        vieModel.CurrentActorList[i] = actorInfo;
+                        vieModel.CurrentActorList[i].SmallImage = actorInfo.SmallImage;
+                        break;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+
         public void BorderMouseEnter(object sender, MouseEventArgs e)
         {
             if (Properties.Settings.Default.EditMode)
@@ -6247,6 +6280,7 @@ namespace Jvedio
             bool? success = new Window_EditActor(0).ShowDialog();
             if ((bool)success)
             {
+                msgCard.Success("成功添加！");
                 vieModel.Statistic();
             }
         }
@@ -6686,6 +6720,17 @@ namespace Jvedio
                 }
                 vieModel.SelectActor();
             }
+        }
+
+        private void OpenActorImagePath(object sender, RoutedEventArgs e)
+        {
+            MenuItem mnu = sender as MenuItem;
+            ContextMenu contextMenu = mnu.Parent as ContextMenu;
+            long.TryParse(contextMenu.Tag.ToString(), out long actorID);
+            if (actorID <= 0) return;
+            ActorInfo actorInfo = actorMapper.selectById(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
+            string path = Path.GetFullPath(actorInfo.getImagePath());
+            FileHelper.TryOpenSelectPath(path);
         }
     }
 

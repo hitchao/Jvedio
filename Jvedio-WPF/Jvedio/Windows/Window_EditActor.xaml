@@ -81,7 +81,13 @@
                     <Image
                         Width="125"
                         Height="auto"
-                        Source="{Binding CurrentActorInfo.SmallImage}" />
+                        Source="{Binding CurrentActorInfo.SmallImage}">
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Click="SetActorImage" Header="设置头像" />
+                            </ContextMenu>
+                        </Image.ContextMenu>
+                    </Image>
 
                 </Border>
 
@@ -97,6 +103,7 @@
                         Foreground="{DynamicResource Global.Foreground}"
                         Style="{StaticResource BaseTextBox}"
                         Text="{Binding CurrentActorInfo.ActorName}" />
+
                 </Border>
 
             </StackPanel>

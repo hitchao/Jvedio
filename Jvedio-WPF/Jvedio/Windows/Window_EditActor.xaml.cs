@@ -4,6 +4,7 @@ using Jvedio.Entity;
 using Jvedio.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,9 @@ namespace Jvedio
     /// </summary>
     public partial class Window_EditActor : BaseWindow
     {
+
+
+        Main main = FileProcess.GetWindowByName("Main") as Main;
         private Window_EditActor()
         {
             InitializeComponent();
@@ -68,7 +72,12 @@ namespace Jvedio
             if (ActorID > 0)
             {
                 int update = actorMapper.updateById(CurrentActorInfo);
-                if (update > 0) MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                if (update > 0)
+                {
+                    MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                    main?.RefreshActor(CurrentActorInfo.ActorID);
+                }
+
             }
             else
             {
@@ -87,12 +96,54 @@ namespace Jvedio
                     actorMapper.insert(CurrentActorInfo);
                     if (CurrentActorInfo.ActorID > 0)
                     {
-                        MessageCard.Success("成功添加！");
                         this.DialogResult = true;
                     }
                     else
                         MessageCard.Success("添加失败！");
                 }
+            }
+
+        }
+
+        private void SetActorImage(object sender, RoutedEventArgs e)
+        {
+            string imageFileName = "";
+            System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
+            OpenFileDialog1.Filter = GlobalVariable.SupportPictureFormat;
+            OpenFileDialog1.FilterIndex = 1;
+            OpenFileDialog1.RestoreDirectory = true;
+            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string filename = OpenFileDialog1.FileName;
+                if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
+                    imageFileName = filename;
+            }
+            bool copyed = false;
+            string targetFileName = CurrentActorInfo.getImagePath(searchExt: false);
+            if (File.Exists(targetFileName))
+            {
+                if (new Msgbox(this, "该图片已存在，是否使用演员识别码命名？").ShowDialog() == true)
+                {
+                    string dir = System.IO.Path.GetDirectoryName(targetFileName);
+                    string ext = System.IO.Path.GetExtension(targetFileName);
+                    targetFileName = System.IO.Path.Combine(dir, $"{CurrentActorInfo.ActorID}_{CurrentActorInfo.ActorName}{ext}");
+                    FileHelper.TryCopyFile(imageFileName, targetFileName, true);
+                    copyed = true;
+                }
+            }
+            else
+            {
+                FileHelper.TryCopyFile(imageFileName, targetFileName);
+                copyed = true;
+            }
+            if (copyed)
+            {
+                // 设置图片
+                CurrentActorInfo.SmallImage = null;
+                CurrentActorInfo.SmallImage = ImageProcess.BitmapImageFromFile(targetFileName);
+
+                main?.RefreshActor(CurrentActorInfo.ActorID);
             }
 
         }

@@ -179,6 +179,7 @@
                         <Image.ContextMenu>
                             <ContextMenu Tag="{Binding ActorID}">
                                 <MenuItem Click="DeleteActors" Header="删除" />
+                                <MenuItem Click="OpenActorImagePath" Header="打开头像位置" />
                                 <MenuItem
                                     Click="DownLoadSelectedActor"
                                     Header="{x:Static lang:Resources.SyncInfo}"
@@ -417,6 +418,7 @@
                             <Image.ContextMenu>
                                 <ContextMenu Tag="{Binding ActorID}">
                                     <MenuItem Click="DeleteActors" Header="删除" />
+                                    <MenuItem Click="OpenActorImagePath" Header="打开头像位置" />
                                     <MenuItem
                                         Click="DownLoadSelectedActor"
                                         Header="{x:Static lang:Resources.SyncInfo}"

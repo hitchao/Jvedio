@@ -119,7 +119,10 @@ namespace Jvedio.Entity
                     basePicPath = System.IO.Path.Combine(GlobalVariable.CurrentUserFolder, basePicPath);
                 string saveDir = System.IO.Path.Combine(basePicPath, "Actresses");
                 if (!Directory.Exists(saveDir)) FileHelper.TryCreateDir(saveDir);
-                result = System.IO.Path.Combine(saveDir, $"{ActorName}.jpg");
+                // 优先使用 1_name.jpg 的方式
+                result = System.IO.Path.Combine(saveDir, $"{ActorID}_{ActorName}{ext}");
+                if (!File.Exists(result))
+                    result = System.IO.Path.Combine(saveDir, $"{ActorName}{ext}");
             }
             else if (!string.IsNullOrEmpty(dataPath))
             {
