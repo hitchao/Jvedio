@@ -38,13 +38,13 @@
             <!--删除字体-->
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Margin" Value="0,5,0,5"/>
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}"/>
         </Style>
 
         <Style x:Key="ActorInfoTextBlock" TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="10 10"/>
             <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}"/>
+            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}"/>
         </Style>
 
         <Style x:Key="ActorBorder" TargetType="{x:Type Border}">
@@ -78,7 +78,7 @@
     </Window.Resources>
 
 
-    <Grid  Background="{DynamicResource BackgroundMain}"  Width="auto" Height="auto"  MaxHeight="500"  >
+    <Grid  Background="{DynamicResource Window.InnerDialog.Background}"  Width="auto" Height="auto"  MaxHeight="500"  >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -87,9 +87,9 @@
         </Grid.RowDefinitions>
         <StackPanel x:Name="VedioTypeStackPanel" Grid.Row="0" Orientation="Horizontal">
             <Label  Content="{x:Static lang:Resources.SearchVideoType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
-            <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
-            <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
-            <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
         </StackPanel>
 
         <DockPanel LastChildFill="True" Grid.Row="1" >
@@ -116,14 +116,14 @@
                     <DataTemplate>
                         <WrapPanel  Name="ActorWrapPanel" Orientation="Horizontal">
                             <Grid Margin="5" >
-                                <Border  Style="{StaticResource ActorBorder}" Background="{DynamicResource BackgroundSide}"  CornerRadius="5"  >
+                                <Border  Style="{StaticResource ActorBorder}" Background="{DynamicResource Window.Side.Background}"  CornerRadius="5"  >
                                     <Border.Effect>
                                         <DropShadowEffect BlurRadius="10" Color="SkyBlue" Direction="-90"  RenderingBias="Quality" ShadowDepth="0"/>
                                     </Border.Effect>
                                 </Border>
                                 <StackPanel Orientation="Vertical" Margin="2">
                                     <Image Tag="{Binding ID,Mode=OneWay}" Stretch="UniformToFill" MouseLeftButtonUp="SelectActor" MouseEnter="ActorBorderMouseEnter" MouseLeave="ActorBorderMouseLeave"  Style="{StaticResource ActorImage}"    />
-                                    <TextBox Name="ActorNameTextBox" Width="125" TextWrapping="Wrap" TextAlignment="Center" MaxHeight="80" Margin="0" Foreground="{DynamicResource ForegroundSearch}" Opacity="0.7" FontSize="18"  Style="{StaticResource ActorInfoTextBox}" >
+                                    <TextBox Name="ActorNameTextBox" Width="125" TextWrapping="Wrap" TextAlignment="Center" MaxHeight="80" Margin="0" Foreground="{DynamicResource Global.Foreground}" Opacity="0.7" FontSize="18"  Style="{StaticResource ActorInfoTextBox}" >
                                         <TextBox.Text>
                                             <MultiBinding StringFormat="{}{0}({1})">
                                                 <Binding Path="Name" />

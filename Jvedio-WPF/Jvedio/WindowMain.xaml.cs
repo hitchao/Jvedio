@@ -89,6 +89,8 @@ namespace Jvedio
         public DetailMovie CurrentLabelMovie;
         public bool IsFlowing = false;
 
+        private WindowFilter windowFilter;
+
 
         public DispatcherTimer FlipoverTimer = new DispatcherTimer();
 
@@ -145,6 +147,7 @@ namespace Jvedio
             initTagStamp();
             AllRadioButton.IsChecked = true;
 
+            ShowSettings(null, null);
         }
 
 
@@ -470,6 +473,7 @@ namespace Jvedio
             vieModel.HideToIcon = false;//隐藏图标
             DisposeGif("", true);//清除 gif 资源
             NoticeTimer.Stop();
+            windowFilter?.Close();
             base.OnClosed(e);
         }
 
@@ -1328,30 +1332,6 @@ namespace Jvedio
             }
         }
 
-        private void SetSearchSelect()
-        {
-            //for (int i = 0; i < SearchItemsControl.Items.Count; i++)
-            //{
-            //    ContentPresenter c = (ContentPresenter)SearchItemsControl.ItemContainerGenerator.ContainerFromItem(SearchItemsControl.Items[i]);
-            //    StackPanel stackPanel = FindElementByName<StackPanel>(c, "SearchStackPanel");
-            //    if (stackPanel != null)
-            //    {
-
-            //        Border border = stackPanel.Children[0] as Border;
-            //        TextBlock textBlock = border.Child as TextBlock;
-            //        if (i == SearchSelectIdex)
-            //        {
-            //            border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundMain"];
-            //        }
-            //        else
-            //        {
-            //            border.Background = new SolidColorBrush(Colors.Transparent);
-            //        }
-
-            //    }
-            //}
-
-        }
 
 
         private void HideListScrollViewer(object sender, RoutedEventArgs e)
@@ -1509,22 +1489,7 @@ namespace Jvedio
 
 
 
-        public void ActorBorderMouseEnter(object sender, RoutedEventArgs e)
-        {
-            Image image = sender as Image;
-            StackPanel stackPanel = image.Parent as StackPanel;
-            Border border = ((Grid)stackPanel.Parent).Children[0] as Border;
-            if (Properties.Settings.Default.ActorEditMode)
-            {
 
-                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
-            }
-            else
-            {
-                border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundTitle"];
-            }
-
-        }
 
         public void ActorBorderMouseLeave(object sender, RoutedEventArgs e)
         {
@@ -1537,7 +1502,7 @@ namespace Jvedio
             }
             else
             {
-                border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
+                border.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];
             }
         }
 
@@ -3948,56 +3913,56 @@ namespace Jvedio
         public void SetSkin()
         {
             FileProcess.SetSkin(Properties.Settings.Default.Themes);
-            SettingsBorder.ContextMenu.UpdateDefaultStyle();//设置弹出的菜单正确显示
-            switch (Properties.Settings.Default.Themes)
-            {
-                case "蓝色":
-                    //设置渐变
-                    LinearGradientBrush myLinearGradientBrush = new LinearGradientBrush();
-                    myLinearGradientBrush.StartPoint = new Point(0.5, 0);
-                    myLinearGradientBrush.EndPoint = new Point(0.5, 1);
-                    myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(62, 191, 223), 1));
-                    myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(11, 114, 189), 0));
-                    //SideBorder.Background = myLinearGradientBrush;
-                    break;
+            //SettingsBorder.ContextMenu.UpdateDefaultStyle();//设置弹出的菜单正确显示
+            //switch (Properties.Settings.Default.Themes)
+            //{
+            //    case "蓝色":
+            //        //设置渐变
+            //        LinearGradientBrush myLinearGradientBrush = new LinearGradientBrush();
+            //        myLinearGradientBrush.StartPoint = new Point(0.5, 0);
+            //        myLinearGradientBrush.EndPoint = new Point(0.5, 1);
+            //        myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(62, 191, 223), 1));
+            //        myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(11, 114, 189), 0));
+            //        //SideBorder.Background = myLinearGradientBrush;
+            //        break;
 
-                default:
-                    //SideBorder.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
-                    break;
-            }
+            //    default:
+            //        //SideBorder.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];
+            //        break;
+            //}
 
-            if (Properties.Settings.Default.EnableBgImage && GlobalVariable.BackgroundImage != null)
-            {
-                SideBorder.Background = Brushes.Transparent;
-                DatabaseComboBox.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Opacity.Background"];
-                TitleBorder.Background = Brushes.Transparent;
-                //MainProgressBar.Background = Brushes.Transparent;
-                //ActorProgressBar.Background = Brushes.Transparent;
-                //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
-                //{
-                //    expander.Background = Brushes.Transparent;
-                //    Border border = expander.Content as Border;
-                //    border.Background = Brushes.Transparent;
-                //}
-                BgImage.Source = GlobalVariable.BackgroundImage;
-            }
-            else
-            {
+            //if (Properties.Settings.Default.EnableBgImage && GlobalVariable.BackgroundImage != null)
+            //{
+            //    SideBorder.Background = Brushes.Transparent;
+            //    DatabaseComboBox.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Opacity.Background"];
+            //    TitleBorder.Background = Brushes.Transparent;
+            //    //MainProgressBar.Background = Brushes.Transparent;
+            //    //ActorProgressBar.Background = Brushes.Transparent;
+            //    //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
+            //    //{
+            //    //    expander.Background = Brushes.Transparent;
+            //    //    Border border = expander.Content as Border;
+            //    //    border.Background = Brushes.Transparent;
+            //    //}
+            //    BgImage.Source = GlobalVariable.BackgroundImage;
+            //}
+            //else
+            //{
 
-                TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-                DatabaseComboBox.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-                SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-                //MainProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-                //ActorProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-                //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
-                //{
-                //    expander.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-                //    Border border = expander.Content as Border;
-                //    border.SetResourceReference(Control.BackgroundProperty, "Window.Background");
-                //}
-            }
-            //设置背景图片
-            BgImage.Source = GlobalVariable.BackgroundImage;
+            //    TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+            //    DatabaseComboBox.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+            //    SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
+            //    //MainProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
+            //    //ActorProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
+            //    //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
+            //    //{
+            //    //    expander.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+            //    //    Border border = expander.Content as Border;
+            //    //    border.SetResourceReference(Control.BackgroundProperty, "Window.Background");
+            //    //}
+            //}
+            ////设置背景图片
+            //BgImage.Source = GlobalVariable.BackgroundImage;
 
 
         }
@@ -4114,29 +4079,19 @@ namespace Jvedio
 
         private async void ShowFilterGrid(object sender, MouseButtonEventArgs e)
         {
-            //这里只能用 Visibility 判断
-            if (FilterGrid.Visibility == Visibility.Visible)
-            {
-                DoubleAnimation doubleAnimation1 = new DoubleAnimation(2000, 0, new Duration(TimeSpan.FromMilliseconds(300)), FillBehavior.HoldEnd);
-                FilterGrid.BeginAnimation(FrameworkElement.MaxHeightProperty, doubleAnimation1);
-                await Task.Delay(300);
-                FilterGrid.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                if (vieModel.Filters == null) vieModel.GetFilterInfo();
-                FilterGrid.Visibility = Visibility.Visible;
-                DoubleAnimation doubleAnimation1 = new DoubleAnimation(0, 2000, new Duration(TimeSpan.FromMilliseconds(300)), FillBehavior.HoldEnd);
-                FilterGrid.BeginAnimation(FrameworkElement.MaxHeightProperty, doubleAnimation1);
-                await Task.Delay(300);
-            }
 
+            if (windowFilter == null) windowFilter = new WindowFilter();
+            windowFilter.Show();
+            windowFilter.BringIntoView();
+            windowFilter.Activate();
         }
 
 
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
         {
+            ChaoControls.Style.Switch s = sender as ChaoControls.Style.Switch;
+            Console.WriteLine(s.IsChecked);
             vieModel.SelectedVideo.Clear();
 
             SetSelected();
@@ -4240,22 +4195,6 @@ namespace Jvedio
 
 
 
-        private void TextBlock_MouseEnter(object sender, MouseEventArgs e)
-        {
-            ((TextBlock)sender).Background = (SolidColorBrush)Application.Current.Resources["BackgroundMain"];
-        }
-
-        private void TextBlock_MouseLeave(object sender, MouseEventArgs e)
-        {
-            ((TextBlock)sender).Background = new SolidColorBrush(Colors.Transparent);
-        }
-
-        private void ShowSamePath(object sender, MouseButtonEventArgs e)
-        {
-            TextBlock textBlock = sender as TextBlock;
-            vieModel.GetSamePathMovie(textBlock.Text);
-
-        }
 
 
 
@@ -4352,145 +4291,145 @@ namespace Jvedio
 
 
 
-        private void AddNewLabel(object sender, RoutedEventArgs e)
-        {
-            //获得选中的标签
-            List<string> originLabels = new List<string>();
-            for (int i = 0; i < vieModel.CurrentMovieLabelList.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)LabelDelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelDelItemsControl.Items[i]);
-                WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
-                if (wrapPanel != null)
-                {
-                    ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
-                    if ((bool)toggleButton.IsChecked)
-                    {
-                        string label = toggleButton.Content.ToString();
-                        if (!originLabels.Contains(label)) originLabels.Add(label);
-                    }
-                }
-            }
+        //private void AddNewLabel(object sender, RoutedEventArgs e)
+        //{
+        //    //获得选中的标签
+        //    List<string> originLabels = new List<string>();
+        //    for (int i = 0; i < vieModel.CurrentMovieLabelList.Count; i++)
+        //    {
+        //        ContentPresenter c = (ContentPresenter)LabelDelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelDelItemsControl.Items[i]);
+        //        WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
+        //        if (wrapPanel != null)
+        //        {
+        //            ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
+        //            if ((bool)toggleButton.IsChecked)
+        //            {
+        //                string label = toggleButton.Content.ToString();
+        //                if (!originLabels.Contains(label)) originLabels.Add(label);
+        //            }
+        //        }
+        //    }
 
-            if (originLabels.Count <= 0)
-            {
-                //msgCard.Warning("请选择标签！");
-                return;
-            }
+        //    if (originLabels.Count <= 0)
+        //    {
+        //        //msgCard.Warning("请选择标签！");
+        //        return;
+        //    }
 
-            List<string> labels = LabelToList(CurrentLabelMovie.label);
-            labels = labels.Except(originLabels).ToList();
-            CurrentLabelMovie.label = string.Join(" ", labels);
-            DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", CurrentLabelMovie.label, "String");
-
-
-            vieModel.CurrentMovieLabelList = new List<string>();
-            foreach (var item in labels)
-            {
-                vieModel.CurrentMovieLabelList.Add(item);
-            }
-
-            LabelDelItemsControl.ItemsSource = null;
-            LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
-
-            if (vieModel.CurrentVideoList.Count == 0)
-            {
-                msgCard.Info(Jvedio.Language.Resources.Message_Success);
-                LabelDelGrid.Visibility = Visibility.Hidden;
-                vieModel.GetLabelList();
-            }
+        //    List<string> labels = LabelToList(CurrentLabelMovie.label);
+        //    labels = labels.Except(originLabels).ToList();
+        //    CurrentLabelMovie.label = string.Join(" ", labels);
+        //    DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", CurrentLabelMovie.label, "String");
 
 
+        //    vieModel.CurrentMovieLabelList = new List<string>();
+        //    foreach (var item in labels)
+        //    {
+        //        vieModel.CurrentMovieLabelList.Add(item);
+        //    }
 
-        }
+        //    LabelDelItemsControl.ItemsSource = null;
+        //    LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
 
-
-        private void ClearSingleLabel(object sender, RoutedEventArgs e)
-        {
-            DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", "", "String");
-            vieModel.CurrentMovieLabelList = new List<string>();
-            LabelDelItemsControl.ItemsSource = null;
-            LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
-        }
-
-        private void AddSingleLabel(object sender, RoutedEventArgs e)
-        {
-            List<string> newLabel = new List<string>();
-
-            var di = new DialogInput(this, Jvedio.Language.Resources.InputTitle1, "");
-            di.ShowDialog();
-            if (di.DialogResult == true & di.Text != "")
-            {
-                foreach (var item in di.Text.Split(' ').ToList())
-                {
-                    if (!newLabel.Contains(item)) newLabel.Add(item);
-                }
-
-            }
-            List<string> labels = LabelToList(CurrentLabelMovie.label);
-            labels = labels.Union(newLabel).ToList();
-            CurrentLabelMovie.label = string.Join(" ", labels);
-            DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", CurrentLabelMovie.label, "String");
-
-
-            vieModel.CurrentMovieLabelList = new List<string>();
-            foreach (var item in labels)
-            {
-                vieModel.CurrentMovieLabelList.Add(item);
-            }
-            LabelDelItemsControl.ItemsSource = null;
-            LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
-        }
-
-        private void DeleteSingleLabel(object sender, RoutedEventArgs e)
-        {
-            //获得选中的标签
-            List<string> originLabels = new List<string>();
-            for (int i = 0; i < vieModel.CurrentMovieLabelList.Count; i++)
-            {
-                ContentPresenter c = (ContentPresenter)LabelDelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelDelItemsControl.Items[i]);
-                WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
-                if (wrapPanel != null)
-                {
-                    ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
-                    if ((bool)toggleButton.IsChecked)
-                    {
-                        string label = toggleButton.Content.ToString();
-                        if (!originLabels.Contains(label)) originLabels.Add(label);
-                    }
-                }
-            }
-
-            if (originLabels.Count <= 0)
-            {
-                //msgCard.Warning("请选择标签！");
-                return;
-            }
-
-            List<string> labels = LabelToList(CurrentLabelMovie.label);
-            labels = labels.Except(originLabels).ToList();
-            CurrentLabelMovie.label = string.Join(" ", labels);
-            DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", CurrentLabelMovie.label, "String");
-
-
-            vieModel.CurrentMovieLabelList = new List<string>();
-            foreach (var item in labels)
-            {
-                vieModel.CurrentMovieLabelList.Add(item);
-            }
-
-            LabelDelItemsControl.ItemsSource = null;
-            LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
-
-            if (vieModel.CurrentVideoList.Count == 0)
-            {
-                msgCard.Info(Jvedio.Language.Resources.Message_Success);
-                LabelDelGrid.Visibility = Visibility.Hidden;
-                vieModel.GetLabelList();
-            }
+        //    if (vieModel.CurrentVideoList.Count == 0)
+        //    {
+        //        msgCard.Info(Jvedio.Language.Resources.Message_Success);
+        //        LabelDelGrid.Visibility = Visibility.Hidden;
+        //        vieModel.GetLabelList();
+        //    }
 
 
 
-        }
+        //}
+
+
+        //private void ClearSingleLabel(object sender, RoutedEventArgs e)
+        //{
+        //    DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", "", "String");
+        //    vieModel.CurrentMovieLabelList = new List<string>();
+        //    LabelDelItemsControl.ItemsSource = null;
+        //    LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
+        //}
+
+        //private void AddSingleLabel(object sender, RoutedEventArgs e)
+        //{
+        //    List<string> newLabel = new List<string>();
+
+        //    var di = new DialogInput(this, Jvedio.Language.Resources.InputTitle1, "");
+        //    di.ShowDialog();
+        //    if (di.DialogResult == true & di.Text != "")
+        //    {
+        //        foreach (var item in di.Text.Split(' ').ToList())
+        //        {
+        //            if (!newLabel.Contains(item)) newLabel.Add(item);
+        //        }
+
+        //    }
+        //    List<string> labels = LabelToList(CurrentLabelMovie.label);
+        //    labels = labels.Union(newLabel).ToList();
+        //    CurrentLabelMovie.label = string.Join(" ", labels);
+        //    DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", CurrentLabelMovie.label, "String");
+
+
+        //    vieModel.CurrentMovieLabelList = new List<string>();
+        //    foreach (var item in labels)
+        //    {
+        //        vieModel.CurrentMovieLabelList.Add(item);
+        //    }
+        //    LabelDelItemsControl.ItemsSource = null;
+        //    LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
+        //}
+
+        //private void DeleteSingleLabel(object sender, RoutedEventArgs e)
+        //{
+        //    //获得选中的标签
+        //    List<string> originLabels = new List<string>();
+        //    for (int i = 0; i < vieModel.CurrentMovieLabelList.Count; i++)
+        //    {
+        //        ContentPresenter c = (ContentPresenter)LabelDelItemsControl.ItemContainerGenerator.ContainerFromItem(LabelDelItemsControl.Items[i]);
+        //        WrapPanel wrapPanel = FindElementByName<WrapPanel>(c, "LabelWrapPanel");
+        //        if (wrapPanel != null)
+        //        {
+        //            ToggleButton toggleButton = wrapPanel.Children.OfType<ToggleButton>().First();
+        //            if ((bool)toggleButton.IsChecked)
+        //            {
+        //                string label = toggleButton.Content.ToString();
+        //                if (!originLabels.Contains(label)) originLabels.Add(label);
+        //            }
+        //        }
+        //    }
+
+        //    if (originLabels.Count <= 0)
+        //    {
+        //        //msgCard.Warning("请选择标签！");
+        //        return;
+        //    }
+
+        //    List<string> labels = LabelToList(CurrentLabelMovie.label);
+        //    labels = labels.Except(originLabels).ToList();
+        //    CurrentLabelMovie.label = string.Join(" ", labels);
+        //    DataBase.UpdateMovieByID(CurrentLabelMovie.id, "label", CurrentLabelMovie.label, "String");
+
+
+        //    vieModel.CurrentMovieLabelList = new List<string>();
+        //    foreach (var item in labels)
+        //    {
+        //        vieModel.CurrentMovieLabelList.Add(item);
+        //    }
+
+        //    LabelDelItemsControl.ItemsSource = null;
+        //    LabelDelItemsControl.ItemsSource = vieModel.CurrentMovieLabelList;
+
+        //    if (vieModel.CurrentVideoList.Count == 0)
+        //    {
+        //        msgCard.Info(Jvedio.Language.Resources.Message_Success);
+        //        LabelDelGrid.Visibility = Visibility.Hidden;
+        //        vieModel.GetLabelList();
+        //    }
+
+
+
+        //}
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -5412,14 +5351,14 @@ namespace Jvedio
         private void SearchBar_MouseEnter_1(object sender, MouseEventArgs e)
         {
             HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            Color color = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["ForegroundSearch"].ToString());
+            Color color = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["Window.Foreground"].ToString());
             searchBar.BorderBrush = new SolidColorBrush(color);
         }
 
         private void SearchBar_MouseLeave_1(object sender, MouseEventArgs e)
         {
             HandyControl.Controls.SearchBar searchBar = sender as HandyControl.Controls.SearchBar;
-            Color color = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["ForegroundGlobal"].ToString());
+            Color color = (Color)ColorConverter.ConvertFromString(Application.Current.Resources["Global.Foreground"].ToString());
             searchBar.BorderBrush = new SolidColorBrush(color);
         }
 
@@ -5942,7 +5881,9 @@ namespace Jvedio
         private void Rate_ValueChanged_2(object sender, FunctionEventArgs<double> e)
         {
             HandyControl.Controls.Rate rate = sender as HandyControl.Controls.Rate;
+            if (rate.Tag == null) return;
             long.TryParse(rate.Tag.ToString(), out long actorID);
+            if (actorID <= 0) return;
             actorMapper.updateFieldById("Grade", rate.Value.ToString(), actorID);
 
         }

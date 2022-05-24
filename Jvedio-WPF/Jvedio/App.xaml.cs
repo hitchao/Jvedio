@@ -28,14 +28,14 @@ namespace Jvedio
         protected override void OnStartup(StartupEventArgs e)
         {
             Console.WriteLine("***************OnStartup***************");
-            bool createNew;
-            ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
-            if (!createNew)
-            {
-                MessageBox.Show(Jvedio.Language.Resources.JvedioIsRunning);
-                App.Current.Shutdown();
-                Environment.Exit(0);
-            }
+            //bool createNew;
+            //ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
+            //if (!createNew)
+            //{
+            //    MessageBox.Show(Jvedio.Language.Resources.JvedioIsRunning);
+            //    App.Current.Shutdown();
+            //    Environment.Exit(0);
+            //}
 
 
             //UI线程未捕获异常处理事件

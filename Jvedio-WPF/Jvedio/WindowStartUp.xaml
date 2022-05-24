@@ -13,7 +13,7 @@
     Width="800"
     Height="400"
     MinWidth="500"
-    Background="{DynamicResource BackgroundMain}"
+    Background="{DynamicResource Window.InnerDialog.Background}"
     CanMinimized="True"
     CanResize="True"
     Closing="Window_StartUp_Closing"
@@ -104,16 +104,16 @@
                         <TextBlock
                             Margin="0,5"
                             FontSize="20"
-                            Foreground="#fff"
+                            Foreground="{DynamicResource Global.Foreground}"
                             Text="{Binding Name}" />
                         <TextBlock
                             FontSize="12"
-                            Foreground="gray"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
                             Text="{Binding CreateDate}"
                             ToolTip="{Binding CreateDate}" />
                         <!--<TextBlock
                             FontSize="12"
-                            Foreground="gray"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
                             Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
                             ToolTip="{Binding Path}" />-->
                     </StackPanel>
@@ -159,16 +159,16 @@
                         <TextBlock
                             Margin="0,5"
                             FontSize="20"
-                            Foreground="#fff"
+                            Foreground="{DynamicResource Global.Foreground}"
                             Text="{Binding Name}" />
                         <TextBlock
                             FontSize="12"
-                            Foreground="gray"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
                             Text="{Binding CreateDate}"
                             ToolTip="{Binding CreateDate}" />
                         <!--<TextBlock
                             FontSize="12"
-                            Foreground="gray"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
                             Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
                             ToolTip="{Binding Path}" />-->
                     </StackPanel>
@@ -237,7 +237,7 @@
                         <hc:LoadingCircle
                             Height="30"
                             Margin="0,20"
-                            Foreground="{DynamicResource ForegroundGlobal}" />
+                            Foreground="{DynamicResource Global.Foreground}" />
 
                         <TextBlock
                             Margin="10,0"
@@ -247,7 +247,11 @@
                             TextAlignment="Center"
                             TextTrimming="WordEllipsis"
                             ToolTip="{Binding LoadingText}" />
-                        <Button Margin="20" Click="CancelScan" Content="取消" Style="{StaticResource ButtonDanger}" />
+                        <Button
+                            Margin="20"
+                            Click="CancelScan"
+                            Content="取消"
+                            Style="{StaticResource ButtonDanger}" />
                     </StackPanel>
                 </Border>
             </TabItem>
@@ -349,7 +353,7 @@
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 FontSize="15"
-                                Foreground="Gray"
+                                Foreground="{DynamicResource Control.Disabled.Background}"
                                 Text="5.0.0.0" />
                             <RadioButton
                                 Margin="0,20,0,0"
@@ -357,7 +361,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="视频"
-                                Foreground="White"
+                                Foreground="{DynamicResource Global.Foreground}"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5" />
 
@@ -368,7 +372,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="图片"
-                                Foreground="White"
+                                Foreground="{DynamicResource Global.Foreground}"
                                 IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5" />
@@ -380,7 +384,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="游戏"
-                                Foreground="White"
+                                Foreground="{DynamicResource Global.Foreground}"
                                 IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5" />
@@ -390,7 +394,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="漫画"
-                                Foreground="White"
+                                Foreground="{DynamicResource Global.Foreground}"
                                 IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5" />
@@ -413,9 +417,9 @@
                                     Background="Transparent"
                                     Clear="SearchText_Changed"
                                     FontSize="15"
-                                    Foreground="#fff"
+                                    Foreground="{DynamicResource Global.Foreground}"
                                     PlaceHolder="检索"
-                                    PlaceHolderForeground="Gray"
+                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                     Search="SearchText_Changed"
                                     SearchOnTextChanged="True"
                                     ShowClearButton="True"
@@ -503,7 +507,7 @@
                                 <chao:Switch
                                     Width="40"
                                     Height="30"
-                                    Background="Gray"
+                                    Background="{DynamicResource Window.Side.Background}"
                                     IsChecked="{Binding Tile, Mode=TwoWay}" />
                                 <TextBlock
                                     VerticalAlignment="Center"
@@ -512,7 +516,7 @@
                                 <chao:Switch
                                     Width="40"
                                     Height="30"
-                                    Background="Gray"
+                                    Background="{DynamicResource Window.Side.Background}"
                                     Click="ShowHideDataBase"
                                     IsChecked="{Binding ShowHideItem, Mode=TwoWay}" />
                                 <TextBlock

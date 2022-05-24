@@ -19,14 +19,14 @@
     Height="600"
     MinWidth="800"
     MinHeight="500"
-    Background="{DynamicResource Global.Background}"
+    Background="{DynamicResource Window.Background}"
     CanMinimized="True"
     CanResize="True"
     Closed="Window_Closed"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
     DataContext="{Binding ElementName=main}"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     PreviewKeyDown="Window_PreviewKeyDown"
     PreviewKeyUp="Window_PreviewKeyUp"
@@ -205,7 +205,7 @@
                                 Margin="0"
                                 HorizontalAlignment="Left"
                                 FontSize="18"
-                                Foreground="{DynamicResource ForegroundSearch}"
+                                Foreground="{DynamicResource Global.Foreground}"
                                 IsEnabled="{Binding ActorEditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                 Opacity="0.7"
                                 Style="{StaticResource ReadOnlyWrapTextBox}"
@@ -219,7 +219,7 @@
                                 BorderThickness="0"
                                 Content="{Binding Count}"
                                 FontSize="18"
-                                Foreground="{DynamicResource ForegroundSearch}"
+                                Foreground="{DynamicResource Global.Foreground}"
                                 Opacity="0.7"
                                 ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />
 
@@ -237,12 +237,12 @@
                             AllowHalf="True"
                             Background="{DynamicResource Window.Background}"
                             Count="5"
-                            Foreground="#FF7B3B"
+                            Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                             Tag="{Binding ActorID, Mode=OneWay}"
                             ToolTip="{x:Static lang:Resources.DoubleClickToCancel}"
                             ValueChanged="Rate_ValueChanged_2"
                             Visibility="Visible"
-                            Value="{Binding CurrentActorInfo.Grade, Mode=TwoWay}" />
+                            Value="{Binding Grade, Mode=TwoWay}" />
                         <StackPanel
                             Grid.Row="2"
                             Margin="0,5"
@@ -397,7 +397,7 @@
                             BorderThickness="0"
                             Content="{Binding Count}"
                             FontSize="18"
-                            Foreground="{DynamicResource ForegroundSearch}"
+                            Foreground="{DynamicResource Global.Foreground}"
                             Opacity="0.7"
                             ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />
                         <Image
@@ -488,7 +488,7 @@
                         MaxHeight="60"
                         Margin="0,10"
                         FontSize="18"
-                        Foreground="{DynamicResource ForegroundSearch}"
+                        Foreground="{DynamicResource Global.Foreground}"
                         IsEnabled="{Binding ActorEditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                         Opacity="0.7"
                         Style="{StaticResource ReadOnlyWrapTextBox}"
@@ -576,7 +576,7 @@
             <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableEditActress}" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource BackgroundSide}" />
+                    <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
                     <Setter Property="IsReadOnly" Value="False" />
                 </DataTrigger>
             </Style.Triggers>
@@ -745,9 +745,9 @@
                         Background="{DynamicResource Window.Side.Background}"
                         BorderBrush="#326CF3"
                         BorderThickness="0"
-                        Foreground="White"
+                        Foreground="{DynamicResource Global.Foreground}"
                         PlaceHolder="搜索标题/路径/识别码"
-                        PlaceHolderForeground="Gray"
+                        PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                         Search="searchDataBox_Search"
                         SearchOnTextChanged="False"
                         ShowClearButton="True"
@@ -1025,7 +1025,7 @@
                                                         VerticalAlignment="Center"
                                                         FontFamily="微软雅黑"
                                                         FontSize="15"
-                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                        Foreground="{DynamicResource Global.Foreground}"
                                                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                         Text="{Binding VID, Mode=OneWay}"
                                                         TextAlignment="Left"
@@ -1066,7 +1066,7 @@
                                                     HorizontalAlignment="Center"
                                                     Background="Transparent"
                                                     FontSize="14"
-                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                    Foreground="{DynamicResource Global.Foreground}"
                                                     IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                     Opacity="0.5"
                                                     Style="{StaticResource ReadOnlyNoWrapTextBox}"
@@ -1308,7 +1308,7 @@
                                                     Cursor="Hand"
                                                     Fill="#F6F7F7"
                                                     Points="15,38 35,25 15,10"
-                                                    Stroke="{DynamicResource BackgroundMenu}" />
+                                                    Stroke="{DynamicResource Menu.Background}" />
                                             </Canvas>
 
                                         </Grid>
@@ -1339,7 +1339,7 @@
                                                 VerticalAlignment="Center"
                                                 FontFamily="微软雅黑"
                                                 FontSize="15"
-                                                Foreground="{DynamicResource ForegroundSearch}"
+                                                Foreground="{DynamicResource Global.Foreground}"
                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                 Text="{Binding VID, Mode=OneWay}"
                                                 TextAlignment="Left"
@@ -1435,9 +1435,9 @@
                                             <hc:Rate
                                                 AllowClear="True"
                                                 AllowHalf="True"
-                                                Background="{DynamicResource BackgroundTitle}"
+                                                Background="{DynamicResource Window.Title.Background}"
                                                 DefaultValue="0"
-                                                Foreground="#FF7B3B"
+                                                Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                                 ItemHeight="15"
                                                 ItemMargin="3 0"
                                                 ValueChanged="Rate_ValueChanged"
@@ -1453,7 +1453,7 @@
                                             HorizontalAlignment="Center"
                                             Background="Transparent"
                                             FontSize="14"
-                                            Foreground="{DynamicResource ForegroundSearch}"
+                                            Foreground="{DynamicResource Global.Foreground}"
                                             IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                             MouseLeftButtonDown="CopyText"
                                             Opacity="0.5"
@@ -2056,10 +2056,10 @@
                                 Background="{DynamicResource Window.Detail.Background}"
                                 BorderBrush="#326CF3"
                                 BorderThickness="0"
-                                Foreground="White"
+                                Foreground="{DynamicResource Global.Foreground}"
                                 HideClearButtonOnMouseLeave="False"
                                 PlaceHolder="搜索"
-                                PlaceHolderForeground="Gray"
+                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                 PreviewKeyDown="searchBox_PreviewKeyDown"
                                 PreviewKeyUp="SearchBar_PreviewKeyUp"
                                 Search="doSearch"
@@ -2265,248 +2265,7 @@
 
 
 
-                                            <StackPanel Orientation="Horizontal">
-
-
-
-
-
-                                                <!--<Grid
-                                                Width="300"
-                                                Height="40"
-                                                Margin="10,5"
-                                                HorizontalAlignment="Left"
-                                                Focusable="True">
-                                                <Border
-                                                    Background="Transparent"
-                                                    BorderBrush="{DynamicResource BackgroundSide}"
-                                                    BorderThickness="2"
-                                                    CornerRadius="2" />
-
-
-                                                <Grid
-                                                    Width="25"
-                                                    Margin="10,0,0,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Panel.ZIndex="3"
-                                                    Cursor="Hand"
-                                                    MouseUp="ShowSearchMenu">
-                                                    <Image
-                                                        Width="20"
-                                                        Height="20"
-                                                        RenderTransformOrigin=".5,.5"
-                                                        Source="{Binding Themes, Mode=OneWay, ConverterParameter=up, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}">
-                                                        <Image.RenderTransform>
-                                                            <RotateTransform Angle="180" />
-                                                        </Image.RenderTransform>
-                                                    </Image>
-                                                    <Popup
-                                                        x:Name="SearchOptionPopup"
-                                                        AllowsTransparency="True"
-                                                        HorizontalOffset="-15"
-                                                        IsOpen="False"
-                                                        Placement="Bottom"
-                                                        PopupAnimation="Fade"
-                                                        StaysOpen="False"
-                                                        VerticalOffset="5">
-                                                        <Grid Margin="5">
-                                                            <Border
-                                                                Margin="5"
-                                                                Background="{DynamicResource BackgroundMenu}"
-                                                                CornerRadius="5"
-                                                                Effect="{StaticResource PopupDropShadowEffect}" />
-                                                            <StackPanel Margin="5">
-                                                                <RadioButton
-                                                                    Click="SaveAllSearchType"
-                                                                    Content="{x:Static lang:Resources.ID}"
-                                                                    FocusVisualStyle="{x:Null}"
-                                                                    GroupName="SearchTypeRadioButton"
-                                                                    IsChecked="True"
-                                                                    Style="{StaticResource RadioButtonStyle}"
-                                                                    Template="{DynamicResource RadioButtonControlTemplate1}" />
-                                                                <RadioButton
-                                                                    Click="SaveAllSearchType"
-                                                                    Content="{x:Static lang:Resources.Title}"
-                                                                    FocusVisualStyle="{x:Null}"
-                                                                    GroupName="SearchTypeRadioButton"
-                                                                    Style="{StaticResource RadioButtonStyle}"
-                                                                    Template="{DynamicResource RadioButtonControlTemplate1}" />
-                                                                <RadioButton
-                                                                    Click="SaveAllSearchType"
-                                                                    Content="{x:Static lang:Resources.Actor}"
-                                                                    FocusVisualStyle="{x:Null}"
-                                                                    GroupName="SearchTypeRadioButton"
-                                                                    Style="{StaticResource RadioButtonStyle}"
-                                                                    Template="{DynamicResource RadioButtonControlTemplate1}" />
-                                                                <CheckBox
-                                                                    Margin="5,0"
-                                                                    Content="{x:Static lang:Resources.SearchCurrent}"
-                                                                    IsChecked="{Binding SearchInCurrent, Mode=TwoWay}"
-                                                                    Style="{StaticResource CheckBoxStyle1}" />
-                                                            </StackPanel>
-                                                        </Grid>
-                                                    </Popup>
-                                                </Grid>
-
-                                                <hc:SearchBar
-                                                    x:Name="SearchBar"
-                                                    Margin="5,5,5,5"
-                                                    Padding="35,0"
-                                                    hc:InfoElement.Placeholder="{Binding SearchHint}"
-                                                    hc:InfoElement.Title=""
-                                                    hc:InfoElement.TitleWidth="140"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    CaretBrush="{DynamicResource ForegroundSearch}"
-                                                    ContextMenu="{StaticResource TextBoxContextMenu}"
-                                                    Focusable="True"
-                                                    Foreground="{DynamicResource ForegroundSearch}"
-                                                    GotFocus="SearchBar_GotFocus"
-                                                    LostFocus="SearchBar_LostFocus"
-                                                    PreviewKeyUp="SearchBar_PreviewKeyUp"
-                                                    PreviewMouseLeftButtonDown="ShowSearchPopup"
-                                                    SearchStarted="SearchBar_SearchStarted"
-                                                    ShowClearButton="True"
-                                                    Style="{StaticResource SearchBarPlus}"
-                                                    TextChanged="RefreshCandiadte" />
-
-                                                <Popup
-                                                    Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}, Mode=FindAncestor}, Path=ActualWidth}"
-                                                    AllowsTransparency="True"
-                                                    Focusable="True"
-                                                    HorizontalOffset="0"
-                                                    IsOpen="{Binding ShowSearchPopup, FallbackValue=False}"
-                                                    Placement="Bottom"
-                                                    StaysOpen="True"
-                                                    VerticalOffset="2"
-                                                    Visibility="Visible">
-                                                    <Grid Margin="5">
-                                                        <Border
-                                                            Name="SearchBorder"
-                                                            Margin="5"
-                                                            Background="{DynamicResource BackgroundMenu}"
-                                                            CornerRadius="5"
-                                                            Effect="{StaticResource PopupDropShadowEffect}" />
-
-                                                        <ScrollViewer
-                                                            Canvas.Top="40"
-                                                            Width="auto"
-                                                            Height="auto"
-                                                            Margin="10"
-                                                            Panel.ZIndex="4"
-                                                            Background="Transparent"
-                                                            HorizontalScrollBarVisibility="Hidden"
-                                                            VerticalScrollBarVisibility="Hidden">
-                                                            <StackPanel>
-                                                                <StackPanel x:Name="SearchHistoryStackPanel">
-
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <TextBlock
-                                                                            Height="auto"
-                                                                            Margin="5"
-                                                                            HorizontalAlignment="Left"
-                                                                            VerticalAlignment="Center"
-                                                                            FontSize="12"
-                                                                            Style="{StaticResource BaseTextBlock}"
-                                                                            Text="{x:Static lang:Resources.SearchHistory}" />
-                                                                        <Border
-                                                                            Width="20"
-                                                                            Height="20"
-                                                                            Margin="5,0"
-                                                                            CornerRadius="3"
-                                                                            MouseLeftButtonDown="ClearSearchHistory"
-                                                                            Style="{StaticResource CloseBorderStyle}">
-                                                                            <Image
-                                                                                Width="15"
-                                                                                Height="15"
-                                                                                Source="{Binding Themes, Mode=OneWay, ConverterParameter=clear, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                                                        </Border>
-                                                                    </StackPanel>
-
-                                                                    <ItemsControl
-                                                                        Width="{Binding ElementName=SearchBorder, Path=ActualWidth, Converter={StaticResource WidthConverter}, ConverterParameter=-20, Mode=OneWay}"
-                                                                        Margin="5,0"
-                                                                        HorizontalAlignment="Left"
-                                                                        Background="Transparent"
-                                                                        ItemsSource="{Binding SearchHistory, Mode=OneWay}"
-                                                                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                        <ItemsControl.ItemsPanel>
-                                                                            <ItemsPanelTemplate>
-                                                                                <WrapPanel Orientation="Horizontal" />
-                                                                            </ItemsPanelTemplate>
-                                                                        </ItemsControl.ItemsPanel>
-
-                                                                        <ItemsControl.ItemTemplate>
-                                                                            <DataTemplate>
-
-                                                                                <Border CornerRadius="3" Style="{StaticResource BorderStyle}">
-                                                                                    <TextBlock
-                                                                                        Width="auto"
-                                                                                        Margin="10,5"
-                                                                                        Padding="2"
-                                                                                        FontSize="15"
-                                                                                        PreviewMouseLeftButtonDown="SetSearchValue"
-                                                                                        Style="{StaticResource SearchCandidateTextBlock}"
-                                                                                        Text="{Binding}"
-                                                                                        TextWrapping="NoWrap"
-                                                                                        ToolTip="{Binding Path=Text, RelativeSource={RelativeSource Mode=Self}}" />
-                                                                                </Border>
-
-                                                                            </DataTemplate>
-                                                                        </ItemsControl.ItemTemplate>
-                                                                    </ItemsControl>
-                                                                </StackPanel>
-
-                                                                <TextBlock
-                                                                    Grid.Row="0"
-                                                                    Margin="5"
-                                                                    HorizontalAlignment="Left"
-                                                                    FontSize="12"
-                                                                    Style="{StaticResource BaseTextBlock}"
-                                                                    Text="{x:Static lang:Resources.SearchResult}" />
-
-                                                                <ItemsControl
-                                                                    x:Name="SearchItemsControl"
-                                                                    Background="Transparent"
-                                                                    ItemsSource="{Binding CurrentSearchCandidate}"
-                                                                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <StackPanel Orientation="Vertical" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <StackPanel Name="SearchStackPanel">
-
-                                                                                <Border CornerRadius="3" Style="{StaticResource BorderStyle}">
-                                                                                    <TextBlock
-                                                                                        Width="auto"
-                                                                                        Margin="10,5"
-                                                                                        Padding="2"
-                                                                                        FontSize="15"
-                                                                                        PreviewMouseLeftButtonDown="SetSearchValue"
-                                                                                        Style="{StaticResource SearchCandidateTextBlock}"
-                                                                                        Text="{Binding}"
-                                                                                        TextWrapping="NoWrap"
-                                                                                        ToolTip="{Binding Path=Text, RelativeSource={RelativeSource Mode=Self}}" />
-
-                                                                                </Border>
-
-                                                                            </StackPanel>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-
-                                                            </StackPanel>
-                                                        </ScrollViewer>
-                                                    </Grid>
-                                                </Popup>
-                                            </Grid>-->
-
-                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" />
 
 
 
@@ -2554,9 +2313,10 @@
                                                 <chao:Switch
                                                     Height="25"
                                                     Background="{DynamicResource Window.Side.Background}"
-                                                    CheckedBackground="Green"
+                                                    CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
                                                     Click="SetSelectMode"
                                                     IsChecked="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource BaseTextBlock}"
@@ -2576,10 +2336,10 @@
                                                     </Viewbox>
                                                 </Border>
                                                 <Border
-                                                    IsEnabled="False"
                                                     MouseLeftButtonUp="ShowFilterGrid"
                                                     Style="{StaticResource ToolsBarBorderStyle}"
-                                                    ToolTip="{x:Static lang:Resources.Filter}">
+                                                    ToolTip="{x:Static lang:Resources.Filter}"
+                                                    Visibility="Collapsed">
 
                                                     <Viewbox Width="auto" Height="18">
                                                         <Path
@@ -2671,7 +2431,7 @@
                                                 <Grid Margin="5">
                                                     <Border
                                                         Margin="5"
-                                                        Background="{DynamicResource BackgroundMenu}"
+                                                        Background="{DynamicResource Popup.Background}"
                                                         CornerRadius="5"
                                                         Effect="{StaticResource PopupDropShadowEffect}" />
                                                     <StackPanel
@@ -2722,13 +2482,13 @@
                                                 <Grid MinWidth="150" MaxWidth="250">
                                                     <Border
                                                         Margin="5"
-                                                        Background="{DynamicResource ForegroundGlobal}"
+                                                        Background="{DynamicResource Global.Foreground}"
                                                         CornerRadius="5"
                                                         Effect="{StaticResource NormalBlurEffect}" />
 
                                                     <Border
                                                         Margin="5"
-                                                        Background="{DynamicResource BackgroundMain}"
+                                                        Background="{DynamicResource Window.InnerDialog.Background}"
                                                         CornerRadius="5">
 
                                                         <Grid Margin="5">
@@ -2741,7 +2501,7 @@
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Orientation="Horizontal">
-                                                                <hc:LoadingCircle Height="30" Foreground="{DynamicResource ForegroundGlobal}" />
+                                                                <hc:LoadingCircle Height="30" Foreground="{DynamicResource Global.Foreground}" />
                                                                 <TextBlock
                                                                     Grid.Row="0"
                                                                     MaxHeight="300"
@@ -2750,7 +2510,7 @@
                                                                     VerticalAlignment="Center"
                                                                     Background="Transparent"
                                                                     FontSize="18"
-                                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                                    Foreground="{DynamicResource Global.Foreground}"
                                                                     Style="{StaticResource BaseTextBlock}"
                                                                     Text="{x:Static lang:Resources.Loading}" />
 
@@ -3090,13 +2850,13 @@
                                         <Grid MinWidth="150" MaxWidth="250">
                                             <Border
                                                 Margin="5"
-                                                Background="{DynamicResource ForegroundGlobal}"
+                                                Background="{DynamicResource Global.Foreground}"
                                                 CornerRadius="5"
                                                 Effect="{StaticResource NormalBlurEffect}" />
 
                                             <Border
                                                 Margin="5"
-                                                Background="{DynamicResource BackgroundMain}"
+                                                Background="{DynamicResource Window.InnerDialog.Background}"
                                                 CornerRadius="5">
 
                                                 <Grid Margin="5">
@@ -3109,7 +2869,7 @@
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"
                                                         Orientation="Horizontal">
-                                                        <hc:LoadingCircle Height="30" Foreground="{DynamicResource ForegroundGlobal}" />
+                                                        <hc:LoadingCircle Height="30" Foreground="{DynamicResource Global.Foreground}" />
                                                         <TextBlock
                                                             Grid.Row="0"
                                                             MaxHeight="300"
@@ -3118,7 +2878,7 @@
                                                             VerticalAlignment="Center"
                                                             Background="Transparent"
                                                             FontSize="18"
-                                                            Foreground="{DynamicResource ForegroundSearch}"
+                                                            Foreground="{DynamicResource Global.Foreground}"
                                                             Style="{StaticResource BaseTextBlock}"
                                                             Text="{x:Static lang:Resources.Loading}" />
 
@@ -3147,7 +2907,7 @@
                                         <Rectangle
                                             Margin="{Binding MainGridThickness, Converter={StaticResource SmallerThicknessConverter}, ConverterParameter=-5, FallbackValue=5}"
                                             Effect="{StaticResource ZeroShadowEffect}"
-                                            Fill="{DynamicResource BackgroundSide}"
+                                            Fill="{DynamicResource Window.Side.Background}"
                                             Opacity="0.5"
                                             RadiusX="2"
                                             RadiusY="2"
@@ -3193,7 +2953,7 @@
                                             Visibility="{Binding ShowActorGrid, FallbackValue=Visible}">
                                             <Border
                                                 Margin="5"
-                                                Background="{DynamicResource BackgroundTitle}"
+                                                Background="{DynamicResource Window.Title.Background}"
                                                 CornerRadius="5"
                                                 Effect="{StaticResource NormalDropShadowEffect}" />
 
@@ -3250,7 +3010,7 @@
                                                         ContextMenu="{StaticResource CopyContextMenu}"
                                                         FontSize="20"
                                                         FontWeight="Normal"
-                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                        Foreground="{DynamicResource Global.Foreground}"
                                                         IsReadOnly="True"
                                                         Style="{StaticResource ActorTextBox}"
                                                         Text="{Binding CurrentActorInfo.ActorName, Mode=OneWay}"
@@ -3297,9 +3057,9 @@
                                                     VerticalAlignment="Center"
                                                     AllowClear="True"
                                                     AllowHalf="True"
-                                                    Background="{DynamicResource BackgroundSide}"
+                                                    Background="{DynamicResource Window.Side.Background}"
                                                     Count="5"
-                                                    Foreground="#FF7B3B"
+                                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                                     ToolTip="{x:Static lang:Resources.DoubleClickToCancel}"
                                                     ValueChanged="Rate_ValueChanged_1"
                                                     Visibility="Visible"
@@ -3659,7 +3419,7 @@
                                                                             Cursor="Hand"
                                                                             Fill="#F6F7F7"
                                                                             Points="15,38 35,25 15,10"
-                                                                            Stroke="{DynamicResource BackgroundMenu}" />
+                                                                            Stroke="{DynamicResource Menu.Background}" />
                                                                     </Canvas>
                                                                 </Grid>
 
@@ -3687,7 +3447,7 @@
                                                                         VerticalAlignment="Center"
                                                                         FontFamily="微软雅黑"
                                                                         FontSize="15"
-                                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                                        Foreground="{DynamicResource Global.Foreground}"
                                                                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                                         Text="{Binding VID, Mode=OneWay}"
                                                                         TextAlignment="Left"
@@ -3753,37 +3513,7 @@
                                                                         </ItemsControl.ItemTemplate>
                                                                     </ItemsControl>
 
-                                                                    <!--<StackPanel
-                                                                            Grid.Column="1"
-                                                                            Margin="5,5"
-                                                                            HorizontalAlignment="Right"
-                                                                            Orientation="Horizontal"
-                                                                            Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                                            <Label
-                                                                                Margin="2,0"
-                                                                                Padding="4"
-                                                                                Background="#9A58B7"
-                                                                                BorderThickness="0"
-                                                                                Content="{x:Static lang:Resources.HD}"
-                                                                                Foreground="{DynamicResource ForegroundSearch}"
-                                                                                Visibility="{Binding tagstamps, Converter={StaticResource TagStampsConverter}, ConverterParameter=1, Mode=OneWay}" />
-                                                                            <Label
-                                                                                Margin="2,0"
-                                                                                Padding="4"
-                                                                                Background="YellowGreen"
-                                                                                BorderThickness="0"
-                                                                                Content="{x:Static lang:Resources.Translated}"
-                                                                                Foreground="{DynamicResource ForegroundSearch}"
-                                                                                Visibility="{Binding tagstamps, Converter={StaticResource TagStampsConverter}, ConverterParameter=2, Mode=OneWay}" />
-                                                                            <Label
-                                                                                Margin="2,0"
-                                                                                Padding="4"
-                                                                                Background="#00B0F0"
-                                                                                BorderThickness="0"
-                                                                                Content="{x:Static lang:Resources.FlowOut}"
-                                                                                Foreground="{DynamicResource ForegroundSearch}"
-                                                                                Visibility="{Binding tagstamps, Converter={StaticResource TagStampsConverter}, ConverterParameter=3, Mode=OneWay}" />
-                                                                        </StackPanel>-->
+
                                                                 </Grid>
 
                                                                 <!--  日期  -->
@@ -3816,9 +3546,9 @@
                                                                     <hc:Rate
                                                                         AllowClear="True"
                                                                         AllowHalf="True"
-                                                                        Background="{DynamicResource BackgroundTitle}"
+                                                                        Background="{DynamicResource Window.Title.Background}"
                                                                         DefaultValue="0"
-                                                                        Foreground="#FF7B3B"
+                                                                        Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                                                         ItemHeight="15"
                                                                         ItemMargin="3 0"
                                                                         ValueChanged="Rate_ValueChanged"
@@ -3834,7 +3564,7 @@
                                                                     HorizontalAlignment="Center"
                                                                     Background="Transparent"
                                                                     FontSize="14"
-                                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                                    Foreground="{DynamicResource Global.Foreground}"
                                                                     IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                                     MouseLeftButtonDown="CopyText"
                                                                     Opacity="0.5"
@@ -3992,7 +3722,7 @@
                                             Margin="20,0,5,0"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center"
-                                            Background="{DynamicResource BackgroundSide}"
+                                            Background="{DynamicResource Window.Side.Background}"
                                             DockPanel.Dock="Bottom"
                                             IsVisibleChanged="ProgressBar_IsVisibleChanged"
                                             Maximum="100"
@@ -4035,7 +3765,7 @@
                                             Margin="5,0"
                                             Padding="3"
                                             VerticalAlignment="Center"
-                                            BorderBrush="{DynamicResource BackgroundSide}"
+                                            BorderBrush="{DynamicResource Window.Side.Background}"
                                             BorderThickness="0"
                                             CornerRadius="3"
                                             Cursor="Hand"
@@ -4072,7 +3802,7 @@
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center"
                                                 FontSize="15"
-                                                Foreground="{DynamicResource ForegroundSearch}"
+                                                Foreground="{DynamicResource Global.Foreground}"
                                                 Text="{Binding TotalPage, StringFormat=/\{0\}}" />
                                         </StackPanel>
 
@@ -4081,7 +3811,7 @@
                                             Padding="3"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            BorderBrush="{DynamicResource BackgroundSide}"
+                                            BorderBrush="{DynamicResource Window.Side.Background}"
                                             BorderThickness="0"
                                             CornerRadius="3"
                                             Cursor="Hand"
@@ -4140,13 +3870,19 @@
                                                 <chao:Switch
                                                     Height="25"
                                                     Background="{DynamicResource Window.Side.Background}"
-                                                    CheckedBackground="Green"
+                                                    CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
                                                     Click="SetActorSelectMode"
                                                     IsChecked="{Binding ActorEditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+
+
+
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource BaseTextBlock}"
                                                     Text="{x:Static lang:Resources.MultiSelect}" />
+
+
+
 
 
                                                 <Border
@@ -4175,6 +3911,7 @@
                                                     ToolTip="{x:Static lang:Resources.Sorting}">
                                                     <Border.ContextMenu>
                                                         <ContextMenu HorizontalOffset="-50">
+                                                            <MenuItem Header="我的评分" IsCheckable="True" />
                                                             <MenuItem Header="{x:Static lang:Resources.Name}" IsCheckable="True" />
                                                             <MenuItem Header="作品数量" IsCheckable="True" />
                                                             <MenuItem Header="{x:Static lang:Resources.Country}" IsCheckable="True" />
@@ -4355,13 +4092,13 @@
                                         <Grid MinWidth="150" MaxWidth="250">
                                             <Border
                                                 Margin="5"
-                                                Background="{DynamicResource ForegroundGlobal}"
+                                                Background="{DynamicResource Global.Foreground}"
                                                 CornerRadius="5"
                                                 Effect="{StaticResource NormalBlurEffect}" />
 
                                             <Border
                                                 Margin="5"
-                                                Background="{DynamicResource BackgroundMain}"
+                                                Background="{DynamicResource Window.InnerDialog.Background}"
                                                 CornerRadius="5">
 
                                                 <Grid Margin="5">
@@ -4374,7 +4111,7 @@
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"
                                                         Orientation="Horizontal">
-                                                        <hc:LoadingCircle Height="30" Foreground="{DynamicResource ForegroundGlobal}" />
+                                                        <hc:LoadingCircle Height="30" Foreground="{DynamicResource Global.Foreground}" />
                                                         <TextBlock
                                                             Grid.Row="0"
                                                             MaxHeight="300"
@@ -4383,7 +4120,7 @@
                                                             VerticalAlignment="Center"
                                                             Background="Transparent"
                                                             FontSize="18"
-                                                            Foreground="{DynamicResource ForegroundSearch}"
+                                                            Foreground="{DynamicResource Global.Foreground}"
                                                             Style="{StaticResource BaseTextBlock}"
                                                             Text="{x:Static lang:Resources.Loading}" />
 
@@ -4417,7 +4154,7 @@
                                         Grid.Row="1"
                                         Margin="5"
                                         Background="Transparent"
-                                        BorderBrush="{DynamicResource BackgroundSearch}"
+                                        BorderBrush="{DynamicResource Window.Foreground}"
                                         IsEnabled="{Binding IsLoadingClassify, Converter={StaticResource OppositeBooleanConverter}}"
                                         SelectedIndex="{Binding ClassifySelectedIndex, Mode=TwoWay}"
                                         SelectionChanged="ClassifyTabControl_SelectionChanged"
@@ -4587,13 +4324,13 @@
                     <Grid>
                         <Border
                             Margin="5"
-                            Background="{DynamicResource ForegroundGlobal}"
+                            Background="{DynamicResource Global.Foreground}"
                             CornerRadius="0"
                             Effect="{StaticResource NormalBlurEffect}" />
 
                         <Border
                             Margin="5"
-                            Background="{DynamicResource BackgroundMain}"
+                            Background="{DynamicResource Window.InnerDialog.Background}"
                             CornerRadius="0">
 
                             <StackPanel
@@ -4652,7 +4389,7 @@
 
                 <!--  标签  -->
 
-                <Grid
+                <!--<Grid
                     x:Name="LabelGrid"
                     Width="500"
                     Height="300"
@@ -4662,7 +4399,7 @@
                     Visibility="Collapsed">
                     <Border
                         Margin="2"
-                        Background="{DynamicResource BackgroundMain}"
+                        Background="{DynamicResource Window.InnerDialog.Background}"
                         CornerRadius="5"
                         Effect="{StaticResource NormalDropShadowEffect}" />
 
@@ -4718,7 +4455,7 @@
                                                 BorderThickness="0"
                                                 Content="{Binding}"
                                                 FontSize="15"
-                                                Foreground="{DynamicResource ForegroundSearch}"
+                                                Foreground="{DynamicResource Global.Foreground}"
                                                 Style="{StaticResource ToggleButtonStyle1}" />
                                         </WrapPanel>
                                     </DataTemplate>
@@ -4747,11 +4484,11 @@
                     </Grid>
 
 
-                </Grid>
+                </Grid>-->
 
                 <!--  删除标签  -->
 
-                <Grid
+                <!--<Grid
                     x:Name="LabelDelGrid"
                     Width="500"
                     Height="300"
@@ -4761,7 +4498,7 @@
                     Visibility="Collapsed">
                     <Border
                         Margin="2"
-                        Background="{DynamicResource BackgroundMain}"
+                        Background="{DynamicResource Window.InnerDialog.Background}"
                         CornerRadius="5"
                         Effect="{StaticResource NormalDropShadowEffect}" />
 
@@ -4814,7 +4551,7 @@
                                             BorderThickness="0"
                                             Content="{Binding}"
                                             FontSize="15"
-                                            Foreground="{DynamicResource ForegroundSearch}"
+                                            Foreground="{DynamicResource Global.Foreground}"
                                             Style="{StaticResource ToggleButtonStyle1}" />
                                     </WrapPanel>
                                 </DataTemplate>
@@ -4845,7 +4582,7 @@
                     </Grid>
 
 
-                </Grid>
+                </Grid>-->
 
 
             </Grid>

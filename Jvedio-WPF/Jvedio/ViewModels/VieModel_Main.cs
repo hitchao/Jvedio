@@ -132,6 +132,14 @@ namespace Jvedio.ViewModel
             //CurrentMovieList.AllowRemove = true;
         }
 
+        static VieModel_Main()
+        {
+            ActorSortDict = new Dictionary<int, string>();
+            for (int i = 0; i < ActorSortDictList.Count; i++)
+            {
+                ActorSortDict.Add(i, ActorSortDictList[i]);
+            }
+        }
 
         public void refreshVideoRenderToken()
         {
@@ -2409,26 +2417,30 @@ namespace Jvedio.ViewModel
         //获得演员，信息照片都获取
 
         #region "演员 => 翻页" 
-        public static Dictionary<int, string> ActorSortDict = new Dictionary<int, string>()
+
+        public static List<string> ActorSortDictList = new List<string>()
         {
-            { 0, "actor_info.ActorName" },
-            { 1, "Count" },
-            { 2, "actor_info.Country" },
-            { 3, "Nation" },
-            { 4, "BirthPlace" },
-            { 5, "Birthday" },
-            { 6, "BloodType" },
-            { 7, "Height" },
-            { 8, "Weight" },
-            { 9, "Gender" },
-            { 10, "Hobby" },
-            { 11, "Cup" },
-            { 12, "Chest" },
-            { 13, "Waist" },
-            { 14, "Hipline" },
-            { 15, "actor_info.Grade" },
-            { 16, "Age" },
+             "actor_info.Grade" ,
+              "actor_info.ActorName" ,
+              "Count",
+              "actor_info.Country" ,
+             "Nation" ,
+              "BirthPlace" ,
+             "Birthday" ,
+              "BloodType" ,
+              "Height" ,
+              "Weight" ,
+              "Gender" ,
+              "Hobby" ,
+             "Cup" ,
+             "Chest" ,
+              "Waist" ,
+              "Hipline" ,
+             "actor_info.Grade" ,
+             "Age"
         };
+
+        public static Dictionary<int, string> ActorSortDict;
 
         public static string[] ActorSelectedField = new string[]
         {
@@ -2894,6 +2906,7 @@ namespace Jvedio.ViewModel
             }
             main.pagination.CurrentPage = 1;
             ClickFilterType = string.Empty;
+            ShowActorGrid = Visibility.Collapsed;
             Select();
         }
 

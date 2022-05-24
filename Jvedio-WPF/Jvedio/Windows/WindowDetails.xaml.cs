@@ -225,7 +225,7 @@ namespace Jvedio
             ImageGrid.Background = Brushes.Transparent;
             ExtraImageBorder.Background = Brushes.Transparent;
             TitleTextBox.Background = Brushes.Transparent;
-            InfoBorder.Background = (SolidColorBrush)Application.Current.Resources["BackgroundMain"];
+            //InfoBorder.Background = (SolidColorBrush)Application.Current.Resources["Window.Background"];
             InfoBorder.Opacity = 0.7;
             NextBorder.Opacity = 0.7;
             PreviousBorder.Opacity = 0.7;

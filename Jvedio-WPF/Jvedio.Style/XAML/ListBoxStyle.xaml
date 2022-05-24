@@ -1,32 +1,39 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
->
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="ListBox.Static.Background" Color="#FFFFFFFF"/>
-    <SolidColorBrush x:Key="ListBox.Static.Border" Color="#FFABADB3"/>
-    <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FFFFFFFF"/>
-    <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="#FFD9D9D9"/>
+    <SolidColorBrush x:Key="ListBox.Static.Background" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ListBox.Static.Border" Color="#FFABADB3" />
+    <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="#FFD9D9D9" />
     <Style x:Key="ListBoxStyle1" TargetType="{x:Type ListBox}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="Background" Value="{StaticResource ListBox.Static.Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ListBox.Static.Border}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
-        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="Background" Value="{StaticResource ListBox.Static.Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource ListBox.Static.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="ScrollViewer.PanningMode" Value="Both" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
-                    <Border   BorderThickness="2" CornerRadius="5" x:Name="Bd"   Background="{DynamicResource BackgroundSide}" Padding="5" SnapsToDevicePixels="true">
+                    <Border
+                        x:Name="Bd"
+                        Padding="5"
+                        Background="{DynamicResource Window.Side.Background}"
+                        BorderThickness="2"
+                        CornerRadius="5"
+                        SnapsToDevicePixels="true">
                         <Border.BorderBrush>
-                            <DrawingBrush Viewport="0,0,8,8" ViewportUnits="Absolute" TileMode="Tile">
+                            <DrawingBrush
+                                TileMode="Tile"
+                                Viewport="0,0,8,8"
+                                ViewportUnits="Absolute">
                                 <DrawingBrush.Drawing>
                                     <DrawingGroup>
-                                        <GeometryDrawing Brush="{DynamicResource ForegroundSearch}">
+                                        <GeometryDrawing Brush="{DynamicResource Window.Foreground}">
                                             <GeometryDrawing.Geometry>
                                                 <GeometryGroup>
                                                     <RectangleGeometry Rect="0,0,50,50" />
@@ -38,21 +45,21 @@
                                 </DrawingBrush.Drawing>
                             </DrawingBrush>
                         </Border.BorderBrush>
-                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        <ScrollViewer Padding="{TemplateBinding Padding}" Focusable="false">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         </ScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Background" TargetName="Bd" Value="Gray"/>
-                            <Setter Property="BorderBrush" TargetName="Bd" Value="LightGray"/>
+                            <Setter TargetName="Bd" Property="Background" Value="Gray" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="LightGray" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="IsGrouping" Value="true"/>
-                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                                <Condition Property="IsGrouping" Value="true" />
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -60,43 +67,53 @@
         </Setter>
     </Style>
     <Style x:Key="ListBoxItemStyle1" TargetType="{x:Type ListBoxItem}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="Padding" Value="4,1"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Padding" Value="4,1" />
         <!--<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>-->
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                    <Border Margin="5" CornerRadius="5"  x:Name="Bd"  BorderThickness="0" Background="{DynamicResource BackgroundMain}" Padding="5" SnapsToDevicePixels="true">
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    <Border
+                        x:Name="Bd"
+                        Margin="5"
+                        Padding="5"
+                        Background="{DynamicResource Window.InnerDialog.Background}"
+                        BorderThickness="0"
+                        CornerRadius="5"
+                        SnapsToDevicePixels="true">
+                        <ContentPresenter
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource BackgroundTitle}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Window.Title.Background}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
-                                <Condition Property="IsSelected" Value="True"/>
+                                <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                <Condition Property="IsSelected" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource BackgroundTitle}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Window.Title.Background}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
-                                <Condition Property="IsSelected" Value="True"/>
+                                <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                <Condition Property="IsSelected" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource BackgroundTitle}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Window.Title.Background}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -104,8 +121,8 @@
         </Setter>
     </Style>
 
-    <Style TargetType="ListBox" BasedOn="{StaticResource ListBoxStyle1}"/>
-    <Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle1}"/>
+    <Style BasedOn="{StaticResource ListBoxStyle1}" TargetType="ListBox" />
+    <Style BasedOn="{StaticResource ListBoxItemStyle1}" TargetType="ListBoxItem" />
 
 
 </ResourceDictionary>

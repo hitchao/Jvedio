@@ -7,7 +7,7 @@
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Margin" Value="5" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
     </Style>
 
     <Style x:Key="CenterTextBlock" TargetType="{x:Type TextBlock}">
@@ -38,14 +38,14 @@
         <Setter Property="FontFamily" Value="Times New Romans" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Margin" Value="10,5,100,5" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
-        <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource BackgroundMain}" />
+                <Setter Property="Background" Value="{DynamicResource Window.Background}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -57,18 +57,18 @@
         <Setter Property="FontFamily" Value="Times New Romans" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Margin" Value="10,5,10,5" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
-        <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
         <Style.Triggers>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsMouseOver}" Value="True" />
                     <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsReadOnly}" Value="False" />
                 </MultiDataTrigger.Conditions>
-                <Setter Property="Background" Value="{DynamicResource BackgroundMain}" />
+                <Setter Property="Background" Value="{DynamicResource Window.Background}" />
 
             </MultiDataTrigger>
         </Style.Triggers>
@@ -84,18 +84,18 @@
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="FontFamily" Value="Times New Romans" />
         <Setter Property="FontSize" Value="15" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ContextMenu" Value="{StaticResource CopyContextMenu}" />
         <Setter Property="IsReadOnly" Value="True" />
-        <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
     </Style>
 
     <Style x:Key="ReadOnlyWrapTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="TextWrapping" Value="Wrap" />

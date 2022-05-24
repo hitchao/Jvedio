@@ -109,7 +109,7 @@ namespace Jvedio
 
             var brush = new SolidColorBrush(Colors.Red);
             NameBorder.Background = brush;
-            Color TargColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Application.Current.Resources["BackgroundMain"].ToString())).Color;
+            Color TargColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Application.Current.Resources["Window.Background"].ToString())).Color;
             var ca = new ColorAnimation(TargColor, TimeSpan.FromSeconds(0.75));
             brush.BeginAnimation(SolidColorBrush.ColorProperty, ca);
 

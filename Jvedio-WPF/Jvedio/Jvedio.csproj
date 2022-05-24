@@ -278,6 +278,7 @@
     <Compile Include="Core\Config\PluginConfig.cs" />
     <Compile Include="Core\Config\ScanConfig.cs" />
     <Compile Include="Core\Config\ServerConfig.cs" />
+    <Compile Include="Core\Config\WindowConfig\Filter.cs" />
     <Compile Include="Core\Config\WindowConfig\Settings.cs" />
     <Compile Include="Core\Crawler\ActorSearch.cs" />
     <Compile Include="Core\Crawler\CrawlerHeader.cs" />
@@ -327,6 +328,7 @@
     <Compile Include="Core\GlobalStyle.cs" />
     <Compile Include="Core\Plugins\Plugin.cs" />
     <Compile Include="Core\Plugins\PluginInfo.cs" />
+    <Compile Include="Core\Plugins\Theme\ThemeLoader.cs" />
     <Compile Include="Core\Scan\ComicScan.cs" />
     <Compile Include="Core\Scan\GameScan.cs" />
     <Compile Include="Core\Scan\PictureScan.cs" />
@@ -511,6 +513,9 @@
     <Compile Include="Windows\WindowDetails.xaml.cs">
       <DependentUpon>WindowDetails.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\WindowFilter.xaml.cs">
+      <DependentUpon>WindowFilter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\WindowEdit.xaml.cs">
       <DependentUpon>WindowEdit.xaml</DependentUpon>
     </Compile>
@@ -604,6 +609,10 @@
     <Page Include="Windows\Simple\Window_ScanDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\WindowFilter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Window_DBManagement.xaml">
       <SubType>Designer</SubType>

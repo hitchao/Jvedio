@@ -25,7 +25,7 @@
             <!--  删除字体  -->
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Margin" Value="0,5,0,5" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         </Style>
     </Window.Resources>
 
@@ -33,7 +33,7 @@
     <Grid
         Height="auto"
         VerticalAlignment="Top"
-        Background="{DynamicResource BackgroundMain}">
+        Background="{DynamicResource Window.InnerDialog.Background}">
 
 
         <StackPanel Margin="20,50" Orientation="Vertical">
@@ -65,7 +65,7 @@
                 x:Name="VersionTextBlock"
                 Margin="10"
                 FontSize="20"
-                Foreground="{DynamicResource ForegroundSearch}"
+                Foreground="{DynamicResource Global.Foreground}"
                 Style="{StaticResource ReadOnlyTextBox}"
                 Text="{x:Static lang:Resources.Version}" />
 
@@ -75,7 +75,7 @@
                     <TextBlock
                         Margin="5,10"
                         FontSize="20"
-                        Foreground="{DynamicResource ForegroundSearch}"
+                        Foreground="{DynamicResource Global.Foreground}"
                         TextAlignment="Center"><Hyperlink Click="OpenUrl" NavigateUri="https://github.com/hitchao/Jvedio">
                             <Run Text="Github" />
                         </Hyperlink></TextBlock>
@@ -86,7 +86,7 @@
                     <TextBlock
                         Margin="5,10"
                         FontSize="20"
-                        Foreground="{DynamicResource ForegroundSearch}"
+                        Foreground="{DynamicResource Global.Foreground}"
                         TextAlignment="Center"><Hyperlink Click="OpenUrl" NavigateUri="https://hitchao.github.io/JvedioWebPage/">
                             <Run Text="{x:Static lang:Resources.OfficialWebsite}" />
                         </Hyperlink></TextBlock>

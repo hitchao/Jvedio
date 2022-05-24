@@ -43,28 +43,6 @@
     <converter:PlusToVisibilityConverter x:Key="PlusToVisibilityConverter" />
     <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter" />
 
-    <!--  动态资源  -->
-    <!--  默认黑色皮肤  -->
-    <Color x:Key="Color_BackgroundTitle">#22252A</Color>
-    <Color x:Key="Color_BackgroundMain">#1B1B1F</Color>
-    <Color x:Key="Color_BackgroundSide">#101013</Color>
-    <Color x:Key="Color_BackgroundTab">#383838</Color>
-    <Color x:Key="Color_BackgroundSearch">#18191B</Color>
-    <Color x:Key="Color_BackgroundMenu">#252526</Color>
-    <Color x:Key="Color_ForegroundGlobal">#AFAFAF</Color>
-    <Color x:Key="Color_ForegroundSearch">#FFFFFF</Color>
-    <Color x:Key="Color_BorderBursh">Transparent</Color>
-
-    <SolidColorBrush x:Key="BackgroundTitle" Color="{DynamicResource Color_BackgroundTitle}" />
-    <SolidColorBrush x:Key="BackgroundMain" Color="{DynamicResource Color_BackgroundMain}" />
-    <SolidColorBrush x:Key="BackgroundSide" Color="{DynamicResource Color_BackgroundSide}" />
-    <SolidColorBrush x:Key="BackgroundTab" Color="{DynamicResource Color_BackgroundTab}" />
-    <SolidColorBrush x:Key="BackgroundSearch" Color="{DynamicResource Color_BackgroundSearch}" />
-    <SolidColorBrush x:Key="BackgroundMenu" Color="{DynamicResource Color_BackgroundMenu}" />
-    <SolidColorBrush x:Key="ForegroundGlobal" Color="{DynamicResource Color_ForegroundGlobal}" />
-    <SolidColorBrush x:Key="ForegroundSearch" Color="{DynamicResource Color_ForegroundSearch}" />
-    <SolidColorBrush x:Key="BorderBursh" Color="{DynamicResource Color_BorderBursh}" />
-
 
     <DropShadowEffect
         x:Key="NormalDropShadowEffect"
@@ -102,10 +80,10 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Canvas}, Mode=FindAncestor}}" Value="True">
-                <Setter Property="Fill" Value="{DynamicResource ForegroundSearch}" />
+                <Setter Property="Fill" Value="{DynamicResource Window.Foreground}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Canvas}, Mode=FindAncestor}}" Value="False">
-                <Setter Property="Fill" Value="{DynamicResource ForegroundSearch}" />
+                <Setter Property="Fill" Value="{DynamicResource Window.Foreground}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -179,7 +157,7 @@
         <Setter Property="FontSize" Value="15" />
         <!--<Setter Property="MinWidth" Value="100"/>-->
         <Setter Property="Margin" Value="10,5" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
     </Style>
 
     <Style x:Key="SearchCandidateTextBlock" TargetType="{x:Type TextBlock}">
@@ -190,7 +168,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Margin" Value="10,0" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
     </Style>
 
     <Style x:Key="ToolsBarBorderStyle" TargetType="Border">
@@ -201,13 +179,13 @@
         <Setter Property="Padding" Value="5" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundSide}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Window.Side.Background}" />
         <Setter Property="Background" Value="Transparent" />
 
         <Setter Property="Background" Value="Transparent" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource BackgroundTitle}" />
+                <Setter Property="Background" Value="{DynamicResource Window.Tab.Background}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -232,10 +210,10 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="Background" Value="{DynamicResource BackgroundTitle}" />
+        <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource BackgroundSide}" />
+                <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -279,7 +257,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource BackgroundTitle}" />
+                <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -292,7 +270,7 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundSide}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Window.Side.Background}" />
         <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -352,7 +330,7 @@
 
     <Style x:Key="ReturnBorder" TargetType="Border">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-        <Setter Property="Background" Value="{DynamicResource BackgroundMain}" />
+        <Setter Property="Background" Value="{DynamicResource Window.Background}" />
         <Setter Property="Cursor" Value="Hand" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}, Path=IsMouseOver}" Value="True">
@@ -371,7 +349,7 @@
         <Setter Property="CornerRadius" Value="5" />
         <Setter Property="Margin" Value="20,0" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Background" Value="{DynamicResource BackgroundMain}" />
+        <Setter Property="Background" Value="{DynamicResource Window.Background}" />
         <Setter Property="BorderBrush">
             <Setter.Value>
                 <DrawingBrush
@@ -380,7 +358,7 @@
                     ViewportUnits="Absolute">
                     <DrawingBrush.Drawing>
                         <DrawingGroup>
-                            <GeometryDrawing Brush="{DynamicResource ForegroundSearch}">
+                            <GeometryDrawing Brush="{DynamicResource Window.Foreground}">
                                 <GeometryDrawing.Geometry>
                                     <GeometryGroup>
                                         <RectangleGeometry Rect="0,0,50,50" />
@@ -400,10 +378,10 @@
 
     <Style x:Key="MultiLineTextBox" TargetType="TextBox">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-        <Setter Property="Background" Value="{DynamicResource BackgroundSide}" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ForegroundGlobal}" />
-        <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="Padding" Value="10" />
@@ -413,7 +391,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource ForegroundSearch}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Window.Foreground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -427,7 +405,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Cursor" Value="Hand" />
         <!--  删除字体  -->
@@ -457,7 +435,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource BackgroundTitle}" />
+                <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
             </Trigger>
         </Style.Triggers>
     </Style>

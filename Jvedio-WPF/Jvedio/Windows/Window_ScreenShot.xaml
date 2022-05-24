@@ -25,7 +25,7 @@
         <Border Background="Black" Opacity="0.2" Panel.ZIndex="2" ></Border>
         <Canvas Panel.ZIndex="3"   x:Name="Canvas1"  >
 
-            <Border x:Name="SizeBorder" Background="{DynamicResource BackgroundMain}" Opacity="0.7" CornerRadius="5" Panel.ZIndex="5" Margin="5" Padding="5 0">
+            <Border x:Name="SizeBorder" Background="{DynamicResource Window.InnerDialog.Background}" Opacity="0.7" CornerRadius="5" Panel.ZIndex="5" Margin="5" Padding="5 0">
                 <TextBlock x:Name="SizeTextBlock" Text="20x20" Style="{StaticResource BaseTextBlock}" />
             </Border>
 

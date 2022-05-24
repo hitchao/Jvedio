@@ -8,11 +8,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="标记"
     Width="400"
-    ContentRendered="BaseWindow_ContentRendered"
     Height="260"
-    Background="{DynamicResource BackgroundMain}"
+    Background="{DynamicResource Window.InnerDialog.Background}"
     CanMinimized="False"
     CanResize="False"
+    ContentRendered="BaseWindow_ContentRendered"
     Foreground="{DynamicResource Global.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     WindowStartupLocation="CenterScreen"
@@ -41,8 +41,8 @@
                 Background="{DynamicResource Window.Side.Background}"
                 BorderBrush="#007FD4"
                 BorderThickness="0"
-                CaretBrush="{StaticResource Global.Foreground}"
-                Foreground="{StaticResource Global.Foreground}"
+                CaretBrush="{DynamicResource Global.Foreground}"
+                Foreground="{DynamicResource Global.Foreground}"
                 KeyDown="textBox_KeyDown"
                 TextChanged="textBox_TextChanged" />
         </Grid>
@@ -63,7 +63,7 @@
                 Height="25"
                 Margin="25,10"
                 HorizontalAlignment="Left"
-                Background="Red"
+                Background="#E1855E"
                 CornerRadius="5"
                 Cursor="Hand"
                 MouseLeftButtonDown="border_MouseLeftButtonDown" />
@@ -102,7 +102,7 @@
                 Height="25"
                 Margin="25,10"
                 HorizontalAlignment="Left"
-                Background="Red"
+                Background="#F7F8F8"
                 CornerRadius="5"
                 Cursor="Hand"
                 MouseLeftButtonDown="border2_MouseLeftButtonDown" />

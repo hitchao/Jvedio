@@ -65,7 +65,7 @@ namespace Jvedio
             if (!SelectedActor.Contains(id))
             {
                 border.BorderBrush = Brushes.Transparent;
-                border.Background = (SolidColorBrush)Application.Current.Resources["BackgroundSide"];
+                border.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];
             }
 
 

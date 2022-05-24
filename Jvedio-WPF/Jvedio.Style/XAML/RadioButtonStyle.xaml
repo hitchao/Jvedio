@@ -12,13 +12,13 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FontSize" Value="15" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="Margin" Value="5" />
         <!--  删除字体  -->
         <Setter Property="Background" Value="Transparent" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource BackgroundSearch}" />
+                <Setter Property="Background" Value="{DynamicResource Window.Foreground}" />
             </Trigger>
 
         </Style.Triggers>
@@ -44,7 +44,7 @@
                         x:Name="optionMark"
                         Margin="2,2,0,0"
                         Data="M0,5 5,10 13,1"
-                        Stroke="{DynamicResource ForegroundSearch}"
+                        Stroke="{DynamicResource Window.Foreground}"
                         StrokeThickness="2"
                         Visibility="Hidden" />
                 </Grid>
@@ -114,7 +114,7 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{StaticResource RadioButton.Static.Border}" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Height" Value="40" />
@@ -167,7 +167,7 @@
                             <Setter Property="Padding" Value="4,-1,0,0" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="templateRoot" Property="Background" Value="{DynamicResource BackgroundTitle}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{DynamicResource Window.Title.Background}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <!--<Setter Property="Background" TargetName="radioButtonBorder" Value="gray"/>-->
@@ -177,7 +177,7 @@
                         <Trigger Property="IsPressed" Value="true" />
                         <Trigger Property="IsChecked" Value="true">
                             <Setter TargetName="optionMark" Property="Opacity" Value="1" />
-                            <!--<Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource  BackgroundTitle}"/>-->
+                            <!--<Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource  Window.Title.Background}"/>-->
                         </Trigger>
                         <Trigger Property="IsChecked" Value="{x:Null}">
                             <Setter TargetName="optionMark" Property="Opacity" Value="0.56" />

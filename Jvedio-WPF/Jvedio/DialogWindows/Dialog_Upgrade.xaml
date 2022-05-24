@@ -23,7 +23,7 @@
 
 
 
-    <Grid HorizontalAlignment="Left" Background="{DynamicResource BackgroundMain}">
+    <Grid HorizontalAlignment="Left" Background="{DynamicResource Window.InnerDialog.Background}">
         <Grid
             Width="auto"
             Margin="20"
@@ -51,7 +51,7 @@
                             Margin="10"
                             FontSize="20"
                             FontWeight="Bold"
-                            Foreground="{DynamicResource ForegroundSearch}"
+                            Foreground="{DynamicResource Global.Foreground}"
                             Text="{x:Static lang:Resources.Upgrade}"
                             TextAlignment="Center" />
 
@@ -65,7 +65,7 @@
                         <hc:LoadingCircle
                             x:Name="UpgradeLoadingCircle"
                             Height="30"
-                            Foreground="{DynamicResource ForegroundGlobal}"
+                            Foreground="{DynamicResource Global.Foreground}"
                             Visibility="{Binding IsChecking, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay}" />
 
                     </StackPanel>
@@ -79,7 +79,7 @@
                             Margin="10"
                             HorizontalAlignment="Left"
                             FontSize="14"
-                            Foreground="{DynamicResource ForegroundGlobal}"
+                            Foreground="{DynamicResource Global.Foreground}"
                             Text="{x:Static lang:Resources.UpgradeSource}" />
 
                         <StackPanel Orientation="Horizontal">
@@ -204,7 +204,7 @@
                         HorizontalAlignment="Left"
                         FontSize="18"
                         FontWeight="Bold"
-                        Foreground="{DynamicResource ForegroundSearch}"
+                        Foreground="{DynamicResource Global.Foreground}"
                         Text="新版本详情"
                         TextAlignment="Center" />
                     <TextBox
@@ -215,7 +215,7 @@
                         VerticalContentAlignment="Top"
                         FontFamily="微软雅黑"
                         FontSize="15"
-                        Foreground="{DynamicResource ForegroundGlobal}"
+                        Foreground="{DynamicResource Global.Foreground}"
                         HorizontalScrollBarVisibility="Auto"
                         IsReadOnly="True"
                         Style="{StaticResource ReadOnlyTextBox}"

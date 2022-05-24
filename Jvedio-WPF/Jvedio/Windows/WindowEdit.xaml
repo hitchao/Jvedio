@@ -37,7 +37,7 @@
             <!--  删除字体  -->
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="2" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+            <Setter Property="Foreground" Value="{DynamicResource Global.Sub.Foreground}" />
         </Style>
 
     </chao:BaseWindow.Resources>
@@ -61,7 +61,7 @@
         </ScrollViewer>
 
 
-        <Grid Background="{DynamicResource BackgroundMain}">
+        <Grid Background="{DynamicResource Window.InnerDialog.Background}">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -70,7 +70,7 @@
 
             <Grid Grid.Row="0" Margin="5">
                 <!--<Border
-                    Background="{DynamicResource BackgroundSide}"
+                    Background="{DynamicResource Window.Side.Background}"
                     BorderThickness="0"
                     CornerRadius="5" />-->
                 <ScrollViewer FocusVisualStyle="{x:Null}">
@@ -93,28 +93,28 @@
                                     Content="{x:Static lang:Resources.Normal}"
                                     FocusVisualStyle="{x:Null}"
                                     FontSize="15"
-                                    Foreground="{DynamicResource ForegroundSearch}"
+                                    Foreground="{DynamicResource Global.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=0, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
                                     Style="{StaticResource FlatRadioButton}" />
                                 <RadioButton
                                     Content="无修正"
                                     FocusVisualStyle="{x:Null}"
                                     FontSize="15"
-                                    Foreground="{DynamicResource ForegroundSearch}"
+                                    Foreground="{DynamicResource Global.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=1, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
                                     Style="{StaticResource FlatRadioButton}" />
                                 <RadioButton
                                     Content="修正"
                                     FocusVisualStyle="{x:Null}"
                                     FontSize="15"
-                                    Foreground="{DynamicResource ForegroundSearch}"
+                                    Foreground="{DynamicResource Global.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=2, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
                                     Style="{StaticResource FlatRadioButton}" />
                                 <RadioButton
                                     Content="{x:Static lang:Resources.Europe}"
                                     FocusVisualStyle="{x:Null}"
                                     FontSize="15"
-                                    Foreground="{DynamicResource ForegroundSearch}"
+                                    Foreground="{DynamicResource Global.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=3, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
                                     Style="{StaticResource FlatRadioButton}" />
                             </StackPanel>
@@ -128,7 +128,7 @@
                                 <hc:Rate
                                     AllowClear="True"
                                     AllowHalf="True"
-                                    Background="{DynamicResource BackgroundTitle}"
+                                    Background="{DynamicResource Window.Title.Background}"
                                     DefaultValue="0"
                                     FocusVisualStyle="{StaticResource FocusVisual}"
                                     Foreground="{DynamicResource Common.HighLight.Deep.Background}"
@@ -248,9 +248,9 @@
                                             Background="{DynamicResource Window.Side.Background}"
                                             BorderBrush="#326CF3"
                                             BorderThickness="0"
-                                            Foreground="White"
+                                            Foreground="{DynamicResource Global.Foreground}"
                                             PlaceHolder="搜索"
-                                            PlaceHolderForeground="Gray"
+                                            PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                             SearchOnTextChanged="False"
                                             ShowClearButton="True"
                                             ShowSearchButton="True"
@@ -281,7 +281,7 @@
                                                         Background="{DynamicResource Window.Side.Background}"
                                                         BorderBrush="#326CF3"
                                                         BorderThickness="0"
-                                                        Foreground="White"
+                                                        Foreground="{DynamicResource Global.Foreground}"
                                                         IsReadOnly="True"
                                                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                         Text="{Binding ActorName, Mode=TwoWay}" />
@@ -490,9 +490,9 @@
                                                 Background="{DynamicResource Window.Side.Background}"
                                                 BorderBrush="#326CF3"
                                                 BorderThickness="0"
-                                                Foreground="White"
+                                                Foreground="{DynamicResource Global.Foreground}"
                                                 PlaceHolder="搜索"
-                                                PlaceHolderForeground="Gray"
+                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                 SearchOnTextChanged="False"
                                                 ShowClearButton="True"
                                                 ShowSearchButton="True"
@@ -577,7 +577,7 @@
                                     Margin="5"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Foreground="{DynamicResource ForegroundGlobal}"
+                                    Foreground="{DynamicResource Global.Foreground}"
                                     Text="{x:Static lang:Resources.DragFileIn}" />
 
                             </Border>

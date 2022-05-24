@@ -37,7 +37,7 @@
             <!--  删除字体  -->
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="2" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
         </Style>
 
     </chao:BaseWindow.Resources>
@@ -61,7 +61,7 @@
         </ScrollViewer>
 
 
-        <Grid Background="{DynamicResource BackgroundMain}">
+        <Grid Background="{DynamicResource Window.InnerDialog.Background}">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -70,7 +70,7 @@
 
             <Grid Grid.Row="0" Margin="5">
                 <!--<Border
-                    Background="{DynamicResource BackgroundSide}"
+                    Background="{DynamicResource Window.Side.Background}"
                     BorderThickness="0"
                     CornerRadius="5" />-->
                 <ScrollViewer FocusVisualStyle="{x:Null}">
@@ -95,7 +95,7 @@
                                 <hc:Rate
                                     AllowClear="True"
                                     AllowHalf="True"
-                                    Background="{DynamicResource BackgroundTitle}"
+                                    Background="{DynamicResource Window.Title.Background}"
                                     DefaultValue="0"
                                     FocusVisualStyle="{StaticResource FocusVisual}"
                                     Foreground="{DynamicResource Common.HighLight.Deep.Background}"
@@ -176,9 +176,9 @@
                                                 Background="{DynamicResource Window.Side.Background}"
                                                 BorderBrush="#326CF3"
                                                 BorderThickness="0"
-                                                Foreground="White"
+                                                Foreground="{DynamicResource Global.Foreground}"
                                                 PlaceHolder="搜索"
-                                                PlaceHolderForeground="Gray"
+                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                 SearchOnTextChanged="False"
                                                 ShowClearButton="True"
                                                 ShowSearchButton="True"
@@ -264,7 +264,7 @@
                                     Margin="5"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Foreground="{DynamicResource ForegroundGlobal}"
+                                    Foreground="{DynamicResource Global.Foreground}"
                                     Text="{x:Static lang:Resources.DragFileIn}" />
 
                             </Border>

@@ -20,7 +20,7 @@
     mc:Ignorable="d">
 
 
-    <Grid Background="{DynamicResource BackgroundMain}">
+    <Grid Background="{DynamicResource Window.InnerDialog.Background}">
 
         <!--  消息提示框  -->
         <ScrollViewer
@@ -55,12 +55,12 @@
                 hc:InfoElement.Placeholder="输入视频识别码，回车分割"
                 hc:InfoElement.Title=""
                 AcceptsReturn="True"
-                Background="{DynamicResource BackgroundSide}"
-                BorderBrush="{DynamicResource ForegroundGlobal}"
-                CaretBrush="{DynamicResource ForegroundSearch}"
+                Background="{DynamicResource Window.Side.Background}"
+                BorderBrush="{DynamicResource Global.Foreground}"
+                CaretBrush="{DynamicResource Window.Foreground}"
                 ContextMenu="{StaticResource TextBoxContextMenu}"
                 FontSize="15"
-                Foreground="{DynamicResource ForegroundSearch}"
+                Foreground="{DynamicResource Global.Foreground}"
                 Style="{StaticResource TextBoxExtend}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
@@ -74,7 +74,7 @@
                     Margin="20,10"
                     Background="Transparent"
                     Content="{x:Static lang:Resources.VideoType}"
-                    Foreground="{DynamicResource ForegroundSearch}"
+                    Foreground="{DynamicResource Global.Foreground}"
                     Style="{StaticResource LabelPrimary}" />
                 <ComboBox
                     Height="30"

@@ -28,7 +28,7 @@
             <!--  删除字体  -->
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="2" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
 
 
         </Style>
@@ -50,7 +50,7 @@
             <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableEditActress}" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource BackgroundSide}" />
+                    <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
                     <Setter Property="IsReadOnly" Value="False" />
                 </DataTrigger>
             </Style.Triggers>

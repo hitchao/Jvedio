@@ -16,7 +16,7 @@
     mc:Ignorable="d">
 
 
-    <Grid Background="{DynamicResource BackgroundMain}">
+    <Grid Background="{DynamicResource Window.InnerDialog.Background}">
 
         <StackPanel Margin="50,20" Orientation="Vertical">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -47,7 +47,7 @@
                 <TextBlock
                     Margin="0,5"
                     FontSize="15"
-                    Foreground="{DynamicResource ForegroundSearch}"
+                    Foreground="{DynamicResource Global.Foreground}"
                     TextAlignment="Left">
                     界面控件：<Hyperlink Click="OpenUrl" NavigateUri="https://github.com/HandyOrg/HandyControl">
                         <Run Text="HandyControl" />
@@ -72,7 +72,7 @@
                 <TextBlock
                     Margin="2,10"
                     FontSize="16"
-                    Foreground="{DynamicResource ForegroundSearch}"
+                    Foreground="{DynamicResource Global.Foreground}"
                     TextAlignment="Center"
                     Visibility="Hidden" />
 

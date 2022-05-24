@@ -19,7 +19,7 @@
     AllowDrop="True"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Global.Sub.Foreground}"
     ResizeMode="CanResize"
     SizeChanged="BaseWindow_SizeChanged"
     WindowStartupLocation="CenterScreen"
@@ -70,7 +70,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Padding" Value="5,0,0,0" />
             <Setter Property="TextAlignment" Value="Left" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="FontSize" Value="16" />
             <!--  删除字体  -->
             <Setter Property="Margin" Value="20,5" />
@@ -86,7 +86,7 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="MinWidth" Value="100" />
             <Setter Property="Width" Value="auto" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         </Style>
 
 
@@ -96,8 +96,8 @@
             TargetType="TextBox">
             <!--  删除字体  -->
             <Setter Property="FontSize" Value="15" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
-            <Setter Property="Background" Value="{DynamicResource BackgroundTitle}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
+            <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Width" Value="auto" />
             <Setter Property="Height" Value="auto" />
@@ -107,11 +107,11 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="5" />
             <Setter Property="Margin" Value="5,0" />
-            <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
         </Style>
     </chao:BaseWindow.Resources>
 
-    <Grid Background="{DynamicResource BackgroundMain}">
+    <Grid Background="{DynamicResource Window.InnerDialog.Background}">
 
 
         <Grid.RowDefinitions>
@@ -136,13 +136,7 @@
                 hc:Growl.Token="SettingsGrowl" />
         </ScrollViewer>
 
-        <TextBox
-            x:Name="FocusTextBox"
-            Width="5"
-            Margin="-20,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Visibility="Visible" />
+
 
 
         <TabControl
@@ -150,10 +144,19 @@
             Grid.Row="0"
             Margin="5"
             Background="Transparent"
-            BorderBrush="{DynamicResource BackgroundSearch}"
-            SelectedIndex="{Binding TabControlSelectedIndex, Mode=TwoWay}"
+            BorderBrush="{DynamicResource Window.Foreground}"
+            SelectedIndex="6"
             Style="{DynamicResource BaseHcTabControlStyle}"
             TabStripPlacement="Top">
+            <!--<TabControl
+            x:Name="TabControl"
+            Grid.Row="0"
+            Margin="5"
+            Background="Transparent"
+            BorderBrush="{DynamicResource Window.Foreground}"
+            SelectedIndex="{Binding TabControlSelectedIndex, Mode=TwoWay}"
+            Style="{DynamicResource BaseHcTabControlStyle}"
+            TabStripPlacement="Top">-->
             <TabItem
                 Background="Transparent"
                 FontSize="15"
@@ -167,9 +170,10 @@
                             x:Name="openDefaultCheckBox"
                             Content="{x:Static lang:Resources.NotShowLibrary}"
                             IsChecked="{Binding OpenDataBaseDefault, Mode=TwoWay}" />
+                        <CheckBox Content="{x:Static lang:Resources.DetailViewAll}" IsChecked="{Binding DetialWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                         <CheckBox Content="{x:Static lang:Resources.DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="无封面时将已截取的图片作为封面" IsChecked="{Binding AutoGenScreenShot}" />
+
 
                     </WrapPanel>
 
@@ -361,7 +365,10 @@
                 Header="图像">
 
                 <StackPanel Margin="20,5">
-                    <Grid>
+                    <CheckBox Content="无封面时将已截取的图片作为封面" IsChecked="{Binding AutoGenScreenShot}" />
+                    <CheckBox Content="{x:Static lang:Resources.ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+
+                    <Grid Margin="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="*" />
@@ -1254,7 +1261,7 @@
                                 Width="380"
                                 MinWidth="400"
                                 Margin="10,0"
-                                Background="{DynamicResource BackgroundTitle}"
+                                Background="{DynamicResource Window.Title.Background}"
                                 FontSize="15"
                                 PlaceHolder="{x:Static lang:Resources.ToolTip_SameAsVedio}"
                                 PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
@@ -1476,7 +1483,7 @@
                                                                             </DataTrigger>
                                                                             <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="2">
                                                                                 <Setter Property="Icon" Value="Refresh" />
-                                                                                <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+                                                                                <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
                                                                                 <Setter Property="Spin" Value="True" />
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
@@ -1500,7 +1507,7 @@
                                                                 Background="Transparent"
                                                                 Foreground="{DynamicResource Global.Foreground}"
                                                                 PlaceHolder="网址"
-                                                                PlaceHolderForeground="Gray"
+                                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                 Style="{StaticResource BaseSearchTextBox}"
                                                                 Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                         </DataTemplate>
@@ -1522,7 +1529,7 @@
                                                                 Foreground="{DynamicResource Global.Foreground}"
                                                                 IsReadOnly="True"
                                                                 PlaceHolder="Cookies"
-                                                                PlaceHolderForeground="Gray"
+                                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                 PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp"
                                                                 Style="{StaticResource BaseSearchTextBox}"
                                                                 Text="{Binding Cookies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -1540,7 +1547,7 @@
                                                                 Foreground="{DynamicResource Global.Foreground}"
                                                                 IsReadOnly="True"
                                                                 PlaceHolder="Headers"
-                                                                PlaceHolderForeground="Gray"
+                                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                 PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp_1"
                                                                 Style="{StaticResource BaseSearchTextBox}"
                                                                 Text="{Binding Headers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -1986,14 +1993,16 @@
                         Margin="5"
                         HorizontalAlignment="Left"
                         Orientation="Vertical">
-                        <CheckBox Content="{x:Static lang:Resources.ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="搜索栏" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="翻页调节栏" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="页码调节下拉菜单" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="{x:Static lang:Resources.StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="{x:Static lang:Resources.FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="{x:Static lang:Resources.Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <WrapPanel Orientation="Horizontal">
 
+
+                            <CheckBox Content="搜索栏" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="翻页调节栏" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="页码调节下拉菜单" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{x:Static lang:Resources.StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{x:Static lang:Resources.FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{x:Static lang:Resources.Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        </WrapPanel>
                         <CheckBox
                             Content="{x:Static lang:Resources.Filter}"
                             IsChecked="{Binding ShowFilter, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
@@ -2009,7 +2018,6 @@
                             Content="{x:Static lang:Resources.ShowTranslate2}"
                             IsChecked="{Binding PlotShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                             IsEnabled="False" />
-                        <CheckBox Content="{x:Static lang:Resources.DetailViewAll}" IsChecked="{Binding DetialWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                     </StackPanel>
 
 
@@ -2068,7 +2076,7 @@
                 Background="Transparent"
                 FontSize="15"
                 Header="{x:Static lang:Resources.Theme}">
-                <StackPanel IsEnabled="False">
+                <StackPanel>
                     <WrapPanel
                         x:Name="SkinWrapPanel"
                         Margin="20,5"
@@ -2102,11 +2110,7 @@
                             HorizontalAlignment="Left"
                             Content="{x:Static lang:Resources.MoreThemes}"
                             Style="{StaticResource InfoLabel}" />
-                        <Button
-                            HorizontalAlignment="Left"
-                            Click="OpenDIY"
-                            Content="{x:Static lang:Resources.Get}"
-                            Style="{StaticResource ButtonStyleFill}" />
+
 
 
                         <DataGrid
@@ -2114,7 +2118,7 @@
                             MinHeight="200"
                             Margin="0,10"
                             AutoGenerateColumns="False"
-                            Background="{DynamicResource BackgroundMenu}"
+                            Background="{DynamicResource Popup.Background}"
                             BorderThickness="0"
                             CanUserAddRows="False"
                             CanUserDeleteRows="True"
@@ -2125,7 +2129,7 @@
                             ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
                             DragIndicatorStyle="{DynamicResource DataGridColumnHeaderStyle2}"
                             DropLocationIndicatorStyle="{DynamicResource DataGridStyle2}"
-                            Foreground="{DynamicResource ForegroundSearch}"
+                            Foreground="{DynamicResource Global.Foreground}"
                             HorizontalGridLinesBrush="Transparent"
                             IsSynchronizedWithCurrentItem="True"
                             ItemsPanel="{DynamicResource ItemsPanelTemplate1}"
@@ -2226,7 +2230,7 @@
                             <fa:ImageAwesome
                                 Height="20"
                                 Margin="5,0"
-                                Foreground="{DynamicResource ForegroundSearch}" />
+                                Foreground="{DynamicResource Global.Foreground}" />
                             <Button
                                 Width="auto"
                                 HorizontalAlignment="Left"
@@ -2306,7 +2310,7 @@
                             <fa:ImageAwesome
                                 Height="20"
                                 Margin="5,0"
-                                Foreground="{DynamicResource ForegroundSearch}" />
+                                Foreground="{DynamicResource Global.Foreground}" />
                             <Button
                                 Click="Button_Click_5"
                                 Content=" ？"
@@ -2369,7 +2373,7 @@
 
                         <TextBlock
                             Cursor="Hand"
-                            Foreground="LightSkyBlue"
+                            Foreground="{DynamicResource Common.HighLight.BorderBrush}"
                             MouseLeftButtonUp="CopyFFmpegUrl"
                             Style="{StaticResource BaseTextBlock}"
                             Text="前往下载"
@@ -2773,88 +2777,88 @@
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.ID}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Title}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
 
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.VideoType}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
 
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Year}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Duration}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Country}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Director}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Tag}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Genre}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Label}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Actor}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Studio}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.Rating}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
 
                         <ToggleButton
                             MinWidth="155"
                             Margin="5"
                             Padding="5"
                             Content="{x:Static lang:Resources.ReleaseDate}"
-                            Style="{StaticResource ToggleButtonStyle1}" />
+                            Style="{StaticResource FlatToggleButtonStyle}" />
 
                     </WrapPanel>
 
@@ -3067,7 +3071,7 @@
 
         </TabControl>
 
-        <Grid Grid.Row="1" Background="{DynamicResource BackgroundTitle}">
+        <Grid Grid.Row="1" Background="{DynamicResource Window.Title.Background}">
             <Button
                 HorizontalAlignment="Left"
                 Click="Restore"

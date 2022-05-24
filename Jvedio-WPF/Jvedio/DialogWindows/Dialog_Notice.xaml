@@ -11,7 +11,7 @@
     MinHeight="300"
     MaxWidth="800"
     MaxHeight="800"
-    Background="{StaticResource Window.Background}"
+    Background="{DynamicResource Window.Background}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -19,19 +19,19 @@
         <Style x:Key="BaseTextBox" TargetType="{x:Type TextBox}">
             <Setter Property="Padding" Value="10" />
             <Setter Property="IsReadOnly" Value="True" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="TextAlignment" Value="Left" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="FontFamily" Value="Times New Romans" />
             <Setter Property="FontSize" Value="20" />
             <Setter Property="Margin" Value="10" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CaretBrush" Value="{DynamicResource ForegroundSearch}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="{DynamicResource ForegroundSearch}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource Window.Foreground}" />
                 </Trigger>
             </Style.Triggers>
         </Style>

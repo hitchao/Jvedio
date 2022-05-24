@@ -22,11 +22,11 @@
     </Window.Resources>
 
 
-    <Grid  Background="{DynamicResource BackgroundMain}"       >
+    <Grid  Background="{DynamicResource Window.InnerDialog.Background}"       >
         <StackPanel Margin="20" >
             <StackPanel   Orientation="Horizontal">
                 <Label  Content="{x:Static lang:Resources.Url}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
-                <TextBox x:Name="tb" Grid.Row="0" FontSize="15" Foreground="{DynamicResource ForegroundSearch}" Background="{DynamicResource BackgroundTitle}" BorderThickness="0" Width="300" CaretBrush="{DynamicResource ForegroundSearch}" TextChanged="TextBox_TextChanged"    hc:InfoElement.TitleWidth="140" hc:InfoElement.Placeholder="{x:Static lang:Resources.FirstPageOfUrl}"  hc:InfoElement.Title="" hc:InfoElement.Necessary="True" Style="{StaticResource TextBoxExtend}" Margin="20" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                <TextBox x:Name="tb" Grid.Row="0" FontSize="15" Foreground="{DynamicResource Global.Foreground}" Background="{DynamicResource Window.Title.Background}" BorderThickness="0" Width="300" CaretBrush="{DynamicResource Window.Foreground}" TextChanged="TextBox_TextChanged"    hc:InfoElement.TitleWidth="140" hc:InfoElement.Placeholder="{x:Static lang:Resources.FirstPageOfUrl}"  hc:InfoElement.Title="" hc:InfoElement.Necessary="True" Style="{StaticResource TextBoxExtend}" Margin="20" ContextMenu="{StaticResource TextBoxContextMenu}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="20 0">
                 <Button Margin="10" Style="{StaticResource ButtonSuccess}" Content="{x:Static lang:Resources.Save}" Click="SaveWebSite"/>
@@ -40,9 +40,9 @@
 
             <StackPanel x:Name="VedioTypeStackPanel"   Orientation="Horizontal">
                 <Label  Content="{x:Static lang:Resources.VideoType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
-                <RadioButton  FontSize="15"  Foreground="{DynamicResource ForegroundSearch}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
-                <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
-                <RadioButton FontSize="15"  Foreground="{DynamicResource ForegroundSearch}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
+                <RadioButton  FontSize="15"  Foreground="{DynamicResource Global.Foreground}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
+                <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
+                <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
             </StackPanel>
 
             <DockPanel    >

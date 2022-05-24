@@ -84,7 +84,7 @@
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="FontSize" Value="16" />
             <!--  删除字体  -->
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
             <Setter Property="ContextMenu" Value="{StaticResource CopyContextMenu}" />
             <Setter Property="Margin" Value="0,5" />
             <Setter Property="Padding" Value="0" />
@@ -95,8 +95,9 @@
         <Style x:Key="BaseTextBlock" TargetType="TextBlock">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="微软雅黑" />
             <!--  删除字体  -->
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}" />
+            <Setter Property="Foreground" Value="{DynamicResource Global.Sub.Foreground}" />
             <Setter Property="Margin" Value="0,0" />
             <Setter Property="Opacity" Value="0.9" />
             <Setter Property="Padding" Value="0" />
@@ -293,7 +294,7 @@
                                                     Cursor="Hand"
                                                     Fill="#F6F7F7"
                                                     Points="15,38 35,25 15,10"
-                                                    Stroke="{DynamicResource BackgroundMenu}" />
+                                                    Stroke="{DynamicResource Menu.Background}" />
                                             </Canvas>
 
                                         </Grid>
@@ -324,7 +325,7 @@
                                                 VerticalAlignment="Center"
                                                 FontFamily="微软雅黑"
                                                 FontSize="15"
-                                                Foreground="{DynamicResource ForegroundSearch}"
+                                                Foreground="{DynamicResource Global.Foreground}"
                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                 Text="{Binding VID, Mode=OneWay}"
                                                 TextAlignment="Left"
@@ -420,9 +421,9 @@
                                             <hc:Rate
                                                 AllowClear="True"
                                                 AllowHalf="True"
-                                                Background="{DynamicResource BackgroundTitle}"
+                                                Background="{DynamicResource Window.Title.Background}"
                                                 DefaultValue="0"
-                                                Foreground="#FF7B3B"
+                                                Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                                 ItemHeight="15"
                                                 ItemMargin="3 0"
                                                 ValueChanged="Rate_ValueChanged_1"
@@ -438,7 +439,7 @@
                                             HorizontalAlignment="Center"
                                             Background="Transparent"
                                             FontSize="14"
-                                            Foreground="{DynamicResource ForegroundSearch}"
+                                            Foreground="{DynamicResource Global.Foreground}"
                                             IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                             MouseLeftButtonDown="CopyText"
                                             Opacity="0.5"
@@ -488,10 +489,10 @@
                     ToolTip="{x:Static lang:Resources.Previous}">
                     <Border.Style>
                         <Style TargetType="Border">
-                            <Setter Property="Background" Value="{DynamicResource BackgroundSide}" />
+                            <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource BackgroundTitle}" />
+                                    <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -514,7 +515,7 @@
                     <RadioButton
                         Height="30"
                         Margin="5,5,5,0"
-                        Background="{DynamicResource BackgroundSide}"
+                        Background="{DynamicResource Window.Side.Background}"
                         Click="ExtraImageRadioButton_Click"
                         FocusVisualStyle="{x:Null}"
                         GroupName="ExtraImageView"
@@ -562,7 +563,7 @@
                     <Grid
                         x:Name="MouseMoveGrid"
                         Grid.Column="0"
-                        Background="{DynamicResource BackgroundMain}"
+                        Background="{DynamicResource Window.InnerDialog.Background}"
                         MouseMove="MoveWindow" />
 
                     <TextBox
@@ -571,11 +572,11 @@
                         Margin="0,0,50,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Background="{DynamicResource BackgroundMain}"
+                        Background="{DynamicResource Window.InnerDialog.Background}"
                         FocusVisualStyle="{x:Null}"
                         FontSize="16"
                         FontWeight="Bold"
-                        Foreground="{DynamicResource ForegroundGlobal}"
+                        Foreground="{DynamicResource Global.Sub.Foreground}"
                         Style="{StaticResource ViewTextBox}"
                         Text="{Binding CurrentVideo.Title}"
                         TextAlignment="Left"
@@ -720,7 +721,7 @@
                             Grid.Row="0"
                             HorizontalAlignment="Stretch"
                             AllowDrop="True"
-                            Background="{DynamicResource BackgroundMain}"
+                            Background="{DynamicResource Window.InnerDialog.Background}"
                             DragOver="BigImage_DragOver"
                             Drop="BigImage_Drop"
                             MouseLeftButtonDown="Grid_MouseLeftButtonDown"
@@ -816,7 +817,7 @@
                                 x:Name="ExtraImageBorder"
                                 Margin="0,10"
                                 AllowDrop="True"
-                                Background="{DynamicResource BackgroundSide}"
+                                Background="{DynamicResource Window.Side.Background}"
                                 CornerRadius="10"
                                 DragOver="Border_DragOver"
                                 Drop="Border_Drop"
@@ -912,7 +913,7 @@
                                 Panel.ZIndex="10">
                                 <Border
                                     Margin="10"
-                                    Background="{DynamicResource BackgroundMain}"
+                                    Background="{DynamicResource Window.InnerDialog.Background}"
                                     CornerRadius="5"
                                     Effect="{StaticResource BlueDropShadowEffect}" />
                                 <Image
@@ -965,7 +966,7 @@
                                                     HorizontalAlignment="Left"
                                                     FontFamily="Times New Roman"
                                                     FontSize="24"
-                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                    Foreground="{DynamicResource Global.Foreground}"
                                                     Style="{StaticResource ViewTextBox}"
                                                     Text="{Binding CurrentVideo.VID, Mode=OneWay}" />
                                             </StackPanel>
@@ -1021,10 +1022,10 @@
                                                 Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource bool2VisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                                                 <hc:Rate
                                                     AllowClear="True"
-                                                    Background="{DynamicResource BackgroundTitle}"
+                                                    Background="{DynamicResource Window.Title.Background}"
                                                     DefaultValue="0"
                                                     FocusVisualStyle="{x:Null}"
-                                                    Foreground="#FF7B3B"
+                                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                                     ValueChanged="Rate_ValueChanged"
                                                     Value="{Binding CurrentVideo.Grade, Mode=TwoWay}" />
                                             </StackPanel>
@@ -1109,7 +1110,7 @@
                                                                             MaxHeight="60"
                                                                             Margin="0"
                                                                             FontSize="12"
-                                                                            Foreground="{DynamicResource ForegroundSearch}"
+                                                                            Foreground="{DynamicResource Global.Foreground}"
                                                                             Opacity="0.7"
                                                                             Style="{StaticResource ReadOnlyWrapTextBox}"
                                                                             Text="{Binding ActorName}"
@@ -1123,7 +1124,7 @@
                                                                         BorderThickness="0"
                                                                         Content="{Binding Count}"
                                                                         FontSize="18"
-                                                                        Foreground="{DynamicResource ForegroundSearch}"
+                                                                        Foreground="{DynamicResource Global.Foreground}"
                                                                         Opacity="0.7"
                                                                         ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />-->
 
@@ -1498,7 +1499,7 @@
                                             Width="auto"
                                             Height="1"
                                             Margin="0,5"
-                                            Fill="{DynamicResource ForegroundGlobal}" />
+                                            Fill="{DynamicResource Global.Foreground}" />
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.AudioFormat}" />
@@ -1539,7 +1540,7 @@
                                             Width="auto"
                                             Height="1"
                                             Margin="0,5"
-                                            Fill="{DynamicResource ForegroundGlobal}" />
+                                            Fill="{DynamicResource Global.Foreground}" />
 
 
 
@@ -1598,10 +1599,10 @@
                                 ToolTip="{x:Static lang:Resources.Next}">
                                 <Border.Style>
                                     <Style TargetType="Border">
-                                        <Setter Property="Background" Value="{DynamicResource BackgroundSide}" />
+                                        <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource BackgroundTitle}" />
+                                                <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>

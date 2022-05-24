@@ -12,7 +12,7 @@
     Height="auto"
     MinHeight="200"
     MaxHeight="500"
-    Background="{DynamicResource BackgroundMain}"
+    Background="{DynamicResource Window.InnerDialog.Background}"
     CanMinimized="False"
     CanResize="False"
     Foreground="{DynamicResource Window.Title.Foreground}"

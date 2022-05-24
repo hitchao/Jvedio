@@ -251,7 +251,7 @@ namespace Jvedio
             ImageAwesome imageAwesome = stackPanel.Children.OfType<ImageAwesome>().First();
             imageAwesome.Icon = FontAwesomeIcon.Refresh;
             imageAwesome.Spin = true;
-            imageAwesome.Foreground = (SolidColorBrush)Application.Current.Resources["ForegroundSearch"];
+            imageAwesome.Foreground = (SolidColorBrush)Application.Current.Resources["Window.Foreground"];
             if (checkBox.Content.ToString() == Jvedio.Language.Resources.BaiduFaceRecognition)
             {
 
@@ -300,7 +300,7 @@ namespace Jvedio
             ImageAwesome imageAwesome = stackPanel.Children.OfType<ImageAwesome>().First();
             imageAwesome.Icon = FontAwesomeIcon.Refresh;
             imageAwesome.Spin = true;
-            imageAwesome.Foreground = (SolidColorBrush)Application.Current.Resources["ForegroundSearch"];
+            imageAwesome.Foreground = (SolidColorBrush)Application.Current.Resources["Window.Foreground"];
 
             if (checkBox.Content.ToString() == "百度翻译")
             {
@@ -1441,10 +1441,7 @@ namespace Jvedio
             Properties.Settings.Default.ScanRe = (sender as TextBox).Text.Replace("；", ";");
         }
 
-        private void OpenDIY(object sender, RoutedEventArgs e)
-        {
-            FileHelper.TryOpenUrl(ThemeDIY);
-        }
+
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {

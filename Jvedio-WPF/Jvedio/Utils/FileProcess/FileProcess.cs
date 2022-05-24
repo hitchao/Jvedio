@@ -28,82 +28,34 @@ namespace Jvedio
 
         public static void SetSkin(string themeName)
         {
-            Theme theme = ThemeLoader.loadTheme(themeName);
-            Application.Current.Resources["Color_BackgroundTitle"] = theme.DisplayProperty.Title.MainBackground;
-            Application.Current.Resources["Color_BackgroundMain"] = theme.DisplayProperty.Display.MainBackground;
-            Application.Current.Resources["Color_BackgroundSide"] = theme.DisplayProperty.Side.MainBackground;
-            Application.Current.Resources["Color_BackgroundTab"] = theme.DisplayProperty.Tools.MainBackground;
-            Application.Current.Resources["Color_BackgroundSearch"] = theme.DisplayProperty.Search.MainBackground;
-            Application.Current.Resources["Color_BackgroundMenu"] = theme.DisplayProperty.Menu.MainBackground;
-            Application.Current.Resources["Color_ForegroundGlobal"] = theme.DisplayProperty.Global.MainForeground;
-            Application.Current.Resources["Color_ForegroundSearch"] = theme.DisplayProperty.Search.MainForeground;
-            Application.Current.Resources["Color_BorderBursh"] = Colors.Transparent;
 
-            //设置字体
-            GlobalFont = new FontFamily("微软雅黑");
-            if (theme.Font != null)
+            if ("白色".Equals(themeName))
             {
-                var fonts = Fonts.GetFontFamilies(new Uri(theme.Font));
-                if (fonts != null && fonts.Count >= 1) GlobalFont = fonts.First();
+                Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
+
             }
-            foreach (Window window in App.Current.Windows)
+            else
             {
-                window.FontFamily = GlobalFont;
+                Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml", UriKind.RelativeOrAbsolute);
+
             }
+
+
+            //Theme theme = ThemeLoader.loadTheme(themeName);
+
+            ////设置字体
+            //GlobalFont = new FontFamily("微软雅黑");
+            //if (theme.Font != null)
+            //{
+            //    var fonts = Fonts.GetFontFamilies(new Uri(theme.Font));
+            //    if (fonts != null && fonts.Count >= 1) GlobalFont = fonts.First();
+            //}
+            //foreach (Window window in App.Current.Windows)
+            //{
+            //    window.FontFamily = GlobalFont;
+            //}
 
             //Console.WriteLine(fonts);
-
-            //if (theme == "黑色")
-            //{
-            //    Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#22252A");
-            //    Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#1B1B1F");
-            //    Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#101013");
-            //    Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#383838");
-            //    Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#18191B");
-            //    Application.Current.Resources["Color_BackgroundMenu"] = (Color)ColorConverter.ConvertFromString("#252526");
-            //    Application.Current.Resources["Color_ForegroundGlobal"] = (Color)ColorConverter.ConvertFromString("#AFAFAF");
-            //    Application.Current.Resources["Color_ForegroundSearch"] = Colors.White;
-            //    Application.Current.Resources["Color_BorderBursh"] = Colors.Transparent;
-            //}
-            //else if (theme == "白色")
-            //{
-            //    Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#E2E3E5");
-            //    Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#F9F9F9");
-            //    Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#F2F3F4");
-            //    Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#FFF5EE");
-            //    Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#D1D1D1");
-            //    Application.Current.Resources["Color_BackgroundMenu"] = Colors.White;
-            //    Application.Current.Resources["Color_ForegroundGlobal"] = (Color)ColorConverter.ConvertFromString("#555555");
-            //    Application.Current.Resources["Color_ForegroundSearch"] = Colors.Black;
-            //    Application.Current.Resources["Color_BorderBursh"] = Colors.Gray;
-            //}
-            //else if (theme == "蓝色")
-
-            //{
-            //    Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#0288D1");
-            //    Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#2BA2D2");
-            //    Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#03A9F5");
-            //    Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#0288D1");
-            //    Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#87CEEB");
-            //    Application.Current.Resources["Color_BackgroundMenu"] = (Color)ColorConverter.ConvertFromString("#0288D1");
-            //    Application.Current.Resources["Color_ForegroundGlobal"] = Colors.White;
-            //    Application.Current.Resources["Color_ForegroundSearch"] = Colors.White;
-            //    Application.Current.Resources["Color_BorderBursh"] = (Color)ColorConverter.ConvertFromString("#95DCED");
-
-            //}
-
-
-            Application.Current.Resources["BackgroundTitle"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundTitle"]);
-            Application.Current.Resources["BackgroundMain"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundMain"]);
-            Application.Current.Resources["BackgroundSide"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundSide"]);
-            Application.Current.Resources["BackgroundTab"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundTab"]);
-            Application.Current.Resources["BackgroundSearch"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundSearch"]);
-            Application.Current.Resources["BackgroundMenu"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundMenu"]);
-            Application.Current.Resources["ForegroundGlobal"] = new SolidColorBrush((Color)Application.Current.Resources["Color_ForegroundGlobal"]);
-            Application.Current.Resources["ForegroundSearch"] = new SolidColorBrush((Color)Application.Current.Resources["Color_ForegroundSearch"]);
-            Application.Current.Resources["BorderBursh"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BorderBursh"]);
-
-
 
         }
         public static Window GetWindowByName(string name)

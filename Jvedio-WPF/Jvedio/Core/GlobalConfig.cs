@@ -14,6 +14,7 @@ namespace Jvedio
     {
         public static StartUp StartUp = StartUp.createInstance();
         public static Core.WindowConfig.Main Main = Core.WindowConfig.Main.createInstance();
+        public static Core.WindowConfig.Filter Filter = Core.WindowConfig.Filter.createInstance();
         public static Edit Edit = Edit.createInstance();
         public static Detail Detail = Detail.createInstance();
         public static MetaData MetaData = MetaData.createInstance();
@@ -29,6 +30,7 @@ namespace Jvedio
         {
             StartUp.Read();
             Main.Read();
+            Filter.Read();
             Edit.Read();
             Detail.Read();
             MetaData.Read();

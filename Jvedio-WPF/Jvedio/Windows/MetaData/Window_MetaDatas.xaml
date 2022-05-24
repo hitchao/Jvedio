@@ -122,7 +122,7 @@
             <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableEditActress}" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource BackgroundSide}" />
+                    <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
                     <Setter Property="IsReadOnly" Value="False" />
                 </DataTrigger>
             </Style.Triggers>
@@ -515,9 +515,9 @@
                         Background="{DynamicResource Window.Detail.Background}"
                         BorderBrush="#326CF3"
                         BorderThickness="0"
-                        Foreground="White"
+                        Foreground="{DynamicResource Global.Foreground}"
                         PlaceHolder="搜索"
-                        PlaceHolderForeground="Gray"
+                        PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                         SearchOnTextChanged="False"
                         ShowClearButton="True"
                         ShowSearchButton="True"
@@ -631,7 +631,7 @@
                                                 Focusable="True">
                                                 <Border
                                                     Background="Transparent"
-                                                    BorderBrush="{DynamicResource BackgroundSide}"
+                                                    BorderBrush="{DynamicResource Window.Side.Background}"
                                                     BorderThickness="2"
                                                     CornerRadius="2" />
 
@@ -665,7 +665,7 @@
                                                         <Grid Margin="5">
                                                             <Border
                                                                 Margin="5"
-                                                                Background="{DynamicResource BackgroundMenu}"
+                                                                Background="{DynamicResource Popup.Background}"
                                                                 CornerRadius="5"
                                                                 Effect="{StaticResource PopupDropShadowEffect}" />
                                                             <StackPanel Margin="5">
@@ -710,10 +710,10 @@
                                                     hc:InfoElement.TitleWidth="140"
                                                     Background="Transparent"
                                                     BorderThickness="0"
-                                                    CaretBrush="{DynamicResource ForegroundSearch}"
+                                                    CaretBrush="{DynamicResource Window.Foreground}"
                                                     ContextMenu="{StaticResource TextBoxContextMenu}"
                                                     Focusable="True"
-                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                    Foreground="{DynamicResource Global.Foreground}"
                                                     GotFocus="SearchBar_GotFocus"
                                                     LostFocus="SearchBar_LostFocus"
                                                     PreviewKeyUp="SearchBar_PreviewKeyUp"
@@ -737,7 +737,7 @@
                                                         <Border
                                                             Name="SearchBorder"
                                                             Margin="5"
-                                                            Background="{DynamicResource BackgroundMenu}"
+                                                            Background="{DynamicResource Popup.Background}"
                                                             CornerRadius="5"
                                                             Effect="{StaticResource PopupDropShadowEffect}" />
 
@@ -868,7 +868,7 @@
                                         <chao:Switch
                                             Height="25"
                                             Background="{DynamicResource Window.Side.Background}"
-                                            CheckedBackground="Green"
+                                            CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
                                             Click="SetSelectMode"
                                             IsChecked="{Binding EditMode, Mode=TwoWay}" />
                                         <TextBlock
@@ -1217,7 +1217,7 @@
                                                                     HorizontalAlignment="Center"
                                                                     Background="Transparent"
                                                                     FontSize="14"
-                                                                    Foreground="{DynamicResource ForegroundSearch}"
+                                                                    Foreground="{DynamicResource Global.Foreground}"
                                                                     IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                                     Opacity="0.5"
                                                                     Style="{StaticResource ReadOnlyNoWrapTextBox}"
@@ -1272,9 +1272,9 @@
                                                                 <hc:Rate
                                                                     AllowClear="True"
                                                                     AllowHalf="True"
-                                                                    Background="{DynamicResource BackgroundTitle}"
+                                                                    Background="{DynamicResource Window.Title.Background}"
                                                                     DefaultValue="0"
-                                                                    Foreground="#FF7B3B"
+                                                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                                                     ItemHeight="15"
                                                                     ItemMargin="3 0"
                                                                     ValueChanged="Rate_ValueChanged"
