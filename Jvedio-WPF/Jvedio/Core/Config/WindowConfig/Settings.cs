@@ -33,6 +33,7 @@ namespace Jvedio.Core.WindowConfig
         public Dictionary<string, bool> PluginEnabled;
         public bool DownloadPreviewImage { get; set; }
         public bool OverrideInfo { get; set; }
+        public bool IgnoreCertVal { get; set; }
         public bool AutoHandleHeader { get; set; }
         public long TabControlSelectedIndex { get; set; }
         public bool OpenDataBaseDefault { get; set; }

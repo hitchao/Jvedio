@@ -91,9 +91,9 @@
                             x:Name="_borderOver"
                             Margin="0"
                             Background="{TemplateBinding Background}"
-                            BorderBrush="{DynamicResource Window.Sub.Foreground}"
                             BorderThickness="2"
-                            CornerRadius="5" />
+                            CornerRadius="5"
+                            Effect="{StaticResource PopupDropShadowEffect}" />
                         <Border
                             x:Name="_borderChecked"
                             Width="20"
@@ -109,7 +109,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Data="M0,5 5,10 13,1"
-                                Stroke="{DynamicResource Window.Foreground}"
+                                Stroke="{DynamicResource CheckBox.Checked.Background}"
                                 StrokeThickness="1" />
                         </Border>
                     </Grid>

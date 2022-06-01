@@ -147,7 +147,7 @@ namespace Jvedio
             initTagStamp();
             AllRadioButton.IsChecked = true;
 
-            ShowSettings(null, null);
+            //ShowSettings(null, null);
         }
 
 
@@ -6636,7 +6636,31 @@ namespace Jvedio
 
         private void ShowSponsor(object sender, RoutedEventArgs e)
         {
-            new Dialog_Sponsor(this).ShowDialog();
+            // 检测
+            string message = "请设置一个刮削网址后在尝试";
+            if (GlobalConfig.ServerConfig.CrawlerServers != null &&
+                GlobalConfig.ServerConfig.CrawlerServers.Count > 0
+                )
+            {
+                bool found = false;
+
+                foreach (var item in GlobalConfig.ServerConfig.CrawlerServers)
+                {
+                    if (!string.IsNullOrEmpty(item.Url))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+
+                if (found)
+                {
+                    new Dialog_Sponsor(this).ShowDialog();
+                    return;
+                }
+            }
+            msgCard.Info(message);
         }
 
         private void DeleteActors(object sender, RoutedEventArgs e)

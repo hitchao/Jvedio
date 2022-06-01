@@ -11,6 +11,7 @@
         <Setter Property="Width" Value="30" />
         <Setter Property="Height" Value="30" />
         <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Fill" Value="{DynamicResource Global.Foreground}" />
         <Setter Property="HoverBackground" Value="{DynamicResource Window.Title.Hover.Background}" />
         <Setter Property="MsgHeight" Value="15" />
         <Setter Property="MsgMargin" Value="2" />

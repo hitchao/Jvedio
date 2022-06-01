@@ -1281,16 +1281,24 @@
 
 
                     </WrapPanel>
+                    <WrapPanel Orientation="Horizontal">
+                        <CheckBox
+                            Margin="20,5"
+                            Content="主界面同步时同时下载预览图"
+                            IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="20,5"
+                            Content="强制同步信息（不推荐）"
+                            IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="20,5"
+                            Content="忽略证书错误（不安全）"
+                            IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}"
+                            IsEnabled="False" />
+                    </WrapPanel>
 
 
-                    <CheckBox
-                        Margin="20,5"
-                        Content="主界面同步时同时下载预览图"
-                        IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
-                    <CheckBox
-                        Margin="20,5"
-                        Content="强制同步信息（不推荐）"
-                        IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
+
 
 
                     <StackPanel Margin="20,5" Orientation="Horizontal">
@@ -1313,6 +1321,178 @@
                             Text="s"
                             TextAlignment="Left" />
                     </StackPanel>
+
+                    <chao:TogglePanel
+                        Margin="10,0"
+                        Padding="0,5"
+                        FontSize="15"
+                        Header="代理设置"
+                        IsExpanded="True"
+                        LineWidth="0"
+                        Style="{StaticResource BaseTogglePanel}">
+                        <StackPanel Orientation="Vertical">
+
+                            <StackPanel
+                                Name="proxyStackPanel"
+                                Margin="10"
+                                Orientation="Horizontal">
+                                <RadioButton
+                                    HorizontalAlignment="Left"
+                                    Content="不使用代理"
+                                    GroupName="enableProxy"
+                                    Style="{StaticResource FlatRadioButton}" />
+                                <RadioButton
+                                    HorizontalAlignment="Left"
+                                    Content="使用系统代理"
+                                    GroupName="enableProxy"
+                                    IsChecked="True"
+                                    Style="{StaticResource FlatRadioButton}" />
+                                <RadioButton
+                                    x:Name="customProxyRadioButton"
+                                    HorizontalAlignment="Left"
+                                    Content="自定义代理"
+                                    GroupName="enableProxy"
+                                    Style="{StaticResource FlatRadioButton}" />
+
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical" Visibility="{Binding ElementName=customProxyRadioButton, Path=IsChecked, Converter={StaticResource bool2VisibilityConverter}}">
+                                <StackPanel
+                                    Name="proxyTypesStackPanel"
+                                    Margin="20,5"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        MinWidth="60"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="类型"
+                                        TextAlignment="Left"
+                                        ToolTip="[0-2000]" />
+                                    <RadioButton
+                                        Content="HTTP"
+                                        GroupName="proxyType"
+                                        IsChecked="True"
+                                        Style="{StaticResource FlatRadioButton}" />
+                                    <RadioButton
+                                        Content="SOCKS"
+                                        GroupName="proxyType"
+                                        Style="{StaticResource FlatRadioButton}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Margin="20,5"
+                                    Orientation="Horizontal"
+                                    Visibility="Visible">
+                                    <TextBlock
+                                        MinWidth="60"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="服务器*"
+                                        TextAlignment="Left" />
+                                    <chao:SearchBox
+                                        MinWidth="400"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="{Binding ProxyServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                    <TextBlock
+                                        MinWidth="60"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="端口*"
+                                        TextAlignment="Left" />
+                                    <chao:SearchBox
+                                        MinWidth="200"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="{Binding ProxyPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                </StackPanel>
+                                <StackPanel
+                                    Margin="20,5"
+                                    Orientation="Horizontal"
+                                    Visibility="Visible">
+                                    <TextBlock
+                                        MinWidth="60"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="用户名"
+                                        TextAlignment="Left" />
+                                    <chao:SearchBox
+                                        MinWidth="400"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="{Binding ProxyUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                    <TextBlock
+                                        MinWidth="60"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="密码"
+                                        TextAlignment="Left" />
+
+                                    <PasswordBox
+                                        Name="passwordBox"
+                                        Height="30"
+                                        MinWidth="200"
+                                        Margin="10,5"
+                                        Padding="5"
+                                        VerticalContentAlignment="Center"
+                                        Background="{DynamicResource ListBoxItem.Background}"
+                                        BorderThickness="0"
+                                        ContextMenu="{DynamicResource PasteOnlyContextMenu}"
+                                        Foreground="{DynamicResource Global.Foreground}"
+                                        PasswordChar="●"
+                                        Style="{x:Null}" />
+                                    <!--<chao:SearchBox
+                                        MinWidth="200"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="{Binding ProxyPwd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
+
+                                </StackPanel>
+
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <fa:ImageAwesome
+                                    Grid.Column="0"
+                                    Width="20"
+                                    Margin="20,4,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                    <fa:ImageAwesome.Style>
+                                        <Style TargetType="fa:ImageAwesome">
+                                            <Style.Triggers>
+
+                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Canceled">
+                                                    <Setter Property="Icon" Value="TimesCircle" />
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                    <Setter Property="Spin" Value="False" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="RanToCompletion">
+                                                    <Setter Property="Icon" Value="CheckCircle" />
+                                                    <Setter Property="Foreground" Value="#20B759" />
+                                                    <Setter Property="Spin" Value="False" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Running">
+                                                    <Setter Property="Icon" Value="Refresh" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource Common.HighLight.Hover.Background}" />
+                                                    <Setter Property="Spin" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </fa:ImageAwesome.Style>
+
+                                </fa:ImageAwesome>
+                                <Button
+                                    MinWidth="100"
+                                    Margin="20,10"
+                                    HorizontalAlignment="Left"
+                                    Click="TestProxy"
+                                    Content="测试" />
+
+                                <TextBlock VerticalAlignment="Center" Text="测试地址" />
+                                <chao:SearchBox
+                                    Name="textProxyUrl"
+                                    MinWidth="200"
+                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Text="http://www.google.com" />
+                            </StackPanel>
+                        </StackPanel>
+                    </chao:TogglePanel>
 
                     <chao:TogglePanel
                         Grid.Column="1"
@@ -1690,177 +1870,7 @@
 
 
 
-                    <chao:TogglePanel
-                        Margin="10,0"
-                        Padding="0,5"
-                        FontSize="15"
-                        Header="代理设置"
-                        IsExpanded="True"
-                        LineWidth="0"
-                        Style="{StaticResource BaseTogglePanel}">
-                        <StackPanel Orientation="Vertical">
 
-                            <StackPanel
-                                Name="proxyStackPanel"
-                                Margin="10"
-                                Orientation="Horizontal">
-                                <RadioButton
-                                    HorizontalAlignment="Left"
-                                    Content="不使用代理"
-                                    GroupName="enableProxy"
-                                    Style="{StaticResource FlatRadioButton}" />
-                                <RadioButton
-                                    HorizontalAlignment="Left"
-                                    Content="使用系统代理"
-                                    GroupName="enableProxy"
-                                    IsChecked="True"
-                                    Style="{StaticResource FlatRadioButton}" />
-                                <RadioButton
-                                    x:Name="customProxyRadioButton"
-                                    HorizontalAlignment="Left"
-                                    Content="自定义代理"
-                                    GroupName="enableProxy"
-                                    Style="{StaticResource FlatRadioButton}" />
-
-                            </StackPanel>
-
-                            <StackPanel Orientation="Vertical" Visibility="{Binding ElementName=customProxyRadioButton, Path=IsChecked, Converter={StaticResource bool2VisibilityConverter}}">
-                                <StackPanel
-                                    Name="proxyTypesStackPanel"
-                                    Margin="20,5"
-                                    Orientation="Horizontal">
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="类型"
-                                        TextAlignment="Left"
-                                        ToolTip="[0-2000]" />
-                                    <RadioButton
-                                        Content="HTTP"
-                                        GroupName="proxyType"
-                                        IsChecked="True"
-                                        Style="{StaticResource FlatRadioButton}" />
-                                    <RadioButton
-                                        Content="SOCKS"
-                                        GroupName="proxyType"
-                                        Style="{StaticResource FlatRadioButton}" />
-                                </StackPanel>
-                                <StackPanel
-                                    Margin="20,5"
-                                    Orientation="Horizontal"
-                                    Visibility="Visible">
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="服务器*"
-                                        TextAlignment="Left" />
-                                    <chao:SearchBox
-                                        MinWidth="400"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="端口*"
-                                        TextAlignment="Left" />
-                                    <chao:SearchBox
-                                        MinWidth="200"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                                </StackPanel>
-                                <StackPanel
-                                    Margin="20,5"
-                                    Orientation="Horizontal"
-                                    Visibility="Visible">
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="用户名"
-                                        TextAlignment="Left" />
-                                    <chao:SearchBox
-                                        MinWidth="400"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="密码"
-                                        TextAlignment="Left" />
-
-                                    <PasswordBox
-                                        Name="passwordBox"
-                                        Height="30"
-                                        MinWidth="200"
-                                        Margin="10,5"
-                                        Padding="5"
-                                        VerticalContentAlignment="Center"
-                                        Background="{DynamicResource ListBoxItem.Background}"
-                                        BorderThickness="0"
-                                        ContextMenu="{DynamicResource PasteOnlyContextMenu}"
-                                        Foreground="{DynamicResource Global.Foreground}"
-                                        PasswordChar="●"
-                                        Style="{x:Null}" />
-                                    <!--<chao:SearchBox
-                                        MinWidth="200"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyPwd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
-
-                                </StackPanel>
-
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <fa:ImageAwesome
-                                    Grid.Column="0"
-                                    Width="20"
-                                    Margin="20,4,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center">
-                                    <fa:ImageAwesome.Style>
-                                        <Style TargetType="fa:ImageAwesome">
-                                            <Style.Triggers>
-
-                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Canceled">
-                                                    <Setter Property="Icon" Value="TimesCircle" />
-                                                    <Setter Property="Foreground" Value="Red" />
-                                                    <Setter Property="Spin" Value="False" />
-                                                </DataTrigger>
-
-                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="RanToCompletion">
-                                                    <Setter Property="Icon" Value="CheckCircle" />
-                                                    <Setter Property="Foreground" Value="#20B759" />
-                                                    <Setter Property="Spin" Value="False" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Running">
-                                                    <Setter Property="Icon" Value="Refresh" />
-                                                    <Setter Property="Foreground" Value="{DynamicResource Common.HighLight.Hover.Background}" />
-                                                    <Setter Property="Spin" Value="True" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </fa:ImageAwesome.Style>
-
-                                </fa:ImageAwesome>
-                                <Button
-                                    MinWidth="100"
-                                    Margin="20,10"
-                                    HorizontalAlignment="Left"
-                                    Click="TestProxy"
-                                    Content="测试" />
-
-                                <TextBlock VerticalAlignment="Center" Text="测试地址" />
-                                <chao:SearchBox
-                                    Name="textProxyUrl"
-                                    MinWidth="200"
-                                    Style="{StaticResource BaseSearchTextBox}"
-                                    Text="http://www.google.com" />
-                            </StackPanel>
-                        </StackPanel>
-                    </chao:TogglePanel>
 
 
 
@@ -2096,105 +2106,31 @@
                             FocusVisualStyle="{x:Null}"
                             GroupName="SkinRadioButton"
                             Style="{StaticResource ColorRadioButton}" />
-                        <RadioButton
-                            Background="#87CEFF"
-                            Click="SetSkin"
-                            Content="蓝色"
-                            FocusVisualStyle="{x:Null}"
-                            GroupName="SkinRadioButton"
-                            Style="{StaticResource ColorRadioButton}" />
+
                     </WrapPanel>
 
-                    <StackPanel Margin="20,5">
-                        <Label
+
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="25,10"
                             HorizontalAlignment="Left"
-                            Content="{x:Static lang:Resources.MoreThemes}"
-                            Style="{StaticResource InfoLabel}" />
-
-
-
-                        <DataGrid
-                            x:Name="ThemesDataGrid"
-                            MinHeight="200"
-                            Margin="0,10"
-                            AutoGenerateColumns="False"
-                            Background="{DynamicResource Popup.Background}"
-                            BorderThickness="0"
-                            CanUserAddRows="False"
-                            CanUserDeleteRows="True"
-                            CanUserResizeColumns="True"
-                            CanUserResizeRows="False"
-                            CanUserSortColumns="True"
-                            CellStyle="{DynamicResource DataGridCellStyle1}"
-                            ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
-                            DragIndicatorStyle="{DynamicResource DataGridColumnHeaderStyle2}"
-                            DropLocationIndicatorStyle="{DynamicResource DataGridStyle2}"
-                            Foreground="{DynamicResource Global.Foreground}"
-                            HorizontalGridLinesBrush="Transparent"
-                            IsSynchronizedWithCurrentItem="True"
-                            ItemsPanel="{DynamicResource ItemsPanelTemplate1}"
-                            ItemsSource="{Binding ThemeList}"
-                            PreviewMouseLeftButtonDown="SetCurrentRowIndex"
-                            RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}"
-                            RowStyle="{DynamicResource DataGridRowStyle1}"
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                            Style="{DynamicResource DataGridStyle1}"
-                            VerticalGridLinesBrush="Transparent"
-                            VerticalScrollBarVisibility="Disabled"
-                            Visibility="Collapsed">
-
-
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn
-                                    Width="auto"
-                                    MinWidth="40"
-                                    Header="{x:Static lang:Resources.Enable}">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <RadioButton
-                                                Name="rb"
-                                                Background="{Binding DisplayProperty.Title.MainBackground, Mode=OneWay, Converter={StaticResource MyColorToBrushConverter}}"
-                                                Click="SetSkin"
-                                                Content="{Binding Name, Mode=OneWay}"
-                                                FocusVisualStyle="{x:Null}"
-                                                GroupName="SkinRadioButton"
-                                                Style="{StaticResource ColorRadioButton}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTextColumn
-                                    Width="auto"
-                                    Binding="{Binding Name, Mode=OneWay}"
-                                    Header="{x:Static lang:Resources.Name}"
-                                    IsReadOnly="True" />
-                                <DataGridTextColumn
-                                    Width="auto"
-                                    Binding="{Binding Author, Mode=OneWay}"
-                                    Header="{x:Static lang:Resources.Author}"
-                                    IsReadOnly="True" />
-                                <DataGridTextColumn
-                                    Width="auto"
-                                    Binding="{Binding Date, Mode=OneWay}"
-                                    Header="{x:Static lang:Resources.Date}"
-                                    IsReadOnly="True" />
-                                <DataGridTextColumn
-                                    Width="auto"
-                                    Binding="{Binding Version, Mode=OneWay}"
-                                    Header="{x:Static lang:Resources.Version}"
-                                    IsReadOnly="True" />
-
-                            </DataGrid.Columns>
-
-                            <!--<local:Server  IsEnable="True" Url="https://www.123.cam/" Cookie="123" Available="0" Name="123" LastRefreshDate="2020-09-04" />
-                        <local:Server IsEnable="False" Url="https://123.com/"  Cookie="123"  Available="0"  Name="123" LastRefreshDate="2020-10-05" />-->
-
-
-
-                        </DataGrid>
-
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="更多" />
+                        <Button Content="刷新" />
+                        <TextBlock
+                            Margin="25,10"
+                            HorizontalAlignment="Left"
+                            FontSize="14"
+                            Foreground="{StaticResource Global.Sub.Foreground}"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="更新源：github" />
                     </StackPanel>
+
+
+                    <WrapPanel />
+
+
 
                 </StackPanel>
             </TabItem>

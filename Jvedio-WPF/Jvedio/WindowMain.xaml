@@ -1977,14 +1977,14 @@
                                                 Header="{x:Static lang:Resources.Statistic}"
                                                 IsEnabled="False" />
 
-
+                                            <MenuItem
+                                                Click="ShowSponsor"
+                                                Header="赞助我"
+                                                Visibility="{Binding TeenMode, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
 
 
                                             <MenuItem Header="Jvedio">
-                                                <MenuItem
-                                                    Click="ShowSponsor"
-                                                    Header="赞助我"
-                                                    Icon="pack://application:,,,/Resources/menuitem/like.png" />
+
                                                 <MenuItem Click="ShowAbout" Header="{x:Static lang:Resources.About}" />
                                                 <MenuItem Click="OpenHelp" Header="{x:Static lang:Resources.Help}" />
                                                 <MenuItem Click="OpenFeedBack" Header="{x:Static lang:Resources.FeedBack}" />
@@ -1992,6 +1992,8 @@
                                                 <MenuItem Click="ShowThanks" Header="{x:Static lang:Resources.Thanks}" />
 
                                             </MenuItem>
+
+
                                             <MenuItem Header="{x:Static lang:Resources.OpenPath}">
                                                 <MenuItem Click="OpenLogPath" Header="{x:Static lang:Resources.Log}" />
                                                 <MenuItem Click="OpenImageSavePath" Header="{x:Static lang:Resources.Picture}" />
@@ -3864,7 +3866,8 @@
                                                 Margin="10,5"
                                                 HorizontalAlignment="Left"
                                                 Click="NewActor"
-                                                Content="新增演员" />
+                                                Content="新增演员"
+                                                Style="{StaticResource ButtonPrimary}" />
 
                                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                 <chao:Switch

@@ -446,9 +446,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button
+                                    MinWidth="0"
+                                    MinHeight="0"
                                     Margin="15,0"
                                     Click="AddToLabel"
-                                    Content="添加到" />
+                                    Content="添加到"
+                                    Style="{StaticResource ButtonPrimary}" />
                                 <chao:TagPanel
                                     Name="labelTagPanel"
                                     Grid.Column="1"

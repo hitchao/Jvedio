@@ -43,6 +43,7 @@ namespace Jvedio
         public static readonly string BaiduUrl = "https://github.com/hitchao/Jvedio/wiki/HowToSetBaiduAI";
         public static readonly string UpgradeSource = "https://hitchao.github.io";
         public static readonly string UpdateUrl = "https://hitchao.github.io/jvedioupdate/latest.json";
+        //public static readonly string UpdateUrl = "https://hitchao.github.io:444/jvedioupdate/latest.json";
         //public static readonly string UpdateUrl = "https://hitchao.github.io/jvedioupdate/Version";// 旧版本
         public static readonly string UpdateExeVersionUrl = "https://hitchao.github.io/jvedioupdate/update";
         public static readonly string UpdateExeUrl = "https://hitchao.github.io/jvedioupdate/JvedioUpdate.exe";

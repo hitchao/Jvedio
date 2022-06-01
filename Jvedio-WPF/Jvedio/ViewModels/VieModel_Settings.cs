@@ -474,6 +474,17 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _IgnoreCertVal = GlobalConfig.Settings.IgnoreCertVal;
+
+        public bool IgnoreCertVal
+        {
+            get { return _IgnoreCertVal; }
+            set
+            {
+                _IgnoreCertVal = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         private Dictionary<string, ObservableCollection<CrawlerServer>> _CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();

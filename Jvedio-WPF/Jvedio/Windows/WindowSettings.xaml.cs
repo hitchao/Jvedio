@@ -710,26 +710,26 @@ namespace Jvedio
                     break;
                 }
             }
-            if (!findTheme)
-            {
-                for (int i = 0; i < ThemesDataGrid.Items.Count; i++)
-                {
-                    DataGridRow row = (DataGridRow)ThemesDataGrid.ItemContainerGenerator.ContainerFromItem(ThemesDataGrid.Items[i]);
-                    if (row != null)
-                    {
-                        var cell = ThemesDataGrid.Columns[0];
-                        var cp = (ContentPresenter)cell?.GetCellContent(row);
-                        RadioButton rb = (RadioButton)cp?.ContentTemplate.FindName("rb", cp);
-                        if (rb != null && rb.Content.ToString() == Properties.Settings.Default.Themes)
-                        {
-                            rb.IsChecked = true;
+            //if (!findTheme)
+            //{
+            //    for (int i = 0; i < ThemesDataGrid.Items.Count; i++)
+            //    {
+            //        DataGridRow row = (DataGridRow)ThemesDataGrid.ItemContainerGenerator.ContainerFromItem(ThemesDataGrid.Items[i]);
+            //        if (row != null)
+            //        {
+            //            var cell = ThemesDataGrid.Columns[0];
+            //            var cp = (ContentPresenter)cell?.GetCellContent(row);
+            //            RadioButton rb = (RadioButton)cp?.ContentTemplate.FindName("rb", cp);
+            //            if (rb != null && rb.Content.ToString() == Properties.Settings.Default.Themes)
+            //            {
+            //                rb.IsChecked = true;
 
-                            break;
-                        }
-                    }
+            //                break;
+            //            }
+            //        }
 
-                }
-            }
+            //    }
+            //}
 
             // 设置代理选中
             List<RadioButton> proxies = proxyStackPanel.Children.OfType<RadioButton>().ToList();
@@ -1330,6 +1330,7 @@ namespace Jvedio
             GlobalConfig.Settings.PicPathMode = vieModel.PicPathMode;
             GlobalConfig.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
             GlobalConfig.Settings.OverrideInfo = vieModel.OverrideInfo;
+            GlobalConfig.Settings.IgnoreCertVal = vieModel.IgnoreCertVal;
             GlobalConfig.Settings.AutoBackup = vieModel.AutoBackup;
             GlobalConfig.Settings.AutoBackupPeriodIndex = vieModel.AutoBackupPeriodIndex;
 
@@ -1674,7 +1675,7 @@ namespace Jvedio
             Button button = sender as Button;
             button.IsEnabled = false;
             string url = textProxyUrl.Text;
-            //string url = "https://www.baidu.com";
+            //url = "https://www.baidu.com";
             //string url = "https://www.google.com";
 
 
