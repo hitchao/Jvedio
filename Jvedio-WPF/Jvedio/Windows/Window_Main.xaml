@@ -2237,7 +2237,7 @@
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
                             SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}"
-                            Style="{StaticResource FlatTabControl}">
+                            Style="{StaticResource HeaderHideTabControlStyle}">
                             <TabItem Header="影片">
                                 <!--  影片  -->
                                 <Grid HorizontalAlignment="Stretch">
