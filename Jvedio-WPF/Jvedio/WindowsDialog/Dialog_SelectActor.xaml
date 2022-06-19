@@ -1,0 +1,144 @@
+﻿<chao:BaseDialog
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:chao="https://gitee.com/secret/chao-controls"
+        xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+        xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils"
+        x:Class="Jvedio.Dialog_SelectActor"
+        mc:Ignorable="d"
+        Title="{x:Static lang:Resources.ChooseActor}" 
+        Width="500"
+        Height="500"
+     MaxHeight="500"  
+    SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+    
+        >
+
+    <Window.Resources>
+
+        <converter:IntConverter x:Key="IntConverter"/>
+
+        <Style x:Key="ActorInfoTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+
+        <Style x:Key="BaseTextBlock" TargetType="{x:Type TextBlock}">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <!--删除字体-->
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}"/>
+        </Style>
+
+        <Style x:Key="ActorInfoTextBlock" TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="10 10"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}"/>
+        </Style>
+
+        <Style x:Key="ActorBorder" TargetType="{x:Type Border}">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+
+            <!--编辑模式-->
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource Selected_BorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style x:Key="ActorImage" TargetType="{x:Type Image}">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="AllowDrop" Value="True"/>
+            <Setter Property="Height" Value="125"/>
+            <Setter Property="Width" Value="125"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0 0 0 10"/>
+            <Setter Property="Source" Value="{Binding Img}" />
+            <Style.Triggers>
+                <DataTrigger  Binding="{Binding Img}"  Value="{x:Null}">
+                    <Setter Property="Source" Value="/Resources/Picture/NoPrinting_A.png" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid  Background="{DynamicResource Window.InnerDialog.Background}"  Width="auto" Height="auto"  MaxHeight="500"  >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel x:Name="VedioTypeStackPanel" Grid.Row="0" Orientation="Horizontal">
+            <Label  Content="{x:Static lang:Resources.SearchVideoType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
+        </StackPanel>
+
+        <DockPanel LastChildFill="True" Grid.Row="1" >
+            <Label  Content="{x:Static lang:Resources.StartPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+            <TextBlock  Width="30"   Style="{StaticResource BaseTextBlock}"   Text="{Binding Value, ElementName=Slider, Mode=OneWay,Converter={StaticResource IntConverter}}"  VerticalAlignment="Center" />
+            <Slider Name="Slider" ValueChanged="Slider_ValueChanged"   Value="1" Minimum="1" Maximum="500" Margin="20 0" SmallChange="1" LargeChange="2" TickFrequency="1" Width="auto" VerticalAlignment="Center"    />
+        </DockPanel>
+
+        <DockPanel LastChildFill="True" Grid.Row="2" >
+            <Label  Content="{x:Static lang:Resources.EndPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+            <TextBlock  Width="30"   Style="{StaticResource BaseTextBlock}"   Text="{Binding Value, ElementName=SliderEnd, Mode=OneWay,Converter={StaticResource IntConverter}}"  VerticalAlignment="Center" />
+            <Slider Name="SliderEnd" ValueChanged="SliderEnd_ValueChanged"   Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Maximum,Mode=OneTime}" Minimum="1" Maximum="500"  Margin="20 0"  SmallChange="1" LargeChange="2" TickFrequency="1"   VerticalAlignment="Center"  />
+        </DockPanel>
+
+        <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+
+            <ItemsControl x:Name="ActorItemsControl"     Margin="5" Background="Transparent">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel  Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel  Name="ActorWrapPanel" Orientation="Horizontal">
+                            <Grid Margin="5" >
+                                <Border  Style="{StaticResource ActorBorder}" Background="{DynamicResource Window.Side.Background}"  CornerRadius="5"  >
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" Color="SkyBlue" Direction="-90"  RenderingBias="Quality" ShadowDepth="0"/>
+                                    </Border.Effect>
+                                </Border>
+                                <StackPanel Orientation="Vertical" Margin="2">
+                                    <Image Tag="{Binding ID,Mode=OneWay}" Stretch="UniformToFill" MouseLeftButtonUp="SelectActor" MouseEnter="ActorBorderMouseEnter" MouseLeave="ActorBorderMouseLeave"  Style="{StaticResource ActorImage}"    />
+                                    <TextBox Name="ActorNameTextBox" Width="125" TextWrapping="Wrap" TextAlignment="Center" MaxHeight="80" Margin="0" Foreground="{DynamicResource Global.Foreground}" Opacity="0.7" FontSize="18"  Style="{StaticResource ActorInfoTextBox}" >
+                                        <TextBox.Text>
+                                            <MultiBinding StringFormat="{}{0}({1})">
+                                                <Binding Path="Name" />
+                                                <Binding Path="Tag" />
+                                            </MultiBinding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </StackPanel>
+                            </Grid>
+                        </WrapPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+
+
+    </Grid>
+</chao:BaseDialog>

@@ -1,0 +1,18 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:chao="https://gitee.com/secret/chao-controls">
+
+    <Style x:Key="BasePathRadioButton" TargetType="{x:Type chao:PathRadioButton}">
+        <Setter Property="Height" Value="30" />
+        <Setter Property="PathHeight" Value="15" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Fill" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="CheckedBrush" Value="{DynamicResource Window.Side.Hover.Background}" />
+    </Style>
+
+
+</ResourceDictionary>

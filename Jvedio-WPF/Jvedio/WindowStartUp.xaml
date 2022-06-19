@@ -1,0 +1,641 @@
+﻿<chao:BaseWindow
+    x:Class="Jvedio.WindowStartUp"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:cmd="clr-namespace:Jvedio.Core.Command"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="Window_StartUp"
+    Title="欢迎使用 Jvedio"
+    Width="800"
+    Height="400"
+    MinWidth="500"
+    Background="{DynamicResource Window.InnerDialog.Background}"
+    CanMinimized="True"
+    CanResize="True"
+    Closing="Window_StartUp_Closing"
+    Foreground="{DynamicResource Window.Title.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
+    Loaded="Window_Loaded"
+    TitleAlign="Left"
+    TitleHeight="0"
+    TitleMargin="5 0"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <chao:BaseWindow.Resources>
+
+
+
+        <DataTemplate x:Key="TileTemplate">
+            <Border
+                Padding="3"
+                Panel.ZIndex="5"
+                Background="{StaticResource Window.Title.Background}"
+                Cursor="Hand">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="LoadDataBase" Header="打开" />
+                        <!--<MenuItem
+                            Command="cmd:File.OpenDir"
+                            CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
+                            Header="打开目录" />-->
+                        <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Click="HideDataBase" Header="{Binding Hide, Converter={StaticResource Hide2TextConverter}}" />
+                        <MenuItem Click="SetImage" Header="设置图片" />
+                        <MenuItem
+                            Click="DelSqlite"
+                            Header="删除"
+                            Tag="#ff2e2e" />
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Image
+                        Grid.Row="0"
+                        Width="178"
+                        Height="100"
+                        Margin="0"
+                        Source="{Binding Image, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+
+                    <Grid Grid.Row="0">
+                        <Border
+                            Height="25"
+                            VerticalAlignment="Bottom"
+                            Background="Gray"
+                            Opacity="0.5" />
+                        <StackPanel
+                            Margin="5"
+                            VerticalAlignment="Bottom"
+                            Orientation="Horizontal">
+                            <Viewbox
+                                Width="12"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M194.56 386.048q31.744 0 46.592 19.456t14.848 43.008l0 447.488-192.512 0 0-443.392q0-31.744 19.968-49.152t43.52-17.408l67.584 0zM514.048 134.144q27.648 0 44.032 16.896t16.384 40.448l0 704.512-191.488 0 0-702.464q0-15.36 6.144-26.624t15.36-18.432 20.48-10.752 20.48-3.584l68.608 0zM832.512 577.536q9.216 0 19.968 5.12t20.48 14.336 16.384 20.992 6.656 25.088l0 252.928-191.488 0 0-250.88q0-11.264 4.608-23.552t12.8-22.016 19.456-15.872 24.576-6.144l66.56 0z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                            <TextBlock Margin="5,0" Text="{Binding Count}" />
+                            <Viewbox
+                                Width="12"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M995.474286 446.902857a569.782857 569.782857 0 0 0-95.817143-134.034286 540.708571 540.708571 0 0 0-775.314286 0 569.782857 569.782857 0 0 0-95.817143 134.034286 143.36 143.36 0 0 0 0 130.194286 569.782857 569.782857 0 0 0 95.817143 134.034286 540.708571 540.708571 0 0 0 775.314286 0 569.782857 569.782857 0 0 0 95.817143-134.034286 143.36 143.36 0 0 0 0-130.194286zM512 676.571429a164.571429 164.571429 0 1 1 164.571429-164.571429 164.571429 164.571429 0 0 1-164.571429 164.571429z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                            <TextBlock Margin="5,0" Text="{Binding ViewCount}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Margin="10,5,10,10">
+                        <TextBlock
+                            Margin="0,5"
+                            FontSize="20"
+                            Foreground="{DynamicResource Global.Foreground}"
+                            Text="{Binding Name}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
+                            Text="{Binding CreateDate}"
+                            ToolTip="{Binding CreateDate}" />
+                        <!--<TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
+                            Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
+                            ToolTip="{Binding Path}" />-->
+                    </StackPanel>
+
+
+                </Grid>
+
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListTemplate">
+            <Border
+                Margin="0"
+                Padding="5"
+                Panel.ZIndex="5"
+                Background="{StaticResource Window.Title.Background}"
+                Cursor="Hand">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="LoadDataBase" Header="打开" />
+                        <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Click="HideDataBase" Header="{Binding Hide, Converter={StaticResource Hide2TextConverter}}" />
+                        <MenuItem Click="SetImage" Header="设置图片" />
+                        <MenuItem
+                            Click="DelSqlite"
+                            Header="删除"
+                            Tag="#ff2e2e" />
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Grid.Row="0"
+                        Width="auto"
+                        Height="64"
+                        Source="{Binding Image, Mode=OneWay}"
+                        Stretch="Uniform" />
+                    <StackPanel Grid.Column="1" Margin="10,0">
+                        <TextBlock
+                            Margin="0,5"
+                            FontSize="20"
+                            Foreground="{DynamicResource Global.Foreground}"
+                            Text="{Binding Name}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
+                            Text="{Binding CreateDate}"
+                            ToolTip="{Binding CreateDate}" />
+                        <!--<TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource Control.Disabled.Background}"
+                            Text="{Binding Path, Converter={StaticResource SmallerPathConverter}, ConverterParameter=2}"
+                            ToolTip="{Binding Path}" />-->
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="2"
+                        VerticalAlignment="Bottom"
+                        Orientation="Horizontal">
+                        <Viewbox
+                            Width="12"
+                            Height="auto"
+                            VerticalAlignment="Center">
+                            <Path
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Data="M194.56 386.048q31.744 0 46.592 19.456t14.848 43.008l0 447.488-192.512 0 0-443.392q0-31.744 19.968-49.152t43.52-17.408l67.584 0zM514.048 134.144q27.648 0 44.032 16.896t16.384 40.448l0 704.512-191.488 0 0-702.464q0-15.36 6.144-26.624t15.36-18.432 20.48-10.752 20.48-3.584l68.608 0zM832.512 577.536q9.216 0 19.968 5.12t20.48 14.336 16.384 20.992 6.656 25.088l0 252.928-191.488 0 0-250.88q0-11.264 4.608-23.552t12.8-22.016 19.456-15.872 24.576-6.144l66.56 0z"
+                                Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                        </Viewbox>
+                        <TextBlock Margin="5,0" Text="{Binding Count}" />
+                        <Viewbox
+                            Width="12"
+                            Height="auto"
+                            VerticalAlignment="Center">
+                            <Path
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Data="M995.474286 446.902857a569.782857 569.782857 0 0 0-95.817143-134.034286 540.708571 540.708571 0 0 0-775.314286 0 569.782857 569.782857 0 0 0-95.817143 134.034286 143.36 143.36 0 0 0 0 130.194286 569.782857 569.782857 0 0 0 95.817143 134.034286 540.708571 540.708571 0 0 0 775.314286 0 569.782857 569.782857 0 0 0 95.817143-134.034286 143.36 143.36 0 0 0 0-130.194286zM512 676.571429a164.571429 164.571429 0 1 1 164.571429-164.571429 164.571429 164.571429 0 0 1-164.571429 164.571429z"
+                                Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                        </Viewbox>
+                        <TextBlock Margin="5,0" Text="{Binding ViewCount}" />
+                    </StackPanel>
+                </Grid>
+
+            </Border>
+        </DataTemplate>
+
+        <Style x:Key="ContainerStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="ContentTemplate" Value="{StaticResource ListTemplate}" />
+            <!--<Setter Property="ContentTemplate" Value="{StaticResource TileTemplate}" />-->
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.Tile, FallbackValue=False}" Value="True">
+                    <Setter Property="ContentTemplate" Value="{StaticResource TileTemplate}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </chao:BaseWindow.Resources>
+
+
+    <Grid>
+
+        <TabControl
+            Name="tabControl"
+            Background="Transparent"
+            ItemContainerStyle="{StaticResource FlatTabItem}"
+            SelectedIndex="1"
+            Style="{StaticResource HeaderHideTabControlStyle}">
+            <TabItem Header="加载中">
+                <Border Panel.ZIndex="20" Background="{DynamicResource Window.Background}">
+                    <StackPanel VerticalAlignment="Center">
+                        <Image
+                            Height="40"
+                            Margin="0,30,0,0"
+                            Source="/Resources/Picture/logo.png" />
+                        <hc:LoadingCircle
+                            Height="30"
+                            Margin="0,20"
+                            Foreground="{DynamicResource Global.Foreground}" />
+
+                        <TextBlock
+                            Margin="10,0"
+                            HorizontalAlignment="Stretch"
+                            FontSize="15"
+                            Text="{Binding LoadingText}"
+                            TextAlignment="Center"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding LoadingText}" />
+                        <Button
+                            Margin="20"
+                            Click="CancelScan"
+                            Content="取消"
+                            Style="{StaticResource ButtonDanger}" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <TabItem Header="选择库">
+                <Border
+                    BorderBrush="Gray"
+                    BorderThickness="0"
+                    CornerRadius="5">
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel
+                            Grid.Column="0"
+                            Margin="0,140,0,0"
+                            Panel.ZIndex="20"
+                            Visibility="Collapsed">
+                            <Border
+                                Width="30"
+                                Height="30"
+                                Margin="10,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Panel.ZIndex="20"
+                                CornerRadius="5"
+                                PreviewMouseLeftButtonUp="ShowHelpPicture"
+                                Style="{StaticResource RoundBorder}"
+                                Tag="{DynamicResource Window.Title.Hover.Background}">
+                                <Viewbox
+                                    Width="20"
+                                    Height="auto"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="M563.363941 572.337203c-0.662107-10.635221 5.985569-21.937638 19.948145-33.908274 13.962576-11.964496 29.591164-25.264407 46.879625-39.893592 17.288461-14.628162 33.242474-31.083949 47.872273-49.365314 14.630823-18.286482 22.606806-39.397289 23.936137-63.332421 1.330354-25.932626-1.329331-50.199309-7.977007-72.810283-6.647676-22.604834-17.620026-42.050722-32.910909-58.33971-15.297023-16.290011-35.079386-29.258371-59.347087-38.900985-24.267702-9.636474-52.694294-14.45727-85.274661-14.45727-40.563514 0-74.308452 7.148817-101.239931 21.441335-26.925339 14.293541-48.705279 31.581276-65.326516 51.864228-16.621237 20.276812-28.26081 41.222867-34.908486 62.829977-6.647676 21.60711-9.641996 39.727817-8.974772 54.358025 0.662107 17.282618 6.150328 29.92045 16.455454 37.897122 10.305126 7.976672 21.442235 12.135388 33.413373 12.466939 11.964998 0.331551 22.937348-2.989077 32.910909-9.973142 9.973561-6.984065 14.960341-17.121959 14.960341-30.416753 0-7.982812 2.493902-17.790178 7.480682-29.424146s11.805356-22.771633 20.450609-33.411971c8.643207-10.635221 19.115139-19.615757 31.416819-26.924209 12.30168-7.315616 26.098473-10.971889 41.39038-10.971889 29.921706 0 53.857842 7.480368 71.81455 22.440082 17.950567 14.959713 26.263233 33.742499 24.934925 56.348356 0 11.302417-3.325885 21.772886-9.973561 31.4155-6.652793 9.642614-15.131241 18.948561-25.43739 27.929096-10.304103 8.974395-21.276452 17.949814-32.910909 26.924209-11.639573 8.974395-22.606806 18.286482-32.917049 27.929096-10.304103 9.636474-18.949356 20.111037-25.927574 31.4155-6.984358 11.302417-10.806567 23.603581-11.474814 36.898375l0.998789 37.903262c0 9.973142 4.656239 19.444864 13.962576 28.4254 9.311454 8.975419 21.613134 13.796214 36.906064 14.458293 15.29293-0.662079 27.427804-5.64865 36.403599-14.959713 8.974772-9.30697 13.134686-19.947308 12.467463-31.911804L563.365987 572.337203zM512.496324 817.685098c17.289484 0 31.753501-5.814426 43.387957-17.453511 11.639573-11.633968 17.454243-25.761734 17.454243-42.387389 0-17.287735-5.81467-31.747051-17.454243-43.386136-11.634456-11.633968-26.098473-17.453511-43.387957-17.453511-17.283344 0-31.747361 5.819542-43.381817 17.453511-11.639573 11.639085-17.454243 26.098401-17.454243 43.386136 0 16.625656 5.81467 30.753421 17.454243 42.387389C480.748964 811.870672 495.212981 817.685098 512.496324 817.685098zM511.503676 65.687048c61.834849 0 119.851582 11.799744 174.04099 35.403325 54.194524 23.604604 101.570473 55.522548 142.127847 95.746668 40.56249 40.225143 72.476657 87.433328 95.750687 141.625578 23.27403 54.187133 34.908486 112.201431 34.908486 174.033685 0 61.838394-11.634456 119.6818-34.908486 173.543521-23.27403 53.855582-55.188196 101.063767-95.750687 141.619438-40.557374 40.560788-87.933322 72.473615-142.127847 95.746668-54.189408 23.273053-112.206141 34.907021-174.04099 34.907021-61.840989 0-119.686823-11.633968-173.550806-34.907021-53.857842-23.273053-101.068009-55.18588-141.625382-95.746668-40.56249-40.555671-72.476657-87.763856-95.750687-141.619438C77.302771 632.17708 65.668315 574.333674 65.668315 512.496304c0-61.832254 11.634456-119.846552 34.908486-174.033685 23.27403-54.19225 55.188196-101.400435 95.750687-141.625578 40.557374-40.22412 87.76754-72.142064 141.625382-95.746668C391.816852 77.486792 449.662687 65.687048 511.503676 65.687048z"
+                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                </Viewbox>
+                            </Border>
+
+                            <Border
+                                Width="30"
+                                Height="30"
+                                Margin="10,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Panel.ZIndex="20"
+                                CornerRadius="5"
+                                PreviewMouseLeftButtonUp="ShowHelpGame"
+                                Style="{StaticResource RoundBorder}"
+                                Tag="{DynamicResource Window.Title.Hover.Background}">
+                                <Viewbox
+                                    Width="20"
+                                    Height="auto"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="M563.363941 572.337203c-0.662107-10.635221 5.985569-21.937638 19.948145-33.908274 13.962576-11.964496 29.591164-25.264407 46.879625-39.893592 17.288461-14.628162 33.242474-31.083949 47.872273-49.365314 14.630823-18.286482 22.606806-39.397289 23.936137-63.332421 1.330354-25.932626-1.329331-50.199309-7.977007-72.810283-6.647676-22.604834-17.620026-42.050722-32.910909-58.33971-15.297023-16.290011-35.079386-29.258371-59.347087-38.900985-24.267702-9.636474-52.694294-14.45727-85.274661-14.45727-40.563514 0-74.308452 7.148817-101.239931 21.441335-26.925339 14.293541-48.705279 31.581276-65.326516 51.864228-16.621237 20.276812-28.26081 41.222867-34.908486 62.829977-6.647676 21.60711-9.641996 39.727817-8.974772 54.358025 0.662107 17.282618 6.150328 29.92045 16.455454 37.897122 10.305126 7.976672 21.442235 12.135388 33.413373 12.466939 11.964998 0.331551 22.937348-2.989077 32.910909-9.973142 9.973561-6.984065 14.960341-17.121959 14.960341-30.416753 0-7.982812 2.493902-17.790178 7.480682-29.424146s11.805356-22.771633 20.450609-33.411971c8.643207-10.635221 19.115139-19.615757 31.416819-26.924209 12.30168-7.315616 26.098473-10.971889 41.39038-10.971889 29.921706 0 53.857842 7.480368 71.81455 22.440082 17.950567 14.959713 26.263233 33.742499 24.934925 56.348356 0 11.302417-3.325885 21.772886-9.973561 31.4155-6.652793 9.642614-15.131241 18.948561-25.43739 27.929096-10.304103 8.974395-21.276452 17.949814-32.910909 26.924209-11.639573 8.974395-22.606806 18.286482-32.917049 27.929096-10.304103 9.636474-18.949356 20.111037-25.927574 31.4155-6.984358 11.302417-10.806567 23.603581-11.474814 36.898375l0.998789 37.903262c0 9.973142 4.656239 19.444864 13.962576 28.4254 9.311454 8.975419 21.613134 13.796214 36.906064 14.458293 15.29293-0.662079 27.427804-5.64865 36.403599-14.959713 8.974772-9.30697 13.134686-19.947308 12.467463-31.911804L563.365987 572.337203zM512.496324 817.685098c17.289484 0 31.753501-5.814426 43.387957-17.453511 11.639573-11.633968 17.454243-25.761734 17.454243-42.387389 0-17.287735-5.81467-31.747051-17.454243-43.386136-11.634456-11.633968-26.098473-17.453511-43.387957-17.453511-17.283344 0-31.747361 5.819542-43.381817 17.453511-11.639573 11.639085-17.454243 26.098401-17.454243 43.386136 0 16.625656 5.81467 30.753421 17.454243 42.387389C480.748964 811.870672 495.212981 817.685098 512.496324 817.685098zM511.503676 65.687048c61.834849 0 119.851582 11.799744 174.04099 35.403325 54.194524 23.604604 101.570473 55.522548 142.127847 95.746668 40.56249 40.225143 72.476657 87.433328 95.750687 141.625578 23.27403 54.187133 34.908486 112.201431 34.908486 174.033685 0 61.838394-11.634456 119.6818-34.908486 173.543521-23.27403 53.855582-55.188196 101.063767-95.750687 141.619438-40.557374 40.560788-87.933322 72.473615-142.127847 95.746668-54.189408 23.273053-112.206141 34.907021-174.04099 34.907021-61.840989 0-119.686823-11.633968-173.550806-34.907021-53.857842-23.273053-101.068009-55.18588-141.625382-95.746668-40.56249-40.555671-72.476657-87.763856-95.750687-141.619438C77.302771 632.17708 65.668315 574.333674 65.668315 512.496304c0-61.832254 11.634456-119.846552 34.908486-174.033685 23.27403-54.19225 55.188196-101.400435 95.750687-141.625578 40.557374-40.22412 87.76754-72.142064 141.625382-95.746668C391.816852 77.486792 449.662687 65.687048 511.503676 65.687048z"
+                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                </Viewbox>
+                            </Border>
+                            <Border
+                                Width="30"
+                                Height="30"
+                                Margin="10,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Panel.ZIndex="20"
+                                CornerRadius="5"
+                                PreviewMouseLeftButtonUp="ShowHelpComics"
+                                Style="{StaticResource RoundBorder}"
+                                Tag="{DynamicResource Window.Title.Hover.Background}">
+                                <Viewbox
+                                    Width="20"
+                                    Height="auto"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="M563.363941 572.337203c-0.662107-10.635221 5.985569-21.937638 19.948145-33.908274 13.962576-11.964496 29.591164-25.264407 46.879625-39.893592 17.288461-14.628162 33.242474-31.083949 47.872273-49.365314 14.630823-18.286482 22.606806-39.397289 23.936137-63.332421 1.330354-25.932626-1.329331-50.199309-7.977007-72.810283-6.647676-22.604834-17.620026-42.050722-32.910909-58.33971-15.297023-16.290011-35.079386-29.258371-59.347087-38.900985-24.267702-9.636474-52.694294-14.45727-85.274661-14.45727-40.563514 0-74.308452 7.148817-101.239931 21.441335-26.925339 14.293541-48.705279 31.581276-65.326516 51.864228-16.621237 20.276812-28.26081 41.222867-34.908486 62.829977-6.647676 21.60711-9.641996 39.727817-8.974772 54.358025 0.662107 17.282618 6.150328 29.92045 16.455454 37.897122 10.305126 7.976672 21.442235 12.135388 33.413373 12.466939 11.964998 0.331551 22.937348-2.989077 32.910909-9.973142 9.973561-6.984065 14.960341-17.121959 14.960341-30.416753 0-7.982812 2.493902-17.790178 7.480682-29.424146s11.805356-22.771633 20.450609-33.411971c8.643207-10.635221 19.115139-19.615757 31.416819-26.924209 12.30168-7.315616 26.098473-10.971889 41.39038-10.971889 29.921706 0 53.857842 7.480368 71.81455 22.440082 17.950567 14.959713 26.263233 33.742499 24.934925 56.348356 0 11.302417-3.325885 21.772886-9.973561 31.4155-6.652793 9.642614-15.131241 18.948561-25.43739 27.929096-10.304103 8.974395-21.276452 17.949814-32.910909 26.924209-11.639573 8.974395-22.606806 18.286482-32.917049 27.929096-10.304103 9.636474-18.949356 20.111037-25.927574 31.4155-6.984358 11.302417-10.806567 23.603581-11.474814 36.898375l0.998789 37.903262c0 9.973142 4.656239 19.444864 13.962576 28.4254 9.311454 8.975419 21.613134 13.796214 36.906064 14.458293 15.29293-0.662079 27.427804-5.64865 36.403599-14.959713 8.974772-9.30697 13.134686-19.947308 12.467463-31.911804L563.365987 572.337203zM512.496324 817.685098c17.289484 0 31.753501-5.814426 43.387957-17.453511 11.639573-11.633968 17.454243-25.761734 17.454243-42.387389 0-17.287735-5.81467-31.747051-17.454243-43.386136-11.634456-11.633968-26.098473-17.453511-43.387957-17.453511-17.283344 0-31.747361 5.819542-43.381817 17.453511-11.639573 11.639085-17.454243 26.098401-17.454243 43.386136 0 16.625656 5.81467 30.753421 17.454243 42.387389C480.748964 811.870672 495.212981 817.685098 512.496324 817.685098zM511.503676 65.687048c61.834849 0 119.851582 11.799744 174.04099 35.403325 54.194524 23.604604 101.570473 55.522548 142.127847 95.746668 40.56249 40.225143 72.476657 87.433328 95.750687 141.625578 23.27403 54.187133 34.908486 112.201431 34.908486 174.033685 0 61.838394-11.634456 119.6818-34.908486 173.543521-23.27403 53.855582-55.188196 101.063767-95.750687 141.619438-40.557374 40.560788-87.933322 72.473615-142.127847 95.746668-54.189408 23.273053-112.206141 34.907021-174.04099 34.907021-61.840989 0-119.686823-11.633968-173.550806-34.907021-53.857842-23.273053-101.068009-55.18588-141.625382-95.746668-40.56249-40.555671-72.476657-87.763856-95.750687-141.619438C77.302771 632.17708 65.668315 574.333674 65.668315 512.496304c0-61.832254 11.634456-119.846552 34.908486-174.033685 23.27403-54.19225 55.188196-101.400435 95.750687-141.625578 40.557374-40.22412 87.76754-72.142064 141.625382-95.746668C391.816852 77.486792 449.662687 65.687048 511.503676 65.687048z"
+                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                </Viewbox>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel
+                            Name="SidePanel"
+                            Grid.Column="0"
+                            Background="{DynamicResource Window.Side.Background}">
+                            <Image
+                                Height="30"
+                                Margin="0,30,0,0"
+                                Source="/Resources/Picture/logo.png" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="15"
+                                Foreground="{DynamicResource Control.Disabled.Background}"
+                                Text="5.0.0.0" />
+                            <RadioButton
+                                Margin="0,20,0,0"
+                                HorizontalContentAlignment="Center"
+                                Background="Transparent"
+                                Click="ChangeDataType"
+                                Content="视频"
+                                Foreground="{DynamicResource Global.Foreground}"
+                                Style="{StaticResource SideRadioButton}"
+                                Tag="5" />
+
+
+                            <RadioButton
+                                Margin="0"
+                                HorizontalContentAlignment="Center"
+                                Background="Transparent"
+                                Click="ChangeDataType"
+                                Content="图片"
+                                Foreground="{DynamicResource Global.Foreground}"
+                                IsEnabled="False"
+                                Style="{StaticResource SideRadioButton}"
+                                Tag="5"
+                                Visibility="Collapsed" />
+
+
+                            <RadioButton
+                                Margin="0"
+                                HorizontalContentAlignment="Center"
+                                Background="Transparent"
+                                Click="ChangeDataType"
+                                Content="游戏"
+                                Foreground="{DynamicResource Global.Foreground}"
+                                IsEnabled="False"
+                                Style="{StaticResource SideRadioButton}"
+                                Tag="5"
+                                Visibility="Collapsed" />
+                            <RadioButton
+                                Margin="0"
+                                HorizontalContentAlignment="Center"
+                                Background="Transparent"
+                                Click="ChangeDataType"
+                                Content="漫画"
+                                Foreground="{DynamicResource Global.Foreground}"
+                                IsEnabled="False"
+                                Style="{StaticResource SideRadioButton}"
+                                Tag="5"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <chao:SearchBox
+                                    Padding="5,0"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent"
+                                    Clear="SearchText_Changed"
+                                    FontSize="15"
+                                    Foreground="{DynamicResource Global.Foreground}"
+                                    PlaceHolder="检索"
+                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
+                                    Search="SearchText_Changed"
+                                    SearchOnTextChanged="True"
+                                    ShowClearButton="True"
+                                    ShowSearchButton="False" />
+
+                                <StackPanel
+                                    Grid.Column="1"
+                                    Margin="10,0"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Width="auto"
+                                        MinWidth="100"
+                                        Click="NewDatabase"
+                                        Content="新建" />
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Margin="10,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat=" {0} / {1} ">
+                                        <Binding Path="CurrentDatabases.Count" />
+                                        <Binding Path="Databases.Count" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+
+                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                <Border
+                                    Grid.Row="1"
+                                    Width="30"
+                                    Height="30"
+                                    Margin="5,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="5"
+                                    MouseUp="ShowSortPopup"
+                                    Style="{StaticResource RoundBorder}"
+                                    Tag="{DynamicResource Window.Title.Hover.Background}">
+                                    <Border.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Click="SortDatabases" Header="名称" />
+                                            <MenuItem Click="SortDatabases" Header="创建时间" />
+                                            <MenuItem Click="SortDatabases" Header="数据数目" />
+                                            <MenuItem Click="SortDatabases" Header="访问频率" />
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
+                                    <Viewbox
+                                        Width="20"
+                                        Height="auto"
+                                        VerticalAlignment="Center">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M800.256 741.888l47.616-47.616a31.744 31.744 0 0 1 45.056 45.056l-102.4 102.4a31.744 31.744 0 0 1-54.272-22.528V204.8a32.256 32.256 0 0 1 64 0zM153.6 237.056a32.256 32.256 0 0 1 0-64h460.8a32.256 32.256 0 0 1 0 64z m0 307.2a32.256 32.256 0 0 1 0-64h460.8a32.256 32.256 0 0 1 0 64z m0 307.2a32.256 32.256 0 0 1 0-64h460.8a32.256 32.256 0 0 1 0 64z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+                                <Border
+                                    Grid.Row="1"
+                                    Width="30"
+                                    Height="30"
+                                    Margin="5,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="5"
+                                    MouseUp="RefreshDatabase"
+                                    Style="{StaticResource RoundBorder}"
+                                    Tag="{DynamicResource Window.Title.Hover.Background}">
+                                    <Viewbox
+                                        Width="20"
+                                        Height="auto"
+                                        VerticalAlignment="Center">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M684.032 403.456q-17.408-8.192-15.872-22.016t11.776-22.016q3.072-2.048 19.968-15.872t41.472-33.28q-43.008-49.152-102.4-77.312t-129.024-28.16q-64.512 0-120.832 24.064t-98.304 66.048-66.048 98.304-24.064 120.832q0 63.488 24.064 119.808t66.048 98.304 98.304 66.048 120.832 24.064q53.248 0 100.864-16.896t87.04-47.616 67.584-72.192 41.472-90.624q7.168-23.552 26.624-38.912t46.08-15.36q31.744 0 53.76 22.528t22.016 53.248q0 14.336-5.12 27.648-21.504 71.68-63.488 132.096t-99.84 103.936-128.512 68.096-148.48 24.576q-95.232 0-179.2-35.84t-145.92-98.304-98.304-145.92-36.352-178.688 36.352-179.2 98.304-145.92 145.92-98.304 179.2-36.352q105.472 0 195.584 43.52t153.6 118.272q23.552-17.408 39.424-30.208t19.968-15.872q6.144-5.12 13.312-7.68t13.312 0 10.752 10.752 6.656 24.576q1.024 9.216 2.048 31.232t2.048 51.2 1.024 60.416-1.024 58.88q-1.024 34.816-16.384 50.176-8.192 8.192-24.576 9.216t-34.816-3.072q-27.648-6.144-60.928-13.312t-63.488-14.848-53.248-14.336-29.184-9.728z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+
+                                <chao:Switch
+                                    Width="40"
+                                    Height="30"
+                                    Background="{DynamicResource Window.Side.Background}"
+                                    IsChecked="{Binding Tile, Mode=TwoWay}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="平铺" />
+                                <chao:Switch
+                                    Width="40"
+                                    Height="30"
+                                    Background="{DynamicResource Window.Side.Background}"
+                                    Click="ShowHideDataBase"
+                                    IsChecked="{Binding ShowHideItem, Mode=TwoWay}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="显示隐藏库" />
+                            </StackPanel>
+
+                            <ListBox
+                                Name="listBox"
+                                Grid.Row="2"
+                                Margin="5,0"
+                                HorizontalContentAlignment="Stretch"
+                                d:ItemsSource="{d:SampleData ItemCount=5}"
+                                Background="Transparent"
+                                ItemContainerStyle="{StaticResource ContainerStyle}"
+                                ItemsSource="{Binding CurrentDatabases}"
+                                MouseDoubleClick="listBox_MouseDoubleClick">
+                                <ListBox.Resources>
+                                    <ItemsPanelTemplate x:Key="ListBoxWrapTemplate">
+                                        <WrapPanel
+                                            Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
+                                            ItemHeight="{Binding (ListView.View).ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                                    </ItemsPanelTemplate>
+                                    <ItemsPanelTemplate x:Key="ListBoxVerticalStackTemplate">
+                                        <StackPanel Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}" Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.Resources>
+                                <ListBox.Style>
+                                    <Style BasedOn="{StaticResource NormalListBox}" TargetType="ListBox">
+                                        <Setter Property="ItemsPanel" Value="{DynamicResource ListBoxVerticalStackTemplate}" />
+                                        <!--<Setter Property="ItemsPanel" Value="{DynamicResource ListBoxWrapTemplate}" />-->
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Tile}" Value="True">
+                                                <Setter Property="ItemsPanel" Value="{DynamicResource ListBoxWrapTemplate}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListBox.Style>
+                            </ListBox>
+
+
+
+
+                        </Grid>
+                        <Border
+                            Grid.Row="1"
+                            Width="30"
+                            Height="30"
+                            Margin="10"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            CornerRadius="5"
+                            MouseUp="ShowSettingsPopup"
+                            Style="{StaticResource RoundBorder}"
+                            Tag="{DynamicResource Menu.Hover.Background}">
+                            <Border.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem
+                                        Command="cmd:OpenWindow.About"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                        Header="关于" />
+                                    <MenuItem Command="cmd:OpenWindow.Settings" Header="设置" />
+                                    <MenuItem
+                                        Command="cmd:OpenWindow.Upgrade"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                        Header="检查更新" />
+                                    <MenuItem Command="cmd:File.OpenBaseDir" Header="打开程序所在路径" />
+                                </ContextMenu>
+                            </Border.ContextMenu>
+                            <Viewbox
+                                Width="20"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M940 596l-76-57.6c0.8-8 1.6-16.8 1.6-26.4s-0.8-18.4-1.6-26.4l76-57.6c20.8-16 26.4-44 12.8-68l-84.8-143.2c-9.6-16.8-28-27.2-47.2-27.2-6.4 0-12 0.8-18.4 3.2L712 228c-15.2-10.4-31.2-19.2-47.2-26.4l-13.6-92c-4-26.4-26.4-45.6-53.6-45.6H426.4c-27.2 0-49.6 19.2-53.6 44.8L360 201.6c-16 7.2-31.2 16-47.2 26.4l-90.4-35.2c-6.4-2.4-12.8-3.2-19.2-3.2-19.2 0-37.6 9.6-46.4 26.4L71.2 360c-13.6 22.4-8 52 12.8 68l76 57.6c-0.8 9.6-1.6 18.4-1.6 26.4s0 16.8 1.6 26.4l-76 57.6c-20.8 16-26.4 44-12.8 68l84.8 143.2c9.6 16.8 28 27.2 47.2 27.2 6.4 0 12-0.8 18.4-3.2L312 796c15.2 10.4 31.2 19.2 47.2 26.4l13.6 92c3.2 25.6 26.4 45.6 53.6 45.6h171.2c27.2 0 49.6-19.2 53.6-44.8l13.6-92.8c16-7.2 31.2-16 47.2-26.4l90.4 35.2c6.4 2.4 12.8 3.2 19.2 3.2 19.2 0 37.6-9.6 46.4-26.4l85.6-144.8c12.8-23.2 7.2-51.2-13.6-67.2zM704 512c0 105.6-86.4 192-192 192S320 617.6 320 512s86.4-192 192-192 192 86.4 192 192z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                        </Border>
+
+
+                        <Grid Grid.Row="1" Visibility="Collapsed">
+                            <!--<Button
+                        x:Name="LoadButton"
+                        Margin="20,10"
+                        HorizontalAlignment="Center"
+                        Click="ImportDatabase"
+                        Content="{x:Static lang:Resources.ImportLibrary}"
+                        FontSize="15"
+                        Style="{StaticResource FlatButton}" />-->
+
+                            <ComboBox
+                                MinWidth="100"
+                                Margin="20,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                SelectedIndex="0"
+                                SelectionChanged="LanguageChanged"
+                                Style="{StaticResource ComboBoxStyle1}"
+                                Visibility="Collapsed">
+                                <ComboBoxItem Content="中文" />
+                                <ComboBoxItem Content="English" />
+                                <ComboBoxItem Content="日本語" />
+                            </ComboBox>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </TabItem>
+        </TabControl>
+
+
+
+
+    </Grid>
+</chao:BaseWindow>

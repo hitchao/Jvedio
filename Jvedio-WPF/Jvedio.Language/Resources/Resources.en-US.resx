@@ -1,0 +1,1749 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllVideo" xml:space="preserve">
+    <value>All Video</value>
+  </data>
+  <data name="AutoClassification" xml:space="preserve">
+    <value>Classification</value>
+  </data>
+  <data name="FastImport" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Favorites" xml:space="preserve">
+    <value>Favorites</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="MyList" xml:space="preserve">
+    <value>My List</value>
+  </data>
+  <data name="RecentCreate" xml:space="preserve">
+    <value>Recent Create</value>
+  </data>
+  <data name="RecentPlay" xml:space="preserve">
+    <value>Recent Play</value>
+  </data>
+  <data name="SearchHint" xml:space="preserve">
+    <value>Search for ID, Title, Actress</value>
+  </data>
+  <data name="VideoType" xml:space="preserve">
+    <value>VideoType</value>
+  </data>
+  <data name="WithActress" xml:space="preserve">
+    <value>Actress</value>
+  </data>
+  <data name="WithGenre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="WithLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="WithPath" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="Actress_Age" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="Actress_Birthday" xml:space="preserve">
+    <value>Birthday</value>
+  </data>
+  <data name="Actress_Birthplace" xml:space="preserve">
+    <value>Birthplace</value>
+  </data>
+  <data name="Actress_Chest" xml:space="preserve">
+    <value>Chest</value>
+  </data>
+  <data name="Actress_Cup" xml:space="preserve">
+    <value>Cup</value>
+  </data>
+  <data name="Actress_Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="Actress_Hipline" xml:space="preserve">
+    <value>Hipline</value>
+  </data>
+  <data name="Actress_Hobby" xml:space="preserve">
+    <value>Hobby</value>
+  </data>
+  <data name="Actress_Waist" xml:space="preserve">
+    <value>Waist</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="FileSize" xml:space="preserve">
+    <value>FileSize</value>
+  </data>
+  <data name="MovieActors" xml:space="preserve">
+    <value>Actors</value>
+  </data>
+  <data name="MovieGenre" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="MovieLabels" xml:space="preserve">
+    <value>Labels</value>
+  </data>
+  <data name="MovieRating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="ReleaseYear" xml:space="preserve">
+    <value>ReleaseYear</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="ShowAll" xml:space="preserve">
+    <value>ShowAll</value>
+  </data>
+  <data name="VedioDuration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="Upgrade" xml:space="preserve">
+    <value>Upgrade</value>
+  </data>
+  <data name="Picture" xml:space="preserve">
+    <value>Picture</value>
+  </data>
+  <data name="Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="OpenPath" xml:space="preserve">
+    <value>OpenPath</value>
+  </data>
+  <data name="Thanks" xml:space="preserve">
+    <value>Thanks</value>
+  </data>
+  <data name="WebSite" xml:space="preserve">
+    <value>WebSite</value>
+  </data>
+  <data name="FeedBack" xml:space="preserve">
+    <value>FeedBack</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="BatchProcessing" xml:space="preserve">
+    <value>BatchProcessing</value>
+  </data>
+  <data name="MovieManagement" xml:space="preserve">
+    <value>MovieManagement</value>
+  </data>
+  <data name="Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="SoftWare" xml:space="preserve">
+    <value>SoftWare</value>
+  </data>
+  <data name="Raname" xml:space="preserve">
+    <value>Raname</value>
+  </data>
+  <data name="Actor" xml:space="preserve">
+    <value>Actor</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="SearchCurrent" xml:space="preserve">
+    <value>SearchCurrent</value>
+  </data>
+  <data name="Poster" xml:space="preserve">
+    <value>Poster</value>
+  </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Thumbnail" xml:space="preserve">
+    <value>Thumbnail</value>
+  </data>
+  <data name="SyncInfo" xml:space="preserve">
+    <value>Sync Info</value>
+  </data>
+  <data name="StopSync" xml:space="preserve">
+    <value>Stop Sync</value>
+  </data>
+  <data name="ImageType" xml:space="preserve">
+    <value>ImageType</value>
+  </data>
+  <data name="Sorting" xml:space="preserve">
+    <value>Sorting</value>
+  </data>
+  <data name="MultiSelect" xml:space="preserve">
+    <value>MultiSelect</value>
+  </data>
+  <data name="About_Outline" xml:space="preserve">
+    <value>Local Video Management</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="About_Content" xml:space="preserve">
+    <value>Jvedio is a local video management software, which supports scanning local videos and importing software, establishing video library, extracting unique video identification code, automatically classifying videos, adding labels to manage videos, using artificial intelligence to identify actors, supporting translation information, and capturing video pictures based on FFmpeg. It is a smooth and beautiful application software on Window desktop</value>
+  </data>
+  <data name="OfficialWebsite" xml:space="preserve">
+    <value>Official Website</value>
+  </data>
+  <data name="Thanks_Content1" xml:space="preserve">
+    <value>Thank you so much for your sponsorship and support!</value>
+  </data>
+  <data name="Thanks_Content2" xml:space="preserve">
+    <value>Wish Jvedio better and better development!</value>
+  </data>
+  <data name="Menu_SyncInfo" xml:space="preserve">
+    <value>Sync Info(S)</value>
+  </data>
+  <data name="Menu_SyncExtra" xml:space="preserve">
+    <value>Sync Extra</value>
+  </data>
+  <data name="Menu_CustomUrl" xml:space="preserve">
+    <value>Custom Url</value>
+  </data>
+  <data name="Menu_EnforceSync" xml:space="preserve">
+    <value>Enforce Sync</value>
+  </data>
+  <data name="Menu_EditInfo" xml:space="preserve">
+    <value>Edit Info(E)</value>
+  </data>
+  <data name="Menu_Advance" xml:space="preserve">
+    <value>Advance</value>
+  </data>
+  <data name="Menu_AddToList" xml:space="preserve">
+    <value>Add to MyList</value>
+  </data>
+  <data name="Menu_RemoveFromList" xml:space="preserve">
+    <value>Remove from MyList</value>
+  </data>
+  <data name="Menu_LabelManagement" xml:space="preserve">
+    <value>Label Management</value>
+  </data>
+  <data name="Menu_OpenWebSite" xml:space="preserve">
+    <value>Open the Website (W)</value>
+  </data>
+  <data name="Menu_CopyFile" xml:space="preserve">
+    <value>Copy Files (C)</value>
+  </data>
+  <data name="Menu_DeleteInfo" xml:space="preserve">
+    <value>Delete Info(D)</value>
+  </data>
+  <data name="Menu_DeleteFile" xml:space="preserve">
+    <value>Delete File(T)</value>
+  </data>
+  <data name="ToolTip_DeleteInfo" xml:space="preserve">
+    <value>Delete information (do not delete files)</value>
+  </data>
+  <data name="ToolTip_DeleteFile" xml:space="preserve">
+    <value>Delete files to the Recycle Bin</value>
+  </data>
+  <data name="Menu_Translate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="Menu_GenerateThumbnail" xml:space="preserve">
+    <value>Generate Thumbnail</value>
+  </data>
+  <data name="Menu_GenerateActressImage" xml:space="preserve">
+    <value>Generate Actress Image</value>
+  </data>
+  <data name="Menu_GenerateScreenShot" xml:space="preserve">
+    <value>Generate ScreenShot</value>
+  </data>
+  <data name="Menu_GenerateGif" xml:space="preserve">
+    <value>Generate Gif</value>
+  </data>
+  <data name="Menu_RenameFile" xml:space="preserve">
+    <value>Rename File</value>
+  </data>
+  <data name="Menu_RemoveZero" xml:space="preserve">
+    <value>Remove first 00 from 00000</value>
+  </data>
+  <data name="Menu_LabelManage1" xml:space="preserve">
+    <value>Add an existing label</value>
+  </data>
+  <data name="Menu_LabelManage2" xml:space="preserve">
+    <value>Single movie modification label</value>
+  </data>
+  <data name="Menu_LabelManage3" xml:space="preserve">
+    <value>Add tags to multiple movies</value>
+  </data>
+  <data name="Menu_LabelManage4" xml:space="preserve">
+    <value>Multi - movie delete tag</value>
+  </data>
+  <data name="Menu_LabelManage5" xml:space="preserve">
+    <value>Multi - movie empty tag</value>
+  </data>
+  <data name="ScreenShot" xml:space="preserve">
+    <value>ScreenShot</value>
+  </data>
+  <data name="Movie" xml:space="preserve">
+    <value>FilePath</value>
+  </data>
+  <data name="ActressImage" xml:space="preserve">
+    <value>Actor Image</value>
+  </data>
+  <data name="ToolTip_RandomShow" xml:space="preserve">
+    <value>Random Show</value>
+  </data>
+  <data name="ToolTip_Filter" xml:space="preserve">
+    <value>Portfolio Selection</value>
+  </data>
+  <data name="InputTitle1" xml:space="preserve">
+    <value>Please enter the tags to be added, each tag is separated by a space</value>
+  </data>
+  <data name="InputTitle2" xml:space="preserve">
+    <value>Please enter the URL of the video to be synchronized</value>
+  </data>
+  <data name="InputTitle3" xml:space="preserve">
+    <value>Please enter the modified name</value>
+  </data>
+  <data name="InputTitle4" xml:space="preserve">
+    <value>Please enter the list you want to add</value>
+  </data>
+  <data name="InputTitle5" xml:space="preserve">
+    <value>Please enter the ID to be added</value>
+  </data>
+  <data name="InputTitle6" xml:space="preserve">
+    <value>Please enter the tags to be deleted, separated by spaces</value>
+  </data>
+  <data name="Message_StopAndTry" xml:space="preserve">
+    <value>Stop the current download and try again</value>
+  </data>
+  <data name="Message_ScanNum" xml:space="preserve">
+    <value>The number of videos scanned and imported is</value>
+  </data>
+  <data name="Message_ViewLog" xml:space="preserve">
+    <value>See the log file for details</value>
+  </data>
+  <data name="Message_WatchFail" xml:space="preserve">
+    <value>Interception failed</value>
+  </data>
+  <data name="Message_OpenFail" xml:space="preserve">
+    <value>Can't open</value>
+  </data>
+  <data name="Message_SetYoudao" xml:space="preserve">
+    <value>Please set [youdao translation] and test it</value>
+  </data>
+  <data name="Message_SetBaiduAI" xml:space="preserve">
+    <value>Please set [Baidu AI] and test</value>
+  </data>
+  <data name="Message_FailNum" xml:space="preserve">
+    <value>Number of failures</value>
+  </data>
+  <data name="Message_SkipNum" xml:space="preserve">
+    <value>Number of skips</value>
+  </data>
+  <data name="Message_SuccessNum" xml:space="preserve">
+    <value>Number of success</value>
+  </data>
+  <data name="Message_PosterMustExist" xml:space="preserve">
+    <value>The poster image must exist!</value>
+  </data>
+  <data name="Message_SetFFmpeg" xml:space="preserve">
+    <value>Please set the path of ffmpeg.exe</value>
+  </data>
+  <data name="Message_SetRenameRule" xml:space="preserve">
+    <value>Please configure [Rename] rule in settings</value>
+  </data>
+  <data name="Message_Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Message_Fail" xml:space="preserve">
+    <value>Fail</value>
+  </data>
+  <data name="Message_FileNotExist" xml:space="preserve">
+    <value>file does not exist</value>
+  </data>
+  <data name="Message_Copied" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="Message_DeleteToRecycleBin" xml:space="preserve">
+    <value>Deleted video to trash</value>
+  </data>
+  <data name="Message_NotEdit" xml:space="preserve">
+    <value>Edit mode cannot modify information in batches</value>
+  </data>
+  <data name="Message_WaitForDownload" xml:space="preserve">
+    <value>Please wait for the download to complete</value>
+  </data>
+  <data name="Message_UrlNotSet" xml:space="preserve">
+    <value>The server source for synchronizing information is not set</value>
+  </data>
+  <data name="Message_SetUrl" xml:space="preserve">
+    <value>Please add the server source and enable it in the settings [Sync Information]</value>
+  </data>
+  <data name="Message_Stop" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="Message_OnlySupportJPG" xml:space="preserve">
+    <value>Only supports JPG format</value>
+  </data>
+  <data name="Message_NotOpenOrNotEnable" xml:space="preserve">
+    <value>Not turned on or not set</value>
+  </data>
+  <data name="Message_WrongUrl" xml:space="preserve">
+    <value>Wrong URL</value>
+  </data>
+  <data name="Message_NotRecognize" xml:space="preserve">
+    <value>Recognition failure</value>
+  </data>
+  <data name="NotSupport" xml:space="preserve">
+    <value>Not currently supported</value>
+  </data>
+  <data name="Message_BeginParse" xml:space="preserve">
+    <value>Start parsing</value>
+  </data>
+  <data name="Message_BeginDownloadImage" xml:space="preserve">
+    <value>Successfully parsed and started to synchronize pictures</value>
+  </data>
+  <data name="Message_AlreadyExist" xml:space="preserve">
+    <value>Existed</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Please wait……</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="Status_ScanDir" xml:space="preserve">
+    <value>Scan the specified folder</value>
+  </data>
+  <data name="Missing" xml:space="preserve">
+    <value>Missing</value>
+  </data>
+  <data name="ChooseDataBase" xml:space="preserve">
+    <value>Select video library</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="NewLibrary" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="MyLibrary" xml:space="preserve">
+    <value>My Library</value>
+  </data>
+  <data name="IsToDelete" xml:space="preserve">
+    <value>Is to delete</value>
+  </data>
+  <data name="IsToOverWrite" xml:space="preserve">
+    <value>Is to overwrite</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="SetDefaultToOpen" xml:space="preserve">
+    <value>Set as default</value>
+  </data>
+  <data name="SetPassword" xml:space="preserve">
+    <value>Set password</value>
+  </data>
+  <data name="Status_ClearLog" xml:space="preserve">
+    <value>Clear log files older than 10 days……</value>
+  </data>
+  <data name="Status_ClearRecentWatch" xml:space="preserve">
+    <value>Clear more than 10 days of recent viewing……</value>
+  </data>
+  <data name="Status_CreateDir" xml:space="preserve">
+    <value>Create folder……</value>
+  </data>
+  <data name="Status_InitDatabase" xml:space="preserve">
+    <value>Initialize the database……</value>
+  </data>
+  <data name="Status_InitID" xml:space="preserve">
+    <value>Initialize identification code parameters……</value>
+  </data>
+  <data name="Status_InitMovie" xml:space="preserve">
+    <value>Initialize the movie……</value>
+  </data>
+  <data name="Status_InitNet" xml:space="preserve">
+    <value>Network configuration initialization……</value>
+  </data>
+  <data name="Status_InitScan" xml:space="preserve">
+    <value>Initialize scan parameters……</value>
+  </data>
+  <data name="Status_RepairConfig" xml:space="preserve">
+    <value>Fix setting error……</value>
+  </data>
+  <data name="Status_UpdateConfig" xml:space="preserve">
+    <value>Update configuration file……</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="IsToRemove" xml:space="preserve">
+    <value>Is to remove</value>
+  </data>
+  <data name="IsToClearInfo" xml:space="preserve">
+    <value>Is to clear the download information of the video</value>
+  </data>
+  <data name="IsToUpdate" xml:space="preserve">
+    <value>Whether to close the program and start the update</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="ShowFavoriteActor" xml:space="preserve">
+    <value>Show favorite actors</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select/deselect all</value>
+  </data>
+  <data name="ShowExists" xml:space="preserve">
+    <value>Only show playable</value>
+  </data>
+  <data name="ShowSubSection" xml:space="preserve">
+    <value>Show only segmented video</value>
+  </data>
+  <data name="ShowStamp" xml:space="preserve">
+    <value>Stamp</value>
+  </data>
+  <data name="ShowImageType" xml:space="preserve">
+    <value>Picture display mode</value>
+  </data>
+  <data name="ScrollToEnd" xml:space="preserve">
+    <value>ScrollToEnd</value>
+  </data>
+  <data name="Basic" xml:space="preserve">
+    <value>Basic</value>
+  </data>
+  <data name="Scan" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="Translate" xml:space="preserve">
+    <value>Translation</value>
+  </data>
+  <data name="VedioProcessing" xml:space="preserve">
+    <value>Video Processing</value>
+  </data>
+  <data name="CustomAppearance" xml:space="preserve">
+    <value>Custom Appearance</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="AI" xml:space="preserve">
+    <value>Artificial Intelligence</value>
+  </data>
+  <data name="CloseToBar" xml:space="preserve">
+    <value>Minimize after closing</value>
+  </data>
+  <data name="RandomWhenStartUp" xml:space="preserve">
+    <value>Random display after launch</value>
+  </data>
+  <data name="NotShowLibrary" xml:space="preserve">
+    <value>Open the last closed library by default</value>
+  </data>
+  <data name="AutoDelete" xml:space="preserve">
+    <value>Automatically delete non-existent videos</value>
+  </data>
+  <data name="DeleteFileWhenDeleteInfo" xml:space="preserve">
+    <value>Delete file and delete movie information</value>
+  </data>
+  <data name="ScanWhenRefresh" xml:space="preserve">
+    <value>Scan movies when the main interface refreshes</value>
+  </data>
+  <data name="BossKey" xml:space="preserve">
+    <value>Boss key</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Skin" xml:space="preserve">
+    <value>Skin</value>
+  </data>
+  <data name="ImageSavePath" xml:space="preserve">
+    <value>Picture Path</value>
+  </data>
+  <data name="ChooseDir" xml:space="preserve">
+    <value>Select Folder</value>
+  </data>
+  <data name="Choose" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ShowOtherOptions" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="ShowRecentCreate" xml:space="preserve">
+    <value>Show the number of days recently created (day)</value>
+  </data>
+  <data name="ShowRecentPlay" xml:space="preserve">
+    <value>Show the number of days played recently (day)</value>
+  </data>
+  <data name="SearchCandidateNumber" xml:space="preserve">
+    <value>Number of search candidates</value>
+  </data>
+  <data name="DirClassificationNumber" xml:space="preserve">
+    <value>Sort by number of folders</value>
+  </data>
+  <data name="DirClassificationDepth" xml:space="preserve">
+    <value>Maximum depth of directories in the category of folders</value>
+  </data>
+  <data name="SetPlayer" xml:space="preserve">
+    <value>Specify the player</value>
+  </data>
+  <data name="SubsectionSpiltChar" xml:space="preserve">
+    <value>Segmented video separator</value>
+  </data>
+  <data name="ScanDirWhenStartUp" xml:space="preserve">
+    <value>Scan the following directories at startup</value>
+  </data>
+  <data name="ImportNFOWhenScan" xml:space="preserve">
+    <value>Import the scanned NFO file at the same time (overwrite the existing information)</value>
+  </data>
+  <data name="UrlList" xml:space="preserve">
+    <value>Url List</value>
+  </data>
+  <data name="Attention_UrlTest" xml:space="preserve">
+    <value>Note: The newly added URL can only be saved if it passes the test. The server name can only be changed [Enable] if it is not empty. In addition to the specified server, other servers will not save it</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="UrlName" xml:space="preserve">
+    <value>Server Name</value>
+  </data>
+  <data name="LatestUpdateDate" xml:space="preserve">
+    <value>Last update time</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="SaveToNFO" xml:space="preserve">
+    <value>Save information to NFO</value>
+  </data>
+  <data name="ToolTip_SameAsVedio" xml:space="preserve">
+    <value>If it is not filled, it will be the same directory</value>
+  </data>
+  <data name="TimeOut_CloseConnection" xml:space="preserve">
+    <value>Forcibly close the connection</value>
+  </data>
+  <data name="TimeOut_HTTP" xml:space="preserve">
+    <value>HTTP timeout</value>
+  </data>
+  <data name="TimeOut_TCP" xml:space="preserve">
+    <value>TCP timeout</value>
+  </data>
+  <data name="TimeOut_DownloadImage" xml:space="preserve">
+    <value>Image download timed out</value>
+  </data>
+  <data name="TimeOut_ReadWrite" xml:space="preserve">
+    <value>Stream read timeout</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="Nothing" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ImageStretch" xml:space="preserve">
+    <value>Picture auto zoom</value>
+  </data>
+  <data name="StatusBar" xml:space="preserve">
+    <value>Status Bar</value>
+  </data>
+  <data name="ShowFIlename" xml:space="preserve">
+    <value>Display the file name when the title is empty</value>
+  </data>
+  <data name="ShowTranslation" xml:space="preserve">
+    <value>Title shows translation result</value>
+  </data>
+  <data name="ShowTranslate2" xml:space="preserve">
+    <value>Summary shows translation results</value>
+  </data>
+  <data name="DetailViewAll" xml:space="preserve">
+    <value>Browse all movies in the database left and right in the details window</value>
+  </data>
+  <data name="FormEffect" xml:space="preserve">
+    <value>Window effect</value>
+  </data>
+  <data name="FadeInOut" xml:space="preserve">
+    <value>Form fades in and out</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="FunctionBar" xml:space="preserve">
+    <value>Function bar</value>
+  </data>
+  <data name="Youdao" xml:space="preserve">
+    <value>Youdao Translation</value>
+  </data>
+  <data name="BaiduFaceRecognition" xml:space="preserve">
+    <value>Baidu face recognition</value>
+  </data>
+  <data name="ScreenShotToPreviewDir" xml:space="preserve">
+    <value>Screenshot to preview image directory</value>
+  </data>
+  <data name="FFmpegPath" xml:space="preserve">
+    <value>FFmpeg.exe path</value>
+  </data>
+  <data name="ChooseFFmpeg" xml:space="preserve">
+    <value>Select the FFmpeg.exe file</value>
+  </data>
+  <data name="ScreenShotNumber" xml:space="preserve">
+    <value>Total number of pictures captured</value>
+  </data>
+  <data name="SkipBegin" xml:space="preserve">
+    <value>Skip the beginning (minutes)</value>
+  </data>
+  <data name="SkipEnd" xml:space="preserve">
+    <value>Skip the end (minutes)</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Stamp" xml:space="preserve">
+    <value>Stamp</value>
+  </data>
+  <data name="BackgroundImage" xml:space="preserve">
+    <value>Background Image</value>
+  </data>
+  <data name="DeleteSpace" xml:space="preserve">
+    <value>Remove spaces</value>
+  </data>
+  <data name="AutoAddStamp" xml:space="preserve">
+    <value>Automatically add Translated/HD stamp</value>
+  </data>
+  <data name="OuterSplitChar" xml:space="preserve">
+    <value>Information external separator</value>
+  </data>
+  <data name="InnerSplitChar" xml:space="preserve">
+    <value>Information internal separator</value>
+  </data>
+  <data name="RenameRule" xml:space="preserve">
+    <value>Rename rules</value>
+  </data>
+  <data name="RenamePreview" xml:space="preserve">
+    <value>Rename preview</value>
+  </data>
+  <data name="Attention_Rename" xml:space="preserve">
+    <value>Note: If you add content to the naming rule, if the corresponding field is empty when naming, the new content will not be deleted automatically, such as: {id}_({title}), if {title} is empty, then The brackets on both sides will not be deleted automatically</value>
+  </data>
+  <data name="TranslatedTitle" xml:space="preserve">
+    <value>Translated Title</value>
+  </data>
+  <data name="ReleaseDate" xml:space="preserve">
+    <value>Released Date</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Director" xml:space="preserve">
+    <value>Director</value>
+  </data>
+  <data name="Genre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="Studio" xml:space="preserve">
+    <value>Studio</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="SampleMovie_Title" xml:space="preserve">
+    <value>  IronMan1  </value>
+  </data>
+  <data name="SampleMovie_TranslatedTitle" xml:space="preserve">
+    <value>IronMan1</value>
+  </data>
+  <data name="SampleMovie_Director" xml:space="preserve">
+    <value>乔恩·费儒</value>
+  </data>
+  <data name="SampleMovie_Genre" xml:space="preserve">
+    <value>动作 冒险 科幻</value>
+  </data>
+  <data name="SampleMovie_Tag" xml:space="preserve">
+    <value>Series</value>
+  </data>
+  <data name="SampleMovie_Actor" xml:space="preserve">
+    <value>Robert Downey Jr./Gwyneth Paltrow/Terrence Howard/Jeff Bridges</value>
+  </data>
+  <data name="SampleMovie_Studio" xml:space="preserve">
+    <value>Marvel Studios</value>
+  </data>
+  <data name="SampleMovie_Label" xml:space="preserve">
+    <value>Label 1/Label 2/Label 3</value>
+  </data>
+  <data name="SampleMovie_Country" xml:space="preserve">
+    <value>United States</value>
+  </data>
+  <data name="Message_IsToReset" xml:space="preserve">
+    <value>Is to reset ?</value>
+  </data>
+  <data name="Message_CanNotBeNull" xml:space="preserve">
+    <value>Folder path cannot be empty</value>
+  </data>
+  <data name="Hint" xml:space="preserve">
+    <value>Prompt</value>
+  </data>
+  <data name="Message_TestError" xml:space="preserve">
+    <value>The test fails: 1. If the cookie is invalid, please copy the cookie again or 2. Retest or 3. Set the network timeout</value>
+  </data>
+  <data name="Message_NeedCookies" xml:space="preserve">
+    <value>The URL needs to be filled with Cookie!, and test once after filling in!</value>
+  </data>
+  <data name="BossKeyError" xml:space="preserve">
+    <value>Hotkey conflict!</value>
+  </data>
+  <data name="VedioScan" xml:space="preserve">
+    <value>Video scan</value>
+  </data>
+  <data name="ImportAccess" xml:space="preserve">
+    <value>Access data import</value>
+  </data>
+  <data name="ImportNFO" xml:space="preserve">
+    <value>Metadata NFO import</value>
+  </data>
+  <data name="EuropeScan" xml:space="preserve">
+    <value>European and American film scanning</value>
+  </data>
+  <data name="UNCScan" xml:space="preserve">
+    <value>UNC Scan</value>
+  </data>
+  <data name="ScanAllFile" xml:space="preserve">
+    <value>Full scan (Everything engine)</value>
+  </data>
+  <data name="ViewLog" xml:space="preserve">
+    <value>View Log</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="DragFileIn" xml:space="preserve">
+    <value>Or drag and drop the file here</value>
+  </data>
+  <data name="ScanFolder" xml:space="preserve">
+    <value>Scan folder</value>
+  </data>
+  <data name="ImportSingleNFO" xml:space="preserve">
+    <value>Import a single NFO</value>
+  </data>
+  <data name="CopyNFOImage" xml:space="preserve">
+    <value>Copy poster and fanart under the same file of the video to the picture directory of Jvedio</value>
+  </data>
+  <data name="Attention_EuropeScan" xml:space="preserve">
+    <value>Note: The file name must contain the form BrazzersExxtra.20.07.22, and the download information only supports the Bus site</value>
+  </data>
+  <data name="DragFolderIn" xml:space="preserve">
+    <value>Or drag into the folder here</value>
+  </data>
+  <data name="ChooseFile" xml:space="preserve">
+    <value>Select File</value>
+  </data>
+  <data name="Europe" xml:space="preserve">
+    <value>Europe</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="ImportNumber" xml:space="preserve">
+    <value>Number of imports</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="InsufficientPermissions" xml:space="preserve">
+    <value>Insufficient Permissions</value>
+  </data>
+  <data name="NotExists" xml:space="preserve">
+    <value>Not Exists</value>
+  </data>
+  <data name="NoLog" xml:space="preserve">
+    <value>No Log</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>FilePath</value>
+  </data>
+  <data name="Message_CancelCurrentTask" xml:space="preserve">
+    <value>Cancel the current download task</value>
+  </data>
+  <data name="Message_PathConflict" xml:space="preserve">
+    <value>Path conflict</value>
+  </data>
+  <data name="BeginScan" xml:space="preserve">
+    <value>Start scanning</value>
+  </data>
+  <data name="OtherTaskIsRunning" xml:space="preserve">
+    <value>Other tasks are in progress</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Series</value>
+  </data>
+  <data name="Plot" xml:space="preserve">
+    <value>Plot</value>
+  </data>
+  <data name="SubsectionVedio" xml:space="preserve">
+    <value>Segmented video</value>
+  </data>
+  <data name="CreatedDate" xml:space="preserve">
+    <value>Creation time</value>
+  </data>
+  <data name="ImportDate" xml:space="preserve">
+    <value>Import time</value>
+  </data>
+  <data name="NotRecognize" xml:space="preserve">
+    <value>Unrecognized</value>
+  </data>
+  <data name="NormalVedio" xml:space="preserve">
+    <value>Common video files</value>
+  </data>
+  <data name="OtherVedio" xml:space="preserve">
+    <value>Other video files</value>
+  </data>
+  <data name="AllFile" xml:space="preserve">
+    <value>All files</value>
+  </data>
+  <data name="NullID" xml:space="preserve">
+    <value>ID is empty</value>
+  </data>
+  <data name="Message_ChooseVedioType" xml:space="preserve">
+    <value>Please select video type</value>
+  </data>
+  <data name="Message_SaveFailForExistID" xml:space="preserve">
+    <value>Save failed, the ID already exists</value>
+  </data>
+  <data name="Message_EditUpdateSuccess" xml:space="preserve">
+    <value>The path, video type, file size, creation time, and import time are successfully updated！</value>
+  </data>
+  <data name="Translated" xml:space="preserve">
+    <value>Translated</value>
+  </data>
+  <data name="FlowOut" xml:space="preserve">
+    <value>FlowOut</value>
+  </data>
+  <data name="MovieInfo" xml:space="preserve">
+    <value>Movie information</value>
+  </data>
+  <data name="VideoInfo" xml:space="preserve">
+    <value>Video information</value>
+  </data>
+  <data name="HD" xml:space="preserve">
+    <value>HD</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>Video format</value>
+  </data>
+  <data name="FrameRate" xml:space="preserve">
+    <value>FrameRate</value>
+  </data>
+  <data name="BitRate" xml:space="preserve">
+    <value>BitRate</value>
+  </data>
+  <data name="Resolution" xml:space="preserve">
+    <value>Resolution</value>
+  </data>
+  <data name="DisplayAspectRatio" xml:space="preserve">
+    <value>DisplayAspectRatio</value>
+  </data>
+  <data name="BitDepth" xml:space="preserve">
+    <value>BitDepth</value>
+  </data>
+  <data name="FrameCount" xml:space="preserve">
+    <value>FrameCount</value>
+  </data>
+  <data name="AudioFormat" xml:space="preserve">
+    <value>AudioFormat</value>
+  </data>
+  <data name="AudioBitRate" xml:space="preserve">
+    <value>AudioBitRate</value>
+  </data>
+  <data name="AudioSamplingRate" xml:space="preserve">
+    <value>AudioSamplingRate</value>
+  </data>
+  <data name="Channel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="FileExtension" xml:space="preserve">
+    <value>File Extension</value>
+  </data>
+  <data name="EnterLabel" xml:space="preserve">
+    <value>Please enter a label</value>
+  </data>
+  <data name="CannotOpen" xml:space="preserve">
+    <value>Can't open</value>
+  </data>
+  <data name="HasCopy" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="IsToDeleteAllSubSection" xml:space="preserve">
+    <value>Are you sure to delete all segmented videos to the recycle bin?</value>
+  </data>
+  <data name="TranslateFail" xml:space="preserve">
+    <value>Translation failed</value>
+  </data>
+  <data name="TranslateSuccess" xml:space="preserve">
+    <value>Successfully translated</value>
+  </data>
+  <data name="MovieHasNoActor" xml:space="preserve">
+    <value>No actors in this film</value>
+  </data>
+  <data name="DownloadSPicFailFor" xml:space="preserve">
+    <value>Failed to download thumbnail, reason</value>
+  </data>
+  <data name="DownloadBPicFailFor" xml:space="preserve">
+    <value>Failed to download poster image, reason</value>
+  </data>
+  <data name="DownloadEPicFailFor" xml:space="preserve">
+    <value>Failed to download poster image</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>the reason</value>
+  </data>
+  <data name="Or" xml:space="preserve">
+    <value>Or</value>
+  </data>
+  <data name="Management" xml:space="preserve">
+    <value>Management</value>
+  </data>
+  <data name="Statistic" xml:space="preserve">
+    <value>Statistic</value>
+  </data>
+  <data name="ResetDataBase" xml:space="preserve">
+    <value>Reset DataBase</value>
+  </data>
+  <data name="DeleteMovieNotExist" xml:space="preserve">
+    <value>Delete non-existent video</value>
+  </data>
+  <data name="DeleteMovieNotInScan" xml:space="preserve">
+    <value>Delete the movies that are not in the [Scan at startup] directory</value>
+  </data>
+  <data name="SmallToBig" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
+  <data name="BigToSmall" xml:space="preserve">
+    <value>Descending</value>
+  </data>
+  <data name="ViewNumber" xml:space="preserve">
+    <value>Visits</value>
+  </data>
+  <data name="ListView" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Current Version</value>
+  </data>
+  <data name="LatestVersion" xml:space="preserve">
+    <value>Latest Version</value>
+  </data>
+  <data name="SuccessScreenShotTo" xml:space="preserve">
+    <value>Successfully screenshot to</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="IsUsing" xml:space="preserve">
+    <value>Being used</value>
+  </data>
+  <data name="PleaseEnter" xml:space="preserve">
+    <value>Please Enter</value>
+  </data>
+  <data name="SuccessDelete" xml:space="preserve">
+    <value>Success Delete</value>
+  </data>
+  <data name="DownloadMessageFailFor" xml:space="preserve">
+    <value>Information download failed, reason</value>
+  </data>
+  <data name="RebootToTakeEffect" xml:space="preserve">
+    <value>Take effect after restart</value>
+  </data>
+  <data name="NoPermissionToListen" xml:space="preserve">
+    <value>No permission to monitor</value>
+  </data>
+  <data name="FilePathIntersection" xml:space="preserve">
+    <value>The folder has an intersection or the folder is already in the current collection</value>
+  </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Scanning……</value>
+  </data>
+  <data name="DeleteImage" xml:space="preserve">
+    <value>Delete picture</value>
+  </data>
+  <data name="SetAs" xml:space="preserve">
+    <value>Set as</value>
+  </data>
+  <data name="ThumbnailAndPoster" xml:space="preserve">
+    <value>Thumbnail + Poster</value>
+  </data>
+  <data name="DataBase" xml:space="preserve">
+    <value>DataBase</value>
+  </data>
+  <data name="CurrentAndTotal" xml:space="preserve">
+    <value>Current/Total</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Batch_SyncInfo" xml:space="preserve">
+    <value>Batch synchronization: only used to synchronize information and preview images, low-speed synchronization, to avoid server crash</value>
+  </data>
+  <data name="Batch_Gif" xml:space="preserve">
+    <value>Generate GIF: Randomly intercept GIF</value>
+  </data>
+  <data name="Batch_ScreenShot" xml:space="preserve">
+    <value>Generate screenshots: generate screenshots at equal intervals</value>
+  </data>
+  <data name="Batch_Rename" xml:space="preserve">
+    <value>Rename: Follow the rules in [Settings-Rename]</value>
+  </data>
+  <data name="TaskNumber" xml:space="preserve">
+    <value>Number of tasks</value>
+  </data>
+  <data name="TaskSettings" xml:space="preserve">
+    <value>Task settings</value>
+  </data>
+  <data name="ForeceToSync" xml:space="preserve">
+    <value>Forced to synchronize overwrite information (if not selected, the synchronized ones will be skipped)</value>
+  </data>
+  <data name="SkipExistGif" xml:space="preserve">
+    <value>Skip intercepted</value>
+  </data>
+  <data name="GifDuration" xml:space="preserve">
+    <value>Intercept time</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="SkipExistsScreenShot" xml:space="preserve">
+    <value>Skip if there is a picture in the save location</value>
+  </data>
+  <data name="ThreadNumber" xml:space="preserve">
+    <value>Number of threads</value>
+  </data>
+  <data name="Second" xml:space="preserve">
+    <value>Second</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="BeginAsync" xml:space="preserve">
+    <value>Begin Async</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="NoScreenShotDuration" xml:space="preserve">
+    <value>Skip the beginning or end that exceeds the total length of the video</value>
+  </data>
+  <data name="NewFileExists" xml:space="preserve">
+    <value>New file already exists</value>
+  </data>
+  <data name="SourceFile" xml:space="preserve">
+    <value>Original file</value>
+  </data>
+  <data name="NotShowInCountry" xml:space="preserve">
+    <value>This product is not published in your country of residence</value>
+  </data>
+  <data name="NoID" xml:space="preserve">
+    <value>The URL does not have the resource, or the product cannot be found</value>
+  </data>
+  <data name="TimeOut" xml:space="preserve">
+    <value>The gateway request timed out, the URL may be blocked</value>
+  </data>
+  <data name="TooFrequent" xml:space="preserve">
+    <value>Retrieving too frequently, try again later</value>
+  </data>
+  <data name="GetSourceCodeFail" xml:space="preserve">
+    <value>Failed to get webpage source code</value>
+  </data>
+  <data name="ParseFail" xml:space="preserve">
+    <value>Parsing failed</value>
+  </data>
+  <data name="DownLoadImageFail" xml:space="preserve">
+    <value>Image download failed</value>
+  </data>
+  <data name="NoActorInfo" xml:space="preserve">
+    <value>There is no cast information on this URL</value>
+  </data>
+  <data name="UrlNotSet" xml:space="preserve">
+    <value>URL is not configured</value>
+  </data>
+  <data name="UrlEuropeNotset" xml:space="preserve">
+    <value>European and American URLs are not opened</value>
+  </data>
+  <data name="UrlDBNotset" xml:space="preserve">
+    <value>DB URL is not opened</value>
+  </data>
+  <data name="ScanNFO" xml:space="preserve">
+    <value>Scan out NFO</value>
+  </data>
+  <data name="SuccessImportToDataBase" xml:space="preserve">
+    <value>Import the database successfully</value>
+  </data>
+  <data name="ImportNFONumber" xml:space="preserve">
+    <value>Total number of imported nfo files</value>
+  </data>
+  <data name="ImportVideioNumber" xml:space="preserve">
+    <value>Total number of imported videos</value>
+  </data>
+  <data name="ScanVideo" xml:space="preserve">
+    <value>Number of videos scanned</value>
+  </data>
+  <data name="NotRecognizeNumber" xml:space="preserve">
+    <value>Number of unrecognized videos</value>
+  </data>
+  <data name="NotImport" xml:space="preserve">
+    <value>Not imported</value>
+  </data>
+  <data name="ImportSubSection" xml:space="preserve">
+    <value>Number of imported segmented videos</value>
+  </data>
+  <data name="ImportFile" xml:space="preserve">
+    <value>The imported file is</value>
+  </data>
+  <data name="RepeatVideo" xml:space="preserve">
+    <value>Duplicate video</value>
+  </data>
+  <data name="TotalImport" xml:space="preserve">
+    <value>Total number of imports</value>
+  </data>
+  <data name="ImportAttention" xml:space="preserve">
+    <value>Since there may be duplicate videos in the database, the number of imported videos is greater than the actual number of videos</value>
+  </data>
+  <data name="Playable" xml:space="preserve">
+    <value>Playable</value>
+  </data>
+  <data name="OnlyShowSubsection" xml:space="preserve">
+    <value>Fragmented video only</value>
+  </data>
+  <data name="WithImage" xml:space="preserve">
+    <value>There are pictures</value>
+  </data>
+  <data name="NoImage" xml:space="preserve">
+    <value>No picture</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="DoubleClickToCancel" xml:space="preserve">
+    <value>Double Click To Cancel</value>
+  </data>
+  <data name="AddToFavorites" xml:space="preserve">
+    <value>Add/Cancel To Favorites</value>
+  </data>
+  <data name="Censored" xml:space="preserve">
+    <value>Censored</value>
+  </data>
+  <data name="Uncensored" xml:space="preserve">
+    <value>Uncensored</value>
+  </data>
+  <data name="OpenJvedio" xml:space="preserve">
+    <value>Open Jvedio</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Notice" xml:space="preserve">
+    <value>Notice</value>
+  </data>
+  <data name="BeginUpgrade" xml:space="preserve">
+    <value>Start Update</value>
+  </data>
+  <data name="DownLoadFromUrl" xml:space="preserve">
+    <value>download file</value>
+  </data>
+  <data name="CheckUpgrade" xml:space="preserve">
+    <value>Check Upgrade</value>
+  </data>
+  <data name="LoadActorOtherMovie" xml:space="preserve">
+    <value>Load other works of this actor</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>Next Page</value>
+  </data>
+  <data name="PreviewPage" xml:space="preserve">
+    <value>Preview Page</value>
+  </data>
+  <data name="ShowRest" xml:space="preserve">
+    <value>Show Rest</value>
+  </data>
+  <data name="MovieOpacity" xml:space="preserve">
+    <value>Video opacity</value>
+  </data>
+  <data name="MoviePerPage" xml:space="preserve">
+    <value>Number of presentations per page</value>
+  </data>
+  <data name="NumherEachFlow" xml:space="preserve">
+    <value>Number of scrolls at a time</value>
+  </data>
+  <data name="ActorNumberPerPage" xml:space="preserve">
+    <value>Number of actors per page</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Scene" xml:space="preserve">
+    <value>Scene</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="Behaviour" xml:space="preserve">
+    <value>Behaviour</value>
+  </data>
+  <data name="Body" xml:space="preserve">
+    <value>Body</value>
+  </data>
+  <data name="Clothing" xml:space="preserve">
+    <value>Clothing</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="ScanAllAttention" xml:space="preserve">
+    <value>It takes effect after starting in administrator mode (then you can drag into the folder without being in administrator mode)</value>
+  </data>
+  <data name="EnterSplit" xml:space="preserve">
+    <value>Carriage return split</value>
+  </data>
+  <data name="SuccessGifTo" xml:space="preserve">
+    <value>GIF successfully generated to</value>
+  </data>
+  <data name="AutoHeight" xml:space="preserve">
+    <value>Original video aspect ratio</value>
+  </data>
+  <data name="FailToCutOffVideo" xml:space="preserve">
+    <value>Unsuccessful split video screenshot</value>
+  </data>
+  <data name="FailToGenerate" xml:space="preserve">
+    <value>Unsuccessfully generated</value>
+  </data>
+  <data name="LoadLocalKey" xml:space="preserve">
+    <value>Load from local file</value>
+  </data>
+  <data name="HalfCutOff" xml:space="preserve">
+    <value>Cut the right part of the poster</value>
+  </data>
+  <data name="StopUpgrade" xml:space="preserve">
+    <value>Stop update</value>
+  </data>
+  <data name="HotKeyConflict" xml:space="preserve">
+    <value>Hotkey Conflict</value>
+  </data>
+  <data name="UpgradeSource" xml:space="preserve">
+    <value>Update source</value>
+  </data>
+  <data name="Gif_Duration" xml:space="preserve">
+    <value>Gif Duration</value>
+  </data>
+  <data name="SuccessCopyUrl" xml:space="preserve">
+    <value>The download address has been successfully copied</value>
+  </data>
+  <data name="CopyToDownload" xml:space="preserve">
+    <value>Please copy the download address to download</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="TimeOut_Process" xml:space="preserve">
+    <value>TimeOut</value>
+  </data>
+  <data name="SearchHistory" xml:space="preserve">
+    <value>SearchHistory</value>
+  </data>
+  <data name="SearchResult" xml:space="preserve">
+    <value>SearchResult</value>
+  </data>
+  <data name="DetailMode" xml:space="preserve">
+    <value>DetailMode</value>
+  </data>
+  <data name="DragFileInOr" xml:space="preserve">
+    <value>Drag in folders and videos or</value>
+  </data>
+  <data name="TO" xml:space="preserve">
+    <value>TimeOut</value>
+  </data>
+  <data name="HttpFail" xml:space="preserve">
+    <value>HttpFail</value>
+  </data>
+  <data name="UrlFC2Notset" xml:space="preserve">
+    <value>FC2 URL not enabled</value>
+  </data>
+  <data name="UrlBusNotset" xml:space="preserve">
+    <value>Bus URL not enabled</value>
+  </data>
+  <data name="UrlLibraryNotset" xml:space="preserve">
+    <value>Library URL not open</value>
+  </data>
+  <data name="SearchTooFrequent" xml:space="preserve">
+    <value>Too many searches, DB has been blocked, wait 10 minutes to unban</value>
+  </data>
+  <data name="UrlDMMNotset" xml:space="preserve">
+    <value>DMM URL is not opened</value>
+  </data>
+  <data name="UrlMOONotset" xml:space="preserve">
+    <value>MOO URL not enabled</value>
+  </data>
+  <data name="exportnfo" xml:space="preserve">
+    <value>export NFO</value>
+  </data>
+  <data name="setnfo" xml:space="preserve">
+    <value>Please configure the NFO in Synchronization Information</value>
+  </data>
+  <data name="overwrite" xml:space="preserve">
+    <value>Overwrite existing files</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Navigation" xml:space="preserve">
+    <value>The navigation bar</value>
+  </data>
+  <data name="sqlitecopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Target" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <data name="SamePathError" xml:space="preserve">
+    <value>SamePathError</value>
+  </data>
+  <data name="Attention_CopyDataBase" xml:space="preserve">
+    <value>Synchronously copies information from the original database to the target database</value>
+  </data>
+  <data name="EasyMode" xml:space="preserve">
+    <value>EasyMode</value>
+  </data>
+  <data name="SkipIfTitleEmpty" xml:space="preserve">
+    <value>The original database movie name is empty and skipped</value>
+  </data>
+  <data name="SearchActor" xml:space="preserve">
+    <value>Search Actor</value>
+  </data>
+  <data name="NoResult" xml:space="preserve">
+    <value>There is no result</value>
+  </data>
+  <data name="ChooseActor" xml:space="preserve">
+    <value>Choose Actor</value>
+  </data>
+  <data name="MoreThanThree" xml:space="preserve">
+    <value>No more than three</value>
+  </data>
+  <data name="SearchVideoType" xml:space="preserve">
+    <value>Search out all videos as</value>
+  </data>
+  <data name="CurrentPage" xml:space="preserve">
+    <value>CurrentPage</value>
+  </data>
+  <data name="StartPage" xml:space="preserve">
+    <value>Start Page</value>
+  </data>
+  <data name="EndPage" xml:space="preserve">
+    <value>Termination of the page</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="SelectAllText" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="ShowSameSeries" xml:space="preserve">
+    <value>Loads the movie according to the page number</value>
+  </data>
+  <data name="LoadFromNet" xml:space="preserve">
+    <value>Load From Net</value>
+  </data>
+  <data name="ErrorUrl" xml:space="preserve">
+    <value>Error Url</value>
+  </data>
+  <data name="FirstPageOfUrl" xml:space="preserve">
+    <value>First Page Of Url</value>
+  </data>
+  <data name="OpenOtherUrl" xml:space="preserve">
+    <value>Open Other Url</value>
+  </data>
+  <data name="GetPlot" xml:space="preserve">
+    <value>Get Plot</value>
+  </data>
+  <data name="CopyMagnets" xml:space="preserve">
+    <value>Copy Magnets</value>
+  </data>
+  <data name="ImageViewer" xml:space="preserve">
+    <value>ImageViewer</value>
+  </data>
+  <data name="Method" xml:space="preserve">
+    <value>Method</value>
+  </data>
+  <data name="RowNumber" xml:space="preserve">
+    <value>RowNumber</value>
+  </data>
+  <data name="SyncMagnets" xml:space="preserve">
+    <value>Sync Magnets</value>
+  </data>
+  <data name="ManageImage" xml:space="preserve">
+    <value>Manage Image</value>
+  </data>
+  <data name="AllImage" xml:space="preserve">
+    <value>All Image</value>
+  </data>
+  <data name="RecentView" xml:space="preserve">
+    <value>Recent View</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="RestartToTakeEffect" xml:space="preserve">
+    <value>Restart To Take Effect</value>
+  </data>
+  <data name="AllComics" xml:space="preserve">
+    <value>All Comics</value>
+  </data>
+  <data name="MyComics" xml:space="preserve">
+    <value>My Comics</value>
+  </data>
+  <data name="ChooseComicsLibrary" xml:space="preserve">
+    <value>Choose Comics Library</value>
+  </data>
+  <data name="ImportLibrary" xml:space="preserve">
+    <value>Import Library</value>
+  </data>
+  <data name="AutoAddPrefix" xml:space="preserve">
+    <value>Auto Prefix</value>
+  </data>
+  <data name="ScanRe" xml:space="preserve">
+    <value>Extra regular expression</value>
+  </data>
+  <data name="UseSemToSplitRe" xml:space="preserve">
+    <value>Split each regular expression with a semicolon</value>
+  </data>
+  <data name="ErrorToShutdown" xml:space="preserve">
+    <value>Program fatal error, will terminate!</value>
+  </data>
+  <data name="JvedioIsRunning" xml:space="preserve">
+    <value>Jvedio is already running!</value>
+  </data>
+  <data name="AlreadyTranslate" xml:space="preserve">
+    <value>The film has been translated. Do you want to continue the translation?</value>
+  </data>
+  <data name="OnlySupportBus" xml:space="preserve">
+    <value>Only Support Bus</value>
+  </data>
+  <data name="MainIsDownloading" xml:space="preserve">
+    <value>The main Windowis already syncing!</value>
+  </data>
+  <data name="ActressDownloadAttention" xml:space="preserve">
+    <value>Note: Synchronization is possible only if it exists on the BUS</value>
+  </data>
+  <data name="MoreThemes" xml:space="preserve">
+    <value>More Themes</value>
+  </data>
+  <data name="DIY" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Get" xml:space="preserve">
+    <value>Get</value>
+  </data>
+  <data name="TeenMode" xml:space="preserve">
+    <value>TeenMode</value>
+  </data>
+  <data name="Outline" xml:space="preserve">
+    <value>Outline</value>
+  </data>
+  <data name="AllGame" xml:space="preserve">
+    <value>All Game</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>NotFound</value>
+  </data>
+</root>

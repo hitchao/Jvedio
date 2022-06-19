@@ -1,0 +1,1013 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DCFB456D-B299-459F-A4C7-EC3D183B3971}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Jvedio</RootNamespace>
+    <AssemblyName>Jvedio</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>5.0.0.0</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Jvedio.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Jvedio.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>D567C50EDEB5F761357AC450DF1BB468F82008DA</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Jvedio_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="ChaoControls.Style, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Reference\ChaoControls.Style.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Jvedio-Crawler\Common\bin\Debug\CommonNet.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.2.0.2\lib\net47\CommonServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="DynamicData, Version=6.15.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicData.6.15.1\lib\net461\DynamicData.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExCSS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExCSS.4.1.0\lib\netstandard2.0\ExCSS.dll</HintPath>
+    </Reference>
+    <Reference Include="Fare, Version=2.2.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fare.2.2.0\lib\net35\Fare.dll</HintPath>
+    </Reference>
+    <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.4.1.0, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.14.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.14.0\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="HandyControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=45be8712787a1e5b, processorArchitecture=MSIL">
+      <HintPath>..\packages\HandyControl.3.1.0\lib\net472\HandyControl.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
+    <Reference Include="MediaInfoNET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\MediaInfoNET.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="MihaZupan.HttpToSocks5Proxy">
+      <HintPath>Reference\MihaZupan.HttpToSocks5Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=8.0.28.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.28\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PInvoke, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\PInvoke.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="PriorityQueue, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5e136dbf0437dacd, processorArchitecture=MSIL">
+      <HintPath>..\packages\OptimizedPriorityQueue.5.1.0\lib\net45\PriorityQueue.dll</HintPath>
+    </Reference>
+    <Reference Include="QueryEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\QueryEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.113.1\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.113.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.113.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive, Version=4.4.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.4.4.1\lib\net46\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Ubiety.Dns.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.28\lib\net452\Ubiety.Dns.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="UsnOperation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\UsnOperation.dll</HintPath>
+    </Reference>
+    <Reference Include="VirtualizingWrapPanel, Version=1.5.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VirtualizingWrapPanel.1.5.7\lib\net452\VirtualizingWrapPanel.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="ZstdNet, Version=1.4.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.28\lib\net452\ZstdNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Core\Exceptions\SqlException.cs" />
+    <Compile Include="Core\Exceptions\NFOParseException.cs" />
+    <Compile Include="Core\Exceptions\DllLoadFailedException.cs" />
+    <Compile Include="Core\Exceptions\DirCreateFailedException.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Attributes\TableAttribute.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Attributes\TableFieldAttribute.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Attributes\TableIdAttribute.cs" />
+    <Compile Include="Core\Command\File.cs" />
+    <Compile Include="Core\Command\OpenWindow.cs" />
+    <Compile Include="Core\Config\ProxyConfig.cs" />
+    <Compile Include="Core\Config\FFmpegConfig.cs" />
+    <Compile Include="Core\Config\RenameConfig.cs" />
+    <Compile Include="Core\Config\PluginConfig.cs" />
+    <Compile Include="Core\Config\ScanConfig.cs" />
+    <Compile Include="Core\Config\ServerConfig.cs" />
+    <Compile Include="Core\Config\WindowConfig\Filter.cs" />
+    <Compile Include="Core\Config\WindowConfig\Settings.cs" />
+    <Compile Include="Core\Crawler\ActorSearch.cs" />
+    <Compile Include="Core\Crawler\CrawlerHeader.cs" />
+    <Compile Include="Core\CustomEventArgs\PreviewImageEventArgs.cs" />
+    <Compile Include="Core\CustomEventArgs\MessageCallBackEventArgs.cs" />
+    <Compile Include="Core\CustomTask\AbstractTask.cs" />
+    <Compile Include="Core\Enums\AssociationType.cs" />
+    <Compile Include="Core\Enums\DownLoadState.cs" />
+    <Compile Include="Core\Enums\ImageType.cs" />
+    <Compile Include="Core\Enums\LogType.cs" />
+    <Compile Include="Core\Enums\NoticeType.cs" />
+    <Compile Include="Core\Enums\PluginType.cs" />
+    <Compile Include="Core\Exceptions\CrawlerNotFoundException.cs" />
+    <Compile Include="Core\Exceptions\MediaCutOutOfRangeException.cs" />
+    <Compile Include="Core\Exceptions\NotFoundException.cs" />
+    <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
+    <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
+    <Compile Include="Core\Interfaces\IDictKeys.cs" />
+    <Compile Include="Core\Net\DownLoadTask.cs" />
+    <Compile Include="Core\Net\UpgradeHelper.cs" />
+    <Compile Include="Core\Plugins\Crawler\CrawlerLoader.cs" />
+    <Compile Include="Core\CustomSettingsProvider.cs" />
+    <Compile Include="Core\DataBase\Connection.cs" />
+    <Compile Include="Core\DataBase\MysqlConnection.cs" />
+    <Compile Include="Core\Enums\ComicType.cs" />
+    <Compile Include="Core\Enums\DataBaseType.cs" />
+    <Compile Include="Core\Enums\DataType.cs" />
+    <Compile Include="Core\Enums\Gender.cs" />
+    <Compile Include="Core\Enums\IdType.cs" />
+    <Compile Include="Core\Enums\InsertMode.cs" />
+    <Compile Include="Core\Enums\Language.cs" />
+    <Compile Include="Core\Enums\SearchField.cs" />
+    <Compile Include="Core\Enums\PathType.cs" />
+    <Compile Include="Core\Enums\RelevanceType.cs" />
+    <Compile Include="Core\Enums\SearchType.cs" />
+    <Compile Include="Core\Enums\TranslationPlatform.cs" />
+    <Compile Include="Core\Enums\VideoType.cs" />
+    <Compile Include="Core\Enums\ViewMode.cs" />
+    <Compile Include="Core\Enums\WindowState.cs" />
+    <Compile Include="Core\CustomEventArgs\WrapperEventArg.cs" />
+    <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
+    <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
+    <Compile Include="Core\Global\GlobalMapper.cs" />
+    <Compile Include="Core\Global\GlobalStyle.cs" />
+    <Compile Include="Core\Plugins\Plugin.cs" />
+    <Compile Include="Core\Plugins\PluginInfo.cs" />
+    <Compile Include="Core\Plugins\Theme\ThemeHelper.cs" />
+    <Compile Include="Core\Plugins\Theme\ThemeLoader.cs" />
+    <Compile Include="Core\Scan\ComicScan.cs" />
+    <Compile Include="Core\Scan\GameScan.cs" />
+    <Compile Include="Core\Scan\PictureScan.cs" />
+    <Compile Include="Core\CustomTask\ITask.cs" />
+    <Compile Include="Core\Scan\ScanFactory.cs" />
+    <Compile Include="Core\Scan\ScanResult.cs" />
+    <Compile Include="Core\Framework\MarkDown.cs" />
+    <Compile Include="Core\Framework\SimpleORM\AbstractMapper.cs" />
+    <Compile Include="Core\Framework\SimpleORM\BaseMapper.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Log.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Mapper\MySQLMapper.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Mapper\PostgreSQLMapper.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Wrapper\SelectWrapper.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Mapper\SqliteMapper.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Wrapper\IWrapper.cs" />
+    <Compile Include="Core\DataBase\Tables\Sqlite.cs" />
+    <Compile Include="Core\Framework\SimpleORM\Wrapper\UpdateWrapper.cs" />
+    <Compile Include="Core\Config\Base\AbstractConfig.cs" />
+    <Compile Include="Core\Global\GlobalConfig.cs" />
+    <Compile Include="Core\Config\Base\IConfig.cs" />
+    <Compile Include="Core\Config\WindowConfig\Edit.cs" />
+    <Compile Include="Core\Config\WindowConfig\Detail.cs" />
+    <Compile Include="Core\Config\WindowConfig\MetaData.cs" />
+    <Compile Include="Core\Config\WindowConfig\Main.cs" />
+    <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
+    <Compile Include="Core\CustomTask\TaskLogger.cs" />
+    <Compile Include="Utils\Common\CommonDataHelper.cs" />
+    <Compile Include="Utils\Common\JsonUtils.cs" />
+    <Compile Include="Utils\Reflections\ReflectionHelper.cs" />
+    <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
+      <DependentUpon>Dialog_Logs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowsDialog\Dialog_Sponsor.xaml.cs">
+      <DependentUpon>Dialog_Sponsor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Actor.cs" />
+    <Compile Include="Entity\ActorInfo.cs" />
+    <Compile Include="Entity\Actress.cs" />
+    <Compile Include="Core\Scan\ScanTask.cs" />
+    <Compile Include="Entity\Base\ListNode.cs" />
+    <Compile Include="Entity\CommonSQL\AIFaceInfo.cs" />
+    <Compile Include="Entity\CommonSQL\Association.cs" />
+    <Compile Include="Entity\CommonSQL\SearchHistory.cs" />
+    <Compile Include="Entity\CommonSQL\AppConfig.cs" />
+    <Compile Include="Entity\CommonSQL\AppDatabases.cs" />
+    <Compile Include="Entity\CommonSQL\CommonImage.cs" />
+    <Compile Include="Entity\CommonSQL\TagStamp.cs" />
+    <Compile Include="Entity\Data\MetaData.cs" />
+    <Compile Include="Entity\Data\Comic.cs" />
+    <Compile Include="Entity\Data\Game.cs" />
+    <Compile Include="Entity\Data\Picture.cs" />
+    <Compile Include="Entity\Data\UrlCode.cs" />
+    <Compile Include="Entity\Data\Video.cs" />
+    <Compile Include="Entity\DetailMovie.cs" />
+    <Compile Include="Entity\Message.cs" />
+    <Compile Include="Entity\Movie.cs" />
+    <Compile Include="Entity\Notice.cs" />
+    <Compile Include="Entity\Serilizable.cs" />
+    <Compile Include="Core\Crawler\CrawlerServer.cs" />
+    <Compile Include="Entity\Server.cs" />
+    <Compile Include="Entity\CommonSQL\Magnet.cs" />
+    <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
+    <Compile Include="Entity\CommonSQL\Translation.cs" />
+    <Compile Include="Entity\VideoInfo.cs" />
+    <Compile Include="Entity\Theme.cs" />
+    <Compile Include="Core\Framework\SimpleORM\IMapper.cs" />
+    <Compile Include="Core\ThemeLoader.cs" />
+    <Compile Include="WindowsDialog\Dialog_LoadPage.xaml.cs">
+      <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowsDialog\Dialog_SelectActor.xaml.cs">
+      <DependentUpon>Dialog_SelectActor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowsDialog\Dialog_Upgrade.xaml.cs">
+      <DependentUpon>Dialog_Upgrade.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowsDialog\Dialog_Notice.xaml.cs">
+      <DependentUpon>Dialog_Notice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowsDialog\Dialog_NewMovie.xaml.cs">
+      <DependentUpon>Dialog_NewMovie.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowsDialog\Dialog_About.xaml.cs">
+      <DependentUpon>Dialog_About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Extern\JvedioLib.cs" />
+    <Compile Include="Global\FFmpeg.cs" />
+    <Compile Include="Global\Download.cs" />
+    <Compile Include="Global\Plugins.cs" />
+    <Compile Include="Mapper\AssociationMapper.cs" />
+    <Compile Include="Mapper\ActorMapper.cs" />
+    <Compile Include="Mapper\AIFaceMapper.cs" />
+    <Compile Include="Mapper\AppConfigMapper.cs" />
+    <Compile Include="Mapper\AppDatabaseMapper.cs" />
+    <Compile Include="Mapper\GameMapper.cs" />
+    <Compile Include="Mapper\ComicMapper.cs" />
+    <Compile Include="Mapper\TagStampMapper.cs" />
+    <Compile Include="Mapper\SearchHistoryMapper.cs" />
+    <Compile Include="Mapper\ComImagesMapper.cs" />
+    <Compile Include="Mapper\MagnetsMapper.cs" />
+    <Compile Include="Mapper\MetaDataMapper.cs" />
+    <Compile Include="Mapper\TranslationMapper.cs" />
+    <Compile Include="Mapper\UrlCodeMapper.cs" />
+    <Compile Include="Mapper\PictureMapper.cs" />
+    <Compile Include="Mapper\VideoMapper.cs" />
+    <Compile Include="Test\TestMapper.cs" />
+    <Compile Include="Test\TestUtils.cs" />
+    <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
+    <Compile Include="Utils\External\Baidu.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\IO\ClipBoard.cs" />
+    <Compile Include="Utils\IO\DirHelper.cs" />
+    <Compile Include="Utils\IO\FileHelper.cs" />
+    <Compile Include="Utils\IO\NFOHelper.cs" />
+    <Compile Include="Utils\IO\StreamHelper.cs" />
+    <Compile Include="Utils\Other\Converter.cs" />
+    <Compile Include="Core\Media\Gif.cs" />
+    <Compile Include="Core\Media\GifImage.cs" />
+    <Compile Include="Core\FFmpeg\ScreenShot.cs" />
+    <Compile Include="Utils\Media\MediaParse.cs" />
+    <Compile Include="Utils\Config\RecentWatchedConfig.cs" />
+    <Compile Include="Utils\Config\ScanPathConfig.cs" />
+    <Compile Include="Utils\Media\MediaInfo.cs" />
+    <Compile Include="Utils\Media\ImageHelper.cs" />
+    <Compile Include="WindowsDialog\Dialog_Thanks.xaml.cs">
+      <DependentUpon>Dialog_Thanks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\External\Translate.cs" />
+    <Compile Include="Entity\MySqlite.cs" />
+    <Compile Include="Utils\Data\SqlHelper.cs" />
+    <Compile Include="Utils\Visual\VisualHelper.cs" />
+    <Compile Include="ViewModels\VieModel_MetaDataEdit.cs" />
+    <Compile Include="ViewModels\VieModel_MetaData.cs" />
+    <Compile Include="Windows\Dialog\DialogInput.xaml.cs">
+      <DependentUpon>DialogInput.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Net\VideoDownLoader.cs" />
+    <Compile Include="Core\Media\ImageSlide.cs" />
+    <Compile Include="Logs\Logger.cs" />
+    <Compile Include="Entity\NFO.cs" />
+    <Compile Include="Core\Scan\ScanHelper.cs" />
+    <Compile Include="Windows\MetaData\Window_MetaDataEdit.xaml.cs">
+      <DependentUpon>Window_MetaDataEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MetaData\Window_MetaDatas.xaml.cs">
+      <DependentUpon>Window_MetaDatas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Dialog\Msgbox.xaml.cs">
+      <DependentUpon>Msgbox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Global\GlobalVariable.cs" />
+    <Compile Include="ViewModels\VieModel_Details.cs" />
+    <Compile Include="ViewModels\VieModel_Edit.cs" />
+    <Compile Include="ViewModels\VieModel_Main.cs" />
+    <Compile Include="ViewModels\VieModel_StartUp.cs" />
+    <Compile Include="ViewModels\VieModel_Settings.cs" />
+    <Compile Include="Windows\Window_ScanDetail.xaml.cs">
+      <DependentUpon>Window_ScanDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_Details.xaml.cs">
+      <DependentUpon>Window_Details.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_Filter.xaml.cs">
+      <DependentUpon>Window_Filter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_Edit.xaml.cs">
+      <DependentUpon>Window_Edit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_Settings.xaml.cs">
+      <DependentUpon>Window_Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowStartUp.xaml.cs">
+      <DependentUpon>WindowStartUp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_EditActor.xaml.cs">
+      <DependentUpon>Window_EditActor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_Progress.xaml.cs">
+      <DependentUpon>Window_Progress.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Window_ImageViewer.xaml.cs">
+      <DependentUpon>Window_ImageViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Dialog\Window_TagStamp.xaml.cs">
+      <DependentUpon>Window_TagStamp.xaml</DependentUpon>
+    </Compile>
+    <Page Include="CustomStyle\ChaoControls\Basic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomStyle\ChaoControls\Pagination.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomStyle\ChaoControls\PathRadioButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_Logs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_LoadPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_SelectActor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_Sponsor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_Upgrade.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_Notice.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_NewMovie.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_About.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_Thanks.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\MetaData\Window_MetaDataEdit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\MetaData\Window_MetaDatas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_ScanDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Filter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Window_EditActor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Progress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_ImageViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Dialog\DialogInput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Dialog\Msgbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Details.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Edit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Main.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowStartUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Dialog\Window_TagStamp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Windows\Window_Main.xaml.cs">
+      <DependentUpon>Window_Main.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Content Include="Reference\ChaoControls.Style.dll" />
+    <Content Include="Reference\CommonNet.dll" />
+    <Resource Include="Resources\Picture\雷达扫描.png" />
+    <Resource Include="Resources\Picture\网络信息.png" />
+    <Resource Include="Resources\Picture\欧美扫描.png" />
+    <Resource Include="Resources\Picture\网络磁盘扫描.png" />
+    <Resource Include="Resources\Picture\搜索.png" />
+    <Resource Include="Resources\Picture\新增.png" />
+    <Resource Include="Resources\Picture\导入.png" />
+    <Content Include="Reference\HtmlAgilityPack.dll" />
+    <Content Include="Reference\JvedioLib.dll" />
+    <Resource Include="Resources\Picture\asso.png" />
+    <Content Include="Data\Sql\app_cache.sql" />
+    <Content Include="Data\Sql\single_db_comic.sql" />
+    <Content Include="Data\Sql\single_db_game.sql" />
+    <Content Include="Data\Sql\single_db_picture.sql" />
+    <Content Include="Test\SqliteTest\main.py" />
+    <None Include="Data\config.ini" />
+    <None Include="Test\FFmpeg\command.md" />
+    <Resource Include="Resources\Picture\Empty.png" />
+    <Content Include="Data\Sql\app_configs.sql" />
+    <Content Include="Data\Sql\app_datas.sql" />
+    <Content Include="Data\Sql\single_db_actor.sql" />
+    <Content Include="Data\Sql\single_db_video.sql" />
+    <None Include="README.md" />
+    <Resource Include="Resources\Picture\logo.png" />
+    <Resource Include="Resources\menuitem\magnet.png" />
+    <Resource Include="Resources\Picture\NoPrinting_G.gif" />
+    <Resource Include="Resources\Picture\datalist_video.png" />
+    <Content Include="Data\x64\SQLite.Interop.dll" />
+    <Content Include="Data\x86\SQLite.Interop.dll" />
+    <Resource Include="Resources\Skin\white\classify.png" />
+    <Resource Include="Resources\Skin\black\classify.png" />
+    <Resource Include="Resources\Skin\black\hide.png" />
+    <Resource Include="Resources\Skin\white\hide.png" />
+    <Resource Include="Resources\Picture\其他.png" />
+    <Resource Include="Resources\Skin\white\add.png" />
+    <Resource Include="Resources\Skin\black\add.png" />
+    <Resource Include="Resources\Picture\视频.png" />
+    <Resource Include="Resources\Picture\图像.png" />
+    <Resource Include="Resources\Picture\收起.png" />
+    <Resource Include="Resources\Picture\NoPrinting_A.png" />
+    <Resource Include="Resources\Picture\NoPrinting_S.png" />
+    <Resource Include="Resources\Picture\NoPrinting_B.png" />
+    <Resource Include="Resources\Picture\筛选.png" />
+    <Resource Include="Resources\Skin\white\_score.png" />
+    <Resource Include="Resources\Skin\black\_score.png" />
+    <Resource Include="Resources\Picture\score.png" />
+    <Resource Include="Resources\Skin\white\runtime.png" />
+    <Resource Include="Resources\Skin\black\runtime.png" />
+    <Resource Include="Resources\Skin\white\create.png" />
+    <Resource Include="Resources\Skin\black\create.png" />
+    <Resource Include="Resources\Picture\sort_up.png" />
+    <Resource Include="Resources\Picture\sort_down.png" />
+    <Resource Include="Resources\Skin\black\selectmode.png" />
+    <Resource Include="Resources\Skin\white\selectmode.png" />
+    <Resource Include="Resources\Skin\white\download.png" />
+    <Resource Include="Resources\Skin\black\download.png" />
+    <Resource Include="Resources\Skin\white\image.png" />
+    <Resource Include="Resources\Skin\black\image.png" />
+    <Resource Include="Resources\Skin\white\search.png" />
+    <Resource Include="Resources\Skin\black\search.png" />
+    <Resource Include="Resources\Skin\white\menu.png" />
+    <Resource Include="Resources\Skin\black\menu.png" />
+    <Resource Include="Resources\Skin\black\arrow_up.png" />
+    <Resource Include="Resources\Skin\white\arrow_up.png" />
+    <Resource Include="Resources\Skin\white\arrow_down.png" />
+    <Resource Include="Resources\Skin\black\arrow_down.png" />
+    <Resource Include="Resources\Skin\white\dir.png" />
+    <Resource Include="Resources\Skin\black\dir.png" />
+    <Resource Include="Resources\Skin\black\like.png" />
+    <Resource Include="Resources\Skin\white\like.png" />
+    <Resource Include="Resources\Skin\black\recent.png" />
+    <Resource Include="Resources\Skin\white\recent.png" />
+    <Resource Include="Resources\Skin\white\all.png" />
+    <Resource Include="Resources\Skin\black\all.png" />
+    <Resource Include="Resources\Ico\github.png" />
+    <Resource Include="Resources\Ico\gitee.ico" />
+    <Resource Include="Resources\Picture\随机.png" />
+    <Resource Include="Resources\Picture\升级.png" />
+    <Resource Include="Resources\Picture\停止.png" />
+    <Resource Include="Resources\Picture\刷新文件夹.png" />
+    <Resource Include="Resources\Image\StartUp\库.png" />
+    <Resource Include="Resources\Image\StartUp\新建.png" />
+    <Resource Include="Resources\Image\StartUp\选项.png" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\Jvedio.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\AI_smallimage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\Title.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\status_success.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\status_initial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\status_fail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\hdcn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\flowout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\actor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\genre.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\label.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\fullscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\skin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\skin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\actor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\fullscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\genre.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\label.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\openfolder.png" />
+    <Resource Include="Resources\Skin\white\openfolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\clear.png" />
+    <Resource Include="Resources\Skin\white\clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\option.png" />
+    <Resource Include="Resources\Skin\black\option.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\openfolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\openwebsite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\download.png" />
+    <Resource Include="Resources\menuitem\edit.png" />
+    <Resource Include="Resources\menuitem\clear.png" />
+    <Resource Include="Resources\menuitem\del.png" />
+    <Resource Include="Resources\menuitem\like.png" />
+    <Resource Include="Resources\menuitem\copy.png" />
+    <Resource Include="Resources\menuitem\label.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\checked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\download.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\AI_actor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\AI.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\translate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\selectall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\menuitem\scrolltoend.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\right.png" />
+    <Resource Include="Resources\Skin\white\left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\right.png" />
+    <Resource Include="Resources\Skin\black\left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\triangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\detaildownload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\vedio.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\screenshot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\detaildownload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\triangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\close.png" />
+    <Resource Include="Resources\Skin\white\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\max.png" />
+    <Resource Include="Resources\Skin\black\max.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\white\min.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\black\min.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\subsection2.png" />
+    <Resource Include="Resources\Picture\subsection1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\manage.png" />
+    <Resource Include="Resources\Picture\statistic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\loaddatabase.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Picture\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reference\PInvoke.dll" />
+    <Content Include="Reference\QueryEngine.dll" />
+    <Content Include="Reference\UsnOperation.dll" />
+    <Content Include="Reference\WpfAnimatedGif.dll" />
+    <Resource Include="Resources\Jvedio.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reference\MediaInfo.dll" />
+    <Content Include="Reference\MediaInfoNET.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jvedio.Language\Jvedio.Language.csproj">
+      <Project>{d7a06c53-5742-4894-820e-3697f81a3785}</Project>
+      <Name>Jvedio.Language</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Jvedio.Style\Jvedio.Style.csproj">
+      <Project>{c398561c-9e61-4258-a9a0-1692832a6a95}</Project>
+      <Name>Jvedio.Style</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Jvedio.Utils\Jvedio.Utils.csproj">
+      <Project>{0eb5999e-c297-4a50-abb0-615bb92176dc}</Project>
+      <Name>Jvedio.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\MediaInfoNET.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\ChaoControls.Style.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\WpfAnimatedGif.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+
+</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>XCOPY  "$(ProjectDir)bin\Debug"  "$(SolutionDir)Release\public\File"    /E /Y /i
+XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i
+mkdir "$(ProjectDir)bin\Debug\plugins\crawlers"
+XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>
