@@ -38,14 +38,14 @@
 
     <chao:BaseWindow.Resources>
 
-  
- 
+
+
         <!--<local:MovieStampTypeToVisibilityConverter x:Key="MovieStampTypeToVisibilityConverter" />-->
         <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <local:NotEqualConverter x:Key="NotEqualConverter" />
         <local:MultiLargerConverter x:Key="MultiLargerConverter" />
         <local:MultiUnitConverter x:Key="MultiUnitConverter" />
- 
+
 
         <Style x:Key="ItemsControlVirtualizedWrapPanelStyle" TargetType="ItemsControl">
             <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True" />
@@ -2198,7 +2198,8 @@
                                                 FontSize="12"
                                                 Foreground="{DynamicResource Global.Foreground}"
                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                                Text="{Binding Message}" />
+                                                Text="{Binding Message}"
+                                                ToolTip="{Binding Message}" />
                                             <Button
                                                 Grid.Column="2"
                                                 Width="20"

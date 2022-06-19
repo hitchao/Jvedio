@@ -690,7 +690,7 @@ namespace Jvedio
                         if (Data != null && Data.Count > 0)
                         {
                             vieModel.Notices = new ObservableCollection<Notice>();
-                            foreach (Dictionary<string, string> dict in Data)
+                            foreach (var dict in Data)
                             {
                                 if (dict.ContainsKey("Type") && dict.ContainsKey("Message") && dict["Type"] != null && dict["Message"] != null)
                                 {
@@ -713,7 +713,6 @@ namespace Jvedio
                                         notice.Date = date;
                                         vieModel.Notices.Add(notice);
                                     }
-                                    return;
                                 }
                             }
                         }
