@@ -859,6 +859,16 @@ namespace Jvedio.Upgrade
                 try
                 {
                     sr = oldSqlite.RunSql($"select * from {table}");
+                    if (sr == null) continue;
+                    while (sr.Read())
+                    {
+                        try
+                        {
+                            list.Add(sr.GetString(0));
+                        }
+                        catch (Exception ex) { Logger.Error(ex); continue; }
+                    }
+                    datas.Add(table, list);
                 }
                 catch (Exception ex)
                 {
@@ -868,21 +878,8 @@ namespace Jvedio.Upgrade
                 finally
                 {
                     sr?.Close();
+                    sr = null;
                 }
-
-                if (sr == null) continue;
-                while (sr.Read())
-                {
-                    try
-                    {
-                        list.Add(sr.GetString(0));
-                    }
-                    catch (Exception ex) { Logger.Error(ex); continue; }
-                }
-
-                sr.Close();
-                sr = null;
-                datas.Add(table, list);
             }
             oldSqlite.CloseDB();
 
