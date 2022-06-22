@@ -39,7 +39,7 @@ namespace Jvedio
     /// <summary>
     /// Window_Details.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_Details : BaseWindow
+    public partial class Window_Details : Window
     {
 
 
@@ -82,11 +82,12 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            SetShadow();            // 设置阴影
             SetSkin();
             vieModel = new VieModel_Details();
             vieModel.QueryCompleted += async delegate
             {
-                SetStatus(true);    //设置状态
+                SetStatus(true);    // 设置状态
                 await LoadImage(vieModel.ShowScreenShot);//加载图片
                 renderMagnets();    // 显示磁力
                 ShowActor();
@@ -96,6 +97,12 @@ namespace Jvedio
             rootGrid.Focus();       // 设置键盘左右可切换
             InitDataIDs();          // 设置切换的影片列表
             OpenOtherUrlMenuItem.Items.Clear(); // 设置右键菜单
+        }
+
+
+        private void SetShadow()
+        {
+            ChaoControls.Style.Utils.DwmDropShadow.DropShadowToWindow(this);
         }
 
         private delegate void LoadActorDelegate(ActorInfo actor);

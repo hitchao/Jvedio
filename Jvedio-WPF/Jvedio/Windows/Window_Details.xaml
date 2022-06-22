@@ -1,4 +1,4 @@
-﻿<chao:BaseWindow
+﻿<Window
     x:Class="Jvedio.Window_Details"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,21 +12,23 @@
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    Title="{Binding CurrentVideo.VID, TargetNullValue={x:Static sys:String.Empty}}"
+    Title="{Binding CurrentVideo.Title, TargetNullValue=Detail}"
     Width="1230"
     Height="720"
+    AllowsTransparency="True"
     Background="{DynamicResource Window.Detail.Background}"
-    CanResize="False"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
     Foreground="{DynamicResource Global.Foreground}"
-    TitleHeight="0"
+    ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
+
     <Window.Resources>
 
 
- 
+
         <local:VidioTypeToIntConverter x:Key="VidioTypeToIntConverter" />
 
 
@@ -1624,4 +1626,4 @@
             </Grid>
         </Grid>
     </Grid>
-</chao:BaseWindow>
+</Window>
