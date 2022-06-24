@@ -36,6 +36,7 @@ namespace Jvedio
                 this.Height = window.Height;
                 this.Width = window.Width;
             }
+
         }
 
         public string Text
@@ -45,8 +46,7 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            searchBox.SelectAll();
-            searchBox.Focus();
+            SetInputFocus();
         }
 
 
@@ -68,5 +68,12 @@ namespace Jvedio
                 this.DialogResult = false;
         }
 
+
+
+        private void SetInputFocus()
+        {
+            searchBox.SetFocus();
+            searchBox.SelectAll();
+        }
     }
 }

@@ -49,7 +49,12 @@ namespace Jvedio.Core.Config.Base
                 object value = dict[key];
                 var prop = type.GetProperty(key);
                 if (prop == null || value == null) continue;
-                prop.SetValue(this, value, null);
+                try
+                {
+                    prop.SetValue(this, value, null);
+                }
+                catch { continue; }
+
             }
         }
 

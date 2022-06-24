@@ -215,6 +215,11 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public List<long> AssociationList { get; set; }
 
+
+        // 仅用于 NFO 导入的时候的图片地址
+        [TableField(exist: false)]
+        public List<string> ActorThumbs { get; set; }
+
         public bool toDownload()
         {
             return string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(WebUrl) || string.IsNullOrEmpty(ImageUrls);

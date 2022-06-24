@@ -99,6 +99,8 @@ namespace Jvedio.ViewModel
             {
                 ActorSortDict.Add(i, ActorSortDictList[i]);
             }
+
+
         }
 
         public VieModel_Main()
@@ -116,6 +118,13 @@ namespace Jvedio.ViewModel
             refreshVideoRenderToken();
             refreshActorRenderToken();
 
+            // 注册 
+            //GenreList.CollectionChanged += (sender, eventArgs) =>
+            //{
+            //    if (eventArgs..Cast<string>().Any(a => a.Equals("0005"))) resetEvent.Set();
+
+            //};
+            //resetEvent.WaitOne();
         }
 
 
@@ -1384,10 +1393,17 @@ namespace Jvedio.ViewModel
         //获得标签
         public async void GetLabelList()
         {
+            string like_sql = "";
+            if (!string.IsNullOrEmpty(SearchText))
+                like_sql = $" and LabelName like '%{SearchText.ToProperSql()}%' ";
+
+
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} GROUP BY LabelName ORDER BY Count DESC";
+                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                $"{(!string.IsNullOrEmpty(like_sql) ? like_sql : "")}" +
+                $"GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.select(sql);
             if (list != null)
             {
@@ -1413,7 +1429,7 @@ namespace Jvedio.ViewModel
 
 
 
-
+        private static AutoResetEvent resetEvent = new AutoResetEvent(false);
 
         public async void SetClassify(bool refresh = false)
         {
@@ -1429,19 +1445,23 @@ namespace Jvedio.ViewModel
 
                 Dictionary<string, long> genreDict = new Dictionary<string, long>();
                 string sql = $"SELECT Genre from metadata " +
-                    $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND Genre !='' ";
+                    $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND Genre !=''";
 
                 List<Dictionary<string, object>> lists = metaDataMapper.select(sql);
                 if (lists != null)
                 {
+                    string searchText = string.IsNullOrEmpty(SearchText) ? "" : SearchText;
+                    bool search = !string.IsNullOrEmpty(searchText);
+
                     foreach (Dictionary<string, object> item in lists)
                     {
                         if (!item.ContainsKey("Genre")) continue;
                         string genre = item["Genre"].ToString();
                         if (string.IsNullOrEmpty(genre)) continue;
-                        List<string> genres = genre.Split(GlobalVariable.Separator).ToList();
+                        List<string> genres = genre.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         foreach (string g in genres)
                         {
+                            if (search && g.IndexOf(searchText) < 0) continue;
                             if (genreDict.ContainsKey(g))
                                 genreDict[g] = genreDict[g] + 1;
 
@@ -1462,6 +1482,8 @@ namespace Jvedio.ViewModel
 
                 SetClassifyLoadingStatus(true);
                 GenreList = new ObservableCollection<string>();
+                GenreList.Clear();
+                await Task.Delay(10);
                 if (ordered != null)
                 {
                     foreach (var key in ordered.Keys)
@@ -1516,10 +1538,17 @@ namespace Jvedio.ViewModel
 
         public List<string> GetListByField(string field)
         {
+            string like_sql = "";
+            if (!string.IsNullOrEmpty(SearchText))
+                like_sql = $" and {field} like '%{SearchText.ToProperSql()}%' ";
+
+
+
             List<string> result = new List<string>();
             string sql = $"SELECT {field},Count({field}) as Count from metadata " +
                 "JOIN metadata_video on metadata.DataID=metadata_video.DataID " +
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
+                $"{(!string.IsNullOrEmpty(like_sql) ? like_sql : "")}" +
                 $"GROUP BY {field} ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.select(sql);
             if (list != null)

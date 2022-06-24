@@ -480,6 +480,15 @@ namespace Jvedio
 
         }
 
+
+        private void SetListenStatus()
+        {
+            if (GlobalConfig.Settings.ListenEnabled)
+            {
+                // 开启端口监听
+            }
+        }
+
         private void SavePath()
         {
             Dictionary<string, string> dict = (Dictionary<string, string>)vieModel.PicPaths[PathType.RelativeToData.ToString()];
@@ -1286,6 +1295,7 @@ namespace Jvedio
 
             GlobalConfig.Settings.PicPathMode = vieModel.PicPathMode;
             GlobalConfig.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
+            GlobalConfig.Settings.SkipExistImage = vieModel.SkipExistImage;
             GlobalConfig.Settings.OverrideInfo = vieModel.OverrideInfo;
             GlobalConfig.Settings.IgnoreCertVal = vieModel.IgnoreCertVal;
             GlobalConfig.Settings.AutoBackup = vieModel.AutoBackup;
@@ -1326,6 +1336,9 @@ namespace Jvedio
             GlobalConfig.RenameConfig.FormatString = vieModel.FormatString;
 
 
+            // 监听
+            GlobalConfig.Settings.ListenEnabled = vieModel.ListenEnabled;
+            GlobalConfig.Settings.ListenPort = vieModel.ListenPort;
 
         }
 

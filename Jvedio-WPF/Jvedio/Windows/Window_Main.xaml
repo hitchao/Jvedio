@@ -38,6 +38,11 @@
 
     <chao:BaseWindow.Resources>
 
+        <ContextMenu x:Key="TextBlockContextMenu">
+            <MenuItem Click="CopyTextBlock" Header="{x:Static lang:Resources.Copy}" />
+        </ContextMenu>
+
+
 
 
         <!--<local:MovieStampTypeToVisibilityConverter x:Key="MovieStampTypeToVisibilityConverter" />-->
@@ -558,6 +563,9 @@
             TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="10,10" />
         </Style>
+
+
+
 
 
 
@@ -3736,9 +3744,11 @@
 
                                                             <Border Style="{StaticResource RoundBorderStyle}">
                                                                 <TextBlock
-                                                                    MouseUp="ShowSameString"
+                                                                    ContextMenu="{StaticResource TextBlockContextMenu}"
+                                                                    MouseLeftButtonUp="ShowSameString"
                                                                     Style="{StaticResource GenreTextBlock}"
                                                                     Text="{Binding}" />
+
                                                             </Border>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
@@ -3773,7 +3783,8 @@
 
                                                             <Border Style="{StaticResource RoundBorderStyle}">
                                                                 <TextBlock
-                                                                    MouseUp="ShowSameString"
+                                                                    ContextMenu="{StaticResource TextBlockContextMenu}"
+                                                                    MouseLeftButtonUp="ShowSameString"
                                                                     Style="{StaticResource GenreTextBlock}"
                                                                     Text="{Binding}" />
                                                             </Border>
@@ -3807,7 +3818,8 @@
                                                         <DataTemplate>
                                                             <Border Style="{StaticResource RoundBorderStyle}">
                                                                 <TextBlock
-                                                                    MouseUp="ShowSameString"
+                                                                    ContextMenu="{StaticResource TextBlockContextMenu}"
+                                                                    MouseLeftButtonUp="ShowSameString"
                                                                     Style="{StaticResource GenreTextBlock}"
                                                                     Text="{Binding}" />
                                                             </Border>
@@ -3843,7 +3855,8 @@
 
                                                             <Border Style="{StaticResource RoundBorderStyle}">
                                                                 <TextBlock
-                                                                    MouseUp="ShowSameString"
+                                                                    ContextMenu="{StaticResource TextBlockContextMenu}"
+                                                                    MouseLeftButtonUp="ShowSameString"
                                                                     Style="{StaticResource GenreTextBlock}"
                                                                     Text="{Binding}" />
                                                             </Border>

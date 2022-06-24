@@ -340,6 +340,21 @@ namespace Jvedio.Entity
                 movie.actor = string.Join(sep, actors);
             }
 
+            // 演员头像地址
+            XmlNodeList thumbNodes = TrySelectNode(doc, "/movie/actor/thumb");
+            List<string> thumbs = new List<string>();
+            if (thumbNodes?.Count > 0)
+            {
+                foreach (XmlNode item in thumbNodes)
+                {
+                    if (!string.IsNullOrEmpty(item.InnerText))
+                        thumbs.Add(item.InnerText);
+                    else
+                        thumbs.Add(GlobalVariable.DEFAULT_NULL_STRING);
+                }
+                movie.actressimageurl = string.Join(sep, thumbs);
+            }
+
             //fanart
             XmlNodeList fanartNodes = TrySelectNode(doc, "/movie/fanart/thumb");
             List<string> extraimageurls = new List<string>();
@@ -417,6 +432,9 @@ namespace Jvedio.Entity
             video.WebType = source.Replace("jav", "").Replace("fc2adult", "fc2");
             video.WebUrl = sourceurl;
             //video.ImageUrls = json;   // 让 ImageUrls 为空，这样子导入旧的数据库后就会自动同步新信息
+            video.ActorNames = actor;   // 演员
+            video.ActorThumbs = string.IsNullOrEmpty(actressimageurl) ? new List<string>()
+                : actressimageurl.Split(GlobalVariable.Separator).ToList();
             return video;
         }
 

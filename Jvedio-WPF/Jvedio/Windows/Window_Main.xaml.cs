@@ -892,39 +892,28 @@ namespace Jvedio
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            if (!IsToUpdate && GlobalConfig.Settings.CloseToTaskBar && this.IsVisible == true)
+            //停止所有任务
+            try
             {
-                //vieModel.HideToIcon = true;
-                //HideAllWindow(false);
-
-
-            }
-            else
-            {
-
-
-                //停止所有任务
-                try
+                // todo 下载程序
+                if (vieModel.DownLoadTasks != null)
                 {
-                    // todo 下载程序
-                    if (vieModel.DownLoadTasks != null)
+                    foreach (var item in vieModel.DownLoadTasks)
                     {
-                        foreach (var item in vieModel.DownLoadTasks)
-                        {
-                            item.Cancel();
-                        }
+                        item.Cancel();
                     }
-                    LoadSearchCTS?.Cancel();
-                    scan_cts?.Cancel();
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
-                // 关闭所有窗口
-                App.Current.Shutdown();
+                LoadSearchCTS?.Cancel();
+                scan_cts?.Cancel();
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            // 关闭所有窗口
+            App.Current.Shutdown();
+
         }
 
         public void FadeOut()
@@ -945,8 +934,15 @@ namespace Jvedio
 
         public override void CloseWindow(object sender, RoutedEventArgs e)
         {
-            FadeOut();
-            base.CloseWindow(sender, e);
+            if (!IsToUpdate && GlobalConfig.Settings.CloseToTaskBar && this.IsVisible == true)
+            {
+                SetWindowVisualStatus(false);
+            }
+            else
+            {
+                FadeOut();
+                base.CloseWindow(sender, e);
+            }
         }
 
         public void MinWindow(object sender, RoutedEventArgs e)
@@ -1048,7 +1044,7 @@ namespace Jvedio
         {
             if (e.Key == Key.Enter)
             {
-                doSearch(sender, null);
+                //doSearch(sender, null);
             }
             else if (e.Key == Key.Down)
             {
@@ -2638,15 +2634,16 @@ namespace Jvedio
             Properties.Settings.Default.EditMode = false;
             Properties.Settings.Default.ActorEditMode = false;
             Properties.Settings.Default.Save();
+            GlobalConfig.Main?.Save();
+            GlobalConfig.Settings?.Save();
+
 
             if (!IsToUpdate && GlobalConfig.Settings.CloseToTaskBar && this.IsVisible == true)
             {
-                e.Cancel = true;
                 SetWindowVisualStatus(false);
+                e.Cancel = true;
             }
 
-            GlobalConfig.Main?.Save();
-            GlobalConfig.Settings?.Save();
 
         }
 
@@ -3483,6 +3480,7 @@ namespace Jvedio
         private void ClassifyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             vieModel.SetClassify();
+            Console.WriteLine("ClassifyTabControl_SelectionChanged");
         }
 
 
@@ -3871,11 +3869,21 @@ namespace Jvedio
                 GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
                 await vieModel.Query((SearchType)searchTabControl.SelectedIndex);
             }
-            else
+            else if (vieModel.TabSelectedIndex == 1)
             {
                 // 搜寻演员
                 vieModel.SearchingActor = true;
                 vieModel.SelectActor();
+            }
+            else if (vieModel.TabSelectedIndex == 2)
+            {
+                // 搜寻标签
+                vieModel.GetLabelList();
+            }
+            else if (vieModel.TabSelectedIndex == 3)
+            {
+                // 搜寻分类
+                vieModel.SetClassify(true);
             }
         }
 
@@ -4819,7 +4827,18 @@ namespace Jvedio
             FileHelper.TryOpenSelectPath(path);
         }
 
-
+        private void CopyTextBlock(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+            TextBlock textBlock = contextMenu.PlacementTarget as TextBlock;
+            if (textBlock != null)
+            {
+                string txt = textBlock.Text;
+                if (!string.IsNullOrEmpty(txt))
+                    ClipBoard.TrySetDataObject(txt);
+            }
+        }
     }
 
 }

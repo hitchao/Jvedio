@@ -101,6 +101,7 @@ namespace Jvedio.Core.Scan
 
 
         private List<Video> existVideos { get; set; }
+        private List<ActorInfo> existActors { get; set; }
 
         public override void doWrok()
         {
@@ -316,8 +317,9 @@ namespace Jvedio.Core.Scan
             if (import?.Count <= 0) return;
 
             existVideos = GetExistVideos();
+            existActors = actorMapper.selectList();
 
-
+            // 复制图片
             if (GlobalConfig.ScanConfig.CopyNFOPicture)
             {
                 Dictionary<string, object> PicPaths = GlobalConfig.Settings.PicPaths;
@@ -393,6 +395,7 @@ namespace Jvedio.Core.Scan
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
                     ScanResult.Update.Add(video.Path);
+                    HandleActor(video);
                 }
 
             }
@@ -401,14 +404,40 @@ namespace Jvedio.Core.Scan
             videoMapper.updateBatch(toUpdate, NFOUpdateVideoProps);
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
             metaDataMapper.updateBatch(toUpdateData, NFOUpdateMetaProps);
+
             // 2. 剩下的都是需要导入的
             InsertData(import);
+        }
 
-
-
-
-
-
+        private void HandleActor(Video video)
+        {
+            // 更新演员
+            if (!string.IsNullOrEmpty(video.ActorNames))
+            {
+                List<string> list = video.ActorNames.Split(GlobalVariable.Separator).ToList();
+                List<string> urls = video.ActorThumbs;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    string name = list[i];
+                    string url = i < urls.Count ? urls[i] : "";
+                    ActorInfo actorInfo = existActors?.Where(arg => arg.ActorName.Equals(name)).FirstOrDefault();
+                    if (actorInfo == null || actorInfo.ActorID <= 0)
+                    {
+                        actorInfo = new ActorInfo();
+                        actorInfo.ActorName = name;
+                        actorInfo.ImageUrl = url;
+                        actorMapper.insert(actorInfo);
+                    }
+                    else
+                    {
+                        actorInfo.ImageUrl = url;
+                        actorMapper.updateFieldById("ImageUrl", url, actorInfo.ActorID);
+                    }
+                    // 保存信息
+                    string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
+                    metaDataMapper.executeNonQuery(sql);
+                }
+            }
         }
 
 
@@ -472,6 +501,9 @@ namespace Jvedio.Core.Scan
                 videoMapper.executeNonQuery("END TRANSACTION;");
                 GlobalVariable.DataBaseBusy = false;
             }
+
+            foreach (var video in toInsert)
+                HandleActor(video);
 
         }
 

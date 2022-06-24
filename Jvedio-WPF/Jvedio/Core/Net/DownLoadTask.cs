@@ -305,6 +305,7 @@ namespace Jvedio.Core.Net
                                 {
                                     actorInfo = new ActorInfo();
                                     actorInfo.ActorName = actorName;
+                                    actorInfo.ImageUrl = url;
                                     actorMapper.insert(actorInfo);
                                 }
                                 // 保存信息

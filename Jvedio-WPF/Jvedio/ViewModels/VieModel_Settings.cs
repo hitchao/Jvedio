@@ -459,6 +459,19 @@ namespace Jvedio.ViewModel
             }
         }
 
+
+        private bool _SkipExistImage = GlobalConfig.Settings.SkipExistImage;
+
+        public bool SkipExistImage
+        {
+            get { return _SkipExistImage; }
+            set
+            {
+                _SkipExistImage = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private bool _OverrideInfo = GlobalConfig.Settings.OverrideInfo;
 
         public bool OverrideInfo
@@ -967,6 +980,37 @@ namespace Jvedio.ViewModel
             }
         }
 
+
+
+        #endregion
+
+
+        #region "端口"
+
+
+        private bool _ListenEnabled = GlobalConfig.Settings.ListenEnabled;
+
+        public bool ListenEnabled
+        {
+            get { return _ListenEnabled; }
+            set
+            {
+                _ListenEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _ListenPort = GlobalConfig.Settings.ListenPort;
+
+        public string ListenPort
+        {
+            get { return _ListenPort; }
+            set
+            {
+                _ListenPort = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         #endregion

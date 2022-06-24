@@ -42,6 +42,7 @@ namespace Jvedio.Core.WindowConfig
         public string PluginEnabledJson { get; set; }
         public Dictionary<string, bool> PluginEnabled;
         public bool DownloadPreviewImage { get; set; }
+        public bool SkipExistImage { get; set; }
         public bool OverrideInfo { get; set; }
         public bool IgnoreCertVal { get; set; }
         public bool AutoHandleHeader { get; set; }
@@ -76,6 +77,10 @@ namespace Jvedio.Core.WindowConfig
         public bool PlayableIndexCreated { get; set; }
         public bool PictureIndexCreated { get; set; }
         public bool AutoCreatePlayableIndex { get; set; }
+
+        // 端口
+        public bool ListenEnabled { get; set; }
+        public string ListenPort { get; set; }
 
     }
 }

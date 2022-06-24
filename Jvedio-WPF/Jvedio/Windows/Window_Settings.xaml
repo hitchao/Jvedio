@@ -1286,6 +1286,10 @@
                             IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
                         <CheckBox
                             Margin="20,5"
+                            Content="跳过已下载的图片"
+                            IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="20,5"
                             Content="强制同步信息（不推荐）"
                             IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
                         <CheckBox
@@ -3002,7 +3006,27 @@
 
                 </StackPanel>
             </TabItem>
+            <TabItem
+                Background="Transparent"
+                FontSize="15"
+                Header="网络">
+                <StackPanel Orientation="Vertical">
 
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Content="开启端口监听（未来实现）" IsChecked="{Binding ListenEnabled, Mode=TwoWay}" />
+
+                        <chao:SearchBox
+                            Width="100"
+                            Foreground="{DynamicResource Global.Foreground}"
+                            PlaceHolder="端口号"
+                            PlaceHolderForeground="{DynamicResource Global.Sub.Foreground}"
+                            Style="{StaticResource BaseSearchTextBox}"
+                            Text="{Binding ListenPort, Mode=TwoWay}"
+                            Visibility="{Binding ListenEnabled, Mode=OneWay, Converter={StaticResource bool2VisibilityConverter}}" />
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
         </TabControl>
 
         <Grid Grid.Row="1" Background="{DynamicResource Window.Title.Background}">

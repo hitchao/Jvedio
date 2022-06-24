@@ -106,6 +106,7 @@ namespace Jvedio
 
         /* 分隔符 */
         public static char Separator { get; set; }
+        public static string DEFAULT_NULL_STRING { get; set; }
 
         //禁止的文件名符号 https://docs.microsoft.com/zh-cn/previous-versions/s6feh8zw(v=vs.110)?redirectedfrom=MSDN
         public static char[] BANFILECHAR { get; set; }
@@ -247,6 +248,7 @@ namespace Jvedio
             DefaultBigImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
             DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
             Separator = (char)007;
+            DEFAULT_NULL_STRING = "NULL";
             FadeInterval = TimeSpan.FromMilliseconds(150);//淡入淡出时间
             FontExt = new[] { ".otf", ".ttf" };
             TagStamps = new List<TagStamp>();

@@ -42,6 +42,7 @@ namespace Jvedio.Entity
         public string ExtraInfo { get; set; }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
+        public string ImageUrl { get; set; }
 
         public ActorInfo()
         {

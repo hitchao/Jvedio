@@ -33,6 +33,7 @@ using Jvedio.Utils.Media;
 using static Jvedio.Utils.Visual.VisualHelper;
 using static Jvedio.Utils.Media.ImageHelper;
 using Jvedio.Logs;
+using Jvedio.Core.Crawler;
 
 namespace Jvedio
 {
@@ -121,11 +122,38 @@ namespace Jvedio
                     //加载图片
                     string imagePath = actorInfo.getImagePath(vieModel.CurrentVideo.Path);
                     BitmapImage smallimage = ReadImageFromFile(imagePath);
-                    if (smallimage == null) smallimage = DefaultActorImage;
+                    if (smallimage == null)
+                    {
+                        smallimage = DefaultActorImage;
+                        //// 根据地址下载图片
+                        //if (!string.IsNullOrEmpty(actorInfo.ImageUrl))
+                        //{
+                        //    string url = actorInfo.ImageUrl;
+                        //    string ext = Path.GetExtension(url);
+                        //    string dir = Path.GetDirectoryName(imagePath);
+                        //    string name = Path.GetFileNameWithoutExtension(imagePath);
+                        //    string saveFileName = Path.Combine(dir, name + ext);
+
+                        //    Task.Run(() =>
+                        //    {
+                        //        StartDownLoadActorImage();
+                        //    });
+
+                        //}
+
+                    }
                     actorInfo.SmallImage = smallimage;
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo);
                 }
+
+
+
             }
+        }
+
+        private async void StartDownLoadActorImage()
+        {
+            //await HttpHelper.AsyncDownLoadFile(actorInfo.ImageUrl, CrawlerHeader.Default);
         }
 
 

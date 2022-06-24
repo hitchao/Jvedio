@@ -12,6 +12,7 @@
     AllowsTransparency="True"
     Background="Transparent"
     ContentRendered="Window_ContentRendered"
+    Focusable="True"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     WindowStyle="None"
