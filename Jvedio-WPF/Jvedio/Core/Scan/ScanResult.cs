@@ -13,7 +13,7 @@ namespace Jvedio.Core.Scan
 
         public ScanResult()
         {
-            Update = new List<string>();
+            Update = new Dictionary<string, string>();
             Import = new List<string>();
             NotImport = new Dictionary<string, string>();
             FailNFO = new List<string>();
@@ -22,7 +22,7 @@ namespace Jvedio.Core.Scan
         }
 
 
-        public List<string> Update { get; set; }
+        public Dictionary<string, string> Update { get; set; }
         public List<string> Logs { get; set; }
         public List<string> Import { get; set; }
 
@@ -34,6 +34,7 @@ namespace Jvedio.Core.Scan
 
         public string ScanDate { get; set; }
         public long ElapsedMilliseconds { get; set; }
+        public long TotalCount { get; set; }
 
 
     }

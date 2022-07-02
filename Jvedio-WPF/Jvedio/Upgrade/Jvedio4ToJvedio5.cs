@@ -501,18 +501,12 @@ namespace Jvedio.Upgrade
                 foreach (Video video in videos)
                 {
                     // 高清
-                    if (Identify.IsHDV(video.Size) || video.Genre?.IndexOfAnyString(TagStrings_HD) >= 0 ||
-                    video.Series?.IndexOfAnyString(TagStrings_HD) >= 0 || video.Label?.IndexOfAnyString(TagStrings_HD) >= 0)
-                    {
+                    if (video.IsHDV())
                         list.Add($"({video.DataID},1)");
-                    }
-
                     // 中文
-                    if (Identify.IsCHS(video.Path) || video.Genre?.IndexOfAnyString(TagStrings_Translated) >= 0 ||
-                    video.Series?.IndexOfAnyString(TagStrings_Translated) >= 0 || video.Label?.IndexOfAnyString(TagStrings_Translated) >= 0)
-                    {
+                    if (video.IsCHS())
                         list.Add($"({video.DataID},2)");
-                    }
+
                 }
                 if (list.Count > 0)
                 {

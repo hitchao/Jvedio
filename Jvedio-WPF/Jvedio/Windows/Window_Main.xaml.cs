@@ -190,7 +190,7 @@ namespace Jvedio
         private void initTagStamp()
         {
             GlobalVariable.TagStamps = tagStampMapper.getAllTagStamp();
-            vieModel.initCurrentTagStamps();
+            vieModel.InitCurrentTagStamps();
         }
 
         private void BindingEventAfterRender()
@@ -3077,7 +3077,7 @@ namespace Jvedio
             vieModel.IsRefresh = true;
             vieModel.Statistic();
             vieModel.Reset();
-            vieModel.initCurrentTagStamps();
+            vieModel.InitCurrentTagStamps();
 
             //vieModel.InitLettersNavigation();
             //vieModel.GetFilterInfo();
@@ -3409,17 +3409,58 @@ namespace Jvedio
                         };
                         menu.Click += (s, ev) =>
                         {
-                            string sql = $"insert or replace into metadata_to_tagstamp (DataID,TagID)  values ({dataID},{arg.TagID})";
-                            tagStampMapper.executeNonQuery(sql);
-                            initTagStamp();
-                            RefreshTagStamp(dataID, arg.TagID);
-
+                            long TagID = arg.TagID;
+                            AddTagHandler(menu, TagID);
                         };
                         menuItem.Items.Add(menu);
-
                     });
                 }
             }
+
+        }
+
+
+        private void AddTagHandler(object sender, long tagID)
+        {
+            handleMenuSelected(sender, 1);
+            // 构造 sql 语句
+            if (vieModel.SelectedVideo?.Count <= 0) return;
+            List<string> values = new List<string>();
+            foreach (var item in vieModel.SelectedVideo)
+            {
+                values.Add($"({item.DataID},{tagID})");
+            }
+            if (values.Count <= 0) return;
+            string sql = $"insert or replace into metadata_to_tagstamp (DataID,TagID)  values {(string.Join(",", values))}";
+            tagStampMapper.executeNonQuery(sql);
+            initTagStamp();
+
+            // 更新主界面
+            ObservableCollection<Video> datas = vieModel.CurrentVideoList;
+            if (AssoDataPopup.IsOpen) datas = vieModel.ViewAssociationDatas;
+
+
+
+
+            foreach (var item in vieModel.SelectedVideo)
+            {
+                long dataID = item.DataID;
+                if (dataID <= 0 || tagID <= 0 || datas == null || datas.Count == 0) continue;
+                for (int i = 0; i < datas.Count; i++)
+                {
+                    if (datas[i].DataID == dataID)
+                    {
+                        Video video = datas[i];
+                        refreshTagStamp(ref video, tagID);
+                        datas[i] = null;
+                        datas[i] = video;
+                        break;
+                    }
+                }
+            }
+            if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+
+
 
         }
 
@@ -4555,7 +4596,7 @@ namespace Jvedio
                         break;
                     }
                 }
-                vieModel.initCurrentTagStamps();
+                vieModel.InitCurrentTagStamps();
             }
 
         }

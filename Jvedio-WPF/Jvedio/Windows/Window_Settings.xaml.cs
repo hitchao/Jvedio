@@ -452,11 +452,9 @@ namespace Jvedio
                 int idx = DatabaseComboBox.SelectedIndex;
 
                 List<AppDatabase> appDatabases = windowMain?.vieModel.DataBases.ToList();
-
-                // todo
                 if (appDatabases != null && idx < windowMain.vieModel.DataBases.Count)
                 {
-                    windowMain.vieModel.DataBases[idx] = db;
+                    windowMain.vieModel.DataBases[idx].ScanPath = db.ScanPath;
                 }
             }
 

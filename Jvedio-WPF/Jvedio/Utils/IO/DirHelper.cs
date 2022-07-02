@@ -24,25 +24,31 @@ namespace Jvedio.Utils.IO
 
         }
 
-        public static void TryCopy(string sourcePath, string targetPath)
+        public static bool TryCopy(string sourcePath, string targetPath, Action<string> errorBack = null, Action<string> doWork = null)
         {
             try
             {
                 foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
                 {
+                    doWork?.Invoke($"创建文件夹：{dirPath}");
                     Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
                 }
 
                 //Copy all the files & Replaces any files with the same name
                 foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
                 {
-                    File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+                    string target = newPath.Replace(sourcePath, targetPath);
+                    doWork?.Invoke($"复制文件：{newPath} 到 {target}");
+                    File.Copy(newPath, target, true);
                 }
+                return true;
             }
             catch (Exception ex)
             {
+                errorBack?.Invoke(ex.Message);
                 Logger.LogF(ex);
             }
+            return false;
 
         }
 

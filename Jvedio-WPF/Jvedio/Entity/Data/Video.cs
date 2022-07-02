@@ -711,5 +711,20 @@ namespace Jvedio.Entity
         }
 
 
+        public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
+
+
+        public bool IsHDV()
+        {
+            return Identify.IsHDV(Size) || Identify.IsHDV(Path) || Genre?.IndexOfAnyString(GlobalVariable.TagStrings_HD) >= 0 ||
+                    Series?.IndexOfAnyString(GlobalVariable.TagStrings_HD) >= 0 || Label?.IndexOfAnyString(GlobalVariable.TagStrings_HD) >= 0;
+        }
+
+        public bool IsCHS()
+        {
+            return Identify.IsCHS(Path) || Genre?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0 ||
+                     Series?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0 || Label?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0;
+        }
+
     }
 }

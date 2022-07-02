@@ -90,14 +90,14 @@ namespace Jvedio
                 };
                 details.Add(detail);
             }
-            foreach (var item in ScanResult.Update)
+            foreach (var key in ScanResult.Update.Keys)
             {
                 ScanDetail detail = new ScanDetail()
                 {
                     Handle = "更新",
-                    FilePath = item,
-                    Extension = getExtension(item),
-                    Reason = "",
+                    FilePath = key,
+                    Extension = getExtension(key),
+                    Reason = ScanResult.Update[key],
                 };
                 details.Add(detail);
             }
@@ -115,6 +115,7 @@ namespace Jvedio
             dataGrid.ItemsSource = details;
 
 
+            total.Text = ScanResult.TotalCount.ToString();
             import.Text = ScanResult.Import.Count.ToString();
             notImport.Text = ScanResult.NotImport.Count.ToString();
             update.Text = ScanResult.Update.Count.ToString();
@@ -154,7 +155,7 @@ namespace Jvedio
                 {
                     string path = saveFileDialog.FileName;
                     if (!path.ToLower().EndsWith(".txt")) path += ".txt";
-                    File.WriteAllText(path, generateOutput());
+                    File.WriteAllText(path, GenerateOutput());
                     MessageCard.Success(Jvedio.Language.Resources.Message_Success);
                 }
                 catch (Exception ex)
@@ -165,17 +166,21 @@ namespace Jvedio
             }
         }
 
-        private string generateOutput()
+        private string GenerateOutput()
         {
             StringBuilder builder = new StringBuilder();
-            List<StackPanel> stackPanels = wrapPanel.Children.OfType<StackPanel>().ToList();
-            for (int i = 0; i < stackPanels.Count; i++)
+            List<Border> borders = wrapPanel.Children.OfType<Border>().ToList();
+            for (int i = 0; i < borders.Count; i++)
             {
-                StackPanel stackPanel = stackPanels[i];
-                List<TextBlock> textBlocks = stackPanel.Children.OfType<TextBlock>().ToList();
-                for (int j = 0; j < textBlocks.Count; j++)
+                Border border = borders[i];
+                UIElementCollection children = (border.Child as Grid).Children;
+                foreach (var item in children)
                 {
-                    builder.Append(textBlocks[j].Text);
+                    if (item.GetType().GetProperty("Text") != null)
+                    {
+                        string text = item.GetType().GetProperty("Text").GetValue(item).ToString();
+                        builder.Append(text + " ");
+                    }
                 }
                 builder.Append(Environment.NewLine);
 

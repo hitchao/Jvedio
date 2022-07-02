@@ -1163,9 +1163,9 @@ namespace Jvedio.ViewModel
         }
 
 
-        public void initCurrentTagStamps()
+        public void InitCurrentTagStamps()
         {
-            List<Dictionary<string, object>> list = tagStampMapper.select(TagStampMapper.AllTagSql);
+            List<Dictionary<string, object>> list = tagStampMapper.select(TagStampMapper.GetTagSql());
             List<TagStamp> tagStamps = new List<TagStamp>();
             if (list?.Count > 0)
                 tagStamps = tagStampMapper.toEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);

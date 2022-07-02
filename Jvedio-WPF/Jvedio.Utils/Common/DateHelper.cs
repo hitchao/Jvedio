@@ -34,11 +34,43 @@ namespace Jvedio.Utils.Common
             try
             {
                 TimeSpan t = TimeSpan.FromMilliseconds(ms);
-                result = string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms",
+
+                if (ms < 100)
+                {
+                    result = string.Format("{0} ms", t.Milliseconds);
+                }
+                else if (ms < 1000)
+                {
+                    result = string.Format("{3:D3} ms",
                                         t.Hours,
                                         t.Minutes,
                                         t.Seconds,
                                         t.Milliseconds);
+                }
+                else if (ms < 60 * 1000)
+                {
+                    result = string.Format("{2:D2}s:{3:D3}ms",
+                                        t.Hours,
+                                        t.Minutes,
+                                        t.Seconds,
+                                        t.Milliseconds);
+                }
+                else if (ms < 60 * 60 * 1000)
+                {
+                    result = string.Format("{1:D2}m:{2:D2}s:{3:D3}ms",
+                                        t.Hours,
+                                        t.Minutes,
+                                        t.Seconds,
+                                        t.Milliseconds);
+                }
+                else if (ms < 60 * 60 * 60 * 1000)
+                {
+                    result = string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms",
+                                        t.Hours,
+                                        t.Minutes,
+                                        t.Seconds,
+                                        t.Milliseconds);
+                }
             }
             catch (Exception ex)
             {

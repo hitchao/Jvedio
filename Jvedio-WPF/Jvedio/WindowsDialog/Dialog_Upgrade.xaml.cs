@@ -23,6 +23,7 @@ namespace Jvedio
     public partial class Dialog_Upgrade : ChaoControls.Style.BaseDialog, System.ComponentModel.INotifyPropertyChanged
     {
 
+        private static string UpgradeProgram = "Jvedio.Update.exe";
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -168,16 +169,28 @@ namespace Jvedio
             {
                 button.Content = Jvedio.Language.Resources.StopUpgrade;
 
-                UpgradeHelper.onCompleted += (s, _) =>
+                UpgradeHelper.onCompleted += async (s, _) =>
                 {
                     IsUpgrading = false;
-                    //执行命令
-                    string arg = $"xcopy /y/e \"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp")}\" \"{AppDomain.CurrentDomain.BaseDirectory}\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\"";
-                    if (!Properties.Settings.Default.Debug) arg += " &exit";
 
-                    StreamHelper.TryWrite("upgrade.bat", arg);
-                    FileHelper.TryOpenFile("upgrade.bat");
-                    Application.Current.Shutdown();
+                    // 调用 Jvedio.Update.exe
+                    ////执行命令
+                    //string arg = $"xcopy /y/e \"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp")}\" \"{AppDomain.CurrentDomain.BaseDirectory}\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\"";
+                    //if (!Properties.Settings.Default.Debug) arg += " &exit";
+
+                    //StreamHelper.TryWrite("upgrade.bat", arg);
+                    //FileHelper.TryOpenFile("upgrade.bat");
+                    if (!File.Exists(UpgradeProgram))
+                    {
+                        MessageCard.Error($"不存在 {UpgradeProgram} 更新取消");
+                    }
+                    else
+                    {
+                        FileHelper.TryOpenFile(UpgradeProgram);
+                        await Task.Delay(1000);
+                        Application.Current.Shutdown();
+                    }
+
                 };
                 UpgradeHelper.onDownloading += (s, _) =>
                 {

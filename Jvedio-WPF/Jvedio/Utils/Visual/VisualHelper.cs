@@ -73,7 +73,7 @@ namespace Jvedio.Utils.Visual
 
         public static T FindParentOfType<T>(this FrameworkElement child, string name = "") where T : FrameworkElement
         {
-            if (string.IsNullOrEmpty(name) || child == null) return null;
+            if (string.IsNullOrEmpty(name) && child == null) return null;
             FrameworkElement parentDepObj = child;
             do
             {

@@ -22,6 +22,7 @@ using Jvedio.Utils.IO;
 using Jvedio.Logs;
 using Newtonsoft.Json;
 using Jvedio.Core.Enums;
+using JvedioLib.Security;
 
 namespace Jvedio.Core.Scan
 {
@@ -144,7 +145,7 @@ namespace Jvedio.Core.Scan
                         logger.Error(msg);
                     });
 
-
+                   ScanResult.TotalCount = parseResult.import.Count + parseResult.notImport.Count + parseResult.failNFO.Count;
                    try { CheckStatus(); }
                    catch (TaskCanceledException ex)
                    {
@@ -235,7 +236,7 @@ namespace Jvedio.Core.Scan
                     video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
-                    ScanResult.Update.Add(video.Path);
+                    ScanResult.Update.Add(video.Path, "");
                 }
 
             }
@@ -263,7 +264,7 @@ namespace Jvedio.Core.Scan
                     video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
-                    ScanResult.Update.Add(video.Path);
+                    ScanResult.Update.Add(video.Path, "HASH 相同，原路径不同");
                 }
 
             }
@@ -275,7 +276,7 @@ namespace Jvedio.Core.Scan
             videoMapper.updateBatch(toUpdate, "SubSection");// 分段视频
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
             metaDataMapper.updateBatch(toUpdateData, "Path", "LastScanDate");
-
+            AddTags(toUpdate);
             // 2.导入
             InsertData(toInsert);
         }
@@ -391,10 +392,10 @@ namespace Jvedio.Core.Scan
 
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
+                    ScanResult.Update.Add(video.Path, "NFO 信息更新");
                     video.Path = null;
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
-                    ScanResult.Update.Add(video.Path);
                     HandleActor(video);
                 }
 
@@ -404,7 +405,6 @@ namespace Jvedio.Core.Scan
             videoMapper.updateBatch(toUpdate, NFOUpdateVideoProps);
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
             metaDataMapper.updateBatch(toUpdateData, NFOUpdateMetaProps);
-
             // 2. 剩下的都是需要导入的
             InsertData(import);
         }
@@ -502,9 +502,33 @@ namespace Jvedio.Core.Scan
                 GlobalVariable.DataBaseBusy = false;
             }
 
+            AddTags(toInsert);
+
+            // 处理演员
             foreach (var video in toInsert)
                 HandleActor(video);
 
+        }
+
+
+        private void AddTags(ICollection<Video> videos)
+        {
+            // 处理标记
+            List<string> list = new List<string>();
+            foreach (Video video in videos)
+            {
+                // 高清
+                if (video.IsHDV())
+                    list.Add($"({video.DataID},1)");
+                // 中文
+                if (video.IsCHS())
+                    list.Add($"({video.DataID},2)");
+            }
+            if (list.Count > 0)
+            {
+                string sql = $"insert or ignore into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
+                videoMapper.executeNonQuery(sql);
+            }
         }
 
 

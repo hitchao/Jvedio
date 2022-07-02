@@ -133,7 +133,7 @@ namespace Jvedio.Core.Scan
                     data.PID = existData.PID;
                     data.LastScanDate = DateHelper.Now();
                     toUpdate.Add(data);
-                    ScanResult.Update.Add(data.Path);
+                    ScanResult.Update.Add(data.Path, "哈希相同，路径不同");
                 }
 
             }
@@ -149,7 +149,7 @@ namespace Jvedio.Core.Scan
                     data.PID = existData.PID;
                     data.LastScanDate = DateHelper.Now();
                     toUpdate.Add(data);
-                    ScanResult.Update.Add(data.Path);
+                    ScanResult.Update.Add(data.Path, "哈希不同，路径相同");
                 }
 
             }
