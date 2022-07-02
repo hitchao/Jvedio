@@ -1770,7 +1770,36 @@
                                         </StackPanel>
                                     </chao:TogglePanel>
                                     <Grid Grid.Row="1">
+                                        <ToggleButton
+                                            Width="23"
+                                            Height="23"
+                                            Margin="0,5,60,0"
+                                            Padding="0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Panel.ZIndex="20"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Click="SetTagStampsSelected"
+                                            IsChecked="True"
+                                            Style="{StaticResource FlatToggleButton}">
+                                            <Border
+                                                Margin="0"
+                                                CornerRadius="5"
+                                                Tag="{DynamicResource Window.Title.Hover.Background}">
+                                                <Viewbox
+                                                    Width="14"
+                                                    Height="auto"
+                                                    VerticalAlignment="Center">
+                                                    <Path
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Data="M412.16 738.304a51.2 51.2 0 0 1 0 69.12l-3.072 3.328L210.432 998.4a51.2 51.2 0 0 1-67.072 2.816L140.032 998.4 16.384 880.64a51.2 51.2 0 0 1 67.072-76.8l3.328 2.816 88.832 84.224 164.096-153.6a51.2 51.2 0 0 1 72.448 2.304zM972.8 824.576a51.2 51.2 0 0 1 0 102.4H563.2a51.2 51.2 0 0 1 0-102.4zM412.16 379.904a51.2 51.2 0 0 1 0 69.376l-3.072 3.072L210.432 640a51.2 51.2 0 0 1-67.072 2.816L140.032 640 16.384 522.24a51.2 51.2 0 0 1 67.072-76.8l3.328 2.816 88.832 84.48 164.096-153.6a51.2 51.2 0 0 1 72.448 2.048zM972.8 466.176a51.2 51.2 0 0 1 0 102.4H563.2a51.2 51.2 0 0 1 0-102.4zM412.16 21.76a51.2 51.2 0 0 1 0 69.12l-2.56 3.072L210.432 281.6a51.2 51.2 0 0 1-67.072 2.816L140.032 281.6 16.384 163.84a51.2 51.2 0 0 1 67.072-76.8l3.328 3.072L175.616 174.08l164.096-153.6a51.2 51.2 0 0 1 72.448 1.28zM972.8 108.032a51.2 51.2 0 0 1 44.288 76.8 51.2 51.2 0 0 1-44.288 25.6H563.2a51.2 51.2 0 0 1-44.288-25.6 51.2 51.2 0 0 1 44.288-76.8z m0 0"
+                                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                </Viewbox>
 
+                                            </Border>
+                                        </ToggleButton>
                                         <Border
                                             Width="25"
                                             Height="25"

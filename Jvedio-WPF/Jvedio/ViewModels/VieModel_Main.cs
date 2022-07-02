@@ -1279,21 +1279,59 @@ namespace Jvedio.ViewModel
                     sql += ActorMapper.actor_join_sql;
                 else if (searchType == SearchType.LabelName)
                     sql += label_join_sql;
-                List<Dictionary<string, object>> list = metaDataMapper.select(sql + condition_sql);
-                if (list != null && list.Count > 0)
+
+                if (searchType == SearchType.Genre)
                 {
-                    foreach (Dictionary<string, object> dict in list)
+                    // 类别特殊处理
+                    string genre_sql = $"SELECT {field} FROM metadata_video " +
+                            "JOIN metadata " +
+                            "on metadata.DataID=metadata_video.DataID ";
+                    List<Dictionary<string, object>> list = metaDataMapper.select(genre_sql);
+                    if (list != null && list.Count > 0) SetGenreCandidate(field, list, ref result);
+                }
+                else
+                {
+                    List<Dictionary<string, object>> list = metaDataMapper.select(sql + condition_sql);
+                    if (list != null && list.Count > 0)
                     {
-                        if (!dict.ContainsKey(field)) continue;
-                        string value = dict[field].ToString();
-                        if (string.IsNullOrEmpty(value)) continue;
-                        result.Add(value);
+                        foreach (Dictionary<string, object> dict in list)
+                        {
+                            if (!dict.ContainsKey(field)) continue;
+                            string value = dict[field].ToString();
+                            if (string.IsNullOrEmpty(value)) continue;
+                            result.Add(value);
+                        }
+
+
                     }
                 }
                 return result;
             });
         }
 
+
+        private void SetGenreCandidate(string field, List<Dictionary<string, object>> list, ref List<string> result)
+        {
+            string search = SearchText.ToProperSql().ToLower();
+            HashSet<string> set = new HashSet<string>();
+            foreach (Dictionary<string, object> dict in list)
+            {
+                if (!dict.ContainsKey(field)) continue;
+                string value = dict[field].ToString();
+                if (string.IsNullOrEmpty(value)) continue;
+                string[] arr = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries);
+                if (arr != null && arr.Length > 0)
+                {
+                    foreach (var item in arr)
+                    {
+                        if (string.IsNullOrEmpty(item)) continue;
+                        set.Add(item);
+                    }
+                }
+            }
+            result = set.Where(arg => arg.ToLower().IndexOf(search) >= 0).ToList()
+                .Take(Properties.Settings.Default.SearchCandidateMaxCount).ToList();
+        }
 
         private delegate void LoadActorDelegate(ActorInfo actor, int idx);
         private void LoadActor(ActorInfo actor, int idx)

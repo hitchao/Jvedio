@@ -622,7 +622,7 @@ namespace Jvedio
 
         public void Notify_Close(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Application.Current.Shutdown(0);
         }
 
 
@@ -4879,6 +4879,12 @@ namespace Jvedio
                 if (!string.IsNullOrEmpty(txt))
                     ClipBoard.TrySetDataObject(txt);
             }
+        }
+
+        private void SetTagStampsSelected(object sender, RoutedEventArgs e)
+        {
+            ToggleButton toggleButton = sender as ToggleButton;
+            Console.WriteLine(toggleButton.IsChecked);
         }
     }
 
