@@ -224,13 +224,15 @@ namespace Jvedio.Core.SimpleORM
             return executeNonQuery(sql) > 0;
         }
 
-        public int updateField(string field, string value, IWrapper<T> wrapper)
+        public int updateField(string field, string value, IWrapper<T> wrapper = null)
         {
             Type type = typeof(T).GetProperty(field).PropertyType;
+            string where = "";
+            if (wrapper != null) where = wrapper.toWhere();
 
-            string sql = $"update {TableName} set {field}={value} {wrapper.toWhere()}";
+            string sql = $"update {TableName} set {field}={value} {where}";
             if (type == typeof(string))
-                sql = $"update {TableName} set {field}='{SqlHelper.Format(value)}' {wrapper.toWhere()}";
+                sql = $"update {TableName} set {field}='{SqlHelper.Format(value)}' {where}";
             return executeNonQuery(sql);
         }
 

@@ -1279,6 +1279,10 @@ namespace Jvedio
 
         private void saveSettings()
         {
+
+            GlobalConfig.Main.ShowSearchHistory = vieModel.ShowSearchHistory;
+
+
             GlobalConfig.Settings.TabControlSelectedIndex = vieModel.TabControlSelectedIndex;
             GlobalConfig.Settings.OpenDataBaseDefault = vieModel.OpenDataBaseDefault;
             GlobalConfig.Settings.AutoGenScreenShot = vieModel.AutoGenScreenShot;
@@ -1875,6 +1879,11 @@ namespace Jvedio
         private void CancelCreateIndex(object sender, RoutedEventArgs e)
         {
             IndexCanceled = true;
+        }
+
+        private void ViewSearchHistory(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 

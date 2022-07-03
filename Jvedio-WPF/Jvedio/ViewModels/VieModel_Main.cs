@@ -796,7 +796,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private int _PageSize = 40;
+        private int _PageSize = Properties.Settings.Default.PageSize;
         public int PageSize
         {
             get { return _PageSize; }
@@ -1258,7 +1258,7 @@ namespace Jvedio.ViewModel
         {
             return await Task.Run(() =>
             {
-                SearchType searchType = (SearchType)GlobalConfig.Main.SearchSelectedIndex;
+                SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
                 string field = searchType.ToString();
 
                 List<string> result = new List<string>();
@@ -1275,12 +1275,12 @@ namespace Jvedio.ViewModel
                 string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
                             "JOIN metadata " +
                             "on metadata.DataID=metadata_video.DataID ";
-                if (searchType == SearchType.ActorName)
+                if (searchType == SearchField.ActorName)
                     sql += ActorMapper.actor_join_sql;
-                else if (searchType == SearchType.LabelName)
+                else if (searchType == SearchField.LabelName)
                     sql += label_join_sql;
 
-                if (searchType == SearchType.Genre)
+                if (searchType == SearchField.Genre)
                 {
                     // 类别特殊处理
                     string genre_sql = $"SELECT {field} FROM metadata_video " +
@@ -1794,7 +1794,7 @@ namespace Jvedio.ViewModel
 
         #endregion
 
-        public SelectWrapper<Video> getWrapper(SearchType searchType)
+        public SelectWrapper<Video> getWrapper(SearchField searchType)
         {
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             if (string.IsNullOrEmpty(SearchText)) return null;
@@ -1804,7 +1804,7 @@ namespace Jvedio.ViewModel
 
             switch (searchType)
             {
-                case SearchType.VID:
+                case SearchField.VID:
 
                     string vid = Identify.GetVID(FormatSearch);
                     if (string.IsNullOrEmpty(vid)) searchContent = FormatSearch;
@@ -1823,13 +1823,12 @@ namespace Jvedio.ViewModel
         }
 
 
-        public async Task<bool> Query(SearchType searchType = SearchType.VID)
+        public async Task<bool> Query(SearchField searchType = SearchField.VID)
         {
             extraWrapper = getWrapper(searchType);
             Select();
             return true;
         }
-
 
         public void RandomDisplay()
         {
@@ -1859,7 +1858,7 @@ namespace Jvedio.ViewModel
 
 
         public static string[] SelectFields = {
-            "metadata.DataID",
+            "DISTINCT metadata.DataID",
             "MVID",
             "VID",
             "metadata.Grade",
@@ -1975,12 +1974,12 @@ namespace Jvedio.ViewModel
 
 
             // todo 如果搜索框选中了标签，搜索出来的结果不一致
-            SearchType searchType = (SearchType)GlobalConfig.Main.SearchSelectedIndex;
+            SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
             if (Searching)
             {
-                if (searchType == SearchType.ActorName)
+                if (searchType == SearchField.ActorName)
                     sql += VideoMapper.ACTOR_JOIN_SQL;
-                else if (searchType == SearchType.LabelName)
+                else if (searchType == SearchField.LabelName)
                     sql += VideoMapper.LABEL_JOIN_SQL;
             }
             else if (!string.IsNullOrEmpty(ClickFilterType))
@@ -2002,15 +2001,22 @@ namespace Jvedio.ViewModel
 
 
             // 标记
-            // todo 标记全排除
-            //bool allFalse = TagStamps.All(item => item.Selected == false);
-            bool falseAndTrue = TagStamps.Any(item => item.Selected == false) && TagStamps.Any(item => item.Selected == false);
-            //if (!allFalse && falseAndTrue)
-            if (falseAndTrue)
+            bool allFalse = TagStamps.All(item => item.Selected == false);
+            if (allFalse)
             {
-                wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
-                sql += VideoMapper.TAGSTAMP_JOIN_SQL;
+                wrapper.IsNull("TagID");
+                sql += VideoMapper.TAGSTAMP_LEFT_JOIN_SQL;
             }
+            else
+            {
+                bool allTrue = TagStamps.All(item => item.Selected == true);
+                if (!allTrue)
+                {
+                    wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
+                    sql += VideoMapper.TAGSTAMP_JOIN_SQL;
+                }
+            }
+
 
             // 右侧菜单的一些筛选项
 
@@ -2068,7 +2074,7 @@ namespace Jvedio.ViewModel
                 wrapper.Eq("metadata.PathExist", DataExistIndex - 1);
 
 
-            string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
+            string count_sql = "select count(DISTINCT metadata.DataID) " + sql + wrapper.toWhere(false);
             TotalCount = metaDataMapper.selectCount(count_sql);
 
 

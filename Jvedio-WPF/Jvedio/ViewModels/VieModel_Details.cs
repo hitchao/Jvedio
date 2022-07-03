@@ -22,6 +22,7 @@ using System.Windows.Threading;
 using Jvedio.Mapper;
 using Jvedio.Utils.Media;
 using Jvedio.Logs;
+using Jvedio.Utils;
 
 namespace Jvedio.ViewModel
 {
@@ -29,6 +30,8 @@ namespace Jvedio.ViewModel
     {
         private Window_Details windowDetails { get; set; }
         public event EventHandler QueryCompleted;
+
+        private bool loadingLabel { get; set; }
         public VieModel_Details()
         {
             windowDetails = GetWindowByName("Window_Details") as Window_Details;
@@ -148,6 +151,33 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        private ObservableCollection<string> _CurrentLabelList;
+
+
+        public ObservableCollection<string> CurrentLabelList
+        {
+            get { return _CurrentLabelList; }
+            set
+            {
+                _CurrentLabelList = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private string _LabelText = String.Empty;
+        public string LabelText
+        {
+            get { return _LabelText; }
+            set
+            {
+                _LabelText = value;
+                RaisePropertyChanged();
+                getLabels();
+            }
+        }
+
 
         public void CleanUp()
         {
@@ -269,6 +299,50 @@ namespace Jvedio.ViewModel
 
         private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
         private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
+
+
+
+
+
+        public async void getLabels()
+        {
+            if (loadingLabel) return;
+            loadingLabel = true;
+            string like_sql = "";
+
+            string search = LabelText.ToProperSql().Trim();
+            if (!string.IsNullOrEmpty(search))
+                like_sql = $" and LabelName like '%{search}%' ";
+
+
+            List<string> labels = new List<string>();
+            string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
+                "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
+                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
+                $" GROUP BY LabelName ORDER BY Count DESC";
+            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            if (list != null)
+            {
+                foreach (Dictionary<string, object> item in list)
+                {
+                    if (!item.ContainsKey("LabelName") || !item.ContainsKey("Count") ||
+                        item["LabelName"] == null || item["Count"] == null) continue;
+                    string LabelName = item["LabelName"].ToString();
+                    long.TryParse(item["Count"].ToString(), out long count);
+                    labels.Add($"{LabelName}({count})");
+                }
+            }
+
+            CurrentLabelList = new ObservableCollection<string>();
+            for (int i = 0; i < labels.Count; i++)
+            {
+                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
+            }
+            loadingLabel = false;
+        }
+
+        private delegate void LoadLabelDelegate(string str);
+        private void LoadLabel(string str) => CurrentLabelList.Add(str);
 
 
     }

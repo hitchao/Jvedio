@@ -11,6 +11,7 @@ using Jvedio.Upgrade;
 using Jvedio.Utils.Common;
 using Jvedio.Utils.IO;
 using Jvedio.ViewModel;
+using JvedioLib.Security;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -132,7 +133,6 @@ namespace Jvedio
             //}
 
             CrawlerLoader.LoadAllCrawlers();// 初始化爬虫
-
         }
 
 
@@ -202,7 +202,7 @@ namespace Jvedio
                 Jvedio4ToJvedio5.MoveMagnets();
                 Jvedio4ToJvedio5.MoveTranslate();
                 Jvedio4ToJvedio5.MoveMyList();      // 清单和 Label 合并，统一为 Label
-                Jvedio4ToJvedio5.MoveSearchHistory();
+                //Jvedio4ToJvedio5.MoveSearchHistory();
                 Jvedio4ToJvedio5.MoveScanPathConfig(files);
                 GlobalConfig.Settings.OpenDataBaseDefault = false;
             }

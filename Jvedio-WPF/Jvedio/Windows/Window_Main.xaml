@@ -1866,6 +1866,7 @@
                                                     <DataTemplate>
                                                         <StackPanel>
                                                             <chao:PathCheckButton
+                                                                Name="pathCheckButton"
                                                                 Height="30"
                                                                 Margin="0"
                                                                 CheckedBrush="{DynamicResource Window.Side.Hover.Background}"
@@ -2158,7 +2159,15 @@
                                             Margin="5"
                                             Background="{DynamicResource Menu.Background}"
                                             Visibility="Collapsed">
-                                            <Button HorizontalAlignment="Left" Content="清除记录" />
+                                            <TabControl TabStripPlacement="Bottom">
+                                                <TabItem Header="2022-07">
+                                                    <WrapPanel Orientation="Horizontal" />
+                                                </TabItem>
+                                                <TabItem Header="2022-06" />
+                                            </TabControl>
+
+
+
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -3295,64 +3304,65 @@
                                     <!--  底部  -->
                                     <Grid
                                         Grid.Row="2"
+                                        HorizontalAlignment="Stretch"
                                         Panel.ZIndex="5"
                                         Visibility="{Binding DisplayPage, Converter={StaticResource BoolToVis}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
-
-                                            <Slider
-                                                Grid.Column="0"
-                                                Width="200"
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                LargeChange="10"
-                                                Maximum="800"
-                                                Minimum="200"
-                                                SmallChange="5"
-                                                ValueChanged="ImageSizeSlider_ValueChanged"
-                                                Value="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, Mode=TwoWay}" />
-
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource BaseTextBlock}"
-                                                Text="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, StringFormat=\{0\} px}"
-                                                Visibility="Hidden" />
-
-                                        </StackPanel>
-
-                                        <Border
-                                            Grid.Column="1"
+                                        <Slider
+                                            Grid.Column="0"
+                                            Width="200"
+                                            Margin="20,0,0,0"
+                                            HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Background="{DynamicResource Window.Title.Background}"
-                                            CornerRadius="5">
-                                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}">
-                                                <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{} {0}/{1}">
-                                                        <Binding Path="CurrentCount" />
-                                                        <Binding Path="TotalCount" />
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
-                                        </Border>
+                                            LargeChange="10"
+                                            Maximum="800"
+                                            Minimum="200"
+                                            SmallChange="5"
+                                            ValueChanged="ImageSizeSlider_ValueChanged"
+                                            Value="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, Mode=TwoWay}" />
+
+                                        <Grid Grid.Column="1" HorizontalAlignment="Right">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border
+                                                Grid.Column="0"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Background="{DynamicResource Window.Side.Background}"
+                                                CornerRadius="5">
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    Style="{StaticResource BaseTextBlock}">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{} {0}/{1}">
+                                                            <Binding Path="CurrentCount" />
+                                                            <Binding Path="TotalCount" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Border>
 
 
-                                        <!--  页码  -->
-                                        <chao:Pagination
-                                            Name="pagination"
-                                            Grid.Column="2"
-                                            CurrentPage="{Binding CurrentPage, Mode=OneWay}"
-                                            CurrentPageChange="Pagination_CurrentPageChange"
-                                            PageSize="{Binding PageSize, Source={x:Static p:Settings.Default}, Mode=TwoWay}"
-                                            PageSizes="[10,20,40,50,100,200]"
-                                            ShowCombobox="{Binding PaginationCombobox, Source={x:Static p:Settings.Default}}"
-                                            Style="{StaticResource NormalPagination}"
-                                            Total="{Binding TotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <!--  页码  -->
+                                            <chao:Pagination
+                                                Name="pagination"
+                                                Grid.Column="1"
+                                                CurrentPage="{Binding CurrentPage, Mode=OneWay}"
+                                                CurrentPageChange="Pagination_CurrentPageChange"
+                                                PageSize="{Binding PageSize, Source={x:Static p:Settings.Default}, Mode=TwoWay}"
+                                                PageSizes="[10,20,40,50,100]"
+                                                ShowCombobox="{Binding PaginationCombobox, Source={x:Static p:Settings.Default}}"
+                                                Style="{StaticResource NormalPagination}"
+                                                Total="{Binding TotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Grid>
+
                                         <!--<StackPanel
                                         Grid.Column="3"
                                         Width="auto"

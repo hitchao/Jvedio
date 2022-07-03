@@ -141,18 +141,23 @@ COMMIT;
 
 
 -- SearchField: [video,actor,director,series,tag,label,...]
-drop table if exists common_search_history;
+drop table if exists common_search_histories;
 BEGIN;
-create table common_search_history (
-    id INTEGER PRIMARY KEY autoincrement,
-    SearchValue TEXT,
+create table common_search_histories (
+    ID INTEGER PRIMARY KEY autoincrement,
+    SearchMode INT DEFAULT 0,
     SearchField VARCHAR(200),
+    SearchValue TEXT,
 
+    CreateYear INT DEFAULT 2022,
+    CreateMonth INT DEFAULT 7,
+    CreateDay INT DEFAULT 3,
     ExtraInfo TEXT,
     CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')),
     UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime'))
 );
-CREATE INDEX common_search_history_idx_SearchField ON common_search_history (SearchField);
+CREATE INDEX common_search_histories_idx_SearchMode_SearchField_CreateYear_CreateMonth_CreateDay ON common_search_histories (SearchMode,SearchField,CreateYear,CreateMonth,CreateDay);
+CREATE INDEX common_search_histories_idx_SearchMode_SearchField_CreateDate ON common_search_histories (SearchMode,SearchField,CreateDate);
 COMMIT;
 
 -- 【标记】

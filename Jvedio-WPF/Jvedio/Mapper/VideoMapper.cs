@@ -148,6 +148,9 @@ namespace Jvedio.Mapper
         public static string TAGSTAMP_JOIN_SQL =
             " join metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
 
+        public static string TAGSTAMP_LEFT_JOIN_SQL =
+            " LEFT JOIN metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
+
         public static string COMMON_PICTURE_EXIST_JOIN_SQL =
             " join common_picture_exist on common_picture_exist.DataID=metadata.DataID ";
     }

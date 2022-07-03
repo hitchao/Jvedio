@@ -1,4 +1,5 @@
-﻿using Jvedio.Utils.Common;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Utils.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

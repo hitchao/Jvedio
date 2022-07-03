@@ -37,6 +37,15 @@ namespace Jvedio.Core.Scan
 
         public event EventHandler onScanning;
 
+        public static Dictionary<NotImportReason, string> ReasonToString = new Dictionary<NotImportReason, string>()
+        {
+            {NotImportReason.NotInExtension,"扩展名不支持" },
+            {NotImportReason.RepetitiveVideo,"重复的视频" },
+            {NotImportReason.RepetitiveVID,"重复的识别码" },
+            {NotImportReason.SizeTooSmall,"文件过小" },
+            {NotImportReason.SizeTooLarge,"文件过大" },
+        };
+
 
         static ScanTask()
         {
@@ -139,7 +148,7 @@ namespace Jvedio.Core.Scan
 
                try
                {
-                   (List<Video> import, List<string> notImport, List<string> failNFO) parseResult
+                   (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO) parseResult
                     = scanHelper.parseMovie(FilePaths, FileExt, token, Properties.Settings.Default.ScanNfo, callBack: (msg) =>
                     {
                         logger.Error(msg);
@@ -281,10 +290,23 @@ namespace Jvedio.Core.Scan
             InsertData(toInsert);
         }
 
-        private void HandleNotImport(List<string> notImport)
+        private void HandleNotImport(Dictionary<string, NotImportReason> notImport)
         {
-            foreach (string path in notImport)
-                ScanResult.NotImport.Add(path, "文件过小或忽略的文件拓展名");
+            foreach (var key in notImport.Keys)
+            {
+                if (ScanResult.NotImport.ContainsKey(key)) continue;
+                NotImportReason reason = notImport[key];
+                if (reason == NotImportReason.RepetitiveVID)
+                {
+                    string vid = Identify.GetVID(Path.GetFileNameWithoutExtension(key));
+                    ScanResult.NotImport.Add(key, $"{ReasonToString[reason]} => {vid}");
+                }
+                else
+                {
+                    ScanResult.NotImport.Add(key, ReasonToString[reason]);
+                }
+
+            }
 
         }
         private void HandleFailNFO(List<string> failNFO)

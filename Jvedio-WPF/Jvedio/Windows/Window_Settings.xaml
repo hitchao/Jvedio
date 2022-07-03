@@ -173,6 +173,10 @@
 
                         <CheckBox Content="{x:Static lang:Resources.DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
+                        <WrapPanel Orientation="Horizontal">
+                            <CheckBox Content="显示搜索历史" IsChecked="{Binding ShowSearchHistory, Mode=TwoWay}" />
+                            <Button Click="ViewSearchHistory" Content="查看历史记录" />
+                        </WrapPanel>
 
                     </WrapPanel>
 

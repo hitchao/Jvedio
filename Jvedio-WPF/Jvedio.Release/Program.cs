@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -44,11 +45,30 @@ namespace Jvedio.Release
             string bat_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "copy_to_jvedioupdate.bat");
             string target_bat_file = Path.GetFullPath(Path.Combine(target, "../copy_to_jvedioupdate.bat"));
             File.Copy(bat_file, target_bat_file, true);
+            TryOpenSelectPath(Path.GetDirectoryName(target_bat_file));
             Console.WriteLine("Finished！");
             Console.WriteLine("Pressed Any Key to Exit.");
             Console.ReadKey();
         }
 
+
+        public static bool TryOpenSelectPath(string path)
+        {
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    Process.Start("explorer.exe", " \"" + path + "\"");
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
 
         private static void DeleteFiles()
         {

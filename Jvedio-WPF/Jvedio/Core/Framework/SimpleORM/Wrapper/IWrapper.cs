@@ -51,6 +51,8 @@ namespace Jvedio.Core.SimpleORM
         IWrapper<T> Lt(string field, object value);
         IWrapper<T> Le(string field, object value);
         IWrapper<T> Like(string field, object value);
+        IWrapper<T> IsNull(string field);
+        IWrapper<T> NotNull(string field);
         IWrapper<T> Or();
         IWrapper<T> LeftBacket();
         IWrapper<T> RightBacket();

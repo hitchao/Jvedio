@@ -1355,7 +1355,7 @@ namespace Jvedio.ViewModel
         {
             return await Task.Run(() =>
             {
-                SearchType searchType = (SearchType)GlobalConfig.Main.SearchSelectedIndex;
+                SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
                 string field = searchType.ToString();
 
                 List<string> result = new List<string>();
@@ -1377,9 +1377,9 @@ namespace Jvedio.ViewModel
                 string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
                             "JOIN metadata " +
                             "on metadata.DataID=metadata_video.DataID ";
-                if (searchType == SearchType.ActorName)
+                if (searchType == SearchField.ActorName)
                     sql += actor_join_sql;
-                else if (searchType == SearchType.LabelName)
+                else if (searchType == SearchField.LabelName)
                     sql += label_join_sql;
                 List<Dictionary<string, object>> list = metaDataMapper.select(sql + condition_sql);
                 if (list != null && list.Count > 0)
@@ -1852,7 +1852,7 @@ namespace Jvedio.ViewModel
 
 
 
-        public SelectWrapper<Video> getWrapper(SearchType searchType)
+        public SelectWrapper<Video> getWrapper(SearchField searchType)
         {
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             if (string.IsNullOrEmpty(SearchText)) return null;
@@ -1862,7 +1862,7 @@ namespace Jvedio.ViewModel
 
             switch (searchType)
             {
-                case SearchType.VID:
+                case SearchField.VID:
 
                     string vid = Identify.GetVID(FormatSearch);
                     if (string.IsNullOrEmpty(vid)) searchContent = FormatSearch;
@@ -1882,7 +1882,7 @@ namespace Jvedio.ViewModel
         /// 在数据库中搜索影片
         /// </summary>
 #pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
-        public async Task<bool> Query(SearchType searchType = SearchType.VID)
+        public async Task<bool> Query(SearchField searchType = SearchField.VID)
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
             // todo
@@ -1972,12 +1972,12 @@ namespace Jvedio.ViewModel
             }
 
             // todo 如果搜索框选中了标签，搜索出来的结果不一致
-            SearchType searchType = (SearchType)GlobalConfig.Main.SearchSelectedIndex;
+            SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
             if (Searching)
             {
-                if (searchType == SearchType.ActorName)
+                if (searchType == SearchField.ActorName)
                     sql += VideoMapper.ACTOR_JOIN_SQL;
-                else if (searchType == SearchType.LabelName)
+                else if (searchType == SearchField.LabelName)
                     sql += VideoMapper.LABEL_JOIN_SQL;
             }
             else if (!string.IsNullOrEmpty(ClickFilterType))

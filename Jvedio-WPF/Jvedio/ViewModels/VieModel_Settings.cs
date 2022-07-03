@@ -225,6 +225,17 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _ShowSearchHistory = GlobalConfig.Main.ShowSearchHistory;
+
+        public bool ShowSearchHistory
+        {
+            get { return _ShowSearchHistory; }
+            set
+            {
+                _ShowSearchHistory = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         private ObservableCollection<Theme> _ThemeList;

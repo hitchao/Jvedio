@@ -803,27 +803,27 @@ namespace Jvedio.Upgrade
         }
         public static void MoveSearchHistory()
         {
-            string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SearchHistory");
-            if (!File.Exists(origin)) return;
-            string data = FileHelper.TryReadFile(origin);
-            if (!string.IsNullOrEmpty(data))
-            {
-                List<SearchHistory> histories = new List<SearchHistory>();
-                List<string> VID_list = data.Split(new char[] { '\'' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                foreach (string VID in VID_list)
-                {
-                    if (string.IsNullOrEmpty(VID)) continue;
-                    SearchHistory history = new SearchHistory();
-                    history.SearchField = SearchField.video;
-                    history.SearchValue = VID;
-                    histories.Add(history);
-                }
-                try { searchHistoryMapper.insertBatch(histories); }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex);
-                }
-            }
+            //string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SearchHistory");
+            //if (!File.Exists(origin)) return;
+            //string data = FileHelper.TryReadFile(origin);
+            //if (!string.IsNullOrEmpty(data))
+            //{
+            //    List<SearchHistory> histories = new List<SearchHistory>();
+            //    List<string> VID_list = data.Split(new char[] { '\'' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            //    foreach (string VID in VID_list)
+            //    {
+            //        if (string.IsNullOrEmpty(VID)) continue;
+            //        SearchHistory history = new SearchHistory();
+            //        history.SearchField = SearchField.video;
+            //        history.SearchValue = VID;
+            //        histories.Add(history);
+            //    }
+            //    try { searchHistoryMapper.insertBatch(histories); }
+            //    catch (Exception ex)
+            //    {
+            //        Logger.Error(ex);
+            //    }
+            //}
 
         }
 

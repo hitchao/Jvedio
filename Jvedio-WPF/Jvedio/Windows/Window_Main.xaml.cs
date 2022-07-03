@@ -16,6 +16,7 @@ using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Logs;
+using Jvedio.Utils;
 using Jvedio.Utils.Common;
 using Jvedio.Utils.Data;
 using Jvedio.Utils.IO;
@@ -32,6 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Permissions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -345,7 +347,7 @@ namespace Jvedio
             listBox.ItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
             listBox.Background = Brushes.Transparent;
             listBox.ItemsSource = list;
-            if (vieModel.TabSelectedIndex == 0)
+            if (vieModel.TabSelectedIndex == 0 && !string.IsNullOrEmpty(vieModel.SearchText))
                 vieModel.Searching = true;
         }
 
@@ -2911,16 +2913,12 @@ namespace Jvedio
             e.Handled = true;
         }
 
-
-
-        // todo
         private void ClearRecentWatched(object sender, RoutedEventArgs e)
         {
-            //if (new RecentWatchedConfig("").Clear())
-            //{
-            //    //ReadRecentWatchedFromConfig();
-            //    //vieModel.AddToRecentWatch("");
-            //}
+            SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
+            wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
+            metaDataMapper.updateField("ViewDate", "", wrapper);
+            vieModel.Statistic();
         }
 
         private void ConfigFirstRun()
@@ -3350,11 +3348,11 @@ namespace Jvedio
 
 
 
-        private void refreshTagStamp(ref Video video, long newTagID)
+        private void refreshTagStamp(ref Video video, long newTagID, bool deleted)
         {
             if (video == null || newTagID <= 0) return;
             string tagIDs = video.TagIDs;
-            if (string.IsNullOrEmpty(tagIDs))
+            if (!deleted && string.IsNullOrEmpty(tagIDs))
             {
                 video.TagStamp = new ObservableCollection<TagStamp>();
                 video.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
@@ -3363,16 +3361,16 @@ namespace Jvedio
             else
             {
                 List<string> list = tagIDs.Split(',').ToList();
-                if (!list.Contains(newTagID.ToString()))
-                {
+                if (!deleted && !list.Contains(newTagID.ToString()))
                     list.Add(newTagID.ToString());
-                    video.TagIDs = string.Join(",", list);
-                    video.TagStamp = new ObservableCollection<TagStamp>();
-                    foreach (var arg in list)
-                    {
-                        long.TryParse(arg, out long id);
-                        video.TagStamp.Add(GlobalVariable.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
-                    }
+                if (deleted && list.Contains(newTagID.ToString()))
+                    list.Remove(newTagID.ToString());
+                video.TagIDs = string.Join(",", list);
+                video.TagStamp = new ObservableCollection<TagStamp>();
+                foreach (var arg in list)
+                {
+                    long.TryParse(arg, out long id);
+                    video.TagStamp.Add(GlobalVariable.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
                 }
             }
         }
@@ -3396,6 +3394,13 @@ namespace Jvedio
             if (dataID <= 0) return;
             ContextMenu contextMenu = gifImage.ContextMenu;
             if (contextMenu == null) return;
+
+            Video video = vieModel.CurrentVideoList.Where(arg => arg.DataID == dataID).FirstOrDefault();
+            if (video == null) return;
+            List<string> tagIDs = new List<string>();
+            if (!string.IsNullOrEmpty(video.TagIDs))
+                tagIDs = video.TagIDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
             foreach (FrameworkElement item in contextMenu.Items)
             {
                 if ("TagMenuItems".Equals(item.Name) && item is MenuItem menuItem)
@@ -3403,9 +3408,12 @@ namespace Jvedio
                     menuItem.Items.Clear();
                     GlobalVariable.TagStamps.ForEach(arg =>
                     {
+                        string tagID = arg.TagID.ToString();
                         MenuItem menu = new MenuItem()
                         {
-                            Header = arg.TagName
+                            Header = arg.TagName,
+                            IsCheckable = true,
+                            IsChecked = tagIDs.Contains(tagID)
                         };
                         menu.Click += (s, ev) =>
                         {
@@ -3423,16 +3431,39 @@ namespace Jvedio
         private void AddTagHandler(object sender, long tagID)
         {
             handleMenuSelected(sender, 1);
+
+            MenuItem menuItem = sender as MenuItem;
+            bool deleted = false;
+            if (menuItem != null) deleted = !menuItem.IsChecked;
+
+
+
             // 构造 sql 语句
             if (vieModel.SelectedVideo?.Count <= 0) return;
-            List<string> values = new List<string>();
-            foreach (var item in vieModel.SelectedVideo)
+
+            if (deleted)
             {
-                values.Add($"({item.DataID},{tagID})");
+                StringBuilder builder = new StringBuilder();
+                foreach (var item in vieModel.SelectedVideo)
+                {
+
+                    builder.Append($"delete from metadata_to_tagstamp where DataID={item.DataID} and TagID={tagID};");
+
+                }
+                string sql = "begin;" + builder.ToString() + "commit;";
+                tagStampMapper.executeNonQuery(sql);
             }
-            if (values.Count <= 0) return;
-            string sql = $"insert or replace into metadata_to_tagstamp (DataID,TagID)  values {(string.Join(",", values))}";
-            tagStampMapper.executeNonQuery(sql);
+            else
+            {
+                List<string> values = new List<string>();
+                foreach (var item in vieModel.SelectedVideo)
+                {
+                    values.Add($"({item.DataID},{tagID})");
+                }
+                if (values.Count <= 0) return;
+                string sql = $"insert or replace into metadata_to_tagstamp (DataID,TagID)  values {(string.Join(",", values))}";
+                tagStampMapper.executeNonQuery(sql);
+            }
             initTagStamp();
 
             // 更新主界面
@@ -3451,7 +3482,7 @@ namespace Jvedio
                     if (datas[i].DataID == dataID)
                     {
                         Video video = datas[i];
-                        refreshTagStamp(ref video, tagID);
+                        refreshTagStamp(ref video, tagID, deleted);
                         datas[i] = null;
                         datas[i] = video;
                         break;
@@ -3465,26 +3496,7 @@ namespace Jvedio
         }
 
 
-        private void RefreshTagStamp(long dataID, long tagID)
-        {
-            ObservableCollection<Video> datas = vieModel.CurrentVideoList;
-            if (AssoDataPopup.IsOpen) datas = vieModel.ViewAssociationDatas;
-            if (dataID <= 0 || tagID <= 0 || datas == null || datas.Count == 0) return;
 
-            for (int i = 0; i < datas.Count; i++)
-            {
-                if (datas[i].DataID == dataID)
-                {
-                    Video video = datas[i];
-                    refreshTagStamp(ref video, tagID);
-                    datas[i] = null;
-                    datas[i] = video;
-                }
-            }
-
-
-
-        }
 
 
 
@@ -3903,29 +3915,57 @@ namespace Jvedio
 
         private async void doSearch(object sender, RoutedEventArgs e)
         {
+            SearchMode mode = (SearchMode)vieModel.TabSelectedIndex;
+
             if (vieModel.TabSelectedIndex == 0)
             {
                 vieModel.Searching = true;
-
                 GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
-                await vieModel.Query((SearchType)searchTabControl.SelectedIndex);
+                await vieModel.Query((SearchField)searchTabControl.SelectedIndex);
+                SaveSearchHistory(mode,
+                (SearchField)searchTabControl.SelectedIndex);
             }
             else if (vieModel.TabSelectedIndex == 1)
             {
                 // 搜寻演员
                 vieModel.SearchingActor = true;
                 vieModel.SelectActor();
+                SaveSearchHistory(mode, 0);
             }
             else if (vieModel.TabSelectedIndex == 2)
             {
                 // 搜寻标签
                 vieModel.GetLabelList();
+                SaveSearchHistory(mode, 0);
             }
             else if (vieModel.TabSelectedIndex == 3)
             {
                 // 搜寻分类
                 vieModel.SetClassify(true);
+                SaveSearchHistory(mode, (SearchField)vieModel.ClassifySelectedIndex);
             }
+
+            vieModel.Searching = false;
+
+
+        }
+
+
+        private void SaveSearchHistory(SearchMode mode, SearchField field)
+        {
+            string searchValue = vieModel.SearchText.ToProperSql();
+            if (string.IsNullOrEmpty(searchValue)) return;
+            SearchHistory history = new SearchHistory()
+            {
+                SearchMode = mode,
+                SearchValue = searchValue,
+                CreateDate = DateHelper.Now(),
+                SearchField = field,
+                CreateYear = DateTime.Now.Year,
+                CreateMonth = DateTime.Now.Month,
+                CreateDay = DateTime.Now.Day,
+            };
+            searchHistoryMapper.insert(history);
         }
 
         private void searchBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -4884,7 +4924,18 @@ namespace Jvedio
         private void SetTagStampsSelected(object sender, RoutedEventArgs e)
         {
             ToggleButton toggleButton = sender as ToggleButton;
-            Console.WriteLine(toggleButton.IsChecked);
+            bool allChecked = (bool)toggleButton.IsChecked;
+            ItemsControl itemsControl = TagStampItemsControl;
+            for (int i = 0; i < itemsControl.Items.Count; i++)
+            {
+                ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                if (presenter == null) continue;
+                PathCheckButton button = FindElementByName<PathCheckButton>(presenter, "pathCheckButton");
+                if (button == null) continue;
+                button.IsChecked = allChecked;
+
+            }
+            vieModel.LoadData();
         }
     }
 

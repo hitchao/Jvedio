@@ -22,10 +22,17 @@ namespace Jvedio.Core.SimpleORM
         private class Where
         {
 
+            public Where()
+            {
+                AddQuote = true;
+            }
+
             public bool Or { get; set; }// 后面跟着的是 and 还是 Or，默认 And
 
             public bool LeftBracket { get; set; } // 左括号
             public bool RightBracket { get; set; } // 左括号
+
+            public bool AddQuote { get; set; }
 
             public string Field { get; set; }
 
@@ -61,7 +68,9 @@ namespace Jvedio.Core.SimpleORM
             Like,
             NotLike,
             NotEqual,
-            Between
+            Between,
+            IS,
+            ISNot,
         }
 
 
@@ -73,6 +82,8 @@ namespace Jvedio.Core.SimpleORM
             { WhereCondition.LessThen,"<" } ,
             { WhereCondition.Equal,"=" } ,
             { WhereCondition.NotEqual,"!=" } ,
+            { WhereCondition.IS,"IS" } ,
+            { WhereCondition.ISNot,"IS NOT" } ,
         };
 
         List<Where> Wheres { get; set; }
@@ -192,7 +203,10 @@ namespace Jvedio.Core.SimpleORM
                     // 表驱动设计
                     if (whereConditions.ContainsKey(where.Condition))
                     {
-                        builder.Append($" {where.Field} {whereConditions[where.Condition]} '{values[0]}'");
+                        if (!where.AddQuote)
+                            builder.Append($" {where.Field} {whereConditions[where.Condition]} {values[0]}");
+                        else
+                            builder.Append($" {where.Field} {whereConditions[where.Condition]} '{values[0]}'");
                     }
                     else if (where.Condition == WhereCondition.Like)
                     {
@@ -287,6 +301,22 @@ namespace Jvedio.Core.SimpleORM
             return this;
         }
 
+        public IWrapper<T> IsNull(string field)
+        {
+            Where where = getWhere(field, "NULL", WhereCondition.IS);
+            where.AddQuote = false;
+            if (!Wheres.Contains(where)) Wheres.Add(where);
+            return this;
+        }
+
+        public IWrapper<T> NotNull(string field)
+        {
+            Where where = getWhere(field, "NULL", WhereCondition.ISNot);
+            where.AddQuote = false;
+            if (!Wheres.Contains(where)) Wheres.Add(where);
+            return this;
+        }
+
         public IWrapper<T> Or()
         {
             if (Wheres.Count <= 0) throw new Exception("where 条件与 and/or 数据不符合");
@@ -367,5 +397,7 @@ namespace Jvedio.Core.SimpleORM
         {
             return In(field + " NOT ", items);
         }
+
+
     }
 }

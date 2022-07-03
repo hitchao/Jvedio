@@ -16,6 +16,7 @@ namespace Jvedio.Core.WindowConfig
             Height = SystemParameters.WorkArea.Height * 0.8;
             SideGridWidth = 200;
             FirstRun = true;
+            ShowSearchHistory = true;
         }
 
         private static Main _instance = null;
@@ -38,6 +39,7 @@ namespace Jvedio.Core.WindowConfig
         public double SideGridWidth { get; set; }
 
         public bool FirstRun { get; set; }
+        public bool ShowSearchHistory { get; set; }
 
     }
 }

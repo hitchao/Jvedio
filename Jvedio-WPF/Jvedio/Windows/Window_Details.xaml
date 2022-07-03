@@ -93,7 +93,7 @@
 
 
         <Style x:Key="BaseTextBlock" TargetType="TextBlock">
-            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"/>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontFamily" Value="微软雅黑" />
@@ -1287,55 +1287,122 @@
                                                 </Grid>
 
                                                 <!--  标签  -->
-                                                <Grid>
+                                                <Grid Margin="0,10,0,0">
                                                     <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
                                                         <ColumnDefinition Width="auto" />
                                                         <ColumnDefinition Width="auto" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
                                                     <TextBlock
                                                         Grid.Column="0"
-                                                        Margin="0,10,0,0"
-                                                        VerticalAlignment="Top"
+                                                        Height="auto"
+                                                        VerticalAlignment="Center"
                                                         Style="{StaticResource BaseTextBlock}"
                                                         Text="标签" />
                                                     <TextBlock
                                                         Grid.Column="1"
-                                                        Margin="0,10,0,0"
-                                                        VerticalAlignment="Top"
+                                                        Height="auto"
                                                         Style="{StaticResource BaseTextBlock}"
                                                         Text="：" />
 
-                                                    <ItemsControl
+                                                    <Button
                                                         Grid.Column="2"
                                                         Height="auto"
-                                                        Margin="0,10,0,5"
-                                                        VerticalAlignment="Top"
-                                                        Background="Transparent"
-                                                        ItemsSource="{Binding CurrentVideo.LabelList}">
-                                                        <ItemsControl.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <WrapPanel Orientation="Horizontal" />
-                                                            </ItemsPanelTemplate>
-                                                        </ItemsControl.ItemsPanel>
+                                                        MinWidth="0"
+                                                        MinHeight="0"
+                                                        Margin="0"
+                                                        Padding="10,4"
+                                                        Click="AddToLabel"
+                                                        Content="添加到"
+                                                        Style="{StaticResource ButtonPrimary}" />
+                                                    <chao:TagPanel
+                                                        Name="labelTagPanel"
+                                                        Grid.Row="1"
+                                                        Grid.Column="0"
+                                                        Grid.ColumnSpan="4"
+                                                        AddButtonVerticalAlignment="Top"
+                                                        OnAddNewLabel="NewLabel"
+                                                        TagChanged="LabelChanged" />
 
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Border
-                                                                    Margin="5,0"
-                                                                    Padding="5,2"
-                                                                    CornerRadius="3"
-                                                                    Cursor="Hand"
-                                                                    Style="{StaticResource BorderStyle}">
-                                                                    <TextBlock
-                                                                        MouseLeftButtonUp="ShowSameLabel"
-                                                                        Style="{StaticResource BaseTextBlock}"
-                                                                        Text="{Binding}"
-                                                                        ToolTip="{x:Null}" />
-                                                                </Border>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
+                                                    <Popup
+                                                        x:Name="searchLabelPopup"
+                                                        Width="800"
+                                                        MinHeight="300"
+                                                        AllowsTransparency="True"
+                                                        HorizontalOffset="-5"
+                                                        Placement="Bottom"
+                                                        PlacementTarget="{Binding ElementName=labelTagPanel}"
+                                                        PopupAnimation="Fade"
+                                                        StaysOpen="False"
+                                                        VerticalOffset="-5">
+                                                        <Grid Margin="5">
+                                                            <Border
+                                                                Margin="5"
+                                                                Background="{DynamicResource Menu.Background}"
+                                                                CornerRadius="5"
+                                                                Effect="{StaticResource PopupDropShadowEffect}" />
+                                                            <Grid Margin="4,5">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="auto" />
+                                                                    <RowDefinition Height="*" />
+                                                                </Grid.RowDefinitions>
+
+                                                                <chao:SearchBox
+                                                                    Name="labelSearchBox"
+                                                                    Grid.Row="0"
+                                                                    Width="auto"
+                                                                    Height="30"
+                                                                    Margin="0"
+                                                                    Padding="3,0"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Background="{DynamicResource Window.Side.Background}"
+                                                                    BorderBrush="#326CF3"
+                                                                    BorderThickness="0"
+                                                                    Foreground="{DynamicResource Global.Foreground}"
+                                                                    PlaceHolder="搜索"
+                                                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
+                                                                    SearchOnTextChanged="False"
+                                                                    ShowClearButton="True"
+                                                                    ShowSearchButton="True"
+                                                                    Text="{Binding LabelText, Mode=TwoWay}" />
+
+
+                                                                <ScrollViewer
+                                                                    Grid.Row="1"
+                                                                    CanContentScroll="True"
+                                                                    FocusVisualStyle="{x:Null}"
+                                                                    IsDeferredScrollingEnabled="False"
+                                                                    VerticalScrollBarVisibility="Auto">
+                                                                    <ItemsControl
+                                                                        Name="labelItemsControl"
+                                                                        Margin="5"
+                                                                        Background="Transparent"
+                                                                        ItemsSource="{Binding CurrentLabelList}"
+                                                                        ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ItemsControl.ItemsPanel>
+                                                                            <ItemsPanelTemplate>
+                                                                                <WrapPanel Orientation="Horizontal" />
+                                                                            </ItemsPanelTemplate>
+                                                                        </ItemsControl.ItemsPanel>
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <Border MouseUp="Border_MouseUp" Style="{StaticResource ActorInfoBorderStyle}">
+                                                                                    <TextBlock Style="{StaticResource GenreTextBlock}" Text="{Binding}" />
+                                                                                </Border>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </ScrollViewer>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Popup>
+
+
 
                                                 </Grid>
 

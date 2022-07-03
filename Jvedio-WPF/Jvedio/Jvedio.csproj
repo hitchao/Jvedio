@@ -267,6 +267,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Enums\NotImportReason.cs" />
+    <Compile Include="Core\Enums\SearchMode.cs" />
     <Compile Include="Core\Exceptions\SqlException.cs" />
     <Compile Include="Core\Exceptions\NFOParseException.cs" />
     <Compile Include="Core\Exceptions\DllLoadFailedException.cs" />
@@ -314,10 +316,9 @@
     <Compile Include="Core\Enums\IdType.cs" />
     <Compile Include="Core\Enums\InsertMode.cs" />
     <Compile Include="Core\Enums\Language.cs" />
-    <Compile Include="Core\Enums\SearchField.cs" />
     <Compile Include="Core\Enums\PathType.cs" />
     <Compile Include="Core\Enums\RelevanceType.cs" />
-    <Compile Include="Core\Enums\SearchType.cs" />
+    <Compile Include="Core\Enums\SearchField.cs" />
     <Compile Include="Core\Enums\TranslationPlatform.cs" />
     <Compile Include="Core\Enums\VideoType.cs" />
     <Compile Include="Core\Enums\ViewMode.cs" />

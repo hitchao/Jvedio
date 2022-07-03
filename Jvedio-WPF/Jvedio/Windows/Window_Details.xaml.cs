@@ -43,7 +43,7 @@ namespace Jvedio
     public partial class Window_Details : Window
     {
 
-
+        private List<string> oldLabels { get; set; }
         private VieModel_Details vieModel { get; set; }
 
         private static Main windowMain { get; set; }
@@ -92,12 +92,30 @@ namespace Jvedio
                 await LoadImage(vieModel.ShowScreenShot);//加载图片
                 renderMagnets();    // 显示磁力
                 ShowActor();
+                SetLabel();
             };
             vieModel.Load(DataID);
             this.DataContext = vieModel;
             rootGrid.Focus();       // 设置键盘左右可切换
             InitDataIDs();          // 设置切换的影片列表
             OpenOtherUrlMenuItem.Items.Clear(); // 设置右键菜单
+        }
+
+        private void SetLabel()
+        {
+            labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
+            labelTagPanel.Refresh();
+            oldLabels = vieModel.CurrentVideo.LabelList?.Select(arg => arg).ToList();
+            vieModel.getLabels();
+        }
+
+        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Border border = sender as Border;
+            TextBlock textBlock = border.Child as TextBlock;
+            string text = textBlock.Text;
+            addLabel(text.Substring(0, text.IndexOf("(")));
+            searchLabelPopup.IsOpen = false;
         }
 
 
@@ -1468,6 +1486,46 @@ namespace Jvedio
                 ClipBoard.TrySetDataObject(builder.ToString());
             else
                 MessageCard.Error("无信息！");
+        }
+
+        private void NewLabel(object sender, RoutedEventArgs e)
+        {
+            DialogInput dialogInput = new DialogInput(this, "请输入");
+            if (dialogInput.ShowDialog() == true)
+            {
+                string text = dialogInput.Text;
+                if (string.IsNullOrEmpty(text)) return;
+                addLabel(text);
+            }
+        }
+
+        private void LabelChanged(object sender, ListChangedEventArgs e)
+        {
+
+            if (e != null && e.List != null)
+            {
+                vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), e.List);
+                GlobalMapper.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
+            }
+
+        }
+
+        private void addLabel(string label)
+        {
+            if (vieModel.CurrentVideo.LabelList == null)
+                vieModel.CurrentVideo.LabelList = new System.Collections.Generic.List<string>();
+            if (vieModel.CurrentVideo.LabelList.Contains(label)) return;
+            vieModel.CurrentVideo.LabelList.Add(label);
+            vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentVideo.LabelList);
+            labelTagPanel.TagList = null;
+            labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
+            labelTagPanel.Refresh();
+            GlobalMapper.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
+        }
+
+        private void AddToLabel(object sender, RoutedEventArgs e)
+        {
+            searchLabelPopup.IsOpen = true;
         }
     }
 

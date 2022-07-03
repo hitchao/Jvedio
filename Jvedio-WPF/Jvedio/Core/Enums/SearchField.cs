@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.Enums
 {
-
-    //  [video,actor,director,series,tag,label,...]
     public enum SearchField
     {
-        video,
-        actor,
-        director,
-        series,
-        tag,
-        label,
-        genre,
-        studio,
+        VID,
+        Title,
+        Path,
+        ActorName,
+        LabelName,
+        Genre,
+        Series,
+        Studio,
+        Director,
     }
 }
