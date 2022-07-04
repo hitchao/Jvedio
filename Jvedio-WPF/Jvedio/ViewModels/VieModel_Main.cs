@@ -13,6 +13,7 @@ using Jvedio.Logs;
 using Jvedio.Mapper;
 using Jvedio.Utils;
 using Jvedio.Utils.Common;
+using Jvedio.Utils.IO;
 using JvedioLib.Security;
 using System;
 using System.Collections.Generic;
@@ -2244,6 +2245,24 @@ namespace Jvedio.ViewModel
                 video.BigImage = bigimage;
                 Video.setTagStamps(ref video);// 设置标签戳
                 Video.handleEmpty(ref video);// 设置标题和发行日期
+
+
+                if (GlobalConfig.Settings.AutoGenScreenShot)
+                {
+                    string path = video.getScreenShot();
+                    if (Directory.Exists(path))
+                    {
+                        string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+                        if (array.Length > 0)
+                        {
+
+                            Video.SetImage(ref video, array[array.Length / 2]);
+                            video.BigImage = null;
+                            video.BigImage = video.ViewImage;
+                        }
+                    }
+                }
+
                 App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
             }
 

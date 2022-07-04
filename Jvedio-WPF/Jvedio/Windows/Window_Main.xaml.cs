@@ -3869,6 +3869,7 @@ namespace Jvedio
 
 
 
+
                     vieModel.CurrentVideoList[i].SmallImage = null;
                     vieModel.CurrentVideoList[i].BigImage = null;
                     vieModel.CurrentVideoList[i] = null;
@@ -3876,6 +3877,28 @@ namespace Jvedio
                     vieModel.CurrentVideoList[i] = video;
                     vieModel.CurrentVideoList[i].SmallImage = video.SmallImage;
                     vieModel.CurrentVideoList[i].BigImage = video.BigImage;
+
+
+                    if (GlobalConfig.Settings.AutoGenScreenShot)
+                    {
+                        if (vieModel.CurrentVideoList[i].BigImage == GlobalVariable.DefaultBigImage)
+                        {
+                            // 检查有无截图
+                            string path = video.getScreenShot();
+                            if (Directory.Exists(path))
+                            {
+                                string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+                                if (array.Length > 0)
+                                {
+
+                                    Video.SetImage(ref video, array[array.Length / 2]);
+                                    vieModel.CurrentVideoList[i].BigImage = null;
+                                    vieModel.CurrentVideoList[i].BigImage = video.ViewImage;
+                                }
+                            }
+                        }
+                    }
+
                     break;
                 }
 
