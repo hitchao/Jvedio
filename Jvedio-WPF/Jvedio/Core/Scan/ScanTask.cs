@@ -449,6 +449,7 @@ namespace Jvedio.Core.Scan
                         actorInfo.ActorName = name;
                         actorInfo.ImageUrl = url;
                         actorMapper.insert(actorInfo);
+                        existActors.Add(actorInfo);
                     }
                     else
                     {
@@ -527,6 +528,7 @@ namespace Jvedio.Core.Scan
             AddTags(toInsert);
 
             // 处理演员
+            existActors = actorMapper.selectList();
             foreach (var video in toInsert)
                 HandleActor(video);
 

@@ -143,8 +143,18 @@ namespace Jvedio
             AllRadioButton.IsChecked = true;
 
             vieModel.Reset();           // 加载数据
-
+            OpenListen();
             //new Msgbox(this, "demo").ShowDialog();
+        }
+
+
+        private void OpenListen()
+        {
+            if (GlobalConfig.Settings.ListenEnabled)
+            {
+                // 开启端口监听
+
+            }
         }
 
 
