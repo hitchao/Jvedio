@@ -407,6 +407,7 @@
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
                             <Grid Grid.Row="0">
@@ -562,6 +563,12 @@
                                 </ListBox.Style>
                             </ListBox>
 
+                            <StackPanel
+                                Grid.Row="3"
+                                Margin="5"
+                                Orientation="Horizontal">
+                                <Button Click="RestoreDatabase" Content="将库恢复初始化" />
+                            </StackPanel>
 
 
 

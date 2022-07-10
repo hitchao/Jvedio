@@ -243,7 +243,7 @@ namespace Jvedio.Utils.IO
             return false;
         }
 
-        public static bool TryDeleteFile(string path)
+        public static bool TryDeleteFile(string path, Action<string> errorCallBack = null)
         {
             if (File.Exists(path))
             {
@@ -254,6 +254,7 @@ namespace Jvedio.Utils.IO
                 }
                 catch (Exception ex)
                 {
+                    errorCallBack?.Invoke(ex.Message);
                     Logger.LogF(ex);
                 }
             }

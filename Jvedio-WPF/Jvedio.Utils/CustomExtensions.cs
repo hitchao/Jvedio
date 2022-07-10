@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using System.IO;
 
 namespace Jvedio.Utils
 {
@@ -77,11 +77,26 @@ namespace Jvedio.Utils
                 return false;
         }
 
-        public static bool IsIntersectWith(this ObservableCollection<string> collections, string str)
+
+        // todo
+        // 2.1 和 2.14 会产生交集
+        // d:/abc/2.1
+        // d:/abc/2.14
+        // d:/2.145
+        public static bool IsIntersectWith(this ICollection<string> collections, string dir)
         {
+            if (collections?.Count <= 0 || string.IsNullOrEmpty(dir)) return false;
+            List<string> names = collections.Select(arg => Path.GetFileName(arg).ToLower()).ToList();
+            string fatherPath = Path.GetDirectoryName(dir).ToLower();
+            string name = Path.GetFileNameWithoutExtension(dir);
             foreach (var item in collections)
             {
-                if (item.IndexOf(str) >= 0 || str.IndexOf(item) >= 0) return true;
+                if (item.IndexOf(dir) >= 0 || dir.IndexOf(item) >= 0)
+                {
+                    string fp = Path.GetDirectoryName(item).ToLower();
+                    if (fp.Equals(fatherPath) && !names.Contains(name)) return false;
+                    return true;
+                }
             }
 
             return false;

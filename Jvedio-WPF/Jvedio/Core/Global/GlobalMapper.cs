@@ -91,5 +91,26 @@ namespace Jvedio
         }
 
 
+        public static void Dispose()
+        {
+            appConfigMapper.Dispose();
+
+            appDatabaseMapper.Dispose();
+            translationMapper.Dispose();
+            magnetsMapper.Dispose();
+            aIFaceMapper.Dispose();
+            tagStampMapper.Dispose();
+            searchHistoryMapper.Dispose();
+
+            metaDataMapper.Dispose();
+            videoMapper.Dispose();
+            pictureMapper.Dispose();
+            comicMapper.Dispose();
+            gameMapper.Dispose();
+            actorMapper.Dispose();
+            urlCodeMapper.Dispose();
+            associationMapper.Dispose();
+        }
+
     }
 }

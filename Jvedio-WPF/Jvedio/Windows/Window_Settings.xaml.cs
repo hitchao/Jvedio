@@ -4,14 +4,17 @@ using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Plugins;
 using Jvedio.Core.Framework;
+using Jvedio.Core.Plugins;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
+using Jvedio.Logs;
 using Jvedio.Mapper;
 using Jvedio.Utils;
-using Jvedio.Utils.Media;
+using Jvedio.Utils.Common;
+using Jvedio.Utils.External;
 using Jvedio.Utils.IO;
+using Jvedio.Utils.Media;
 using Jvedio.ViewModel;
 using JvedioLib.Security;
 using Newtonsoft.Json;
@@ -36,9 +39,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Visual.VisualHelper;
-using Jvedio.Utils.Common;
-using Jvedio.Utils.External;
-using Jvedio.Logs;
 
 namespace Jvedio
 {
@@ -1314,6 +1314,7 @@ namespace Jvedio
 
             // 扫描
             GlobalConfig.ScanConfig.MinFileSize = vieModel.MinFileSize;
+            GlobalConfig.ScanConfig.FetchVID = vieModel.FetchVID;
             GlobalConfig.ScanConfig.ScanOnStartUp = vieModel.ScanOnStartUp;
             GlobalConfig.ScanConfig.CopyNFOPicture = vieModel.CopyNFOPicture;
 

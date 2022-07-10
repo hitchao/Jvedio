@@ -15,6 +15,7 @@ namespace Jvedio.Core.Config
         private ScanConfig() : base("ScanConfig")
         {
             CopyNFOPicture = true;
+            FetchVID = true;
         }
 
         private static ScanConfig _instance = null;
@@ -45,6 +46,7 @@ namespace Jvedio.Core.Config
         }
         public bool ScanOnStartUp { get; set; }
         public bool CopyNFOPicture { get; set; }
+        public bool FetchVID { get; set; }
 
 
     }

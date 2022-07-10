@@ -641,6 +641,18 @@ namespace Jvedio.ViewModel
             }
         }
 
+        private bool _FetchVID = GlobalConfig.ScanConfig.FetchVID;
+
+        public bool FetchVID
+        {
+            get { return _FetchVID; }
+            set
+            {
+                _FetchVID = value;
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion
 
 

@@ -4494,6 +4494,29 @@ namespace Jvedio
                 AddScanTask(new string[] { path });
                 MessageCard.Success("已添加扫描任务：=> " + path);
             }
+
+
+
+        }
+
+        private void ImportVideoByPaths(object sender, RoutedEventArgs e)
+        {
+            Window_SelectPaths window_SelectPaths = new Window_SelectPaths();
+            if (window_SelectPaths.ShowDialog() == true)
+            {
+                List<string> folders = window_SelectPaths.Folders;
+                if (folders.Count == 0)
+                {
+                    MessageCard.Warning("并未选择文件夹");
+                }
+                else
+                {
+                    AddScanTask(folders.ToArray());
+                    MessageCard.Success($"已添加 {folders.Count} 个文件夹到扫描任务!");
+                }
+            }
+
+
         }
 
         private void DeleteNotExistVideo(object sender, RoutedEventArgs e)

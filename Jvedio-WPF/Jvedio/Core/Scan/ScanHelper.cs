@@ -417,7 +417,9 @@ namespace Jvedio
             foreach (string path in VideoPaths)
             {
                 if (!File.Exists(path)) continue;
-                string VID = Identify.GetVID(Path.GetFileNameWithoutExtension(path));
+                string VID = "";
+                if (GlobalConfig.ScanConfig.FetchVID)
+                    VID = Identify.GetVID(Path.GetFileNameWithoutExtension(path));
                 if (string.IsNullOrEmpty(VID))
                 {
                     // 无识别码

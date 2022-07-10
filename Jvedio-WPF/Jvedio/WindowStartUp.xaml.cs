@@ -40,6 +40,8 @@ namespace Jvedio
         private ScanTask scanTask { get; set; }
         private bool EnteringDataBase { get; set; }
         private bool CancelScanTask { get; set; }
+
+        private const int DEFAULT_TITLE_HEIGHT = 30;
         public WindowStartUp()
         {
 
@@ -79,8 +81,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("数据库初始化失败！");
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"数据库初始化失败：{ex.Message}");
                 App.Current.Shutdown();
             }
             GlobalConfig.InitConfig();
@@ -121,7 +122,7 @@ namespace Jvedio
             {
                 tabControl.SelectedIndex = 1;
                 vieModel_StartUp.Loading = false;
-                this.TitleHeight = 30;
+                this.TitleHeight = DEFAULT_TITLE_HEIGHT;
             }
 
             //}
@@ -526,8 +527,19 @@ namespace Jvedio
         public async void LoadDataBase()
         {
             if (vieModel_StartUp.CurrentDatabases == null || vieModel_StartUp.CurrentDatabases.Count <= 0)
+            {
+                GlobalConfig.Settings.OpenDataBaseDefault = false;
+                vieModel_StartUp.Loading = false;
+                tabControl.SelectedIndex = 1;
+                this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
+            }
 
+
+
+
+
+            List<AppDatabase> appDatabases = appDatabaseMapper.selectList();
             //加载数据库
             long id = GlobalConfig.Main.CurrentDBId;
             AppDatabase database = null;
@@ -549,7 +561,7 @@ namespace Jvedio
             {
                 // 默认打开上一次的库
                 id = GlobalConfig.Settings.DefaultDBID;
-                List<AppDatabase> appDatabases = appDatabaseMapper.selectList();
+
                 if (appDatabases != null || appDatabases.Count > 0)
                     database = appDatabases.Where(arg => arg.DBId == id).FirstOrDefault();
             }
@@ -558,58 +570,63 @@ namespace Jvedio
 
             if (database == null)
             {
-                MessageCard.Error("无此数据库");
+                MessageCard.Error("默认打开的数据库被删除了，取消启动时默认打开");
+                GlobalConfig.Settings.OpenDataBaseDefault = false;
+                vieModel_StartUp.Loading = false;
+                tabControl.SelectedIndex = 1;
+                this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
             }
-            vieModel_StartUp.Loading = false;
-            // 次数+1
-            appDatabaseMapper.increaseFieldById("ViewCount", id);
-
-            GlobalConfig.Main.CurrentDBId = id;
-
-            // 是否需要扫描
-
-            if (GlobalConfig.ScanConfig.ScanOnStartUp)
+            else
             {
-                if (!string.IsNullOrEmpty(database.ScanPath))
+                vieModel_StartUp.Loading = false;
+                // 次数+1
+                appDatabaseMapper.increaseFieldById("ViewCount", id);
+
+                GlobalConfig.Main.CurrentDBId = id;
+
+                // 是否需要扫描
+
+                if (GlobalConfig.ScanConfig.ScanOnStartUp)
                 {
-                    tabControl.SelectedIndex = 0;
-                    double h = this.TitleHeight;
-                    this.TitleHeight = 0;
-                    List<string> toScan = JsonUtils.TryDeserializeObject<List<string>>(database.ScanPath);
-                    try
+                    if (!string.IsNullOrEmpty(database.ScanPath))
                     {
-                        scanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
-                        scanTask.onScanning += (s, ev) =>
+                        tabControl.SelectedIndex = 0;
+
+                        this.TitleHeight = 0;
+                        List<string> toScan = JsonUtils.TryDeserializeObject<List<string>>(database.ScanPath);
+                        try
                         {
-                            Dispatcher.Invoke(() =>
+                            scanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
+                            scanTask.onScanning += (s, ev) =>
                             {
-                                vieModel_StartUp.LoadingText = (ev as MessageCallBackEventArgs).Message;
-                            });
-                        };
-                        scanTask.Start();
-                        while (scanTask.Running)
-                        {
-                            await Task.Delay(100);
-                            Console.WriteLine("扫描中");
-                            if (CancelScanTask) break;
+                                Dispatcher.Invoke(() =>
+                                {
+                                    vieModel_StartUp.LoadingText = (ev as MessageCallBackEventArgs).Message;
+                                });
+                            };
+                            scanTask.Start();
+                            while (scanTask.Running)
+                            {
+                                await Task.Delay(100);
+                                Console.WriteLine("扫描中");
+                                if (CancelScanTask) break;
+                            }
                         }
+                        catch (Exception ex)
+                        {
+                            Logger.LogF(ex);
+                            MessageBox.Show(ex.Message);
+                        }
+                        this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Logger.LogF(ex);
-                        MessageBox.Show(ex.Message);
+                        tabControl.SelectedIndex = 1;
                     }
-                    this.Height = h;
                 }
-                else
-                {
-                    tabControl.SelectedIndex = 1;
-                }
+
             }
-
-
-
 
             //启动主窗口
             if (CurrentDataType == DataType.Video)
@@ -768,6 +785,39 @@ namespace Jvedio
         {
             scanTask?.Cancel();
             CancelScanTask = true;
+            tabControl.SelectedIndex = 1;
+            this.TitleHeight = DEFAULT_TITLE_HEIGHT;
+        }
+
+        private async void RestoreDatabase(object sender, RoutedEventArgs e)
+        {
+            if (new Msgbox(this, "即将删除所有的库信息（保留图片和文件）并重新初始化？").ShowDialog() == true)
+            {
+                Button button = sender as Button;
+                button.IsEnabled = false;
+                // todo 多数据库
+                GlobalMapper.Dispose();
+                await Task.Delay(1000);
+                bool success = FileHelper.TryDeleteFile(DEFAULT_SQLITE_PATH, (error) =>
+                {
+                    MessageCard.Error($"初始化失败：{error}");
+                });
+                if (success)
+                {
+                    try
+                    {
+                        GlobalMapper.Init();    // 初始化数据库连接
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"数据库初始化失败：{ex.Message}");
+                        App.Current.Shutdown();
+                    }
+                    MessageCard.Success($"初始化成功！");
+                }
+                button.IsEnabled = true;
+            }
+
         }
     }
 }

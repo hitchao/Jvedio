@@ -476,6 +476,9 @@
     <Compile Include="Logs\Logger.cs" />
     <Compile Include="Entity\NFO.cs" />
     <Compile Include="Core\Scan\ScanHelper.cs" />
+    <Compile Include="Windows\Dialog\Window_SelectPaths.xaml.cs">
+      <DependentUpon>Window_SelectPaths.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MetaData\Window_MetaDataEdit.xaml.cs">
       <DependentUpon>Window_MetaDataEdit.xaml</DependentUpon>
     </Compile>
@@ -566,6 +569,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="WindowsDialog\Dialog_Thanks.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Dialog\Window_SelectPaths.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

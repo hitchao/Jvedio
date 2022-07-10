@@ -21,10 +21,12 @@ namespace Jvedio.Core.SimpleORM
             if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
             {
                 SqliteMapper.Dispose();
+                SqliteMapper = null;
             }
             else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
             {
                 MySQLMapper.Dispose();
+                MySQLMapper = null;
             }
         }
 

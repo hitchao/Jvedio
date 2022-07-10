@@ -1992,7 +1992,7 @@
                                             VerticalOffset="-5">
                                             <MenuItem Command="cmd:OpenWindow.Settings" Header="{x:Static lang:Resources.Settings}" />
                                             <MenuItem Header="{x:Static lang:Resources.Scan}">
-                                                <MenuItem Click="ImportVideo" Header="扫描文件夹" />
+                                                <MenuItem Click="ImportVideoByPaths" Header="扫描多个文件夹" />
                                                 <MenuItem Click="ImportVideo" Header="扫描网络磁盘" />
                                             </MenuItem>
                                             <MenuItem Header="{x:Static lang:Resources.MovieManagement}">
