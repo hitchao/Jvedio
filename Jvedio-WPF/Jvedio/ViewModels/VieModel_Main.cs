@@ -1133,6 +1133,26 @@ namespace Jvedio.ViewModel
 
         #endregion
 
+
+        #region "皮肤"
+
+
+        private ActorInfo _ThemesColor;
+        public ActorInfo ThemesColor
+        {
+            get { return _ThemesColor; }
+            set
+            {
+                _ThemesColor = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
+
+
+
         public void LoadData()
         {
             Select();

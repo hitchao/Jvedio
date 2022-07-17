@@ -1552,6 +1552,91 @@
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
                         <Button
+                            Name="themeButton"
+                            Width="40"
+                            Click="ShowThemes"
+                            Style="{StaticResource NormalButton}"
+                            Tag="{DynamicResource Window.Title.Hover.Background}">
+                            <Viewbox
+                                Width="15"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M758.35 121.71H704.7c-14.19 0-27.88 6.14-37.04 17.11-27.48 32.81-106.09 54.05-155.61 54.05s-128.13-21.24-155.61-54.05c-9.26-10.98-22.85-17.11-37.04-17.11h-53.75c-13.08 0-25.57 5.23-34.83 14.7L52.56 317.69c-11.48 11.67-11.48 30.5 0 42.17l108.7 110.62c11.48 11.68 30 11.68 41.47 0l3.62-3.62c3.93-3.93 10.57-1.21 10.57 4.43V856.9c0 25.06 19.93 45.39 44.59 45.39h500.95c24.66 0 44.59-20.33 44.59-45.39V471.19c0-5.64 6.64-8.46 10.57-4.43l3.62 3.63c11.48 11.67 30 11.67 41.47 0l108.7-110.62c11.48-11.67 11.48-30.5 0-42.17L793.18 136.31c-9.26-9.36-21.84-14.6-34.83-14.6z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                        </Button>
+
+                        <Popup
+                            x:Name="themesPopup"
+                            Width="500"
+                            MinHeight="500"
+                            MaxHeight="600"
+                            AllowsTransparency="True"
+                            HorizontalOffset="-300"
+                            Placement="Bottom"
+                            PlacementTarget="{Binding ElementName=themeButton}"
+                            PopupAnimation="Fade"
+                            StaysOpen="True"
+                            VerticalOffset="0">
+                            <Grid Margin="5">
+                                <Border
+                                    Margin="5"
+                                    Background="{DynamicResource Menu.Background}"
+                                    CornerRadius="0 0 5 5"
+                                    Effect="{StaticResource PopupDropShadowEffect}" />
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <TabControl
+                                        Background="Transparent"
+                                        ItemContainerStyle="{StaticResource FlatTabItem}"
+                                        Style="{StaticResource FlatTabControl}">
+                                        <TabItem Header="纯色">
+                                            <ListBox
+                                                Name="colorsListBox"
+                                                d:ItemsSource="{d:SampleData ItemCount=5}"
+                                                Background="Transparent"
+                                                ItemsSource="{Binding ThemesColor}"
+                                                Style="{StaticResource NormalListBox}">
+                                                <ListBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ListBox.ItemsPanel>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border
+                                                            Width="20"
+                                                            Height="20"
+                                                            Background="AliceBlue">
+                                                            <TextBlock Text="123" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </TabItem>
+                                        <TabItem Header="渐变" />
+                                        <TabItem Header="图像" />
+                                        <TabItem Header="自定义" />
+                                    </TabControl>
+                                    <StackPanel
+                                        Grid.Row="1"
+                                        Margin="5"
+                                        HorizontalAlignment="Right">
+                                        <Button Click="CloseThemePopup" Content="关闭" />
+                                    </StackPanel>
+
+
+
+                                </Grid>
+                            </Grid>
+                        </Popup>
+                        <Button
                             Width="40"
                             Click="MinWindow"
                             Style="{StaticResource NormalButton}"

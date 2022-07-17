@@ -4993,6 +4993,16 @@ namespace Jvedio
             }
             vieModel.LoadData();
         }
+
+        private void ShowThemes(object sender, RoutedEventArgs e)
+        {
+            themesPopup.IsOpen = true;
+        }
+
+        private void CloseThemePopup(object sender, RoutedEventArgs e)
+        {
+            themesPopup.IsOpen = false;
+        }
     }
 
 }

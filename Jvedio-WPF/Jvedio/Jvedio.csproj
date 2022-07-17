@@ -269,6 +269,7 @@
     </ApplicationDefinition>
     <Compile Include="Core\Enums\NotImportReason.cs" />
     <Compile Include="Core\Enums\SearchMode.cs" />
+    <Compile Include="Core\Enums\ThemeSingleColor.cs" />
     <Compile Include="Core\Exceptions\SqlException.cs" />
     <Compile Include="Core\Exceptions\NFOParseException.cs" />
     <Compile Include="Core\Exceptions\DllLoadFailedException.cs" />
