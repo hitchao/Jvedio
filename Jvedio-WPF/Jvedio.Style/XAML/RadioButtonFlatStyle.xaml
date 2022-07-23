@@ -6,7 +6,7 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Background" Value="{StaticResource RadioButton.Static.Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource RadioButton.Static.Border}" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Margin" Value="5,0" />
         <Setter Property="FontSize" Value="18" />
@@ -42,7 +42,7 @@
                         </Border>
                         <Border
                             x:Name="markBorder"
-                            BorderBrush="{DynamicResource Global.Foreground}"
+                            BorderBrush="{DynamicResource Window.Foreground}"
                             CornerRadius="5" />
                         <ContentPresenter
                             x:Name="contentPresenter"

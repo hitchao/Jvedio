@@ -53,11 +53,11 @@
                 hc:InfoElement.Title=""
                 AcceptsReturn="True"
                 Background="{DynamicResource Window.Side.Background}"
-                BorderBrush="{DynamicResource Global.Foreground}"
+                BorderBrush="{DynamicResource Window.Foreground}"
                 CaretBrush="{DynamicResource Window.Foreground}"
                 ContextMenu="{StaticResource TextBoxContextMenu}"
                 FontSize="15"
-                Foreground="{DynamicResource Global.Foreground}"
+                Foreground="{DynamicResource Window.Foreground}"
                 Style="{StaticResource TextBoxExtend}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
@@ -71,7 +71,7 @@
                     Margin="20,10"
                     Background="Transparent"
                     Content="{x:Static lang:Resources.VideoType}"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     Style="{StaticResource LabelPrimary}" />
                 <ComboBox
                     Height="30"
@@ -81,7 +81,7 @@
                     Background="{DynamicResource Window.Detail.Background}"
                     BorderBrush="{DynamicResource Window.Side.Hover.Background}"
                     FontSize="16"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                     SelectedIndex="2"
                     SelectionChanged="ComboBox_SelectionChanged"

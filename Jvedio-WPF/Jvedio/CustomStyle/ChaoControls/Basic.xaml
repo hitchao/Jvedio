@@ -10,9 +10,9 @@
     <Style x:Key="NormalPathMsg" TargetType="{x:Type chao:PathMsg}">
         <Setter Property="Width" Value="30" />
         <Setter Property="Height" Value="30" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
-        <Setter Property="Fill" Value="{DynamicResource Global.Foreground}" />
-        <Setter Property="HoverBackground" Value="{DynamicResource Window.Title.Hover.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
+        <Setter Property="Fill" Value="{DynamicResource Window.Foreground}" />
+        <Setter Property="HoverBackground" Value="{DynamicResource Window.StatusBar.Hover.Background}" />
         <Setter Property="MsgHeight" Value="15" />
         <Setter Property="MsgMargin" Value="2" />
         <Setter Property="PathHeight" Value="16" />
@@ -26,7 +26,7 @@
         <Setter Property="FontFamily" Value="微软雅黑" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="PlaceHolder" Value="" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
         <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -48,7 +48,7 @@
         <Setter Property="Margin" Value="0" />
         <Setter Property="GroupName" Value="PathGroupRadioButton_Main" />
         <Setter Property="TextVisibility" Value="Collapsed" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="CheckedBrush" Value="{DynamicResource Window.Side.Hover.Background}" />
     </Style>
 

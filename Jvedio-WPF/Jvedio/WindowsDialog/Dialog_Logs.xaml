@@ -6,8 +6,8 @@
     Title="日志"
     Width="800"
     Height="500"
-    Background="{DynamicResource Global.Background}"
-    Foreground="{DynamicResource Global.Foreground}"
+    Background="{DynamicResource Window.Background}"
+    Foreground="{DynamicResource Window.Foreground}"
     Topmost="True"
     WindowStartupLocation="CenterScreen">
 

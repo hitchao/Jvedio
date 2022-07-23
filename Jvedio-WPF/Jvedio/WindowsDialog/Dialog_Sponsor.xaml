@@ -39,7 +39,7 @@
                 Grid.Row="1"
                 Margin="20,5"
                 FontSize="10"
-                Foreground="{DynamicResource Button.Disabled.BorderBrush}"
+                Foreground="{DynamicResource Window.Sub.Foreground}"
                 Style="{StaticResource BaseTextBlock}"
                 Text="更新源：github"
                 TextAlignment="Left" />
@@ -62,7 +62,7 @@
                             Height="40"
                             DotCount="5"
                             DotDiameter="5"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Visibility="{Binding Loading, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <Image Name="wechat" />
                     </Grid>
@@ -82,7 +82,7 @@
                             Height="40"
                             DotCount="5"
                             DotDiameter="5"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Visibility="{Binding Loading, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <Image Name="alipay" />
                     </Grid>

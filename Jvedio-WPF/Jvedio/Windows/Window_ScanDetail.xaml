@@ -38,7 +38,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="IsReadOnly" Value="True" />
         </Style>
 

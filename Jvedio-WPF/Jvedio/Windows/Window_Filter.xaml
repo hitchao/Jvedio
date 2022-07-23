@@ -10,9 +10,9 @@
     Height="700"
     MinWidth="400"
     MinHeight="200"
-    Background="{DynamicResource Global.Background}"
+    Background="{DynamicResource Window.Background}"
     Closed="Window_Closed"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Window.Foreground}"
     mc:Ignorable="d">
 
     <Grid>

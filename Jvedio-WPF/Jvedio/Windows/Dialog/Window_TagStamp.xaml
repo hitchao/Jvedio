@@ -13,7 +13,7 @@
     CanMinimized="False"
     CanResize="False"
     ContentRendered="BaseWindow_ContentRendered"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -40,7 +40,7 @@
                 Background="{DynamicResource Window.Side.Background}"
                 BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                 BorderThickness="2"
-                Foreground="{DynamicResource Global.Foreground}"
+                Foreground="{DynamicResource Window.Foreground}"
                 KeyDown="textBox_KeyDown"
                 PlaceHolder=""
                 TextChanged="textBox_TextChanged"

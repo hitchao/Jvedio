@@ -43,7 +43,7 @@
         <Style x:Key="ActorInfoTextBlock" TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="10 10"/>
             <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}"/>
         </Style>
 
         <Style x:Key="ActorBorder" TargetType="{x:Type Border}">
@@ -86,9 +86,9 @@
         </Grid.RowDefinitions>
         <StackPanel x:Name="VedioTypeStackPanel" Grid.Row="0" Orientation="Horizontal">
             <Label  Content="{x:Static lang:Resources.SearchVideoType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
-            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
-            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
-            <RadioButton FontSize="15"  Foreground="{DynamicResource Global.Foreground}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
         </StackPanel>
 
         <DockPanel LastChildFill="True" Grid.Row="1" >
@@ -122,7 +122,7 @@
                                 </Border>
                                 <StackPanel Orientation="Vertical" Margin="2">
                                     <Image Tag="{Binding ID,Mode=OneWay}" Stretch="UniformToFill" MouseLeftButtonUp="SelectActor" MouseEnter="ActorBorderMouseEnter" MouseLeave="ActorBorderMouseLeave"  Style="{StaticResource ActorImage}"    />
-                                    <TextBox Name="ActorNameTextBox" Width="125" TextWrapping="Wrap" TextAlignment="Center" MaxHeight="80" Margin="0" Foreground="{DynamicResource Global.Foreground}" Opacity="0.7" FontSize="18"  Style="{StaticResource ActorInfoTextBox}" >
+                                    <TextBox Name="ActorNameTextBox" Width="125" TextWrapping="Wrap" TextAlignment="Center" MaxHeight="80" Margin="0" Foreground="{DynamicResource Window.Foreground}" Opacity="0.7" FontSize="18"  Style="{StaticResource ActorInfoTextBox}" >
                                         <TextBox.Text>
                                             <MultiBinding StringFormat="{}{0}({1})">
                                                 <Binding Path="Name" />

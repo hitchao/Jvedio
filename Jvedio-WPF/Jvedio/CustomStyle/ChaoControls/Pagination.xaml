@@ -14,7 +14,7 @@
         <Setter Property="Background" Value="{DynamicResource Window.Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Window.Title.Foreground}" />
         <Setter Property="CurrentPageBackground" Value="#409EFF" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="PageBackground" Value="{DynamicResource Window.Side.Background}" />
         <Setter Property="PageCount" Value="5" />
         <Setter Property="PageHoverBackground" Value="{DynamicResource Window.Title.Hover.Background}" />

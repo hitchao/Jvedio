@@ -39,7 +39,7 @@
                     CaretBrush="{DynamicResource Window.Foreground}"
                     ContextMenu="{StaticResource TextBoxContextMenu}"
                     FontSize="15"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     Style="{StaticResource TextBoxExtend}"
                     TextChanged="TextBox_TextChanged" />
             </StackPanel>
@@ -80,20 +80,20 @@
                     Click="SaveVedioType"
                     Content="{x:Static lang:Resources.Uncensored}"
                     FontSize="15"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     IsChecked="True"
                     Style="{StaticResource FlatRadioButton}" />
                 <RadioButton
                     Click="SaveVedioType"
                     Content="{x:Static lang:Resources.Censored}"
                     FontSize="15"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     Style="{StaticResource FlatRadioButton}" />
                 <RadioButton
                     Click="SaveVedioType"
                     Content="{x:Static lang:Resources.Europe}"
                     FontSize="15"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     Style="{StaticResource FlatRadioButton}" />
             </StackPanel>
 

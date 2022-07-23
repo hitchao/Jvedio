@@ -52,9 +52,9 @@
             HorizontalAlignment="Center"
             Background="Transparent"
             BorderThickness="0"
-            CaretBrush="{StaticResource Global.Foreground}"
+            CaretBrush="{StaticResource Window.Foreground}"
             ContextMenu="{StaticResource CopyContextMenu}"
-            Foreground="{StaticResource Global.Foreground}"
+            Foreground="{StaticResource Window.Foreground}"
             IsReadOnly="True"
             Style="{x:Null}" />
 

@@ -11,7 +11,7 @@
     Width="800"
     Height="400"
     Background="{DynamicResource Window.Background}"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Window.Foreground}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -27,7 +27,7 @@
             <!--  删除字体  -->
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="2" />
-            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
 
 
         </Style>
@@ -99,7 +99,7 @@
                         Margin="0"
                         HorizontalContentAlignment="Center"
                         Background="Transparent"
-                        Foreground="{DynamicResource Global.Foreground}"
+                        Foreground="{DynamicResource Window.Foreground}"
                         Style="{StaticResource BaseTextBox}"
                         Text="{Binding CurrentActorInfo.ActorName}" />
 

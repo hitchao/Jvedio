@@ -10,7 +10,7 @@
     Width="600"
     Height="400"
     Background="{DynamicResource Window.InnerDialog.Background}"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -46,7 +46,7 @@
                             Margin="2,0"
                             VerticalAlignment="Center"
                             FontSize="15"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Text="{Binding}" />
                     </StackPanel>
                 </DataTemplate>
@@ -73,7 +73,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Data="M183.232 128c0 0-52.544 0 37.184 0 80.448 0 164.288 0 250.368 0 58.368 0 58.24 128.832 140.864 128.832 50.88 0 228.992 0 228.992 0C906.56 256.832 960 310.272 960 376.128l0 398.656c0 65.856-53.44 119.232-119.296 119.232L183.232 894.016C117.44 894.08 64 840.704 64 774.784L64 247.296C64 181.376 117.44 128 183.232 128z"
-                        Fill="{DynamicResource Global.Foreground}" />
+                        Fill="{DynamicResource Window.Foreground}" />
                 </Viewbox>
             </Button>
 
@@ -91,7 +91,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Data="M827.392 195.584q65.536 65.536 97.792 147.456t32.256 167.936-32.256 167.936-97.792 147.456-147.456 98.304-167.936 32.768-168.448-32.768-147.968-98.304-98.304-147.456-32.768-167.936 32.768-167.936 98.304-147.456 147.968-97.792 168.448-32.256 167.936 32.256 147.456 97.792zM720.896 715.776q21.504-21.504 18.944-49.152t-24.064-49.152l-107.52-107.52 107.52-107.52q21.504-21.504 24.064-49.152t-18.944-49.152-51.712-21.504-51.712 21.504l-107.52 106.496-104.448-104.448q-21.504-20.48-49.152-23.04t-49.152 17.92q-21.504 21.504-21.504 52.224t21.504 52.224l104.448 104.448-104.448 104.448q-21.504 21.504-21.504 51.712t21.504 51.712 49.152 18.944 49.152-24.064l104.448-104.448 107.52 107.52q21.504 21.504 51.712 21.504t51.712-21.504z"
-                        Fill="{DynamicResource Global.Foreground}" />
+                        Fill="{DynamicResource Window.Foreground}" />
                 </Viewbox>
             </Button>
             <Button
@@ -108,7 +108,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Data="M687.6 96.4H336.4v91.2h351.1V96.4zM636.7 398v405.5h-73.9V398h73.9z m-175.5 0v405.5h-73.9V398h73.9z m332.1-119.2H230.7l27.9 648.8h506.7l28-648.8zM696.8 5.1c40.4 0 73.3 35.6 73.9 79.8v102.7h147.8c20.2 0 36.6 17.8 37 39.9v41.2c0 5.5-4 10-9 10.1h-70.1L848 941.6c-1.8 42.9-33.7 76.6-72.6 77.3H249.8c-39 0-71.3-33.4-73.7-76l-0.1-1.3-28.5-662.7H77.7c-5 0-9.1-4.4-9.2-9.8v-40.9c0-22.2 16.2-40.2 36.3-40.5h148.4V86.2c0-44.3 32.5-80.4 72.7-81.1h370.9z"
-                        Fill="{DynamicResource Global.Foreground}" />
+                        Fill="{DynamicResource Window.Foreground}" />
                 </Viewbox>
             </Button>
         </StackPanel>

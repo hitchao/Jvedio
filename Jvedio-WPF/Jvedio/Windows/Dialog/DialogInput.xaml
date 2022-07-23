@@ -28,7 +28,7 @@
             VerticalAlignment="Center">
             <Border
                 Margin="5"
-                Background="{DynamicResource Global.Background}"
+                Background="{DynamicResource Window.Background}"
                 CornerRadius="3"
                 Effect="{StaticResource PopupDropShadowEffect}" />
             <Border
@@ -69,9 +69,9 @@
                         BorderThickness="1"
                         ContextMenu="{StaticResource TextBoxContextMenu}"
                         FontSize="15"
-                        Foreground="{DynamicResource Global.Foreground}"
+                        Foreground="{DynamicResource Window.Foreground}"
                         PlaceHolder="Please Insert"
-                        PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                        PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                         PreviewKeyUp="ContentTextBox_PreviewKeyUp"
                         TextPadding="5 0" />
                     <StackPanel

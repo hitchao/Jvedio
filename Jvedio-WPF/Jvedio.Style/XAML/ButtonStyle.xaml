@@ -160,7 +160,7 @@
                             Margin="10,5"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Text="{TemplateBinding Content}" />
                     </Border>
                 </ControlTemplate>
@@ -287,7 +287,7 @@
                             Margin="10,5"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Text="{TemplateBinding Content}" />
                     </Border>
                 </ControlTemplate>

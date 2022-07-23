@@ -47,7 +47,7 @@
             VerticalAlignment="Center">
             <Border
                 Margin="5"
-                Background="{DynamicResource Global.Background}"
+                Background="{DynamicResource Window.Background}"
                 CornerRadius="3"
                 Effect="{StaticResource PopupDropShadowEffect}" />
             <Border

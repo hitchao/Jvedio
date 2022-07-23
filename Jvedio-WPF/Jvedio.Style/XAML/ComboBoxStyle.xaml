@@ -38,7 +38,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Data="F1 M 0,0 L 2.667,2.66665 L 5.3334,0 L 5.3334,-1.78168 L 2.6667,0.88501 L0,-1.78168 L0,0 Z"
-                                Fill="{DynamicResource Global.Foreground}" />
+                                Fill="{DynamicResource Window.Foreground}" />
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -144,7 +144,7 @@
                     Color="Transparent">
                     <Border
                         x:Name="dropDownBorder"
-                        Background="{DynamicResource Popup.Background}"
+                        Background="{DynamicResource Window.Side.Background}"
                         BorderBrush="Transparent"
                         BorderThickness="3"
                         CornerRadius="5">
@@ -229,7 +229,7 @@
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}" />
     </Style>
 

@@ -16,12 +16,12 @@
     Height="600"
     MinWidth="800"
     MinHeight="500"
-    Background="{DynamicResource Global.Background}"
+    Background="{DynamicResource Window.Background}"
     CanMinimized="True"
     CanResize="True"
     Closing="BaseWindow_Closing"
     ContentRendered="BaseWindow_ContentRendered"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     TitleAlign="Left"
     TitleMargin="5 0"
@@ -252,7 +252,7 @@
                             BorderBrush="{DynamicResource Window.Side.Hover.Background}"
                             DisplayMemberPath="Name"
                             FontSize="16"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                             ItemsSource="{Binding DataBases}"
                             SelectedValuePath="DBId"
@@ -277,7 +277,7 @@
                         BorderBrush="{DynamicResource Window.Side.Hover.Background}"
                         DisplayMemberPath="Name"
                         FontSize="16"
-                        Foreground="{DynamicResource Global.Foreground}"
+                        Foreground="{DynamicResource Window.Foreground}"
                         ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                         ItemsSource="{Binding DataBases}"
                         SelectedValuePath="DBId"
@@ -384,7 +384,7 @@
                                                     CornerRadius="0"
                                                     Fill="{Binding BackgroundBrush}"
                                                     FontSize="12"
-                                                    Foreground="{DynamicResource Global.Foreground}"
+                                                    Foreground="{DynamicResource Window.Foreground}"
                                                     IsChecked="{Binding Selected, Mode=TwoWay}"
                                                     MainText="{Binding TagName}"
                                                     Path="M121.6 247.872h780.8c23.488 0 42.496 19.008 42.496 42.496v417.92a42.496 42.496 0 0 1-42.496 42.496H121.6a42.496 42.496 0 0 1-42.496-42.496v-417.92a42.496 42.496 0 0 1 42.496-42.496z"
@@ -509,7 +509,7 @@
                         Background="{DynamicResource Window.Detail.Background}"
                         BorderBrush="#326CF3"
                         BorderThickness="0"
-                        Foreground="{DynamicResource Global.Foreground}"
+                        Foreground="{DynamicResource Window.Foreground}"
                         PlaceHolder="搜索"
                         PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                         SearchOnTextChanged="False"
@@ -659,7 +659,7 @@
                                                         <Grid Margin="5">
                                                             <Border
                                                                 Margin="5"
-                                                                Background="{DynamicResource Popup.Background}"
+                                                                Background="{DynamicResource Window.Side.Background}"
                                                                 CornerRadius="5"
                                                                 Effect="{StaticResource PopupDropShadowEffect}" />
                                                             <StackPanel Margin="5">
@@ -707,7 +707,7 @@
                                                     CaretBrush="{DynamicResource Window.Foreground}"
                                                     ContextMenu="{StaticResource TextBoxContextMenu}"
                                                     Focusable="True"
-                                                    Foreground="{DynamicResource Global.Foreground}"
+                                                    Foreground="{DynamicResource Window.Foreground}"
                                                     GotFocus="SearchBar_GotFocus"
                                                     LostFocus="SearchBar_LostFocus"
                                                     PreviewKeyUp="SearchBar_PreviewKeyUp"
@@ -731,7 +731,7 @@
                                                         <Border
                                                             Name="SearchBorder"
                                                             Margin="5"
-                                                            Background="{DynamicResource Popup.Background}"
+                                                            Background="{DynamicResource Window.Side.Background}"
                                                             CornerRadius="5"
                                                             Effect="{StaticResource PopupDropShadowEffect}" />
 
@@ -1144,7 +1144,7 @@
                                                                     Padding="5"
                                                                     HorizontalAlignment="Left"
                                                                     VerticalAlignment="Bottom"
-                                                                    Background="{DynamicResource Global.Background}"
+                                                                    Background="{DynamicResource Window.Background}"
                                                                     CornerRadius="5"
                                                                     Opacity="0.7">
                                                                     <Border.Style>
@@ -1211,7 +1211,7 @@
                                                                     HorizontalAlignment="Center"
                                                                     Background="Transparent"
                                                                     FontSize="14"
-                                                                    Foreground="{DynamicResource Global.Foreground}"
+                                                                    Foreground="{DynamicResource Window.Foreground}"
                                                                     IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                                     Opacity="0.5"
                                                                     Style="{StaticResource ReadOnlyNoWrapTextBox}"
@@ -1284,7 +1284,7 @@
                                                                 HorizontalAlignment="Left"
                                                                 Background="Transparent"
                                                                 FontSize="15"
-                                                                Foreground="{DynamicResource Global.Foreground}"
+                                                                Foreground="{DynamicResource Window.Foreground}"
                                                                 IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                                 Opacity="0.5"
                                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
@@ -1471,7 +1471,7 @@
                         Style="{StaticResource FlatBorderStyle}">
 
                         <Viewbox Height="15" Margin="-5,0,0,0">
-                            <Path Data="M232 64c-30.928 0-56 25.072-56 56v784c0 30.928 25.072 56 56 56h560c30.928 0 56-25.072 56-56V120c0-30.928-25.072-56-56-56H232z m0 840V120h560v784H232z m112-736h-64v64h64V168z m168 120c-123.712 0-224 100.288-224 224s100.288 224 224 224 224-100.288 224-224-100.288-224-224-224z m-168 224c0-92.784 75.216-168 168-168s168 75.216 168 168-75.216 168-168 168-168-75.216-168-168z m168-112c-61.856 0-112 50.144-112 112s50.144 112 112 112 112-50.144 112-112-50.144-112-112-112zM744 168h-64v64h64V168zM316 792v56h392v-56H316z" Fill="{DynamicResource Global.Foreground}" />
+                            <Path Data="M232 64c-30.928 0-56 25.072-56 56v784c0 30.928 25.072 56 56 56h560c30.928 0 56-25.072 56-56V120c0-30.928-25.072-56-56-56H232z m0 840V120h560v784H232z m112-736h-64v64h64V168z m168 120c-123.712 0-224 100.288-224 224s100.288 224 224 224 224-100.288 224-224-100.288-224-224-224z m-168 224c0-92.784 75.216-168 168-168s168 75.216 168 168-75.216 168-168 168-168-75.216-168-168z m168-112c-61.856 0-112 50.144-112 112s50.144 112 112 112 112-50.144 112-112-50.144-112-112-112zM744 168h-64v64h64V168zM316 792v56h392v-56H316z" Fill="{DynamicResource Window.Foreground}" />
 
                         </Viewbox>
                     </Border>
@@ -1512,7 +1512,7 @@
                                                 </BeginStoryboard>
                                             </DataTrigger.ExitActions>
                                             <Setter Property="Visibility" Value="Visible" />
-                                            <Setter Property="Fill" Value="{DynamicResource Common.HighLight.Hover.Background}" />
+                                            <Setter Property="Fill" Value="{DynamicResource Common.Status.Running.Background}" />
                                             <Setter Property="Data" Value="M171.292444 548.977778a337.464889 337.464889 0 0 1 210.488889-367.445334c111.616-43.52 231.992889-22.698667 317.212445 39.480889L626.460444 338.488889l325.233778-1.251556L835.470222 0l-59.562666 96.426667C650.353778 15.075556 479.175111-11.491556 329.272889 46.933333 121.628444 127.886222 2.048 337.351111 25.6 549.034667h145.635556zM852.764444 465.009778a337.464889 337.464889 0 0 1-210.488888 367.502222c-102.627556 39.992889-215.836444 24.917333-302.819556-29.013333l65.536-106.211556-349.752889-20.48L203.093333 1024l62.065778-100.465778c125.553778 81.351111 279.608889 102.001778 429.511111 43.52 207.644444-80.952889 327.224889-290.304 303.616-502.044444h-145.635555z" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding ScanStatus}" Value="Complete">
@@ -1644,7 +1644,7 @@
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
 
-                                                                                <Setter Property="Fill" Value="{DynamicResource Common.HighLight.Hover.Background}" />
+                                                                                <Setter Property="Fill" Value="{DynamicResource Common.Status.Running.Background}" />
                                                                                 <Setter Property="Data" Value="M171.292444 548.977778a337.464889 337.464889 0 0 1 210.488889-367.445334c111.616-43.52 231.992889-22.698667 317.212445 39.480889L626.460444 338.488889l325.233778-1.251556L835.470222 0l-59.562666 96.426667C650.353778 15.075556 479.175111-11.491556 329.272889 46.933333 121.628444 127.886222 2.048 337.351111 25.6 549.034667h145.635556zM852.764444 465.009778a337.464889 337.464889 0 0 1-210.488888 367.502222c-102.627556 39.992889-215.836444 24.917333-302.819556-29.013333l65.536-106.211556-349.752889-20.48L203.093333 1024l62.065778-100.465778c125.553778 81.351111 279.608889 102.001778 429.511111 43.52 207.644444-80.952889 327.224889-290.304 303.616-502.044444h-145.635555z" />
                                                                             </DataTrigger>
                                                                             <DataTrigger Binding="{Binding Status}" Value="RanToCompletion">
@@ -1828,7 +1828,7 @@
                                             Width="280"
                                             Height="80"
                                             Margin="0,10"
-                                            Foreground="{DynamicResource Global.Foreground}"
+                                            Foreground="{DynamicResource Window.Foreground}"
                                             Message="{Binding Text}"
                                             MessageType="{Binding Type}" />
                                     </DataTemplate>

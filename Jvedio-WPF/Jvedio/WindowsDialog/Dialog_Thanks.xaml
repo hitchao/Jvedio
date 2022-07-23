@@ -43,7 +43,7 @@
                 <TextBlock
                     Margin="0,5"
                     FontSize="15"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     TextAlignment="Left">
                     界面控件：<Hyperlink Click="OpenUrl" NavigateUri="https://github.com/HandyOrg/HandyControl">
                         <Run Text="HandyControl" />
@@ -68,7 +68,7 @@
                 <TextBlock
                     Margin="2,10"
                     FontSize="16"
-                    Foreground="{DynamicResource Global.Foreground}"
+                    Foreground="{DynamicResource Window.Foreground}"
                     TextAlignment="Center"
                     Visibility="Hidden" />
 

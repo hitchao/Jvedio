@@ -52,7 +52,7 @@
                             Margin="10"
                             FontSize="20"
                             FontWeight="Bold"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Text="{x:Static lang:Resources.Upgrade}"
                             TextAlignment="Center" />
 
@@ -66,7 +66,7 @@
                         <hc:LoadingCircle
                             x:Name="UpgradeLoadingCircle"
                             Height="30"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Visibility="{Binding IsChecking, Converter={StaticResource bool2VisibilityConverter}, Mode=OneWay}" />
 
                     </StackPanel>
@@ -80,7 +80,7 @@
                             Margin="10"
                             HorizontalAlignment="Left"
                             FontSize="14"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Text="{x:Static lang:Resources.UpgradeSource}" />
 
                         <StackPanel Orientation="Horizontal">
@@ -88,13 +88,13 @@
                                 Margin="10"
                                 HorizontalAlignment="Left"
                                 FontSize="14"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 Opacity="0.7"
                                 Text="{x:Static lang:Resources.ReleaseDate}" />
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 Opacity="0.7"
                                 Text="{Binding ReleaseDate}" />
                         </StackPanel>
@@ -103,13 +103,13 @@
                                 Margin="10"
                                 HorizontalAlignment="Left"
                                 FontSize="14"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 Opacity="0.7"
                                 Text="{x:Static lang:Resources.CurrentVersion}" />
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 Opacity="0.7"
                                 Text="{Binding LocalVersion}" />
                         </StackPanel>
@@ -119,12 +119,12 @@
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 Text="{x:Static lang:Resources.LatestVersion}" />
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 Text="{Binding LatestVersion}" />
                         </StackPanel>
                     </StackPanel>
@@ -205,7 +205,7 @@
                         HorizontalAlignment="Left"
                         FontSize="18"
                         FontWeight="Bold"
-                        Foreground="{DynamicResource Global.Foreground}"
+                        Foreground="{DynamicResource Window.Foreground}"
                         Text="新版本详情"
                         TextAlignment="Center" />
                     <TextBox
@@ -216,7 +216,7 @@
                         VerticalContentAlignment="Top"
                         FontFamily="微软雅黑"
                         FontSize="15"
-                        Foreground="{DynamicResource Global.Foreground}"
+                        Foreground="{DynamicResource Window.Foreground}"
                         HorizontalScrollBarVisibility="Auto"
                         IsReadOnly="True"
                         Style="{StaticResource ReadOnlyTextBox}"

@@ -3,7 +3,7 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Cursor" Value="Hand" />

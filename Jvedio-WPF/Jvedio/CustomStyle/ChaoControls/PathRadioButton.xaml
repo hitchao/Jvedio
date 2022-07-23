@@ -9,8 +9,8 @@
         <Setter Property="CornerRadius" Value="0" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
-        <Setter Property="Fill" Value="{DynamicResource Global.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
+        <Setter Property="Fill" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="CheckedBrush" Value="{DynamicResource Window.Side.Hover.Background}" />
     </Style>
 

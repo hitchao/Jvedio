@@ -1,0 +1,118 @@
+{
+    "info": {
+        "type": 1, // 0 刮削器 1 皮肤
+        "authors": [
+            {
+                "name": "chao",
+                "github": "https://github.com/hitchao",
+                "gitee": ""
+            },
+            {
+                "name": "SuperStudio",
+                "github": "https://github.com/SuperStudio",
+                "gitee": ""
+            }
+        ],
+        "release_notes": [
+            {
+                "version": "v1.0.0",
+                "dates": "2022-07-23",
+                "desc": "默认皮肤",
+                "markdown": "# 默认皮肤 \n Jvedio 默认皮肤，黑色"
+            },
+            {
+                "version": "v1.0.1",
+                "dates": "2022-07-25",
+                "desc": "默认皮肤",
+                "markdown": "# 默认皮肤 \n Jvedio 默认皮肤，黑色"
+            }
+        ]
+    },
+    "data": {
+        "type": 0,  // 0 纯色 1 渐变 2 图片 
+        "images": {
+            "big": "./images/big.png",
+            "small": "./images/small.png",
+            "default": "./images/default.png"
+        },
+        "colors": {
+            "Window.Background": "#1E1E1E",
+            "Window.Foreground": "#FFFFFF",
+            "Window.Sub.Foreground": "#C5C5C5",
+            "Window.Background": "#1E1E1E",
+            "Window.Foreground": "#FFFFFF",
+            "Window.Side.Background": "#252526",
+            "Window.Side.Foreground": "#FFFFFF",
+            "Window.Side.Hover.Background": "#B237373D",
+            "Window.Side.Hover.Foreground": "#B2FFFFFF",
+            "Window.ToolsBar.Background": "#383838",
+            "Window.Tab.Foreground": "#FFFFFF",
+            "Window.Title.Background": "#323233",
+            "Window.Title.Foreground": "#FFFFFF",
+            "Window.Title.Hover.Background": "#B23F3F41",
+            "Window.Title.Hover.Foreground": "#B2FFFFFF",
+            "Window.Title.Hover.Deep.Background": "#FF0000",
+            "Window.StatusBar.Background": "#007ACC",
+            "Window.StatusBar.Foreground": "#FFFFFF",
+            "Control.Hover.Background": "#2D2D30",
+            "Control.Hover.Foreground": "#FFFFFF",
+            "Control.Disabled.Background": "#808080",
+            "Control.Disabled.Foreground": "#2D2D30",
+            "Control.Disabled.BorderBrush": "#808080",
+            "Button.Selected.Background": "#326BF1",
+            "Button.Selected.BorderBrush": "#007FD4",
+            "Button.Selected.Foreground": "#FFFFFF",
+            "Button.Selected.NotActive.Background": "#37373D",
+            "Button.Selected.NotActive.Foreground": "#37373D",
+            "Button.Hover.Background": "#B22D2D30",
+            "Button.Hover.BorderBrush": "#FFFFFF",
+            "Button.Disabled.BorderBrush": "#808080",
+            "Button.Fill.Background": "#1A97ED",
+            "Button.Fill.Foreground": "#FFFFFF",
+            "ScollViewer.Background": "#00000000",
+            "ScollViewer.Thumb.Background": "#424242",
+            "ScollViewer.Thumb.Hover.Background": "#4F4F4F",
+            "Menu.Hover.Background": "#1F466E",
+            "Menu.Hover.Foreground": "#FFFFFF",
+            "Menu.Background": "#212122",
+            "Menu.Foreground": "#FFFFFF",
+            "Window.Side.Background": "#252526",
+            "Popup.Foreground": "#FFFFFF",
+            "ListBoxItem.Background": "#101013",
+            "ListBoxItem.Foreground": "#CCCCCC",
+            "ListBoxItem.Hover.Background": "#2D2D30",
+            "ListBoxItem.Hover.Foreground": "#FFFFFF",
+            "ListBoxItem.Selected.Active.Background": "#094771",
+            "ListBoxItem.Selected.Active.Foreground": "#FFFFFF",
+            "ListBoxItem.Selected.Active.BorderBrush": "#007FD4",
+            "ListBoxItem.Selected.NotActive.Background": "#686868",
+            "TabItem.Selected.Background": "#1E1E1E",
+            "TabItem.Selected.Foreground": "#FFFFFF",
+            "TabItem.UnSaved.Fill": "#ED7547",
+            "DataGrid.Header.Background": "#222222",
+            "DataGrid.Header.Foreground": "#FFFFFF",
+            "DataGrid.Header.Gripper.Background": "#343434",
+            "DataGrid.Row.Even.Background": "#1E1E1E",
+            "DataGrid.Row.Even.Foreground": "#FFFFFF",
+            "DataGrid.Row.Odd.Background": "#252525",
+            "DataGrid.Row.Odd.Foreground": "#FFFFFF",
+            "DataGrid.Row.Hover.Background": "#2A2D2E",
+            "DataGrid.Row.Hover.Foreground": "#FFFFFF",
+            "DataGrid.Border.BorderBrush": "#007FD4",
+            "Common.HighLight.Background": "#094771",
+            "Common.HighLight.Foreground": "#FFFFFF",
+            "Common.HighLight.Deep.Background": "#FF7B3B",
+            "Common.HighLight.Deep.Foreground": "#FFFFFF",
+            "Common.HighLight.BorderBrush": "#007FD4",
+            "Common.HighLight.Hover.Background": "#007FD4",
+            "Common.HighLight.Hover.Foreground": "#FFFFFF",
+            "Window.Detail.Background": "#1B1B1F",
+            "Window.Detail.Foreground": "#FFFFFF",
+            "Window.InnerDialog.Background": "#1B1B1F",
+            "Window.InnerDialog.Foreground": "#FFFFFF",
+            "CheckBox.Checked.Background": "#008000",
+            "CheckBox.Checked.Foreground": "#FFFFFF",
+            "TextBox.PlaceHolder.Foreground": "#808080"
+        }
+    }
+}

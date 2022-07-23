@@ -44,7 +44,7 @@
                                         Focusable="False"
                                         RecognizesAccessKey="True"
                                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                        TextElement.Foreground="{DynamicResource Global.Sub.Foreground}" />
+                                        TextElement.Foreground="{DynamicResource Window.Sub.Foreground}" />
 
                                 </hc:SimplePanel>
                                 <ControlTemplate.Triggers>
@@ -66,7 +66,7 @@
                                             <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type TabControl}}}" Value="Left" />
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="Panel.ZIndex" Value="1" />
-                                        <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{DynamicResource Global.Foreground}" />
+                                        <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{DynamicResource Window.Foreground}" />
                                         <Setter TargetName="mainBorder" Property="BorderThickness" Value="0,0,3,0" />
                                     </MultiDataTrigger>
                                     <MultiDataTrigger>
@@ -273,7 +273,7 @@
                             <Border
                                 x:Name="innerBorder"
                                 Margin="-1"
-                                Background="{DynamicResource Window.Tab.Background}"
+                                Background="{DynamicResource Window.ToolsBar.Background}"
                                 BorderThickness="0"
                                 CornerRadius="5"
                                 Opacity="0" />
@@ -294,7 +294,7 @@
                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
                                 <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="mainBorder" Property="Background" Value="{DynamicResource Window.Tab.Background}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{DynamicResource Window.ToolsBar.Background}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>

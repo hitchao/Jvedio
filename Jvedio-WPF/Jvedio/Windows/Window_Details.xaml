@@ -19,7 +19,7 @@
     Background="{DynamicResource Window.Detail.Background}"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
-    Foreground="{DynamicResource Global.Foreground}"
+    Foreground="{DynamicResource Window.Detail.Foreground}"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
@@ -84,7 +84,7 @@
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="FontSize" Value="16" />
             <!--  删除字体  -->
-            <Setter Property="Foreground" Value="{DynamicResource Global.Foreground}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="ContextMenu" Value="{StaticResource CopyContextMenu}" />
             <Setter Property="Margin" Value="0,5" />
             <Setter Property="Padding" Value="0" />
@@ -98,7 +98,7 @@
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontFamily" Value="微软雅黑" />
             <!--  删除字体  -->
-            <Setter Property="Foreground" Value="{DynamicResource Global.Sub.Foreground}" />
+            <Setter Property="Foreground" Value="{DynamicResource Window.Sub.Foreground}" />
             <Setter Property="Margin" Value="0,0" />
             <Setter Property="Opacity" Value="0.9" />
             <Setter Property="Padding" Value="0" />
@@ -326,7 +326,7 @@
                                                 VerticalAlignment="Center"
                                                 FontFamily="微软雅黑"
                                                 FontSize="15"
-                                                Foreground="{DynamicResource Global.Foreground}"
+                                                Foreground="{DynamicResource Window.Foreground}"
                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                 Text="{Binding VID, Mode=OneWay}"
                                                 TextAlignment="Left"
@@ -402,7 +402,7 @@
                                             HorizontalAlignment="Left"
                                             Background="Transparent"
                                             FontSize="15"
-                                            Foreground="{DynamicResource Global.Foreground}"
+                                            Foreground="{DynamicResource Window.Foreground}"
                                             Opacity="0.5"
                                             Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                             Text="{Binding ReleaseDate, Mode=OneWay}"
@@ -440,7 +440,7 @@
                                             HorizontalAlignment="Center"
                                             Background="Transparent"
                                             FontSize="14"
-                                            Foreground="{DynamicResource Global.Foreground}"
+                                            Foreground="{DynamicResource Window.Foreground}"
                                             IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                             MouseLeftButtonDown="CopyText"
                                             Opacity="0.5"
@@ -577,7 +577,7 @@
                         FocusVisualStyle="{x:Null}"
                         FontSize="16"
                         FontWeight="Bold"
-                        Foreground="{DynamicResource Global.Sub.Foreground}"
+                        Foreground="{DynamicResource Window.Sub.Foreground}"
                         Style="{StaticResource ViewTextBox}"
                         Text="{Binding CurrentVideo.Title}"
                         TextAlignment="Left"
@@ -632,7 +632,7 @@
                             VerticalAlignment="Stretch"
                             Click="CloseWindow"
                             Style="{StaticResource NormalButton}"
-                            Tag="{DynamicResource Window.Title.Close.Hover.Background}">
+                            Tag="{DynamicResource Window.Title.Hover.Deep.Background}">
                             <Image
                                 Width="24"
                                 Height="24"
@@ -971,7 +971,7 @@
                                                     HorizontalAlignment="Left"
                                                     FontFamily="Times New Roman"
                                                     FontSize="24"
-                                                    Foreground="{DynamicResource Global.Foreground}"
+                                                    Foreground="{DynamicResource Window.Foreground}"
                                                     Style="{StaticResource ViewTextBox}"
                                                     Text="{Binding CurrentVideo.VID, Mode=OneWay}" />
                                             </StackPanel>
@@ -1115,7 +1115,7 @@
                                                                             MaxHeight="60"
                                                                             Margin="0"
                                                                             FontSize="12"
-                                                                            Foreground="{DynamicResource Global.Foreground}"
+                                                                            Foreground="{DynamicResource Window.Foreground}"
                                                                             Opacity="0.7"
                                                                             Style="{StaticResource ReadOnlyWrapTextBox}"
                                                                             Text="{Binding ActorName}"
@@ -1129,7 +1129,7 @@
                                                                         BorderThickness="0"
                                                                         Content="{Binding Count}"
                                                                         FontSize="18"
-                                                                        Foreground="{DynamicResource Global.Foreground}"
+                                                                        Foreground="{DynamicResource Window.Foreground}"
                                                                         Opacity="0.7"
                                                                         ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />-->
 
@@ -1189,7 +1189,7 @@
                                                         Background="{DynamicResource Window.Detail.Background}"
                                                         BorderBrush="{DynamicResource Window.Side.Hover.Background}"
                                                         FontSize="16"
-                                                        Foreground="{DynamicResource Global.Foreground}"
+                                                        Foreground="{DynamicResource Window.Foreground}"
                                                         ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                                         SelectedIndex="{Binding CurrentVideo.VideoType, Converter={StaticResource VidioTypeToIntConverter}, Mode=TwoWay}"
                                                         SelectionChanged="ComboBox_SelectionChanged"
@@ -1363,7 +1363,7 @@
                                                                     Background="{DynamicResource Window.Side.Background}"
                                                                     BorderBrush="#326CF3"
                                                                     BorderThickness="0"
-                                                                    Foreground="{DynamicResource Global.Foreground}"
+                                                                    Foreground="{DynamicResource Window.Foreground}"
                                                                     PlaceHolder="搜索"
                                                                     PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                     SearchOnTextChanged="False"
@@ -1572,7 +1572,7 @@
                                             Width="auto"
                                             Height="1"
                                             Margin="0,5"
-                                            Fill="{DynamicResource Global.Foreground}" />
+                                            Fill="{DynamicResource Window.Foreground}" />
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.AudioFormat}" />
@@ -1613,7 +1613,7 @@
                                             Width="auto"
                                             Height="1"
                                             Margin="0,5"
-                                            Fill="{DynamicResource Global.Foreground}" />
+                                            Fill="{DynamicResource Window.Foreground}" />
 
 
 

@@ -33,7 +33,7 @@
             <Border
                 Padding="3"
                 Panel.ZIndex="5"
-                Background="{StaticResource Window.Title.Background}"
+                Background="{DynamicResource Window.Title.Background}"
                 Cursor="Hand">
                 <Border.ContextMenu>
                     <ContextMenu>
@@ -68,7 +68,7 @@
                         <Border
                             Height="25"
                             VerticalAlignment="Bottom"
-                            Background="Gray"
+                            Background="{DynamicResource Window.Side.Background}"
                             Opacity="0.5" />
                         <StackPanel
                             Margin="5"
@@ -103,7 +103,7 @@
                         <TextBlock
                             Margin="0,5"
                             FontSize="20"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Text="{Binding Name}" />
                         <TextBlock
                             FontSize="12"
@@ -128,7 +128,7 @@
                 Margin="0"
                 Padding="5"
                 Panel.ZIndex="5"
-                Background="{StaticResource Window.Title.Background}"
+                Background="{DynamicResource Window.Title.Background}"
                 Cursor="Hand">
                 <Border.ContextMenu>
                     <ContextMenu>
@@ -158,7 +158,7 @@
                         <TextBlock
                             Margin="0,5"
                             FontSize="20"
-                            Foreground="{DynamicResource Global.Foreground}"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Text="{Binding Name}" />
                         <TextBlock
                             FontSize="12"
@@ -236,7 +236,7 @@
                         <hc:LoadingCircle
                             Height="30"
                             Margin="0,20"
-                            Foreground="{DynamicResource Global.Foreground}" />
+                            Foreground="{DynamicResource Window.Foreground}" />
 
                         <TextBlock
                             Margin="10,0"
@@ -361,7 +361,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="视频"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5" />
 
@@ -372,7 +372,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="图片"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5"
@@ -385,7 +385,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="游戏"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5"
@@ -396,7 +396,7 @@
                                 Background="Transparent"
                                 Click="ChangeDataType"
                                 Content="漫画"
-                                Foreground="{DynamicResource Global.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
                                 Tag="5"
@@ -421,7 +421,7 @@
                                     Background="Transparent"
                                     Clear="SearchText_Changed"
                                     FontSize="15"
-                                    Foreground="{DynamicResource Global.Foreground}"
+                                    Foreground="{DynamicResource Window.Foreground}"
                                     PlaceHolder="检索"
                                     PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                     Search="SearchText_Changed"
