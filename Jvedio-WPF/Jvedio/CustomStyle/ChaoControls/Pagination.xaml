@@ -13,7 +13,7 @@
         <Setter Property="Padding" Value="10" />
         <Setter Property="Background" Value="{DynamicResource Window.Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Window.Title.Foreground}" />
-        <Setter Property="CurrentPageBackground" Value="#409EFF" />
+        <Setter Property="CurrentPageBackground" Value="{DynamicResource Button.Fill.Background}" />
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="PageBackground" Value="{DynamicResource Window.Side.Background}" />
         <Setter Property="PageCount" Value="5" />

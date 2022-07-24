@@ -1804,7 +1804,10 @@
                                         IsSelected="False"
                                         LineWidth="0"
                                         Style="{StaticResource BaseTogglePanel}">
-                                        <StackPanel Height="auto" VerticalAlignment="Stretch">
+                                        <StackPanel
+                                            Name="sideRadioButtons"
+                                            Height="auto"
+                                            VerticalAlignment="Stretch">
                                             <chao:PathRadioButton
                                                 Name="AllRadioButton"
                                                 Command="{Binding SelectCommand}"
@@ -3320,69 +3323,68 @@
                                             <!--</ScrollViewer>-->
 
 
-
-
-
-                                            <!--  返回顶部  -->
-                                            <Canvas
-                                                Width="20"
-                                                Height="20"
-                                                Margin="0,0,70,40"
+                                            <StackPanel
+                                                Margin="20,10"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Bottom"
-                                                Panel.ZIndex="5"
-                                                Cursor="Hand"
-                                                MouseLeftButtonUp="GotoTop"
-                                                Visibility="{Binding GoToTopCanvas, FallbackValue=Hidden}">
-                                                <Ellipse
-                                                    Width="40"
-                                                    Height="40"
-                                                    Margin="0,0,5,5"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Bottom"
-                                                    Style="{StaticResource BlueEllipse}" />
-                                                <Image
-                                                    Canvas.Left="9"
-                                                    Canvas.Top="8"
-                                                    Height="22"
-                                                    HorizontalAlignment="Left"
-                                                    Panel.ZIndex="2"
-                                                    Source="{Binding Themes, Mode=OneWay, ConverterParameter=up, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                            </Canvas>
+                                                Panel.ZIndex="99"
+                                                Orientation="Vertical">
 
-                                            <!--  去到底部  -->
-                                            <Canvas
-                                                Width="20"
-                                                Height="20"
-                                                Margin="10,10,70,40"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Top"
-                                                Panel.ZIndex="5"
-                                                Cursor="Hand"
-                                                MouseLeftButtonUp="GotoBottom"
-                                                Visibility="{Binding GoToBottomCanvas}">
-                                                <Ellipse
-                                                    Width="40"
-                                                    Height="40"
-                                                    Margin="0,0,5,5"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Bottom"
-                                                    Style="{StaticResource BlueEllipse}" />
-                                                <Image
-                                                    Canvas.Left="9"
-                                                    Canvas.Top="10"
-                                                    Height="22"
-                                                    HorizontalAlignment="Left"
-                                                    Panel.ZIndex="2"
-                                                    RenderTransformOrigin="0.5,0.5"
-                                                    Source="{Binding Themes, Mode=OneWay, ConverterParameter=up, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}">
+                                                <Border
+                                                    Width="25"
+                                                    Height="25"
+                                                    CornerRadius="5 5 0 0"
+                                                    MouseLeftButtonUp="GotoTop"
+                                                    Style="{StaticResource BgHoverBorder}"
+                                                    ToolTip="去到顶部">
 
-                                                    <Image.RenderTransform>
-                                                        <RotateTransform Angle="180" />
-                                                    </Image.RenderTransform>
+                                                    <Viewbox
+                                                        Width="15"
+                                                        Height="auto"
+                                                        VerticalAlignment="Center">
+                                                        <Path
+                                                            Data="M854.016 739.328l-313.344-309.248-313.344 309.248q-14.336 14.336-32.768 21.504t-37.376 7.168-36.864-7.168-32.256-21.504q-29.696-28.672-29.696-68.608t29.696-68.608l376.832-373.76q14.336-14.336 34.304-22.528t40.448-9.216 39.424 5.12 31.232 20.48l382.976 379.904q28.672 28.672 28.672 68.608t-28.672 68.608q-14.336 14.336-32.768 21.504t-37.376 7.168-36.864-7.168-32.256-21.504z"
+                                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                                            RenderTransformOrigin="0.5,0.5">
+                                                            <Path.RenderTransform>
+                                                                <TransformGroup>
+                                                                    <RotateTransform Angle="0" />
+                                                                </TransformGroup>
+                                                            </Path.RenderTransform>
+                                                        </Path>
+                                                    </Viewbox>
+                                                </Border>
+                                                <Border
+                                                    Width="25"
+                                                    Height="25"
+                                                    Padding="3,8,0,0"
+                                                    Panel.ZIndex="99"
+                                                    CornerRadius="0 0 5 5"
+                                                    MouseLeftButtonUp="GotoBottom"
+                                                    Style="{StaticResource BgHoverBorder}"
+                                                    ToolTip="去到顶部">
 
-                                                </Image>
-                                            </Canvas>
+                                                    <Viewbox
+                                                        Width="15"
+                                                        Height="auto"
+                                                        VerticalAlignment="Center">
+                                                        <Path
+                                                            Data="M854.016 739.328l-313.344-309.248-313.344 309.248q-14.336 14.336-32.768 21.504t-37.376 7.168-36.864-7.168-32.256-21.504q-29.696-28.672-29.696-68.608t29.696-68.608l376.832-373.76q14.336-14.336 34.304-22.528t40.448-9.216 39.424 5.12 31.232 20.48l382.976 379.904q28.672 28.672 28.672 68.608t-28.672 68.608q-14.336 14.336-32.768 21.504t-37.376 7.168-36.864-7.168-32.256-21.504z"
+                                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                                            RenderTransformOrigin="0.5,0.5">
+                                                            <Path.RenderTransform>
+                                                                <TransformGroup>
+                                                                    <RotateTransform Angle="180" />
+                                                                </TransformGroup>
+                                                            </Path.RenderTransform>
+                                                        </Path>
+                                                    </Viewbox>
+                                                </Border>
+                                            </StackPanel>
+
+
+
+
                                         </Grid>
                                     </Grid>
 

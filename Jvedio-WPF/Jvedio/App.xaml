@@ -21,8 +21,8 @@
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
 
                 <!--  ChaoControls  -->
-                <!--<ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml" />-->
-                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/ChaoControls.Style;Component/Themes/ChaoControls.xaml" />
 
                 <!--  Main  -->

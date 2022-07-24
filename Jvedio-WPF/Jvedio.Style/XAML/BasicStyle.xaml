@@ -13,7 +13,7 @@
     <converter:FilePathToDirConverter x:Key="FilePathToDirConverter" />
 
     <converter:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
- 
+
     <converter:BoolToOppositeVisibilityConverter x:Key="BoolToOppositeVisibilityConverter" />
     <converter:SmallerThicknessConverter x:Key="SmallerThicknessConverter" />
     <converter:OppositeBooleanConverter x:Key="OppositeBooleanConverter" />
@@ -28,12 +28,12 @@
     <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converter:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
     <converter:IntToCheckedConverter x:Key="IntToCheckedConverter" />
- 
+
     <converter:SmallerValueConverter x:Key="SmallerValueConverter" />
- 
+
     <!--  字体  -->
- 
- 
+
+
     <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter" />
 
 
@@ -100,10 +100,10 @@
         <Setter Property="Cursor" Value="Hand" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Canvas}, Mode=FindAncestor}}" Value="True">
-                <Setter Property="Fill" Value="#1177BB" />
+                <Setter Property="Fill" Value="{DynamicResource Common.HighLight.Background}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Canvas}, Mode=FindAncestor}}" Value="False">
-                <Setter Property="Fill" Value="#0E639C" />
+                <Setter Property="Fill" Value="{DynamicResource Common.HighLight.BorderBrush}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>

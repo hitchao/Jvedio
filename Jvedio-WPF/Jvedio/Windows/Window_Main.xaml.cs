@@ -76,6 +76,7 @@ namespace Jvedio
         private static bool CheckingDownloadStatus { get; set; }
         Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager taskbarInstance { get; set; }
 
+
         private bool canShowDetails { get; set; }
 
         private int firstidx = -1;
@@ -1512,20 +1513,20 @@ namespace Jvedio
                 dataScrollViewer = FindVisualChild<ScrollViewer>(itemsControl);
             }
 
-            if (dataScrollViewer == null) return;
+            //if (dataScrollViewer == null) return;
 
-            double offset = dataScrollViewer.VerticalOffset;
+            //double offset = dataScrollViewer.VerticalOffset;
 
 
-            if (offset >= 500)
-                vieModel.GoToTopCanvas = Visibility.Visible;
-            else
-                vieModel.GoToTopCanvas = Visibility.Hidden;
+            //if (offset >= 500)
+            //    vieModel.GoToTopCanvas = Visibility.Visible;
+            //else
+            //    vieModel.GoToTopCanvas = Visibility.Hidden;
 
-            if (offset == dataScrollViewer.ScrollableHeight)
-                vieModel.GoToBottomCanvas = Visibility.Hidden;
-            else
-                vieModel.GoToBottomCanvas = Visibility.Visible;
+            //if (offset == dataScrollViewer.ScrollableHeight)
+            //    vieModel.GoToBottomCanvas = Visibility.Hidden;
+            //else
+            //    vieModel.GoToBottomCanvas = Visibility.Visible;
 
 
         }
@@ -2948,6 +2949,7 @@ namespace Jvedio
         public void SetSkin()
         {
             ThemeHelper.SetSkin(Properties.Settings.Default.Themes);
+            ChaoControls.Style.CustomEventHandler.Render();
             //SettingsBorder.ContextMenu.UpdateDefaultStyle();//设置弹出的菜单正确显示
             //switch (Properties.Settings.Default.Themes)
             //{

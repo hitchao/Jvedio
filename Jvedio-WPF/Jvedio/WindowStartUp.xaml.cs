@@ -92,6 +92,9 @@ namespace Jvedio
 
 
             if (GlobalFont != null) this.FontFamily = GlobalFont;
+
+            //ChaoControls.Style.fore
+
             Jvedio.Core.Plugins.Theme.ThemeHelper.SetSkin(Properties.Settings.Default.Themes);  // 设置皮肤
             InitAppData();      // 初始化应用数据
             DeleteLogs();       // 清理日志

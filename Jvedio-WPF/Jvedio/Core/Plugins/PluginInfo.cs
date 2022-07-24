@@ -10,10 +10,6 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.Plugins
 {
-
-
-
-
     public class PluginInfo
     {
 

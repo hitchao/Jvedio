@@ -176,28 +176,28 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private Visibility _GoToTopCanvas = Visibility.Collapsed;
+        //private Visibility _GoToTopCanvas = Visibility.Collapsed;
 
-        public Visibility GoToTopCanvas
-        {
-            get { return _GoToTopCanvas; }
-            set
-            {
-                _GoToTopCanvas = value;
-                RaisePropertyChanged();
-            }
-        }
-        private Visibility _GoToBottomCanvas = Visibility.Visible;
+        //public Visibility GoToTopCanvas
+        //{
+        //    get { return _GoToTopCanvas; }
+        //    set
+        //    {
+        //        _GoToTopCanvas = value;
+        //        RaisePropertyChanged();
+        //    }
+        //}
+        //private Visibility _GoToBottomCanvas = Visibility.Visible;
 
-        public Visibility GoToBottomCanvas
-        {
-            get { return _GoToBottomCanvas; }
-            set
-            {
-                _GoToBottomCanvas = value;
-                RaisePropertyChanged();
-            }
-        }
+        //public Visibility GoToBottomCanvas
+        //{
+        //    get { return _GoToBottomCanvas; }
+        //    set
+        //    {
+        //        _GoToBottomCanvas = value;
+        //        RaisePropertyChanged();
+        //    }
+        //}
 
 
 
