@@ -4,6 +4,7 @@ using Jvedio.CommonNet;
 using Jvedio.Logs;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -14,6 +15,28 @@ namespace Jvedio.Utils.IO
 {
     public static class FileHelper
     {
+
+
+
+        public static string FindWithExt(string path, List<string> exts)
+        {
+            foreach (var item in exts)
+            {
+                path = ChangeExt(path, item);
+                if (File.Exists(path)) break;
+            }
+            return path;
+        }
+
+
+        private static string ChangeExt(string path, string ext)
+        {
+            if (string.IsNullOrEmpty(path)) return "";
+            string dir = System.IO.Path.GetDirectoryName(path);
+            string name = System.IO.Path.GetFileNameWithoutExtension(path);
+            return System.IO.Path.Combine(dir, name + ext);
+        }
+
 
         public static string TryGetFullPath(string path)
         {

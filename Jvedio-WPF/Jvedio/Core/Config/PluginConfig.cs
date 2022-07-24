@@ -32,7 +32,7 @@ namespace Jvedio.Core.Config
         public string PluginList { get; set; }
 
 
-        public void FetchPluginInfo(Action onRefresh = null)
+        public void FetchPluginMetaData(Action onRefresh = null)
         {
             RequestHeader Header = CrawlerHeader.GitHub;
             Task.Run(async () =>

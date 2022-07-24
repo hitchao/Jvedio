@@ -80,12 +80,14 @@
     <Style x:Key="ColorRadioButton" TargetType="RadioButton">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Margin" Value="1" />
+        <Setter Property="BorderBrush" Value="red" />
+        <Setter Property="BorderThickness" Value="2" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Grid
-                        Width="50"
-                        Height="30"
+                        Width="70"
+                        Height="50"
                         Margin="{TemplateBinding Margin}">
                         <Border
                             x:Name="_borderOver"
@@ -110,7 +112,7 @@
                                 VerticalAlignment="Center"
                                 Data="M0,5 5,10 13,1"
                                 Stroke="{DynamicResource CheckBox.Checked.Background}"
-                                StrokeThickness="1" />
+                                StrokeThickness="2" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -123,6 +125,7 @@
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="_borderChecked" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="_borderOver" Property="BorderBrush" Value="{DynamicResource Common.HighLight.BorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

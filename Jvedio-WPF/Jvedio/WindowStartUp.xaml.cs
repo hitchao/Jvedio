@@ -3,6 +3,7 @@ using Jvedio.Core;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
+using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
@@ -68,13 +69,11 @@ namespace Jvedio
         // todo
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
-            EnsureSettings();   // 修复设置错误
-            EnsureFileExists(); // 判断文件是否存在
-            InitProperties();   // 初始化全局变量
-            EnsureDirExists();  // 创建文件夹
-            GlobalConfig.Init();            // 初始化全局配置
+            EnsureSettings();           // 修复设置错误
+            EnsureFileExists();         // 判断文件是否存在
+            InitProperties();           // 初始化全局变量
+            EnsureDirExists();          // 创建文件夹
+            GlobalConfig.Init();        // 初始化全局配置
             try
             {
                 GlobalMapper.Init();    // 初始化数据库连接
@@ -88,26 +87,26 @@ namespace Jvedio
             GlobalConfig.EnsurePicPaths();
 
             await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
-            //ThemeLoader.loadAllThemes();  // 加载主题
 
 
-            if (GlobalFont != null) this.FontFamily = GlobalFont;
 
-            //ChaoControls.Style.fore
+            //if (GlobalFont != null) 
+            //    this.FontFamily = GlobalFont;
 
-            Jvedio.Core.Plugins.Theme.ThemeHelper.SetSkin(Properties.Settings.Default.Themes);  // 设置皮肤
+
+
             InitAppData();      // 初始化应用数据
             DeleteLogs();       // 清理日志
+            //GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
 
-
-            GlobalConfig.PluginConfig.FetchPluginInfo(); // 同步远程插件
             await BackupData(); // 备份文件
 
-
+            ThemeManager.LoadAllThemes();       // 加载主题
+            CrawlerManager.LoadAllCrawlers();   // 初始化爬虫
+            PluginManager.MergeAllPlugin();     // 将所有插件进行汇总
 
             vieModel_StartUp = new VieModel_StartUp();  // todo 检视
             this.DataContext = vieModel_StartUp;
-
             List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
             for (int i = 0; i < radioButtons.Count; i++)
             {
@@ -128,15 +127,7 @@ namespace Jvedio
                 this.TitleHeight = DEFAULT_TITLE_HEIGHT;
             }
 
-            //}
-            //catch (Exception ex)
-            //{
 
-            //    MessageBox.Show(ex.Message);
-            //    Logger.LogF(ex);
-            //}
-
-            CrawlerLoader.LoadAllCrawlers();// 初始化爬虫
         }
 
 

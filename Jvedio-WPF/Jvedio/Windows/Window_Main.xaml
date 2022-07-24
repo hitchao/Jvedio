@@ -528,34 +528,7 @@
         </Style>
 
 
-        <Style x:Key="HoverSpliter" TargetType="GridSplitter">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Margin" Value="0" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Trigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard FillBehavior="HoldEnd">
-                                <ColorAnimation
-                                    Storyboard.TargetProperty="Background.Color"
-                                    To="#007FD4"
-                                    Duration="0:0:0.2" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.EnterActions>
-                    <Trigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation
-                                    Storyboard.TargetProperty="Background.Color"
-                                    To="Transparent"
-                                    Duration="0:0:0.2" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.ExitActions>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+
 
         <Style
             x:Key="ActorInfoTextBlock"
@@ -1597,11 +1570,38 @@
                                         ItemContainerStyle="{StaticResource FlatTabItem}"
                                         Style="{StaticResource FlatTabControl}">
                                         <TabItem Header="纯色">
-                                            <ListBox
+                                            <Grid>
+                                                <ItemsControl
+                                                    Name="ColorThemesItemsControl"
+                                                    Margin="5,5,5,5"
+                                                    Background="Transparent"
+                                                    ItemsSource="{Binding ColorThemes}"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <RadioButton
+                                                                Name="rb"
+                                                                Background="{Binding ViewBrush}"
+                                                                Click="ChangeTheme"
+                                                                FocusVisualStyle="{x:Null}"
+                                                                GroupName="SkinRadioButton"
+                                                                Style="{StaticResource ColorRadioButton}"
+                                                                Tag="{Binding ID}" />
+
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+                                            <!--<ListBox
                                                 Name="colorsListBox"
                                                 d:ItemsSource="{d:SampleData ItemCount=5}"
                                                 Background="Transparent"
-                                                ItemsSource="{Binding ThemesColor}"
+                                                ItemsSource="{Binding ColorThemes}"
                                                 Style="{StaticResource NormalListBox}">
                                                 <ListBox.ItemsPanel>
                                                     <ItemsPanelTemplate>
@@ -1613,21 +1613,22 @@
                                                         <Border
                                                             Width="20"
                                                             Height="20"
-                                                            Background="AliceBlue">
+                                                            Background="{Binding ViewBrush}">
                                                             <TextBlock Text="123" />
                                                         </Border>
                                                     </DataTemplate>
                                                 </ListBox.ItemTemplate>
-                                            </ListBox>
+                                            </ListBox>-->
                                         </TabItem>
-                                        <TabItem Header="渐变" />
                                         <TabItem Header="图像" />
-                                        <TabItem Header="自定义" />
+
                                     </TabControl>
                                     <StackPanel
                                         Grid.Row="1"
                                         Margin="5"
-                                        HorizontalAlignment="Right">
+                                        HorizontalAlignment="Right"
+                                        Orientation="Horizontal">
+                                        <Button Click="ReLoadTheme" Content="刷新" />
                                         <Button Click="CloseThemePopup" Content="关闭" />
                                     </StackPanel>
 
@@ -4282,7 +4283,7 @@
             <Grid
                 Grid.Row="2"
                 Height="30"
-                Background="{DynamicResource Window.Title.Background}"
+                Background="{DynamicResource Window.StatusBar.Background}"
                 Visibility="{Binding DisplayStatusBar, Converter={StaticResource BoolToVis}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

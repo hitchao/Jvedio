@@ -9,6 +9,33 @@ namespace Jvedio.Utils.Visual
 {
     public static class VisualHelper
     {
+        private static System.Windows.Media.BrushConverter converter =
+            new System.Windows.Media.BrushConverter();
+        public static Brush HexStringToBrush(string hexString)
+        {
+            try
+            {
+                return (Brush)converter.ConvertFromString(hexString);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+
+        private static System.Windows.Media.Color GetColorFromRGBSring(string rgb)
+        {
+            if (rgb.IndexOf("rgb(") < 0 || rgb.Split(',').Count() != 3) return System.Windows.Media.Color.FromRgb(0, 0, 0);
+
+            rgb = rgb.Replace("rgb(", "").Replace(")", "").Replace(" ", "");
+            string[] colors = rgb.Split(',');
+            byte.TryParse(colors[0], out byte r);
+            byte.TryParse(colors[1], out byte g);
+            byte.TryParse(colors[2], out byte b);
+            return System.Windows.Media.Color.FromRgb(r, g, b);
+        }
 
         // todo 有些窗体名字没改，打不开
         // todo 检视

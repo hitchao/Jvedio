@@ -136,7 +136,7 @@ namespace Jvedio.Entity
             }
             // 替换成其他扩展名
             if (searchExt && !File.Exists(result))
-                result = Video.findWithExt(result);
+                result = FileHelper.FindWithExt(result, ScanTask.PICTURE_EXTENSIONS_LIST);
             return result;
         }
 

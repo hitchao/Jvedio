@@ -7,6 +7,7 @@
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Margin" Value="5" />
+        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
     </Style>
 

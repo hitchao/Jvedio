@@ -53,11 +53,22 @@
 
 
 
-        <Style
+        <!--<Style
             x:Key="BaseTextBlock"
             BasedOn="{StaticResource BaseTextBlock}"
             TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>-->
+
+
+
+        <Style
+            x:Key="NoWrapTextBlock"
+            BasedOn="{StaticResource BaseTextBlock}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="WordEllipsis" />
         </Style>
 
 
@@ -830,50 +841,124 @@
                         Grid.Column="0"
                         Width="300"
                         Height="auto"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
+
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <chao:SearchBox
-                                Grid.Column="0"
-                                Clear="SearchPlugin"
-                                PlaceHolder="搜索插件"
-                                PlaceHolderForeground="{DynamicResource RadioButton.Disabled.Background}"
-                                Search="SearchPlugin"
-                                SearchOnTextChanged="True"
-                                ShowSearchButton="True"
-                                Style="{StaticResource BaseSearchTextBox}" />
-                            <Border
-                                Name="pluginSortBorder"
-                                Grid.Column="1"
-                                MouseUp="ShowContextMenu"
-                                Style="{StaticResource ToolsBarBorderStyle}"
-                                ToolTip="{x:Static lang:Resources.Sorting}">
-                                <Border.ContextMenu>
-                                    <ContextMenu HorizontalOffset="-50">
-                                        <MenuItem Header="{x:Static lang:Resources.Name}" IsCheckable="True" />
-                                        <MenuItem Header="{x:Static lang:Resources.Author}" IsCheckable="True" />
-                                        <MenuItem Header="发行日期" IsCheckable="True" />
+                            <TextBlock
+                                Margin="10,0"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="插件" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Border
+                                    MouseUp="ShowContextMenu"
+                                    Style="{StaticResource ToolsBarBorderStyle}"
+                                    ToolTip="{x:Static lang:Resources.Sorting}">
+                                    <Border.ContextMenu>
+                                        <ContextMenu HorizontalOffset="-50">
+                                            <MenuItem Header="启用当前插件" />
+                                            <MenuItem Header="禁用当前插件" />
+                                            <MenuItem Header="启用所有插件" />
+                                            <MenuItem Header="禁用所有插件" />
 
-                                    </ContextMenu>
-                                </Border.ContextMenu>
-                                <Viewbox Width="auto" Height="18">
-                                    <Path
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Data="M44.032 451.584c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m0 302.592c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m519.68-484.352c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68z m170.496-120.832c-22.528 0-40.96 18.432-40.96 40.96V834.56c0 22.528 18.432 40.96 40.96 40.96h38.912c15.36 0 28.16-8.192 35.328-20.48l212.48-212.48c0-22.528-18.432-40.96-40.96-40.96H814.08V189.952c0-22.528-18.432-40.96-40.96-40.96h-38.912z"
-                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                </Viewbox>
-                            </Border>
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
+                                    <Viewbox Width="auto" Height="18">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M897.427256 249.003144 126.57172 249.003144c-34.673707 0-62.73174-28.088732-62.73174-62.73174s28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174S932.101987 249.003144 897.427256 249.003144z M897.427256 574.73174 126.57172 574.73174c-34.673707 0-62.73174-28.088732-62.73174-62.73174s28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174S932.101987 574.73174 897.427256 574.73174z M897.427256 900.460336 126.57172 900.460336c-34.673707 0-62.73174-28.088732-62.73174-62.73174 0-34.643008 28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174C960.16002 872.371604 932.101987 900.460336 897.427256 900.460336z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+                                <Border
+                                    MouseUp="ShowContextMenu"
+                                    Style="{StaticResource ToolsBarBorderStyle}"
+                                    ToolTip="{x:Static lang:Resources.Sorting}">
+                                    <Border.ContextMenu>
+                                        <ContextMenu HorizontalOffset="-50">
+                                            <MenuItem Header="是否启用">
+                                                <MenuItem Header="启用" IsCheckable="True" />
+                                                <MenuItem Header="未启用" IsCheckable="True" />
+                                            </MenuItem>
+                                            <MenuItem Header="类别">
+                                                <MenuItem Header="皮肤" />
+                                                <MenuItem Header="刮削器" />
+                                            </MenuItem>
+
+
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
+                                    <Viewbox Width="auto" Height="18">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M452.923077 512v275.692308l118.153846-98.461539v-177.230769l177.230769-177.230769H275.692308l177.230769 177.230769zM0 512C0 229.218462 229.238154 0 512 0c282.781538 0 512 229.238154 512 512 0 282.781538-229.238154 512-512 512C229.218462 1024 0 794.761846 0 512z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+                                <Border
+                                    MouseUp="RefreshPluginList"
+                                    Style="{StaticResource ToolsBarBorderStyle}"
+                                    ToolTip="{x:Static lang:Resources.Sorting}">
+
+                                    <Viewbox Width="auto" Height="18">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M848.738462 608.137846c-8.467692 178.097231-155.963077 319.881846-336.659693 319.881846-186.171077 0-337.132308-150.449231-337.132307-336.068923 0-180.145231 142.178462-327.168 320.787692-335.675077v159.82277l353.122461-192.039385L495.734154 0v160.098462C263.995077 168.684308 78.769231 358.754462 78.769231 591.872 78.769231 830.542769 272.777846 1024 512.157538 1024 746.062769 1024 936.644923 839.286154 945.230769 608.137846h-96.492307z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+                                <Border
+                                    Name="pluginSortBorder"
+                                    MouseUp="ShowContextMenu"
+                                    Style="{StaticResource ToolsBarBorderStyle}"
+                                    ToolTip="{x:Static lang:Resources.Sorting}">
+                                    <Border.ContextMenu>
+                                        <ContextMenu HorizontalOffset="-50">
+                                            <MenuItem Header="{x:Static lang:Resources.Name}" IsCheckable="True" />
+                                            <MenuItem Header="{x:Static lang:Resources.Author}" IsCheckable="True" />
+                                            <MenuItem Header="发行日期" IsCheckable="True" />
+
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
+                                    <Viewbox Width="auto" Height="18">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M44.032 451.584c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m0 302.592c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m519.68-484.352c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68z m170.496-120.832c-22.528 0-40.96 18.432-40.96 40.96V834.56c0 22.528 18.432 40.96 40.96 40.96h38.912c15.36 0 28.16-8.192 35.328-20.48l212.48-212.48c0-22.528-18.432-40.96-40.96-40.96H814.08V189.952c0-22.528-18.432-40.96-40.96-40.96h-38.912z"
+                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                    </Viewbox>
+                                </Border>
+                            </StackPanel>
                         </Grid>
-                        <StackPanel
+
+
+
+                        <chao:SearchBox
                             Grid.Row="1"
+                            Clear="SearchPlugin"
+                            PlaceHolder="搜索"
+                            PlaceHolderForeground="{DynamicResource RadioButton.Disabled.Background}"
+                            Search="SearchPlugin"
+                            SearchOnTextChanged="True"
+                            ShowSearchButton="True"
+                            Style="{StaticResource BaseSearchTextBox}" />
+
+
+                        <StackPanel
+                            Grid.Row="2"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
 
@@ -908,8 +993,15 @@
                                                 <Image
                                                     Grid.Column="0"
                                                     Height="64"
-                                                    Margin="5"
-                                                    Source="{Binding ImageUrl}" />
+                                                    Margin="5">
+                                                    <Image.Source>
+                                                        <Binding Path="ImagePath">
+                                                            <Binding.TargetNullValue>
+                                                                <ImageSource>/Resources/Picture/plugin.png</ImageSource>
+                                                            </Binding.TargetNullValue>
+                                                        </Binding>
+                                                    </Image.Source>
+                                                </Image>
                                                 <StackPanel
                                                     Grid.Column="1"
                                                     Margin="5,0"
@@ -985,7 +1077,7 @@
                                     </ListBox.ItemsPanel>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid>
+                                            <Grid Width="300">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="64" />
                                                     <ColumnDefinition Width="*" />
@@ -1008,8 +1100,16 @@
                                                 <Image
                                                     Grid.Column="0"
                                                     Height="64"
-                                                    Margin="5"
-                                                    Source="{Binding Image, Converter={StaticResource Base64ImageConverter}}" />
+                                                    Margin="5">
+                                                    <Image.Source>
+                                                        <Binding Path="ImagePath">
+                                                            <Binding.TargetNullValue>
+                                                                <ImageSource>/Resources/Picture/plugin.png</ImageSource>
+                                                            </Binding.TargetNullValue>
+                                                        </Binding>
+                                                    </Image.Source>
+                                                </Image>
+
                                                 <StackPanel
                                                     Grid.Column="1"
                                                     Margin="5,0"
@@ -1018,21 +1118,21 @@
                                                         Margin="0"
                                                         Padding="2"
                                                         FontWeight="Bold"
-                                                        Style="{StaticResource BaseTextBlock}"
-                                                        Text="{Binding Name}"
+                                                        Style="{StaticResource NoWrapTextBlock}"
+                                                        Text="{Binding PluginName}"
                                                         TextAlignment="Left" />
                                                     <TextBlock
                                                         Margin="0"
                                                         Padding="2"
-                                                        Style="{StaticResource BaseTextBlock}"
-                                                        Text="{Binding Description}"
+                                                        Style="{StaticResource NoWrapTextBlock}"
+                                                        Text="{Binding ReleaseNotes.Desc}"
                                                         TextAlignment="Left" />
                                                     <TextBlock
                                                         Margin="0"
                                                         Padding="2"
                                                         FontStyle="Italic"
-                                                        Style="{StaticResource BaseTextBlock}"
-                                                        Text="{Binding Author}"
+                                                        Style="{StaticResource NoWrapTextBlock}"
+                                                        Text="{Binding AuthorNames}"
                                                         TextAlignment="Left" />
                                                 </StackPanel>
                                                 <Border
@@ -1066,10 +1166,11 @@
 
 
                     </Grid>
+
                     <Grid
                         x:Name="pluginDetailGrid"
                         Grid.Column="1"
-                        Visibility="Collapsed">
+                        Visibility="Visible">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="1" />
@@ -1084,7 +1185,14 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="0" Height="128">
-                                <Image.Style>
+                                <Image.Source>
+                                    <Binding Path="CurrentPlugin.ImagePath">
+                                        <Binding.TargetNullValue>
+                                            <ImageSource>/Resources/Picture/plugin.png</ImageSource>
+                                        </Binding.TargetNullValue>
+                                    </Binding>
+                                </Image.Source>
+                                <!--<Image.Style>
                                     <Style TargetType="Image">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="false">
@@ -1095,7 +1203,7 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </Image.Style>
+                                </Image.Style>-->
                             </Image>
                             <StackPanel
                                 Grid.Column="1"
@@ -1109,7 +1217,7 @@
                                         FontSize="30"
                                         FontWeight="Bold"
                                         Style="{StaticResource BaseTextBlock}"
-                                        Text="{Binding CurrentPlugin.Name}"
+                                        Text="{Binding CurrentPlugin.PluginName}"
                                         TextAlignment="Left" />
                                     <Border
                                         Margin="10,0"
@@ -1120,7 +1228,7 @@
                                         <TextBlock
                                             FontSize="18"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding CurrentPlugin.Version, StringFormat=v{0}}" />
+                                            Text="{Binding CurrentPlugin.ReleaseNotes.Version, StringFormat=v{0}}" />
                                     </Border>
 
                                 </StackPanel>
@@ -1128,14 +1236,14 @@
                                     Margin="0"
                                     Padding="2"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.Description}"
+                                    Text="{Binding CurrentPlugin.ReleaseNotes.Desc}"
                                     TextAlignment="Left" />
                                 <TextBlock
                                     Margin="0"
                                     Padding="2"
                                     FontStyle="Italic"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.Author, StringFormat=作者：{0}}"
+                                    Text="{Binding CurrentPlugin.AuthorNames, StringFormat=作者：{0}}"
                                     TextAlignment="Left" />
                                 <StackPanel
                                     Margin="0,5"
@@ -1211,7 +1319,35 @@
                                 Foreground="{StaticResource Window.Foreground}"
                                 IsReadOnly="True"
                                 Style="{x:Null}" />
-                            <StackPanel
+
+                            <ItemsControl
+                                Grid.Column="1"
+                                Width="100"
+                                Margin="50,10"
+                                ItemsSource="{Binding CurrentPlugin.ReleaseNotes.KeyWords}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock
+                                                HorizontalAlignment="Left"
+                                                FontWeight="Bold"
+                                                Style="{StaticResource NoWrapTextBlock}"
+                                                Text="{Binding Path=Key}" />
+                                            <TextBlock
+                                                HorizontalAlignment="Left"
+                                                FontSize="12"
+                                                Style="{StaticResource NoWrapTextBlock}"
+                                                Text="{Binding Path=Value}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <!--<StackPanel
                                 Grid.Column="1"
                                 Margin="50,10"
                                 Orientation="Vertical">
@@ -1255,7 +1391,7 @@
                                     FontSize="12"
                                     Style="{StaticResource BaseTextBlock}"
                                     Text="{Binding CurrentPlugin.PublishDate}" />
-                            </StackPanel>
+                            </StackPanel>-->
                         </Grid>
                     </Grid>
 
@@ -1310,25 +1446,25 @@
 
 
                     </WrapPanel>
-                    <WrapPanel Orientation="Horizontal">
-                        <CheckBox
-                            Margin="20,5"
-                            Content="主界面同步时同时下载预览图"
-                            IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
-                        <CheckBox
-                            Margin="20,5"
-                            Content="跳过已下载的图片"
-                            IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
-                        <CheckBox
-                            Margin="20,5"
-                            Content="强制同步信息（不推荐）"
-                            IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
-                        <CheckBox
-                            Margin="20,5"
-                            Content="忽略证书错误（不安全）"
-                            IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}"
-                            IsEnabled="False" />
-                    </WrapPanel>
+
+                    <CheckBox
+                        Margin="20,5"
+                        Content="主界面同步时同时下载预览图"
+                        IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
+                    <CheckBox
+                        Margin="20,5"
+                        Content="跳过已下载的图片"
+                        IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
+                    <CheckBox
+                        Margin="20,5"
+                        Content="强制同步信息（不推荐）"
+                        IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
+                    <CheckBox
+                        Margin="20,5"
+                        Content="忽略证书错误（不安全）"
+                        IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}"
+                        IsEnabled="False" />
+
 
 
 
@@ -2114,60 +2250,6 @@
 
                 </StackPanel>
             </TabItem>
-
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.Theme}">
-                <StackPanel>
-                    <WrapPanel
-                        x:Name="SkinWrapPanel"
-                        Margin="20,5"
-                        Orientation="Horizontal">
-                        <Label Content="{x:Static lang:Resources.Default}" Style="{StaticResource InfoLabel}" />
-                        <RadioButton
-                            Background="Black"
-                            Click="SetSkin"
-                            Content="黑色"
-                            FocusVisualStyle="{x:Null}"
-                            GroupName="SkinRadioButton"
-                            Style="{StaticResource ColorRadioButton}" />
-                        <RadioButton
-                            Background="White"
-                            Click="SetSkin"
-                            Content="白色"
-                            FocusVisualStyle="{x:Null}"
-                            GroupName="SkinRadioButton"
-                            Style="{StaticResource ColorRadioButton}" />
-
-                    </WrapPanel>
-
-
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                            Margin="25,10"
-                            HorizontalAlignment="Left"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="更多" />
-                        <Button Content="刷新" />
-                        <TextBlock
-                            Margin="25,10"
-                            HorizontalAlignment="Left"
-                            FontSize="14"
-                            Foreground="{StaticResource Window.Sub.Foreground}"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="更新源：github" />
-                    </StackPanel>
-
-
-                    <WrapPanel />
-
-
-
-                </StackPanel>
-            </TabItem>
-
             <TabItem
                 Background="Transparent"
                 FontSize="15"

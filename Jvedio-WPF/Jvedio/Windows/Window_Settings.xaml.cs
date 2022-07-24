@@ -647,17 +647,6 @@ namespace Jvedio
             }
             if (InComboBox.SelectedIndex < 0) OutComboBox.SelectedIndex = 0;
 
-            //设置主题选中
-            bool findTheme = false;
-            foreach (var item in SkinWrapPanel.Children.OfType<RadioButton>())
-            {
-                if (item.Content.ToString() == Properties.Settings.Default.Themes)
-                {
-                    item.IsChecked = true;
-                    findTheme = true;
-                    break;
-                }
-            }
             //if (!findTheme)
             //{
             //    for (int i = 0; i < ThemesDataGrid.Items.Count; i++)
@@ -720,114 +709,114 @@ namespace Jvedio
             }
 
             // 同步远程插件
-            GlobalConfig.PluginConfig.FetchPluginInfo(() =>
+            GlobalConfig.PluginConfig.FetchPluginMetaData(() =>
             {
                 // 更新插件状态
-                Dispatcher.Invoke(() => { setRemotePluginInfo(); });
+                Dispatcher.Invoke(() => { setRemotePluginMetaData(); });
             });
 
-            vieModel.setPlugins();
-            setRemotePluginInfo();
+            vieModel.RenderPlugins();
+            setRemotePluginMetaData();
 
-
+            pluginDetailGrid.Visibility = Visibility.Hidden;
 
         }
 
 
-        private List<PluginInfo> parsePluginInfoFromJson(string pluginList)
+        private List<PluginMetaData> parsePluginMetaDataFromJson(string pluginList)
         {
-            List<PluginInfo> result = new List<PluginInfo>();
-            try
-            {
-                List<Dictionary<string, object>> list = JsonUtils.TryDeserializeObject<List<Dictionary<string, object>>>(pluginList);
-                if (list != null && list.Count > 0)
-                {
-                    foreach (Dictionary<string, object> dict in list)
-                    {
-                        if (!dict.ContainsKey("Type") || !dict.ContainsKey("Data") ||
-                            dict["Type"] == null || dict["Data"] == null) continue;
-                        string type = dict["Type"].ToString().ToLower();
-                        if ("crawler".Equals(type))
-                        {
-                            List<Dictionary<string, string>> datas = null;
-                            JArray Data = null;
-                            try
-                            {
-                                Data = (JArray)dict["Data"];
-                                datas = Data.ToObject<List<Dictionary<string, string>>>();
-                            }
-                            catch (Exception ex) { Logger.Error(ex); }
-                            if (datas != null)
-                            {
+            List<PluginMetaData> result = new List<PluginMetaData>();
+            //try
+            //{
+            //    List<Dictionary<string, object>> list = JsonUtils.TryDeserializeObject<List<Dictionary<string, object>>>(pluginList);
+            //    if (list != null && list.Count > 0)
+            //    {
+            //        foreach (Dictionary<string, object> dict in list)
+            //        {
+            //            if (!dict.ContainsKey("Type") || !dict.ContainsKey("Data") ||
+            //                dict["Type"] == null || dict["Data"] == null) continue;
+            //            string type = dict["Type"].ToString().ToLower();
+            //            if ("crawler".Equals(type))
+            //            {
+            //                List<Dictionary<string, string>> datas = null;
+            //                JArray Data = null;
+            //                try
+            //                {
+            //                    Data = (JArray)dict["Data"];
+            //                    datas = Data.ToObject<List<Dictionary<string, string>>>();
+            //                }
+            //                catch (Exception ex) { Logger.Error(ex); }
+            //                if (datas != null)
+            //                {
 
-                                foreach (Dictionary<string, string> d in datas)
-                                {
-                                    if (!d.ContainsKey("ServerName") || !d.ContainsKey("Name") || !d.ContainsKey("Version")) continue;
-                                    PluginInfo pluginInfo = PluginInfo.ParseDict(d);
-                                    result.Add(pluginInfo);
-                                }
-                            }
+            //                    foreach (Dictionary<string, string> d in datas)
+            //                    {
+            //                        if (!d.ContainsKey("ServerName") || !d.ContainsKey("Name") || !d.ContainsKey("Version")) continue;
+            //                        PluginMetaData PluginMetaData = PluginMetaData.ParseDict(d);
+            //                        result.Add(PluginMetaData);
+            //                    }
+            //                }
 
 
 
-                        }
-                        else if ("theme".Equals(type))
-                        {
+            //            }
+            //            else if ("theme".Equals(type))
+            //            {
 
-                        }
+            //            }
 
-                    }
-                    return result;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
+            //        }
+            //        return result;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Error(ex);
+            //}
             return null;
         }
 
-        private void setRemotePluginInfo()
+        private void setRemotePluginMetaData()
         {
             // 未安装创建
-            vieModel.AllFreshPlugins = new List<PluginInfo>();
-            string pluginList = GlobalConfig.PluginConfig.PluginList;
-            if (!string.IsNullOrEmpty(pluginList))
-            {
-                List<PluginInfo> pluginInfos = parsePluginInfoFromJson(pluginList);
-                if (pluginInfos != null && pluginInfos.Count > 0)
-                {
-                    foreach (PluginInfo info in pluginInfos)
-                    {
+            //vieModel.AllFreshPlugins = new List<PluginMetaData>();
+            //string pluginList = GlobalConfig.PluginConfig.PluginList;
+            //if (!string.IsNullOrEmpty(pluginList))
+            //{
+            //    List<PluginMetaData> PluginMetaDatas = parsePluginMetaDataFromJson(pluginList);
+            //    if (PluginMetaDatas != null && PluginMetaDatas.Count > 0)
+            //    {
+            //        foreach (PluginMetaData info in PluginMetaDatas)
+            //        {
 
-                        PluginInfo installed = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
-                        if (installed == null)
-                        {
-                            // 新插件
+            //            PluginMetaData installed = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
+            //            if (installed == null)
+            //            {
+            //                // 新插件
 
-                            vieModel.AllFreshPlugins.Add(info);
-                        }
-                        else
-                        {
-                            // 检查更新
-                            if (installed.Version.CompareTo(info.Version) < 0)
-                            {
-                                installed.HasNewVersion = true;
-                                installed.NewVersion = info.Version;
-                                installed.FileName = info.FileName;
-                                PluginInfo currentInstalled = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
-                                if (currentInstalled != null) currentInstalled = installed;
-                            }
-                        }
-                    }
-                }
+            //                vieModel.AllFreshPlugins.Add(info);
+            //            }
+            //            else
+            //            {
+            //                // 检查更新
+            //                if (installed.Version.CompareTo(info.Version) < 0)
+            //                {
+            //                    installed.HasNewVersion = true;
+            //                    installed.NewVersion = info.Version;
+            //                    installed.FileName = info.FileName;
+            //                    PluginMetaData currentInstalled = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
+            //                    if (currentInstalled != null) currentInstalled = installed;
+            //                }
+            //            }
+            //        }
+            //    }
 
-            }
+            //}
 
 
-            vieModel.CurrentFreshPlugins = new ObservableCollection<PluginInfo>();
-            foreach (var item in vieModel.getSortResult(vieModel.AllFreshPlugins))
-                vieModel.CurrentFreshPlugins.Add(item);
+            //vieModel.CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
+            //foreach (var item in vieModel.getSortResult(vieModel.AllFreshPlugins))
+            //    vieModel.CurrentFreshPlugins.Add(item);
 
         }
 
@@ -854,7 +843,7 @@ namespace Jvedio
                 }
                 else item.IsChecked = false;
             }
-            vieModel.setPlugins();
+            vieModel.RenderPlugins();
         }
 
         // todo 检视
@@ -1437,23 +1426,23 @@ namespace Jvedio
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int idx = (sender as ListBox).SelectedIndex;
-            if (idx < 0) return;
-            if (vieModel.CrawlerServers != null && vieModel.CrawlerServers.Count > 0)
-            {
-                string serverType = vieModel.CrawlerServers.Keys.ToList()[idx];
-                int index = serverType.IndexOf('.');
-                string serverName = serverType.Substring(0, index);
-                string name = serverType.Substring(index + 1);
-                PluginInfo pluginInfo = Global.Plugins.Crawlers.Where(arg => arg.ServerName.Equals(serverName) && arg.Name.Equals(name)).FirstOrDefault();
-                if (pluginInfo != null && pluginInfo.Enabled) vieModel.PluginEnabled = true;
-                else vieModel.PluginEnabled = false;
+            //int idx = (sender as ListBox).SelectedIndex;
+            //if (idx < 0) return;
+            //if (vieModel.CrawlerServers != null && vieModel.CrawlerServers.Count > 0)
+            //{
+            //    string serverType = vieModel.CrawlerServers.Keys.ToList()[idx];
+            //    int index = serverType.IndexOf('.');
+            //    string serverName = serverType.Substring(0, index);
+            //    string name = serverType.Substring(index + 1);
+            //    PluginMetaData PluginMetaData = Global.Plugins.Crawlers.Where(arg => arg.ServerName.Equals(serverName) && arg.Name.Equals(name)).FirstOrDefault();
+            //    if (PluginMetaData != null && PluginMetaData.Enabled) vieModel.PluginEnabled = true;
+            //    else vieModel.PluginEnabled = false;
 
-                ServersDataGrid.ItemsSource = null;
-                ServersDataGrid.ItemsSource = vieModel.CrawlerServers[serverType];
-                GlobalConfig.Settings.CrawlerSelectedIndex = idx;
+            //    ServersDataGrid.ItemsSource = null;
+            //    ServersDataGrid.ItemsSource = vieModel.CrawlerServers[serverType];
+            //    GlobalConfig.Settings.CrawlerSelectedIndex = idx;
 
-            }
+            //}
         }
 
         private void ShowCrawlerHelp(object sender, MouseButtonEventArgs e)
@@ -1479,21 +1468,22 @@ namespace Jvedio
         private void pluginViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             object item = pluginViewListBox.SelectedItem;
-            if (item == null) return;
-            PluginInfo pluginInfo = item as PluginInfo;
-            vieModel.CurrentPlugin = vieModel.InstalledPlugins.Where(arg => arg.FileHash.Equals(pluginInfo.FileHash)).FirstOrDefault();
-            richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.MarkDown);
-            pluginDetailGrid.Visibility = Visibility.Visible;
+            if (item != null && item is PluginMetaData PluginMetaData)
+            {
+                vieModel.CurrentPlugin = vieModel.InstalledPlugins.Where(arg => arg.PluginID.Equals(PluginMetaData.PluginID)).FirstOrDefault();
+                richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.ReleaseNotes.MarkDown);
+                pluginDetailGrid.Visibility = Visibility.Visible;
+            }
         }
 
         private void freshViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            object item = freshViewListBox.SelectedItem;
-            if (item == null) return;
-            PluginInfo pluginInfo = item as PluginInfo;
-            vieModel.CurrentPlugin = vieModel.AllFreshPlugins.Where(arg => arg.getUID().Equals(pluginInfo.getUID())).FirstOrDefault();
-            richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.MarkDown);
-            pluginDetailGrid.Visibility = Visibility.Visible;
+            //object item = freshViewListBox.SelectedItem;
+            //if (item == null) return;
+            //PluginMetaData PluginMetaData = item as PluginMetaData;
+            //vieModel.CurrentPlugin = vieModel.AllFreshPlugins.Where(arg => arg.getUID().Equals(PluginMetaData.getUID())).FirstOrDefault();
+            //richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.MarkDown);
+            //pluginDetailGrid.Visibility = Visibility.Visible;
         }
 
 
@@ -1511,16 +1501,16 @@ namespace Jvedio
 
         private void SavePluginEnabled(object sender, RoutedEventArgs e)
         {
-            GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
-            bool enabled = (bool)(sender as ChaoControls.Style.Switch).IsChecked;
-            foreach (PluginInfo plugin in Global.Plugins.Crawlers)
-            {
-                if (plugin.getUID().Equals(vieModel.CurrentPlugin.getUID()))
-                    plugin.Enabled = enabled;
-                GlobalConfig.Settings.PluginEnabled.Add(plugin.getUID(), plugin.Enabled);
-            }
-            GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
-            vieModel.setServers();
+            //GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
+            //bool enabled = (bool)(sender as ChaoControls.Style.Switch).IsChecked;
+            //foreach (PluginMetaData plugin in Global.Plugins.Crawlers)
+            //{
+            //    if (plugin.getUID().Equals(vieModel.CurrentPlugin.getUID()))
+            //        plugin.Enabled = enabled;
+            //    GlobalConfig.Settings.PluginEnabled.Add(plugin.getUID(), plugin.Enabled);
+            //}
+            //GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
+            //vieModel.setServers();
         }
 
         private void url_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -1722,72 +1712,72 @@ namespace Jvedio
         {
             SearchBox searchBox = sender as SearchBox;
             vieModel.PluginSearch = searchBox.Text;
-            vieModel.setPlugins();
+            vieModel.RenderPlugins();
         }
 
         private void DownloadPlugin(object sender, RoutedEventArgs e)
         {
 
-            PluginInfo pluginInfo = new PluginInfo();
-            pluginInfo.Name = vieModel.CurrentPlugin.Name;
-            pluginInfo.FileName = vieModel.CurrentPlugin.FileName;
-            pluginInfo.Type = vieModel.CurrentPlugin.Type;
-            //https://hitchao.github.io/Jvedio-Plugin/plugins/crawlers/testFile.txt
-            string remoteUrl = getPluginPath(GlobalVariable.PLUGIN_LIST_BASE_URL, pluginInfo).Replace("\\", "/");
-            if (!remoteUrl.IsProperUrl())
-            {
-                MessageCard.Error("地址不合理 => " + remoteUrl);
-                return;
-            }
-            Button button = sender as Button;
-            button.IsEnabled = false;
-            DownloadPlugin(remoteUrl, pluginInfo);
+            //PluginMetaData PluginMetaData = new PluginMetaData();
+            //PluginMetaData.Name = vieModel.CurrentPlugin.Name;
+            //PluginMetaData.FileName = vieModel.CurrentPlugin.FileName;
+            //PluginMetaData.Type = vieModel.CurrentPlugin.Type;
+            ////https://hitchao.github.io/Jvedio-Plugin/plugins/crawlers/testFile.txt
+            //string remoteUrl = getPluginPath(GlobalVariable.PLUGIN_LIST_BASE_URL, PluginMetaData).Replace("\\", "/");
+            //if (!remoteUrl.IsProperUrl())
+            //{
+            //    MessageCard.Error("地址不合理 => " + remoteUrl);
+            //    return;
+            //}
+            //Button button = sender as Button;
+            //button.IsEnabled = false;
+            //DownloadPlugin(remoteUrl, PluginMetaData);
         }
 
 
-        public string getPluginPath(string basePath, PluginInfo pluginInfo)
+        public string getPluginPath(string basePath, PluginMetaData PluginMetaData)
         {
-            if (pluginInfo == null || pluginInfo.FileName == null) return "";
-            return Path.Combine(basePath, "plugins", pluginInfo.Type.ToString().ToLower() + "s", pluginInfo.FileName);
+            if (PluginMetaData == null || PluginMetaData.FileName == null) return "";
+            return Path.Combine(basePath, "plugins", PluginMetaData.Type.ToString().ToLower() + "s", PluginMetaData.FileName);
         }
 
 
 
-        private void DownloadPlugin(string url, PluginInfo pluginInfo)
+        private void DownloadPlugin(string url, PluginMetaData PluginMetaData)
         {
-            Task.Run(async () =>
-            {
-                HttpResult httpResult = await HttpHelper.AsyncDownLoadFile(url, CrawlerHeader.GitHub);
-                if (httpResult.StatusCode == HttpStatusCode.OK && httpResult.FileByte != null)
-                {
-                    byte[] fileByte = httpResult.FileByte;
-                    string saveFileName = getPluginPath(AppDomain.CurrentDomain.BaseDirectory, pluginInfo);
-                    if (string.IsNullOrEmpty(saveFileName)) return;
+            //Task.Run(async () =>
+            //{
+            //    HttpResult httpResult = await HttpHelper.AsyncDownLoadFile(url, CrawlerHeader.GitHub);
+            //    if (httpResult.StatusCode == HttpStatusCode.OK && httpResult.FileByte != null)
+            //    {
+            //        byte[] fileByte = httpResult.FileByte;
+            //        string saveFileName = getPluginPath(AppDomain.CurrentDomain.BaseDirectory, PluginMetaData);
+            //        if (string.IsNullOrEmpty(saveFileName)) return;
 
-                    string tempDir = Path.Combine(Path.GetDirectoryName(saveFileName), "temp");
-                    if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
-                    string tempFileName = Path.Combine(tempDir, Path.GetFileName(saveFileName));
-                    bool success = FileHelper.ByteArrayToFile(fileByte, tempFileName, (error) =>
-                    {
-                        if (!string.IsNullOrEmpty(error))
-                        {
-                            Dispatcher.Invoke(() =>
-                            {
-                                MessageCard.Error(error);
-                            });
-                        }
-                    });
-                    if (success) Dispatcher.Invoke(() =>
-                    {
-                        MessageBox.Show($"{pluginInfo.Name} 下载成功，即将重启", "插件下载");
-                        //执行命令
-                        string arg = $"xcopy /y/e \"{tempFileName}\" \"{saveFileName}*\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\" &exit";
-                        StreamHelper.TryWrite("upgrade-plugins.bat", arg, true, Encoding.GetEncoding("GB2312"));
-                        FileHelper.TryOpenFile("upgrade-plugins.bat");
-                        Application.Current.Shutdown();
-                    });
-                }
-            });
+            //        string tempDir = Path.Combine(Path.GetDirectoryName(saveFileName), "temp");
+            //        if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+            //        string tempFileName = Path.Combine(tempDir, Path.GetFileName(saveFileName));
+            //        bool success = FileHelper.ByteArrayToFile(fileByte, tempFileName, (error) =>
+            //        {
+            //            if (!string.IsNullOrEmpty(error))
+            //            {
+            //                Dispatcher.Invoke(() =>
+            //                {
+            //                    MessageCard.Error(error);
+            //                });
+            //            }
+            //        });
+            //        if (success) Dispatcher.Invoke(() =>
+            //        {
+            //            MessageBox.Show($"{PluginMetaData.Name} 下载成功，即将重启", "插件下载");
+            //            //执行命令
+            //            string arg = $"xcopy /y/e \"{tempFileName}\" \"{saveFileName}*\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\" &exit";
+            //            StreamHelper.TryWrite("upgrade-plugins.bat", arg, true, Encoding.GetEncoding("GB2312"));
+            //            FileHelper.TryOpenFile("upgrade-plugins.bat");
+            //            Application.Current.Shutdown();
+            //        });
+            //    }
+            //});
 
         }
 
@@ -1885,6 +1875,17 @@ namespace Jvedio
         private void ViewSearchHistory(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private async void RefreshPluginList(object sender, MouseButtonEventArgs e)
+        {
+            Border border = sender as Border;
+            border.IsEnabled = false;
+
+            await Task.Delay(500);
+
+
+            border.IsEnabled = true;
         }
     }
 

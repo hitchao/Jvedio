@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using Jvedio.Core;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
@@ -126,6 +127,18 @@ namespace Jvedio.ViewModel
 
             //};
             //resetEvent.WaitOne();
+
+            // 初始化皮肤
+            InitThemes();
+        }
+
+        public void InitThemes()
+        {
+            ColorThemes = new ObservableCollection<Theme>();
+            foreach (var item in ThemeManager.Themes)
+            {
+                ColorThemes.Add(item);
+            }
         }
 
 
@@ -1137,13 +1150,13 @@ namespace Jvedio.ViewModel
         #region "皮肤"
 
 
-        private ActorInfo _ThemesColor;
-        public ActorInfo ThemesColor
+        private ObservableCollection<Theme> _ColorThemes;
+        public ObservableCollection<Theme> ColorThemes
         {
-            get { return _ThemesColor; }
+            get { return _ColorThemes; }
             set
             {
-                _ThemesColor = value;
+                _ColorThemes = value;
                 RaisePropertyChanged();
             }
         }

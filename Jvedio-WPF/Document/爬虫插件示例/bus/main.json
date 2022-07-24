@@ -1,0 +1,41 @@
+{
+    "PluginInfo": {
+        "PluginType": 1, // 0 刮削器 1 皮肤
+        "Authors": [
+            {
+                "Name": "chao",
+                "github": "https://github.com/hitchao",
+                "gitee": ""
+            },
+            {
+                "Name": "SuperStudio",
+                "github": "https://github.com/SuperStudio",
+                "gitee": ""
+            }
+        ],
+        "ReleaseNotes": {
+            "Version": "v1.0.0",
+            "Date": "2022-07-23",
+            "Desc": "bus 爬虫",
+            "MarkDown": "# bus 爬虫 \n Jvedio 默认皮肤，黑色",
+            "KeyWords": [
+                {
+                    "key": "DB",
+                    "value": "网站类型"
+                },
+                {
+                    "key": "抓取的信息类型",
+                    "value": "FC"
+                },
+                {
+                    "key": "说明",
+                    "value": "detail"
+                }
+            ]
+        }
+    },
+    "Data": {
+        "CrawlerType": "DLL",
+        "Path": "./BusCrawler.dll"
+    }
+}

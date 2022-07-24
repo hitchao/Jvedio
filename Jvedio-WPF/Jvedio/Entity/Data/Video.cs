@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
+using Jvedio.Utils.IO;
 
 namespace Jvedio.Entity
 {
@@ -361,7 +362,7 @@ namespace Jvedio.Entity
             }
             // 替换成其他扩展名
             if (searchExt && !File.Exists(smallImagePath))
-                smallImagePath = findWithExt(smallImagePath);
+                smallImagePath = FileHelper.FindWithExt(smallImagePath, ScanTask.PICTURE_EXTENSIONS_LIST);
             return FileHelper.TryGetFullPath(smallImagePath);
         }
 
@@ -381,28 +382,8 @@ namespace Jvedio.Entity
             }
             // 替换成其他扩展名
             if (searchExt && !File.Exists(bigImagePath))
-                bigImagePath = findWithExt(bigImagePath);
+                bigImagePath = FileHelper.FindWithExt(bigImagePath, ScanTask.PICTURE_EXTENSIONS_LIST);
             return FileHelper.TryGetFullPath(bigImagePath);
-        }
-
-
-        public static string findWithExt(string path)
-        {
-            foreach (var item in ScanTask.PICTURE_EXTENSIONS_LIST)
-            {
-                path = changeExt(path, item);
-                if (File.Exists(path)) break;
-            }
-            return path;
-        }
-
-
-        private static string changeExt(string path, string ext)
-        {
-            if (string.IsNullOrEmpty(path)) return "";
-            string dir = System.IO.Path.GetDirectoryName(path);
-            string name = System.IO.Path.GetFileNameWithoutExtension(path);
-            return System.IO.Path.Combine(dir, name + ext);
         }
 
         public string getExtraImage()

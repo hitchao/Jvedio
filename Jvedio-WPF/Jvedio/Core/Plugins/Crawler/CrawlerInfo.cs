@@ -10,22 +10,14 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.Plugins
 {
-    public class PluginInfo
+    public class CrawlerInfo
     {
-
-
         public string ServerName { get; set; }
         public string InfoType { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
         public string Categories { get; set; }
         public string Image { get; set; }
-        public string Author { get; set; }
-        public string Email { get; set; }
-        public string Description { get; set; }
-        public string MarkDown { get; set; }
-        public string License { get; set; }
-        public string PublishDate { get; set; }
 
 
         // 不在 dll 内的字段
@@ -52,17 +44,17 @@ namespace Jvedio.Core.Plugins
             }
         }
 
-        public PluginInfo()
+        public CrawlerInfo()
         {
             Enabled = true;
         }
 
 
-        public static PluginInfo ParseDict(Dictionary<string, string> dict)
+        public static PluginMetaData ParseDict(Dictionary<string, string> dict)
         {
             if (dict == null || dict.Count <= 0) return null;
-            PluginInfo result = new PluginInfo();
-            PropertyInfo[] propertyInfos = typeof(PluginInfo).GetProperties();
+            PluginMetaData result = new PluginMetaData();
+            PropertyInfo[] propertyInfos = typeof(PluginMetaData).GetProperties();
             foreach (PropertyInfo propertyInfo in propertyInfos)
             {
                 string name = propertyInfo.Name;
@@ -74,11 +66,12 @@ namespace Jvedio.Core.Plugins
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
-            PluginInfo other = obj as PluginInfo;
-            if (other == null) return false;
-            if (other.ServerName == null || other.Name == null) return false;
-            return other.ServerName.Equals(ServerName) && other.Name.Equals(Name);
+            //if (obj == null) return false;
+            //PluginMetaData other = obj as PluginMetaData;
+            //if (other == null) return false;
+            //if (other.ServerName == null || other.Name == null) return false;
+            //return other.ServerName.Equals(ServerName) && other.Name.Equals(Name);
+            return true;
         }
 
         public string getUID()

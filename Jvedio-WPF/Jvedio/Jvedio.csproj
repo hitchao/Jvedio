@@ -267,6 +267,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Config\ThemeConfig.cs" />
     <Compile Include="Core\Enums\NotImportReason.cs" />
     <Compile Include="Core\Enums\SearchMode.cs" />
     <Compile Include="Core\Enums\ThemeSingleColor.cs" />
@@ -306,7 +307,7 @@
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
     <Compile Include="Core\Net\UpgradeHelper.cs" />
-    <Compile Include="Core\Plugins\Crawler\CrawlerLoader.cs" />
+    <Compile Include="Core\Plugins\Crawler\CrawlerManager.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
     <Compile Include="Core\DataBase\Connection.cs" />
     <Compile Include="Core\DataBase\MysqlConnection.cs" />
@@ -330,9 +331,10 @@
     <Compile Include="Core\Global\GlobalMapper.cs" />
     <Compile Include="Core\Global\GlobalStyle.cs" />
     <Compile Include="Core\Plugins\Plugin.cs" />
-    <Compile Include="Core\Plugins\PluginInfo.cs" />
+    <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
+    <Compile Include="Core\Plugins\PluginManager.cs" />
+    <Compile Include="Core\Plugins\PluginMetaData.cs" />
     <Compile Include="Core\Plugins\Theme\ThemeHelper.cs" />
-    <Compile Include="Core\Plugins\Theme\ThemeLoader.cs" />
     <Compile Include="Core\Scan\ComicScan.cs" />
     <Compile Include="Core\Scan\GameScan.cs" />
     <Compile Include="Core\Scan\PictureScan.cs" />
@@ -397,9 +399,9 @@
     <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
     <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\VideoInfo.cs" />
-    <Compile Include="Entity\Theme.cs" />
+    <Compile Include="Core\Plugins\Theme\Theme.cs" />
     <Compile Include="Core\Framework\SimpleORM\IMapper.cs" />
-    <Compile Include="Core\ThemeLoader.cs" />
+    <Compile Include="Core\Plugins\Theme\ThemeManager.cs" />
     <Compile Include="WindowsDialog\Dialog_LoadPage.xaml.cs">
       <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
     </Compile>
@@ -421,7 +423,6 @@
     <Compile Include="Utils\Extern\JvedioLib.cs" />
     <Compile Include="Global\FFmpeg.cs" />
     <Compile Include="Global\Download.cs" />
-    <Compile Include="Global\Plugins.cs" />
     <Compile Include="Mapper\AssociationMapper.cs" />
     <Compile Include="Mapper\ActorMapper.cs" />
     <Compile Include="Mapper\AIFaceMapper.cs" />
@@ -671,6 +672,7 @@
     <Content Include="Data\Sql\single_db_comic.sql" />
     <Content Include="Data\Sql\single_db_game.sql" />
     <Content Include="Data\Sql\single_db_picture.sql" />
+    <Resource Include="Resources\Picture\plugin.png" />
     <Content Include="Test\SqliteTest\main.py" />
     <None Include="Data\config.ini" />
     <None Include="Test\FFmpeg\command.md" />

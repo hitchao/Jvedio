@@ -28,14 +28,8 @@ namespace Jvedio.ViewModel
         public VieModel_Settings()
         {
             PicPaths = new Dictionary<string, object>();
-            //ThemeList = new ObservableCollection<Theme>();
-            //foreach (Theme theme in ThemeLoader.Themes)
-            //{
-            //    if (theme.Name == Skin.白色.ToString() || theme.Name == Skin.黑色.ToString() || theme.Name == Skin.蓝色.ToString()) continue;
-            //    ThemeList.Add(theme);
-            //}
             setServers();
-            setPlugins();
+            RenderPlugins();
             setBasePicPaths();
         }
 
@@ -56,91 +50,90 @@ namespace Jvedio.ViewModel
         }
 
 
-        public void setPlugins()
+        public void RenderPlugins()
         {
 
-            InstalledPlugins = new List<PluginInfo>();
-            foreach (PluginInfo plugin in Global.Plugins.Crawlers)
+            InstalledPlugins = new List<PluginMetaData>();
+            foreach (PluginMetaData plugin in PluginManager.PluginList)
                 InstalledPlugins.Add(plugin);
 
 
-            CurrentInstalledPlugins = new ObservableCollection<PluginInfo>();
-            foreach (var item in getSortResult(InstalledPlugins))
+            CurrentInstalledPlugins = new ObservableCollection<PluginMetaData>();
+            foreach (var item in GetSortResult(InstalledPlugins))
                 CurrentInstalledPlugins.Add(item);
 
 
 
-            if (AllFreshPlugins != null)
-            {
-                CurrentFreshPlugins = new ObservableCollection<PluginInfo>();
-                foreach (var item in getSortResult(AllFreshPlugins))
-                    CurrentFreshPlugins.Add(item);
-
-            }
+            //if (AllFreshPlugins != null)
+            //{
+            //    CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
+            //    foreach (var item in getSortResult(AllFreshPlugins))
+            //        CurrentFreshPlugins.Add(item);
+            //}
 
 
         }
 
 
-        public List<PluginInfo> getSortResult(IEnumerable<PluginInfo> pluginInfos)
+        public List<PluginMetaData> GetSortResult(IEnumerable<PluginMetaData> PluginMetaDatas)
         {
-            IEnumerable<PluginInfo> list = pluginInfos.Where(arg => arg.Name.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
+            IEnumerable<PluginMetaData> list = PluginMetaDatas.Where(arg => arg.PluginName.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
             if (PluginSortIndex == 0)
             {
                 if (PluginSortDesc)
-                    list = list.OrderByDescending(arg => arg.Name);
+                    list = list.OrderByDescending(arg => arg.PluginName);
                 else
-                    list = list.OrderBy(arg => arg.Name);
+                    list = list.OrderBy(arg => arg.PluginName);
             }
             else if (PluginSortIndex == 1)
             {
                 if (PluginSortDesc)
-                    list = list.OrderByDescending(arg => arg.Author);
+                    list = list.OrderByDescending(arg => arg.AuthorNames);
                 else
-                    list = list.OrderBy(arg => arg.Author);
+                    list = list.OrderBy(arg => arg.AuthorNames);
             }
             else if (PluginSortIndex == 2)
             {
                 if (PluginSortDesc)
-                    list = list.OrderByDescending(arg => arg.PublishDate);
+                    list = list.OrderByDescending(arg => arg.ReleaseNotes.Date);
                 else
-                    list = list.OrderBy(arg => arg.PublishDate);
+                    list = list.OrderBy(arg => arg.ReleaseNotes.Date);
             }
             return list.ToList();
         }
 
         public void setServers()
         {
-            CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
-            foreach (PluginInfo plugin in Global.Plugins.Crawlers)
-            {
-                string serverName = plugin.ServerName;
-                string name = plugin.Name;
-                CrawlerServer crawlerServer = GlobalConfig.ServerConfig.CrawlerServers
-                    .Where(arg => arg.ServerName.ToLower() == serverName.ToLower() && arg.Name == name).FirstOrDefault();
-                if (crawlerServer == null)
-                {
-                    crawlerServer = new CrawlerServer();
-                    crawlerServer.ServerName = serverName;
-                    crawlerServer.Name = name;
-                    CrawlerServers.Add(plugin.getUID(), null);
-                }
-                else
-                {
-                    ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
-                    GlobalConfig.ServerConfig.CrawlerServers.Where(arg => arg.ServerName.ToLower() == serverName.ToLower() && arg.Name == name).
-                        ToList().ForEach(t => crawlers.Add(t));
-                    if (!CrawlerServers.ContainsKey(plugin.getUID()))
-                        CrawlerServers.Add(plugin.getUID(), crawlers);
-                }
+            //CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
+            //foreach (PluginMetaData plugin in Global.Plugins.Crawlers)
+            //{
+            //    string serverName = plugin.ServerName;
+            //    string name = plugin.Name;
+            //    CrawlerServer crawlerServer = GlobalConfig.ServerConfig.CrawlerServers
+            //        .Where(arg => arg.ServerName.ToLower() == serverName.ToLower() && arg.Name == name).FirstOrDefault();
+            //    if (crawlerServer == null)
+            //    {
+            //        crawlerServer = new CrawlerServer();
+            //        crawlerServer.ServerName = serverName;
+            //        crawlerServer.Name = name;
+            //        CrawlerServers.Add(plugin.getUID(), null);
+            //    }
+            //    else
+            //    {
+            //        ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
+            //        GlobalConfig.ServerConfig.CrawlerServers.Where(arg => arg.ServerName.ToLower() == serverName.ToLower() && arg.Name == name).
+            //            ToList().ForEach(t => crawlers.Add(t));
+            //        if (!CrawlerServers.ContainsKey(plugin.getUID()))
+            //            CrawlerServers.Add(plugin.getUID(), crawlers);
+            //    }
 
-            }
-            DisplayCrawlerServers = new ObservableCollection<string>();
-            foreach (string key in CrawlerServers.Keys)
-            {
-                string name = key.Split('.').Last();
-                DisplayCrawlerServers.Add(name);
-            }
+            //}
+            //DisplayCrawlerServers = new ObservableCollection<string>();
+            //foreach (string key in CrawlerServers.Keys)
+            //{
+            //    string name = key.Split('.').Last();
+            //    DisplayCrawlerServers.Add(name);
+            //}
         }
 
         public bool SaveServers(Action<string> callback = null)
@@ -252,11 +245,11 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public List<PluginInfo> InstalledPlugins;
-        public List<PluginInfo> AllFreshPlugins;
-        private ObservableCollection<PluginInfo> _CurrentInstalledPlugins;
+        public List<PluginMetaData> InstalledPlugins;
+        public List<PluginMetaData> AllFreshPlugins;
+        private ObservableCollection<PluginMetaData> _CurrentInstalledPlugins;
 
-        public ObservableCollection<PluginInfo> CurrentInstalledPlugins
+        public ObservableCollection<PluginMetaData> CurrentInstalledPlugins
         {
             get { return _CurrentInstalledPlugins; }
             set
@@ -265,9 +258,9 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private ObservableCollection<PluginInfo> _CurrentFreshPlugins;
+        private ObservableCollection<PluginMetaData> _CurrentFreshPlugins;
 
-        public ObservableCollection<PluginInfo> CurrentFreshPlugins
+        public ObservableCollection<PluginMetaData> CurrentFreshPlugins
         {
             get { return _CurrentFreshPlugins; }
             set
@@ -324,9 +317,9 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private PluginInfo _CurrentPlugin;
+        private PluginMetaData _CurrentPlugin;
 
-        public PluginInfo CurrentPlugin
+        public PluginMetaData CurrentPlugin
         {
             get { return _CurrentPlugin; }
             set

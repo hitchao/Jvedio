@@ -1,34 +1,41 @@
 {
-    "plugin_info": {
-        "plugin_type": 1, // 0 刮削器 1 皮肤
-        "authors": [
+    "PluginMetaData": {
+        "PluginType": 1, // 0 刮削器 1 皮肤
+        "Authors": [
             {
-                "name": "chao",
-                "github": "https://github.com/hitchao",
-                "gitee": ""
+                "Name": "chao",
+                "Github": "https://github.com/hitchao",
+                "Gitee": ""
             },
             {
-                "name": "SuperStudio",
-                "github": "https://github.com/SuperStudio",
-                "gitee": ""
+                "Name": "SuperStudio",
+                "Github": "https://github.com/SuperStudio",
+                "Gitee": ""
             }
         ],
-        "release_notes": {
-            "version": "v1.0.0",
-            "dates": "2022-07-23",
-            "desc": "默认皮肤",
-            "markdown": "# 默认皮肤 \n Jvedio 默认皮肤，黑色"
+        "ReleaseNotes": {
+            "Version": "v1.0.0",
+            "Date": "2022-07-23",
+            "Desc": "默认皮肤",
+            "MarkDown": "# 默认皮肤 \n Jvedio 默认皮肤，黑色",
+            "KeyWords": [
+                {
+                    "Key": "颜色",
+                    "Value": "深色皮肤"
+                }
+            ]
         }
     },
-    "data": {
-        "theme_type": 0, // 0 纯色 1 图片 
-        "images": {
-            "bg": "./images/bg.png",
-            "big": "./images/big.png",
-            "small": "./images/small.png",
-            "default": "./images/default.png"
+    "Data": {
+        "ThemeImage": {
+            "Background": "./images/bg.png",
+            "Big": "./images/big.png",
+            "Small": "./images/small.png",
+            "Normal": "./images/default.png"
         },
-        "colors": {
+        "FontName": "",
+        "FontPath": "./myfont.tff",
+        "Colors": {
             "Window.Background": "#1E1E1E",
             "Window.Foreground": "#FFFFFF",
             "Window.Sub.Background": "#1E1E1E",

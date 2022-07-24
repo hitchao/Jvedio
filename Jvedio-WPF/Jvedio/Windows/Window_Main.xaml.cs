@@ -3,6 +3,7 @@ using DynamicData;
 using HandyControl.Data;
 using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
+using Jvedio.Core;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
@@ -145,9 +146,46 @@ namespace Jvedio
 
             vieModel.Reset();           // 加载数据
             OpenListen();
+            OpenWindowByName("Window_Settings");
             //new Msgbox(this, "demo").ShowDialog();
+
         }
 
+
+
+
+
+        public void RefreshThemeData()
+        {
+            // 找到先前选择的皮肤
+            int idx = GetThemeIndex();
+            if (idx < ColorThemesItemsControl.Items.Count)
+            {
+                ContentPresenter presenter = (ContentPresenter)ColorThemesItemsControl.ItemContainerGenerator.ContainerFromItem(ColorThemesItemsControl.Items[idx]);
+                if (presenter == null) return;
+                RadioButton element = FindElementByName<RadioButton>(presenter, "rb");
+                if (element == null) return;
+                element.IsChecked = true;
+            }
+        }
+
+
+        private int GetThemeIndex()
+        {
+            int idx = GlobalConfig.ThemeConfig.ThemeIndex;
+            if (!string.IsNullOrEmpty(GlobalConfig.ThemeConfig.ThemeID))
+            {
+                for (int i = 0; i < ThemeManager.Themes.Count; i++)
+                {
+                    if (ThemeManager.Themes[i].ID.Equals(GlobalConfig.ThemeConfig.ThemeID))
+                    {
+                        idx = i;
+                        break;
+                    }
+                }
+            }
+            return idx;
+        }
 
         private void OpenListen()
         {
@@ -2948,7 +2986,25 @@ namespace Jvedio
         // todo 更改皮肤
         public void SetSkin()
         {
-            ThemeHelper.SetSkin(Properties.Settings.Default.Themes);
+            int idx = GetThemeIndex();
+            if (idx >= ThemeManager.Themes.Count) idx = 0;
+            Theme theme = ThemeManager.Themes[idx];
+            if (theme.Image != null && theme.Image.Background != null)
+            {
+                // 设置背景图片
+            }
+            // 设置颜色
+            if (theme.Colors != null && theme.Colors.Count > 0)
+            {
+                foreach (string key in theme.Colors.Keys)
+                {
+                    Application.Current.Resources[key] = VisualHelper.HexStringToBrush(theme.Colors[key]);
+                }
+            }
+
+
+
+            //ThemeHelper.SetSkin(Properties.Settings.Default.Themes);
             ChaoControls.Style.CustomEventHandler.Render();
             //SettingsBorder.ContextMenu.UpdateDefaultStyle();//设置弹出的菜单正确显示
             //switch (Properties.Settings.Default.Themes)
@@ -4998,12 +5054,48 @@ namespace Jvedio
 
         private void ShowThemes(object sender, RoutedEventArgs e)
         {
+
             themesPopup.IsOpen = true;
+            RefreshThemeData();
         }
 
         private void CloseThemePopup(object sender, RoutedEventArgs e)
         {
             themesPopup.IsOpen = false;
+        }
+
+        private void ChangeTheme(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < ColorThemesItemsControl.Items.Count; i++)
+            {
+                ContentPresenter presenter = (ContentPresenter)ColorThemesItemsControl.ItemContainerGenerator.ContainerFromItem(ColorThemesItemsControl.Items[i]);
+                if (presenter == null) return;
+                RadioButton element = FindElementByName<RadioButton>(presenter, "rb");
+                if (element == null) return;
+                if ((bool)element.IsChecked)
+                {
+                    GlobalConfig.ThemeConfig.ThemeIndex = i;
+                    GlobalConfig.ThemeConfig.ThemeID = element.Tag.ToString();
+                    GlobalConfig.ThemeConfig.Save();
+                    break;
+                }
+            }
+            SetSkin();
+            SetSelected();
+            ActorSetSelected();
+        }
+
+        private async void ReLoadTheme(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            button.IsEnabled = false;
+            ThemeManager.LoadAllThemes();
+            vieModel.InitThemes();
+            await Task.Delay(500);
+            RefreshThemeData();
+            ChangeTheme(null, null);
+            button.IsEnabled = true;
+
         }
     }
 

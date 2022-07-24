@@ -29,6 +29,7 @@ namespace Jvedio
         public static Jvedio.Core.Config.FFmpegConfig FFmpegConfig = Jvedio.Core.Config.FFmpegConfig.createInstance();
         public static Jvedio.Core.Config.RenameConfig RenameConfig = Jvedio.Core.Config.RenameConfig.createInstance();
         public static Jvedio.Core.Config.PluginConfig PluginConfig = Jvedio.Core.Config.PluginConfig.createInstance();
+        public static Jvedio.Core.Config.ThemeConfig ThemeConfig = Jvedio.Core.Config.ThemeConfig.createInstance();
 
 
 
