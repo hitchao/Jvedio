@@ -866,11 +866,8 @@
                                     ToolTip="{x:Static lang:Resources.Sorting}">
                                     <Border.ContextMenu>
                                         <ContextMenu HorizontalOffset="-50">
-                                            <MenuItem Header="启用当前插件" />
-                                            <MenuItem Header="禁用当前插件" />
-                                            <MenuItem Header="启用所有插件" />
-                                            <MenuItem Header="禁用所有插件" />
-
+                                            <MenuItem Click="PluginHandle" Header="启用所有插件" />
+                                            <MenuItem Click="PluginHandle" Header="禁用所有插件" />
                                         </ContextMenu>
                                     </Border.ContextMenu>
                                     <Viewbox Width="auto" Height="18">
@@ -888,12 +885,25 @@
                                     <Border.ContextMenu>
                                         <ContextMenu HorizontalOffset="-50">
                                             <MenuItem Header="是否启用">
-                                                <MenuItem Header="启用" IsCheckable="True" />
-                                                <MenuItem Header="未启用" IsCheckable="True" />
+                                                <MenuItem
+                                                    Click="SetViewEnabled"
+                                                    Header="启用"
+                                                    IsCheckable="True" />
+                                                <MenuItem
+                                                    Click="SetViewEnabled"
+                                                    Header="未启用"
+                                                    IsCheckable="True" />
                                             </MenuItem>
                                             <MenuItem Header="类别">
-                                                <MenuItem Header="皮肤" />
-                                                <MenuItem Header="刮削器" />
+                                                <MenuItem
+                                                    Click="SetPluginType"
+                                                    Header="刮削器"
+                                                    IsCheckable="True" />
+                                                <MenuItem
+                                                    Click="SetPluginType"
+                                                    Header="皮肤"
+                                                    IsCheckable="True" />
+
                                             </MenuItem>
 
 
@@ -1679,7 +1689,7 @@
                             </Grid.ColumnDefinitions>
                             <Border
                                 Grid.Column="0"
-                                MinWidth="100"
+                                MinWidth="150"
                                 Padding="0,10"
                                 HorizontalAlignment="Left"
                                 Background="{DynamicResource Window.Side.Background}"
@@ -1703,7 +1713,7 @@
                                 MaxHeight="300"
                                 Margin="20,0"
                                 Padding="0,10"
-                                HorizontalAlignment="Left"
+                                HorizontalAlignment="Stretch"
                                 Background="{DynamicResource Window.Side.Background}"
                                 CornerRadius="5">
                                 <Grid>
@@ -1775,8 +1785,7 @@
                                                             <CheckBox
                                                                 HorizontalAlignment="Center"
                                                                 IsChecked="{Binding Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                PreviewMouseUp="SetServerEnable"
-                                                                Style="{StaticResource CheckBoxStyle1}" />
+                                                                PreviewMouseUp="SetServerEnable" />
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>
@@ -3146,8 +3155,7 @@
 
 
             <Button
-                Margin="915,5,0,5"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Stretch"
                 Click="SaveSettings"
                 Content="{x:Static lang:Resources.Save}"

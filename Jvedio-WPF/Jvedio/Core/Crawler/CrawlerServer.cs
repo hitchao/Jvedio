@@ -21,13 +21,9 @@ namespace Jvedio.Core.Crawler
     {
         public CrawlerServer()
         {
-
+            PluginID = "";
         }
-
-
-
-        public string ServerName { get; set; }
-        public string Name { get; set; }
+        public string PluginID { get; set; }
         private string _Url;
         public string Url
         {
@@ -94,7 +90,7 @@ namespace Jvedio.Core.Crawler
                 OnPropertyChanged();
             }
         }
-        public string _Headers { get; set; }
+        private string _Headers { get; set; }
         public string Headers
         {
             get

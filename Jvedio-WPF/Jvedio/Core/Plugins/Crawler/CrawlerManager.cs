@@ -43,7 +43,7 @@ namespace Jvedio.Core.Plugins.Crawler
                 // 校验
                 PluginMetaData data = GetPluginData(dllPath);
                 if (data == null) continue;
-                data.PluginID = PluginType.Cralwer.ToString() + Path.GetFileName(crawler_dir);
+                data.PluginID = PluginType.Cralwer.ToString() + "-" + Path.GetFileName(crawler_dir);
                 CrawlerInfo info = new CrawlerInfo();
                 info.Path = dllPath;
                 PluginMetaDatas.Add(data);
@@ -52,7 +52,6 @@ namespace Jvedio.Core.Plugins.Crawler
                 string target = Path.Combine(BaseDir, Path.GetFileName(dllPath));
                 if (copy) FileHelper.TryCopyFile(dllPath, target, true);
             }
-            //SetPluginEnabled();
             GlobalConfig.ServerConfig.Read();// 必须在加载所有爬虫插件后在初始化
         }
 
@@ -95,25 +94,6 @@ namespace Jvedio.Core.Plugins.Crawler
         }
 
 
-        private static void SetPluginEnabled()
-        {
-            //if (Global.Plugins.Crawlers != null && Global.Plugins.Crawlers.Count > 0
-            //    && !string.IsNullOrEmpty(GlobalConfig.Settings.PluginEnabledJson))
-            //{
-
-            //    string json = GlobalConfig.Settings.PluginEnabledJson;
-            //    if (string.IsNullOrEmpty(json)) return;
-            //    Dictionary<string, bool> dict = JsonUtils.TryDeserializeObject<Dictionary<string, bool>>(json);
-            //    if (dict == null || dict.Count <= 0) return;
-            //    foreach (PluginMetaData plugin in Global.Plugins.Crawlers)
-            //    {
-            //        string uid = plugin.getUID();
-            //        if (string.IsNullOrEmpty(uid)) continue;
-            //        if (dict.ContainsKey(uid))
-            //            plugin.Enabled = dict[uid];
-            //    }
-            //}
-        }
 
 
 

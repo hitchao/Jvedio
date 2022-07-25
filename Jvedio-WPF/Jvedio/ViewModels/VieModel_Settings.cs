@@ -2,6 +2,7 @@
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Plugins;
+using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
 using Jvedio.Logs;
 using Jvedio.Utils.Common;
@@ -28,7 +29,7 @@ namespace Jvedio.ViewModel
         public VieModel_Settings()
         {
             PicPaths = new Dictionary<string, object>();
-            setServers();
+            SetServers();
             RenderPlugins();
             setBasePicPaths();
         }
@@ -58,10 +59,8 @@ namespace Jvedio.ViewModel
                 InstalledPlugins.Add(plugin);
 
 
-            CurrentInstalledPlugins = new ObservableCollection<PluginMetaData>();
-            foreach (var item in GetSortResult(InstalledPlugins))
-                CurrentInstalledPlugins.Add(item);
 
+            RefreshCurrentPlugins();
 
 
             //if (AllFreshPlugins != null)
@@ -74,10 +73,41 @@ namespace Jvedio.ViewModel
 
         }
 
+        public void RefreshCurrentPlugins()
+        {
+            CurrentInstalledPlugins = new ObservableCollection<PluginMetaData>();
+            foreach (var item in GetSortResult(InstalledPlugins))
+                CurrentInstalledPlugins.Add(item);
+        }
+
+
+        public int SortEnabledIndex = -1;           // 0 启用 1 未启用
+        public PluginType SortPluginType = PluginType.None;
 
         public List<PluginMetaData> GetSortResult(IEnumerable<PluginMetaData> PluginMetaDatas)
         {
-            IEnumerable<PluginMetaData> list = PluginMetaDatas.Where(arg => arg.PluginName.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
+            // 筛选
+            IEnumerable<PluginMetaData> list = PluginMetaDatas;
+
+
+            if (SortEnabledIndex >= 0)
+            {
+                bool enabled = SortEnabledIndex == 0;
+                list = list.Where(arg => arg.Enabled == enabled);
+            }
+
+            if (SortPluginType != PluginType.None)
+            {
+                list = list.Where(arg => arg.PluginType == SortPluginType);
+            }
+
+            if (!string.IsNullOrEmpty(PluginSearch))
+            {
+                list = PluginMetaDatas.Where(arg => arg.PluginName.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
+            }
+
+
+
             if (PluginSortIndex == 0)
             {
                 if (PluginSortDesc)
@@ -102,38 +132,38 @@ namespace Jvedio.ViewModel
             return list.ToList();
         }
 
-        public void setServers()
+        public void SetServers()
         {
-            //CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
-            //foreach (PluginMetaData plugin in Global.Plugins.Crawlers)
-            //{
-            //    string serverName = plugin.ServerName;
-            //    string name = plugin.Name;
-            //    CrawlerServer crawlerServer = GlobalConfig.ServerConfig.CrawlerServers
-            //        .Where(arg => arg.ServerName.ToLower() == serverName.ToLower() && arg.Name == name).FirstOrDefault();
-            //    if (crawlerServer == null)
-            //    {
-            //        crawlerServer = new CrawlerServer();
-            //        crawlerServer.ServerName = serverName;
-            //        crawlerServer.Name = name;
-            //        CrawlerServers.Add(plugin.getUID(), null);
-            //    }
-            //    else
-            //    {
-            //        ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
-            //        GlobalConfig.ServerConfig.CrawlerServers.Where(arg => arg.ServerName.ToLower() == serverName.ToLower() && arg.Name == name).
-            //            ToList().ForEach(t => crawlers.Add(t));
-            //        if (!CrawlerServers.ContainsKey(plugin.getUID()))
-            //            CrawlerServers.Add(plugin.getUID(), crawlers);
-            //    }
+            CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
+            foreach (PluginMetaData plugin in CrawlerManager.PluginMetaDatas)
+            {
+                string pluginID = plugin.PluginID;
+                if (string.IsNullOrEmpty(pluginID)) continue;
+                string name = plugin.PluginName;
+                CrawlerServer crawlerServer = GlobalConfig.ServerConfig.CrawlerServers
+                    .Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+                if (crawlerServer == null)
+                {
+                    crawlerServer = new CrawlerServer();
+                    crawlerServer.PluginID = pluginID;
+                    CrawlerServers.Add(pluginID, null);
+                }
+                else
+                {
+                    ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
+                    GlobalConfig.ServerConfig.CrawlerServers.Where(arg => arg.PluginID.Equals(pluginID)).
+                        ToList().ForEach(t => crawlers.Add(t));
+                    if (!CrawlerServers.ContainsKey(pluginID))
+                        CrawlerServers.Add(pluginID, crawlers);
+                }
 
-            //}
-            //DisplayCrawlerServers = new ObservableCollection<string>();
-            //foreach (string key in CrawlerServers.Keys)
-            //{
-            //    string name = key.Split('.').Last();
-            //    DisplayCrawlerServers.Add(name);
-            //}
+            }
+            DisplayCrawlerServers = new ObservableCollection<string>();
+            foreach (string key in CrawlerServers.Keys)
+            {
+                int len = PluginType.Cralwer.ToString().Length + 1;
+                DisplayCrawlerServers.Add(key.Substring(len));
+            }
         }
 
         public bool SaveServers(Action<string> callback = null)
@@ -151,9 +181,6 @@ namespace Jvedio.ViewModel
                         callback?.Invoke($"【{key}】 刮削器处地址为 {server.Url} 的 Headers 不合理，格式必须为：{format}");
                         return false;
                     }
-                    int idx = key.IndexOf('.');
-                    server.ServerName = key.Substring(0, idx);
-                    server.Name = key.Substring(idx + 1);
                     if (server.Headers == null) server.Headers = "";
                     list.Add(server);
 

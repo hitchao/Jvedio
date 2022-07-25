@@ -298,7 +298,6 @@
     <Compile Include="Core\Enums\ImageType.cs" />
     <Compile Include="Core\Enums\LogType.cs" />
     <Compile Include="Core\Enums\NoticeType.cs" />
-    <Compile Include="Core\Enums\PluginType.cs" />
     <Compile Include="Core\Exceptions\CrawlerNotFoundException.cs" />
     <Compile Include="Core\Exceptions\MediaCutOutOfRangeException.cs" />
     <Compile Include="Core\Exceptions\NotFoundException.cs" />

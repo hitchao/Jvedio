@@ -6,6 +6,7 @@ using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Framework;
 using Jvedio.Core.Plugins;
+using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Logs;
@@ -54,6 +55,8 @@ namespace Jvedio
 
 
         public static Video SampleVideo { get; set; }
+
+        public static string DEFAULT_TEST_URL = "https://www.baidu.com/";
 
 
         static Window_Settings()
@@ -910,30 +913,31 @@ namespace Jvedio
 
         private void NewServer(object sender, RoutedEventArgs e)
         {
-            string serverType = getCurrentServerType();
-            if (string.IsNullOrEmpty(serverType)) return;
+            string pluginID = GetPluginID();
+            if (string.IsNullOrEmpty(pluginID)) return;
             CrawlerServer server = new CrawlerServer()
             {
+                PluginID = pluginID,
                 Enabled = true,
-                Url = "https://www.baidu.com/",
+                Url = DEFAULT_TEST_URL,
                 Cookies = "",
                 Available = 0,
                 LastRefreshDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
             };
-            ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[serverType];
+            ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[pluginID];
             if (list == null) list = new ObservableCollection<CrawlerServer>();
             list.Add(server);
-            vieModel.CrawlerServers[serverType] = list;
+            vieModel.CrawlerServers[pluginID] = list;
             ServersDataGrid.ItemsSource = null;
             ServersDataGrid.ItemsSource = list;
         }
 
 
 
-        private string getCurrentServerType()
+        private string GetPluginID()
         {
             int idx = serverListBox.SelectedIndex;
-            if (idx < 0 || vieModel.CrawlerServers == null || vieModel.CrawlerServers.Count == 0) return null;
+            if (idx < 0 || vieModel.CrawlerServers?.Count == 0) return null;
             return vieModel.CrawlerServers.Keys.ToList()[idx];
         }
 
@@ -944,9 +948,9 @@ namespace Jvedio
 
 
             int idx = CurrentRowIndex;
-            string serverType = getCurrentServerType();
-            if (string.IsNullOrEmpty(serverType)) return;
-            ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[serverType];
+            string pluginID = GetPluginID();
+            if (string.IsNullOrEmpty(pluginID)) return;
+            ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[pluginID];
             CrawlerServer server = list[idx];
 
             if (!server.isHeaderProper())
@@ -969,12 +973,12 @@ namespace Jvedio
         private void DeleteServer(object sender, RoutedEventArgs e)
         {
 
-            string serverType = getCurrentServerType();
-            if (string.IsNullOrEmpty(serverType)) return;
+            string pluginID = GetPluginID();
+            if (string.IsNullOrEmpty(pluginID)) return;
             Console.WriteLine(CurrentRowIndex);
-            ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[serverType];
+            ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[pluginID];
             list.RemoveAt(CurrentRowIndex);
-            vieModel.CrawlerServers[serverType] = list;
+            vieModel.CrawlerServers[pluginID] = list;
             ServersDataGrid.ItemsSource = null;
             ServersDataGrid.ItemsSource = list;
         }
@@ -1426,23 +1430,20 @@ namespace Jvedio
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //int idx = (sender as ListBox).SelectedIndex;
-            //if (idx < 0) return;
-            //if (vieModel.CrawlerServers != null && vieModel.CrawlerServers.Count > 0)
-            //{
-            //    string serverType = vieModel.CrawlerServers.Keys.ToList()[idx];
-            //    int index = serverType.IndexOf('.');
-            //    string serverName = serverType.Substring(0, index);
-            //    string name = serverType.Substring(index + 1);
-            //    PluginMetaData PluginMetaData = Global.Plugins.Crawlers.Where(arg => arg.ServerName.Equals(serverName) && arg.Name.Equals(name)).FirstOrDefault();
-            //    if (PluginMetaData != null && PluginMetaData.Enabled) vieModel.PluginEnabled = true;
-            //    else vieModel.PluginEnabled = false;
+            int idx = (sender as ListBox).SelectedIndex;
+            if (idx < 0) return;
+            if (vieModel.CrawlerServers?.Count > 0)
+            {
+                string pluginID = PluginType.Cralwer.ToString() + "-" + vieModel.DisplayCrawlerServers[idx];
+                pluginID = pluginID.ToLower();
+                PluginMetaData PluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+                if (PluginMetaData != null && PluginMetaData.Enabled) vieModel.PluginEnabled = true;
+                else vieModel.PluginEnabled = false;
+                ServersDataGrid.ItemsSource = null;
+                ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
+                GlobalConfig.Settings.CrawlerSelectedIndex = idx;
 
-            //    ServersDataGrid.ItemsSource = null;
-            //    ServersDataGrid.ItemsSource = vieModel.CrawlerServers[serverType];
-            //    GlobalConfig.Settings.CrawlerSelectedIndex = idx;
-
-            //}
+            }
         }
 
         private void ShowCrawlerHelp(object sender, MouseButtonEventArgs e)
@@ -1501,16 +1502,16 @@ namespace Jvedio
 
         private void SavePluginEnabled(object sender, RoutedEventArgs e)
         {
-            //GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
-            //bool enabled = (bool)(sender as ChaoControls.Style.Switch).IsChecked;
-            //foreach (PluginMetaData plugin in Global.Plugins.Crawlers)
-            //{
-            //    if (plugin.getUID().Equals(vieModel.CurrentPlugin.getUID()))
-            //        plugin.Enabled = enabled;
-            //    GlobalConfig.Settings.PluginEnabled.Add(plugin.getUID(), plugin.Enabled);
-            //}
-            //GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
-            //vieModel.setServers();
+            GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
+            bool enabled = (bool)(sender as ChaoControls.Style.Switch).IsChecked;
+            foreach (PluginMetaData plugin in PluginManager.PluginList)
+            {
+                if (plugin.PluginID.Equals(vieModel.CurrentPlugin.PluginID))
+                    plugin.Enabled = enabled;
+                GlobalConfig.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
+            }
+            GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
+            vieModel.SetServers();
         }
 
         private void url_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -1553,11 +1554,9 @@ namespace Jvedio
 
             }
 
-
-            //currentHeaderBox = sender as SearchBox;
-            //parsedTextbox.Text = currentHeaderBox.Text;
-            string serverType = getCurrentServerType();
-            currentCrawlerServer = vieModel.CrawlerServers[serverType][ServersDataGrid.SelectedIndex];
+            string pluginID = GetPluginID();
+            if (string.IsNullOrEmpty(pluginID)) return;
+            currentCrawlerServer = vieModel.CrawlerServers[pluginID][ServersDataGrid.SelectedIndex];
         }
 
         private void CancelHeader(object sender, RoutedEventArgs e)
@@ -1886,6 +1885,82 @@ namespace Jvedio
 
 
             border.IsEnabled = true;
+        }
+
+        private void SetViewEnabled(object sender, RoutedEventArgs e)
+        {
+            (bool isChecked, int idx) = SetChecked(sender as MenuItem);
+            if (!isChecked)
+            {
+                vieModel.SortEnabledIndex = -1;
+            }
+            else
+            {
+                vieModel.SortEnabledIndex = idx;
+            }
+            vieModel.RefreshCurrentPlugins();
+        }
+
+        private void SetPluginType(object sender, RoutedEventArgs e)
+        {
+            (bool isChecked, int idx) = SetChecked(sender as MenuItem);
+            if (!isChecked)
+            {
+                vieModel.SortPluginType = PluginType.None;
+            }
+            else
+            {
+                vieModel.SortPluginType = (PluginType)idx;
+            }
+            vieModel.RefreshCurrentPlugins();
+
+        }
+
+        private (bool, int) SetChecked(MenuItem menuItem)
+        {
+            bool isChecked = menuItem.IsChecked;
+            MenuItem parent = menuItem.Parent as MenuItem;
+            foreach (MenuItem item in parent.Items)
+            {
+                item.IsChecked = false;
+            }
+            menuItem.IsChecked = isChecked;
+            return (isChecked, parent.Items.IndexOf(menuItem));
+        }
+
+        private void PluginHandle(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu parent = menuItem.Parent as ContextMenu;
+            int idx = parent.Items.IndexOf(menuItem);
+            PluginHandle(idx);
+        }
+
+
+        private void PluginHandle(int idx)
+        {
+            GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
+            bool enabled = false;
+            if (idx == 0)
+            {
+
+
+                enabled = true;
+
+            }
+            else if (idx == 1)
+            {
+                enabled = false;
+            }
+            foreach (PluginMetaData plugin in PluginManager.PluginList)
+            {
+                plugin.Enabled = enabled;
+                GlobalConfig.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
+            }
+            GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
+            vieModel.SetServers();
+            vieModel.RefreshCurrentPlugins();
+
         }
     }
 

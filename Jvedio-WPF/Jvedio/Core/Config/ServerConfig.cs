@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Config.Base;
 using Jvedio.Core.Crawler;
+using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Core.WindowConfig;
 using Jvedio.Entity;
@@ -34,31 +35,30 @@ namespace Jvedio.Core.Config
 
         public override void Read()
         {
-            //CrawlerServers = new List<CrawlerServer>();
-            //SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
-            //wrapper.Eq("ConfigName", ConfigName);
-            //AppConfig appConfig = GlobalMapper.appConfigMapper.selectOne(wrapper);
-            //if (appConfig == null || appConfig.ConfigId == 0) return;
-            //List<Dictionary<object, object>> dicts = JsonUtils.TryDeserializeObject<List<Dictionary<object, object>>>(appConfig.ConfigValue);
+            CrawlerServers = new List<CrawlerServer>();
+            SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
+            wrapper.Eq("ConfigName", ConfigName);
+            AppConfig appConfig = GlobalMapper.appConfigMapper.selectOne(wrapper);
+            if (appConfig == null || appConfig.ConfigId == 0) return;
+            List<Dictionary<object, object>> dicts = JsonUtils.TryDeserializeObject<List<Dictionary<object, object>>>(appConfig.ConfigValue);
 
-            //if (dicts == null) return;
-            //foreach (Dictionary<object, object> d in dicts)
-            //{
-            //    CrawlerServer server = new CrawlerServer();
-            //    if (!server.HasAllKeys(d)) continue;
-            //    server.ServerName = d["ServerName"].ToString();
-            //    server.Name = d["Name"].ToString();
-            //    if (!Global.Plugins.Crawlers.Where(arg => arg.ServerName.ToString().ToLower().Equals(server.ServerName.ToLower())).Any())
-            //        continue;
-            //    server.Url = d["Url"].ToString();
-            //    server.Cookies = d["Cookies"].ToString();
-            //    server.Enabled = "true".Equals(d["Enabled"].ToString().ToLower());
-            //    server.LastRefreshDate = d["LastRefreshDate"].ToString();
-            //    server.Headers = d["Headers"].ToString();
-            //    int.TryParse(d["Available"].ToString(), out int available);
-            //    server.Available = available;
-            //    CrawlerServers.Add(server);
-            //}
+            if (dicts == null || CrawlerManager.PluginMetaDatas == null) return;
+            foreach (Dictionary<object, object> d in dicts)
+            {
+                CrawlerServer server = new CrawlerServer();
+                if (!server.HasAllKeys(d)) continue;
+                if (d.ContainsKey("PluginID")) server.PluginID = d["PluginID"].ToString();
+                if (string.IsNullOrEmpty(server.PluginID)) continue;
+                if (!CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(server.PluginID)).Any()) continue;
+                server.Url = d["Url"].ToString();
+                server.Cookies = d["Cookies"].ToString();
+                server.Enabled = "true".Equals(d["Enabled"].ToString().ToLower());
+                server.LastRefreshDate = d["LastRefreshDate"].ToString();
+                server.Headers = d["Headers"].ToString();
+                int.TryParse(d["Available"].ToString(), out int available);
+                server.Available = available;
+                CrawlerServers.Add(server);
+            }
         }
         public override void Save()
         {

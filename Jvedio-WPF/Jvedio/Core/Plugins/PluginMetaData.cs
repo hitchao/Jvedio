@@ -15,8 +15,10 @@ namespace Jvedio.Core.Plugins
 {
     public enum PluginType
     {
+
         Cralwer,
-        Theme
+        Theme,
+        None
     }
 
 
@@ -43,7 +45,12 @@ namespace Jvedio.Core.Plugins
 
     public class PluginMetaData
     {
-        public string PluginID { get; set; }
+        private string _PluginID;
+        public string PluginID
+        {
+            get { return _PluginID; }
+            set { _PluginID = value.ToLower(); }
+        }
         public string PluginName { get; set; }
         public PluginType PluginType { get; set; }
         public List<AuthorInfo> Authors { get; set; }

@@ -103,7 +103,7 @@ namespace Jvedio
 
             ThemeManager.LoadAllThemes();       // 加载主题
             CrawlerManager.LoadAllCrawlers();   // 初始化爬虫
-            PluginManager.MergeAllPlugin();     // 将所有插件进行汇总
+            PluginManager.Init();     // 将所有插件进行汇总
 
             vieModel_StartUp = new VieModel_StartUp();  // todo 检视
             this.DataContext = vieModel_StartUp;

@@ -86,7 +86,7 @@ namespace Jvedio.Core
                 theme.ID = ID;
                 Themes.Add(theme);
                 data.Installed = true;
-                data.PluginID = PluginType.Theme.ToString() + Path.GetFileName(path);
+                data.PluginID = PluginType.Theme.ToString() + "-" + Path.GetFileName(path);
                 PluginMetaDatas.Add(data);
             }
         }

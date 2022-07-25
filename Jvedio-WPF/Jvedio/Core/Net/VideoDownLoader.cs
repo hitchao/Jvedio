@@ -88,29 +88,28 @@ namespace Jvedio.Core.Net
             // server != NULL
             // server.ServerName != NULL
             string baseUrl = server.Url;
-            string serverName = server.ServerName.ToUpper();
             string url = baseUrl;
             string code = "";
             string vid = CurrentVideo.VID;
-            if ("BUS".Equals(serverName))
-            {
-                url = $"{baseUrl}{vid}";
-                code = vid;
-            }
-            else if ("DB".Equals(serverName))
-            {
-                url = baseUrl;
-                IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>()
-                    .Eq("WebType", "db").Eq("ValueType", "video").Eq("LocalValue", vid);
-                UrlCode urlCode = GlobalMapper.urlCodeMapper.selectOne(wrapper);
-                if (urlCode != null)
-                    code = urlCode.RemoteValue;
-            }
-            else if ("FC".Equals(serverName))
-            {
-                // 后面必须要有 /
-                url = $"{baseUrl}article/{vid.Replace("FC2-", "")}/";
-            }
+            //if ("BUS".Equals(serverName))
+            //{
+            //    url = $"{baseUrl}{vid}";
+            //    code = vid;
+            //}
+            //else if ("DB".Equals(serverName))
+            //{
+            //    url = baseUrl;
+            //    IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>()
+            //        .Eq("WebType", "db").Eq("ValueType", "video").Eq("LocalValue", vid);
+            //    UrlCode urlCode = GlobalMapper.urlCodeMapper.selectOne(wrapper);
+            //    if (urlCode != null)
+            //        code = urlCode.RemoteValue;
+            //}
+            //else if ("FC".Equals(serverName))
+            //{
+            //    // 后面必须要有 /
+            //    url = $"{baseUrl}article/{vid.Replace("FC2-", "")}/";
+            //}
             return (url, code);
         }
 
