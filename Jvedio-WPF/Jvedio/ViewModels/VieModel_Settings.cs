@@ -747,6 +747,18 @@ namespace Jvedio.ViewModel
         }
 
 
+        private bool _DetailShowBg = GlobalConfig.Settings.DetailShowBg;
+
+        public bool DetailShowBg
+        {
+            get { return _DetailShowBg; }
+            set
+            {
+                _DetailShowBg = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         #endregion
 

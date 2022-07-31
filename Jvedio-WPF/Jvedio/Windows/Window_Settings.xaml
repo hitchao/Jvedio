@@ -190,6 +190,30 @@
                         </WrapPanel>
 
                     </WrapPanel>
+                    <StackPanel Margin="15,5" Orientation="Horizontal">
+                        <Label Content="{x:Static lang:Resources.Language}" Style="{StaticResource InfoLabel}" />
+                        <ComboBox
+                            Grid.Column="1"
+                            Height="30"
+                            MinWidth="200"
+                            Margin="5"
+                            HorizontalAlignment="Stretch"
+                            Background="{DynamicResource Window.Side.Background}"
+                            BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                            FontSize="16"
+                            Foreground="{DynamicResource Window.Foreground}"
+                            ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                            SelectedIndex="{Binding SelectedLanguage}"
+                            Style="{StaticResource NormalComboBox}"
+                            Tag="{DynamicResource Window.Side.Hover.Background}"
+                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                            <ComboBoxItem Content="中文" />
+                            <ComboBoxItem Content="English" />
+                            <ComboBoxItem Content="日本語" />
+                        </ComboBox>
+                    </StackPanel>
+
+
 
                     <StackPanel
                         Margin="5,0"
@@ -216,34 +240,11 @@
                             Style="{StaticResource ButtonStyleFill}" />
                     </StackPanel>
 
-                    <StackPanel Margin="20,5" Orientation="Horizontal">
-                        <Label Content="{x:Static lang:Resources.Language}" Style="{StaticResource InfoLabel}" />
-                        <ComboBox
-                            Grid.Column="1"
-                            Height="30"
-                            MinWidth="200"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            Background="{DynamicResource Window.Side.Background}"
-                            BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                            FontSize="16"
-                            Foreground="{DynamicResource Window.Foreground}"
-                            ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
-                            SelectedIndex="{Binding SelectedLanguage}"
-                            Style="{StaticResource NormalComboBox}"
-                            Tag="{DynamicResource Window.Side.Hover.Background}"
-                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
-                            <ComboBoxItem Content="中文" />
-                            <ComboBoxItem Content="English" />
-                            <ComboBoxItem Content="日本語" />
-                        </ComboBox>
-                    </StackPanel>
 
 
 
 
-
-                    <StackPanel Margin="20,5" Orientation="Horizontal">
+                    <StackPanel Margin="15,5" Orientation="Horizontal">
                         <Label Content="{x:Static lang:Resources.SetPlayer}" Style="{StaticResource InfoLabel}" />
                         <hc:TextBox
                             ShowClearButton="True"
@@ -1242,19 +1243,6 @@
                                     </Border>
 
                                 </StackPanel>
-                                <TextBlock
-                                    Margin="0"
-                                    Padding="2"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.ReleaseNotes.Desc}"
-                                    TextAlignment="Left" />
-                                <TextBlock
-                                    Margin="0"
-                                    Padding="2"
-                                    FontStyle="Italic"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.AuthorNames, StringFormat=作者：{0}}"
-                                    TextAlignment="Left" />
                                 <StackPanel
                                     Margin="0,5"
                                     Orientation="Horizontal"
@@ -1268,6 +1256,109 @@
                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="启用" />
 
                                 </StackPanel>
+                                <TextBlock
+                                    Margin="0"
+                                    Padding="2"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding CurrentPlugin.ReleaseNotes.Desc}"
+                                    TextAlignment="Left" />
+
+                                <TextBlock
+                                    Margin="5"
+                                    Padding="2"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="作者："
+                                    TextAlignment="Left" />
+
+                                <ItemsControl ItemsSource="{Binding CurrentPlugin.Authors}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                MaxWidth="250"
+                                                Margin="2"
+                                                Padding="0"
+                                                MouseLeftButtonUp="ShowAuthorInfo"
+                                                Style="{StaticResource HoverBorder}"
+                                                Tag="{Binding Name}">
+                                                <TextBlock
+                                                    Foreground="{DynamicResource Common.HighLight.BorderBrush}"
+                                                    Style="{StaticResource BaseTextBlock}"
+                                                    Text="{Binding Name}"
+                                                    TextDecorations="Underline"
+                                                    TextTrimming="WordEllipsis"
+                                                    TextWrapping="NoWrap" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Popup
+                                    x:Name="authorInfoPopup"
+                                    MaxHeight="400"
+                                    AllowsTransparency="True"
+                                    HorizontalOffset="-100"
+                                    Placement="Bottom"
+                                    PopupAnimation="Fade"
+                                    StaysOpen="False"
+                                    VerticalOffset="0">
+                                    <Grid Margin="5">
+                                        <Border
+                                            Margin="5"
+                                            Background="{DynamicResource Menu.Background}"
+                                            CornerRadius="0 0 5 5"
+                                            Effect="{StaticResource PopupDropShadowEffect}" />
+                                        <ScrollViewer
+                                            Margin="10"
+                                            HorizontalScrollBarVisibility="Hidden"
+                                            VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl
+                                                Name="authorInfoItemsControl"
+                                                Margin="5,5,5,5"
+                                                Background="Transparent"
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Margin="5" Orientation="Horizontal">
+                                                            <Border
+                                                                Width="100"
+                                                                Background="{DynamicResource Window.Title.Background}"
+                                                                CornerRadius="5">
+                                                                <TextBlock
+                                                                    Width="100"
+                                                                    Style="{StaticResource NoWrapTextBlock}"
+                                                                    Text="{Binding Key}" />
+
+                                                            </Border>
+                                                            <TextBlock
+                                                                MaxWidth="400"
+                                                                Cursor="Hand"
+                                                                Foreground="{DynamicResource Common.HighLight.BorderBrush}"
+                                                                MouseLeftButtonUp="OpenAuthorUrl"
+                                                                Style="{StaticResource NoWrapTextBlock}"
+                                                                Text="{Binding Value}"
+                                                                TextDecorations="Underline" />
+                                                        </StackPanel>
+
+
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+
+                                    </Grid>
+                                </Popup>
+
+
                                 <StackPanel Margin="5,10" Orientation="Horizontal">
 
                                     <StackPanel.Style>
@@ -1419,632 +1510,650 @@
                 FontSize="15"
                 Header="{x:Static lang:Resources.SyncInfo}">
                 <StackPanel>
-
-                    <WrapPanel Margin="20,5" Orientation="Horizontal">
-
-                        <CheckBox
-                            Margin="0"
-                            Content="{x:Static lang:Resources.SaveToNFO}"
-                            IsChecked="{Binding SaveInfoToNFO, Mode=TwoWay}" />
-
-
-
-
-                        <!--<StackPanel Orientation="Horizontal" Visibility="{Binding SaveInfoToNFO, Converter={StaticResource BoolToVis}, Mode=OneWay, Source={x:Static p:Settings.Default}}">-->
-                        <StackPanel Orientation="Horizontal" Visibility="Visible">
-                            <chao:SearchBox
-                                Width="380"
-                                MinWidth="400"
-                                Margin="10,0"
-                                Background="{DynamicResource Window.Title.Background}"
-                                FontSize="15"
-                                PlaceHolder="{x:Static lang:Resources.ToolTip_SameAsVedio}"
-                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                Style="{StaticResource BaseSearchTextBox}"
-                                Text="{Binding NFOSavePath, Mode=TwoWay}" />
-
-                            <Button
-                                HorizontalAlignment="Left"
-                                Click="SelectNfoPath"
-                                Content="{x:Static lang:Resources.ChooseDir}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                            <CheckBox Content="{x:Static lang:Resources.overwrite}" IsChecked="{Binding OverriteNFO, Mode=TwoWay}" />
-
-                        </StackPanel>
-
-
-
-
-                    </WrapPanel>
-
-                    <CheckBox
-                        Margin="20,5"
-                        Content="主界面同步时同时下载预览图"
-                        IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
-                    <CheckBox
-                        Margin="20,5"
-                        Content="跳过已下载的图片"
-                        IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
-                    <CheckBox
-                        Margin="20,5"
-                        Content="强制同步信息（不推荐）"
-                        IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
-                    <CheckBox
-                        Margin="20,5"
-                        Content="忽略证书错误（不安全）"
-                        IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}"
-                        IsEnabled="False" />
-
-
-
-
-
-
-                    <StackPanel Margin="20,5" Orientation="Horizontal">
-                        <TextBlock
-                            MinWidth="60"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="请求超时"
-                            TextAlignment="Left"
-                            ToolTip="[0-2000]" />
-                        <chao:SearchBox
-                            MinWidth="50"
-                            Padding="0"
-                            ShowClearButton="False"
-                            Style="{StaticResource BaseSearchTextBox}"
-                            Text="{Binding HttpTimeout, Mode=TwoWay}"
-                            TextAlignment="Center" />
-                        <TextBlock
-                            MinWidth="60"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="s"
-                            TextAlignment="Left" />
-                    </StackPanel>
-
-                    <chao:TogglePanel
-                        Margin="10,0"
-                        Padding="0,5"
-                        FontSize="15"
-                        Header="代理设置"
-                        IsExpanded="True"
-                        LineWidth="0"
-                        Style="{StaticResource BaseTogglePanel}">
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
                         <StackPanel Orientation="Vertical">
+                            <WrapPanel Margin="20,5" Orientation="Horizontal">
 
-                            <StackPanel
-                                Name="proxyStackPanel"
-                                Margin="10"
-                                Orientation="Horizontal">
-                                <RadioButton
-                                    HorizontalAlignment="Left"
-                                    Content="不使用代理"
-                                    GroupName="enableProxy"
-                                    Style="{StaticResource FlatRadioButton}" />
-                                <RadioButton
-                                    HorizontalAlignment="Left"
-                                    Content="使用系统代理"
-                                    GroupName="enableProxy"
-                                    IsChecked="True"
-                                    Style="{StaticResource FlatRadioButton}" />
-                                <RadioButton
-                                    x:Name="customProxyRadioButton"
-                                    HorizontalAlignment="Left"
-                                    Content="自定义代理"
-                                    GroupName="enableProxy"
-                                    Style="{StaticResource FlatRadioButton}" />
+                                <CheckBox
+                                    Margin="0"
+                                    Content="{x:Static lang:Resources.SaveToNFO}"
+                                    IsChecked="{Binding SaveInfoToNFO, Mode=TwoWay}" />
 
+
+
+
+                                <!--<StackPanel Orientation="Horizontal" Visibility="{Binding SaveInfoToNFO, Converter={StaticResource BoolToVis}, Mode=OneWay, Source={x:Static p:Settings.Default}}">-->
+                                <StackPanel Orientation="Horizontal" Visibility="Visible">
+                                    <chao:SearchBox
+                                        Width="380"
+                                        MinWidth="400"
+                                        Margin="10,0"
+                                        Background="{DynamicResource Window.Title.Background}"
+                                        FontSize="15"
+                                        PlaceHolder="{x:Static lang:Resources.ToolTip_SameAsVedio}"
+                                        PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="{Binding NFOSavePath, Mode=TwoWay}" />
+
+                                    <Button
+                                        HorizontalAlignment="Left"
+                                        Click="SelectNfoPath"
+                                        Content="{x:Static lang:Resources.ChooseDir}"
+                                        Style="{StaticResource ButtonStyleFill}" />
+                                    <CheckBox Content="{x:Static lang:Resources.overwrite}" IsChecked="{Binding OverriteNFO, Mode=TwoWay}" />
+
+                                </StackPanel>
+
+
+
+
+                            </WrapPanel>
+
+                            <CheckBox
+                                Margin="20,5"
+                                Content="主界面同步时同时下载预览图"
+                                IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
+                            <CheckBox
+                                Margin="20,5"
+                                Content="跳过已下载的图片"
+                                IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
+                            <CheckBox
+                                Margin="20,5"
+                                Content="强制同步信息（不推荐）"
+                                IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
+                            <CheckBox
+                                Margin="20,5"
+                                Content="忽略证书错误（不安全）"
+                                IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}"
+                                IsEnabled="False" />
+
+
+
+
+
+
+                            <StackPanel Margin="20,5" Orientation="Horizontal">
+                                <TextBlock
+                                    MinWidth="60"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="请求超时"
+                                    TextAlignment="Left"
+                                    ToolTip="[0-2000]" />
+                                <chao:SearchBox
+                                    MinWidth="50"
+                                    Padding="0"
+                                    ShowClearButton="False"
+                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Text="{Binding HttpTimeout, Mode=TwoWay}"
+                                    TextAlignment="Center" />
+                                <TextBlock
+                                    MinWidth="60"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="s"
+                                    TextAlignment="Left" />
                             </StackPanel>
 
-                            <StackPanel Orientation="Vertical" Visibility="{Binding ElementName=customProxyRadioButton, Path=IsChecked, Converter={StaticResource bool2VisibilityConverter}}">
+                        </StackPanel>
+                    </Border>
+
+
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
+                        <chao:TogglePanel
+                            Padding="0,5"
+                            FontSize="15"
+                            Header="代理设置"
+                            IsExpanded="True"
+                            LineWidth="0"
+                            Style="{StaticResource BaseTogglePanel}">
+                            <StackPanel Orientation="Vertical">
+
                                 <StackPanel
-                                    Name="proxyTypesStackPanel"
-                                    Margin="20,5"
+                                    Name="proxyStackPanel"
+                                    Margin="10"
                                     Orientation="Horizontal">
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="类型"
-                                        TextAlignment="Left"
-                                        ToolTip="[0-2000]" />
                                     <RadioButton
-                                        Content="HTTP"
-                                        GroupName="proxyType"
+                                        HorizontalAlignment="Left"
+                                        Content="不使用代理"
+                                        GroupName="enableProxy"
+                                        Style="{StaticResource FlatRadioButton}" />
+                                    <RadioButton
+                                        HorizontalAlignment="Left"
+                                        Content="使用系统代理"
+                                        GroupName="enableProxy"
                                         IsChecked="True"
                                         Style="{StaticResource FlatRadioButton}" />
                                     <RadioButton
-                                        Content="SOCKS"
-                                        GroupName="proxyType"
+                                        x:Name="customProxyRadioButton"
+                                        HorizontalAlignment="Left"
+                                        Content="自定义代理"
+                                        GroupName="enableProxy"
                                         Style="{StaticResource FlatRadioButton}" />
-                                </StackPanel>
-                                <StackPanel
-                                    Margin="20,5"
-                                    Orientation="Horizontal"
-                                    Visibility="Visible">
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="服务器*"
-                                        TextAlignment="Left" />
-                                    <chao:SearchBox
-                                        MinWidth="400"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="端口*"
-                                        TextAlignment="Left" />
-                                    <chao:SearchBox
-                                        MinWidth="200"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                 </StackPanel>
-                                <StackPanel
-                                    Margin="20,5"
-                                    Orientation="Horizontal"
-                                    Visibility="Visible">
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="用户名"
-                                        TextAlignment="Left" />
-                                    <chao:SearchBox
-                                        MinWidth="400"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <StackPanel Orientation="Vertical" Visibility="{Binding ElementName=customProxyRadioButton, Path=IsChecked, Converter={StaticResource bool2VisibilityConverter}}">
+                                    <StackPanel
+                                        Name="proxyTypesStackPanel"
+                                        Margin="20,5"
+                                        Orientation="Horizontal">
+                                        <TextBlock
+                                            MinWidth="60"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="类型"
+                                            TextAlignment="Left"
+                                            ToolTip="[0-2000]" />
+                                        <RadioButton
+                                            Content="HTTP"
+                                            GroupName="proxyType"
+                                            IsChecked="True"
+                                            Style="{StaticResource FlatRadioButton}" />
+                                        <RadioButton
+                                            Content="SOCKS"
+                                            GroupName="proxyType"
+                                            Style="{StaticResource FlatRadioButton}" />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="20,5"
+                                        Orientation="Horizontal"
+                                        Visibility="Visible">
+                                        <TextBlock
+                                            MinWidth="60"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="服务器*"
+                                            TextAlignment="Left" />
+                                        <chao:SearchBox
+                                            MinWidth="400"
+                                            Style="{StaticResource BaseSearchTextBox}"
+                                            Text="{Binding ProxyServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
-                                    <TextBlock
-                                        MinWidth="60"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="密码"
-                                        TextAlignment="Left" />
+                                        <TextBlock
+                                            MinWidth="60"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="端口*"
+                                            TextAlignment="Left" />
+                                        <chao:SearchBox
+                                            MinWidth="200"
+                                            Style="{StaticResource BaseSearchTextBox}"
+                                            Text="{Binding ProxyPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                    <PasswordBox
-                                        Name="passwordBox"
-                                        Height="30"
-                                        MinWidth="200"
-                                        Margin="10,5"
-                                        Padding="5"
-                                        VerticalContentAlignment="Center"
-                                        Background="{DynamicResource ListBoxItem.Background}"
-                                        BorderThickness="0"
-                                        ContextMenu="{DynamicResource PasteOnlyContextMenu}"
-                                        Foreground="{DynamicResource Window.Foreground}"
-                                        PasswordChar="●"
-                                        Style="{x:Null}" />
-                                    <!--<chao:SearchBox
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="20,5"
+                                        Orientation="Horizontal"
+                                        Visibility="Visible">
+                                        <TextBlock
+                                            MinWidth="60"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="用户名"
+                                            TextAlignment="Left" />
+                                        <chao:SearchBox
+                                            MinWidth="400"
+                                            Style="{StaticResource BaseSearchTextBox}"
+                                            Text="{Binding ProxyUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                        <TextBlock
+                                            MinWidth="60"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="密码"
+                                            TextAlignment="Left" />
+
+                                        <PasswordBox
+                                            Name="passwordBox"
+                                            Height="30"
+                                            MinWidth="200"
+                                            Margin="10,5"
+                                            Padding="5"
+                                            VerticalContentAlignment="Center"
+                                            Background="{DynamicResource ListBoxItem.Background}"
+                                            BorderThickness="0"
+                                            ContextMenu="{DynamicResource PasteOnlyContextMenu}"
+                                            Foreground="{DynamicResource Window.Foreground}"
+                                            PasswordChar="●"
+                                            Style="{x:Null}" />
+                                        <!--<chao:SearchBox
                                         MinWidth="200"
                                         Style="{StaticResource BaseSearchTextBox}"
                                         Text="{Binding ProxyPwd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
 
-                                </StackPanel>
+                                    </StackPanel>
 
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:ImageAwesome
+                                        Grid.Column="0"
+                                        Width="20"
+                                        Margin="20,4,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                        <fa:ImageAwesome.Style>
+                                            <Style TargetType="fa:ImageAwesome">
+                                                <Style.Triggers>
+
+                                                    <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Canceled">
+                                                        <Setter Property="Icon" Value="TimesCircle" />
+                                                        <Setter Property="Foreground" Value="Red" />
+                                                        <Setter Property="Spin" Value="False" />
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="RanToCompletion">
+                                                        <Setter Property="Icon" Value="CheckCircle" />
+                                                        <Setter Property="Foreground" Value="#20B759" />
+                                                        <Setter Property="Spin" Value="False" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Running">
+                                                        <Setter Property="Icon" Value="Refresh" />
+                                                        <Setter Property="Foreground" Value="{DynamicResource Common.Status.Running.Background}" />
+                                                        <Setter Property="Spin" Value="True" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </fa:ImageAwesome.Style>
+
+                                    </fa:ImageAwesome>
+                                    <Button
+                                        MinWidth="100"
+                                        Margin="20,10"
+                                        HorizontalAlignment="Left"
+                                        Click="TestProxy"
+                                        Content="测试" />
+
+                                    <TextBlock VerticalAlignment="Center" Text="测试地址" />
+                                    <chao:SearchBox
+                                        Name="textProxyUrl"
+                                        MinWidth="200"
+                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Text="http://www.google.com" />
+                                </StackPanel>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <fa:ImageAwesome
+                        </chao:TogglePanel>
+                    </Border>
+
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
+                        <chao:TogglePanel
+                            Grid.Column="1"
+                            Padding="0,5"
+                            FontSize="16"
+                            Header="刮削器列表"
+                            IsExpanded="True"
+                            LineWidth="0"
+                            Style="{StaticResource BaseTogglePanel}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border
                                     Grid.Column="0"
-                                    Width="20"
-                                    Margin="20,4,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center">
-                                    <fa:ImageAwesome.Style>
-                                        <Style TargetType="fa:ImageAwesome">
-                                            <Style.Triggers>
-
-                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Canceled">
-                                                    <Setter Property="Icon" Value="TimesCircle" />
-                                                    <Setter Property="Foreground" Value="Red" />
-                                                    <Setter Property="Spin" Value="False" />
-                                                </DataTrigger>
-
-                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="RanToCompletion">
-                                                    <Setter Property="Icon" Value="CheckCircle" />
-                                                    <Setter Property="Foreground" Value="#20B759" />
-                                                    <Setter Property="Spin" Value="False" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding TestProxyStatus, Mode=OneWay}" Value="Running">
-                                                    <Setter Property="Icon" Value="Refresh" />
-                                                    <Setter Property="Foreground" Value="{DynamicResource Common.Status.Running.Background}" />
-                                                    <Setter Property="Spin" Value="True" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </fa:ImageAwesome.Style>
-
-                                </fa:ImageAwesome>
-                                <Button
-                                    MinWidth="100"
-                                    Margin="20,10"
+                                    MinWidth="150"
+                                    Padding="0,10"
                                     HorizontalAlignment="Left"
-                                    Click="TestProxy"
-                                    Content="测试" />
-
-                                <TextBlock VerticalAlignment="Center" Text="测试地址" />
-                                <chao:SearchBox
-                                    Name="textProxyUrl"
-                                    MinWidth="200"
-                                    Style="{StaticResource BaseSearchTextBox}"
-                                    Text="http://www.google.com" />
-                            </StackPanel>
-                        </StackPanel>
-                    </chao:TogglePanel>
-
-                    <chao:TogglePanel
-                        Grid.Column="1"
-                        Margin="10,0"
-                        Padding="0,5"
-                        FontSize="16"
-                        Header="刮削器列表"
-                        IsExpanded="True"
-                        LineWidth="0"
-                        Style="{StaticResource BaseTogglePanel}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Border
-                                Grid.Column="0"
-                                MinWidth="150"
-                                Padding="0,10"
-                                HorizontalAlignment="Left"
-                                Background="{DynamicResource Window.Side.Background}"
-                                CornerRadius="5">
-                                <StackPanel Orientation="Vertical">
-
-                                    <ListBox
-                                        Name="serverListBox"
-                                        Background="Transparent"
-                                        ItemContainerStyle="{StaticResource MyListBoxItemStyle}"
-                                        ItemsSource="{Binding Path=DisplayCrawlerServers, Mode=OneWay, NotifyOnSourceUpdated=True}"
-                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                        SelectionChanged="ListBox_SelectionChanged"
-                                        Style="{StaticResource NormalListBox}" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border
-                                Grid.Column="1"
-                                MinWidth="100"
-                                MaxHeight="300"
-                                Margin="20,0"
-                                Padding="0,10"
-                                HorizontalAlignment="Stretch"
-                                Background="{DynamicResource Window.Side.Background}"
-                                CornerRadius="5">
-                                <Grid>
-                                    <Grid Panel.ZIndex="5" Visibility="{Binding PluginEnabled, Converter={StaticResource BoolToOppositeVisibilityConverter}, FallbackValue=Hidden}">
-                                        <Border Background="{DynamicResource Control.Disabled.Background}" Opacity="0.5" />
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            FontSize="20"
-                                            Foreground="Red"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="未启用" />
-                                    </Grid>
+                                    Background="{DynamicResource Window.Side.Background}"
+                                    CornerRadius="5">
                                     <StackPanel Orientation="Vertical">
 
-                                        <StackPanel Orientation="Horizontal">
-                                            <Border
-                                                Width="30"
-                                                Height="30"
-                                                Margin="5,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Panel.ZIndex="20"
-                                                CornerRadius="5"
-                                                PreviewMouseLeftButtonUp="ShowCrawlerHelp"
-                                                Style="{StaticResource RoundBorder}"
-                                                Tag="{DynamicResource Window.Title.Hover.Background}">
-                                                <Viewbox
-                                                    Width="20"
-                                                    Height="auto"
-                                                    VerticalAlignment="Center">
-                                                    <Path
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Data="M563.363941 572.337203c-0.662107-10.635221 5.985569-21.937638 19.948145-33.908274 13.962576-11.964496 29.591164-25.264407 46.879625-39.893592 17.288461-14.628162 33.242474-31.083949 47.872273-49.365314 14.630823-18.286482 22.606806-39.397289 23.936137-63.332421 1.330354-25.932626-1.329331-50.199309-7.977007-72.810283-6.647676-22.604834-17.620026-42.050722-32.910909-58.33971-15.297023-16.290011-35.079386-29.258371-59.347087-38.900985-24.267702-9.636474-52.694294-14.45727-85.274661-14.45727-40.563514 0-74.308452 7.148817-101.239931 21.441335-26.925339 14.293541-48.705279 31.581276-65.326516 51.864228-16.621237 20.276812-28.26081 41.222867-34.908486 62.829977-6.647676 21.60711-9.641996 39.727817-8.974772 54.358025 0.662107 17.282618 6.150328 29.92045 16.455454 37.897122 10.305126 7.976672 21.442235 12.135388 33.413373 12.466939 11.964998 0.331551 22.937348-2.989077 32.910909-9.973142 9.973561-6.984065 14.960341-17.121959 14.960341-30.416753 0-7.982812 2.493902-17.790178 7.480682-29.424146s11.805356-22.771633 20.450609-33.411971c8.643207-10.635221 19.115139-19.615757 31.416819-26.924209 12.30168-7.315616 26.098473-10.971889 41.39038-10.971889 29.921706 0 53.857842 7.480368 71.81455 22.440082 17.950567 14.959713 26.263233 33.742499 24.934925 56.348356 0 11.302417-3.325885 21.772886-9.973561 31.4155-6.652793 9.642614-15.131241 18.948561-25.43739 27.929096-10.304103 8.974395-21.276452 17.949814-32.910909 26.924209-11.639573 8.974395-22.606806 18.286482-32.917049 27.929096-10.304103 9.636474-18.949356 20.111037-25.927574 31.4155-6.984358 11.302417-10.806567 23.603581-11.474814 36.898375l0.998789 37.903262c0 9.973142 4.656239 19.444864 13.962576 28.4254 9.311454 8.975419 21.613134 13.796214 36.906064 14.458293 15.29293-0.662079 27.427804-5.64865 36.403599-14.959713 8.974772-9.30697 13.134686-19.947308 12.467463-31.911804L563.365987 572.337203zM512.496324 817.685098c17.289484 0 31.753501-5.814426 43.387957-17.453511 11.639573-11.633968 17.454243-25.761734 17.454243-42.387389 0-17.287735-5.81467-31.747051-17.454243-43.386136-11.634456-11.633968-26.098473-17.453511-43.387957-17.453511-17.283344 0-31.747361 5.819542-43.381817 17.453511-11.639573 11.639085-17.454243 26.098401-17.454243 43.386136 0 16.625656 5.81467 30.753421 17.454243 42.387389C480.748964 811.870672 495.212981 817.685098 512.496324 817.685098zM511.503676 65.687048c61.834849 0 119.851582 11.799744 174.04099 35.403325 54.194524 23.604604 101.570473 55.522548 142.127847 95.746668 40.56249 40.225143 72.476657 87.433328 95.750687 141.625578 23.27403 54.187133 34.908486 112.201431 34.908486 174.033685 0 61.838394-11.634456 119.6818-34.908486 173.543521-23.27403 53.855582-55.188196 101.063767-95.750687 141.619438-40.557374 40.560788-87.933322 72.473615-142.127847 95.746668-54.189408 23.273053-112.206141 34.907021-174.04099 34.907021-61.840989 0-119.686823-11.633968-173.550806-34.907021-53.857842-23.273053-101.068009-55.18588-141.625382-95.746668-40.56249-40.555671-72.476657-87.763856-95.750687-141.619438C77.302771 632.17708 65.668315 574.333674 65.668315 512.496304c0-61.832254 11.634456-119.846552 34.908486-174.033685 23.27403-54.19225 55.188196-101.400435 95.750687-141.625578 40.557374-40.22412 87.76754-72.142064 141.625382-95.746668C391.816852 77.486792 449.662687 65.687048 511.503676 65.687048z"
-                                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                                </Viewbox>
-                                            </Border>
-                                            <Button
-                                                MinWidth="100"
-                                                Margin="10"
-                                                HorizontalAlignment="Left"
-                                                Click="NewServer"
-                                                Content="{x:Static lang:Resources.Add}"
-                                                Style="{DynamicResource FillButton}" />
-                                        </StackPanel>
+                                        <ListBox
+                                            Name="serverListBox"
+                                            Background="Transparent"
+                                            ItemContainerStyle="{StaticResource MyListBoxItemStyle}"
+                                            ItemsSource="{Binding Path=DisplayCrawlerServers, Mode=OneWay, NotifyOnSourceUpdated=True}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            SelectionChanged="ListBox_SelectionChanged"
+                                            Style="{StaticResource NormalListBox}" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border
+                                    Grid.Column="1"
+                                    MinWidth="100"
+                                    MaxHeight="300"
+                                    Margin="20,0"
+                                    Padding="0,10"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{DynamicResource Window.Side.Background}"
+                                    CornerRadius="5">
+                                    <Grid>
+                                        <Grid Panel.ZIndex="5" Visibility="{Binding PluginEnabled, Converter={StaticResource BoolToOppositeVisibilityConverter}, FallbackValue=Hidden}">
+                                            <Border Background="{DynamicResource Control.Disabled.Background}" Opacity="0.5" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontSize="20"
+                                                Foreground="Red"
+                                                Style="{StaticResource BaseTextBlock}"
+                                                Text="未启用" />
+                                        </Grid>
+                                        <StackPanel Orientation="Vertical">
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border
+                                                    Width="30"
+                                                    Height="30"
+                                                    Margin="5,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Panel.ZIndex="20"
+                                                    CornerRadius="5"
+                                                    PreviewMouseLeftButtonUp="ShowCrawlerHelp"
+                                                    Style="{StaticResource RoundBorder}"
+                                                    Tag="{DynamicResource Window.Title.Hover.Background}">
+                                                    <Viewbox
+                                                        Width="20"
+                                                        Height="auto"
+                                                        VerticalAlignment="Center">
+                                                        <Path
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Data="M563.363941 572.337203c-0.662107-10.635221 5.985569-21.937638 19.948145-33.908274 13.962576-11.964496 29.591164-25.264407 46.879625-39.893592 17.288461-14.628162 33.242474-31.083949 47.872273-49.365314 14.630823-18.286482 22.606806-39.397289 23.936137-63.332421 1.330354-25.932626-1.329331-50.199309-7.977007-72.810283-6.647676-22.604834-17.620026-42.050722-32.910909-58.33971-15.297023-16.290011-35.079386-29.258371-59.347087-38.900985-24.267702-9.636474-52.694294-14.45727-85.274661-14.45727-40.563514 0-74.308452 7.148817-101.239931 21.441335-26.925339 14.293541-48.705279 31.581276-65.326516 51.864228-16.621237 20.276812-28.26081 41.222867-34.908486 62.829977-6.647676 21.60711-9.641996 39.727817-8.974772 54.358025 0.662107 17.282618 6.150328 29.92045 16.455454 37.897122 10.305126 7.976672 21.442235 12.135388 33.413373 12.466939 11.964998 0.331551 22.937348-2.989077 32.910909-9.973142 9.973561-6.984065 14.960341-17.121959 14.960341-30.416753 0-7.982812 2.493902-17.790178 7.480682-29.424146s11.805356-22.771633 20.450609-33.411971c8.643207-10.635221 19.115139-19.615757 31.416819-26.924209 12.30168-7.315616 26.098473-10.971889 41.39038-10.971889 29.921706 0 53.857842 7.480368 71.81455 22.440082 17.950567 14.959713 26.263233 33.742499 24.934925 56.348356 0 11.302417-3.325885 21.772886-9.973561 31.4155-6.652793 9.642614-15.131241 18.948561-25.43739 27.929096-10.304103 8.974395-21.276452 17.949814-32.910909 26.924209-11.639573 8.974395-22.606806 18.286482-32.917049 27.929096-10.304103 9.636474-18.949356 20.111037-25.927574 31.4155-6.984358 11.302417-10.806567 23.603581-11.474814 36.898375l0.998789 37.903262c0 9.973142 4.656239 19.444864 13.962576 28.4254 9.311454 8.975419 21.613134 13.796214 36.906064 14.458293 15.29293-0.662079 27.427804-5.64865 36.403599-14.959713 8.974772-9.30697 13.134686-19.947308 12.467463-31.911804L563.365987 572.337203zM512.496324 817.685098c17.289484 0 31.753501-5.814426 43.387957-17.453511 11.639573-11.633968 17.454243-25.761734 17.454243-42.387389 0-17.287735-5.81467-31.747051-17.454243-43.386136-11.634456-11.633968-26.098473-17.453511-43.387957-17.453511-17.283344 0-31.747361 5.819542-43.381817 17.453511-11.639573 11.639085-17.454243 26.098401-17.454243 43.386136 0 16.625656 5.81467 30.753421 17.454243 42.387389C480.748964 811.870672 495.212981 817.685098 512.496324 817.685098zM511.503676 65.687048c61.834849 0 119.851582 11.799744 174.04099 35.403325 54.194524 23.604604 101.570473 55.522548 142.127847 95.746668 40.56249 40.225143 72.476657 87.433328 95.750687 141.625578 23.27403 54.187133 34.908486 112.201431 34.908486 174.033685 0 61.838394-11.634456 119.6818-34.908486 173.543521-23.27403 53.855582-55.188196 101.063767-95.750687 141.619438-40.557374 40.560788-87.933322 72.473615-142.127847 95.746668-54.189408 23.273053-112.206141 34.907021-174.04099 34.907021-61.840989 0-119.686823-11.633968-173.550806-34.907021-53.857842-23.273053-101.068009-55.18588-141.625382-95.746668-40.56249-40.555671-72.476657-87.763856-95.750687-141.619438C77.302771 632.17708 65.668315 574.333674 65.668315 512.496304c0-61.832254 11.634456-119.846552 34.908486-174.033685 23.27403-54.19225 55.188196-101.400435 95.750687-141.625578 40.557374-40.22412 87.76754-72.142064 141.625382-95.746668C391.816852 77.486792 449.662687 65.687048 511.503676 65.687048z"
+                                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                    </Viewbox>
+                                                </Border>
+                                                <Button
+                                                    MinWidth="100"
+                                                    Margin="10"
+                                                    HorizontalAlignment="Left"
+                                                    Click="NewServer"
+                                                    Content="{x:Static lang:Resources.Add}"
+                                                    Style="{DynamicResource FillButton}" />
+                                            </StackPanel>
 
 
-                                        <DataGrid
-                                            x:Name="ServersDataGrid"
-                                            Grid.Column="1"
-                                            MinHeight="200"
-                                            MaxHeight="220"
-                                            Margin="20,5"
-                                            chao:DataGrid.RowHeight="50"
-                                            CanUserDeleteRows="True"
-                                            CanUserResizeColumns="True"
-                                            PreviewMouseLeftButtonDown="SetCurrentRowIndex"
-                                            Style="{DynamicResource FlatDataGrid}"
-                                            VerticalScrollBarVisibility="Auto">
+                                            <DataGrid
+                                                x:Name="ServersDataGrid"
+                                                Grid.Column="1"
+                                                MinHeight="200"
+                                                MaxHeight="220"
+                                                Margin="20,5"
+                                                chao:DataGrid.RowHeight="50"
+                                                CanUserDeleteRows="True"
+                                                CanUserResizeColumns="True"
+                                                PreviewMouseLeftButtonDown="SetCurrentRowIndex"
+                                                Style="{DynamicResource FlatDataGrid}"
+                                                VerticalScrollBarVisibility="Auto">
 
 
-                                            <DataGrid.Columns>
-                                                <DataGridTemplateColumn
-                                                    Width="auto"
-                                                    MinWidth="40"
-                                                    Header="{x:Static lang:Resources.Enable}">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <CheckBox
-                                                                HorizontalAlignment="Center"
-                                                                IsChecked="{Binding Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                PreviewMouseUp="SetServerEnable" />
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn
+                                                        Width="auto"
+                                                        MinWidth="40"
+                                                        Header="{x:Static lang:Resources.Enable}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox
+                                                                    HorizontalAlignment="Center"
+                                                                    IsChecked="{Binding Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                    PreviewMouseUp="SetServerEnable" />
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
 
-                                                <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Options}">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <StackPanel
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Orientation="Horizontal">
-                                                                <Button
-                                                                    Height="25"
-                                                                    MinWidth="50"
-                                                                    Margin="5"
-                                                                    Padding="0"
-                                                                    Click="TestServer"
-                                                                    Content="{x:Static lang:Resources.Test}"
-                                                                    Cursor="Hand"
-                                                                    Style="{StaticResource ButtonPrimary}"
-                                                                    Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
-                                                                <Button
-                                                                    Height="25"
-                                                                    MinWidth="50"
-                                                                    Margin="5"
-                                                                    Padding="0"
-                                                                    Click="DeleteServer"
-                                                                    Content="{x:Static lang:Resources.Delete}"
-                                                                    Cursor="Hand"
-                                                                    Style="{StaticResource ButtonDanger}" />
-                                                            </StackPanel>
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Options}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Orientation="Horizontal">
+                                                                    <Button
+                                                                        Height="25"
+                                                                        MinWidth="50"
+                                                                        Margin="5"
+                                                                        Padding="0"
+                                                                        Click="TestServer"
+                                                                        Content="{x:Static lang:Resources.Test}"
+                                                                        Cursor="Hand"
+                                                                        Style="{StaticResource ButtonPrimary}"
+                                                                        Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                                                                    <Button
+                                                                        Height="25"
+                                                                        MinWidth="50"
+                                                                        Margin="5"
+                                                                        Padding="0"
+                                                                        Click="DeleteServer"
+                                                                        Content="{x:Static lang:Resources.Delete}"
+                                                                        Cursor="Hand"
+                                                                        Style="{StaticResource ButtonDanger}" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
 
-                                                <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Status}">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <fa:ImageAwesome Height="20">
-                                                                <fa:ImageAwesome.Style>
-                                                                    <Style TargetType="fa:ImageAwesome">
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="0" />
-                                                                            <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="-1">
-                                                                                <Setter Property="Icon" Value="TimesCircle" />
-                                                                                <Setter Property="Foreground" Value="Red" />
-                                                                                <Setter Property="Spin" Value="False" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="1">
-                                                                                <Setter Property="Icon" Value="CheckCircle" />
-                                                                                <Setter Property="Foreground" Value="#20B759" />
-                                                                                <Setter Property="Spin" Value="False" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="2">
-                                                                                <Setter Property="Icon" Value="Refresh" />
-                                                                                <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
-                                                                                <Setter Property="Spin" Value="True" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </fa:ImageAwesome.Style>
-                                                            </fa:ImageAwesome>
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-
-
-
-
-                                                <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Url}">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <chao:SearchBox
-                                                                Name="url"
-                                                                Padding="5,0"
-                                                                HorizontalAlignment="Stretch"
-                                                                Background="Transparent"
-                                                                Foreground="{DynamicResource Window.Foreground}"
-                                                                PlaceHolder="网址"
-                                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
-                                                                Style="{StaticResource BaseSearchTextBox}"
-                                                                Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-
-
-                                                <DataGridTemplateColumn
-                                                    Width="150"
-                                                    Header="Cookies"
-                                                    Visibility="Collapsed">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <chao:SearchBox
-                                                                Name="url"
-                                                                Padding="5,0"
-                                                                HorizontalAlignment="Stretch"
-                                                                Background="Transparent"
-                                                                Foreground="{DynamicResource Window.Foreground}"
-                                                                IsReadOnly="True"
-                                                                PlaceHolder="Cookies"
-                                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
-                                                                PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp"
-                                                                Style="{StaticResource BaseSearchTextBox}"
-                                                                Text="{Binding Cookies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-                                                <DataGridTemplateColumn Width="150" Header="Headers">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <chao:SearchBox
-                                                                Name="url"
-                                                                Padding="5,0"
-                                                                HorizontalAlignment="Stretch"
-                                                                Background="Transparent"
-                                                                Foreground="{DynamicResource Window.Foreground}"
-                                                                IsReadOnly="True"
-                                                                PlaceHolder="Headers"
-                                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
-                                                                PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp_1"
-                                                                Style="{StaticResource BaseSearchTextBox}"
-                                                                Text="{Binding Headers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Status}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <fa:ImageAwesome Height="20">
+                                                                    <fa:ImageAwesome.Style>
+                                                                        <Style TargetType="fa:ImageAwesome">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="0" />
+                                                                                <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="-1">
+                                                                                    <Setter Property="Icon" Value="TimesCircle" />
+                                                                                    <Setter Property="Foreground" Value="Red" />
+                                                                                    <Setter Property="Spin" Value="False" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="1">
+                                                                                    <Setter Property="Icon" Value="CheckCircle" />
+                                                                                    <Setter Property="Foreground" Value="#20B759" />
+                                                                                    <Setter Property="Spin" Value="False" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Available, Mode=OneWay}" Value="2">
+                                                                                    <Setter Property="Icon" Value="Refresh" />
+                                                                                    <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
+                                                                                    <Setter Property="Spin" Value="True" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </fa:ImageAwesome.Style>
+                                                                </fa:ImageAwesome>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
 
 
 
 
-                                                <DataGridTextColumn
-                                                    Width="auto"
-                                                    Binding="{Binding LastRefreshDate, Mode=OneWay}"
-                                                    Foreground="{DynamicResource Window.Foreground}"
-                                                    Header="{x:Static lang:Resources.LatestUpdateDate}"
-                                                    IsReadOnly="True" />
+                                                    <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Url}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <chao:SearchBox
+                                                                    Name="url"
+                                                                    Padding="5,0"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Background="Transparent"
+                                                                    Foreground="{DynamicResource Window.Foreground}"
+                                                                    PlaceHolder="网址"
+                                                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
+                                                                    Style="{StaticResource BaseSearchTextBox}"
+                                                                    Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
 
-                                            </DataGrid.Columns>
 
-                                            <!--<local:Server  IsEnable="True" Url="https://www.123.cam/" Cookie="123" Available="0" Name="123" LastRefreshDate="2020-09-04" />
+                                                    <DataGridTemplateColumn
+                                                        Width="150"
+                                                        Header="Cookies"
+                                                        Visibility="Collapsed">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <chao:SearchBox
+                                                                    Name="url"
+                                                                    Padding="5,0"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Background="Transparent"
+                                                                    Foreground="{DynamicResource Window.Foreground}"
+                                                                    IsReadOnly="True"
+                                                                    PlaceHolder="Cookies"
+                                                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
+                                                                    PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp"
+                                                                    Style="{StaticResource BaseSearchTextBox}"
+                                                                    Text="{Binding Cookies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Width="150" Header="Headers">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <chao:SearchBox
+                                                                    Name="url"
+                                                                    Padding="5,0"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Background="Transparent"
+                                                                    Foreground="{DynamicResource Window.Foreground}"
+                                                                    IsReadOnly="True"
+                                                                    PlaceHolder="Headers"
+                                                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
+                                                                    PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp_1"
+                                                                    Style="{StaticResource BaseSearchTextBox}"
+                                                                    Text="{Binding Headers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+
+
+
+
+                                                    <DataGridTextColumn
+                                                        Width="auto"
+                                                        Binding="{Binding LastRefreshDate, Mode=OneWay}"
+                                                        Foreground="{DynamicResource Window.Foreground}"
+                                                        Header="{x:Static lang:Resources.LatestUpdateDate}"
+                                                        IsReadOnly="True" />
+
+                                                </DataGrid.Columns>
+
+                                                <!--<local:Server  IsEnable="True" Url="https://www.123.cam/" Cookie="123" Available="0" Name="123" LastRefreshDate="2020-09-04" />
                         <local:Server IsEnable="False" Url="https://123.com/"  Cookie="123"  Available="0"  Name="123" LastRefreshDate="2020-10-05" />-->
 
 
 
-                                        </DataGrid>
+                                            </DataGrid>
 
-                                        <Popup
-                                            x:Name="setHeaderPopup"
-                                            Width="800"
-                                            Height="300"
-                                            AllowsTransparency="True"
-                                            HorizontalOffset="0"
-                                            Placement="Center"
-                                            PlacementTarget="{Binding ElementName=ServersDataGrid}"
-                                            PopupAnimation="Fade"
-                                            StaysOpen="True"
-                                            VerticalOffset="0">
-                                            <Grid Margin="5">
-                                                <Border
-                                                    Margin="5"
-                                                    Background="{DynamicResource Menu.Background}"
-                                                    CornerRadius="0 0 5 5"
-                                                    Effect="{StaticResource PopupDropShadowEffect}" />
-                                                <Grid>
-
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="*" />
-                                                        <RowDefinition Height="auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <StackPanel
-                                                        Grid.Row="0"
-                                                        Margin="20,20,0,0"
-                                                        Orientation="Horizontal">
-                                                        <TextBlock VerticalAlignment="Center" Text="请复制浏览器中的所有请求头到此" />
-                                                        <Button
-                                                            Margin="20,0"
-                                                            VerticalAlignment="Center"
-                                                            Click="ShowHeaderHelp"
-                                                            Content="教程" />
-                                                    </StackPanel>
-
-                                                    <Grid Grid.Row="1">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="5*" />
-                                                            <ColumnDefinition Width="5*" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBox
-                                                            x:Name="inputTextbox"
-                                                            Width="auto"
-                                                            Height="auto"
-                                                            Margin="10"
-                                                            Padding="5"
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Stretch"
-                                                            VerticalContentAlignment="Top"
-                                                            AcceptsReturn="True"
-                                                            Background="{DynamicResource Window.Title.Background}"
-                                                            Foreground="{DynamicResource Window.Foreground}"
-                                                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                            Style="{StaticResource BaseTextBox}"
-                                                            Text=""
-                                                            TextAlignment="Left"
-                                                            TextChanged="InputHeader_TextChanged" />
-                                                        <TextBox
-                                                            x:Name="parsedTextbox"
-                                                            Grid.Column="1"
-                                                            Width="auto"
-                                                            Height="auto"
-                                                            Margin="10"
-                                                            Padding="5"
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Stretch"
-                                                            VerticalContentAlignment="Top"
-                                                            AcceptsReturn="True"
-                                                            Background="{DynamicResource Window.Title.Background}"
-                                                            Foreground="{DynamicResource Window.Foreground}"
-                                                            IsReadOnly="True"
-                                                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                            Style="{StaticResource BaseTextBox}"
-                                                            Text=""
-                                                            TextAlignment="Left" />
-                                                    </Grid>
-
-                                                    <StackPanel
-                                                        Grid.Row="2"
+                                            <Popup
+                                                x:Name="setHeaderPopup"
+                                                Width="800"
+                                                Height="300"
+                                                AllowsTransparency="True"
+                                                HorizontalOffset="0"
+                                                Placement="Center"
+                                                PlacementTarget="{Binding ElementName=ServersDataGrid}"
+                                                PopupAnimation="Fade"
+                                                StaysOpen="True"
+                                                VerticalOffset="0">
+                                                <Grid Margin="5">
+                                                    <Border
                                                         Margin="5"
-                                                        HorizontalAlignment="Right"
-                                                        Orientation="Horizontal">
-                                                        <CheckBox
-                                                            Click="SetAutoHeader"
-                                                            Content="自动识别"
-                                                            IsChecked="{Binding AutoHandleHeader, Mode=TwoWay}"
-                                                            Visibility="Collapsed" />
-                                                        <Button
-                                                            Click="CancelHeader"
-                                                            Content="取消"
-                                                            Style="{StaticResource ButtonDanger}" />
-                                                        <Button
-                                                            Click="ConfirmHeader"
-                                                            Content="确认"
-                                                            Style="{StaticResource ButtonPrimary}" />
-                                                    </StackPanel>
+                                                        Background="{DynamicResource Menu.Background}"
+                                                        CornerRadius="0 0 5 5"
+                                                        Effect="{StaticResource PopupDropShadowEffect}" />
+                                                    <Grid>
+
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <StackPanel
+                                                            Grid.Row="0"
+                                                            Margin="20,20,0,0"
+                                                            Orientation="Horizontal">
+                                                            <TextBlock VerticalAlignment="Center" Text="请复制浏览器中的所有请求头到此" />
+                                                            <Button
+                                                                Margin="20,0"
+                                                                VerticalAlignment="Center"
+                                                                Click="ShowHeaderHelp"
+                                                                Content="教程" />
+                                                        </StackPanel>
+
+                                                        <Grid Grid.Row="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="5*" />
+                                                                <ColumnDefinition Width="5*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBox
+                                                                x:Name="inputTextbox"
+                                                                Width="auto"
+                                                                Height="auto"
+                                                                Margin="10"
+                                                                Padding="5"
+                                                                HorizontalAlignment="Stretch"
+                                                                VerticalAlignment="Stretch"
+                                                                VerticalContentAlignment="Top"
+                                                                AcceptsReturn="True"
+                                                                Background="{DynamicResource Window.Title.Background}"
+                                                                Foreground="{DynamicResource Window.Foreground}"
+                                                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                                Style="{StaticResource BaseTextBox}"
+                                                                Text=""
+                                                                TextAlignment="Left"
+                                                                TextChanged="InputHeader_TextChanged" />
+                                                            <TextBox
+                                                                x:Name="parsedTextbox"
+                                                                Grid.Column="1"
+                                                                Width="auto"
+                                                                Height="auto"
+                                                                Margin="10"
+                                                                Padding="5"
+                                                                HorizontalAlignment="Stretch"
+                                                                VerticalAlignment="Stretch"
+                                                                VerticalContentAlignment="Top"
+                                                                AcceptsReturn="True"
+                                                                Background="{DynamicResource Window.Title.Background}"
+                                                                Foreground="{DynamicResource Window.Foreground}"
+                                                                IsReadOnly="True"
+                                                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                                Style="{StaticResource BaseTextBox}"
+                                                                Text=""
+                                                                TextAlignment="Left" />
+                                                        </Grid>
+
+                                                        <StackPanel
+                                                            Grid.Row="2"
+                                                            Margin="5"
+                                                            HorizontalAlignment="Right"
+                                                            Orientation="Horizontal">
+                                                            <CheckBox
+                                                                Click="SetAutoHeader"
+                                                                Content="自动识别"
+                                                                IsChecked="{Binding AutoHandleHeader, Mode=TwoWay}"
+                                                                Visibility="Collapsed" />
+                                                            <Button
+                                                                Click="CancelHeader"
+                                                                Content="取消"
+                                                                Style="{StaticResource ButtonDanger}" />
+                                                            <Button
+                                                                Click="ConfirmHeader"
+                                                                Content="确认"
+                                                                Style="{StaticResource ButtonPrimary}" />
+                                                        </StackPanel>
+                                                    </Grid>
                                                 </Grid>
-                                            </Grid>
-                                        </Popup>
+                                            </Popup>
 
-                                    </StackPanel>
-                                </Grid>
+                                        </StackPanel>
+                                    </Grid>
 
-                            </Border>
-
-
-                        </Grid>
-                    </chao:TogglePanel>
+                                </Border>
 
 
+                            </Grid>
+                        </chao:TogglePanel>
+
+                    </Border>
 
 
 
@@ -2411,76 +2520,89 @@
                         IsChecked="{Binding ScreenShotToExtraPicPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                         Visibility="Collapsed" />
 
-                    <StackPanel Margin="10,5" Orientation="Horizontal">
-                        <TextBlock
-                            MinWidth="150"
-                            Margin="2"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="{x:Static lang:Resources.FFmpegPath}"
-                            TextAlignment="Left" />
-                        <chao:SearchBox
-                            MinWidth="400"
-                            Style="{StaticResource BaseSearchTextBox}"
-                            Text="{Binding FFMPEG_Path, Mode=TwoWay}" />
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
+
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Margin="10,5" Orientation="Horizontal">
+                                <TextBlock
+                                    MinWidth="150"
+                                    Margin="2"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{x:Static lang:Resources.FFmpegPath}"
+                                    TextAlignment="Left" />
+                                <chao:SearchBox
+                                    MinWidth="400"
+                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Text="{Binding FFMPEG_Path, Mode=TwoWay}" />
 
 
-                        <Button
-                            Margin="10,5"
-                            Click="SetFFMPEGPath"
-                            Content="{x:Static lang:Resources.ChooseFile}"
-                            Style="{StaticResource ButtonStyleFill}" />
+                                <Button
+                                    Margin="10,5"
+                                    Click="SetFFMPEGPath"
+                                    Content="{x:Static lang:Resources.ChooseFile}"
+                                    Style="{StaticResource ButtonStyleFill}" />
 
 
-                        <TextBlock
-                            Cursor="Hand"
-                            Foreground="{DynamicResource Common.HighLight.BorderBrush}"
-                            MouseLeftButtonUp="CopyFFmpegUrl"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="前往下载"
-                            TextDecorations="Underline" />
-
-
-
-
-                    </StackPanel>
-
-
-
-
-                    <WrapPanel Margin="10,10" Orientation="Horizontal">
-                        <TextBlock
-                            Height="auto"
-                            MinWidth="150"
-                            Margin="2"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="线程数"
-                            TextAlignment="Left" />
-                        <Slider
-                            x:Name="ThreadNumSlider"
-                            Width="200"
-                            VerticalAlignment="Center"
-                            LargeChange="2"
-                            Maximum="10"
-                            Minimum="1"
-                            SmallChange="1"
-                            TickFrequency="1"
-                            Value="{Binding ScreenShot_ThreadNum, Mode=TwoWay}" />
-
-
-                        <TextBlock
-                            Width="50"
-                            Height="auto"
-                            Margin="5,2"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="{Binding Value, ElementName=ThreadNumSlider, Mode=OneWay}"
-                            TextAlignment="Center" />
+                                <TextBlock
+                                    Cursor="Hand"
+                                    Foreground="{DynamicResource Common.HighLight.BorderBrush}"
+                                    MouseLeftButtonUp="CopyFFmpegUrl"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="前往下载"
+                                    TextDecorations="Underline" />
 
 
 
 
-                    </WrapPanel>
+                            </StackPanel>
+
+                            <WrapPanel Margin="10,10" Orientation="Horizontal">
+                                <TextBlock
+                                    Height="auto"
+                                    MinWidth="150"
+                                    Margin="2"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="截图线程数"
+                                    TextAlignment="Left" />
+                                <Slider
+                                    x:Name="ThreadNumSlider"
+                                    Width="200"
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    LargeChange="2"
+                                    Maximum="10"
+                                    Minimum="1"
+                                    SmallChange="1"
+                                    TickFrequency="1"
+                                    Value="{Binding ScreenShot_ThreadNum, Mode=TwoWay}" />
+
+
+                                <TextBlock
+                                    Width="50"
+                                    Height="auto"
+                                    Margin="5,2"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding Value, ElementName=ThreadNumSlider, Mode=OneWay}"
+                                    TextAlignment="Center" />
+
+
+
+
+                            </WrapPanel>
+                        </StackPanel>
+
+
+                    </Border>
+
+
+
+
                     <WrapPanel
                         Margin="10,10"
                         Orientation="Horizontal"
@@ -2519,167 +2641,183 @@
 
                     </WrapPanel>
 
-
-
-                    <chao:TogglePanel
-                        Grid.Column="1"
-                        Margin="10,0,0,0"
-                        Padding="0,5"
-                        FontSize="16"
-                        Header="{x:Static lang:Resources.ScreenShot}"
-                        IsExpanded="True"
-                        LineWidth="0"
-                        Style="{StaticResource BaseTogglePanel}">
-                        <StackPanel Orientation="Vertical">
-                            <CheckBox
-                                Margin="10"
-                                HorizontalAlignment="Left"
-                                Content="若文件夹存在则跳过"
-                                IsChecked="{Binding SkipExistScreenShot, Mode=TwoWay}" />
-
-                            <StackPanel Margin="20,5" Orientation="Horizontal">
-                                <Slider
-                                    x:Name="ScreenshotNumSlider"
-                                    Width="200"
-                                    VerticalAlignment="Center"
-                                    LargeChange="2"
-                                    Maximum="30"
-                                    Minimum="1"
-                                    SmallChange="1"
-                                    TickFrequency="1"
-                                    Value="{Binding ScreenShotNum, Mode=TwoWay}" />
-                                <TextBlock
-                                    Width="30"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding Value, ElementName=ScreenshotNumSlider, Mode=OneWay}" />
-                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.ScreenShotNumber}" />
-
-                            </StackPanel>
-                            <StackPanel Margin="20,5" Orientation="Horizontal">
-
-                                <Slider
-                                    x:Name="ScreenShotIgnoreSlider1"
-                                    Width="200"
-                                    VerticalAlignment="Center"
-                                    LargeChange="2"
-                                    Maximum="10"
-                                    Minimum="0"
-                                    SmallChange="1"
-                                    TickFrequency="1"
-                                    Value="{Binding ScreenShotIgnoreStart, Mode=TwoWay}" />
-                                <TextBlock
-                                    Width="30"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding ElementName=ScreenShotIgnoreSlider1, Mode=OneWay, Path=Value}" />
-                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.SkipBegin}" />
-                            </StackPanel>
-                            <StackPanel Margin="20,5" Orientation="Horizontal">
-
-                                <Slider
-                                    x:Name="ScreenShotIgnoreSlider2"
-                                    Width="200"
-                                    VerticalAlignment="Center"
-                                    LargeChange="2"
-                                    Maximum="10"
-                                    Minimum="0"
-                                    SmallChange="1"
-                                    TickFrequency="1"
-                                    Value="{Binding ScreenShotIgnoreEnd, Mode=TwoWay}" />
-                                <TextBlock
-                                    Width="30"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding ElementName=ScreenShotIgnoreSlider2, Mode=OneWay, Path=Value}" />
-                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.SkipEnd}" />
-                            </StackPanel>
-                        </StackPanel>
-                    </chao:TogglePanel>
-
-                    <chao:TogglePanel
-                        Grid.Column="1"
-                        Margin="10,0,0,0"
-                        Padding="0,5"
-                        FontSize="16"
-                        Header="GIF"
-                        IsExpanded="True"
-                        LineWidth="0"
-                        Style="{StaticResource BaseTogglePanel}">
-                        <StackPanel Orientation="Vertical">
-                            <CheckBox
-                                Margin="10"
-                                HorizontalAlignment="Left"
-                                Content="{x:Static lang:Resources.SkipExistGif}"
-                                IsChecked="{Binding SkipExistGif, Mode=TwoWay}" />
-
-
-                            <WrapPanel
-                                Margin="15,5"
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                                <Label Content="{x:Static lang:Resources.Resolution}" Style="{StaticResource InfoLabel}" />
-                                <Slider
-                                    x:Name="GifSlider1"
-                                    Width="250"
-                                    Margin="5,0"
-                                    VerticalAlignment="Center"
-                                    Cursor="Hand"
-                                    IsSnapToTickEnabled="True"
-                                    LargeChange="10"
-                                    Maximum="4096"
-                                    Minimum="50"
-                                    SmallChange="1"
-                                    TickFrequency="1"
-                                    TickPlacement="None"
-                                    Value="{Binding GifWidth, Mode=TwoWay}" />
-                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{Binding Value, ElementName=GifSlider1, StringFormat={}{0} px}" />
-                                <Slider
-                                    x:Name="GifSlider2"
-                                    Width="250"
-                                    Margin="5,0"
-                                    VerticalAlignment="Center"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding GifAutoHeight, Converter={StaticResource OppositeBooleanConverter}}"
-                                    IsSnapToTickEnabled="True"
-                                    LargeChange="10"
-                                    Maximum="2160"
-                                    Minimum="50"
-                                    SmallChange="1"
-                                    TickFrequency="1"
-                                    TickPlacement="None"
-                                    Value="{Binding GifHeight, Mode=TwoWay}" />
-                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{Binding Value, ElementName=GifSlider2, StringFormat={}{0} px}" />
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
+                        <chao:TogglePanel
+                            Padding="0,5"
+                            FontSize="16"
+                            Header="{x:Static lang:Resources.ScreenShot}"
+                            IsExpanded="True"
+                            LineWidth="0"
+                            Style="{StaticResource BaseTogglePanel}">
+                            <StackPanel Orientation="Vertical">
                                 <CheckBox
                                     Margin="20,10"
-                                    Content="{x:Static lang:Resources.AutoHeight}"
-                                    IsChecked="{Binding GifAutoHeight, Mode=TwoWay}" />
+                                    HorizontalAlignment="Left"
+                                    Content="若文件夹存在则跳过"
+                                    IsChecked="{Binding SkipExistScreenShot, Mode=TwoWay}" />
+
+                                <StackPanel Margin="20,5" Orientation="Horizontal">
+                                    <Slider
+                                        x:Name="ScreenshotNumSlider"
+                                        Width="200"
+                                        VerticalAlignment="Center"
+                                        LargeChange="2"
+                                        Maximum="30"
+                                        Minimum="1"
+                                        SmallChange="1"
+                                        TickFrequency="1"
+                                        Value="{Binding ScreenShotNum, Mode=TwoWay}" />
+                                    <TextBlock
+                                        Width="30"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding Value, ElementName=ScreenshotNumSlider, Mode=OneWay}" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.ScreenShotNumber}" />
+
+                                </StackPanel>
+                                <StackPanel Margin="20,5" Orientation="Horizontal">
+
+                                    <Slider
+                                        x:Name="ScreenShotIgnoreSlider1"
+                                        Width="200"
+                                        VerticalAlignment="Center"
+                                        LargeChange="2"
+                                        Maximum="10"
+                                        Minimum="0"
+                                        SmallChange="1"
+                                        TickFrequency="1"
+                                        Value="{Binding ScreenShotIgnoreStart, Mode=TwoWay}" />
+                                    <TextBlock
+                                        Width="30"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding ElementName=ScreenShotIgnoreSlider1, Mode=OneWay, Path=Value}" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.SkipBegin}" />
+                                </StackPanel>
+                                <StackPanel Margin="20,5" Orientation="Horizontal">
+
+                                    <Slider
+                                        x:Name="ScreenShotIgnoreSlider2"
+                                        Width="200"
+                                        VerticalAlignment="Center"
+                                        LargeChange="2"
+                                        Maximum="10"
+                                        Minimum="0"
+                                        SmallChange="1"
+                                        TickFrequency="1"
+                                        Value="{Binding ScreenShotIgnoreEnd, Mode=TwoWay}" />
+                                    <TextBlock
+                                        Width="30"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding ElementName=ScreenShotIgnoreSlider2, Mode=OneWay, Path=Value}" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.SkipEnd}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </chao:TogglePanel>
+                    </Border>
+
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
 
 
-                            </WrapPanel>
-
-                            <WrapPanel
-                                Margin="15,5"
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                                <Label Content="{x:Static lang:Resources.Duration}" Style="{StaticResource InfoLabel}" />
-                                <Slider
-                                    x:Name="GifDurationSlider1"
-                                    Width="300"
-                                    Margin="5,0"
-                                    VerticalAlignment="Center"
-                                    Cursor="Hand"
-                                    IsSnapToTickEnabled="True"
-                                    LargeChange="2"
-                                    Maximum="20"
-                                    Minimum="1"
-                                    SmallChange="1"
-                                    TickFrequency="1"
-                                    TickPlacement="None"
-                                    Value="{Binding GifDuration, Mode=TwoWay}" />
-                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{Binding Value, ElementName=GifDurationSlider1, StringFormat={}{0} s}" />
-                            </WrapPanel>
-                        </StackPanel>
-                    </chao:TogglePanel>
+                        <chao:TogglePanel
+                            Padding="0,5"
+                            FontSize="16"
+                            Header="GIF"
+                            IsExpanded="True"
+                            LineWidth="0"
+                            Style="{StaticResource BaseTogglePanel}">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox
+                                    Margin="20,10"
+                                    HorizontalAlignment="Left"
+                                    Content="{x:Static lang:Resources.SkipExistGif}"
+                                    IsChecked="{Binding SkipExistGif, Mode=TwoWay}" />
 
 
+                                <WrapPanel
+                                    Margin="15,5"
+                                    HorizontalAlignment="Left"
+                                    Orientation="Horizontal">
+                                    <Label Content="{x:Static lang:Resources.Resolution}" Style="{StaticResource InfoLabel}" />
+                                    <Slider
+                                        x:Name="GifSlider1"
+                                        Width="250"
+                                        Margin="5,0"
+                                        VerticalAlignment="Center"
+                                        Cursor="Hand"
+                                        IsSnapToTickEnabled="True"
+                                        LargeChange="10"
+                                        Maximum="4096"
+                                        Minimum="50"
+                                        SmallChange="1"
+                                        TickFrequency="1"
+                                        TickPlacement="None"
+                                        Value="{Binding GifWidth, Mode=TwoWay}" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding Value, ElementName=GifSlider1, StringFormat={}{0} px}" />
+                                    <Slider
+                                        x:Name="GifSlider2"
+                                        Width="250"
+                                        Margin="20,0,10,0"
+                                        VerticalAlignment="Center"
+                                        Cursor="Hand"
+                                        IsEnabled="{Binding GifAutoHeight, Converter={StaticResource OppositeBooleanConverter}}"
+                                        IsSnapToTickEnabled="True"
+                                        LargeChange="10"
+                                        Maximum="2160"
+                                        Minimum="50"
+                                        SmallChange="1"
+                                        TickFrequency="1"
+                                        TickPlacement="None"
+                                        Value="{Binding GifHeight, Mode=TwoWay}" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding Value, ElementName=GifSlider2, StringFormat={}{0} px}" />
+                                    <CheckBox
+                                        Margin="20,10"
+                                        Content="{x:Static lang:Resources.AutoHeight}"
+                                        IsChecked="{Binding GifAutoHeight, Mode=TwoWay}" />
+
+
+                                </WrapPanel>
+
+                                <WrapPanel
+                                    Margin="15,5"
+                                    HorizontalAlignment="Left"
+                                    Orientation="Horizontal">
+                                    <Label Content="{x:Static lang:Resources.Duration}" Style="{StaticResource InfoLabel}" />
+                                    <Slider
+                                        x:Name="GifDurationSlider1"
+                                        Width="300"
+                                        Margin="5,0"
+                                        VerticalAlignment="Center"
+                                        Cursor="Hand"
+                                        IsSnapToTickEnabled="True"
+                                        LargeChange="2"
+                                        Maximum="20"
+                                        Minimum="1"
+                                        SmallChange="1"
+                                        TickFrequency="1"
+                                        TickPlacement="None"
+                                        Value="{Binding GifDuration, Mode=TwoWay}" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding Value, ElementName=GifDurationSlider1, StringFormat={}{0} s}" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </chao:TogglePanel>
+
+                    </Border>
 
                 </StackPanel>
             </TabItem>
@@ -2690,7 +2828,7 @@
                 Header="{x:Static lang:Resources.CustomAppearance}">
                 <StackPanel>
                     <WrapPanel
-                        Margin="20,5"
+                        Margin="15"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
                         <CheckBox Content="{x:Static lang:Resources.ID}" IsChecked="{Binding DisplayID, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
@@ -2722,24 +2860,14 @@
 
                     </WrapPanel>
 
+                    <CheckBox
+                        Margin="25,15"
+                        HorizontalAlignment="Left"
+                        Click="SetDetailBg"
+                        Content="将背景应用到详情页"
+                        IsChecked="{Binding DetailShowBg, Mode=TwoWay}" />
 
-                    <StackPanel
-                        Margin="20,5"
-                        IsEnabled="False"
-                        Orientation="Horizontal">
-                        <CheckBox
-                            Click="CheckBox_Click"
-                            Content="{x:Static lang:Resources.BackgroundImage}"
-                            IsChecked="{Binding EnableBgImage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <!--<Label Content="{x:Static lang:Resources.BackgroundImage}" Style="{StaticResource InfoLabel}"  />-->
 
-                        <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding BackgroundImage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <Button
-                            Click="SetBackgroundImage"
-                            Content="{x:Static lang:Resources.Choose}"
-                            Style="{StaticResource ButtonStyleFill}" />
-
-                    </StackPanel>
                 </StackPanel>
 
             </TabItem>
@@ -2749,84 +2877,94 @@
                 Header="{x:Static lang:Resources.Rename}">
                 <StackPanel>
 
-                    <CheckBox
-                        Margin="20,5"
-                        HorizontalAlignment="Left"
-                        Click="AddToRename"
-                        Content="去除标题两边的空格"
-                        IsChecked="{Binding Path=RemoveTitleSpace, Mode=TwoWay}" />
-                    <CheckBox
-                        Margin="20,5"
-                        HorizontalAlignment="Left"
-                        Click="AddToRename"
-                        Content="{x:Static lang:Resources.AutoAddStamp}"
-                        IsChecked="{Binding Path=AddRenameTag, Mode=TwoWay}"
-                        IsEnabled="False" />
-
-
-
-
-                    <WrapPanel Margin="10,0">
-                        <!--{'\\','#','%', '&', '*', '|', ':', '"', ' <', '>', '?', '/','.' }-->
-                        <StackPanel Margin="10,5" Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="信息分隔符" />
-                            <ComboBox
-                                x:Name="OutComboBox"
-                                Height="30"
-                                MinWidth="100"
-                                Margin="10"
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox
+                                Margin="20,5"
                                 HorizontalAlignment="Left"
-                                Background="{DynamicResource Window.Side.Background}"
-                                BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                                FontSize="16"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
-                                SelectionChanged="OutComboBox_SelectionChanged"
-                                Style="{StaticResource NormalComboBox}"
-                                Tag="{DynamicResource Window.Side.Hover.Background}"
-                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
-                                <ComboBoxItem Content="[null]" />
-                                <ComboBoxItem Content="_" />
-                                <ComboBoxItem Content="-" />
-                                <ComboBoxItem Content="$" />
-                                <ComboBoxItem Content="%" />
-                                <ComboBoxItem Content="^" />
-                                <ComboBoxItem Content="@" />
-                                <ComboBoxItem Content="+" />
-                                <ComboBoxItem Content="," />
-                            </ComboBox>
-                        </StackPanel>
-
-
-                        <StackPanel Margin="10,5" Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="标签/类别/演员等分隔符" />
-                            <ComboBox
-                                x:Name="InComboBox"
-                                Height="30"
-                                MinWidth="100"
-                                Margin="10"
+                                Click="AddToRename"
+                                Content="去除标题两边的空格"
+                                IsChecked="{Binding Path=RemoveTitleSpace, Mode=TwoWay}" />
+                            <CheckBox
+                                Margin="20,5"
                                 HorizontalAlignment="Left"
-                                Background="{DynamicResource Window.Side.Background}"
-                                BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                                FontSize="16"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
-                                SelectionChanged="InComboBox_SelectionChanged"
-                                Style="{StaticResource NormalComboBox}"
-                                Tag="{DynamicResource Window.Side.Hover.Background}"
-                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
-                                <ComboBoxItem Content="[null]" />
-                                <ComboBoxItem Content="_" />
-                                <ComboBoxItem Content="-" />
-                                <ComboBoxItem Content="$" />
-                                <ComboBoxItem Content="%" />
-                                <ComboBoxItem Content="^" />
-                                <ComboBoxItem Content="@" />
-                                <ComboBoxItem Content="+" />
-                                <ComboBoxItem Content="," />
-                            </ComboBox>
+                                Click="AddToRename"
+                                Content="{x:Static lang:Resources.AutoAddStamp}"
+                                IsChecked="{Binding Path=AddRenameTag, Mode=TwoWay}"
+                                IsEnabled="False" />
+
+
+
+
+                            <WrapPanel Margin="10,0">
+                                <!--{'\\','#','%', '&', '*', '|', ':', '"', ' <', '>', '?', '/','.' }-->
+                                <StackPanel Margin="10,5" Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="信息分隔符" />
+                                    <ComboBox
+                                        x:Name="OutComboBox"
+                                        Height="30"
+                                        MinWidth="100"
+                                        Margin="10"
+                                        HorizontalAlignment="Left"
+                                        Background="{DynamicResource Window.Side.Background}"
+                                        BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                                        FontSize="16"
+                                        Foreground="{DynamicResource Window.Foreground}"
+                                        ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                                        SelectionChanged="OutComboBox_SelectionChanged"
+                                        Style="{StaticResource NormalComboBox}"
+                                        Tag="{DynamicResource Window.Side.Hover.Background}"
+                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                        <ComboBoxItem Content="[null]" />
+                                        <ComboBoxItem Content="_" />
+                                        <ComboBoxItem Content="-" />
+                                        <ComboBoxItem Content="$" />
+                                        <ComboBoxItem Content="%" />
+                                        <ComboBoxItem Content="^" />
+                                        <ComboBoxItem Content="@" />
+                                        <ComboBoxItem Content="+" />
+                                        <ComboBoxItem Content="," />
+                                    </ComboBox>
+                                </StackPanel>
+
+
+                                <StackPanel Margin="10,5" Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="标签/类别/演员等分隔符" />
+                                    <ComboBox
+                                        x:Name="InComboBox"
+                                        Height="30"
+                                        MinWidth="100"
+                                        Margin="10"
+                                        HorizontalAlignment="Left"
+                                        Background="{DynamicResource Window.Side.Background}"
+                                        BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                                        FontSize="16"
+                                        Foreground="{DynamicResource Window.Foreground}"
+                                        ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                                        SelectionChanged="InComboBox_SelectionChanged"
+                                        Style="{StaticResource NormalComboBox}"
+                                        Tag="{DynamicResource Window.Side.Hover.Background}"
+                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                        <ComboBoxItem Content="[null]" />
+                                        <ComboBoxItem Content="_" />
+                                        <ComboBoxItem Content="-" />
+                                        <ComboBoxItem Content="$" />
+                                        <ComboBoxItem Content="%" />
+                                        <ComboBoxItem Content="^" />
+                                        <ComboBoxItem Content="@" />
+                                        <ComboBoxItem Content="+" />
+                                        <ComboBoxItem Content="," />
+                                    </ComboBox>
+                                </StackPanel>
+                            </WrapPanel>
                         </StackPanel>
-                    </WrapPanel>
+                    </Border>
+
+
 
                     <WrapPanel
                         x:Name="CheckedBoxWrapPanel"
@@ -3031,42 +3169,51 @@
                 FontSize="15"
                 Header="库">
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <CheckBox
-                            HorizontalAlignment="Left"
-                            Content="自动备份库"
-                            IsChecked="{Binding AutoBackup, Mode=TwoWay}" />
-                        <TextBlock
-                            Margin="20,0,0,0"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="备份周期（天）" />
-                        <ComboBox
-                            Grid.Column="1"
-                            Height="30"
-                            MinWidth="200"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            Background="{DynamicResource Window.Side.Background}"
-                            BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                            FontSize="16"
-                            Foreground="{DynamicResource Window.Foreground}"
-                            ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
-                            SelectedIndex="{Binding AutoBackupPeriodIndex}"
-                            Style="{StaticResource NormalComboBox}"
-                            Tag="{DynamicResource Window.Side.Hover.Background}"
-                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
-                            <ComboBoxItem Content="1" />
-                            <ComboBoxItem Content="3" />
-                            <ComboBoxItem Content="7" />
-                            <ComboBoxItem Content="15" />
-                            <ComboBoxItem Content="30" />
-                        </ComboBox>
-                    </StackPanel>
+                    <Border
+                        Margin="10"
+                        Padding="5"
+                        Background="{DynamicResource Control.Background}"
+                        CornerRadius="10">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox
+                                    HorizontalAlignment="Left"
+                                    Content="自动备份库"
+                                    IsChecked="{Binding AutoBackup, Mode=TwoWay}" />
+                                <TextBlock
+                                    Margin="20,0,0,0"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="备份周期（天）" />
+                                <ComboBox
+                                    Grid.Column="1"
+                                    Height="30"
+                                    MinWidth="200"
+                                    Margin="5"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{DynamicResource Window.Side.Background}"
+                                    BorderBrush="{DynamicResource Window.Side.Hover.Background}"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource Window.Foreground}"
+                                    ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
+                                    SelectedIndex="{Binding AutoBackupPeriodIndex}"
+                                    Style="{StaticResource NormalComboBox}"
+                                    Tag="{DynamicResource Window.Side.Hover.Background}"
+                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                    <ComboBoxItem Content="1" />
+                                    <ComboBoxItem Content="3" />
+                                    <ComboBoxItem Content="7" />
+                                    <ComboBoxItem Content="15" />
+                                    <ComboBoxItem Content="30" />
+                                </ComboBox>
+                            </StackPanel>
 
-                    <CheckBox
-                        HorizontalAlignment="Left"
-                        Content="扫描后自动建立播放索引"
-                        IsChecked="{Binding AutoCreatePlayableIndex, Mode=TwoWay}" />
+                            <CheckBox
+                                HorizontalAlignment="Left"
+                                Content="扫描后自动建立播放索引"
+                                IsChecked="{Binding AutoCreatePlayableIndex, Mode=TwoWay}" />
+                        </StackPanel>
+                    </Border>
+
 
                     <Border
                         Margin="10"

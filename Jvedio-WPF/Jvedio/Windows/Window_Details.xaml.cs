@@ -213,37 +213,11 @@ namespace Jvedio
         // todo
         public void SetSkin()
         {
-            switch (Properties.Settings.Default.Themes)
-            {
-                case "蓝色":
-                    //if (BackGroundImage == null)
-                    //{
-                    //    //设置渐变
-                    //    LinearGradientBrush myLinearGradientBrush = new LinearGradientBrush();
-                    //    myLinearGradientBrush.StartPoint = new Point(0.5, 0);
-                    //    myLinearGradientBrush.EndPoint = new Point(0.5, 1);
-                    //    myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(62, 191, 223), 1));
-                    //    myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(11, 114, 189), 0));
-                    //    BackBorder.Background = myLinearGradientBrush;
-                    //}
-
-                    break;
-            }
-
-            //设置背景
-
-            //BackGroundImage.Source = GlobalVariable.BackgroundImage;
-            MouseMoveGrid.Background = Brushes.Transparent;
-            ImageGrid.Background = Brushes.Transparent;
-            ExtraImageBorder.Background = Brushes.Transparent;
-            TitleTextBox.Background = Brushes.Transparent;
-            //InfoBorder.Background = (SolidColorBrush)Application.Current.Resources["Window.Background"];
-            InfoBorder.Opacity = 0.7;
-            NextBorder.Opacity = 0.7;
-            PreviousBorder.Opacity = 0.7;
-
-            //设置字体
-            if (GlobalFont != null) this.FontFamily = GlobalFont;
+            BgImage.Source = null;
+            if (GlobalConfig.Settings.DetailShowBg)
+                BgImage.Source = GlobalVariable.BackgroundImage;
+            ////设置字体
+            //if (GlobalFont != null) this.FontFamily = GlobalFont;
         }
 
         public void DownLoad(object sender, RoutedEventArgs e)

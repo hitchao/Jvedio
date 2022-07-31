@@ -265,19 +265,6 @@ namespace Jvedio.ViewModel
 
 
 
-
-        private BitmapSource _BackgroundImage = GlobalVariable.BackgroundImage;
-
-        public BitmapSource BackgroundImage
-        {
-            get { return _BackgroundImage; }
-            set
-            {
-                _BackgroundImage = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private int _TabSelectedIndex = 0;
 
         public int TabSelectedIndex

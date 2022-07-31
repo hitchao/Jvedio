@@ -11,7 +11,7 @@
 
     <Style x:Key="NormalPagination" TargetType="{x:Type chao:Pagination}">
         <Setter Property="Padding" Value="10" />
-        <Setter Property="Background" Value="{DynamicResource Window.Background}" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{DynamicResource Window.Title.Foreground}" />
         <Setter Property="CurrentPageBackground" Value="{DynamicResource Button.Fill.Background}" />
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />

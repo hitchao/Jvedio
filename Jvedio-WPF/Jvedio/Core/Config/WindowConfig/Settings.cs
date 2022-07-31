@@ -22,6 +22,7 @@ namespace Jvedio.Core.WindowConfig
             Prefix = "";
             AutoBackupPeriodIndex = 0;
             AutoBackup = true;
+            DetailShowBg = true;
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
@@ -77,6 +78,7 @@ namespace Jvedio.Core.WindowConfig
         public bool PlayableIndexCreated { get; set; }
         public bool PictureIndexCreated { get; set; }
         public bool AutoCreatePlayableIndex { get; set; }
+        public bool DetailShowBg { get; set; }
 
         // 端口
         public bool ListenEnabled { get; set; }

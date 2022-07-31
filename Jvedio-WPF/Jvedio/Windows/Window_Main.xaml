@@ -683,7 +683,7 @@
         <Image
             x:Name="BgImage"
             Margin="0"
-            Source="{Binding BackgroundImage}"
+            Source="{x:Null}"
             Stretch="UniformToFill" />
 
 
@@ -1544,8 +1544,8 @@
 
                         <Popup
                             x:Name="themesPopup"
-                            Width="500"
-                            MinHeight="500"
+                            Width="460"
+                            MinHeight="100"
                             MaxHeight="600"
                             AllowsTransparency="True"
                             HorizontalOffset="-300"
@@ -1565,64 +1565,76 @@
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
-                                    <TabControl
-                                        Background="Transparent"
-                                        ItemContainerStyle="{StaticResource FlatTabItem}"
-                                        Style="{StaticResource FlatTabControl}">
-                                        <TabItem Header="纯色">
-                                            <Grid>
-                                                <ItemsControl
-                                                    Name="ColorThemesItemsControl"
-                                                    Margin="5,5,5,5"
-                                                    Background="Transparent"
-                                                    ItemsSource="{Binding ColorThemes}"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <WrapPanel />
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <RadioButton
-                                                                Name="rb"
-                                                                Background="{Binding ViewBrush}"
-                                                                Click="ChangeTheme"
-                                                                FocusVisualStyle="{x:Null}"
-                                                                GroupName="SkinRadioButton"
-                                                                Style="{StaticResource ColorRadioButton}"
-                                                                Tag="{Binding ID}" />
 
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                            </Grid>
-                                            <!--<ListBox
-                                                Name="colorsListBox"
-                                                d:ItemsSource="{d:SampleData ItemCount=5}"
-                                                Background="Transparent"
-                                                ItemsSource="{Binding ColorThemes}"
-                                                Style="{StaticResource NormalListBox}">
-                                                <ListBox.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel Orientation="Horizontal" />
-                                                    </ItemsPanelTemplate>
-                                                </ListBox.ItemsPanel>
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border
-                                                            Width="20"
-                                                            Height="20"
-                                                            Background="{Binding ViewBrush}">
-                                                            <TextBlock Text="123" />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
-                                            </ListBox>-->
-                                        </TabItem>
-                                        <TabItem Header="图像" />
+                                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl
+                                            Name="ColorThemesItemsControl"
+                                            Width="460"
+                                            Margin="5,5,5,5"
+                                            Background="Transparent"
+                                            ItemsSource="{Binding ColorThemes}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <RadioButton
+                                                            Name="rb"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalContentAlignment="Center"
+                                                            Background="{Binding ViewBrush}"
+                                                            Click="ChangeTheme"
+                                                            FocusVisualStyle="{x:Null}"
+                                                            GroupName="SkinRadioButton"
+                                                            Style="{StaticResource ColorRadioButton}"
+                                                            Tag="{Binding ID}"
+                                                            ToolTip="{Binding Desc}">
 
-                                    </TabControl>
+                                                            <!--  https://stackoverflow.com/a/54642877/13454100  -->
+                                                            <Grid
+                                                                Width="100"
+                                                                Height="70"
+                                                                Margin="0,0,0,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Top">
+
+                                                                <!--  Add rounded corners here  -->
+                                                                <Border
+                                                                    Name="Mask"
+                                                                    Grid.RowSpan="2"
+                                                                    Margin="5"
+                                                                    Background="{Binding ViewBrush}"
+                                                                    CornerRadius="4" />
+
+                                                                <!--  Image  -->
+                                                                <Grid Grid.RowSpan="2">
+                                                                    <Grid.OpacityMask>
+                                                                        <VisualBrush Visual="{Binding ElementName=Mask}" />
+                                                                    </Grid.OpacityMask>
+
+                                                                    <Image
+                                                                        Margin="8"
+                                                                        Source="{Binding ViewImage}"
+                                                                        Stretch="UniformToFill" />
+                                                                </Grid>
+
+                                                            </Grid>
+
+                                                        </RadioButton>
+
+                                                    </Grid>
+
+
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+
+
                                     <StackPanel
                                         Grid.Row="1"
                                         Margin="5"
@@ -2016,7 +2028,8 @@
                                             IsExpanded="True"
                                             IsSelected="False"
                                             LineWidth="0"
-                                            Style="{StaticResource BaseTogglePanel}">
+                                            Style="{StaticResource BaseTogglePanel}"
+                                            Visibility="Collapsed">
                                             <StackPanel>
 
                                                 <ItemsControl
@@ -2167,7 +2180,10 @@
                         Width="5"
                         Panel.ZIndex="10"
                         Style="{StaticResource HoverSpliter}" />
-                    <Grid Grid.Column="1">
+                    <Grid
+                        x:Name="contentGrid"
+                        Grid.Column="1"
+                        Background="{DynamicResource Window.Background}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -2183,7 +2199,7 @@
                                 Padding="0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
-                                Background="{DynamicResource Window.Detail.Background}"
+                                Background="Transparent"
                                 BorderBrush="#326CF3"
                                 BorderThickness="0"
                                 Foreground="{DynamicResource Window.Foreground}"
@@ -4281,6 +4297,7 @@
 
             </Grid>
             <Grid
+                x:Name="statusBar"
                 Grid.Row="2"
                 Height="30"
                 Background="{DynamicResource Window.StatusBar.Background}"
@@ -4598,8 +4615,17 @@
                             Width="30"
                             Height="30"
                             Margin="0"
-                            MouseLeftButtonUp="ShowMsgScanPopup"
-                            Style="{StaticResource FlatBorderStyle}">
+                            MouseLeftButtonUp="ShowMsgScanPopup">
+                            <Border.Style>
+                                <Style BasedOn="{StaticResource FlatBorderStyle}" TargetType="Border">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource Window.StatusBar.Hover.Background}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
 
                             <Viewbox Height="15" Margin="-5,0,0,0">
                                 <Path Data="M232 64c-30.928 0-56 25.072-56 56v784c0 30.928 25.072 56 56 56h560c30.928 0 56-25.072 56-56V120c0-30.928-25.072-56-56-56H232z m0 840V120h560v784H232z m112-736h-64v64h64V168z m168 120c-123.712 0-224 100.288-224 224s100.288 224 224 224 224-100.288 224-224-100.288-224-224-224z m-168 224c0-92.784 75.216-168 168-168s168 75.216 168 168-75.216 168-168 168-168-75.216-168-168z m168-112c-61.856 0-112 50.144-112 112s50.144 112 112 112 112-50.144 112-112-50.144-112-112-112zM744 168h-64v64h64V168zM316 792v56h392v-56H316z" Fill="{DynamicResource Window.Foreground}" />

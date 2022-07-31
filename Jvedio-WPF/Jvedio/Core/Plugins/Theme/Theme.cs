@@ -9,6 +9,10 @@ using DynamicData.Annotations;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
 using Jvedio.Utils.Visual;
+using System.IO;
+using Jvedio.Core;
+using System.Windows.Media.Imaging;
+using Jvedio.Utils.Media;
 
 namespace Jvedio.Entity
 {
@@ -26,9 +30,24 @@ namespace Jvedio.Entity
     public class Theme : INotifyPropertyChanged
     {
         public string ID { get; set; }
-        public ThemeImage Image { get; set; }
+        public ThemeImage Images { get; set; }
         public string FontName { get; set; }
         public string FontPath { get; set; }
+        public string Desc { get; set; }
+        private float _BgColorOpacity = 1;
+        public float BgColorOpacity
+        {
+            get { return _BgColorOpacity; }
+            set
+            {
+                if (value < 0)
+                    _BgColorOpacity = 0;
+                else if (value > 1)
+                    _BgColorOpacity = 1;
+                else
+                    _BgColorOpacity = value;
+            }
+        }
         public Dictionary<string, string> Colors { get; set; }
 
         public Brush _ViewBrush;
@@ -38,6 +57,16 @@ namespace Jvedio.Entity
             set
             {
                 _ViewBrush = value;
+                OnPropertyChanged();
+            }
+        }
+        public BitmapImage _ViewImage;
+        public BitmapImage ViewImage
+        {
+            get { return _ViewImage; }
+            set
+            {
+                _ViewImage = value;
                 OnPropertyChanged();
             }
         }
@@ -230,6 +259,7 @@ namespace Jvedio.Entity
         public Theme()
         {
             ID = "";
+
         }
 
         public Brush GetViewBrush()
@@ -241,8 +271,23 @@ namespace Jvedio.Entity
             }
             return VisualHelper.HexStringToBrush(hexColor);
         }
+        public BitmapImage GetViewImage()
+        {
+            if (Images == null || string.IsNullOrEmpty(Images.Small)) return null;
+            string path = Path.GetFullPath(Path.Combine(GetThemePath(), Images.Small));
+            if (File.Exists(path))
+            {
+                return ImageHelper.BitmapImageFromFile(path);
+            }
+            return null;
+        }
 
 
+        public string GetThemePath()
+        {
+            if (string.IsNullOrEmpty(ID)) return "";
+            return Path.Combine(ThemeManager.ThemePath, ID);
+        }
 
 
         public static Theme Parse(object o)
@@ -251,17 +296,21 @@ namespace Jvedio.Entity
             if (!dict.ContainsKey("Colors")) return null;
 
             Theme theme = new Theme();
-            if (dict.ContainsKey("ThemeImage") && dict["ThemeImage"] is JObject jObject)
+            if (dict.ContainsKey("Images") && dict["Images"] is JObject jObject)
             {
-                theme.Image = new ThemeImage();
-                if (jObject.ContainsKey("Background")) theme.Image.Background = jObject["Background"].ToString();
-                if (jObject.ContainsKey("Big")) theme.Image.Big = jObject["Big"].ToString();
-                if (jObject.ContainsKey("Small")) theme.Image.Small = jObject["Small"].ToString();
-                if (jObject.ContainsKey("Normal")) theme.Image.Normal = jObject["Normal"].ToString();
+                theme.Images = new ThemeImage();
+                if (jObject.ContainsKey("Background")) theme.Images.Background = jObject["Background"].ToString();
+                if (jObject.ContainsKey("Big")) theme.Images.Big = jObject["Big"].ToString();
+                if (jObject.ContainsKey("Small")) theme.Images.Small = jObject["Small"].ToString();
+                if (jObject.ContainsKey("Normal")) theme.Images.Normal = jObject["Normal"].ToString();
             }
 
             if (dict.ContainsKey("FontName")) theme.FontName = dict["FontName"].ToString();
-            if (dict.ContainsKey("FontPath")) theme.FontPath = dict["FontPath"].ToString();
+            if (dict.ContainsKey("Font")) theme.FontPath = dict["Font"].ToString();
+            if (dict.ContainsKey("BgColorOpacity") && float.TryParse(dict["BgColorOpacity"].ToString(), out float opacity))
+            {
+                theme.BgColorOpacity = opacity;
+            }
             if (dict["Colors"] is JObject d)
             {
                 theme.Colors = new Dictionary<string, string>();

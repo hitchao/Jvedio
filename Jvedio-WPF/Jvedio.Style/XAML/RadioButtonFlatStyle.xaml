@@ -86,8 +86,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Grid
-                        Width="70"
-                        Height="50"
+                        Width="100"
+                        Height="70"
                         Margin="{TemplateBinding Margin}">
                         <Border
                             x:Name="_borderOver"
@@ -103,6 +103,7 @@
                             Margin="0,0,3,3"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
+                            Panel.ZIndex="5"
                             Background="{DynamicResource Window.Side.Background}"
                             CornerRadius="3"
                             Visibility="Collapsed">
@@ -114,6 +115,15 @@
                                 Stroke="{DynamicResource CheckBox.Checked.Background}"
                                 StrokeThickness="2" />
                         </Border>
+                        <ContentPresenter
+                            x:Name="contentPresenter"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Panel.ZIndex="1"
+                            Focusable="False"
+                            RecognizesAccessKey="True"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasContent" Value="True">

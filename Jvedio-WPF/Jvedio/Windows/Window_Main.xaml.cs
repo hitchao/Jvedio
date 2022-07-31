@@ -21,6 +21,7 @@ using Jvedio.Utils;
 using Jvedio.Utils.Common;
 using Jvedio.Utils.Data;
 using Jvedio.Utils.IO;
+using Jvedio.Utils.Media;
 using Jvedio.Utils.Visual;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
@@ -2775,14 +2776,14 @@ namespace Jvedio
         private Video getVideo(long dataID)
         {
             if (dataID <= 0 || vieModel?.VideoList?.Count <= 0) return null;
-            Video video = vieModel.VideoList.Where(item => item.DataID == dataID).First();
+            Video video = vieModel.VideoList.Where(item => item.DataID == dataID).FirstOrDefault();
             if (video != null && video.DataID > 0) return video;
             return null;
         }
         private Video getAssoVideo(long dataID)
         {
             if (dataID <= 0 || vieModel?.ViewAssociationDatas?.Count <= 0) return null;
-            Video video = vieModel.ViewAssociationDatas.Where(item => item.DataID == dataID).First();
+            Video video = vieModel.ViewAssociationDatas.Where(item => item.DataID == dataID).FirstOrDefault();
             if (video != null && video.DataID > 0) return video;
             return null;
         }
@@ -2989,10 +2990,30 @@ namespace Jvedio
             int idx = GetThemeIndex();
             if (idx >= ThemeManager.Themes.Count) idx = 0;
             Theme theme = ThemeManager.Themes[idx];
-            if (theme.Image != null && theme.Image.Background != null)
+            if (theme.Images != null && theme.Images.Background != null)
             {
                 // 设置背景图片
+                string bgPath = Path.GetFullPath(Path.Combine(theme.GetThemePath(), theme.Images.Background));
+                if (File.Exists(bgPath))
+                {
+                    GlobalVariable.BackgroundImage = ImageHelper.BitmapImageFromFile(bgPath);
+                    // 设置颜色绑定
+                    SetBgImageProperty(true, ref theme);
+                }
+                else
+                {
+                    SetBgImageProperty(false, ref theme);
+                    GlobalVariable.BackgroundImage = null;
+                }
             }
+            else
+            {
+                SetBgImageProperty(false, ref theme);
+                GlobalVariable.BackgroundImage = null;
+            }
+
+            BgImage.Source = GlobalVariable.BackgroundImage;
+
             // 设置颜色
             if (theme.Colors != null && theme.Colors.Count > 0)
             {
@@ -3001,62 +3022,57 @@ namespace Jvedio
                     Application.Current.Resources[key] = VisualHelper.HexStringToBrush(theme.Colors[key]);
                 }
             }
-
-
-
             //ThemeHelper.SetSkin(Properties.Settings.Default.Themes);
             ChaoControls.Style.CustomEventHandler.Render();
+            windowDetails?.SetSkin();
+        }
+
+
+        private static List<string> TransParentColors = new List<string>()
+        {
+            "Window.Side.Background",
+            "Window.Side.Hover.Background",
+            "Menu.Background",
+        };
+
+        private void SetBgImageProperty(bool enabled, ref Theme theme)
+        {
             //SettingsBorder.ContextMenu.UpdateDefaultStyle();//设置弹出的菜单正确显示
-            //switch (Properties.Settings.Default.Themes)
-            //{
-            //    case "蓝色":
-            //        //设置渐变
-            //        LinearGradientBrush myLinearGradientBrush = new LinearGradientBrush();
-            //        myLinearGradientBrush.StartPoint = new Point(0.5, 0);
-            //        myLinearGradientBrush.EndPoint = new Point(0.5, 1);
-            //        myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(62, 191, 223), 1));
-            //        myLinearGradientBrush.GradientStops.Add(new GradientStop(Color.FromRgb(11, 114, 189), 0));
-            //        //SideBorder.Background = myLinearGradientBrush;
-            //        break;
+            if (enabled)
+            {
+                contentGrid.Background = Brushes.Transparent;
+                SideBorder.Background = Brushes.Transparent;
+                TitleBorder.Background = Brushes.Transparent;
+                statusBar.Background = Brushes.Transparent;
+                MovieItemsControl.Background = Brushes.Transparent;
+                // 给颜色透明度降低
+                foreach (var item in TransParentColors)
+                {
+                    if (item.IndexOf("Background") < 0) continue;
+                    string hexString = theme.Colors[item];
+                    Brush brush = VisualHelper.HexStringToBrush(hexString);
 
-            //    default:
-            //        //SideBorder.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];
-            //        break;
-            //}
+                    if (brush != null)
+                    {
+                        StringBuilder color = new StringBuilder(brush.ToString().ToUpper());
+                        if (!color[1].Equals('F') && !!color[2].Equals('F')) continue;
+                        int value = (int)(255 * theme.BgColorOpacity);
+                        string str = value.ToString("X");
+                        color[1] = str[0];
+                        color[2] = str[1];
+                        theme.Colors[item] = color.ToString();
+                    }
+                }
 
-            //if (Properties.Settings.Default.EnableBgImage && GlobalVariable.BackgroundImage != null)
-            //{
-            //    SideBorder.Background = Brushes.Transparent;
-            //    DatabaseComboBox.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Opacity.Background"];
-            //    TitleBorder.Background = Brushes.Transparent;
-            //    //MainProgressBar.Background = Brushes.Transparent;
-            //    //ActorProgressBar.Background = Brushes.Transparent;
-            //    //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
-            //    //{
-            //    //    expander.Background = Brushes.Transparent;
-            //    //    Border border = expander.Content as Border;
-            //    //    border.Background = Brushes.Transparent;
-            //    //}
-            //    BgImage.Source = GlobalVariable.BackgroundImage;
-            //}
-            //else
-            //{
-
-            //    TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-            //    DatabaseComboBox.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-            //    SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-            //    //MainProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-            //    //ActorProgressBar.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-            //    //foreach (Expander expander in ExpanderStackPanel.Children.OfType<Expander>().ToList())
-            //    //{
-            //    //    expander.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-            //    //    Border border = expander.Content as Border;
-            //    //    border.SetResourceReference(Control.BackgroundProperty, "Window.Background");
-            //    //}
-            //}
-            ////设置背景图片
-            //BgImage.Source = GlobalVariable.BackgroundImage;
-
+            }
+            else
+            {
+                contentGrid.SetResourceReference(Control.BackgroundProperty, "Window.Background");
+                SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
+                TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+                statusBar.SetResourceReference(Control.BackgroundProperty, "Window.StatusBar.Background");
+                MovieItemsControl.SetResourceReference(Control.BackgroundProperty, "Window.Background");
+            }
 
         }
 

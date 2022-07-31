@@ -1,6 +1,6 @@
 import os
 import re
-xaml_path = "D:\Visual_Studio_Project\chao-controls\ChaoControls.Style\XAML\Skin\White.xaml"
+xaml_path = "D:\Visual_Studio_Project\chao-controls\ChaoControls.Style\XAML\Skin\DefaultColor.xaml"
 output_json = os.path.join(os.getcwd(), "output.json")
 d = {}
 key_list=[]
@@ -41,6 +41,6 @@ def FormatPrintColorList():
         f.write("\n};")
 
 Parse()
-#print(d)
+print(d)
 #formatPrintKeyList()
-FormatPrintColorList()
+#FormatPrintColorList()

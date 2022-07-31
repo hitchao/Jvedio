@@ -308,9 +308,6 @@
     <Setting Name="ScanNfo" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="BackgroundImage" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="MovieOpacity" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
@@ -343,9 +340,6 @@
     </Setting>
     <Setting Name="WebSiteList" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="EnableBgImage" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="InfoItemWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>

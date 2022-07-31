@@ -176,22 +176,6 @@ namespace Jvedio
         #endregion
 
 
-        public static void LoadBgImage()
-        {
-            //设置背景
-            GlobalVariable.BackgroundImage = null;
-            if (Properties.Settings.Default.EnableBgImage)
-            {
-                string path = Properties.Settings.Default.BackgroundImage;
-                if (!File.Exists(path)) path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "background.jpg");
-                GC.Collect();
-
-                if (File.Exists(path))
-                    GlobalVariable.BackgroundImage = ImageHelper.BitmapImageFromFile(path);
-
-            }
-        }
-
         public static void Init()
         {
             CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);

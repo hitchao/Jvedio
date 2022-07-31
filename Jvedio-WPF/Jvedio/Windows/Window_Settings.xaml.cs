@@ -470,7 +470,7 @@ namespace Jvedio
                 GlobalVariable.InitProperties();
                 ScanHelper.InitSearchPattern();
                 SavePath();
-                saveSettings();
+                SaveSettings();
 
                 ChaoControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
             }
@@ -1235,32 +1235,10 @@ namespace Jvedio
             ShowViewRename(vieModel.FormatString);
         }
 
-        private void SetBackgroundImage(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            OpenFileDialog1.Title = Jvedio.Language.Resources.Choose;
-            OpenFileDialog1.FileName = "background.jpg";
-            OpenFileDialog1.Filter = "(jpg;jpeg;png)|*.jpg;*.jpeg;*.png";
-            OpenFileDialog1.FilterIndex = 1;
-            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                string path = OpenFileDialog1.FileName;
-                if (File.Exists(path))
-                {
-                    //设置背景
-                    GlobalVariable.BackgroundImage = null;
-                    GC.Collect();
-                    GlobalVariable.BackgroundImage = ImageHelper.BitmapImageFromFile(path);
-                    Properties.Settings.Default.BackgroundImage = path;
-                    (GetWindowByName("Main") as Main)?.SetSkin();
-                    (GetWindowByName("Window_Details") as Window_Details)?.SetSkin();
-                }
-            }
-        }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            saveSettings();
+            SaveSettings();
             GlobalConfig.Settings.Save();
             GlobalConfig.ProxyConfig.Save();
             GlobalConfig.ScanConfig.Save();
@@ -1270,7 +1248,7 @@ namespace Jvedio
 
 
 
-        private void saveSettings()
+        private void SaveSettings()
         {
 
             GlobalConfig.Main.ShowSearchHistory = vieModel.ShowSearchHistory;
@@ -1281,6 +1259,7 @@ namespace Jvedio
             GlobalConfig.Settings.AutoGenScreenShot = vieModel.AutoGenScreenShot;
             GlobalConfig.Settings.TeenMode = vieModel.TeenMode;
             GlobalConfig.Settings.CloseToTaskBar = vieModel.CloseToTaskBar;
+            GlobalConfig.Settings.DetailShowBg = vieModel.DetailShowBg;
             GlobalConfig.Settings.SelectedLanguage = vieModel.SelectedLanguage;
             GlobalConfig.Settings.SaveInfoToNFO = vieModel.SaveInfoToNFO;
             GlobalConfig.Settings.NFOSavePath = vieModel.NFOSavePath;
@@ -1411,11 +1390,6 @@ namespace Jvedio
 
 
 
-        private void CheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            GlobalVariable.LoadBgImage();
-            OnSetSkin();
-        }
 
         private void SetBasePicPath(object sender, MouseButtonEventArgs e)
         {
@@ -1634,7 +1608,7 @@ namespace Jvedio
         private async void TestProxy(object sender, RoutedEventArgs e)
         {
             vieModel.TestProxyStatus = TaskStatus.Running;
-            saveSettings();
+            SaveSettings();
             Button button = sender as Button;
             button.IsEnabled = false;
             string url = textProxyUrl.Text;
@@ -1960,6 +1934,43 @@ namespace Jvedio
             GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
             vieModel.SetServers();
             vieModel.RefreshCurrentPlugins();
+
+        }
+
+        private void SetDetailBg(object sender, RoutedEventArgs e)
+        {
+            GlobalConfig.Settings.DetailShowBg = vieModel.DetailShowBg;
+
+            windowMain?.SetSkin();
+        }
+
+        private void ShowAuthorInfo(object sender, MouseButtonEventArgs e)
+        {
+            if (vieModel.CurrentPlugin == null || vieModel.CurrentPlugin.Authors == null ||
+                vieModel.CurrentPlugin.Authors.Count <= 0)
+                return;
+            Border border = sender as Border;
+            if (border == null) return;
+            string name = border.Tag.ToString();
+            if (string.IsNullOrEmpty(name)) return;
+            AuthorInfo authorInfo = vieModel.CurrentPlugin.Authors.Where(arg => arg.Name.Equals(name)).FirstOrDefault();
+            if (authorInfo == null) return;
+            authorInfoItemsControl.ItemsSource = null;
+            authorInfoItemsControl.ItemsSource = authorInfo.Infos;
+            authorInfoPopup.PlacementTarget = border;
+            authorInfoPopup.IsOpen = true;
+
+        }
+
+        private void OpenAuthorUrl(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock textBlock = sender as TextBlock;
+            if (textBlock == null) return;
+            string url = textBlock.Text;
+            if (string.IsNullOrEmpty(url)) return;
+            if (url.IsProperUrl())
+                FileHelper.TryOpenUrl(url);
+
 
         }
     }

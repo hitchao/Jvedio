@@ -132,6 +132,13 @@
         Focusable="True"
         PreviewKeyUp="Grid_PreviewKeyUp">
 
+        <Image
+            x:Name="BgImage"
+            Margin="0"
+            Source="{x:Null}"
+            Stretch="UniformToFill" />
+
+
 
         <!--  影片关联弹框  -->
         <Popup
@@ -477,7 +484,6 @@
             <Grid
                 x:Name="PreviousGrid"
                 Grid.Column="0"
-                Background="{DynamicResource Window.Detail.Background}"
                 PreviewMouseWheel="Border_PreviewMouseWheel">
                 <Border
                     x:Name="PreviousBorder"
@@ -564,7 +570,7 @@
                     <Grid
                         x:Name="MouseMoveGrid"
                         Grid.Column="0"
-                        Background="{DynamicResource Window.InnerDialog.Background}"
+                        Background="Transparent"
                         MouseMove="MoveWindow" />
 
                     <TextBox
@@ -573,7 +579,7 @@
                         Margin="0,0,50,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Background="{DynamicResource Window.InnerDialog.Background}"
+                        Background="Transparent"
                         FocusVisualStyle="{x:Null}"
                         FontSize="16"
                         FontWeight="Bold"
@@ -725,7 +731,7 @@
                             Grid.Row="0"
                             HorizontalAlignment="Stretch"
                             AllowDrop="True"
-                            Background="{DynamicResource Window.InnerDialog.Background}"
+                            Background="Transparent"
                             DragOver="BigImage_DragOver"
                             Drop="BigImage_Drop"
                             MouseLeftButtonDown="Grid_MouseLeftButtonDown"
@@ -1659,7 +1665,6 @@
                         <Grid
                             x:Name="NextGrid"
                             Grid.Column="1"
-                            Background="{DynamicResource Window.Detail.Background}"
                             PreviewMouseWheel="Border_PreviewMouseWheel">
                             <Border
                                 x:Name="NextBorder"

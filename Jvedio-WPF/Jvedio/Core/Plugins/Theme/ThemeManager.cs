@@ -45,7 +45,7 @@ namespace Jvedio.Core
         public static List<PluginMetaData> PluginMetaDatas { get; set; }
         public static List<Theme> Themes { get; set; }
 
-        private static readonly string ThemePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins\\Themes");
+        public static readonly string ThemePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins\\Themes");
 
 
         /// <summary>
@@ -84,6 +84,7 @@ namespace Jvedio.Core
                 }
                 string ID = Path.GetFileName(path);
                 theme.ID = ID;
+                theme.ViewImage = theme.GetViewImage();
                 Themes.Add(theme);
                 data.Installed = true;
                 data.PluginID = PluginType.Theme.ToString() + "-" + Path.GetFileName(path);
@@ -103,7 +104,8 @@ namespace Jvedio.Core
             {
                 theme = Theme.Parse(dict["Data"]);
                 data = PluginMetaData.Parse(jsonPath);
-
+                if (data != null)
+                    theme.Desc = data.ReleaseNotes.Desc;
             }
             catch (Exception ex)
             {

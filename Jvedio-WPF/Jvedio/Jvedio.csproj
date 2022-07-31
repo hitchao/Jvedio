@@ -303,6 +303,7 @@
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
+    <Compile Include="Core\Global\GlobalEvent.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
     <Compile Include="Core\Net\UpgradeHelper.cs" />
