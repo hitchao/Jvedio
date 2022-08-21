@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using HandyControl.Data;
 using Jvedio.CommonNet;
 using Jvedio.Core.CustomEventArgs;
@@ -121,7 +121,7 @@ namespace Jvedio
 
         private void SetShadow()
         {
-            ChaoControls.Style.Utils.DwmDropShadow.DropShadowToWindow(this);
+            SuperControls.Style.Utils.DwmDropShadow.DropShadowToWindow(this);
         }
 
         private delegate void LoadActorDelegate(ActorInfo actor);
@@ -512,7 +512,7 @@ namespace Jvedio
             //string path = getExtraImagePath(sender as FrameworkElement, 1);
             //videoMapper.updateFieldById("SmallImagePath", path, DataID);
             //windowMain?.RefreshImage(vieModel.CurrentVideo);
-            //ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
         }
 
         // todo
@@ -525,7 +525,7 @@ namespace Jvedio
             //videoMapper.updateFieldById("BigImagePath", path, DataID);
             //Refresh();
             //windowMain?.RefreshImage(vieModel.CurrentVideo);
-            //ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
 
         }
 
@@ -537,7 +537,7 @@ namespace Jvedio
             videoMapper.updateFieldById("BigImagePath", path, DataID);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
-            ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
         }
 
 
@@ -556,7 +556,7 @@ namespace Jvedio
             }
             else
             {
-                ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_FileNotExist);
+                SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_FileNotExist);
             }
         }
 
@@ -633,7 +633,7 @@ namespace Jvedio
         {
             //if (IsTranslating) return;
 
-            //if (!Properties.Settings.Default.Enable_TL_BAIDU & !Properties.Settings.Default.Enable_TL_YOUDAO) { ChaoControls.Style.MessageCard.Warning("请设置【有道翻译】并测试"); IsTranslating = false; return; }
+            //if (!Properties.Settings.Default.Enable_TL_BAIDU & !Properties.Settings.Default.Enable_TL_YOUDAO) { SuperControls.Style.MessageCard.Warning("请设置【有道翻译】并测试"); IsTranslating = false; return; }
             //string result = "";
             //MySqlite dataBase = new MySqlite("Translate");
 
@@ -665,7 +665,7 @@ namespace Jvedio
             //    }
             //    else
             //    {
-            //        ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
+            //        SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
             //    }
 
             //}
@@ -679,11 +679,11 @@ namespace Jvedio
             //        dataBase.SaveYoudaoTranslateByID(movie.id, plot, result, "plot");
             //        movie.plot = result;
             //        UpdateInfo(movie);
-            //        //ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateSuccess);
+            //        //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateSuccess);
             //    }
             //    else
             //    {
-            //        ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
+            //        SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
             //    }
 
             //}
@@ -867,7 +867,7 @@ namespace Jvedio
             //    else
             //        ScreenShotRadioButton_Click(sender, new RoutedEventArgs());
 
-            //    ChaoControls.Style.MessageCard.Success($"{Jvedio.Language.Resources.ImportNumber} {filepaths.Count}");
+            //    SuperControls.Style.MessageCard.Success($"{Jvedio.Language.Resources.ImportNumber} {filepaths.Count}");
 
             //}
 

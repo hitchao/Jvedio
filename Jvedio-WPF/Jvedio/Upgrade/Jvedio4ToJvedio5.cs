@@ -912,7 +912,7 @@ namespace Jvedio.Upgrade
                         if (string.IsNullOrEmpty(VID) || !dict.ContainsKey(VID)) continue;
                         long dataID = dict[VID];
                         if (dataID <= 0) continue;
-                        values.Add($"('{SqlHelper.Format(labelName)}',{SqlHelper.Format(dataID)})");
+                        values.Add($"('{StringFormat.Format(labelName)}',{StringFormat.Format(dataID)})");
                     }
                     string sql = "insert or replace into metadata_to_label(LabelName,DataID) " +
                              $"values {string.Join(",", values)}";

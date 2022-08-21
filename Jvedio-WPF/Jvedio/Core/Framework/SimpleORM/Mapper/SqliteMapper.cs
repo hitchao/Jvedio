@@ -62,7 +62,7 @@ namespace Jvedio.Core.SimpleORM
         public override bool isTableExists(string tableName)
         {
             if (string.IsNullOrEmpty(tableName)) return false;
-            string sql = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{SqlHelper.Format(tableName)}';";
+            string sql = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{StringFormat.Format(tableName)}';";
             cmd.CommandText = sql;
             Log.Info(sql);
             using (SQLiteDataReader sr = cmd.ExecuteReader())

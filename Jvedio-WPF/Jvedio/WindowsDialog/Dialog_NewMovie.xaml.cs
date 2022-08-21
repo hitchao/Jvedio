@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using Jvedio.Core.Enums;
 using System;
 using System.Windows;
@@ -9,7 +9,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Dialog_NewMovie : ChaoControls.Style.BaseDialog
+    public partial class Dialog_NewMovie : SuperControls.Style.BaseDialog
     {
         public NewVideoDialogResult Result { get; private set; }
 

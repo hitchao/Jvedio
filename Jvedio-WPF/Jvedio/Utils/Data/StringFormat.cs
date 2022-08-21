@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Utils.Data
 {
-    public static class SqlHelper
+    public static class StringFormat
     {
         public static string Format(object obj)
         {
@@ -20,7 +20,7 @@ namespace Jvedio.Utils.Data
             return str.Replace("'", "''");
         }
 
-        public static string handleNewLine(string str)
+        public static string HandleNewLine(string str)
         {
             if (string.IsNullOrEmpty(str)) return "";
             return str.Replace("\r\n", GlobalVariable.Separator.ToString())

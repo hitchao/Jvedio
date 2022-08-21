@@ -9,7 +9,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Dialog_LoadPage : ChaoControls.Style.BaseDialog
+    public partial class Dialog_LoadPage : SuperControls.Style.BaseDialog
     {
 
 #pragma warning disable CS0612 // “ActorSearch”已过时

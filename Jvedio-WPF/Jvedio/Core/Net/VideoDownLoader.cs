@@ -21,6 +21,7 @@ using Jvedio.CommonNet.Crawler;
 using Jvedio.CommonNet;
 using Jvedio.Core.SimpleORM;
 using System.Net;
+using Jvedio.Core.Plugins.Crawler;
 
 namespace Jvedio.Core.Net
 {
@@ -33,7 +34,6 @@ namespace Jvedio.Core.Net
         private CancellationToken cancellationToken { get; set; }
 
         public Video CurrentVideo { get; set; }
-        public string InfoType { get; set; }
         public RequestHeader Header { get; set; }
 
         public List<CrawlerServer> CrawlerServers { get; set; } //该资源支持的爬虫刮削器
@@ -41,7 +41,6 @@ namespace Jvedio.Core.Net
         {
             CurrentVideo = video;
             cancellationToken = token;
-            InfoType = CurrentVideo.getServerInfoType().ToLower();
         }
 
 
@@ -58,28 +57,27 @@ namespace Jvedio.Core.Net
         public async Task<Dictionary<string, object>> GetInfo(Action<RequestHeader> callBack)
         {
             //下载信息
-            //State = DownLoadState.DownLoading;
-            //Dictionary<string, object> result = new Dictionary<string, object>();
-            //(CrawlerServer crawler, PluginMetaData PluginMetaData) = getCrawlerServer();
-            //(string url, string code) = getUrlAndCode(crawler);
-            //Header = CrawlerServer.parseHeader(crawler);
-            //callBack?.Invoke(Header);
-
-            //Dictionary<string, string> dataInfo = CurrentVideo.toDictionary();
-            //if (!dataInfo.ContainsKey("DataCode"))
-            //    dataInfo.Add("DataCode", code);
-            //else
-            //    dataInfo["DataCode"] = code;
-
-            //Plugin plugin = new Plugin(PluginMetaData.Path, "GetInfo", new object[] { url, Header, dataInfo });
-            //// 等待很久
-            //object o = await plugin.InvokeAsyncMethod();
-            //if (o is Dictionary<string, object> d)
-            //{
-            //    return d;
-            //}
-            //return result;
-            return null;
+            State = DownLoadState.DownLoading;
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            (CrawlerServer crawler, PluginMetaData PluginMetaData) = getCrawlerServer();
+            (string url, string code) = getUrlAndCode(crawler);
+            Header = CrawlerServer.parseHeader(crawler);
+            callBack?.Invoke(Header);
+            Dictionary<string, string> dataInfo = CurrentVideo.ToDictionary();
+            if (!dataInfo.ContainsKey("DataCode"))
+                dataInfo.Add("DataCode", code);
+            else
+                dataInfo["DataCode"] = code;
+            dataInfo["url"] = url;
+            // 路径就是 pluginID 组合
+            Plugin plugin = new Plugin(PluginMetaData.GetFilePath(), "GetInfo", new object[] { false, Header, dataInfo });
+            // 等待很久
+            object o = await plugin.InvokeAsyncMethod();
+            if (o is Dictionary<string, object> d)
+            {
+                return d;
+            }
+            return result;
         }
 
 
@@ -118,35 +116,31 @@ namespace Jvedio.Core.Net
         {
             // 获取信息类型，并设置爬虫类型
 
-            //if (string.IsNullOrEmpty(InfoType) || GlobalConfig.ServerConfig.CrawlerServers.Count == 0
-            //    || Global.Plugins.Crawlers.Count == 0
-            //    )
-            //    throw new CrawlerNotFoundException();
+            if (GlobalConfig.ServerConfig.CrawlerServers.Count == 0 || CrawlerManager.PluginMetaDatas?.Count == 0)
+                throw new CrawlerNotFoundException();
+            List<PluginMetaData> PluginMetaDatas = CrawlerManager.PluginMetaDatas.Where(arg => arg.Enabled).ToList();
+            if (PluginMetaDatas.Count == 0)
+                throw new CrawlerNotFoundException();
 
-            //List<PluginMetaData> PluginMetaDatas = Global.Plugins.Crawlers.Where(arg => arg.Enabled && arg.InfoType.Split(',')
-            //                               .Select(item => item.ToLower()).Contains(InfoType)).ToList();
-            //if (PluginMetaDatas.Count == 0)
-            //    throw new CrawlerNotFoundException();
+            PluginMetaData PluginMetaData = null;
+            List<CrawlerServer> crawlers = null;
+            for (int i = 0; i < PluginMetaDatas.Count; i++)
+            {
+                // 一组支持刮削的网址列表
+                PluginMetaData = PluginMetaDatas[i];
+                crawlers = GlobalConfig.ServerConfig.CrawlerServers
+                    .Where(arg => arg.Enabled && !string.IsNullOrEmpty(arg.PluginID) &&
+                    arg.PluginID.ToLower().Equals(PluginMetaData.PluginID.ToLower())
+                    && arg.Available == 1 && !string.IsNullOrEmpty(arg.Url)).ToList();
 
-            //PluginMetaData PluginMetaData = null;
-            //List<CrawlerServer> crawlers = null;
-            //for (int i = 0; i < PluginMetaDatas.Count; i++)
-            //{
-            //    // 一组支持刮削的网址列表
-            //    PluginMetaData = PluginMetaDatas[i];
-            //    crawlers = GlobalConfig.ServerConfig.CrawlerServers
-            //        .Where(arg => arg.Enabled && !string.IsNullOrEmpty(arg.ServerName) &&
-            //        arg.ServerName.ToLower().Equals(PluginMetaData.ServerName.ToLower())
-            //        && arg.Available == 1 && !string.IsNullOrEmpty(arg.Url)).ToList();
-
-            //    if (crawlers != null && crawlers.Count > 0) break;
-            //}
-            //if (crawlers == null || crawlers.Count == 0) throw new CrawlerNotFoundException();
-            //// todo 爬虫调度器
-            //crawlers = crawlers.OrderBy(arg => arg.ServerName).ToList();
-            //CrawlerServer crawler = crawlers[0];        // 如果有多个可用的网址，默认取第一个
-            //return (crawler, PluginMetaData);
-            return (null, null);
+                if (crawlers != null && crawlers.Count > 0) break;
+            }
+            if (crawlers == null || crawlers.Count == 0)
+                throw new CrawlerNotFoundException();
+            // todo 爬虫调度器
+            crawlers = crawlers.OrderBy(arg => arg.PluginID).ToList();
+            CrawlerServer crawler = crawlers[0];        // 如果有多个可用的网址，默认取第一个
+            return (crawler, PluginMetaData);
         }
 
 

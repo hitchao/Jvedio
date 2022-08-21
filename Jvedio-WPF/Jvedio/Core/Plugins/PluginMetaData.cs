@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Scan;
+﻿using Jvedio.Core.Plugins.Crawler;
+using Jvedio.Core.Scan;
 using Jvedio.Logs;
 using Jvedio.Utils.Common;
 using Jvedio.Utils.IO;
@@ -74,6 +75,13 @@ namespace Jvedio.Core.Plugins
         public PluginType Type { get; set; }
 
 
+        public void SetPluginID(PluginType type, string value)
+        {
+            if (string.IsNullOrEmpty(value)) return;
+            PluginID = type.ToString().ToLower() + "-" + value.ToLower();
+        }
+
+
 
         public static PluginMetaData Parse(string jsonPath)
         {
@@ -95,6 +103,17 @@ namespace Jvedio.Core.Plugins
 
 
             return metaData;
+        }
+
+        public string GetFilePath()
+        {
+            string path = Path.Combine(CrawlerManager.BaseDir, PluginID.Substring(8));
+            string[] arr = FileHelper.TryGetAllFiles(path, "*.dll");
+            if (arr != null && arr.Length > 0)
+            {
+                return arr[0];
+            }
+            return null;
         }
 
         public static void SetMarkDown(ref PluginMetaData data, string pluginDir)

@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
 using Jvedio.Utils.IO;
@@ -19,7 +19,7 @@ namespace Jvedio
     /// <summary>
     /// Window_Edit.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_MetaDataEdit : ChaoControls.Style.BaseWindow
+    public partial class Window_MetaDataEdit : SuperControls.Style.BaseWindow
     {
 
         Window_MetaDatas window_MetaDatas = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
@@ -121,11 +121,11 @@ namespace Jvedio
                 ReLoad();
                 // todo 更新到主界面和详情界面
                 window_MetaDatas?.RefreshData(vieModel.CurrentData.DataID);
-                ChaoControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                SuperControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
             }
             else
             {
-                ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
+                SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
             }
 
         }
@@ -242,7 +242,7 @@ namespace Jvedio
             labelTagPanel.Refresh();
         }
 
-        private void GenreChanged(object sender, ChaoControls.Style.ListChangedEventArgs e)
+        private void GenreChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
                 vieModel.CurrentData.Genre = String.Join(GlobalVariable.Separator.ToString(), e.List);
@@ -250,14 +250,14 @@ namespace Jvedio
 
         }
 
-        private void LabelChanged(object sender, ChaoControls.Style.ListChangedEventArgs e)
+        private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
                 vieModel.CurrentData.Label = String.Join(GlobalVariable.Separator.ToString(), e.List);
 
         }
 
-        private void ActorChanged(object sender, ChaoControls.Style.ListChangedEventArgs e)
+        private void ActorChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
             {

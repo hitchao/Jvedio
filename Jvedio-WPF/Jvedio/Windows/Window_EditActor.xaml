@@ -1,8 +1,8 @@
-﻿<chao:BaseWindow
+﻿<super:BaseWindow
     x:Class="Jvedio.Window_EditActor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,7 +15,7 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
-    <chao:BaseWindow.Resources>
+    <super:BaseWindow.Resources>
 
         <Style x:Key="BaseInfoLabel" TargetType="Label">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
@@ -54,7 +54,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-    </chao:BaseWindow.Resources>
+    </super:BaseWindow.Resources>
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -124,7 +124,7 @@
 
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Birthday}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Birthday, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Birthday, Mode=TwoWay}" />
                     </DockPanel>
 
 
@@ -132,46 +132,46 @@
 
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Age}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Age, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Age, Mode=TwoWay}" />
                     </DockPanel>
 
 
 
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Birthplace}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.BirthPlace, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.BirthPlace, Mode=TwoWay}" />
                     </DockPanel>
 
 
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Height}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
                     </DockPanel>
 
                     <DockPanel Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}">
                         <Label Content="{x:Static lang:Resources.Actress_Cup}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}" />
                     </DockPanel>
 
 
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Chest}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Chest, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Chest, Mode=TwoWay}" />
                     </DockPanel>
 
 
 
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Waist}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Waist, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Waist, Mode=TwoWay}" />
                     </DockPanel>
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Hipline}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Hipline, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Hipline, Mode=TwoWay}" />
                     </DockPanel>
                     <DockPanel>
                         <Label Content="{x:Static lang:Resources.Actress_Hobby}" Style="{StaticResource BaseInfoLabel}" />
-                        <chao:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}" />
+                        <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}" />
                     </DockPanel>
 
 
@@ -195,4 +195,4 @@
 
         </Grid>
     </Grid>
-</chao:BaseWindow>
+</super:BaseWindow>

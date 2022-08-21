@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using FontAwesome.WPF;
 using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
@@ -46,7 +46,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_Settings : ChaoControls.Style.BaseWindow
+    public partial class Window_Settings : SuperControls.Style.BaseWindow
     {
         public static string AIBaseImage64 { get; set; }
 
@@ -194,7 +194,7 @@ namespace Jvedio
 
             if (!containsFunKey | _key == Key.None)
             {
-                ChaoControls.Style.MessageCard.Error("必须为 功能键 + 数字/字母");
+                SuperControls.Style.MessageCard.Error("必须为 功能键 + 数字/字母");
             }
             else
             {
@@ -385,7 +385,7 @@ namespace Jvedio
                 if (!TestListen())
                     checkBox.IsChecked = false;
                 else
-                    ChaoControls.Style.MessageCard.Info(Jvedio.Language.Resources.RebootToTakeEffect);
+                    SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.RebootToTakeEffect);
             }
         }
 
@@ -413,7 +413,7 @@ namespace Jvedio
                 }
                 catch
                 {
-                    ChaoControls.Style.MessageCard.Error($"{Jvedio.Language.Resources.NoPermissionToListen} {drives[i]}");
+                    SuperControls.Style.MessageCard.Error($"{Jvedio.Language.Resources.NoPermissionToListen} {drives[i]}");
                     return false;
                 }
             }
@@ -472,7 +472,7 @@ namespace Jvedio
                 SavePath();
                 SaveSettings();
 
-                ChaoControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                SuperControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
             }
 
 
@@ -595,7 +595,7 @@ namespace Jvedio
 
 
 
-        private void setScanDatabases()
+        private void SetScanDatabases()
         {
             List<AppDatabase> appDatabases = windowMain?.vieModel.DataBases.ToList();
             AppDatabase db = windowMain?.vieModel.CurrentAppDataBase;
@@ -623,7 +623,7 @@ namespace Jvedio
             serverListBox.SelectedIndex = (int)GlobalConfig.Settings.CrawlerSelectedIndex;
 
             //设置当前数据库
-            setScanDatabases();
+            SetScanDatabases();
 
             //if (vieModel.DataBases?.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
 
@@ -715,111 +715,111 @@ namespace Jvedio
             GlobalConfig.PluginConfig.FetchPluginMetaData(() =>
             {
                 // 更新插件状态
-                Dispatcher.Invoke(() => { setRemotePluginMetaData(); });
+                Dispatcher.Invoke(() => { SetRemotePluginMetaData(); });
             });
 
             vieModel.RenderPlugins();
-            setRemotePluginMetaData();
+            SetRemotePluginMetaData();
 
             pluginDetailGrid.Visibility = Visibility.Hidden;
 
         }
 
 
-        private List<PluginMetaData> parsePluginMetaDataFromJson(string pluginList)
+        private List<PluginMetaData> ParsePluginMetaDataFromJson(string pluginList)
         {
+            List<string> plugin_key = new List<string>() { "crawlers", "themes" };
             List<PluginMetaData> result = new List<PluginMetaData>();
-            //try
-            //{
-            //    List<Dictionary<string, object>> list = JsonUtils.TryDeserializeObject<List<Dictionary<string, object>>>(pluginList);
-            //    if (list != null && list.Count > 0)
-            //    {
-            //        foreach (Dictionary<string, object> dict in list)
-            //        {
-            //            if (!dict.ContainsKey("Type") || !dict.ContainsKey("Data") ||
-            //                dict["Type"] == null || dict["Data"] == null) continue;
-            //            string type = dict["Type"].ToString().ToLower();
-            //            if ("crawler".Equals(type))
-            //            {
-            //                List<Dictionary<string, string>> datas = null;
-            //                JArray Data = null;
-            //                try
-            //                {
-            //                    Data = (JArray)dict["Data"];
-            //                    datas = Data.ToObject<List<Dictionary<string, string>>>();
-            //                }
-            //                catch (Exception ex) { Logger.Error(ex); }
-            //                if (datas != null)
-            //                {
+            try
+            {
+                Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(pluginList);
+                if (dict != null && dict.Count > 0)
+                {
+                    foreach (string key in plugin_key)
+                    {
+                        if (!dict.Any(arg => arg.Key.ToLower().Equals(key) || dict[key] == null))
+                            continue;
 
-            //                    foreach (Dictionary<string, string> d in datas)
-            //                    {
-            //                        if (!d.ContainsKey("ServerName") || !d.ContainsKey("Name") || !d.ContainsKey("Version")) continue;
-            //                        PluginMetaData PluginMetaData = PluginMetaData.ParseDict(d);
-            //                        result.Add(PluginMetaData);
-            //                    }
-            //                }
+                        List<string> datas = null;
+                        JArray Data = null;
+                        try
+                        {
+                            Data = (JArray)dict[key];
+                            datas = Data.ToObject<List<string>>();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
+                        if (datas == null || datas.Count <= 0) continue;
+                        foreach (string data in datas)
+                        {
+                            PluginMetaData metaData = new PluginMetaData();
+                            metaData.PluginName = data;
+                            if ("crawlers".Equals(key.ToLower()))
+                            {
+                                metaData.SetPluginID(PluginType.Cralwer, data);
+                                metaData.PluginType = PluginType.Cralwer;
+                            }
+                            else if ("themes".Equals(key.ToLower()))
+                            {
+                                metaData.SetPluginID(PluginType.Theme, data);
+                                metaData.PluginType = PluginType.Theme;
+                            }
+                            result.Add(metaData);
+                        }
 
-
-
-            //            }
-            //            else if ("theme".Equals(type))
-            //            {
-
-            //            }
-
-            //        }
-            //        return result;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.Error(ex);
-            //}
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
             return null;
         }
 
-        private void setRemotePluginMetaData()
+        private void SetRemotePluginMetaData()
         {
             // 未安装创建
-            //vieModel.AllFreshPlugins = new List<PluginMetaData>();
-            //string pluginList = GlobalConfig.PluginConfig.PluginList;
-            //if (!string.IsNullOrEmpty(pluginList))
-            //{
-            //    List<PluginMetaData> PluginMetaDatas = parsePluginMetaDataFromJson(pluginList);
-            //    if (PluginMetaDatas != null && PluginMetaDatas.Count > 0)
-            //    {
-            //        foreach (PluginMetaData info in PluginMetaDatas)
-            //        {
+            vieModel.AllFreshPlugins = new List<PluginMetaData>();
+            string pluginList = GlobalConfig.PluginConfig.PluginList;
+            if (!string.IsNullOrEmpty(pluginList))
+            {
+                List<PluginMetaData> PluginMetaDatas = ParsePluginMetaDataFromJson(pluginList);
+                if (PluginMetaDatas?.Count > 0)
+                {
+                    foreach (PluginMetaData info in PluginMetaDatas)
+                    {
 
-            //            PluginMetaData installed = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
-            //            if (installed == null)
-            //            {
-            //                // 新插件
+                        PluginMetaData installed = vieModel.InstalledPlugins.Where(arg => arg.PluginID.Equals(info.PluginID)).FirstOrDefault();
+                        if (installed == null)
+                        {
+                            // 新插件
+                            vieModel.AllFreshPlugins.Add(info);
+                        }
+                        else
+                        {
+                            // 检查更新
+                            //if (installed.Version.CompareTo(info.Version) < 0)
+                            //{
+                            //    installed.HasNewVersion = true;
+                            //    installed.NewVersion = info.Version;
+                            //    installed.FileName = info.FileName;
+                            //    PluginMetaData currentInstalled = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
+                            //    if (currentInstalled != null) currentInstalled = installed;
+                            //}
+                        }
+                    }
+                }
 
-            //                vieModel.AllFreshPlugins.Add(info);
-            //            }
-            //            else
-            //            {
-            //                // 检查更新
-            //                if (installed.Version.CompareTo(info.Version) < 0)
-            //                {
-            //                    installed.HasNewVersion = true;
-            //                    installed.NewVersion = info.Version;
-            //                    installed.FileName = info.FileName;
-            //                    PluginMetaData currentInstalled = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
-            //                    if (currentInstalled != null) currentInstalled = installed;
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //}
+            }
 
 
-            //vieModel.CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
-            //foreach (var item in vieModel.getSortResult(vieModel.AllFreshPlugins))
-            //    vieModel.CurrentFreshPlugins.Add(item);
+            vieModel.CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
+            foreach (var item in vieModel.GetSortResult(vieModel.AllFreshPlugins))
+                vieModel.CurrentFreshPlugins.Add(item);
 
         }
 
@@ -1101,7 +1101,7 @@ namespace Jvedio
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success)
                 {
-                    ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.BossKeyError);
+                    SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.BossKeyError);
                     Properties.Settings.Default.HotKey_Enable = false;
                 }
             }
@@ -1477,7 +1477,7 @@ namespace Jvedio
         private void SavePluginEnabled(object sender, RoutedEventArgs e)
         {
             GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
-            bool enabled = (bool)(sender as ChaoControls.Style.Switch).IsChecked;
+            bool enabled = (bool)(sender as SuperControls.Style.Switch).IsChecked;
             foreach (PluginMetaData plugin in PluginManager.PluginList)
             {
                 if (plugin.PluginID.Equals(vieModel.CurrentPlugin.PluginID))

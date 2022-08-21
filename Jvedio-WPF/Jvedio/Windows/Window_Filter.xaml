@@ -1,8 +1,8 @@
-﻿<chao:BaseWindow
+﻿<super:BaseWindow
     x:Class="Jvedio.Window_Filter"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="筛选器"
@@ -90,7 +90,7 @@
                             Text="文件大小" />
 
                         <Grid>
-                            <chao:Slider
+                            <super:Slider
                                 Height="20"
                                 Margin="20,0"
                                 BarCornerRadius="2"
@@ -115,7 +115,7 @@
                             FontSize="16"
                             Text="我的评分" />
 
-                        <chao:Slider
+                        <super:Slider
                             Height="20"
                             Margin="20,0"
                             BarCornerRadius="2"
@@ -370,4 +370,4 @@
 
 
     </Grid>
-</chao:BaseWindow>
+</super:BaseWindow>

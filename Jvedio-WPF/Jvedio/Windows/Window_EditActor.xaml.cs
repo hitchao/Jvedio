@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Utils;

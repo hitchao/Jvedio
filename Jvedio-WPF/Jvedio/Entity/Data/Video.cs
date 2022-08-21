@@ -226,21 +226,6 @@ namespace Jvedio.Entity
             return string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(WebUrl) || string.IsNullOrEmpty(ImageUrls);
         }
 
-        public string getServerInfoType()
-        {
-            if (!string.IsNullOrEmpty(VID))
-            {
-                if (VID.IndexOf("-") > 0)
-                {
-                    string s = VID.Split('-')[0];
-                    if ("FC2".Equals(s.ToUpper()))
-                        return "FC";
-                }
-
-            }
-            return VideoType.ToString();
-        }
-
         /// <summary>
         /// ext 必须要带上 '.'
         /// </summary>
@@ -300,12 +285,20 @@ namespace Jvedio.Entity
         }
 
 
-        public Dictionary<string, string> toDictionary()
+        public Dictionary<string, string> ToDictionary()
         {
+            List<string> fields = new List<string> { "VideoType", "DataID", "VID", "Size", "Path", "Hash", "DataType" };
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict.Add("VideoType", VideoType.ToString());
-            dict.Add("DataID", DataID.ToString());
-            dict.Add("VID", VID);
+            PropertyInfo[] propertyInfos = this.GetType().GetProperties();
+            foreach (PropertyInfo info in propertyInfos)
+            {
+                if (fields.Contains(info.Name))
+                {
+                    object value = info.GetValue(this);
+                    if (value == null) value = "";
+                    dict.Add(info.Name, value.ToString());
+                }
+            }
             return dict;
         }
 

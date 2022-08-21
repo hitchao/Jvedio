@@ -20,7 +20,7 @@ namespace Jvedio.Windows
     /// <summary>
     /// Window_Progress.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_Progress : ChaoControls.Style.BaseWindow, INotifyPropertyChanged
+    public partial class Window_Progress : SuperControls.Style.BaseWindow, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

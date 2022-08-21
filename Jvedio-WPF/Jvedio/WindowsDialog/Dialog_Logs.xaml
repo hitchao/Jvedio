@@ -1,8 +1,8 @@
-﻿<chao:BaseDialog
+﻿<super:BaseDialog
     x:Class="Jvedio.Dialog_Logs"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="日志"
     Width="800"
     Height="500"
@@ -22,4 +22,4 @@
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             Style="{StaticResource ReadOnlyNoWrapTextBox}" />
     </Grid>
-</chao:BaseDialog>
+</super:BaseDialog>

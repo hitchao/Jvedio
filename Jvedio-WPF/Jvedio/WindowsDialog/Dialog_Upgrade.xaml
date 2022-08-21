@@ -1,8 +1,8 @@
-﻿<chao:BaseDialog
+﻿<super:BaseDialog
     x:Class="Jvedio.Dialog_Upgrade"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
@@ -234,4 +234,4 @@
         </Grid>
 
     </Grid>
-</chao:BaseDialog>
+</super:BaseDialog>

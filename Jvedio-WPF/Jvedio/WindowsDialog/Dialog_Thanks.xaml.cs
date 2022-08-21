@@ -17,14 +17,14 @@ using static Jvedio.GlobalVariable;
 
 using System.Windows.Documents;
 using Jvedio.Utils.IO;
-using ChaoControls.Style;
+using SuperControls.Style;
 
 namespace Jvedio
 {
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Dialog_Thanks : ChaoControls.Style.BaseDialog
+    public partial class Dialog_Thanks : SuperControls.Style.BaseDialog
     {
 
         public Dialog_Thanks(Window owner) : base(owner, false)

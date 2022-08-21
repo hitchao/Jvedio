@@ -15,12 +15,12 @@ namespace Jvedio.Core.Plugins.Theme
 
             if ("白色".Equals(themeName))
             {
-                Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
+                Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/SuperControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
 
             }
             else
             {
-                Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/ChaoControls.Style;Component/XAML/Skin/DefaultColor.xaml", UriKind.RelativeOrAbsolute);
+                Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/SuperControls.Style;Component/XAML/Skin/DefaultColor.xaml", UriKind.RelativeOrAbsolute);
 
             }
 

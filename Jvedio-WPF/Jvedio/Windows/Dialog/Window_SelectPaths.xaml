@@ -1,11 +1,11 @@
-﻿<chao:BaseWindow
+﻿<super:BaseWindow
     x:Class="Jvedio.Window_SelectPaths"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="选择文件夹"
     Width="600"
     Height="400"
@@ -64,7 +64,7 @@
                 Height="27"
                 Margin="5,0"
                 Click="AddPath"
-                Style="{StaticResource RoundTitleButton}">
+                Style="{StaticResource RoundNormalButton}">
                 <Viewbox
                     Width="20"
                     Height="20"
@@ -82,7 +82,7 @@
                 Height="27"
                 Margin="5,0"
                 Click="DelPath"
-                Style="{StaticResource RoundTitleButton}">
+                Style="{StaticResource RoundNormalButton}">
                 <Viewbox
                     Width="20"
                     Height="auto"
@@ -139,4 +139,4 @@
                 Style="{StaticResource FillButton}" />
         </StackPanel>
     </Grid>
-</chao:BaseWindow>
+</super:BaseWindow>

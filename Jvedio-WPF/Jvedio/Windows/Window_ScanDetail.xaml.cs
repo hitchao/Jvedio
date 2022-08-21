@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using Jvedio.Core.Scan;
 using Jvedio.Logs;
 using Jvedio.Utils;

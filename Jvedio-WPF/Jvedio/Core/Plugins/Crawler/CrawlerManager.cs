@@ -25,7 +25,7 @@ namespace Jvedio.Core.Plugins.Crawler
 
         public static List<PluginMetaData> PluginMetaDatas { get; set; }
 
-        private static string BaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
+        public static string BaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
 
 
         // todo DLL 签名验证
@@ -43,7 +43,7 @@ namespace Jvedio.Core.Plugins.Crawler
                 // 校验
                 PluginMetaData data = GetPluginData(dllPath);
                 if (data == null) continue;
-                data.PluginID = PluginType.Cralwer.ToString() + "-" + Path.GetFileName(crawler_dir);
+                data.SetPluginID(PluginType.Cralwer, Path.GetFileName(crawler_dir));
                 CrawlerInfo info = new CrawlerInfo();
                 info.Path = dllPath;
                 PluginMetaDatas.Add(data);

@@ -1,5 +1,5 @@
 ﻿
-using ChaoControls.Style;
+using SuperControls.Style;
 using Jvedio.CommonNet;
 using Jvedio.Logs;
 using Microsoft.WindowsAPICodePack.Dialogs;

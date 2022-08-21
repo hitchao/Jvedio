@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls">
+    xmlns:super="https://github.com/SuperStudio/SuperControls">
 
-    <Style x:Key="BasePathRadioButton" TargetType="{x:Type chao:PathRadioButton}">
+    <Style x:Key="BasePathRadioButton" TargetType="{x:Type super:PathRadioButton}">
         <Setter Property="Height" Value="30" />
         <Setter Property="PathHeight" Value="15" />
         <Setter Property="CornerRadius" Value="0" />

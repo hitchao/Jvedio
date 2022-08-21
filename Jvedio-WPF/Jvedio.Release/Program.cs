@@ -94,7 +94,7 @@ namespace Jvedio.Release
 
                     }
                 }
-                List<string> deleteFilePaths = new List<string> { "config.ini", "AI.sqlite", "Info.sqlite", "Translate.sqlite", "OldVersion", "RecentWatch", "WindowConfig", "ServersConfig", "mylist.sqlite" };
+                List<string> deleteFilePaths = new List<string> { "config.ini", "AI.sqlite", "Info.sqlite", "Translate.sqlite", "OldVersion", "RecentWatch", "WindowConfig", "ServersConfig", "mylist.sqlite", "Jvedio.Update.exe" };
                 if (File.Exists("filestodelete.txt"))
                 {
                     using (StreamReader sr = new StreamReader("filestodelete.txt"))
@@ -122,7 +122,11 @@ namespace Jvedio.Release
 
                 foreach (var item in deleteFilePaths)
                 {
-                    if (File.Exists(basePath + item)) { File.Delete(basePath + item); }
+                    string path = Path.Combine(basePath, item);
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
                 }
                 string[] deleteDirPaths = new string[] { "app.publish", "BackUp", "DataBase", "log", "Pic", "data" };
 

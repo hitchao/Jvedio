@@ -19,7 +19,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Jvedio.Core.Enums;
 using static Jvedio.Utils.Visual.VisualHelper;
-using ChaoControls.Style;
+using SuperControls.Style;
 
 namespace Jvedio.ViewModel
 {

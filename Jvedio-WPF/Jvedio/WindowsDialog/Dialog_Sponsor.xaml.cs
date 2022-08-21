@@ -1,5 +1,5 @@
 ﻿
-using ChaoControls.Style;
+using SuperControls.Style;
 using Jvedio.CommonNet;
 using Jvedio.CommonNet.Crawler;
 using Jvedio.CommonNet.Entity;
@@ -23,7 +23,7 @@ using static Jvedio.GlobalVariable;
 namespace Jvedio
 {
     //https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.inotifypropertychanged?view=net-5.0
-    public partial class Dialog_Sponsor : ChaoControls.Style.BaseDialog, System.ComponentModel.INotifyPropertyChanged
+    public partial class Dialog_Sponsor : SuperControls.Style.BaseDialog, System.ComponentModel.INotifyPropertyChanged
     {
 
         public static string Alipay = "https://hitchao.github.io/jvedioupdate/alipay.txt";

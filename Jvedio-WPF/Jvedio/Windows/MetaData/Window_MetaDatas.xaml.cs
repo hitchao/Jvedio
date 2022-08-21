@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using DynamicData;
 using Jvedio.Core;
 using Jvedio.Core.CustomEventArgs;

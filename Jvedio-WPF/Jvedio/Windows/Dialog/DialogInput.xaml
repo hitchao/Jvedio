@@ -2,7 +2,7 @@
     x:Class="Jvedio.DialogInput"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -55,7 +55,7 @@
                         TextTrimming="WordEllipsis"
                         TextWrapping="NoWrap"
                         ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-                    <chao:SearchBox
+                    <super:SearchBox
                         Name="searchBox"
                         Grid.Row="1"
                         Width="auto"

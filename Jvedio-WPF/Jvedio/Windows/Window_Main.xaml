@@ -1,8 +1,7 @@
-﻿<chao:BaseWindow
+﻿<super:BaseWindow
     x:Class="Jvedio.Main"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ext="clr-namespace:Jvedio.Core.Extensions"
@@ -13,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     Title="Jvedio"
     Width="1100"
@@ -36,7 +36,7 @@
     mc:Ignorable="d">
 
 
-    <chao:BaseWindow.Resources>
+    <super:BaseWindow.Resources>
 
         <ContextMenu x:Key="TextBlockContextMenu">
             <MenuItem Click="CopyTextBlock" Header="{x:Static lang:Resources.Copy}" />
@@ -632,7 +632,7 @@
         </Style>
 
 
-    </chao:BaseWindow.Resources>
+    </super:BaseWindow.Resources>
 
 
     <Grid AllowDrop="True">
@@ -711,7 +711,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
-                    <chao:SearchBox
+                    <super:SearchBox
                         Name="searchDataBox"
                         Grid.Row="0"
                         Width="auto"
@@ -743,7 +743,7 @@
                             BorderThickness="0,0,1,0">
                             <ScrollViewer>
                                 <StackPanel Orientation="Vertical">
-                                    <chao:TogglePanel
+                                    <super:TogglePanel
                                         Width="150"
                                         Padding="0,5"
                                         FontSize="15"
@@ -813,8 +813,8 @@
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
-                                    </chao:TogglePanel>
-                                    <chao:TogglePanel
+                                    </super:TogglePanel>
+                                    <super:TogglePanel
                                         Width="150"
                                         Padding="0,5"
                                         FontSize="15"
@@ -882,7 +882,7 @@
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
-                                    </chao:TogglePanel>
+                                    </super:TogglePanel>
                                 </StackPanel>
                             </ScrollViewer>
 
@@ -1081,7 +1081,7 @@
                                 Style="{StaticResource ButtonSuccess}" />
                         </StackPanel>
 
-                        <chao:Pagination
+                        <super:Pagination
                             Name="assoPagination"
                             Grid.Column="2"
                             HorizontalAlignment="Right"
@@ -1527,9 +1527,12 @@
                         <Button
                             Name="themeButton"
                             Width="40"
+                            Margin="0"
+                            Padding="0"
+                            VerticalAlignment="Stretch"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
                             Click="ShowThemes"
-                            Style="{StaticResource NormalButton}"
-                            Tag="{DynamicResource Window.Title.Hover.Background}">
+                            Style="{StaticResource FlatButton}">
                             <Viewbox
                                 Width="15"
                                 Height="auto"
@@ -1651,9 +1654,12 @@
                         </Popup>
                         <Button
                             Width="40"
+                            Margin="0"
+                            Padding="0"
+                            VerticalAlignment="Stretch"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
                             Click="MinWindow"
-                            Style="{StaticResource NormalButton}"
-                            Tag="{DynamicResource Window.Title.Hover.Background}">
+                            Style="{StaticResource FlatButton}">
                             <Viewbox
                                 Width="12"
                                 Height="auto"
@@ -1668,9 +1674,12 @@
                         <Button
                             Name="ButtonMax"
                             Width="40"
+                            Margin="0"
+                            Padding="0"
+                            VerticalAlignment="Stretch"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
                             Click="OnMaxWindow"
-                            Style="{StaticResource NormalButton}"
-                            Tag="{DynamicResource Window.Title.Hover.Background}">
+                            Style="{StaticResource FlatButton}">
                             <Viewbox
                                 Width="12"
                                 Height="auto"
@@ -1686,9 +1695,12 @@
                         <Button
                             Name="ButtonClose"
                             Width="40"
+                            Margin="0"
+                            Padding="0"
+                            VerticalAlignment="Stretch"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
                             Click="CloseWindow"
-                            Style="{StaticResource NormalButton}"
-                            Tag="{DynamicResource Window.Title.Hover.Deep.Background}">
+                            Style="{StaticResource FlatButton}">
                             <Viewbox
                                 Width="12"
                                 Height="auto"
@@ -1707,7 +1719,7 @@
             <Grid Grid.Row="1">
 
 
-                <chao:WaitingPanel
+                <super:WaitingPanel
                     Panel.ZIndex="5"
                     Cancel="WaitingPanel_Cancel"
                     NoticeText="{x:Static lang:Resources.Wait}"
@@ -1715,7 +1727,7 @@
                     ShowProgressBar="Collapsed"
                     Visibility="{Binding IsScanning, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" />
 
-                <chao:WaitingPanel
+                <super:WaitingPanel
                     x:Name="LoadSearchWaitingPanel"
                     Panel.ZIndex="5"
                     Cancel="CancelLoadActor"
@@ -1781,16 +1793,10 @@
                                     Height="30"
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
-                                    Background="{DynamicResource Window.Side.Background}"
-                                    BorderBrush="{DynamicResource Window.Side.Hover.Background}"
                                     DisplayMemberPath="Name"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Window.Foreground}"
-                                    ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                     ItemsSource="{Binding DataBases}"
                                     SelectedValuePath="DBId"
-                                    Style="{StaticResource NormalComboBox}"
-                                    Tag="{DynamicResource Window.Side.Hover.Background}"
+                                    Style="{StaticResource BorderComboBox}"
                                     ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
                             </Grid>
 
@@ -1807,7 +1813,7 @@
                                         <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
 
-                                    <chao:TogglePanel
+                                    <super:TogglePanel
                                         Grid.Row="0"
                                         Width="{Binding ElementName=SideBorder, Path=ActualWidth}"
                                         Padding="0,5"
@@ -1821,7 +1827,7 @@
                                             Name="sideRadioButtons"
                                             Height="auto"
                                             VerticalAlignment="Stretch">
-                                            <chao:PathRadioButton
+                                            <super:PathRadioButton
                                                 Name="AllRadioButton"
                                                 Command="{Binding SelectCommand}"
                                                 CommandParameter="All"
@@ -1829,47 +1835,47 @@
                                                 Path="M63.465962 793.139052c0 55.038524 44.620243 99.708909 99.709933 99.708909l697.969529 0c55.04057 0 99.709933-44.669362 99.709933-99.708909L960.855356 194.878432c0-55.089689-44.669362-99.709933-99.709933-99.709933L163.174871 95.1685c-55.089689 0-99.709933 44.620243-99.709933 99.709933L63.464939 793.139052zM761.435491 494.00823 362.59576 743.283574 362.59576 244.732887 761.435491 494.00823z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding AllVideoCount}" />
-                                            <chao:PathRadioButton
+                                            <super:PathRadioButton
                                                 Command="{Binding SelectCommand}"
                                                 CommandParameter="Favorite"
                                                 MainText="{x:Static lang:Resources.Favorites}"
                                                 Path="M335.008 916.629333c-35.914667 22.314667-82.88 10.773333-104.693333-25.557333a77.333333 77.333333 0 0 1-8.96-57.429333l46.485333-198.24a13.141333 13.141333 0 0 0-4.021333-12.864l-152.16-132.586667c-31.605333-27.52-35.253333-75.648-8.234667-107.733333a75.68 75.68 0 0 1 51.733333-26.752L354.848 339.2c4.352-0.362667 8.245333-3.232 10.026667-7.594667l76.938666-188.170666c16.032-39.2 60.618667-57.92 99.52-41.461334a76.309333 76.309333 0 0 1 40.832 41.461334l76.938667 188.16c1.781333 4.373333 5.674667 7.253333 10.026667 7.605333l199.712 16.277333c41.877333 3.413333 72.885333 40.458667 69.568 82.517334a76.938667 76.938667 0 0 1-26.08 51.978666l-152.16 132.586667c-3.541333 3.082667-5.141333 8.074667-4.021334 12.853333l46.485334 198.24c9.621333 41.013333-15.36 82.336-56.138667 92.224a75.285333 75.285333 0 0 1-57.525333-9.237333l-170.976-106.24a11.296 11.296 0 0 0-12.010667 0l-170.986667 106.24z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding FavoriteVideoCount}" />
-                                            <chao:PathRadioButton
+                                            <super:PathRadioButton
                                                 Command="{Binding SelectCommand}"
                                                 CommandParameter="RecentWatch"
                                                 MainText="{x:Static lang:Resources.RecentPlay}"
                                                 Path="M514.941447 890.533617c75.021176-0.60418 145.170347-21.660501 204.945616-58.36123l65.26431 98.08286a509.889473 509.889473 0 0 1-270.209926 77.026541C235.59169 1007.281788 9.306945 783.413764 9.306945 507.791926 9.306945 232.170089 235.59169 8.302065 514.941447 8.302065c279.966793 0 506.868572 223.868024 506.868572 499.489861 0 7.828632 0 15.040229-0.617035 22.868861l-118.933503-1.20836c0.60418-7.211597 0.60418-13.831869 0.60418-21.056321 0-211.231661-173.823912-382.150366-387.922214-382.150365-214.085448 0-387.318034 171.522885-387.318034 382.150365s173.232586 382.137511 387.318034 382.137511z m444.046693-194.378891L820.528049 514.219374h276.303147L958.975285 696.154726zM696.09265 529.452427c-4.884861 9.641172-14.654582 19.860815-24.411449 29.489133l-176.883377 101.707941c-34.15546 19.256635-78.671967 9.628318-98.198555-24.077221-4.884861-9.628318-9.756867-24.064366-10.965226-33.692684V394.051801c1.20836-38.51327 30.491815-72.822989 75.008321-72.822989 14.654582 0 24.398594 4.820586 34.15546 9.641173l176.883377 101.695086c34.168315 19.256635 44.529362 63.194672 24.398594 96.887356z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding RecentWatchCount}">
-                                                <chao:PathRadioButton.ContextMenu>
+                                                <super:PathRadioButton.ContextMenu>
                                                     <ContextMenu>
                                                         <MenuItem Click="ClearRecentWatched" Header="{x:Static lang:Resources.Clear}" />
                                                     </ContextMenu>
-                                                </chao:PathRadioButton.ContextMenu>
-                                            </chao:PathRadioButton>
-                                            <chao:PathRadioButton
+                                                </super:PathRadioButton.ContextMenu>
+                                            </super:PathRadioButton>
+                                            <super:PathRadioButton
                                                 Click="ShowActorNotice"
                                                 Command="{Binding ShowActorsCommand}"
                                                 MainText="影片演员"
                                                 Path="M501.8624 532.992c120.2176 0 220.8768-97.8944 220.8768-215.2448 0-120.2176-97.8944-215.2448-220.8768-215.2448s-218.112 95.0272-218.112 215.2448 97.8944 215.2448 218.112 215.2448zM417.9968 572.1088C264.192 572.1088 149.504 675.6352 149.504 826.5728v16.7936c0 78.336 122.9824 78.336 279.552 78.336h164.9664c148.1728 0 279.552 0 279.552-78.336v-16.7936c0-150.9376-114.5856-254.464-268.3904-254.464H417.9968z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding AllActorCount}" />
-                                            <chao:PathRadioButton
+                                            <super:PathRadioButton
                                                 Command="{Binding ShowLabelsCommand}"
                                                 MainText="我的标签"
                                                 Path="M1009.37559 308.860541l-279.669985-271.075961a136.280853 136.280853 0 0 0-186.679716-1.544011L8.27357 534.460996a25.898606 25.898606 0 0 0-8.215305 20.043015v339.420313a129.900882 129.900882 0 0 0 129.75522 129.959147h351.189758a26.044267 26.044267 0 0 0 18.586401-7.807454l512.11653-523.390725a129.667824 129.667824 0 0 0-2.330584-183.824751zM279.932176 874.318293a116.529161 116.529161 0 1 1 116.529161-116.529161 116.529161 116.529161 0 0 1-116.529161 116.529161z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding AllLabelCount}" />
-                                            <chao:PathRadioButton
+                                            <super:PathRadioButton
                                                 Command="{Binding ShowClassifyCommand}"
                                                 MainText="{x:Static lang:Resources.AutoClassification}"
                                                 Path="M928.687158 816.316632l64.053895 56.966736-53.733053 60.416-55.457684-49.313684a202.105263 202.105263 0 1 1 45.136842-68.042105zM134.736842 134.736842v242.526316h242.526316V134.736842H134.736842zM53.894737 53.894737h404.210526v404.210526H53.894737V53.894737z m80.842105 565.894737v242.526315h242.526316v-242.526315H134.736842z m-80.842105-80.842106h404.210526v404.210527H53.894737V538.947368zM619.789474 134.736842v242.526316h242.526315V134.736842h-242.526315z m-80.842106-80.842105h404.210527v404.210526H538.947368V53.894737z m202.105264 808.421052a121.263158 121.263158 0 1 0 0-242.526315 121.263158 121.263158 0 0 0 0 242.526315z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="" />
                                         </StackPanel>
-                                    </chao:TogglePanel>
+                                    </super:TogglePanel>
                                     <Grid Grid.Row="1">
                                         <ToggleButton
                                             Width="23"
@@ -1942,7 +1948,7 @@
                                                     Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                                             </Viewbox>
                                         </Border>
-                                        <chao:TogglePanel
+                                        <super:TogglePanel
                                             Height="auto"
                                             Padding="0,5"
                                             FontSize="15"
@@ -1966,7 +1972,7 @@
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <StackPanel>
-                                                            <chao:PathCheckButton
+                                                            <super:PathCheckButton
                                                                 Name="pathCheckButton"
                                                                 Height="30"
                                                                 Margin="0"
@@ -1983,20 +1989,20 @@
                                                                 PathMargin="5 -5 5 0"
                                                                 SubText="{Binding Count}"
                                                                 Tag="{Binding TagID}">
-                                                                <chao:PathCheckButton.ContextMenu>
+                                                                <super:PathCheckButton.ContextMenu>
                                                                     <ContextMenu>
                                                                         <MenuItem Click="EditTagStamp" Header="{x:Static lang:Resources.Edit}" />
                                                                         <MenuItem Click="DeleteTagStamp" Header="{x:Static lang:Resources.Delete}" />
                                                                     </ContextMenu>
-                                                                </chao:PathCheckButton.ContextMenu>
-                                                            </chao:PathCheckButton>
+                                                                </super:PathCheckButton.ContextMenu>
+                                                            </super:PathCheckButton>
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
 
 
-                                        </chao:TogglePanel>
+                                        </super:TogglePanel>
                                     </Grid>
 
                                     <!--  快速访问  -->
@@ -2021,7 +2027,7 @@
                                             </Viewbox>
                                         </Border>
 
-                                        <chao:TogglePanel
+                                        <super:TogglePanel
                                             Padding="0,5"
                                             FontSize="15"
                                             Header="快速访问"
@@ -2044,7 +2050,7 @@
 
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <chao:PathRadioButton
+                                                            <super:PathRadioButton
                                                                 MainText="{Binding Name}"
                                                                 Path="M506.88 88.669091c-231.330909 0-418.909091 187.578182-418.909091 418.909091s187.578182 418.909091 418.909091 418.909091 418.909091-187.578182 418.909091-418.909091-187.578182-418.909091-418.909091-418.909091z m178.036364 661.178182c-8.843636 8.378182-20.247273 12.567273-31.650909 12.567272-12.567273 0-24.901818-4.887273-33.978182-14.894545l-177.338182-190.836364V299.52c0-25.6 20.945455-46.545455 46.545454-46.545455s46.545455 20.945455 46.545455 46.545455v220.625455l152.436364 163.84c17.221818 18.850909 16.290909 48.407273-2.56 65.861818z"
                                                                 Style="{StaticResource BasePathRadioButton}"
@@ -2054,7 +2060,7 @@
                                                 </ItemsControl>
                                             </StackPanel>
 
-                                        </chao:TogglePanel>
+                                        </super:TogglePanel>
 
                                     </Grid>
                                 </Grid>
@@ -2191,7 +2197,7 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
                             <!--  搜索  -->
-                            <chao:SearchBox
+                            <super:SearchBox
                                 Name="searchBox"
                                 Width="auto"
                                 Height="30"
@@ -2438,8 +2444,10 @@
                                                 <Button
                                                     Width="auto"
                                                     MinWidth="0"
+                                                    Margin="5"
+                                                    Padding="20,10"
                                                     Click="ImportVideo"
-                                                    Style="{StaticResource ButtonPrimary}">
+                                                    Style="{StaticResource ButtonMain}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <Image
                                                             Height="13"
@@ -2451,8 +2459,10 @@
                                                 <Button
                                                     Width="auto"
                                                     MinWidth="0"
+                                                    Margin="5"
+                                                    Padding="20,10"
                                                     Command="{Binding AddNewMovie}"
-                                                    Style="{StaticResource ButtonPrimary}"
+                                                    Style="{StaticResource ButtonMain}"
                                                     Visibility="{Binding TeenMode, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <Image
@@ -2464,7 +2474,7 @@
                                                 </Button>
 
 
-                                                <chao:Switch
+                                                <super:Switch
                                                     Height="25"
                                                     Background="{DynamicResource Window.Title.Background}"
                                                     CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
@@ -2514,27 +2524,27 @@
                                                     Background="{DynamicResource Window.Side.Background}"
                                                     CornerRadius="5">
                                                     <StackPanel Name="ViewModeStackPanel" Orientation="Horizontal">
-                                                        <chao:PathRadioButton
+                                                        <super:PathRadioButton
                                                             CornerRadius="5,0,0,5"
                                                             Path="M886.680128 13.86578H136.468464c-37.340302 0-62.274379 24.934078-62.274379 62.274379v871.841311c0 37.340302 24.934078 62.274379 62.274379 62.27438h750.211664c37.340302 0 62.274379-24.934078 62.27438-62.27438V76.140159c0-37.340302-24.934078-62.274379-62.27438-62.274379zM136.468464 76.140159h750.211664V617.878608L710.682029 451.002732 442.731916 730.021143 318.061527 617.878608 136.468464 792.295522V76.140159z m0 871.841311v-78.572752l184.025656-170.524765L599.75579 947.98147H136.468464z m549.401117 0l-200.688918-181.836322 225.501366-234.258701 175.998099 164.321654v251.65174H685.869581z m0 0"
                                                             PathHeight="18"
                                                             Style="{StaticResource PathGroupRadioButton}"
                                                             ToolTip="{x:Static lang:Resources.Thumbnail}" />
-                                                        <chao:PathRadioButton
+                                                        <super:PathRadioButton
                                                             Padding="0,0,0,0"
                                                             CornerRadius="0"
                                                             Path="M934.4 107.52H89.6c-20.48 0-35.84 15.36-35.84 35.84V883.2c0 20.48 15.36 35.84 35.84 35.84h844.8c20.48 0 35.84-15.36 35.84-35.84V143.36c0-20.48-15.36-35.84-35.84-35.84z m-35.84 739.84H125.44V176.64h775.68v670.72h-2.56z m0 0 M335.36 440.32c38.4 0 71.68-30.72 71.68-71.68 0-38.4-30.72-71.68-71.68-71.68-38.4 0-71.68 30.72-71.68 71.68 2.56 40.96 33.28 71.68 71.68 71.68z m0 0M652.8 396.8L445.44 691.2 337.92 540.16 158.72 793.6h704L652.8 396.8z m0 0"
                                                             PathHeight="19"
                                                             Style="{StaticResource PathGroupRadioButton}"
                                                             ToolTip="{x:Static lang:Resources.Poster}" />
-                                                        <chao:PathRadioButton
+                                                        <super:PathRadioButton
                                                             CornerRadius="0"
                                                             Path="M1024 170.666667v682.666666H0V170.666667h1024zM85.333333 256v512h853.333334V256H85.333333z m354.133334 280.106667c0 82.730667-51.477333 133.333333-136.469334 133.333333-92.501333 0-148.117333-59.776-148.117333-158.72 0-97.706667 55.829333-158.144 146.026667-158.144 73.344 0 127.936 42.709333 135.424 106.24h-75.413334c-7.509333-26.453333-29.994667-42.474667-60.010666-42.474667-42.688 0-68.117333 34.986667-68.117334 93.525334 0 59.584 28.117333 95.850667 71.893334 95.850666 34.773333 0 58.944-20.416 60.8-50.837333l0.213333-5.013333h-54.997333v-52.48H439.466667v38.741333zM573.013333 661.333333h-76.48V360.704h76.458667V661.333333z m147.285334 0H643.84V360.704h204.586667v61.461333h-128.128v68.544h116.245333v58.538667h-116.266667V661.333333z"
                                                             PathHeight="19"
                                                             Style="{StaticResource PathGroupRadioButton}"
                                                             ToolTip="GIF"
                                                             Visibility="Collapsed" />
-                                                        <chao:PathRadioButton
+                                                        <super:PathRadioButton
                                                             CornerRadius="0,5,5,0"
                                                             Path="M64 480h352V128H64v352z m64-288h224v224H128V192zM64 928h352V576H64v352z m64-288h224v224H128v-224zM526.848 224H928a32 32 0 1 0 0-64H526.848a32 32 0 0 0 0 64zM928 608H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64zM928 384H526.848a32 32 0 0 0 0 64H928a32 32 0 1 0 0-64zM928 832H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64z"
                                                             PathHeight="19"
@@ -3028,7 +3038,7 @@
                                                                             <ContextMenu Opacity="0.9" PreviewKeyUp="ContextMenu_PreviewKeyUp">
 
 
-                                                                                <MenuItem Click="DownLoadSelectMovie" Header="{x:Static lang:Resources.Menu_SyncInfo}" />
+                                                                                <MenuItem Click="DownLoadSelectMovie" Header="同步信息" />
 
                                                                                 <MenuItem
                                                                                     Click="DownLoadWithUrl"
@@ -3456,7 +3466,7 @@
 
 
                                             <!--  页码  -->
-                                            <chao:Pagination
+                                            <super:Pagination
                                                 Name="pagination"
                                                 Grid.Column="1"
                                                 CurrentPage="{Binding CurrentPage, Mode=OneWay}"
@@ -3586,7 +3596,7 @@
                                                 Style="{StaticResource ButtonPrimary}" />
 
                                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                                <chao:Switch
+                                                <super:Switch
                                                     Height="25"
                                                     Background="{DynamicResource Window.Side.Background}"
                                                     CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
@@ -3609,13 +3619,13 @@
                                                     Background="{DynamicResource Window.Side.Background}"
                                                     CornerRadius="5">
                                                     <StackPanel Name="ActorViewModeStackPanel" Orientation="Horizontal">
-                                                        <chao:PathRadioButton
+                                                        <super:PathRadioButton
                                                             CornerRadius="5,0,0,5"
                                                             Path="M886.680128 13.86578H136.468464c-37.340302 0-62.274379 24.934078-62.274379 62.274379v871.841311c0 37.340302 24.934078 62.274379 62.274379 62.27438h750.211664c37.340302 0 62.274379-24.934078 62.27438-62.27438V76.140159c0-37.340302-24.934078-62.274379-62.27438-62.274379zM136.468464 76.140159h750.211664V617.878608L710.682029 451.002732 442.731916 730.021143 318.061527 617.878608 136.468464 792.295522V76.140159z m0 871.841311v-78.572752l184.025656-170.524765L599.75579 947.98147H136.468464z m549.401117 0l-200.688918-181.836322 225.501366-234.258701 175.998099 164.321654v251.65174H685.869581z m0 0"
                                                             PathHeight="17"
                                                             Style="{StaticResource PathGroupRadioButton}"
                                                             ToolTip="{x:Static lang:Resources.Thumbnail}" />
-                                                        <chao:PathRadioButton
+                                                        <super:PathRadioButton
                                                             CornerRadius="0,5,5,0"
                                                             Path="M64 480h352V128H64v352z m64-288h224v224H128V192zM64 928h352V576H64v352z m64-288h224v224H128v-224zM526.848 224H928a32 32 0 1 0 0-64H526.848a32 32 0 0 0 0 64zM928 608H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64zM928 384H526.848a32 32 0 0 0 0 64H928a32 32 0 1 0 0-64zM928 832H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64z"
                                                             PathHeight="17"
@@ -3749,7 +3759,7 @@
 
 
                                         <!--  页码  -->
-                                        <chao:Pagination
+                                        <super:Pagination
                                             Name="actorPagination"
                                             Grid.Column="2"
                                             CurrentPage="1"
@@ -4322,7 +4332,7 @@
                     Orientation="Horizontal">
 
                     <Grid>
-                        <chao:PathMsg
+                        <super:PathMsg
                             Name="screenShotPathMsg"
                             MouseLeftButtonUp="ShowScreenShotPopup"
                             MsgCount="{Binding ScreenShotTasks.Count}"
@@ -4892,7 +4902,7 @@
 
                     </Grid>
                     <Grid>
-                        <chao:PathMsg
+                        <super:PathMsg
                             Name="downloadPathMsg"
                             MouseLeftButtonUp="ShowDownloadPopup"
                             MsgCount="{Binding DownLoadTasks.Count}"
@@ -5183,7 +5193,7 @@
                         </Popup>
                     </Grid>
                     <Grid>
-                        <chao:PathMsg
+                        <super:PathMsg
                             Name="msgPathMsg"
                             MouseLeftButtonUp="ShowMessage"
                             MsgCount="{Binding Message.Count}"
@@ -5274,7 +5284,7 @@
 
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <chao:MessageCard
+                                                <super:MessageCard
                                                     Width="280"
                                                     Height="80"
                                                     Margin="0,10"
@@ -5307,4 +5317,4 @@
             </Grid>
         </Grid>
     </Grid>
-</chao:BaseWindow>
+</super:BaseWindow>

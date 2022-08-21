@@ -78,6 +78,10 @@ namespace Jvedio.ViewModel
             CurrentInstalledPlugins = new ObservableCollection<PluginMetaData>();
             foreach (var item in GetSortResult(InstalledPlugins))
                 CurrentInstalledPlugins.Add(item);
+
+            CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
+            foreach (var item in GetSortResult(AllFreshPlugins))
+                CurrentFreshPlugins.Add(item);
         }
 
 
@@ -88,6 +92,7 @@ namespace Jvedio.ViewModel
         {
             // 筛选
             IEnumerable<PluginMetaData> list = PluginMetaDatas;
+            if (list == null || list.Count() == 0) return new List<PluginMetaData>();
 
 
             if (SortEnabledIndex >= 0)

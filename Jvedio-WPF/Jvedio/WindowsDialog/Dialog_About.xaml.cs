@@ -1,5 +1,5 @@
 ﻿
-using ChaoControls.Style;
+using SuperControls.Style;
 using Jvedio.Utils.IO;
 using System;
 using System.Windows;
@@ -10,7 +10,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Dialog_About : ChaoControls.Style.BaseDialog
+    public partial class Dialog_About : SuperControls.Style.BaseDialog
     {
 
 

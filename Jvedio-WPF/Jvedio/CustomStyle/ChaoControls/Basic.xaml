@@ -1,13 +1,13 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls">
+    xmlns:super="https://github.com/SuperStudio/SuperControls">
 
 
 
 
 
-    <Style x:Key="NormalPathMsg" TargetType="{x:Type chao:PathMsg}">
+    <Style x:Key="NormalPathMsg" TargetType="{x:Type super:PathMsg}">
         <Setter Property="Width" Value="30" />
         <Setter Property="Height" Value="30" />
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
@@ -18,7 +18,7 @@
         <Setter Property="PathHeight" Value="16" />
     </Style>
 
-    <Style x:Key="BaseSearchTextBox" TargetType="{x:Type chao:SearchBox}">
+    <Style x:Key="BaseSearchTextBox" TargetType="{x:Type super:SearchBox}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Height" Value="auto" />
@@ -39,7 +39,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="PathGroupRadioButton" TargetType="{x:Type chao:PathRadioButton}">
+    <Style x:Key="PathGroupRadioButton" TargetType="{x:Type super:PathRadioButton}">
         <Setter Property="Padding" Value="0" />
         <Setter Property="MainText" Value="" />
         <Setter Property="SubText" Value="" />

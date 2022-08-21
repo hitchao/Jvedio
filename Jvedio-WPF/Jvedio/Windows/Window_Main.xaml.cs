@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using DynamicData;
 using HandyControl.Data;
 using Jvedio.CommonNet;
@@ -57,7 +57,7 @@ namespace Jvedio
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : ChaoControls.Style.BaseWindow
+    public partial class Main : SuperControls.Style.BaseWindow
     {
         public static int NOTICE_INTERVAL = 1800;//30分钟检测一次
         public static Msg msgCard = new Msg();
@@ -717,11 +717,11 @@ namespace Jvedio
                     notices = appConfig.ConfigValue;
                 HttpResult httpResult = await HttpClient.Get(NoticeUrl, CrawlerHeader.GitHub);
                 //判断公告是否内容不同
-                if (httpResult.StatusCode == HttpStatusCode.OK && !SqlHelper.handleNewLine(httpResult.SourceCode).Equals(notices))
+                if (httpResult.StatusCode == HttpStatusCode.OK && !StringFormat.HandleNewLine(httpResult.SourceCode).Equals(notices))
                 {
                     //覆盖原有公告
                     string json = httpResult.SourceCode;
-                    appConfig.ConfigValue = SqlHelper.handleNewLine(httpResult.SourceCode);
+                    appConfig.ConfigValue = StringFormat.HandleNewLine(httpResult.SourceCode);
                     appConfig.ConfigName = configName;
                     appConfigMapper.insert(appConfig, Core.Enums.InsertMode.Replace);
 
@@ -3023,7 +3023,7 @@ namespace Jvedio
                 }
             }
             //ThemeHelper.SetSkin(Properties.Settings.Default.Themes);
-            ChaoControls.Style.CustomEventHandler.Render();
+            SuperControls.Style.CustomEventHandler.Render();
             windowDetails?.SetSkin();
         }
 
@@ -3189,7 +3189,7 @@ namespace Jvedio
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
         {
-            ChaoControls.Style.Switch s = sender as ChaoControls.Style.Switch;
+            SuperControls.Style.Switch s = sender as SuperControls.Style.Switch;
             vieModel.SelectedVideo.Clear();
             SetSelected();
         }

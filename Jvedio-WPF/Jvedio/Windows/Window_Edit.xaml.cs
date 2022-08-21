@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using Jvedio.Core.Enums;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
@@ -18,7 +18,7 @@ namespace Jvedio
     /// <summary>
     /// Window_Edit.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_Edit : ChaoControls.Style.BaseWindow
+    public partial class Window_Edit : SuperControls.Style.BaseWindow
     {
 
         private Main main { get; set; }
@@ -68,11 +68,11 @@ namespace Jvedio
                 // 更新到主界面和详情界面
                 main?.RefreshGrade(vieModel.CurrentVideo);
                 windowDetails?.Refresh();
-                ChaoControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                SuperControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
             }
             else
             {
-                ChaoControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
+                SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
             }
 
         }
@@ -176,7 +176,7 @@ namespace Jvedio
             labelTagPanel.Refresh();
         }
 
-        private void GenreChanged(object sender, ChaoControls.Style.ListChangedEventArgs e)
+        private void GenreChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
                 vieModel.CurrentVideo.Genre = string.Join(GlobalVariable.Separator.ToString(), e.List);
@@ -184,7 +184,7 @@ namespace Jvedio
 
         }
 
-        private void LabelChanged(object sender, ChaoControls.Style.ListChangedEventArgs e)
+        private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
                 vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), e.List);
@@ -193,7 +193,7 @@ namespace Jvedio
 
 
 
-        private void SubSectionChanged(object sender, ChaoControls.Style.ListChangedEventArgs e)
+        private void SubSectionChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
             {

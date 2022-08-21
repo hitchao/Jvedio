@@ -90,10 +90,6 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="ChaoControls.Style, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Reference\ChaoControls.Style.dll</HintPath>
-    </Reference>
     <Reference Include="CommonNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Jvedio-Crawler\Common\bin\Debug\CommonNet.dll</HintPath>
@@ -183,6 +179,9 @@
     <Reference Include="QueryEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\QueryEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperControls.Style">
+      <HintPath>..\..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -466,7 +465,7 @@
     </Compile>
     <Compile Include="Utils\External\Translate.cs" />
     <Compile Include="Entity\MySqlite.cs" />
-    <Compile Include="Utils\Data\SqlHelper.cs" />
+    <Compile Include="Utils\Data\StringFormat.cs" />
     <Compile Include="Utils\Visual\VisualHelper.cs" />
     <Compile Include="ViewModels\VieModel_MetaDataEdit.cs" />
     <Compile Include="ViewModels\VieModel_MetaData.cs" />

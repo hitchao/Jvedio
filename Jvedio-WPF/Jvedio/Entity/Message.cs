@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ChaoControls.Style.MessageCard;
+using static SuperControls.Style.MessageCard;
 
 namespace Jvedio.Entity
 {

@@ -6,6 +6,7 @@
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{x:Static lang:Resources.ImageViewer}"
     Width="800"
     Height="450"
@@ -17,7 +18,7 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
-    <Grid MouseMove="Grid_MouseMove" Background="Transparent">
+    <Grid Background="Transparent" MouseMove="Grid_MouseMove">
         <!--<Image Name="bgImage" Stretch="UniformToFill">
             <Image.Effect>
                 <BlurEffect KernelType="Gaussian" Radius="100" />

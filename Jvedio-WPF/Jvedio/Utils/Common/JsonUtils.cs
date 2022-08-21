@@ -23,6 +23,18 @@ namespace Jvedio.Utils.Common
                 return default(T);
             }
         }
+        public static string TrySerializeObject(object value)
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(value);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return null;
+            }
+        }
 
         public static string ClasstoJson(TypeInfo[] types)
         {

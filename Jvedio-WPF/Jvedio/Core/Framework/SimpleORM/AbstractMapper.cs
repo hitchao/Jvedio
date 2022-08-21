@@ -220,7 +220,7 @@ namespace Jvedio.Core.SimpleORM
 
             string sql = $"update {TableName} set {field}={value} where {generateWhere(id)}";
             if (type == typeof(string))
-                sql = $"update {TableName} set {field}='{SqlHelper.Format(value)}' where {generateWhere(id)}";
+                sql = $"update {TableName} set {field}='{StringFormat.Format(value)}' where {generateWhere(id)}";
             return executeNonQuery(sql) > 0;
         }
 
@@ -232,7 +232,7 @@ namespace Jvedio.Core.SimpleORM
 
             string sql = $"update {TableName} set {field}={value} {where}";
             if (type == typeof(string))
-                sql = $"update {TableName} set {field}='{SqlHelper.Format(value)}' {where}";
+                sql = $"update {TableName} set {field}='{StringFormat.Format(value)}' {where}";
             return executeNonQuery(sql);
         }
 
@@ -360,7 +360,7 @@ namespace Jvedio.Core.SimpleORM
                 }
                 else
                 {
-                    sql.Append($"{name}='{SqlHelper.Format(value)}'");
+                    sql.Append($"{name}='{StringFormat.Format(value)}'");
                 }
                 sql.Append(",");
 
@@ -387,7 +387,7 @@ namespace Jvedio.Core.SimpleORM
             if (value == null) throw new ArgumentNullException("value");
             string where = $" {PrimaryKey.Name}={value}";
             if (PrimaryKey.PropertyType == typeof(string))
-                where = $" {PrimaryKey.Name}='{SqlHelper.Format(value)}'";
+                where = $" {PrimaryKey.Name}='{StringFormat.Format(value)}'";
             return where;
 
         }
@@ -406,7 +406,7 @@ namespace Jvedio.Core.SimpleORM
             {
                 values.ForEach(value =>
                 {
-                    builder.Append($"'{SqlHelper.Format(value)}',");
+                    builder.Append($"'{StringFormat.Format(value)}',");
                 });
             }
             else
@@ -442,7 +442,7 @@ namespace Jvedio.Core.SimpleORM
             }
             else
             {
-                return $"'{SqlHelper.Format(value)}'";
+                return $"'{StringFormat.Format(value)}'";
             }
         }
 
@@ -474,7 +474,7 @@ namespace Jvedio.Core.SimpleORM
                         if (value == null || string.IsNullOrEmpty(value.ToString()))
                             value_sql.Add($"'{DateTime.Now.toLocalDate()}'");
                         else
-                            value_sql.Add($"'{SqlHelper.Format(value)}'");
+                            value_sql.Add($"'{StringFormat.Format(value)}'");
                     }
                     else
                     {
@@ -555,7 +555,7 @@ namespace Jvedio.Core.SimpleORM
                     }
                     else
                     {
-                        set_sql.Append($"WHEN {PrimaryKeyValue} THEN '{SqlHelper.Format(value)}' ");
+                        set_sql.Append($"WHEN {PrimaryKeyValue} THEN '{StringFormat.Format(value)}' ");
                     }
                 }
                 set_sql.Append("END,");

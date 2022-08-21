@@ -25,7 +25,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Dialog_Notice : ChaoControls.Style.BaseDialog
+    public partial class Dialog_Notice : SuperControls.Style.BaseDialog
     {
 
         public string Message { get; set; }

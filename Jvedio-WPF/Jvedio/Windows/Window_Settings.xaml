@@ -1,8 +1,7 @@
-﻿<chao:BaseWindow
+﻿<super:BaseWindow
     x:Class="Jvedio.Window_Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chao="https://gitee.com/secret/chao-controls"
     xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
@@ -12,6 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{x:Static lang:Resources.Settings}"
     Width="1000"
     MinWidth="800"
@@ -25,12 +25,12 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
-    <chao:BaseWindow.Resources>
+    <super:BaseWindow.Resources>
 
         <Style
             x:Key="TogglePanelStyle"
             BasedOn="{StaticResource BaseTogglePanel}"
-            TargetType="{x:Type chao:TogglePanel}">
+            TargetType="{x:Type super:TogglePanel}">
             <Setter Property="Padding" Value="0,5" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -119,7 +119,7 @@
             <Setter Property="Margin" Value="5,0" />
             <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
         </Style>
-    </chao:BaseWindow.Resources>
+    </super:BaseWindow.Resources>
 
     <Grid Background="{DynamicResource Window.InnerDialog.Background}">
 
@@ -198,15 +198,9 @@
                             MinWidth="200"
                             Margin="5"
                             HorizontalAlignment="Stretch"
-                            Background="{DynamicResource Window.Side.Background}"
-                            BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                            FontSize="16"
-                            Foreground="{DynamicResource Window.Foreground}"
-                            ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                             SelectedIndex="{Binding SelectedLanguage}"
-                            Style="{StaticResource NormalComboBox}"
-                            Tag="{DynamicResource Window.Side.Hover.Background}"
-                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                            Style="{StaticResource BorderComboBox}"
+                            >
                             <ComboBoxItem Content="中文" />
                             <ComboBoxItem Content="English" />
                             <ComboBoxItem Content="日本語" />
@@ -257,7 +251,7 @@
                     </StackPanel>
 
 
-                    <chao:TogglePanel
+                    <super:TogglePanel
                         Padding="0,5"
                         HorizontalAlignment="Left"
                         FontSize="15"
@@ -365,7 +359,7 @@
                             </StackPanel>
 
                         </StackPanel>
-                    </chao:TogglePanel>
+                    </super:TogglePanel>
 
 
 
@@ -405,16 +399,9 @@
                                 MinWidth="500"
                                 Margin="10"
                                 HorizontalAlignment="Left"
-                                Background="{DynamicResource Window.Side.Background}"
-                                BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                                FontSize="16"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                 SelectedIndex="{Binding PicPathMode, Mode=TwoWay, FallbackValue=2}"
                                 SelectionChanged="ImageSelectComboBox_SelectionChanged"
-                                Style="{StaticResource NormalComboBox}"
-                                Tag="{DynamicResource Window.Side.Hover.Background}"
-                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                Style="{StaticResource BorderComboBox}">
                                 <ComboBoxItem Content="绝对路径" />
                                 <ComboBoxItem Content="相对于 Jvedio 的路径" />
                                 <ComboBoxItem Content="相对于影片路径" />
@@ -430,7 +417,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </StackPanel.Style>
-                                <chao:SearchBox
+                                <super:SearchBox
                                     MinWidth="500"
                                     ShowClearButton="True"
                                     Style="{StaticResource BaseSearchTextBox}"
@@ -504,7 +491,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="海报"
                                         Style="{StaticResource InfoLabel}" />
-                                    <chao:SearchBox
+                                    <super:SearchBox
                                         MinWidth="500"
                                         ShowClearButton="True"
                                         Style="{StaticResource BaseSearchTextBox}"
@@ -517,7 +504,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="缩略"
                                         Style="{StaticResource InfoLabel}" />
-                                    <chao:SearchBox
+                                    <super:SearchBox
                                         MinWidth="500"
                                         ShowClearButton="True"
                                         Style="{StaticResource BaseSearchTextBox}"
@@ -530,7 +517,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="预览图文件夹"
                                         Style="{StaticResource InfoLabel}" />
-                                    <chao:SearchBox
+                                    <super:SearchBox
                                         MinWidth="500"
                                         ShowClearButton="True"
                                         Style="{StaticResource BaseSearchTextBox}"
@@ -543,7 +530,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="截图文件夹"
                                         Style="{StaticResource InfoLabel}" />
-                                    <chao:SearchBox
+                                    <super:SearchBox
                                         MinWidth="500"
                                         ShowClearButton="True"
                                         Style="{StaticResource BaseSearchTextBox}"
@@ -556,7 +543,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="演员头像"
                                         Style="{StaticResource InfoLabel}" />
-                                    <chao:SearchBox
+                                    <super:SearchBox
                                         MinWidth="500"
                                         ShowClearButton="True"
                                         Style="{StaticResource BaseSearchTextBox}"
@@ -609,7 +596,7 @@
                             Text="扫描的文件大小"
                             TextAlignment="Left"
                             ToolTip="[0-2000]" />
-                        <chao:SearchBox
+                        <super:SearchBox
                             MinWidth="100"
                             ShowClearButton="False"
                             Style="{StaticResource BaseSearchTextBox}"
@@ -629,7 +616,7 @@
                             Text="视频识别码的正则表达式"
                             TextAlignment="Left"
                             ToolTip="[0-2000]" />
-                        <chao:SearchBox
+                        <super:SearchBox
                             MinWidth="400"
                             LostFocus="SetScanRe"
                             PlaceHolder="正则表达式，使用英文分号分割每个正则"
@@ -709,18 +696,12 @@
                                 MinWidth="200"
                                 Margin="5"
                                 HorizontalAlignment="Stretch"
-                                Background="{DynamicResource Window.Side.Background}"
-                                BorderBrush="{DynamicResource Window.Side.Hover.Background}"
                                 DisplayMemberPath="Name"
-                                FontSize="16"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                 ItemsSource="{Binding DataBases}"
                                 SelectedValuePath="DBId"
                                 SelectionChanged="DatabaseComboBox_SelectionChanged"
-                                Style="{StaticResource NormalComboBox}"
-                                Tag="{DynamicResource Window.Side.Hover.Background}"
-                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                                Style="{StaticResource BorderComboBox}"
+                                />
 
 
 
@@ -771,7 +752,7 @@
                                     Height="27"
                                     Margin="5,0"
                                     Click="AddPath"
-                                    Style="{StaticResource RoundTitleButton}">
+                                    Style="{StaticResource RoundNormalButton}">
                                     <Viewbox
                                         Width="20"
                                         Height="20"
@@ -789,7 +770,7 @@
                                     Height="27"
                                     Margin="5,0"
                                     Click="DelPath"
-                                    Style="{StaticResource RoundTitleButton}">
+                                    Style="{StaticResource RoundNormalButton}">
                                     <Viewbox
                                         Width="20"
                                         Height="auto"
@@ -957,7 +938,7 @@
 
 
 
-                        <chao:SearchBox
+                        <super:SearchBox
                             Grid.Row="1"
                             Clear="SearchPlugin"
                             PlaceHolder="搜索"
@@ -973,7 +954,7 @@
                             VerticalAlignment="Top"
                             Orientation="Vertical">
 
-                            <chao:TogglePanel
+                            <super:TogglePanel
                                 Name="freshPlugin"
                                 Header="未安装"
                                 Style="{StaticResource TogglePanelStyle}">
@@ -1022,50 +1003,30 @@
                                                         Padding="2"
                                                         FontWeight="Bold"
                                                         Style="{StaticResource BaseTextBlock}"
-                                                        Text="{Binding Name}"
+                                                        Text="{Binding PluginName}"
                                                         TextAlignment="Left" />
                                                     <TextBlock
                                                         Margin="0"
                                                         Padding="2"
                                                         Style="{StaticResource BaseTextBlock}"
-                                                        Text="{Binding Description}"
+                                                        Text="{Binding ReleaseNotes.Desc}"
                                                         TextAlignment="Left" />
                                                     <TextBlock
                                                         Margin="0"
                                                         Padding="2"
                                                         FontStyle="Italic"
                                                         Style="{StaticResource BaseTextBlock}"
-                                                        Text="{Binding Author}"
+                                                        Text="{Binding AuthorNames}"
                                                         TextAlignment="Left" />
                                                 </StackPanel>
-                                                <Border
-                                                    Grid.Column="1"
-                                                    Margin="2"
-                                                    Padding="5,2"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Bottom"
-                                                    CornerRadius="5">
-                                                    <Border.Style>
-                                                        <Style TargetType="Border">
-                                                            <Setter Property="Visibility" Value="Hidden" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Enabled}" Value="false">
-                                                                    <Setter Property="Background" Value="Red" />
-                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-                                                    <TextBlock Text="未启用" />
-                                                </Border>
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
 
 
-                            </chao:TogglePanel>
-                            <chao:TogglePanel
+                            </super:TogglePanel>
+                            <super:TogglePanel
                                 Name="installedPlugin"
                                 Header="已安装"
                                 Style="{StaticResource TogglePanelStyle}">
@@ -1089,10 +1050,22 @@
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid Width="300">
+
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="64" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
+                                                <Grid.Style>
+                                                    <Style TargetType="Grid">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Enabled}" Value="false">
+                                                                <Setter Property="Opacity" Value="0.3" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Grid.Style>
+
                                                 <Border
                                                     Grid.Column="0"
                                                     Width="auto"
@@ -1146,7 +1119,7 @@
                                                         Text="{Binding AuthorNames}"
                                                         TextAlignment="Left" />
                                                 </StackPanel>
-                                                <Border
+                                                <!--<Border
                                                     Grid.Column="1"
                                                     Margin="2"
                                                     Padding="5,2"
@@ -1165,14 +1138,14 @@
                                                         </Style>
                                                     </Border.Style>
                                                     <TextBlock Text="未启用" />
-                                                </Border>
+                                                </Border>-->
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
 
 
-                            </chao:TogglePanel>
+                            </super:TogglePanel>
                         </StackPanel>
 
 
@@ -1248,7 +1221,7 @@
                                     Orientation="Horizontal"
                                     Visibility="{Binding CurrentPlugin.Installed, Converter={StaticResource bool2VisibilityConverter}}">
 
-                                    <chao:Switch
+                                    <super:Switch
                                         Height="20"
                                         Background="{DynamicResource Window.Title.Background}"
                                         Click="SavePluginEnabled"
@@ -1528,7 +1501,7 @@
 
                                 <!--<StackPanel Orientation="Horizontal" Visibility="{Binding SaveInfoToNFO, Converter={StaticResource BoolToVis}, Mode=OneWay, Source={x:Static p:Settings.Default}}">-->
                                 <StackPanel Orientation="Horizontal" Visibility="Visible">
-                                    <chao:SearchBox
+                                    <super:SearchBox
                                         Width="380"
                                         MinWidth="400"
                                         Margin="10,0"
@@ -1583,7 +1556,7 @@
                                     Text="请求超时"
                                     TextAlignment="Left"
                                     ToolTip="[0-2000]" />
-                                <chao:SearchBox
+                                <super:SearchBox
                                     MinWidth="50"
                                     Padding="0"
                                     ShowClearButton="False"
@@ -1606,7 +1579,7 @@
                         Padding="5"
                         Background="{DynamicResource Control.Background}"
                         CornerRadius="10">
-                        <chao:TogglePanel
+                        <super:TogglePanel
                             Padding="0,5"
                             FontSize="15"
                             Header="代理设置"
@@ -1669,7 +1642,7 @@
                                             Style="{StaticResource BaseTextBlock}"
                                             Text="服务器*"
                                             TextAlignment="Left" />
-                                        <chao:SearchBox
+                                        <super:SearchBox
                                             MinWidth="400"
                                             Style="{StaticResource BaseSearchTextBox}"
                                             Text="{Binding ProxyServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -1680,7 +1653,7 @@
                                             Style="{StaticResource BaseTextBlock}"
                                             Text="端口*"
                                             TextAlignment="Left" />
-                                        <chao:SearchBox
+                                        <super:SearchBox
                                             MinWidth="200"
                                             Style="{StaticResource BaseSearchTextBox}"
                                             Text="{Binding ProxyPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -1695,7 +1668,7 @@
                                             Style="{StaticResource BaseTextBlock}"
                                             Text="用户名"
                                             TextAlignment="Left" />
-                                        <chao:SearchBox
+                                        <super:SearchBox
                                             MinWidth="400"
                                             Style="{StaticResource BaseSearchTextBox}"
                                             Text="{Binding ProxyUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -1720,7 +1693,7 @@
                                             Foreground="{DynamicResource Window.Foreground}"
                                             PasswordChar="●"
                                             Style="{x:Null}" />
-                                        <!--<chao:SearchBox
+                                        <!--<super:SearchBox
                                         MinWidth="200"
                                         Style="{StaticResource BaseSearchTextBox}"
                                         Text="{Binding ProxyPwd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
@@ -1768,14 +1741,14 @@
                                         Content="测试" />
 
                                     <TextBlock VerticalAlignment="Center" Text="测试地址" />
-                                    <chao:SearchBox
+                                    <super:SearchBox
                                         Name="textProxyUrl"
                                         MinWidth="200"
                                         Style="{StaticResource BaseSearchTextBox}"
                                         Text="http://www.google.com" />
                                 </StackPanel>
                             </StackPanel>
-                        </chao:TogglePanel>
+                        </super:TogglePanel>
                     </Border>
 
                     <Border
@@ -1783,7 +1756,7 @@
                         Padding="5"
                         Background="{DynamicResource Control.Background}"
                         CornerRadius="10">
-                        <chao:TogglePanel
+                        <super:TogglePanel
                             Grid.Column="1"
                             Padding="0,5"
                             FontSize="16"
@@ -1876,7 +1849,7 @@
                                                 MinHeight="200"
                                                 MaxHeight="220"
                                                 Margin="20,5"
-                                                chao:DataGrid.RowHeight="50"
+                                                super:DataGrid.RowHeight="50"
                                                 CanUserDeleteRows="True"
                                                 CanUserResizeColumns="True"
                                                 PreviewMouseLeftButtonDown="SetCurrentRowIndex"
@@ -1967,7 +1940,7 @@
                                                     <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Url}">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <chao:SearchBox
+                                                                <super:SearchBox
                                                                     Name="url"
                                                                     Padding="5,0"
                                                                     HorizontalAlignment="Stretch"
@@ -1988,7 +1961,7 @@
                                                         Visibility="Collapsed">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <chao:SearchBox
+                                                                <super:SearchBox
                                                                     Name="url"
                                                                     Padding="5,0"
                                                                     HorizontalAlignment="Stretch"
@@ -2006,7 +1979,7 @@
                                                     <DataGridTemplateColumn Width="150" Header="Headers">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <chao:SearchBox
+                                                                <super:SearchBox
                                                                     Name="url"
                                                                     Padding="5,0"
                                                                     HorizontalAlignment="Stretch"
@@ -2151,7 +2124,7 @@
 
 
                             </Grid>
-                        </chao:TogglePanel>
+                        </super:TogglePanel>
 
                     </Border>
 
@@ -2163,7 +2136,7 @@
 
 
 
-                    <chao:TogglePanel
+                    <super:TogglePanel
                         Margin="10,0"
                         Padding="0,5"
                         FontSize="15"
@@ -2271,7 +2244,7 @@
 
 
                         </StackPanel>
-                    </chao:TogglePanel>
+                    </super:TogglePanel>
 
 
 
@@ -2534,7 +2507,7 @@
                                     Style="{StaticResource BaseTextBlock}"
                                     Text="{x:Static lang:Resources.FFmpegPath}"
                                     TextAlignment="Left" />
-                                <chao:SearchBox
+                                <super:SearchBox
                                     MinWidth="400"
                                     Style="{StaticResource BaseSearchTextBox}"
                                     Text="{Binding FFMPEG_Path, Mode=TwoWay}" />
@@ -2646,7 +2619,7 @@
                         Padding="5"
                         Background="{DynamicResource Control.Background}"
                         CornerRadius="10">
-                        <chao:TogglePanel
+                        <super:TogglePanel
                             Padding="0,5"
                             FontSize="16"
                             Header="{x:Static lang:Resources.ScreenShot}"
@@ -2715,7 +2688,7 @@
                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.SkipEnd}" />
                                 </StackPanel>
                             </StackPanel>
-                        </chao:TogglePanel>
+                        </super:TogglePanel>
                     </Border>
 
                     <Border
@@ -2725,7 +2698,7 @@
                         CornerRadius="10">
 
 
-                        <chao:TogglePanel
+                        <super:TogglePanel
                             Padding="0,5"
                             FontSize="16"
                             Header="GIF"
@@ -2815,7 +2788,7 @@
                                         Text="{Binding Value, ElementName=GifDurationSlider1, StringFormat={}{0} s}" />
                                 </WrapPanel>
                             </StackPanel>
-                        </chao:TogglePanel>
+                        </super:TogglePanel>
 
                     </Border>
 
@@ -2910,15 +2883,9 @@
                                         MinWidth="100"
                                         Margin="10"
                                         HorizontalAlignment="Left"
-                                        Background="{DynamicResource Window.Side.Background}"
-                                        BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                                        FontSize="16"
-                                        Foreground="{DynamicResource Window.Foreground}"
-                                        ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                         SelectionChanged="OutComboBox_SelectionChanged"
-                                        Style="{StaticResource NormalComboBox}"
-                                        Tag="{DynamicResource Window.Side.Hover.Background}"
-                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                        Style="{StaticResource BorderComboBox}"
+                                        >
                                         <ComboBoxItem Content="[null]" />
                                         <ComboBoxItem Content="_" />
                                         <ComboBoxItem Content="-" />
@@ -2940,15 +2907,8 @@
                                         MinWidth="100"
                                         Margin="10"
                                         HorizontalAlignment="Left"
-                                        Background="{DynamicResource Window.Side.Background}"
-                                        BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                                        FontSize="16"
-                                        Foreground="{DynamicResource Window.Foreground}"
-                                        ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                         SelectionChanged="InComboBox_SelectionChanged"
-                                        Style="{StaticResource NormalComboBox}"
-                                        Tag="{DynamicResource Window.Side.Hover.Background}"
-                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                        Style="{StaticResource BorderComboBox}">
                                         <ComboBoxItem Content="[null]" />
                                         <ComboBoxItem Content="_" />
                                         <ComboBoxItem Content="-" />
@@ -3190,15 +3150,9 @@
                                     MinWidth="200"
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
-                                    Background="{DynamicResource Window.Side.Background}"
-                                    BorderBrush="{DynamicResource Window.Side.Hover.Background}"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Window.Foreground}"
-                                    ItemContainerStyle="{StaticResource BaseComboBoxItemStyle}"
                                     SelectedIndex="{Binding AutoBackupPeriodIndex}"
-                                    Style="{StaticResource NormalComboBox}"
-                                    Tag="{DynamicResource Window.Side.Hover.Background}"
-                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}">
+                                    Style="{StaticResource BorderComboBox}"
+                                   >
                                     <ComboBoxItem Content="1" />
                                     <ComboBoxItem Content="3" />
                                     <ComboBoxItem Content="7" />
@@ -3284,7 +3238,7 @@
                     <StackPanel Orientation="Horizontal">
                         <CheckBox Content="开启端口监听（未来实现）" IsChecked="{Binding ListenEnabled, Mode=TwoWay}" />
 
-                        <chao:SearchBox
+                        <super:SearchBox
                             Width="100"
                             Foreground="{DynamicResource Window.Foreground}"
                             PlaceHolder="端口号"
@@ -3310,4 +3264,4 @@
         </Grid>
 
     </Grid>
-</chao:BaseWindow>
+</super:BaseWindow>

@@ -1,4 +1,4 @@
-﻿using ChaoControls.Style;
+﻿using SuperControls.Style;
 using Jvedio.Core;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
@@ -32,7 +32,7 @@ using static Jvedio.Utils.Visual.VisualHelper;
 namespace Jvedio
 {
 
-    public partial class WindowStartUp : ChaoControls.Style.BaseWindow
+    public partial class WindowStartUp : SuperControls.Style.BaseWindow
     {
 
         private CancellationTokenSource cts;
@@ -470,7 +470,7 @@ namespace Jvedio
 
         private void SearchText_Changed(object sender, RoutedEventArgs e)
         {
-            ChaoControls.Style.SearchBox textBox = sender as ChaoControls.Style.SearchBox;
+            SuperControls.Style.SearchBox textBox = sender as SuperControls.Style.SearchBox;
             if (textBox == null) return;
             vieModel_StartUp.CurrentSearch = textBox.Text;
             vieModel_StartUp.Search();
