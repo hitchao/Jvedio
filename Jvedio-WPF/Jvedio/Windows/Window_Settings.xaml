@@ -199,8 +199,7 @@
                             Margin="5"
                             HorizontalAlignment="Stretch"
                             SelectedIndex="{Binding SelectedLanguage}"
-                            Style="{StaticResource BorderComboBox}"
-                            >
+                            Style="{StaticResource BorderComboBox}">
                             <ComboBoxItem Content="中文" />
                             <ComboBoxItem Content="English" />
                             <ComboBoxItem Content="日本語" />
@@ -700,8 +699,7 @@
                                 ItemsSource="{Binding DataBases}"
                                 SelectedValuePath="DBId"
                                 SelectionChanged="DatabaseComboBox_SelectionChanged"
-                                Style="{StaticResource BorderComboBox}"
-                                />
+                                Style="{StaticResource BorderComboBox}" />
 
 
 
@@ -836,11 +834,12 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock
+                            <Button
                                 Margin="10,0"
                                 HorizontalAlignment="Left"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="插件" />
+                                Click="ShowUploadHelp"
+                                Content="上传"
+                                Style="{StaticResource FillButton}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
                                 <Border
                                     MouseUp="ShowContextMenu"
@@ -987,7 +986,7 @@
                                                     Height="64"
                                                     Margin="5">
                                                     <Image.Source>
-                                                        <Binding Path="ImagePath">
+                                                        <Binding Path="ImageUrl">
                                                             <Binding.TargetNullValue>
                                                                 <ImageSource>/Resources/Picture/plugin.png</ImageSource>
                                                             </Binding.TargetNullValue>
@@ -1016,7 +1015,7 @@
                                                         Padding="2"
                                                         FontStyle="Italic"
                                                         Style="{StaticResource BaseTextBlock}"
-                                                        Text="{Binding AuthorNames}"
+                                                        Text="{Binding ReleaseNotes.Date}"
                                                         TextAlignment="Left" />
                                                 </StackPanel>
                                             </Grid>
@@ -1069,9 +1068,10 @@
                                                 <Border
                                                     Grid.Column="0"
                                                     Width="auto"
+                                                    Margin="4"
                                                     Padding="5"
                                                     HorizontalAlignment="Left"
-                                                    VerticalAlignment="Top"
+                                                    VerticalAlignment="Bottom"
                                                     Panel.ZIndex="5"
                                                     Background="Gold"
                                                     CornerRadius="5"
@@ -1116,7 +1116,7 @@
                                                         Padding="2"
                                                         FontStyle="Italic"
                                                         Style="{StaticResource NoWrapTextBlock}"
-                                                        Text="{Binding AuthorNames}"
+                                                        Text="{Binding ReleaseNotes.Date}"
                                                         TextAlignment="Left" />
                                                 </StackPanel>
                                                 <!--<Border
@@ -1170,7 +1170,7 @@
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="0" Height="128">
                                 <Image.Source>
-                                    <Binding Path="CurrentPlugin.ImagePath">
+                                    <Binding Path="CurrentPlugin.ImageUrl">
                                         <Binding.TargetNullValue>
                                             <ImageSource>/Resources/Picture/plugin.png</ImageSource>
                                         </Binding.TargetNullValue>
@@ -1388,9 +1388,9 @@
                                 HorizontalAlignment="Center"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                CaretBrush="{StaticResource Window.Foreground}"
+                                CaretBrush="{DynamicResource Window.Foreground}"
                                 ContextMenu="{StaticResource CopyContextMenu}"
-                                Foreground="{StaticResource Window.Foreground}"
+                                Foreground="{DynamicResource Window.Foreground}"
                                 IsReadOnly="True"
                                 Style="{x:Null}" />
 
@@ -2884,8 +2884,7 @@
                                         Margin="10"
                                         HorizontalAlignment="Left"
                                         SelectionChanged="OutComboBox_SelectionChanged"
-                                        Style="{StaticResource BorderComboBox}"
-                                        >
+                                        Style="{StaticResource BorderComboBox}">
                                         <ComboBoxItem Content="[null]" />
                                         <ComboBoxItem Content="_" />
                                         <ComboBoxItem Content="-" />
@@ -3151,8 +3150,7 @@
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
                                     SelectedIndex="{Binding AutoBackupPeriodIndex}"
-                                    Style="{StaticResource BorderComboBox}"
-                                   >
+                                    Style="{StaticResource BorderComboBox}">
                                     <ComboBoxItem Content="1" />
                                     <ComboBoxItem Content="3" />
                                     <ComboBoxItem Content="7" />

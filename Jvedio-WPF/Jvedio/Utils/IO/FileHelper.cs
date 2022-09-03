@@ -95,7 +95,7 @@ namespace Jvedio.Utils.IO
             }
             catch (Exception ex)
             {
-                errorCallBack.Invoke(ex.Message);
+                errorCallBack?.Invoke(ex.Message);
             }
             return false;
         }

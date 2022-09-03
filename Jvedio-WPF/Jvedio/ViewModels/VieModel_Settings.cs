@@ -166,7 +166,7 @@ namespace Jvedio.ViewModel
             DisplayCrawlerServers = new ObservableCollection<string>();
             foreach (string key in CrawlerServers.Keys)
             {
-                int len = PluginType.Cralwer.ToString().Length + 1;
+                int len = PluginType.Crawler.ToString().Length + 1;
                 DisplayCrawlerServers.Add(key.Substring(len));
             }
         }
@@ -277,8 +277,8 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public List<PluginMetaData> InstalledPlugins;
-        public List<PluginMetaData> AllFreshPlugins;
+        public List<PluginMetaData> InstalledPlugins { get; set; }
+        public List<PluginMetaData> AllFreshPlugins { get; set; }
         private ObservableCollection<PluginMetaData> _CurrentInstalledPlugins;
 
         public ObservableCollection<PluginMetaData> CurrentInstalledPlugins

@@ -31,6 +31,10 @@ namespace Jvedio.Core.Plugins.Crawler
         // todo DLL 签名验证
         public static void LoadAllCrawlers()
         {
+            // 移动
+
+
+
             // 扫描
             List<string> list = DirHelper.TryGetDirList(BaseDir).ToList();
             PluginMetaDatas = new List<PluginMetaData>();
@@ -43,7 +47,7 @@ namespace Jvedio.Core.Plugins.Crawler
                 // 校验
                 PluginMetaData data = GetPluginData(dllPath);
                 if (data == null) continue;
-                data.SetPluginID(PluginType.Cralwer, Path.GetFileName(crawler_dir));
+                data.SetPluginID(PluginType.Crawler, Path.GetFileName(crawler_dir));
                 CrawlerInfo info = new CrawlerInfo();
                 info.Path = dllPath;
                 PluginMetaDatas.Add(data);
@@ -73,7 +77,7 @@ namespace Jvedio.Core.Plugins.Crawler
             PluginMetaData data = null;
             string jsonPath = GetCrawlerJsonPath(json_path);
             if (!File.Exists(jsonPath)) return null;
-            data = PluginMetaData.Parse(jsonPath);
+            data = PluginMetaData.ParseByPath(jsonPath);
             if (data == null) return null;
             Assembly dll = ReflectionHelper.TryLoadAssembly(dllPath);
             if (dll == null) return null;

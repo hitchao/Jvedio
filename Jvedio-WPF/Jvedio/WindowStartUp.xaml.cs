@@ -60,7 +60,7 @@ namespace Jvedio
                 FileHelper.TryDeleteDir("Temp");
             }
 
-            FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers", "temp"));
+            //FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers", "temp"));
             FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
         }
 
@@ -100,7 +100,7 @@ namespace Jvedio
             //GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
 
             await BackupData(); // 备份文件
-
+            await MovePlugins();
             ThemeManager.LoadAllThemes();       // 加载主题
             CrawlerManager.LoadAllCrawlers();   // 初始化爬虫
             PluginManager.Init();     // 将所有插件进行汇总
@@ -129,6 +129,16 @@ namespace Jvedio
 
 
         }
+        private async Task<bool> MovePlugins()
+        {
+            await Task.Delay(1);
+            string path = Path.Combine(GlobalVariable.BasePluginsPath, "temp");
+            bool success = DirHelper.TryCopy(path, GlobalVariable.BasePluginsPath);
+            if (success)
+                DirHelper.TryDelete(path);
+            return true;
+        }
+
 
 
         private async Task<bool> BackupData()

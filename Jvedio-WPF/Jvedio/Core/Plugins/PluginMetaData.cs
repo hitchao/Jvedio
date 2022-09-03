@@ -17,7 +17,7 @@ namespace Jvedio.Core.Plugins
     public enum PluginType
     {
 
-        Cralwer,
+        Crawler,
         Theme,
         None
     }
@@ -46,12 +46,7 @@ namespace Jvedio.Core.Plugins
 
     public class PluginMetaData
     {
-        private string _PluginID;
-        public string PluginID
-        {
-            get { return _PluginID; }
-            set { _PluginID = value.ToLower(); }
-        }
+        public string PluginID { get; set; }
         public string PluginName { get; set; }
         public PluginType PluginType { get; set; }
         public List<AuthorInfo> Authors { get; set; }
@@ -59,13 +54,17 @@ namespace Jvedio.Core.Plugins
         public Dictionary<string, object> Data { get; set; }
         public string ImagePath { get; set; }
 
-
+        public PluginMetaData()
+        {
+            ReleaseNotes = new ReleaseNotes();
+        }
 
         // 其它的字段
         public string AuthorNames { get; set; }
         public bool Enabled { get; set; }
         public bool HasNewVersion { get; set; }
         public bool Installed { get; set; }
+        public bool Installing { get; set; }
         public string NewVersion { get; set; }
         public string FileHash { get; set; }
         public string FileName { get; set; }
@@ -78,14 +77,25 @@ namespace Jvedio.Core.Plugins
         public void SetPluginID(PluginType type, string value)
         {
             if (string.IsNullOrEmpty(value)) return;
-            PluginID = type.ToString().ToLower() + "-" + value.ToLower();
+            PluginID = type.ToString() + "-" + value;
         }
 
+        public string GetRawPluginID()
+        {
+            return PluginID.Replace(PluginType.ToString() + "-", "");
+        }
 
-
-        public static PluginMetaData Parse(string jsonPath)
+        public static PluginMetaData ParseByPath(string jsonPath)
         {
             string content = FileHelper.TryReadFile(jsonPath);
+            PluginMetaData metaData = ParseStr(content);
+            SetMarkDown(ref metaData, Path.GetDirectoryName(jsonPath));
+            SetImagePath(ref metaData, Path.GetDirectoryName(jsonPath));
+            return metaData;
+        }
+
+        public static PluginMetaData ParseStr(string content)
+        {
             if (string.IsNullOrEmpty(content)) return null;
             Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(content);
             if (dict == null || !dict.ContainsKey("PluginMetaData")) return null;
@@ -98,11 +108,45 @@ namespace Jvedio.Core.Plugins
             {
                 Logger.Warning(ex.Message);
             }
-            SetMarkDown(ref metaData, Path.GetDirectoryName(jsonPath));
-            SetImagePath(ref metaData, Path.GetDirectoryName(jsonPath));
-
-
             return metaData;
+        }
+
+
+        public static List<string> GetFileListByJson(string content)
+        {
+            if (string.IsNullOrEmpty(content)) return null;
+            Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(content);
+            if (dict == null || !dict.ContainsKey("PluginMetaData")) return null;
+            List<string> list = new List<string>();
+            JObject o = dict["PluginMetaData"] as JObject;
+            if (o.ContainsKey("ReleaseNotes") && o["ReleaseNotes"] is JObject jObject)
+            {
+                if (jObject.ContainsKey("Files") && jObject["Files"] is JArray array)
+                {
+                    foreach (var item in array)
+                    {
+                        list.Add(item.ToString());
+                    }
+                }
+            }
+
+            if (dict.ContainsKey("Data") && dict["Data"] is JObject ob)
+            {
+                if (ob.ContainsKey("Images") && ob["Images"] is JObject d)
+                {
+                    string[] key_list = { "Background", "Big", "Normal", "Small" };
+                    foreach (var item in key_list)
+                    {
+                        if (d.ContainsKey(item) && d[item] != null)
+                            list.Add(d[item].ToString());
+                    }
+                }
+                if (ob.ContainsKey("Font") && ob["Font"] != null)
+                {
+                    list.Add(ob["Font"].ToString());
+                }
+            }
+            return list;
         }
 
         public string GetFilePath()
@@ -201,6 +245,13 @@ namespace Jvedio.Core.Plugins
 
             metaData.ReleaseNotes = releaseNotes;
             return metaData;
+        }
+
+        public void SetRemoteUrl()
+        {
+            if (string.IsNullOrEmpty(PluginID)) return;
+            this.ImageUrl = $"https://hitchao.github.io/Jvedio-Plugin/plugins/{PluginType.ToString().ToLower()}s/{GetRawPluginID()}/images/plugin.png";
+            Console.WriteLine(this.ImageUrl);
         }
     }
 }

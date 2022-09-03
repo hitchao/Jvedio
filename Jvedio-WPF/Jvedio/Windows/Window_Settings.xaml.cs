@@ -40,6 +40,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Visual.VisualHelper;
+using System.Windows.Threading;
 
 namespace Jvedio
 {
@@ -48,6 +49,7 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Settings : SuperControls.Style.BaseWindow
     {
+
         public static string AIBaseImage64 { get; set; }
 
         public VieModel_Settings vieModel { get; set; }
@@ -737,35 +739,46 @@ namespace Jvedio
                 {
                     foreach (string key in plugin_key)
                     {
-                        if (!dict.Any(arg => arg.Key.ToLower().Equals(key) || dict[key] == null))
+                        if (!dict.Any(arg => arg.Key.Equals(key) || dict[key] == null))
                             continue;
 
-                        List<string> datas = null;
+                        List<Dictionary<string, string>> datas = null;
                         JArray Data = null;
                         try
                         {
                             Data = (JArray)dict[key];
-                            datas = Data.ToObject<List<string>>();
+                            datas = Data.ToObject<List<Dictionary<string, string>>>();
                         }
                         catch (Exception ex)
                         {
                             Logger.Error(ex);
                         }
                         if (datas == null || datas.Count <= 0) continue;
-                        foreach (string data in datas)
+                        foreach (Dictionary<string, string> item in datas)
                         {
+                            if (!item.ContainsKey("PluginID") || item["PluginID"] == null) continue;
                             PluginMetaData metaData = new PluginMetaData();
-                            metaData.PluginName = data;
+                            if (item.ContainsKey("Version") && item["Version"] != null)
+                                metaData.NewVersion = item["Version"].ToString();
+                            if (item.ContainsKey("PluginName") && item["PluginName"] != null)
+                                metaData.PluginName = item["PluginName"].ToString();
+                            if (item.ContainsKey("Date") && item["Date"] != null)
+                                metaData.ReleaseNotes.Date = item["Date"].ToString();
+                            if (item.ContainsKey("Desc") && item["Desc"] != null)
+                                metaData.ReleaseNotes.Desc = item["Desc"].ToString();
                             if ("crawlers".Equals(key.ToLower()))
                             {
-                                metaData.SetPluginID(PluginType.Cralwer, data);
-                                metaData.PluginType = PluginType.Cralwer;
+                                metaData.SetPluginID(PluginType.Crawler, item["PluginID"].ToString());
+                                metaData.PluginType = PluginType.Crawler;
                             }
                             else if ("themes".Equals(key.ToLower()))
                             {
-                                metaData.SetPluginID(PluginType.Theme, data);
+                                metaData.SetPluginID(PluginType.Theme, item["PluginID"].ToString());
                                 metaData.PluginType = PluginType.Theme;
                             }
+                            metaData.SetRemoteUrl();
+                            if (item.ContainsKey("ImageUrl") && item["ImageUrl"] != null)
+                                metaData.ImageUrl = item["ImageUrl"].ToString();
                             result.Add(metaData);
                         }
 
@@ -802,14 +815,11 @@ namespace Jvedio
                         else
                         {
                             // 检查更新
-                            //if (installed.Version.CompareTo(info.Version) < 0)
-                            //{
-                            //    installed.HasNewVersion = true;
-                            //    installed.NewVersion = info.Version;
-                            //    installed.FileName = info.FileName;
-                            //    PluginMetaData currentInstalled = vieModel.InstalledPlugins.Where(arg => arg.getUID().Equals(info.getUID())).FirstOrDefault();
-                            //    if (currentInstalled != null) currentInstalled = installed;
-                            //}
+                            if (installed.ReleaseNotes.Version.CompareTo(info.NewVersion) < 0)
+                            {
+                                installed.HasNewVersion = true;
+                                installed.NewVersion = info.NewVersion;
+                            }
                         }
                     }
                 }
@@ -1408,8 +1418,7 @@ namespace Jvedio
             if (idx < 0) return;
             if (vieModel.CrawlerServers?.Count > 0)
             {
-                string pluginID = PluginType.Cralwer.ToString() + "-" + vieModel.DisplayCrawlerServers[idx];
-                pluginID = pluginID.ToLower();
+                string pluginID = PluginType.Crawler.ToString() + "-" + vieModel.DisplayCrawlerServers[idx];
                 PluginMetaData PluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
                 if (PluginMetaData != null && PluginMetaData.Enabled) vieModel.PluginEnabled = true;
                 else vieModel.PluginEnabled = false;
@@ -1451,14 +1460,28 @@ namespace Jvedio
             }
         }
 
-        private void freshViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private async void freshViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //object item = freshViewListBox.SelectedItem;
-            //if (item == null) return;
-            //PluginMetaData PluginMetaData = item as PluginMetaData;
-            //vieModel.CurrentPlugin = vieModel.AllFreshPlugins.Where(arg => arg.getUID().Equals(PluginMetaData.getUID())).FirstOrDefault();
-            //richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.MarkDown);
-            //pluginDetailGrid.Visibility = Visibility.Visible;
+            object item = freshViewListBox.SelectedItem;
+            if (item != null && item is PluginMetaData PluginMetaData)
+            {
+                PluginMetaData data = vieModel.AllFreshPlugins.Where(arg => arg.PluginID.Equals(PluginMetaData.PluginID)).FirstOrDefault();
+                vieModel.CurrentPlugin = data;
+                richTextBox.Document.Blocks.Clear();
+                pluginDetailGrid.Visibility = Visibility.Visible;
+                PluginMetaData fetchedData = await PluginManager.FetchPlugin(data);
+                if (fetchedData != null && vieModel.CurrentPlugin.PluginID.Equals(fetchedData.PluginID))
+                {
+                    vieModel.CurrentPlugin = null;
+                    vieModel.CurrentPlugin = fetchedData;
+                    System.Windows.Documents.FlowDocument doc = MarkDown.parse(fetchedData.ReleaseNotes.MarkDown);
+                    this.Dispatcher.Invoke(() =>
+                   {
+                       richTextBox.Document = doc;
+                   });
+                }
+
+            }
         }
 
 
@@ -1690,69 +1713,35 @@ namespace Jvedio
 
         private void DownloadPlugin(object sender, RoutedEventArgs e)
         {
-
-            //PluginMetaData PluginMetaData = new PluginMetaData();
-            //PluginMetaData.Name = vieModel.CurrentPlugin.Name;
-            //PluginMetaData.FileName = vieModel.CurrentPlugin.FileName;
-            //PluginMetaData.Type = vieModel.CurrentPlugin.Type;
-            ////https://hitchao.github.io/Jvedio-Plugin/plugins/crawlers/testFile.txt
-            //string remoteUrl = getPluginPath(GlobalVariable.PLUGIN_LIST_BASE_URL, PluginMetaData).Replace("\\", "/");
-            //if (!remoteUrl.IsProperUrl())
-            //{
-            //    MessageCard.Error("地址不合理 => " + remoteUrl);
-            //    return;
-            //}
-            //Button button = sender as Button;
-            //button.IsEnabled = false;
-            //DownloadPlugin(remoteUrl, PluginMetaData);
+            string pluginID = vieModel.CurrentPlugin.PluginID;
+            PluginMetaData pluginMetaData;
+            bool Installing = false;
+            pluginMetaData = vieModel.InstalledPlugins.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+            if (pluginMetaData != null)
+            {
+                Installing = true;
+            }
+            else
+            {
+                pluginMetaData = vieModel.CurrentFreshPlugins.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+            }
+            pluginMetaData.Installing = Installing;
+            // 加入到下载列表中
+            if (PluginManager.DownloadingList.Any(arg => arg.Equals(pluginMetaData.PluginID)))
+            {
+                MessageCard.Warning($"【{pluginMetaData.PluginName}】下载中或已下载");
+                return;
+            }
+            PluginManager.DownloadingList.Add(pluginMetaData.PluginID);
+            PluginManager.DownloadPlugin(pluginMetaData);
         }
 
 
-        public string getPluginPath(string basePath, PluginMetaData PluginMetaData)
-        {
-            if (PluginMetaData == null || PluginMetaData.FileName == null) return "";
-            return Path.Combine(basePath, "plugins", PluginMetaData.Type.ToString().ToLower() + "s", PluginMetaData.FileName);
-        }
 
 
 
-        private void DownloadPlugin(string url, PluginMetaData PluginMetaData)
-        {
-            //Task.Run(async () =>
-            //{
-            //    HttpResult httpResult = await HttpHelper.AsyncDownLoadFile(url, CrawlerHeader.GitHub);
-            //    if (httpResult.StatusCode == HttpStatusCode.OK && httpResult.FileByte != null)
-            //    {
-            //        byte[] fileByte = httpResult.FileByte;
-            //        string saveFileName = getPluginPath(AppDomain.CurrentDomain.BaseDirectory, PluginMetaData);
-            //        if (string.IsNullOrEmpty(saveFileName)) return;
 
-            //        string tempDir = Path.Combine(Path.GetDirectoryName(saveFileName), "temp");
-            //        if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
-            //        string tempFileName = Path.Combine(tempDir, Path.GetFileName(saveFileName));
-            //        bool success = FileHelper.ByteArrayToFile(fileByte, tempFileName, (error) =>
-            //        {
-            //            if (!string.IsNullOrEmpty(error))
-            //            {
-            //                Dispatcher.Invoke(() =>
-            //                {
-            //                    MessageCard.Error(error);
-            //                });
-            //            }
-            //        });
-            //        if (success) Dispatcher.Invoke(() =>
-            //        {
-            //            MessageBox.Show($"{PluginMetaData.Name} 下载成功，即将重启", "插件下载");
-            //            //执行命令
-            //            string arg = $"xcopy /y/e \"{tempFileName}\" \"{saveFileName}*\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\" &exit";
-            //            StreamHelper.TryWrite("upgrade-plugins.bat", arg, true, Encoding.GetEncoding("GB2312"));
-            //            FileHelper.TryOpenFile("upgrade-plugins.bat");
-            //            Application.Current.Shutdown();
-            //        });
-            //    }
-            //});
 
-        }
 
         private async void CreatePlayableIndex(object sender, RoutedEventArgs e)
         {
@@ -1972,6 +1961,11 @@ namespace Jvedio
                 FileHelper.TryOpenUrl(url);
 
 
+        }
+
+        private void ShowUploadHelp(object sender, RoutedEventArgs e)
+        {
+            FileHelper.TryOpenUrl(GlobalVariable.PLUGIN_UPLOAD_HELP);
         }
     }
 

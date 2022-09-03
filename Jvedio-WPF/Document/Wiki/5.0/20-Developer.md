@@ -1,4 +1,6 @@
-﻿﻿﻿﻿﻿# 开发文档
+﻿# 开发者文档
+
+架构图
 
 [<img src="https://s1.ax1x.com/2022/06/11/XcZjdH.png" alt="XcZjdH.png" style="zoom:80%;" />](https://imgtu.com/i/XcZjdH)
 

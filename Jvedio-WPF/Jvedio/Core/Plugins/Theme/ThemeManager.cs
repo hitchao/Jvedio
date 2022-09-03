@@ -103,7 +103,7 @@ namespace Jvedio.Core
             try
             {
                 theme = Theme.Parse(dict["Data"]);
-                data = PluginMetaData.Parse(jsonPath);
+                data = PluginMetaData.ParseByPath(jsonPath);
                 if (data != null)
                     theme.Desc = data.ReleaseNotes.Desc;
             }
