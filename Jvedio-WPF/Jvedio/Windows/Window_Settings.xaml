@@ -1858,10 +1858,7 @@
 
 
                                                 <DataGrid.Columns>
-                                                    <DataGridTemplateColumn
-                                                        Width="auto"
-                                                        MinWidth="40"
-                                                        Header="{x:Static lang:Resources.Enable}">
+                                                    <DataGridTemplateColumn Width="60" Header="{x:Static lang:Resources.Enable}">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <CheckBox

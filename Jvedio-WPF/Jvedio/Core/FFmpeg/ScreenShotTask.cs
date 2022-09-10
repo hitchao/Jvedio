@@ -119,7 +119,7 @@ namespace Jvedio.Core.FFmpeg
                 {
                     StatusText = ex.Message;
                     logger.Error(ex.Message);
-                    finalizeWithCancel();
+                    FinalizeWithCancel();
                 }
                 OnCompleted(null);
             });

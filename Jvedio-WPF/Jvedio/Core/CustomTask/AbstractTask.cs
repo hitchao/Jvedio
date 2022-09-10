@@ -241,7 +241,7 @@ namespace Jvedio.Core.CustomTask
             doWrok();
         }
 
-        public virtual void finalizeWithCancel()
+        public virtual void FinalizeWithCancel()
         {
             Running = false;
             Status = TaskStatus.Canceled;// 抛出异常的任务都自动取消

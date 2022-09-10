@@ -1959,8 +1959,6 @@ namespace Jvedio
             if (string.IsNullOrEmpty(url)) return;
             if (url.IsProperUrl())
                 FileHelper.TryOpenUrl(url);
-
-
         }
 
         private void ShowUploadHelp(object sender, RoutedEventArgs e)
@@ -1968,6 +1966,4 @@ namespace Jvedio
             FileHelper.TryOpenUrl(GlobalVariable.PLUGIN_UPLOAD_HELP);
         }
     }
-
-
 }

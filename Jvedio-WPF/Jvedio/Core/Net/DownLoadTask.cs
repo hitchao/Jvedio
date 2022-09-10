@@ -100,7 +100,7 @@ namespace Jvedio.Core.Net
                     if (video == null || video.DataID <= 0)
                     {
                         Message = $"不存在 DataID={DataID} 的资源";
-                        finalizeWithCancel();
+                        FinalizeWithCancel();
                         return;
                     }
                     VideoDownLoader downLoader = new VideoDownLoader(video, token);
@@ -121,14 +121,14 @@ namespace Jvedio.Core.Net
                                 // todo 显示到界面上
                                 Message = ex.Message;
                                 logger.Error(Message);
-                                finalizeWithCancel();
+                                FinalizeWithCancel();
                                 return;
                             }
                             catch (DllLoadFailedException ex)
                             {
                                 Message = ex.Message;
                                 logger.Error(Message);
-                                finalizeWithCancel();
+                                FinalizeWithCancel();
                                 return;
                             }
 
@@ -167,8 +167,8 @@ namespace Jvedio.Core.Net
                     {
                         dict = null;
                         // 发生了错误，停止下载
-                        finalizeWithCancel();
-                        // 但是已经请求了网址，所示视为完成，并加入到长时间等待队列
+                        FinalizeWithCancel();
+                        // 但是已经请求了网址，所以视为完成，并加入到长时间等待队列
                         Status = TaskStatus.RanToCompletion;
                         return;
                     }
@@ -203,7 +203,7 @@ namespace Jvedio.Core.Net
 
                     if (Canceld)
                     {
-                        finalizeWithCancel();
+                        FinalizeWithCancel();
                         return;
                     }
 
@@ -250,7 +250,7 @@ namespace Jvedio.Core.Net
 
                     if (Canceld)
                     {
-                        finalizeWithCancel();
+                        FinalizeWithCancel();
                         return;
                     }
 
@@ -282,7 +282,7 @@ namespace Jvedio.Core.Net
                     Progress = 77f;
                     if (Canceld)
                     {
-                        finalizeWithCancel();
+                        FinalizeWithCancel();
                         return;
                     }
 
@@ -337,7 +337,7 @@ namespace Jvedio.Core.Net
                     Progress = 88f;
                     if (Canceld)
                     {
-                        finalizeWithCancel();
+                        FinalizeWithCancel();
                         return;
                     }
 
@@ -355,7 +355,7 @@ namespace Jvedio.Core.Net
                             {
                                 if (Canceld)
                                 {
-                                    finalizeWithCancel();
+                                    FinalizeWithCancel();
                                     return;
                                 }
 

@@ -3094,6 +3094,7 @@
                                                                                 </MenuItem>
 
                                                                                 <MenuItem Click="CopyFile" Header="{x:Static lang:Resources.Menu_CopyFile}" />
+                                                                                <MenuItem Click="CutFile" Header="剪切(X)" />
 
                                                                                 <Separator />
                                                                                 <MenuItem

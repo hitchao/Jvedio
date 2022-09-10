@@ -147,7 +147,7 @@ namespace Jvedio
 
             vieModel.Reset();           // 加载数据
             OpenListen();
-            OpenWindowByName("Window_Settings");
+            //OpenWindowByName("Window_Settings");
             //new Msgbox(this, "demo").ShowDialog();
 
         }
@@ -2255,6 +2255,54 @@ namespace Jvedio
         }
 
 
+        public void CutFile(object sender, RoutedEventArgs e)
+        {
+            handleMenuSelected((sender));
+            StringCollection paths = new StringCollection();
+            int count = 0;
+            int total = 0;
+            foreach (var video in vieModel.SelectedVideo)
+            {
+
+                if (video.SubSectionList?.Count > 0)
+                {
+                    total += video.SubSectionList.Count;
+                    foreach (var path in video.SubSectionList)
+                    {
+                        if (File.Exists(path))
+                        {
+                            paths.Add(path);
+                            count++;
+                        }
+                    }
+
+                }
+                else
+                {
+                    total++;
+                    if (File.Exists(video.Path))
+                    {
+                        paths.Add(video.Path);
+                        count++;
+                    }
+                }
+            }
+
+            if (paths.Count <= 0)
+            {
+                msgCard.Warning($"需要剪切文件的个数为 0，文件可能不存在");
+                return;
+            }
+            bool success = ClipBoard.TryCutFileDropList(paths, (error) => { msgCard.Error(error); });
+
+            if (success)
+                msgCard.Success($"已剪切 {count}/{total}");
+
+
+            if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+        }
+
+
 
 
 
@@ -3244,6 +3292,12 @@ namespace Jvedio
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_CopyFile);
                 if (menuItem != null) CopyFile(menuItem, new RoutedEventArgs());
+
+            }
+            else if (e.Key == Key.X)
+            {
+                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_CopyFile);
+                if (menuItem != null) CutFile(menuItem, new RoutedEventArgs());
 
             }
             contextMenu.IsOpen = false;

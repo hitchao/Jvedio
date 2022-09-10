@@ -1,6 +1,8 @@
 ﻿using Jvedio.Logs;
 using System;
 using System.Collections.Specialized;
+using System.IO;
+using System.Windows;
 
 namespace Jvedio.Utils.IO
 {
@@ -28,6 +30,28 @@ namespace Jvedio.Utils.IO
             {
                 System.Windows.Clipboard.Clear();
                 System.Windows.Clipboard.SetFileDropList(filePaths);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                callBack.Invoke(ex.Message);
+                return false;
+            }
+        }
+        public static bool TryCutFileDropList(StringCollection filePaths, Action<string> callBack = null)
+        {
+            try
+            {
+                byte[] moveEffect = new byte[] { 2, 0, 0, 0 };
+                MemoryStream dropEffect = new MemoryStream();
+                dropEffect.Write(moveEffect, 0, moveEffect.Length);
+
+                DataObject data = new DataObject();
+                data.SetFileDropList(filePaths);
+                data.SetData("Preferred DropEffect", dropEffect);
+
+                Clipboard.Clear();
+                Clipboard.SetDataObject(data, true);
                 return true;
             }
             catch (Exception ex)

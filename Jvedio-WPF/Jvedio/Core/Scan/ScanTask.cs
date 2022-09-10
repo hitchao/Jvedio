@@ -159,7 +159,7 @@ namespace Jvedio.Core.Scan
                    catch (TaskCanceledException ex)
                    {
                        logger.Error(ex.Message);
-                       finalizeWithCancel();
+                       FinalizeWithCancel();
                        OnCompleted(null);
                        return;
                    }
