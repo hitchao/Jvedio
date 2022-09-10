@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.Attributes;
+﻿using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
 using Jvedio.Core.SimpleORM;
@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using Jvedio.Utils.IO;
+using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio.Entity
 {

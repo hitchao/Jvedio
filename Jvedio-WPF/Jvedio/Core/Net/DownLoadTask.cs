@@ -24,6 +24,8 @@ using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Utils.IO;
+using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Core.Net
 {

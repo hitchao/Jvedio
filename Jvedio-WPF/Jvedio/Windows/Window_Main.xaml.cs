@@ -51,6 +51,8 @@ using static Jvedio.GlobalVariable;
 using static Jvedio.Main.Msg;
 using static Jvedio.Utils.Media.ImageHelper;
 using static Jvedio.Utils.Visual.VisualHelper;
+using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio
 {
@@ -723,7 +725,7 @@ namespace Jvedio
                     string json = httpResult.SourceCode;
                     appConfig.ConfigValue = StringFormat.HandleNewLine(httpResult.SourceCode);
                     appConfig.ConfigName = configName;
-                    appConfigMapper.insert(appConfig, Core.Enums.InsertMode.Replace);
+                    appConfigMapper.insert(appConfig,  InsertMode.Replace);
 
                     Dictionary<string, object> dictionary = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(json);
                     if (dictionary != null && dictionary.ContainsKey("Date") && dictionary.ContainsKey("Data"))

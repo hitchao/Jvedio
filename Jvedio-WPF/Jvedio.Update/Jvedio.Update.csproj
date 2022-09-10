@@ -108,6 +108,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>XCOPY "$(ProjectDir)bin\Debug\Jvedio.Update.exe" "D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\bin\Debug" /Y /i</PostBuildEvent>
+    <PostBuildEvent>XCOPY "$(ProjectDir)bin\Debug\Jvedio.Update.exe" "$(SolutionDir)Jvedio\bin\Debug" /Y /i</PostBuildEvent>
   </PropertyGroup>
 </Project>

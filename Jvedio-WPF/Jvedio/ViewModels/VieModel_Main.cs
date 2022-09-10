@@ -16,6 +16,8 @@ using Jvedio.Utils;
 using Jvedio.Utils.Common;
 using Jvedio.Utils.IO;
 using JvedioLib.Security;
+using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -1,5 +1,5 @@
 ﻿using DynamicData.Annotations;
-using Jvedio.Core.Attributes;
+using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
 using Jvedio.Core.SimpleORM;
 using Jvedio.Entity.CommonSQL;
@@ -12,6 +12,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
+using SuperUtils.Framework.ORM.Wrapper;
+
 namespace Jvedio.Entity
 {
 

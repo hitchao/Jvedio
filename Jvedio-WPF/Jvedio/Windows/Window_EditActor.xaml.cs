@@ -9,6 +9,8 @@ using System.Windows;
 using static Jvedio.GlobalMapper;
 using static Jvedio.Utils.Visual.VisualHelper;
 using static Jvedio.Utils.Media.ImageHelper;
+using SuperUtils.Framework.ORM.Wrapper;
+
 namespace Jvedio
 {
     /// <summary>

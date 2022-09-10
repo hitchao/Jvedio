@@ -12,6 +12,7 @@ using Jvedio.Mapper;
 using Jvedio.Utils;
 using Jvedio.Utils.Common;
 using JvedioLib.Security;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

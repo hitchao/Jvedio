@@ -37,6 +37,7 @@ using static Jvedio.GlobalMapper;
 using static Jvedio.Main;
 using static Jvedio.Main.Msg;
 using static Jvedio.Utils.Visual.VisualHelper;
+using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio
 {

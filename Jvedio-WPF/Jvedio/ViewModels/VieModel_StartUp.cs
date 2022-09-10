@@ -6,6 +6,7 @@ using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using Jvedio.Utils;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

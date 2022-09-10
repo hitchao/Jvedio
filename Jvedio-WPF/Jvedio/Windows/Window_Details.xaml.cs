@@ -34,6 +34,7 @@ using static Jvedio.Utils.Visual.VisualHelper;
 using static Jvedio.Utils.Media.ImageHelper;
 using Jvedio.Logs;
 using Jvedio.Core.Crawler;
+using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio
 {

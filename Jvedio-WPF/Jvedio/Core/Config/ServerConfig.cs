@@ -7,6 +7,8 @@ using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using Newtonsoft.Json;
+using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +69,7 @@ namespace Jvedio.Core.Config
                 AppConfig appConfig = new AppConfig();
                 appConfig.ConfigName = ConfigName;
                 appConfig.ConfigValue = JsonConvert.SerializeObject(CrawlerServers); ;
-                GlobalMapper.appConfigMapper.insert(appConfig, Enums.InsertMode.Replace);
+                GlobalMapper.appConfigMapper.insert(appConfig,  InsertMode.Replace);
             }
         }
 

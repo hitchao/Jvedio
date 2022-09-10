@@ -2,6 +2,8 @@
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using Newtonsoft.Json;
+using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +68,7 @@ namespace Jvedio.Core.Config.Base
             AppConfig appConfig = new AppConfig();
             appConfig.ConfigName = ConfigName;
             appConfig.ConfigValue = JsonConvert.SerializeObject(dictionary);        // 不为 null
-            GlobalMapper.appConfigMapper.insert(appConfig, Enums.InsertMode.Replace);
+            GlobalMapper.appConfigMapper.insert(appConfig,  InsertMode.Replace);
         }
     }
 }

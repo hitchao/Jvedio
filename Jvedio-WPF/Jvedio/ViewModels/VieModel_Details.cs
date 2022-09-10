@@ -23,6 +23,7 @@ using Jvedio.Mapper;
 using Jvedio.Utils.Media;
 using Jvedio.Logs;
 using Jvedio.Utils;
+using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio.ViewModel
 {

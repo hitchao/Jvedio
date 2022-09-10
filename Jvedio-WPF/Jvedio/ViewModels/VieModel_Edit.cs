@@ -20,6 +20,7 @@ using System.Windows.Threading;
 using Jvedio.Core.Enums;
 using static Jvedio.Utils.Visual.VisualHelper;
 using SuperControls.Style;
+using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio.ViewModel
 {

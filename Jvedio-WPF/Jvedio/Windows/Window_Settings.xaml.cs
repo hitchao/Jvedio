@@ -1,13 +1,10 @@
-﻿using SuperControls.Style;
-using FontAwesome.WPF;
+﻿using FontAwesome.WPF;
 using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Framework;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
-using Jvedio.Core.SimpleORM;
 using Jvedio.Entity;
 using Jvedio.Logs;
 using Jvedio.Mapper;
@@ -20,6 +17,9 @@ using Jvedio.ViewModel;
 using JvedioLib.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SuperControls.Style;
+using SuperUtils.Framework.MarkDown;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,9 +38,9 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Visual.VisualHelper;
-using System.Windows.Threading;
 
 namespace Jvedio
 {

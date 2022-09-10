@@ -1,11 +1,8 @@
-﻿using Jvedio.Core.Enums;
-using Jvedio.Logs;
+﻿using Jvedio.Logs;
+using SuperUtils.Framework.ORM.Mapper;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.SimpleORM
 {

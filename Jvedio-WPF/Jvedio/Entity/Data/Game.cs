@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.Attributes;
+﻿using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
 using System;
 using System.Collections.Generic;

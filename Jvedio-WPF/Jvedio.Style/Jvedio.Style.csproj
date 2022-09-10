@@ -43,7 +43,7 @@
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="SuperControls.Style">
-      <HintPath>..\..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
+      <HintPath>..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

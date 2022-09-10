@@ -1,19 +1,17 @@
 ﻿using DynamicData.Annotations;
-using Jvedio.Core.Attributes;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
 using Jvedio.Utils.Common;
 using Jvedio.Utils.IO;
-using System;
+using Jvedio.Utils.Media;
+using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Mapper;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Jvedio.Utils.Media;
 namespace Jvedio.Entity
 {
     [Table(tableName: "actor_info")]

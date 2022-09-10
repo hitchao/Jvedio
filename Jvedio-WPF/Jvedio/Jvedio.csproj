@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -101,10 +101,10 @@
       <HintPath>..\packages\DynamicData.6.15.1\lib\net461\DynamicData.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="ExCSS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ExCSS.4.1.0\lib\netstandard2.0\ExCSS.dll</HintPath>
@@ -181,7 +181,10 @@
       <HintPath>Lib\QueryEngine.dll</HintPath>
     </Reference>
     <Reference Include="SuperControls.Style">
-      <HintPath>..\..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
+      <HintPath>..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperUtils">
+      <HintPath>..\..\..\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -192,14 +195,14 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.113.1\lib\net46\System.Data.SQLite.dll</HintPath>
+    <Reference Include="System.Data.SQLite, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\lib\net46\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.113.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.116.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.113.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.116.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -274,9 +277,6 @@
     <Compile Include="Core\Exceptions\NFOParseException.cs" />
     <Compile Include="Core\Exceptions\DllLoadFailedException.cs" />
     <Compile Include="Core\Exceptions\DirCreateFailedException.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Attributes\TableAttribute.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Attributes\TableFieldAttribute.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Attributes\TableIdAttribute.cs" />
     <Compile Include="Core\Command\File.cs" />
     <Compile Include="Core\Command\OpenWindow.cs" />
     <Compile Include="Core\Config\ProxyConfig.cs" />
@@ -308,14 +308,11 @@
     <Compile Include="Core\Net\UpgradeHelper.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerManager.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
-    <Compile Include="Core\DataBase\Connection.cs" />
     <Compile Include="Core\DataBase\MysqlConnection.cs" />
     <Compile Include="Core\Enums\ComicType.cs" />
     <Compile Include="Core\Enums\DataBaseType.cs" />
     <Compile Include="Core\Enums\DataType.cs" />
     <Compile Include="Core\Enums\Gender.cs" />
-    <Compile Include="Core\Enums\IdType.cs" />
-    <Compile Include="Core\Enums\InsertMode.cs" />
     <Compile Include="Core\Enums\Language.cs" />
     <Compile Include="Core\Enums\PathType.cs" />
     <Compile Include="Core\Enums\RelevanceType.cs" />
@@ -340,17 +337,8 @@
     <Compile Include="Core\CustomTask\ITask.cs" />
     <Compile Include="Core\Scan\ScanFactory.cs" />
     <Compile Include="Core\Scan\ScanResult.cs" />
-    <Compile Include="Core\Framework\MarkDown.cs" />
-    <Compile Include="Core\Framework\SimpleORM\AbstractMapper.cs" />
-    <Compile Include="Core\Framework\SimpleORM\BaseMapper.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Log.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Mapper\MySQLMapper.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Mapper\PostgreSQLMapper.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Wrapper\SelectWrapper.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Mapper\SqliteMapper.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Wrapper\IWrapper.cs" />
+    <Compile Include="Mapper\BaseMapper\BaseMapper.cs" />
     <Compile Include="Core\DataBase\Tables\Sqlite.cs" />
-    <Compile Include="Core\Framework\SimpleORM\Wrapper\UpdateWrapper.cs" />
     <Compile Include="Core\Config\Base\AbstractConfig.cs" />
     <Compile Include="Core\Global\GlobalConfig.cs" />
     <Compile Include="Core\Config\Base\IConfig.cs" />
@@ -399,7 +387,6 @@
     <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\VideoInfo.cs" />
     <Compile Include="Core\Plugins\Theme\Theme.cs" />
-    <Compile Include="Core\Framework\SimpleORM\IMapper.cs" />
     <Compile Include="Core\Plugins\Theme\ThemeManager.cs" />
     <Compile Include="WindowsDialog\Dialog_LoadPage.xaml.cs">
       <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
@@ -992,16 +979,6 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets'))" />
-  </Target>
-  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" />
   <PropertyGroup>
     <PreBuildEvent>XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
 XCOPY  "$(ProjectDir)Reference\MediaInfoNET.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
@@ -1020,4 +997,14 @@ XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug\plugins\c
 XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
 </PostBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
 </Project>

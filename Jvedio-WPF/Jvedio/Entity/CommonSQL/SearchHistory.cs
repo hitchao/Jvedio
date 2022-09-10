@@ -1,10 +1,11 @@
-﻿using Jvedio.Core.Attributes;
+﻿using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SuperUtils.Framework.ORM.Mapper;
 
 namespace Jvedio.Entity.CommonSQL
 {

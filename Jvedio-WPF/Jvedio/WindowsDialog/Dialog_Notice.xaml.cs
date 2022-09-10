@@ -1,24 +1,8 @@
-﻿using Jvedio.ViewModel;
+﻿using Jvedio.Entity.CommonSQL;
+using SuperUtils.Framework.MarkDown;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Xml;
-using static Jvedio.GlobalVariable;
-
-using System.Windows.Documents;
-using Jvedio.Core.SimpleORM;
-using Jvedio.Entity.CommonSQL;
-using Jvedio.Core.Framework;
 
 namespace Jvedio
 {

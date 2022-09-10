@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Attributes;
+﻿using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Mapper;
 using Jvedio.Core.Enums;
 using Jvedio.Utils.Common;
 using System;
