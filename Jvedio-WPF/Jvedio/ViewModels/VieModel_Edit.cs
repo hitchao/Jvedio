@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.IO;
 using Jvedio.Entity;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using System.Windows;
 using System.Windows.Threading;
 using Jvedio.Core.Enums;
@@ -284,7 +284,7 @@ namespace Jvedio.ViewModel
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             if (list != null)
             {
                 foreach (Dictionary<string, object> item in list)
@@ -317,8 +317,8 @@ namespace Jvedio.ViewModel
                 return false;
 
             data.DataID = DataID;
-            int update1 = GlobalMapper.metaDataMapper.updateById(data);
-            int update2 = GlobalMapper.videoMapper.updateById(CurrentVideo);
+            int update1 = GlobalMapper.metaDataMapper.UpdateById(data);
+            int update2 = GlobalMapper.videoMapper.UpdateById(CurrentVideo);
 
             // 标签
             GlobalMapper.metaDataMapper.SaveLabel(data, oldLabels);
@@ -386,7 +386,7 @@ namespace Jvedio.ViewModel
                          $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
                          "GROUP BY actor_info.ActorID)";
 
-            ActorTotalCount = actorMapper.selectCount(count_sql);
+            ActorTotalCount = actorMapper.SelectCount(count_sql);
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             //string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
             //    $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
@@ -412,8 +412,8 @@ namespace Jvedio.ViewModel
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { windowEdit.actorPagination.Total = ActorTotalCount; });
 
-            List<Dictionary<string, object>> list = actorMapper.select(sql);
-            List<ActorInfo> actors = actorMapper.toEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
+            List<Dictionary<string, object>> list = actorMapper.Select(sql);
+            List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
             ActorList = new List<ActorInfo>();
             if (actors == null) actors = new List<ActorInfo>();
             ActorList.AddRange(actors);

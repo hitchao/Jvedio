@@ -94,8 +94,8 @@ namespace Jvedio.Core.Scan
 
             string sql = GameMapper.BASE_SQL;
             sql = "select metadata.DataID,Hash,Path,GID " + sql;
-            List<Dictionary<string, object>> list = gameMapper.select(sql);
-            List<Game> existDatas = gameMapper.toEntity<Game>(list, typeof(Game).GetProperties(), false);
+            List<Dictionary<string, object>> list = gameMapper.Select(sql);
+            List<Game> existDatas = gameMapper.ToEntity<Game>(list, typeof(Game).GetProperties(), false);
             // 1.1 不需要导入
             // 存在同路径、同哈希的 exe
             foreach (var item in import.Where(arg => existDatas.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any()))
@@ -143,7 +143,7 @@ namespace Jvedio.Core.Scan
             List<Game> toInsert = import;
             // 1.更新
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
-            metaDataMapper.updateBatch(toUpdateData, "Title", "Size", "Hash", "Path", "LastScanDate");
+            metaDataMapper.UpdateBatch(toUpdateData, "Title", "Size", "Hash", "Path", "LastScanDate");
 
             // 2.导入
             foreach (Game data in toInsert)
@@ -157,13 +157,13 @@ namespace Jvedio.Core.Scan
 
             List<MetaData> toInsertData = toInsert.Select(arg => arg.toMetaData()).ToList();
             if (toInsertData.Count <= 0) return;
-            long.TryParse(metaDataMapper.insertAndGetID(toInsertData[0]).ToString(), out long before);
+            long.TryParse(metaDataMapper.InsertAndGetID(toInsertData[0]).ToString(), out long before);
             toInsertData.RemoveAt(0);
             try
             {
                 //开启事务，这样子其他线程就不能更新
-                metaDataMapper.executeNonQuery("BEGIN TRANSACTION;");
-                metaDataMapper.insertBatch(toInsertData);
+                metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");
+                metaDataMapper.InsertBatch(toInsertData);
 
             }
             catch (Exception ex)
@@ -173,7 +173,7 @@ namespace Jvedio.Core.Scan
             }
             finally
             {
-                metaDataMapper.executeNonQuery("END TRANSACTION;");
+                metaDataMapper.ExecuteNonQuery("END TRANSACTION;");
             }
 
             // 处理 DataID
@@ -185,8 +185,8 @@ namespace Jvedio.Core.Scan
             try
             {
 
-                gameMapper.executeNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
-                gameMapper.insertBatch(toInsert);
+                gameMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                gameMapper.InsertBatch(toInsert);
 
 
             }
@@ -197,7 +197,7 @@ namespace Jvedio.Core.Scan
             }
             finally
             {
-                gameMapper.executeNonQuery("END TRANSACTION;");
+                gameMapper.ExecuteNonQuery("END TRANSACTION;");
             }
         }
 

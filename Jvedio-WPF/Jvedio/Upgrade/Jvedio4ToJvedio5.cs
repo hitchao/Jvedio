@@ -55,7 +55,7 @@ namespace Jvedio.Upgrade
             List<AppDatabase> appDatabases = null;
             try
             {
-                appDatabases = appDatabaseMapper.selectList();
+                appDatabases = appDatabaseMapper.SelectList();
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace Jvedio.Upgrade
                 db.ScanPath = json;
                 try
                 {
-                    appDatabaseMapper.updateById(db);
+                    appDatabaseMapper.UpdateById(db);
                 }
                 catch (Exception ex)
                 {
@@ -115,7 +115,7 @@ namespace Jvedio.Upgrade
                     string sql = $"update metadata set ViewDate = '{key.toLocalDate()}' " +
                                 "where DataID in (select DataID from metadata_video " +
                                 $"where VID in ('{string.Join("','", list)}')); ";
-                    metaDataMapper.executeNonQuery(sql);
+                    metaDataMapper.ExecuteNonQuery(sql);
                 }
             }
 
@@ -229,7 +229,7 @@ namespace Jvedio.Upgrade
                                 continue;
                             }
                         }
-                        urlCodeMapper.insertBatch(urlCodes);
+                        urlCodeMapper.InsertBatch(urlCodes);
                     }
                     db?.Close();
                 }
@@ -270,7 +270,7 @@ namespace Jvedio.Upgrade
                                 continue;
                             }
                         }
-                        urlCodeMapper.insertBatch(urlCodes);
+                        urlCodeMapper.InsertBatch(urlCodes);
                     }
                     library?.Close();
                 }
@@ -324,7 +324,7 @@ namespace Jvedio.Upgrade
                                 continue;
                             }
                         }
-                        actorMapper.insertBatch(actressList);
+                        actorMapper.InsertBatch(actressList);
                     }
                     actressReader?.Close();
                 }
@@ -347,7 +347,7 @@ namespace Jvedio.Upgrade
                     appDatabase.DataType = DataType.Video;
                     try
                     {
-                        appDatabaseMapper.insert(appDatabase);
+                        appDatabaseMapper.Insert(appDatabase);
                     }
                     catch (Exception e)
                     {
@@ -428,11 +428,11 @@ namespace Jvedio.Upgrade
                             }
                         }
                         long before = 0;
-                        try { before = metaDataMapper.selectCount(); } catch (Exception ex) { Logger.Error(ex); return false; }
+                        try { before = metaDataMapper.SelectCount(); } catch (Exception ex) { Logger.Error(ex); return false; }
 
                         try
                         {
-                            metaDataMapper.insertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
+                            metaDataMapper.InsertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
                         }
                         catch (Exception ex)
                         {
@@ -460,7 +460,7 @@ namespace Jvedio.Upgrade
 
                         try
                         {
-                            videoMapper.insertBatch(videos);
+                            videoMapper.InsertBatch(videos);
                         }
                         catch (Exception ex)
                         {
@@ -508,7 +508,7 @@ namespace Jvedio.Upgrade
                 {
                     string sql = $"insert into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
 
-                    videoMapper.executeNonQuery(sql);
+                    videoMapper.ExecuteNonQuery(sql);
 
 
                 }
@@ -531,10 +531,10 @@ namespace Jvedio.Upgrade
                 translation.SourceText = title;
                 translation.TargetText = chinesetitle;
                 translation.Platform = Jvedio.Core.Enums.TranslationPlatform.youdao.ToString();
-                mapper.insert(translation);
+                mapper.Insert(translation);
                 string sql = "insert into metadata_to_translation(DataID,FieldType,TransaltionID) " +
                     $"values ({i + 1},'Title',{translation.TransaltionID})";
-                metaDataMapper.executeNonQuery(sql);
+                metaDataMapper.ExecuteNonQuery(sql);
             }
 
         }
@@ -568,7 +568,7 @@ namespace Jvedio.Upgrade
             {
                 string insert_sql =
                 $"insert or replace into metadata_to_label(DataID,LabelName) values {string.Join(",", dataId_to_LabelID)}";
-                metaDataMapper.executeNonQuery(insert_sql);
+                metaDataMapper.ExecuteNonQuery(insert_sql);
             }
 
         }
@@ -576,7 +576,7 @@ namespace Jvedio.Upgrade
         private static void handleActor(List<Video> list)
         {
             // 新增不存在的
-            List<ActorInfo> actorInfos = actorMapper.selectList();
+            List<ActorInfo> actorInfos = actorMapper.SelectList();
             HashSet<string> names = list.Select(x => x.ActorNames).ToHashSet();// 演员名字
             HashSet<string> to_insert = new HashSet<string>();
             foreach (string name in names)
@@ -589,15 +589,15 @@ namespace Jvedio.Upgrade
             if (to_insert.Count > 0)
             {
                 string sql = $"insert into actor_info(WebType,Gender,ActorName) values ('bus',1,'{string.Join("'),('bus',1,'", to_insert)}')";
-                actorMapper.executeNonQuery(sql);
+                actorMapper.ExecuteNonQuery(sql);
             }
-            actorInfos = actorMapper.selectList();
+            actorInfos = actorMapper.SelectList();
             //Dictionary<string, long> dict = actorInfos.ToDictionary(x => x.ActorName, x => x.ActorID);
             Dictionary<string, long> dict = actorInfos.ToLookup(x => x.ActorName, y => y.ActorID).ToDictionary(x => x.Key, x => x.First());
             List<UrlCode> urlCodes = new List<UrlCode>();
 
             List<string> insert_list = new List<string>();
-            long count = metaDataMapper.selectCount();
+            long count = metaDataMapper.SelectCount();
             for (int i = 0; i < list.Count; i++)
             {
 
@@ -633,13 +633,13 @@ namespace Jvedio.Upgrade
 
 
             }
-            urlCodeMapper.insertBatch(urlCodes, InsertMode.Ignore);
+            urlCodeMapper.InsertBatch(urlCodes, InsertMode.Ignore);
 
             if (insert_list.Count > 0)
             {
                 string sql = $"insert or ignore into metadata_to_actor(ActorID,DataID) " +
                     $"values {string.Join(",", insert_list)};";
-                metaDataMapper.executeNonQuery(sql);
+                metaDataMapper.ExecuteNonQuery(sql);
             }
         }
 
@@ -698,7 +698,7 @@ namespace Jvedio.Upgrade
             }
             try
             {
-                aIFaceMapper.insertBatch(list);
+                aIFaceMapper.InsertBatch(list);
             }
             catch (Exception ex)
             {
@@ -759,7 +759,7 @@ namespace Jvedio.Upgrade
             List<Video> videos = null;
             try
             {
-                videos = videoMapper.selectList(wrapper);
+                videos = videoMapper.SelectList(wrapper);
             }
             catch (Exception ex)
             {
@@ -786,7 +786,7 @@ namespace Jvedio.Upgrade
             }
             try
             {
-                magnetsMapper.insertBatch(magnets);
+                magnetsMapper.InsertBatch(magnets);
             }
             catch (Exception ex)
             {
@@ -814,7 +814,7 @@ namespace Jvedio.Upgrade
             //        history.SearchValue = VID;
             //        histories.Add(history);
             //    }
-            //    try { searchHistoryMapper.insertBatch(histories); }
+            //    try { searchHistoryMapper.InsertBatch(histories); }
             //    catch (Exception ex)
             //    {
             //        Logger.Error(ex);
@@ -885,7 +885,7 @@ namespace Jvedio.Upgrade
             Dictionary<string, long> dict = new Dictionary<string, long>();
             try
             {
-                videos = videoMapper.selectList(selectWrapper);
+                videos = videoMapper.SelectList(selectWrapper);
                 if (videos != null && videos.Count > 0)
                     dict = videos.ToLookup(t => t.VID, t => t.DataID).ToDictionary(t => t.Key, t => t.First());
             }
@@ -912,7 +912,7 @@ namespace Jvedio.Upgrade
                     }
                     string sql = "insert or replace into metadata_to_label(LabelName,DataID) " +
                              $"values {string.Join(",", values)}";
-                    metaDataMapper.executeNonQuery(sql);
+                    metaDataMapper.ExecuteNonQuery(sql);
                 }
             }
 
@@ -944,7 +944,7 @@ namespace Jvedio.Upgrade
             Translation translation = null;
             try
             {
-                translation = translationMapper.selectOne(wrapper);
+                translation = translationMapper.SelectOne(wrapper);
             }
             catch (Exception ex)
             {
@@ -991,7 +991,7 @@ namespace Jvedio.Upgrade
             l += 1;     // 在原基础上 +1
             try
             {
-                translationMapper.insertBatch(translations);
+                translationMapper.InsertBatch(translations);
             }
             catch (Exception ex)
             {
@@ -1006,7 +1006,7 @@ namespace Jvedio.Upgrade
             Dictionary<string, long> dict = new Dictionary<string, long>();
             try
             {
-                videos = videoMapper.selectList(selectWrapper);
+                videos = videoMapper.SelectList(selectWrapper);
                 if (videos != null && videos.Count > 0)
                     dict = videos.ToLookup(x => x.VID, y => y.DataID).ToDictionary(x => x.Key, x => x.First());
             }
@@ -1025,7 +1025,7 @@ namespace Jvedio.Upgrade
                     string FieldType = i % 2 == 0 ? "Title" : "Plot";
                     string sql = "insert or replace into metadata_to_translation(DataID,FieldType,TransaltionID) " +
                                 $"values ({dataID},'{FieldType}',{i + l})";
-                    metaDataMapper.executeNonQuery(sql);
+                    metaDataMapper.ExecuteNonQuery(sql);
                 }
             }
             sr.Close();

@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SimpleORM;
+﻿using Jvedio.Mapper.BaseMapper;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;

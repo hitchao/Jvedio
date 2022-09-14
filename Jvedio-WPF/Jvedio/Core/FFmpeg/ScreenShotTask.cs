@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Mapper;
 using static Jvedio.GlobalMapper;
 using Jvedio.Core.Scan;

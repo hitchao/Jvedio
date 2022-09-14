@@ -13,7 +13,7 @@ using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Plugins.Theme;
 using Jvedio.Core.Scan;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Logs;
@@ -408,7 +408,7 @@ namespace Jvedio
         public void setDataBases()
         {
             List<AppDatabase> appDatabases =
-                appDatabaseMapper.selectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)GlobalVariable.CurrentDataType));
+                appDatabaseMapper.SelectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)GlobalVariable.CurrentDataType));
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             appDatabases.ForEach(db => temp.Add(db));
             vieModel.DataBases = temp;
@@ -424,7 +424,7 @@ namespace Jvedio
         {
             SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
             wrapper.Eq("DataType", (int)GlobalVariable.CurrentDataType).NotEq("ViewDate", "");
-            long count = metaDataMapper.selectCount(wrapper);
+            long count = metaDataMapper.SelectCount(wrapper);
             vieModel.RecentWatchedCount = count;
         }
 
@@ -714,7 +714,7 @@ namespace Jvedio
                 string notices = "";
                 SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
                 wrapper.Eq("ConfigName", configName);
-                AppConfig appConfig = appConfigMapper.selectOne(wrapper);
+                AppConfig appConfig = appConfigMapper.SelectOne(wrapper);
                 if (appConfig != null && !string.IsNullOrEmpty(appConfig.ConfigValue))
                     notices = appConfig.ConfigValue;
                 HttpResult httpResult = await HttpClient.Get(NoticeUrl, CrawlerHeader.GitHub);
@@ -725,7 +725,7 @@ namespace Jvedio
                     string json = httpResult.SourceCode;
                     appConfig.ConfigValue = StringFormat.HandleNewLine(httpResult.SourceCode);
                     appConfig.ConfigName = configName;
-                    appConfigMapper.insert(appConfig,  InsertMode.Replace);
+                    appConfigMapper.Insert(appConfig, InsertMode.Replace);
 
                     Dictionary<string, object> dictionary = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(json);
                     if (dictionary != null && dictionary.ContainsKey("Date") && dictionary.ContainsKey("Data"))
@@ -1632,7 +1632,7 @@ namespace Jvedio
 
                 if (success && dataID > 0)
                 {
-                    metaDataMapper.updateFieldById("ViewDate", DateHelper.Now(), dataID);
+                    metaDataMapper.UpdateFieldById("ViewDate", DateHelper.Now(), dataID);
                     vieModel.Statistic();
                 }
             }
@@ -1812,7 +1812,7 @@ namespace Jvedio
 
             SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
             wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
-            List<MetaData> metaDatas = metaDataMapper.selectList(wrapper);
+            List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
             if (metaDatas == null || metaDatas.Count <= 0) return;
 
             foreach (MetaData metaData in metaDatas)
@@ -1828,7 +1828,7 @@ namespace Jvedio
             vieModel.DownloadStatus = "Downloading";
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
-            List<Video> videos = videoMapper.selectList();
+            List<Video> videos = videoMapper.SelectList();
             foreach (Video video in videos)
             {
                 downloadVideo(video);
@@ -2082,14 +2082,14 @@ namespace Jvedio
                             string SubSection = string.Join(GlobalVariable.Separator.ToString(), list);
                             vieModel.CurrentVideoList[i].Path = list[0];
                             vieModel.CurrentVideoList[i].SubSection = SubSection;
-                            metaDataMapper.updateFieldById("Path", list[0], dataID);
-                            videoMapper.updateFieldById("SubSection", SubSection, dataID);
+                            metaDataMapper.UpdateFieldById("Path", list[0], dataID);
+                            videoMapper.UpdateFieldById("SubSection", SubSection, dataID);
                         }
                         else
                         {
                             string path = dict[dataID][0];
                             vieModel.CurrentVideoList[i].Path = path;
-                            metaDataMapper.updateFieldById("Path", path, dataID);
+                            metaDataMapper.UpdateFieldById("Path", path, dataID);
                         }
                     }
                 }
@@ -3017,7 +3017,7 @@ namespace Jvedio
         {
             SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
             wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
-            metaDataMapper.updateField("ViewDate", "", wrapper);
+            metaDataMapper.UpdateField("ViewDate", "", wrapper);
             vieModel.Statistic();
         }
 
@@ -3353,7 +3353,7 @@ namespace Jvedio
             StackPanel stackPanel = rate.Parent as StackPanel;
             long id = getDataID(stackPanel);
             if (id <= 0) return;
-            metaDataMapper.updateFieldById("Grade", rate.Value.ToString(), id);
+            metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), id);
             vieModel.Statistic();
             CanRateChange = false;
         }
@@ -3591,7 +3591,7 @@ namespace Jvedio
 
                 }
                 string sql = "begin;" + builder.ToString() + "commit;";
-                tagStampMapper.executeNonQuery(sql);
+                tagStampMapper.ExecuteNonQuery(sql);
             }
             else
             {
@@ -3602,7 +3602,7 @@ namespace Jvedio
                 }
                 if (values.Count <= 0) return;
                 string sql = $"insert or replace into metadata_to_tagstamp (DataID,TagID)  values {(string.Join(",", values))}";
-                tagStampMapper.executeNonQuery(sql);
+                tagStampMapper.ExecuteNonQuery(sql);
             }
             initTagStamp();
 
@@ -3643,7 +3643,7 @@ namespace Jvedio
         private void ActorRate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
         {
             HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
-            actorMapper.updateFieldById("Grade", rate.Value.ToString(), vieModel.CurrentActorInfo.ActorID);
+            actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), vieModel.CurrentActorInfo.ActorID);
         }
 
 
@@ -3874,7 +3874,7 @@ namespace Jvedio
                     Foreground = VisualHelper.SerilizeBrush(ForegroundBrush),
                     Background = VisualHelper.SerilizeBrush(BackgroundBrush),
                 };
-                tagStampMapper.insert(tagStamp);
+                tagStampMapper.Insert(tagStamp);
                 initTagStamp();
             }
         }
@@ -3899,7 +3899,7 @@ namespace Jvedio
                 tagStamp.TagName = name;
                 tagStamp.Background = VisualHelper.SerilizeBrush(BackgroundBrush);
                 tagStamp.Foreground = VisualHelper.SerilizeBrush(ForegroundBrush);
-                tagStampMapper.updateById(tagStamp);
+                tagStampMapper.UpdateById(tagStamp);
                 initTagStamp();
             }
         }
@@ -3920,10 +3920,10 @@ namespace Jvedio
             if (new Msgbox(this, Jvedio.Language.Resources.IsToDelete + $"标记 【{tagStamp.TagName}】").ShowDialog() == true)
             {
 
-                tagStampMapper.deleteById(id);
+                tagStampMapper.DeleteById(id);
                 // 删除
                 string sql = $"delete from metadata_to_tagstamp where TagID={tagStamp.TagID};";
-                tagStampMapper.executeNonQuery(sql);
+                tagStampMapper.ExecuteNonQuery(sql);
                 initTagStamp();
 
                 // 更新主窗体
@@ -3974,7 +3974,7 @@ namespace Jvedio
                 if (vieModel.CurrentVideoList[i]?.DataID == dataid)
                 {
 
-                    Video video = videoMapper.selectOne(new SelectWrapper<Video>().Eq("DataID", dataid));
+                    Video video = videoMapper.SelectOne(new SelectWrapper<Video>().Eq("DataID", dataid));
                     if (video == null) continue;
                     SetImage(ref video);
                     vieModel.CurrentVideoList[i].SmallImage = null;
@@ -4060,7 +4060,7 @@ namespace Jvedio
 
                     SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
                     wrapper.Eq("ActorID", actorID);
-                    ActorInfo actorInfo = actorMapper.selectById(wrapper);
+                    ActorInfo actorInfo = actorMapper.SelectById(wrapper);
                     if (actorInfo == null) continue;
                     ActorInfo.SetImage(ref actorInfo);
                     actorInfo.Count = count;
@@ -4128,7 +4128,7 @@ namespace Jvedio
                 CreateMonth = DateTime.Now.Month,
                 CreateDay = DateTime.Now.Day,
             };
-            searchHistoryMapper.insert(history);
+            searchHistoryMapper.Insert(history);
         }
 
         private void searchBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -4201,7 +4201,7 @@ namespace Jvedio
             pagination.CurrentPageChange -= Pagination_CurrentPageChange;
             vieModel.CurrentPage = 1;
             vieModel.LoadData();
-            ActorInfo actorInfo = actorMapper.selectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
+            ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
             ActorInfo.SetImage(ref actorInfo);
             vieModel.CurrentActorInfo = actorInfo;
             vieModel.ShowActorGrid = Visibility.Visible;
@@ -4217,7 +4217,7 @@ namespace Jvedio
             if (rate.Tag == null) return;
             long.TryParse(rate.Tag.ToString(), out long actorID);
             if (actorID <= 0) return;
-            actorMapper.updateFieldById("Grade", rate.Value.ToString(), actorID);
+            actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), actorID);
 
         }
 
@@ -4663,7 +4663,7 @@ namespace Jvedio
                 List<string> toDelete = new List<string>();
                 SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
                 wrapper.Select("DataID", "Path").Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", 0);
-                List<MetaData> metaDatas = metaDataMapper.selectList(wrapper);
+                List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
                 if (metaDatas?.Count <= 0)
                 {
                     vieModel.RunningLongTask = false;
@@ -4724,7 +4724,7 @@ namespace Jvedio
                 List<string> toDelete = new List<string>();
                 SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
                 wrapper.Select("DataID", "Path").Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", 0);
-                List<MetaData> metaDatas = metaDataMapper.selectList(wrapper);
+                List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
                 if (metaDatas?.Count <= 0)
                 {
                     vieModel.RunningLongTask = false;
@@ -4807,7 +4807,7 @@ namespace Jvedio
             {
                 tagStamps.Remove(tagStamp);
                 string sql = $"delete from metadata_to_tagstamp where TagID='{TagID}' and DataID='{DataID}'";
-                tagStampMapper.executeNonQuery(sql);
+                tagStampMapper.ExecuteNonQuery(sql);
 
                 ObservableCollection<Video> datas = vieModel.CurrentVideoList;
                 if (AssoDataPopup.IsOpen) datas = vieModel.ViewAssociationDatas;
@@ -5075,9 +5075,9 @@ namespace Jvedio
 
                 foreach (ActorInfo actorInfo in vieModel.SelectedActors)
                 {
-                    actorMapper.deleteById(actorInfo.ActorID);
+                    actorMapper.DeleteById(actorInfo.ActorID);
                     string sql = $"delete from metadata_to_actor where metadata_to_actor.ActorID='{actorInfo.ActorID}'";
-                    actorMapper.executeNonQuery(sql);
+                    actorMapper.ExecuteNonQuery(sql);
                 }
                 vieModel.SelectActor();
             }
@@ -5089,7 +5089,7 @@ namespace Jvedio
             ContextMenu contextMenu = mnu.Parent as ContextMenu;
             long.TryParse(contextMenu.Tag.ToString(), out long actorID);
             if (actorID <= 0) return;
-            ActorInfo actorInfo = actorMapper.selectById(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
+            ActorInfo actorInfo = actorMapper.SelectById(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
             string path = Path.GetFullPath(actorInfo.getImagePath());
             FileHelper.TryOpenSelectPath(path);
         }

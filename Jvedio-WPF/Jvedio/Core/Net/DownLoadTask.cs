@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Mapper;
 using static Jvedio.GlobalMapper;
 using Jvedio.Core.Scan;
@@ -180,8 +180,8 @@ namespace Jvedio.Core.Net
                     {
                         logger.Info($"保存入库");
                         // 并发锁
-                        videoMapper.updateById(video);
-                        metaDataMapper.updateById(video.toMetaData());
+                        videoMapper.UpdateById(video);
+                        metaDataMapper.UpdateById(video.toMetaData());
                         // 保存 dataCode
                         if (dict.ContainsKey("DataCode") && dict.ContainsKey("WebType"))
                         {
@@ -190,7 +190,7 @@ namespace Jvedio.Core.Net
                             urlCode.RemoteValue = dict["DataCode"].ToString();
                             urlCode.ValueType = "video";
                             urlCode.WebType = dict["WebType"].ToString();
-                            urlCodeMapper.insert(urlCode, InsertMode.Replace);
+                            urlCodeMapper.Insert(urlCode, InsertMode.Replace);
                         }
                         // 保存 nfo
                         video.SaveNfo();
@@ -302,17 +302,17 @@ namespace Jvedio.Core.Net
                             {
                                 string actorName = ActorNames[i];
                                 string url = ActressImageUrl[i];
-                                ActorInfo actorInfo = actorMapper.selectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
+                                ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
                                 if (actorInfo == null || actorInfo.ActorID <= 0)
                                 {
                                     actorInfo = new ActorInfo();
                                     actorInfo.ActorName = actorName;
                                     actorInfo.ImageUrl = url;
-                                    actorMapper.insert(actorInfo);
+                                    actorMapper.Insert(actorInfo);
                                 }
                                 // 保存信息
                                 string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
-                                metaDataMapper.executeNonQuery(sql);
+                                metaDataMapper.ExecuteNonQuery(sql);
                                 // 下载图片
                                 string saveFileName = actorInfo.getImagePath(video.Path, Path.GetExtension(url), false);
                                 if (!File.Exists(saveFileName))

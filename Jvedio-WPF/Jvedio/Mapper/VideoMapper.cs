@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SimpleORM;
+﻿using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
@@ -64,8 +64,8 @@ namespace Jvedio.Mapper
             string sql = $"{wrapper.toSelect(false)} FROM metadata_video " +
                         "JOIN metadata " +
                         "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false);
-            List<Dictionary<string, object>> list = select(sql);
-            List<Video> videos = toEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Dictionary<string, object>> list = Select(sql);
+            List<Video> videos = ToEntity<Video>(list, typeof(Video).GetProperties(), false);
             if (videos != null && videos.Count > 0)
             {
                 Video video = videos[0];
@@ -73,8 +73,8 @@ namespace Jvedio.Mapper
                     "JOIN metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                     "join metadata_video on metadata_video.DataID=metadata_to_actor.DataID " +
                     $"where metadata_video.DataID={dataid};";
-                List<Dictionary<string, object>> actor_list = select(actor_sql);
-                List<ActorInfo> actorInfos = toEntity<ActorInfo>(actor_list, typeof(ActorInfo).GetProperties());
+                List<Dictionary<string, object>> actor_list = Select(actor_sql);
+                List<ActorInfo> actorInfos = ToEntity<ActorInfo>(actor_list, typeof(ActorInfo).GetProperties());
                 video.ActorInfos = actorInfos;
                 return video;
             }
@@ -101,7 +101,7 @@ namespace Jvedio.Mapper
                 string sql = $"delete from metadata_to_actor " +
                     $"where DataID={video.DataID} " +
                     $"and ActorID in ('{string.Join("','", to_delete.Select(arg => arg.ActorID))}')";
-                executeNonQuery(sql);
+                ExecuteNonQuery(sql);
             }
 
             // 新增
@@ -115,7 +115,7 @@ namespace Jvedio.Mapper
 
                 string sql = $"insert or ignore into metadata_to_actor(DataID,ActorID) " +
                     $"values {string.Join(",", create)}";
-                executeNonQuery(sql);
+                ExecuteNonQuery(sql);
             }
         }
 
@@ -132,7 +132,7 @@ namespace Jvedio.Mapper
             builder.Append($"delete from metadata_to_actor where DataID in ({ids});");
             builder.Append($"delete from metadata_to_label where DataID in ({ids});");
             builder.Append("commit;");
-            GlobalMapper.videoMapper.executeNonQuery(builder.ToString());
+            GlobalMapper.videoMapper.ExecuteNonQuery(builder.ToString());
         }
 
 

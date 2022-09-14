@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SimpleORM;
+﻿using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using System;
@@ -34,7 +34,7 @@ namespace Jvedio.Mapper
 
         public List<TagStamp> getAllTagStamp()
         {
-            return GlobalMapper.tagStampMapper.selectList();
+            return GlobalMapper.tagStampMapper.SelectList();
 
         }
     }

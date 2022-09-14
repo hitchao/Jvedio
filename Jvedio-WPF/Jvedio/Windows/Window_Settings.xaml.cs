@@ -453,7 +453,7 @@ namespace Jvedio
                 List<string> list = new List<string>();
                 if (vieModel.ScanPath != null) list = vieModel.ScanPath.ToList();
                 db.ScanPath = JsonConvert.SerializeObject(list);
-                GlobalMapper.appDatabaseMapper.updateById(db);
+                GlobalMapper.appDatabaseMapper.UpdateById(db);
                 int idx = DatabaseComboBox.SelectedIndex;
 
                 List<AppDatabase> appDatabases = windowMain?.vieModel.DataBases.ToList();
@@ -1750,7 +1750,7 @@ namespace Jvedio
             long total = 0;
             bool result = await Task.Run(() =>
               {
-                  List<MetaData> metaDatas = GlobalMapper.metaDataMapper.selectList();
+                  List<MetaData> metaDatas = GlobalMapper.metaDataMapper.SelectList();
                   total = metaDatas.Count;
                   if (total <= 0) return false;
                   StringBuilder builder = new StringBuilder();
@@ -1767,7 +1767,7 @@ namespace Jvedio
                       });
                   }
                   string sql = $"begin;update metadata set PathExist=1;{builder};commit;";// 因为大多数资源都是存在的，默认先设为1
-                  GlobalMapper.videoMapper.executeNonQuery(sql);
+                  GlobalMapper.videoMapper.ExecuteNonQuery(sql);
                   return true;
               });
             GlobalConfig.Settings.PlayableIndexCreated = true;
@@ -1794,8 +1794,8 @@ namespace Jvedio
                 IWrapper<Video> wrapper = new SelectWrapper<Video>();
                 wrapper.Select("metadata.DataID", "Path", "VID", "Hash");
                 sql = wrapper.toSelect(false) + sql;
-                List<Dictionary<string, object>> temp = GlobalMapper.metaDataMapper.select(sql);
-                List<Video> videos = GlobalMapper.metaDataMapper.toEntity<Video>(temp, typeof(Video).GetProperties(), true);
+                List<Dictionary<string, object>> temp = GlobalMapper.metaDataMapper.Select(sql);
+                List<Video> videos = GlobalMapper.metaDataMapper.ToEntity<Video>(temp, typeof(Video).GetProperties(), true);
                 total = videos.Count;
                 if (total <= 0) return false;
                 List<string> list = new List<string>();
@@ -1814,7 +1814,7 @@ namespace Jvedio
                     });
                 }
                 string insertSql = $"begin;insert or replace into common_picture_exist(DataID,PathType,ImageType,Exist) values {string.Join(",", list)};commit;";
-                GlobalMapper.videoMapper.executeNonQuery(insertSql);
+                GlobalMapper.videoMapper.ExecuteNonQuery(insertSql);
                 return true;
             });
             if (result)

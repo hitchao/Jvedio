@@ -181,10 +181,10 @@
       <HintPath>Lib\QueryEngine.dll</HintPath>
     </Reference>
     <Reference Include="SuperControls.Style">
-      <HintPath>..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
+      <HintPath>..\..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
     </Reference>
     <Reference Include="SuperUtils">
-      <HintPath>..\..\..\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll</HintPath>
+      <HintPath>..\..\..\..\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -348,6 +348,7 @@
     <Compile Include="Core\Config\WindowConfig\Main.cs" />
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Core\CustomTask\TaskLogger.cs" />
+    <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="Utils\Common\CommonDataHelper.cs" />
     <Compile Include="Utils\Common\JsonUtils.cs" />
     <Compile Include="Utils\Reflections\ReflectionHelper.cs" />

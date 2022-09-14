@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SimpleORM;
+﻿using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -88,8 +88,8 @@ namespace Jvedio.Mapper
             string sql = $"{wrapper.toSelect(false)} FROM metadata_comic " +
                         "JOIN metadata " +
                         "on metadata.DataID=metadata_comic.DataID " + wrapper.toWhere(false);
-            List<Dictionary<string, object>> list = select(sql);
-            List<Comic> comics = toEntity<Comic>(list, typeof(Comic).GetProperties(), false);
+            List<Dictionary<string, object>> list = Select(sql);
+            List<Comic> comics = ToEntity<Comic>(list, typeof(Comic).GetProperties(), false);
             if (comics != null && comics.Count > 0)
             {
                 return comics[0];

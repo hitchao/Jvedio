@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SimpleORM;
+﻿using Jvedio.Mapper.BaseMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace Jvedio.Test
                 });
                 try
                 {
-                    mapper.insert(item);
+                    mapper.Insert(item);
                 }
                 catch (Exception ex)
                 {

@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Mapper;
 using static Jvedio.GlobalMapper;
 using Jvedio.Core.Net;
@@ -195,8 +195,8 @@ namespace Jvedio.Core.Scan
         {
             string sql = VideoMapper.BASE_SQL;
             sql = "select metadata.DataID,VID,Hash,Size,Path,MVID " + sql + $" and metadata.DBId={GlobalConfig.Main.CurrentDBId}";
-            List<Dictionary<string, object>> list = videoMapper.select(sql);
-            return videoMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Dictionary<string, object>> list = videoMapper.Select(sql);
+            return videoMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
         }
 
 
@@ -282,9 +282,9 @@ namespace Jvedio.Core.Scan
             toInsert.AddRange(noVidList);
 
             // 1.更新
-            videoMapper.updateBatch(toUpdate, "SubSection");// 分段视频
+            videoMapper.UpdateBatch(toUpdate, "SubSection");// 分段视频
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
-            metaDataMapper.updateBatch(toUpdateData, "Path", "LastScanDate");
+            metaDataMapper.UpdateBatch(toUpdateData, "Path", "LastScanDate");
             AddTags(toUpdate);
             // 2.导入
             InsertData(toInsert);
@@ -340,7 +340,7 @@ namespace Jvedio.Core.Scan
             if (import?.Count <= 0) return;
 
             existVideos = GetExistVideos();
-            existActors = actorMapper.selectList();
+            existActors = actorMapper.SelectList();
 
             // 复制图片
             if (GlobalConfig.ScanConfig.CopyNFOPicture)
@@ -424,9 +424,9 @@ namespace Jvedio.Core.Scan
             }
             import.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID)).Any());
 
-            videoMapper.updateBatch(toUpdate, NFOUpdateVideoProps);
+            videoMapper.UpdateBatch(toUpdate, NFOUpdateVideoProps);
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
-            metaDataMapper.updateBatch(toUpdateData, NFOUpdateMetaProps);
+            metaDataMapper.UpdateBatch(toUpdateData, NFOUpdateMetaProps);
             // 2. 剩下的都是需要导入的
             InsertData(import);
         }
@@ -448,17 +448,17 @@ namespace Jvedio.Core.Scan
                         actorInfo = new ActorInfo();
                         actorInfo.ActorName = name;
                         actorInfo.ImageUrl = url;
-                        actorMapper.insert(actorInfo);
+                        actorMapper.Insert(actorInfo);
                         existActors.Add(actorInfo);
                     }
                     else
                     {
                         actorInfo.ImageUrl = url;
-                        actorMapper.updateFieldById("ImageUrl", url, actorInfo.ActorID);
+                        actorMapper.UpdateFieldById("ImageUrl", url, actorInfo.ActorID);
                     }
                     // 保存信息
                     string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
-                    metaDataMapper.executeNonQuery(sql);
+                    metaDataMapper.ExecuteNonQuery(sql);
                 }
             }
         }
@@ -479,14 +479,14 @@ namespace Jvedio.Core.Scan
 
             List<MetaData> toInsertData = toInsert.Select(arg => arg.toMetaData()).ToList();
             if (toInsertData.Count <= 0) return;
-            long.TryParse(metaDataMapper.insertAndGetID(toInsertData[0]).ToString(), out long before);
+            long.TryParse(metaDataMapper.InsertAndGetID(toInsertData[0]).ToString(), out long before);
             toInsertData.RemoveAt(0);
 
             try
             {
 
-                metaDataMapper.executeNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
-                metaDataMapper.insertBatch(toInsertData);
+                metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                metaDataMapper.InsertBatch(toInsertData);
                 GlobalVariable.DataBaseBusy = true;
 
             }
@@ -497,7 +497,7 @@ namespace Jvedio.Core.Scan
             }
             finally
             {
-                metaDataMapper.executeNonQuery("END TRANSACTION;");
+                metaDataMapper.ExecuteNonQuery("END TRANSACTION;");
                 GlobalVariable.DataBaseBusy = false;
             }
 
@@ -510,9 +510,9 @@ namespace Jvedio.Core.Scan
 
             try
             {
-                videoMapper.executeNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                videoMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
                 GlobalVariable.DataBaseBusy = true;
-                videoMapper.insertBatch(toInsert);
+                videoMapper.InsertBatch(toInsert);
             }
             catch (Exception ex)
             {
@@ -521,14 +521,14 @@ namespace Jvedio.Core.Scan
             }
             finally
             {
-                videoMapper.executeNonQuery("END TRANSACTION;");
+                videoMapper.ExecuteNonQuery("END TRANSACTION;");
                 GlobalVariable.DataBaseBusy = false;
             }
 
             AddTags(toInsert);
 
             // 处理演员
-            existActors = actorMapper.selectList();
+            existActors = actorMapper.SelectList();
             foreach (var video in toInsert)
                 HandleActor(video);
 
@@ -551,7 +551,7 @@ namespace Jvedio.Core.Scan
             if (list.Count > 0)
             {
                 string sql = $"insert or ignore into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
-                videoMapper.executeNonQuery(sql);
+                videoMapper.ExecuteNonQuery(sql);
             }
         }
 

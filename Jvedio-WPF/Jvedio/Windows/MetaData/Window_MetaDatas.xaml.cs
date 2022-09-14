@@ -5,7 +5,7 @@ using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Entity.Data;
@@ -158,7 +158,7 @@ namespace Jvedio
         public void setDataBases()
         {
             List<AppDatabase> appDatabases =
-                appDatabaseMapper.selectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)GlobalVariable.CurrentDataType));
+                appDatabaseMapper.SelectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)GlobalVariable.CurrentDataType));
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             appDatabases.ForEach(db => temp.Add(db));
             vieModel.DataBases = temp;
@@ -450,7 +450,7 @@ namespace Jvedio
                 bool success = FileHelper.TryOpenFile(exePath);
                 if (success && dataID > 0)
                 {
-                    metaDataMapper.updateFieldById("ViewDate", DateHelper.Now(), dataID);
+                    metaDataMapper.UpdateFieldById("ViewDate", DateHelper.Now(), dataID);
                     vieModel.Statistic();
                 }
             }
@@ -497,7 +497,7 @@ namespace Jvedio
             HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
             StackPanel stackPanel = rate.Parent as StackPanel;
             long id = getDataID(stackPanel);
-            metaDataMapper.updateFieldById("Grade", rate.Value.ToString(), id);
+            metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), id);
             vieModel.Statistic();
             CanRateChange = false;
         }
@@ -718,7 +718,7 @@ namespace Jvedio
                         menu.Click += (s, ev) =>
                         {
                             string sql = $"insert or replace into metadata_to_tagstamp (DataID,TagID)  values ({dataID},{arg.TagID})";
-                            tagStampMapper.executeNonQuery(sql);
+                            tagStampMapper.ExecuteNonQuery(sql);
                             initTagStamp();
                             for (int i = 0; i < vieModel.CurrentDataList.Count; i++)
                             {

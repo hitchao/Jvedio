@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SimpleORM;
+﻿using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using Newtonsoft.Json;
@@ -40,7 +40,7 @@ namespace Jvedio.Core.Config.Base
         {
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", ConfigName);
-            AppConfig appConfig = GlobalMapper.appConfigMapper.selectOne(wrapper);
+            AppConfig appConfig = GlobalMapper.appConfigMapper.SelectOne(wrapper);
             if (appConfig == null || appConfig.ConfigId == 0) return;
             Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(appConfig.ConfigValue);
             if (dict == null) return;
@@ -68,7 +68,7 @@ namespace Jvedio.Core.Config.Base
             AppConfig appConfig = new AppConfig();
             appConfig.ConfigName = ConfigName;
             appConfig.ConfigValue = JsonConvert.SerializeObject(dictionary);        // 不为 null
-            GlobalMapper.appConfigMapper.insert(appConfig,  InsertMode.Replace);
+            GlobalMapper.appConfigMapper.Insert(appConfig, InsertMode.Replace);
         }
     }
 }

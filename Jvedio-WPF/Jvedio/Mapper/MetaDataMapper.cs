@@ -1,5 +1,5 @@
 ﻿using Jvedio.Core.Enums;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
@@ -17,20 +17,20 @@ namespace Jvedio.Mapper
         public int deleteDataByIds(List<string> idList)
         {
             if (idList == null || idList.Count == 0) return 0;
-            int c1 = GlobalMapper.metaDataMapper.deleteByIds(idList);
+            int c1 = GlobalMapper.metaDataMapper.DeleteByIds(idList);
             int c2 = 0;
             DataType dataType = GlobalVariable.CurrentDataType;
             if (dataType == DataType.Picture)
             {
-                c2 = GlobalMapper.pictureMapper.deleteByIds(idList);
+                c2 = GlobalMapper.pictureMapper.DeleteByIds(idList);
             }
             else if (dataType == DataType.Comics)
             {
-                c2 = GlobalMapper.comicMapper.deleteByIds(idList);
+                c2 = GlobalMapper.comicMapper.DeleteByIds(idList);
             }
             else if (dataType == DataType.Game)
             {
-                c2 = GlobalMapper.gameMapper.deleteByIds(idList);
+                c2 = GlobalMapper.gameMapper.DeleteByIds(idList);
             }
 
 
@@ -48,15 +48,15 @@ namespace Jvedio.Mapper
 
             if (dataType == DataType.Picture)
             {
-                GlobalMapper.pictureMapper.executeNonQuery(builder.ToString());
+                GlobalMapper.pictureMapper.ExecuteNonQuery(builder.ToString());
             }
             else if (dataType == DataType.Comics)
             {
-                GlobalMapper.comicMapper.executeNonQuery(builder.ToString());
+                GlobalMapper.comicMapper.ExecuteNonQuery(builder.ToString());
             }
             else if (dataType == DataType.Game)
             {
-                GlobalMapper.gameMapper.executeNonQuery(builder.ToString());
+                GlobalMapper.gameMapper.ExecuteNonQuery(builder.ToString());
             }
             if (c1 == c2 && idList.Count == c1) return c1;
             else
@@ -87,7 +87,7 @@ namespace Jvedio.Mapper
                 string sql = $"delete from metadata_to_label " +
                     $"where DataID={metaData.DataID} " +
                     $"and LabelName in ('{string.Join("','", to_delete)}')";
-                executeNonQuery(sql);
+                ExecuteNonQuery(sql);
             }
 
             // 新增
@@ -101,7 +101,7 @@ namespace Jvedio.Mapper
 
                 string sql = $"insert or ignore into metadata_to_label(DataID,LabelName) " +
                     $"values {string.Join(",", create)}";
-                executeNonQuery(sql);
+                ExecuteNonQuery(sql);
             }
         }
 

@@ -110,7 +110,7 @@ namespace Jvedio
             string sql = $"SELECT DISTINCT ReleaseDate FROM metadata " +
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}";
 
-            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.Select(sql);
             // 2020-02-10
             List<string> dates = list.Select(x => x["ReleaseDate"].ToString())
                 .Where(arg => !string.IsNullOrEmpty(arg) && arg.LastIndexOf('-') > 5).ToList();
@@ -151,7 +151,7 @@ namespace Jvedio
             string sql = $"SELECT DISTINCT {field} FROM metadata_video join metadata on metadata.DataID=metadata_video.DataID " +
                     $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}";
 
-            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.Select(sql);
             List<string> dataList = list.Select(x => x[field].ToString())
                  .Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             HashSet<string> set = new HashSet<string>();
@@ -168,7 +168,7 @@ namespace Jvedio
             string sql = $"SELECT DISTINCT {field} FROM metadata " +
                     $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}";
 
-            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.Select(sql);
             List<string> dataList = list.Select(x => x[field].ToString())
                  .Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             HashSet<string> set = new HashSet<string>();

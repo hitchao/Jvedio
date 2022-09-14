@@ -241,7 +241,7 @@ namespace Jvedio.ViewModel
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)
             {
                 string LabelName = item["LabelName"].ToString();
@@ -262,23 +262,23 @@ namespace Jvedio.ViewModel
         public bool Save()
         {
             if (CurrentData == null) return false;
-            int update1 = metaDataMapper.updateById(CurrentData);
+            int update1 = metaDataMapper.UpdateById(CurrentData);
             metaDataMapper.SaveLabel(CurrentData, oldLabels);// 标签
             int update2 = 0;
             if (CurrentDataType == Core.Enums.DataType.Picture)
             {
                 if (CurrentPicture == null) return false;
-                update2 = pictureMapper.updateById(CurrentPicture);
+                update2 = pictureMapper.UpdateById(CurrentPicture);
             }
             else if (CurrentDataType == Core.Enums.DataType.Game)
             {
                 if (CurrentGame == null) return false;
-                update2 = gameMapper.updateById(CurrentGame);
+                update2 = gameMapper.UpdateById(CurrentGame);
             }
             else if (CurrentDataType == Core.Enums.DataType.Comics)
             {
                 if (CurrentComic == null) return false;
-                update2 = comicMapper.updateById(CurrentComic);
+                update2 = comicMapper.UpdateById(CurrentComic);
             }
             return update1 > 0 & update2 > 0;
         }

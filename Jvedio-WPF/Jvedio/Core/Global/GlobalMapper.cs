@@ -46,7 +46,7 @@ namespace Jvedio
 
             foreach (string key in Sqlite.AppData.TABLES.Keys)
             {
-                appDatabaseMapper.createTable(key, Sqlite.AppData.TABLES[key]);
+                appDatabaseMapper.CreateTable(key, Sqlite.AppData.TABLES[key]);
             }
 
 
@@ -54,7 +54,7 @@ namespace Jvedio
 
             foreach (string key in Sqlite.AppConfig.TABLES.Keys)
             {
-                appConfigMapper.createTable(key, Sqlite.AppConfig.TABLES[key]);
+                appConfigMapper.CreateTable(key, Sqlite.AppConfig.TABLES[key]);
             }
 
 
@@ -71,18 +71,18 @@ namespace Jvedio
 
             foreach (string key in Sqlite.Actor.TABLES.Keys)
             {
-                actorMapper.createTable(key, Sqlite.Actor.TABLES[key]);
+                actorMapper.CreateTable(key, Sqlite.Actor.TABLES[key]);
             }
             foreach (string key in Sqlite.Data.TABLES.Keys)
             {
-                metaDataMapper.createTable(key, Sqlite.Data.TABLES[key]);
+                metaDataMapper.CreateTable(key, Sqlite.Data.TABLES[key]);
             }
 
 
             // 新增列
             foreach (string sql in Sqlite.SQL.SqlCommands)
             {
-                try { metaDataMapper.executeNonQuery(sql); }
+                try { metaDataMapper.ExecuteNonQuery(sql); }
                 catch (Exception ex) { Logger.Error(ex); }
             }
 

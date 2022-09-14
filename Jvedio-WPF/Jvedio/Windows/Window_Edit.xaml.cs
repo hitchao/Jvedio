@@ -1,6 +1,6 @@
 ﻿using SuperControls.Style;
 using Jvedio.Core.Enums;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Utils.IO;
 using Jvedio.Utils.Visual;
@@ -283,7 +283,7 @@ namespace Jvedio
                 vieModel.CurrentVideo.ActorNameList = new System.Collections.Generic.List<string>();
             if (vieModel.CurrentVideo.ActorInfos == null)
                 vieModel.CurrentVideo.ActorInfos = new System.Collections.Generic.List<ActorInfo>();
-            ActorInfo actorInfo = GlobalMapper.actorMapper.selectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
+            ActorInfo actorInfo = GlobalMapper.actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
             if (actorInfo != null && !vieModel.ViewActors.Contains(actorInfo))
                 vieModel.ViewActors.Add(actorInfo);
         }

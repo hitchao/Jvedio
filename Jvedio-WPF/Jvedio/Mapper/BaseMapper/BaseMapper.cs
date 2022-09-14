@@ -1,10 +1,12 @@
 ﻿using Jvedio.Logs;
+using Jvedio.Mapper.BaseMapper;
 using SuperUtils.Framework.ORM.Mapper;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
+using Jvedio.Core.Enums;
 
-namespace Jvedio.Core.SimpleORM
+namespace Jvedio.Mapper.BaseMapper
 {
     public class BaseMapper<T> : AbstractMapper<T>
     {
@@ -15,35 +17,34 @@ namespace Jvedio.Core.SimpleORM
 
         public override void Dispose()
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 SqliteMapper.Dispose();
                 SqliteMapper = null;
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 MySQLMapper.Dispose();
                 MySQLMapper = null;
             }
         }
 
-        public override int executeNonQuery(string sql, Action<Exception> callBack = null)
+        public override int ExecuteNonQuery(string sql)
         {
             try
             {
-                if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+                if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
                 {
-                    return SqliteMapper.executeNonQuery(sql);
+                    return SqliteMapper.ExecuteNonQuery(sql);
                 }
-                else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+                else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
                 {
-                    return MySQLMapper.executeNonQuery(sql);
+                    return MySQLMapper.ExecuteNonQuery(sql);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                callBack?.Invoke(ex);
 
             }
             return -1;
@@ -51,11 +52,11 @@ namespace Jvedio.Core.SimpleORM
 
         public override void Init()
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 if (SqliteMapper == null) SqliteMapper = new SqliteMapper<T>(GlobalVariable.DEFAULT_SQLITE_PATH);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 if (MySQLMapper == null) MySQLMapper = new MySQLMapper<T>();
             }
@@ -67,89 +68,89 @@ namespace Jvedio.Core.SimpleORM
         }
 
 
-        public override bool isTableExists(string tableName)
+        public override bool IsTableExists(string tableName)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.isTableExists(tableName);
+                return SqliteMapper.IsTableExists(tableName);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.isTableExists(tableName);
+                return MySQLMapper.IsTableExists(tableName);
             }
             return false;
         }
 
-        public override List<T> selectByDict(Dictionary<string, object> dict, IWrapper<T> wrapper)
+        public override List<T> SelectByDict(Dictionary<string, object> dict, IWrapper<T> wrapper)
         {
             throw new NotImplementedException();
         }
 
-        public override T selectById(IWrapper<T> wrapper)
+        public override T SelectById(IWrapper<T> wrapper)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.selectById(wrapper);
+                return SqliteMapper.SelectById(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.selectById(wrapper);
+                return MySQLMapper.SelectById(wrapper);
             }
             return default(T);
         }
 
-        public override long selectCount(IWrapper<T> wrapper = null)
+        public override long SelectCount(IWrapper<T> wrapper = null)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.selectCount(wrapper);
+                return SqliteMapper.SelectCount(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.selectCount(wrapper);
+                return MySQLMapper.SelectCount(wrapper);
             }
             return 0;
         }
 
 
 
-        public override long selectCount(string sql)
+        public override long SelectCount(string sql)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.selectCount(sql);
+                return SqliteMapper.SelectCount(sql);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.selectCount(sql);
+                return MySQLMapper.SelectCount(sql);
             }
             return 0;
         }
 
-        public override string selectLastInsertRowId()
+        public override string SelectLastInsertRowId()
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.selectLastInsertRowId();
+                return SqliteMapper.SelectLastInsertRowId();
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.selectLastInsertRowId();
+                return MySQLMapper.SelectLastInsertRowId();
             }
             return null;
         }
 
-        public override List<T> selectList(IWrapper<T> wrapper = null)
+        public override List<T> SelectList(IWrapper<T> wrapper = null)
         {
             try
             {
-                if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+                if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
                 {
-                    return SqliteMapper.selectList(wrapper);
+                    return SqliteMapper.SelectList(wrapper);
                 }
-                else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+                else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
                 {
-                    return MySQLMapper.selectList(wrapper);
+                    return MySQLMapper.SelectList(wrapper);
                 }
             }
             catch (Exception ex)
@@ -159,61 +160,68 @@ namespace Jvedio.Core.SimpleORM
             return null;
         }
 
-        public override bool removeDataBase(string db_name)
-        {
-            throw new NotImplementedException();
-        }
 
-        public override T selectOne(IWrapper<T> wrapper = null)
+
+        public override T SelectOne(IWrapper<T> wrapper = null)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.selectOne(wrapper);
+                return SqliteMapper.SelectOne(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.selectOne(wrapper);
+                return MySQLMapper.SelectOne(wrapper);
             }
             return default(T);
         }
 
-        public override List<Dictionary<string, object>> select(IWrapper<T> wrapper)
+        public override List<Dictionary<string, object>> Select(IWrapper<T> wrapper)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.select(wrapper);
+                return SqliteMapper.Select(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.select(wrapper);
+                return MySQLMapper.Select(wrapper);
             }
             return null;
         }
 
-        public override List<Dictionary<string, object>> select(string sql)
+        public override List<Dictionary<string, object>> Select(string sql)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.select(sql);
+                return SqliteMapper.Select(sql);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.select(sql);
+                return MySQLMapper.Select(sql);
             }
             return null;
         }
 
-        public override object insertAndGetID(T entity)
+        public override object InsertAndGetID(T entity)
         {
-            if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.SQLite)
+            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                return SqliteMapper.insertAndGetID(entity);
+                return SqliteMapper.InsertAndGetID(entity);
             }
-            else if (GlobalVariable.CurrentDataBaseType == Enums.DataBaseType.MySQL)
+            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
             {
-                return MySQLMapper.insertAndGetID(entity);
+                return MySQLMapper.InsertAndGetID(entity);
             }
             return null;
+        }
+
+        public override bool DeleteDataBase(string db_name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int Update(IWrapper<T> wrapper)
+        {
+            throw new NotImplementedException();
         }
     }
 }

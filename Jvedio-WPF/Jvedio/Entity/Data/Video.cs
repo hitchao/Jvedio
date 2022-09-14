@@ -1,7 +1,7 @@
 ﻿using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils;
 using Jvedio.Utils.Common;

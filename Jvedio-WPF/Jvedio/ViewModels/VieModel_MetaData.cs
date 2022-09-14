@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Entity.Data;
@@ -1213,8 +1213,8 @@ namespace Jvedio.ViewModel
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
                 "GROUP BY common_tagstamp.TagID;";
 
-            List<Dictionary<string, object>> list = tagStampMapper.select(sql);
-            List<TagStamp> tagStamps = tagStampMapper.toEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
+            List<Dictionary<string, object>> list = tagStampMapper.Select(sql);
+            List<TagStamp> tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
             TagStamps = new ObservableCollection<TagStamp>();
             // 先增加默认的：高清、中文
             foreach (TagStamp item in GlobalVariable.TagStamps)
@@ -1382,7 +1382,7 @@ namespace Jvedio.ViewModel
                     sql += actor_join_sql;
                 else if (searchType == SearchField.LabelName)
                     sql += label_join_sql;
-                List<Dictionary<string, object>> list = metaDataMapper.select(sql + condition_sql);
+                List<Dictionary<string, object>> list = metaDataMapper.Select(sql + condition_sql);
                 if (list != null && list.Count > 0)
                 {
                     foreach (Dictionary<string, object> dict in list)
@@ -1700,7 +1700,7 @@ namespace Jvedio.ViewModel
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} GROUP BY LabelName ORDER BY Count DESC";
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)
             {
                 string LabelName = item["LabelName"].ToString();
@@ -1737,7 +1737,7 @@ namespace Jvedio.ViewModel
                 string sql = $"SELECT Genre from metadata " +
                     $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND Genre !='' ";
 
-                List<Dictionary<string, object>> lists = metaDataMapper.select(sql);
+                List<Dictionary<string, object>> lists = metaDataMapper.Select(sql);
                 foreach (Dictionary<string, object> item in lists)
                 {
                     string genre = item["Genre"].ToString();
@@ -1815,7 +1815,7 @@ namespace Jvedio.ViewModel
                 "JOIN metadata_video on metadata.DataID=metadata_video.DataID " +
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
                 $"GROUP BY {field} ORDER BY Count DESC";
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)
             {
                 string name = item[field].ToString();
@@ -2098,7 +2098,7 @@ namespace Jvedio.ViewModel
             string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
 
 
-            TotalCount = metaDataMapper.selectCount(count_sql);
+            TotalCount = metaDataMapper.SelectCount(count_sql);
 
 
             WrapperEventArg<MetaData> arg = new WrapperEventArg<MetaData>();
@@ -2120,14 +2120,14 @@ namespace Jvedio.ViewModel
         {
 
             //if (rendering) return;
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
-            List<MetaData> datas = metaDataMapper.toEntity<MetaData>(list, typeof(MetaData).GetProperties(), false);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
+            List<MetaData> datas = metaDataMapper.ToEntity<MetaData>(list, typeof(MetaData).GetProperties(), false);
             if (GlobalVariable.CurrentDataType == DataType.Picture)
-                PictureList = pictureMapper.toEntity<Picture>(list, typeof(Picture).GetProperties(), false);
+                PictureList = pictureMapper.ToEntity<Picture>(list, typeof(Picture).GetProperties(), false);
             else if (GlobalVariable.CurrentDataType == DataType.Comics)
-                ComicList = pictureMapper.toEntity<Comic>(list, typeof(Comic).GetProperties(), false);
+                ComicList = pictureMapper.ToEntity<Comic>(list, typeof(Comic).GetProperties(), false);
             else if (GlobalVariable.CurrentDataType == DataType.Game)
-                GameList = gameMapper.toEntity<Game>(list, typeof(Game).GetProperties(), false);
+                GameList = gameMapper.ToEntity<Game>(list, typeof(Game).GetProperties(), false);
             DataList = new List<MetaData>();
             if (datas == null) datas = new List<MetaData>();
             DataList.AddRange(datas);
@@ -2236,20 +2236,20 @@ namespace Jvedio.ViewModel
             {
                 long dbid = GlobalConfig.Main.CurrentDBId;
                 int dataType = (int)GlobalVariable.CurrentDataType;
-                AllDataCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType));
-                appDatabaseMapper.updateFieldById("Count", AllDataCount.ToString(), dbid);
+                AllDataCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType));
+                appDatabaseMapper.UpdateFieldById("Count", AllDataCount.ToString(), dbid);
 
 
-                FavoriteCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType).Gt("Grade", 0));
+                FavoriteCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType).Gt("Grade", 0));
 
                 string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +
                                         "join metadata on metadata_to_label.DataID=metadata.DataID " +
                                          $"WHERE metadata.DBId={dbid} and metadata.DataType={0} ";
 
-                AllLabelCount = metaDataMapper.selectCount(label_count_sql);
+                AllLabelCount = metaDataMapper.SelectCount(label_count_sql);
                 DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                 DateTime date2 = DateTime.Now;
-                RecentViewCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
+                RecentViewCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
 
 
             });

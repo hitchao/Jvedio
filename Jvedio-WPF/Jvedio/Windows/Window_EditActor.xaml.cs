@@ -1,5 +1,5 @@
 ﻿using SuperControls.Style;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Utils;
 using Jvedio.Utils.IO;
@@ -45,7 +45,7 @@ namespace Jvedio
             if (this.ActorID <= 0) return;
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             wrapper.Eq("ActorID", this.ActorID);
-            ActorInfo actorInfo = actorMapper.selectById(wrapper);
+            ActorInfo actorInfo = actorMapper.SelectById(wrapper);
             if (actorInfo == null) return;
             ActorInfo.SetImage(ref actorInfo);
             CurrentActorInfo = null;
@@ -63,7 +63,7 @@ namespace Jvedio
             }
             if (ActorID > 0)
             {
-                int update = actorMapper.updateById(CurrentActorInfo);
+                int update = actorMapper.UpdateById(CurrentActorInfo);
                 if (update > 0)
                 {
                     MessageCard.Success(Jvedio.Language.Resources.Message_Success);
@@ -77,7 +77,7 @@ namespace Jvedio
                 // 检查是否存在
                 SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
                 wrapper.Eq("ActorName", CurrentActorInfo.ActorName.ToProperSql());
-                ActorInfo actorInfo = actorMapper.selectOne(wrapper);
+                ActorInfo actorInfo = actorMapper.SelectOne(wrapper);
                 bool insert = true;
                 if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName))
                 {
@@ -85,7 +85,7 @@ namespace Jvedio
                 }
                 if (insert)
                 {
-                    actorMapper.insert(CurrentActorInfo);
+                    actorMapper.Insert(CurrentActorInfo);
                     if (CurrentActorInfo.ActorID > 0)
                     {
                         this.DialogResult = true;

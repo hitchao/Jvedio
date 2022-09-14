@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
 using Jvedio.Logs;
@@ -112,8 +112,8 @@ namespace Jvedio.Core.Scan
 
             string sql = PictureMapper.BASE_SQL;
             sql = "select metadata.DataID,Hash,Size,Path,PID " + sql;
-            List<Dictionary<string, object>> list = pictureMapper.select(sql);
-            List<Picture> existPictures = pictureMapper.toEntity<Picture>(list, typeof(Picture).GetProperties(), false);
+            List<Dictionary<string, object>> list = pictureMapper.Select(sql);
+            List<Picture> existPictures = pictureMapper.ToEntity<Picture>(list, typeof(Picture).GetProperties(), false);
             // 1.1 不需要导入
             // 存在同路径、同哈希的图片路径
             foreach (var item in import.Where(arg => existPictures.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any()))
@@ -162,11 +162,11 @@ namespace Jvedio.Core.Scan
             // 1.更新
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
 
-            metaDataMapper.updateBatch(toUpdateData, "Title", "Size", "Hash", "Path", "LastScanDate");
+            metaDataMapper.UpdateBatch(toUpdateData, "Title", "Size", "Hash", "Path", "LastScanDate");
             if (dataType == DataType.Picture)
-                pictureMapper.updateBatch(toUpdate, "PicCount", "PicPaths", "VideoPaths");
+                pictureMapper.UpdateBatch(toUpdate, "PicCount", "PicPaths", "VideoPaths");
             else if (dataType == DataType.Comics)
-                comicMapper.updateBatch(toUpdate.Select(arg => arg.toSimpleComic()).ToList(), "PicCount", "PicPaths");
+                comicMapper.UpdateBatch(toUpdate.Select(arg => arg.toSimpleComic()).ToList(), "PicCount", "PicPaths");
             // 2.导入
             foreach (Picture data in toInsert)
             {
@@ -179,12 +179,12 @@ namespace Jvedio.Core.Scan
 
             List<MetaData> toInsertData = toInsert.Select(arg => arg.toMetaData()).ToList();
             if (toInsertData.Count <= 0) return;
-            long.TryParse(metaDataMapper.insertAndGetID(toInsertData[0]).ToString(), out long before);
+            long.TryParse(metaDataMapper.InsertAndGetID(toInsertData[0]).ToString(), out long before);
             toInsertData.RemoveAt(0);
             try
             {
-                metaDataMapper.executeNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
-                metaDataMapper.insertBatch(toInsertData);
+                metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                metaDataMapper.InsertBatch(toInsertData);
 
             }
             catch (Exception ex)
@@ -194,7 +194,7 @@ namespace Jvedio.Core.Scan
             }
             finally
             {
-                metaDataMapper.executeNonQuery("END TRANSACTION;");
+                metaDataMapper.ExecuteNonQuery("END TRANSACTION;");
             }
 
             // 处理 DataID
@@ -208,13 +208,13 @@ namespace Jvedio.Core.Scan
 
                 if (dataType == DataType.Picture)
                 {
-                    pictureMapper.executeNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
-                    pictureMapper.insertBatch(toInsert);
+                    pictureMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                    pictureMapper.InsertBatch(toInsert);
                 }
                 else if (dataType == DataType.Comics)
                 {
-                    comicMapper.executeNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
-                    comicMapper.insertBatch(toInsert.Select(arg => arg.toSimpleComic()).ToList());
+                    comicMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                    comicMapper.InsertBatch(toInsert.Select(arg => arg.toSimpleComic()).ToList());
                 }
 
             }
@@ -226,9 +226,9 @@ namespace Jvedio.Core.Scan
             finally
             {
                 if (dataType == DataType.Picture)
-                    pictureMapper.executeNonQuery("END TRANSACTION;");
+                    pictureMapper.ExecuteNonQuery("END TRANSACTION;");
                 else if (dataType == DataType.Comics)
-                    comicMapper.executeNonQuery("END TRANSACTION;");
+                    comicMapper.ExecuteNonQuery("END TRANSACTION;");
             }
 
 

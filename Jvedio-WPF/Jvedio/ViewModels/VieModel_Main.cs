@@ -7,7 +7,7 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Logs;
@@ -1188,10 +1188,10 @@ namespace Jvedio.ViewModel
 
         public void InitCurrentTagStamps()
         {
-            List<Dictionary<string, object>> list = tagStampMapper.select(TagStampMapper.GetTagSql());
+            List<Dictionary<string, object>> list = tagStampMapper.Select(TagStampMapper.GetTagSql());
             List<TagStamp> tagStamps = new List<TagStamp>();
             if (list?.Count > 0)
-                tagStamps = tagStampMapper.toEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
+                tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
             TagStamps = new ObservableCollection<TagStamp>();
             // 先增加默认的：高清、中文
             foreach (TagStamp item in GlobalVariable.TagStamps)
@@ -1222,8 +1222,8 @@ namespace Jvedio.ViewModel
                     IWrapper<Video> wrapper = new SelectWrapper<Video>();
                     wrapper.Select("VID").Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0).In("VID", vidList);
                     sql = wrapper.toSelect() + sql + wrapper.toWhere(false);
-                    List<Dictionary<string, object>> list = metaDataMapper.select(sql);
-                    List<Video> videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), true);
+                    List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
+                    List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), true);
 
                     List<string> exists = new List<string>();
                     if (videos != null && videos.Count > 0)
@@ -1241,8 +1241,8 @@ namespace Jvedio.ViewModel
                         };
 
                         MetaData metaData = video.toMetaData();
-                        metaDataMapper.insert(metaData);
-                        videoMapper.insert(video);
+                        metaDataMapper.Insert(metaData);
+                        videoMapper.Insert(video);
                     }
                     Statistic();
 
@@ -1309,12 +1309,12 @@ namespace Jvedio.ViewModel
                     string genre_sql = $"SELECT {field} FROM metadata_video " +
                             "JOIN metadata " +
                             "on metadata.DataID=metadata_video.DataID ";
-                    List<Dictionary<string, object>> list = metaDataMapper.select(genre_sql);
+                    List<Dictionary<string, object>> list = metaDataMapper.Select(genre_sql);
                     if (list != null && list.Count > 0) SetGenreCandidate(field, list, ref result);
                 }
                 else
                 {
-                    List<Dictionary<string, object>> list = metaDataMapper.select(sql + condition_sql);
+                    List<Dictionary<string, object>> list = metaDataMapper.Select(sql + condition_sql);
                     if (list != null && list.Count > 0)
                     {
                         foreach (Dictionary<string, object> dict in list)
@@ -1465,7 +1465,7 @@ namespace Jvedio.ViewModel
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
                 $"{(!string.IsNullOrEmpty(like_sql) ? like_sql : "")}" +
                 $"GROUP BY LabelName ORDER BY Count DESC";
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             if (list != null)
             {
                 foreach (Dictionary<string, object> item in list)
@@ -1508,7 +1508,7 @@ namespace Jvedio.ViewModel
                 string sql = $"SELECT Genre from metadata " +
                     $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND Genre !=''";
 
-                List<Dictionary<string, object>> lists = metaDataMapper.select(sql);
+                List<Dictionary<string, object>> lists = metaDataMapper.Select(sql);
                 if (lists != null)
                 {
                     string searchText = string.IsNullOrEmpty(SearchText) ? "" : SearchText;
@@ -1611,7 +1611,7 @@ namespace Jvedio.ViewModel
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
                 $"{(!string.IsNullOrEmpty(like_sql) ? like_sql : "")}" +
                 $"GROUP BY {field} ORDER BY Count DESC";
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             if (list != null)
             {
                 foreach (Dictionary<string, object> item in list)
@@ -1749,7 +1749,7 @@ namespace Jvedio.ViewModel
                          $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : "")} " +
                          "GROUP BY actor_info.ActorID)";
 
-            ActorTotalCount = actorMapper.selectCount(count_sql);
+            ActorTotalCount = actorMapper.SelectCount(count_sql);
 
             string sql = $"{wrapper.Select(ActorSelectedField).toSelect(false)} FROM actor_info " +
                 $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
@@ -1773,8 +1773,8 @@ namespace Jvedio.ViewModel
 
         public void RenderCurrentActors(string sql)
         {
-            List<Dictionary<string, object>> list = actorMapper.select(sql);
-            List<ActorInfo> actors = actorMapper.toEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
+            List<Dictionary<string, object>> list = actorMapper.Select(sql);
+            List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
             ActorList = new List<ActorInfo>();
             if (actors == null) actors = new List<ActorInfo>();
             ActorList.AddRange(actors);
@@ -2098,7 +2098,7 @@ namespace Jvedio.ViewModel
 
 
             string count_sql = "select count(DISTINCT metadata.DataID) " + sql + wrapper.toWhere(false);
-            TotalCount = metaDataMapper.selectCount(count_sql);
+            TotalCount = metaDataMapper.SelectCount(count_sql);
 
 
             WrapperEventArg<Video> arg = new WrapperEventArg<Video>();
@@ -2116,8 +2116,8 @@ namespace Jvedio.ViewModel
 
         public void RenderCurrentVideo(string sql)
         {
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
-            List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
+            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
             VideoList = new List<Video>();
             if (Videos == null) Videos = new List<Video>();
@@ -2198,10 +2198,10 @@ namespace Jvedio.ViewModel
             Task.Run(() =>
             {
                 long dbid = GlobalConfig.Main.CurrentDBId;
-                AllVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
-                appDatabaseMapper.updateFieldById("Count", AllVideoCount.ToString(), dbid);
+                AllVideoCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
+                appDatabaseMapper.UpdateFieldById("Count", AllVideoCount.ToString(), dbid);
 
-                FavoriteVideoCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
+                FavoriteVideoCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
 
 
                 string actor_count_sql = "SELECT count(*) as Count " +
@@ -2218,17 +2218,17 @@ namespace Jvedio.ViewModel
                          "GROUP BY actor_info.ActorID)";
 
 
-                AllActorCount = actorMapper.selectCount(actor_count_sql);
+                AllActorCount = actorMapper.SelectCount(actor_count_sql);
 
                 string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +
                                         "join metadata on metadata_to_label.DataID=metadata.DataID " +
                                          $"WHERE metadata.DBId={dbid} and metadata.DataType={0} ";
 
 
-                AllLabelCount = metaDataMapper.selectCount(label_count_sql);
+                AllLabelCount = metaDataMapper.SelectCount(label_count_sql);
                 DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                 DateTime date2 = DateTime.Now;
-                RecentWatchCount = metaDataMapper.selectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
+                RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
 
 
             });
@@ -2250,8 +2250,8 @@ namespace Jvedio.ViewModel
 
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
 
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
-            List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
+            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
             if (Videos == null) return;
 
@@ -2323,13 +2323,13 @@ namespace Jvedio.ViewModel
             string sql = VideoMapper.BASE_SQL;
 
             string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
-            AssoSearchTotalCount = metaDataMapper.selectCount(count_sql);
+            AssoSearchTotalCount = metaDataMapper.SelectCount(count_sql);
             main.assoPagination.Total = AssoSearchTotalCount;
 
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
 
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
-            List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
+            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
             if (Videos == null) return;
 
@@ -2378,8 +2378,8 @@ namespace Jvedio.ViewModel
                 wrapper.Select("VID", "metadata.DataID", "Title", "MVID").In("metadata.DataID", set.Select(x => x.ToString()));
                 string sql = VideoMapper.BASE_SQL;
                 sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
-                List<Dictionary<string, object>> list = metaDataMapper.select(sql);
-                CurrentExistAssoData = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+                List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
+                CurrentExistAssoData = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
                 if (CurrentExistAssoData != null)
                     CurrentExistAssoData.ForEach(t => ExistAssociationDatas.Add(t));
                 else
@@ -2418,13 +2418,13 @@ namespace Jvedio.ViewModel
 
 
             if (toInsert.Count > 0)
-                associationMapper.insertBatch(toInsert, InsertMode.Ignore);
+                associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
             if (toDelete.Count > 0)
             {
                 foreach (long id in toDelete)
                 {
                     string sql = $"delete from common_association where MainDataID='{id}' or SubDataID='{id}'";
-                    associationMapper.executeNonQuery(sql);
+                    associationMapper.ExecuteNonQuery(sql);
                 }
             }
 

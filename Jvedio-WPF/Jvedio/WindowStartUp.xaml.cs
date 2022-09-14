@@ -423,7 +423,7 @@ namespace Jvedio
             if (string.IsNullOrEmpty(targetName)) return;
             if (targetName == originName) return;
             info.Name = targetName;
-            appDatabaseMapper.updateById(info);
+            appDatabaseMapper.UpdateById(info);
             // 仅更新重命名的
             vieModel_StartUp.refreshItem();
         }
@@ -500,7 +500,7 @@ namespace Jvedio
             AppDatabase appDatabase = new AppDatabase();
             appDatabase.Name = targetName;
             appDatabase.DataType = (DataType)vieModel_StartUp.CurrentSideIdx;
-            appDatabaseMapper.insert(appDatabase);
+            appDatabaseMapper.Insert(appDatabase);
             RefreshDatabase();
         }
 
@@ -543,7 +543,7 @@ namespace Jvedio
 
 
 
-            List<AppDatabase> appDatabases = appDatabaseMapper.selectList();
+            List<AppDatabase> appDatabases = appDatabaseMapper.SelectList();
             //加载数据库
             long id = GlobalConfig.Main.CurrentDBId;
             AppDatabase database = null;
@@ -585,7 +585,7 @@ namespace Jvedio
             {
                 vieModel_StartUp.Loading = false;
                 // 次数+1
-                appDatabaseMapper.increaseFieldById("ViewCount", id);
+                appDatabaseMapper.IncreaseFieldById("ViewCount", id);
 
                 GlobalConfig.Main.CurrentDBId = id;
 
@@ -713,7 +713,7 @@ namespace Jvedio
             AppDatabase app2 = vieModel_StartUp.CurrentDatabases.Where(x => x.DBId == id).SingleOrDefault();
             if (app1 != null) app1.ImagePath = newPath;
             if (app2 != null) app2.ImagePath = newPath;
-            appDatabaseMapper.updateFieldById("ImagePath", newName, id);
+            appDatabaseMapper.UpdateFieldById("ImagePath", newName, id);
         }
 
         private void LoadDataBase(object sender, RoutedEventArgs e)
@@ -738,7 +738,7 @@ namespace Jvedio
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             if (info == null) return;
             info.Hide = info.Hide == 0 ? 1 : 0;
-            appDatabaseMapper.updateById(info);
+            appDatabaseMapper.UpdateById(info);
             vieModel_StartUp.ReadFromDataBase();
         }
 

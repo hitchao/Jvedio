@@ -5,7 +5,7 @@ using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils;
@@ -188,7 +188,7 @@ namespace Jvedio
                     sql = "select metadata.DataID" + sql + wrapper.toWhere(false) + wrapper.toOrder();
                 else
                     sql = "select metadata.DataID" + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
-                List<Dictionary<string, object>> list = videoMapper.select(sql);
+                List<Dictionary<string, object>> list = videoMapper.Select(sql);
                 if (list != null && list.Count > 0)
                     DataIDs = list.Select(arg => long.Parse(arg["DataID"].ToString())).ToList();
             }
@@ -498,9 +498,9 @@ namespace Jvedio
             vieModel.CurrentVideo.PreviewImageList.Clear();
             vieModel.CurrentVideo.PreviewImagePathList.Clear();
             if (vieModel.ShowScreenShot)
-                videoMapper.updateFieldById("ScreenShotPath", "", vieModel.CurrentVideo.DataID);
+                videoMapper.UpdateFieldById("ScreenShotPath", "", vieModel.CurrentVideo.DataID);
             else
-                videoMapper.updateFieldById("PreviewImagePath", "", vieModel.CurrentVideo.DataID);
+                videoMapper.UpdateFieldById("PreviewImagePath", "", vieModel.CurrentVideo.DataID);
             await Task.Delay(300);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
@@ -511,7 +511,7 @@ namespace Jvedio
         private void SetToSmallPic(object sender, RoutedEventArgs e)
         {
             //string path = getExtraImagePath(sender as FrameworkElement, 1);
-            //videoMapper.updateFieldById("SmallImagePath", path, DataID);
+            //videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
             //windowMain?.RefreshImage(vieModel.CurrentVideo);
             //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
         }
@@ -522,8 +522,8 @@ namespace Jvedio
 
             //string path = getExtraImagePath(sender as FrameworkElement, 1);
             //// todo 绝对地址
-            //videoMapper.updateFieldById("SmallImagePath", path, DataID);
-            //videoMapper.updateFieldById("BigImagePath", path, DataID);
+            //videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
+            //videoMapper.UpdateFieldById("BigImagePath", path, DataID);
             //Refresh();
             //windowMain?.RefreshImage(vieModel.CurrentVideo);
             //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
@@ -535,7 +535,7 @@ namespace Jvedio
         private void SetToBigPic(object sender, RoutedEventArgs e)
         {
             string path = getExtraImagePath(sender as FrameworkElement, 1);
-            videoMapper.updateFieldById("BigImagePath", path, DataID);
+            videoMapper.UpdateFieldById("BigImagePath", path, DataID);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
             SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
@@ -1246,7 +1246,7 @@ namespace Jvedio
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            videoMapper.updateField("VideoType", comboBox.SelectedIndex.ToString(), new SelectWrapper<Video>().Eq("DataID", DataID));
+            videoMapper.UpdateField("VideoType", comboBox.SelectedIndex.ToString(), new SelectWrapper<Video>().Eq("DataID", DataID));
         }
 
         private void DownLoadInfo(object sender, MouseButtonEventArgs e)
@@ -1393,7 +1393,7 @@ namespace Jvedio
             {
                 tagStamps.Remove(tagStamp);
                 string sql = $"delete from metadata_to_tagstamp where TagID='{TagID}' and DataID='{DataID}'";
-                tagStampMapper.executeNonQuery(sql);
+                tagStampMapper.ExecuteNonQuery(sql);
             }
 
         }
@@ -1436,7 +1436,7 @@ namespace Jvedio
             StackPanel stackPanel = rate.Parent as StackPanel;
             long id = getDataID(stackPanel);
             if (id <= 0) return;
-            metaDataMapper.updateFieldById("Grade", rate.Value.ToString(), id);
+            metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), id);
             CanRateChange = false;
         }
 

@@ -2,7 +2,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Jvedio.Core.Enums;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using Jvedio.Utils;
@@ -128,7 +128,7 @@ namespace Jvedio.ViewModel
             List<AppDatabase> appDatabases = new List<AppDatabase>();
             SelectWrapper<AppDatabase> wrapper = new SelectWrapper<AppDatabase>();
             wrapper.Eq("DataType", GlobalConfig.StartUp.SideIdx);
-            appDatabases = appDatabaseMapper.selectList(wrapper);
+            appDatabases = appDatabaseMapper.SelectList(wrapper);
             if (appDatabases == null) return;
             appDatabases.ForEach(item => Databases.Add(item));
             Search();

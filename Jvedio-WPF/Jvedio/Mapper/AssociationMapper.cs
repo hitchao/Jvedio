@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.SimpleORM;
+﻿using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.Base;
 using Jvedio.Entity.CommonSQL;
@@ -18,7 +18,7 @@ namespace Jvedio.Mapper
         public Dictionary<long, ListNode<long>> AdjacencyList { get; set; }
         public void InitAdjacencyList()
         {
-            Associations = selectList();
+            Associations = SelectList();
             AdjacencyList = new Dictionary<long, ListNode<long>>();
             // 构造邻接表
             // 邻接表适合存储稀疏图（顶点较多、边较少）

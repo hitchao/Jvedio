@@ -112,8 +112,8 @@ namespace Jvedio.Entity
             builder.Append("commit;");
             try
             {
-                GlobalMapper.appDatabaseMapper.executeNonQuery(builder.ToString());
-                GlobalMapper.appDatabaseMapper.deleteById(id);
+                GlobalMapper.appDatabaseMapper.ExecuteNonQuery(builder.ToString());
+                GlobalMapper.appDatabaseMapper.DeleteById(id);
             }
             catch (Exception ex)
             {

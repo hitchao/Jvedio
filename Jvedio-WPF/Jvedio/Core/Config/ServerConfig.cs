@@ -1,7 +1,7 @@
 ﻿using Jvedio.Core.Config.Base;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Plugins.Crawler;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Core.WindowConfig;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
@@ -40,7 +40,7 @@ namespace Jvedio.Core.Config
             CrawlerServers = new List<CrawlerServer>();
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", ConfigName);
-            AppConfig appConfig = GlobalMapper.appConfigMapper.selectOne(wrapper);
+            AppConfig appConfig = GlobalMapper.appConfigMapper.SelectOne(wrapper);
             if (appConfig == null || appConfig.ConfigId == 0) return;
             List<Dictionary<object, object>> dicts = JsonUtils.TryDeserializeObject<List<Dictionary<object, object>>>(appConfig.ConfigValue);
 
@@ -69,7 +69,7 @@ namespace Jvedio.Core.Config
                 AppConfig appConfig = new AppConfig();
                 appConfig.ConfigName = ConfigName;
                 appConfig.ConfigValue = JsonConvert.SerializeObject(CrawlerServers); ;
-                GlobalMapper.appConfigMapper.insert(appConfig,  InsertMode.Replace);
+                GlobalMapper.appConfigMapper.Insert(appConfig, InsertMode.Replace);
             }
         }
 

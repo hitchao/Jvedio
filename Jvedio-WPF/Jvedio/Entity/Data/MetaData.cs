@@ -1,7 +1,7 @@
 ﻿using DynamicData.Annotations;
 using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils.Common;
 using Jvedio.Utils.Media;

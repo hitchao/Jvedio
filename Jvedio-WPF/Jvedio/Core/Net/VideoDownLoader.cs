@@ -19,7 +19,7 @@ using Jvedio.Core.Plugins;
 using Jvedio.CommonNet.Entity;
 using Jvedio.CommonNet.Crawler;
 using Jvedio.CommonNet;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using System.Net;
 using Jvedio.Core.Plugins.Crawler;
 

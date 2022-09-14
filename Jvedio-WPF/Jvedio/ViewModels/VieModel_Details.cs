@@ -17,7 +17,7 @@ using DynamicData;
 using System.Windows.Media.Imaging;
 using static Jvedio.Utils.Visual.VisualHelper;
 using Jvedio.Entity;
-using Jvedio.Core.SimpleORM;
+using Jvedio.Mapper.BaseMapper;
 using System.Windows.Threading;
 using Jvedio.Mapper;
 using Jvedio.Utils.Media;
@@ -196,7 +196,7 @@ namespace Jvedio.ViewModel
 
         public void SaveLove()
         {
-            metaDataMapper.updateFieldById("Grade", CurrentVideo.Grade.ToString(), CurrentVideo.DataID);
+            metaDataMapper.UpdateFieldById("Grade", CurrentVideo.Grade.ToString(), CurrentVideo.DataID);
         }
 
 
@@ -226,7 +226,7 @@ namespace Jvedio.ViewModel
             windowDetails.DataID = dataID;
 
             // todo 事务下导致阻塞
-            metaDataMapper.increaseFieldById("ViewCount", dataID); //访问次数+1
+            metaDataMapper.IncreaseFieldById("ViewCount", dataID); //访问次数+1
             Video video = videoMapper.SelectVideoByID(dataID);
             Video.setTagStamps(ref video);// 设置标签戳
             Video.handleEmpty(ref video);
@@ -236,7 +236,7 @@ namespace Jvedio.ViewModel
             video.AssociationList = set.ToList();
             CurrentVideo = video;
             // 磁力
-            List<Magnet> magnets = magnetsMapper.selectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
+            List<Magnet> magnets = magnetsMapper.SelectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
             if (magnets?.Count > 0)
             {
                 try
@@ -270,8 +270,8 @@ namespace Jvedio.ViewModel
 
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
 
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
-            List<Video> Videos = metaDataMapper.toEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
+            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
             if (Videos == null) return;
 
@@ -321,7 +321,7 @@ namespace Jvedio.ViewModel
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
                 $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
-            List<Dictionary<string, object>> list = metaDataMapper.select(sql);
+            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             if (list != null)
             {
                 foreach (Dictionary<string, object> item in list)
