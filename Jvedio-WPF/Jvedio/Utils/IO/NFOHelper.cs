@@ -1,6 +1,6 @@
 ﻿using Jvedio.Entity;
-using Jvedio.Logs;
-using Jvedio.Utils.Common;
+using Jvedio.Core.Logs;
+using SuperUtils.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

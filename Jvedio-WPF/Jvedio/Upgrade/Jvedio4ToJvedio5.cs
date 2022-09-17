@@ -1,9 +1,9 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.Data;
 using Jvedio.Windows;
 using Newtonsoft.Json;
@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
+using SuperUtils.Time;
 
 namespace Jvedio.Upgrade
 {
@@ -112,7 +113,7 @@ namespace Jvedio.Upgrade
                 List<string> list = dict[key];
                 if (list != null && list.Count > 0)
                 {
-                    string sql = $"update metadata set ViewDate = '{key.toLocalDate()}' " +
+                    string sql = $"update metadata set ViewDate = '{key.ToLocalDate()}' " +
                                 "where DataID in (select DataID from metadata_video " +
                                 $"where VID in ('{string.Join("','", list)}')); ";
                     metaDataMapper.ExecuteNonQuery(sql);

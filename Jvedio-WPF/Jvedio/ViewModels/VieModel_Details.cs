@@ -1,29 +1,20 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using Jvedio.Core.Logs;
+using Jvedio.Entity;
+using Jvedio.Mapper;
+using Jvedio.Utils;
+using Jvedio.Utils.Media;
+using SuperUtils.Framework.ORM.Wrapper;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using static Jvedio.GlobalVariable;
 using static Jvedio.MapperManager;
 using static Jvedio.Utils.Media.ImageHelper;
-
-using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using System.IO;
-using System.Text.RegularExpressions;
-using DynamicData;
-using System.Windows.Media.Imaging;
 using static Jvedio.Utils.Visual.VisualHelper;
-using Jvedio.Entity;
-using Jvedio.Mapper.BaseMapper;
-using System.Windows.Threading;
-using Jvedio.Mapper;
-using Jvedio.Utils.Media;
-using Jvedio.Logs;
-using Jvedio.Utils;
-using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio.ViewModel
 {

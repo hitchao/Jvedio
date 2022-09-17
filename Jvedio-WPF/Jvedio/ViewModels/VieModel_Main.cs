@@ -10,10 +10,10 @@ using Jvedio.Core.Scan;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Mapper;
 using Jvedio.Utils;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using JvedioLib.Security;
 using SuperUtils.Framework.ORM.Attributes;
@@ -34,6 +34,8 @@ using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Media.ImageHelper;
 using static Jvedio.Utils.Visual.VisualHelper;
+using SuperUtils.Time;
+
 namespace Jvedio.ViewModel
 {
     public class VieModel_Main : ViewModelBase
@@ -1948,7 +1950,7 @@ namespace Jvedio.ViewModel
                     case "RecentWatch":
                         DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                         DateTime date2 = DateTime.Now;
-                        extraWrapper.Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2));
+                        extraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
                         break;
                     default: break;
                 }
@@ -2228,7 +2230,7 @@ namespace Jvedio.ViewModel
                 AllLabelCount = metaDataMapper.SelectCount(label_count_sql);
                 DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                 DateTime date2 = DateTime.Now;
-                RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.toLocalDate(date1), DateHelper.toLocalDate(date2)));
+                RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
 
 
             });

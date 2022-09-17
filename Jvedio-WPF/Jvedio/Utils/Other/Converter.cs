@@ -11,12 +11,12 @@ using System.Windows.Media;
 using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using Jvedio.Utils;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 
 namespace Jvedio
 {
 
- 
+
 
     public class MultiUnitConverter : IMultiValueConverter
     {
@@ -95,7 +95,7 @@ namespace Jvedio
         }
     }
 
- 
+
 
 
     public class NullToVisibilityConverter : IValueConverter
@@ -112,7 +112,7 @@ namespace Jvedio
         }
     }
 
- 
+
     public class VideoTypeConverter : IValueConverter
     {
         //数字转换为选中项的地址
@@ -137,7 +137,7 @@ namespace Jvedio
 
 
     }
- 
+
 
 
 

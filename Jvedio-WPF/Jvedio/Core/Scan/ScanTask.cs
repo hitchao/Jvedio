@@ -1,6 +1,6 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.Utils;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
@@ -19,10 +19,11 @@ using Jvedio.Core.Net;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
 using Jvedio.Utils.IO;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Newtonsoft.Json;
 using Jvedio.Core.Enums;
 using JvedioLib.Security;
+using SuperUtils.Time;
 
 namespace Jvedio.Core.Scan
 {

@@ -1,7 +1,7 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using Jvedio.Utils.Media;
 using SuperUtils.Framework.ORM.Attributes;
@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
+using SuperUtils.Reflections;
+
 namespace Jvedio.Entity
 {
     [Table(tableName: "actor_info")]
@@ -88,7 +90,7 @@ namespace Jvedio.Entity
 
         public override string ToString()
         {
-            return ClassUtils.toString(this);
+            return ClassUtils.ToString(this);
         }
 
         public static void SetImage(ref ActorInfo actorInfo)

@@ -7,9 +7,9 @@ using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Upgrade;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using Jvedio.ViewModel;
 using JvedioLib.Security;
@@ -28,6 +28,7 @@ using System.Windows.Input;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Visual.VisualHelper;
+using SuperUtils.Time;
 
 namespace Jvedio
 {

@@ -1,7 +1,7 @@
 ﻿using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
-using Jvedio.Logs;
-using Jvedio.Utils.Common;
+using Jvedio.Core.Logs;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using Newtonsoft.Json.Linq;
 using System;

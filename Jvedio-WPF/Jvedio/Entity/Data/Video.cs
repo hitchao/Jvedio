@@ -4,7 +4,7 @@ using Jvedio.Core.Scan;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Utils;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using JvedioLib.Security;
 using Newtonsoft.Json;
@@ -18,6 +18,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using Jvedio.Utils.IO;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Time;
+using SuperUtils.Reflections;
 
 namespace Jvedio.Entity
 {
@@ -76,7 +78,7 @@ namespace Jvedio.Entity
                 video.Title = System.IO.Path.GetFileNameWithoutExtension(video.Path);
             if (Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty
                 && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
-                video.ReleaseDate = DateHelper.toLocalDate(video.LastScanDate);
+                video.ReleaseDate = DateHelper.ToLocalDate(video.LastScanDate);
         }
 
 
@@ -275,7 +277,7 @@ namespace Jvedio.Entity
 
         public override string ToString()
         {
-            return ClassUtils.toString(this);
+            return ClassUtils.ToString(this);
         }
 
         public MetaData toMetaData()

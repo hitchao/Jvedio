@@ -1,6 +1,6 @@
 ﻿using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

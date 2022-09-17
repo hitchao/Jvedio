@@ -1,6 +1,6 @@
 ﻿
 
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using JvedioLib.Security;
 using Newtonsoft.Json;
 using System;

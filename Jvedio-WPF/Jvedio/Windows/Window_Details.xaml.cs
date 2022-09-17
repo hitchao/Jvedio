@@ -32,7 +32,7 @@ using static Jvedio.GlobalVariable;
 using Jvedio.Utils.Media;
 using static Jvedio.Utils.Visual.VisualHelper;
 using static Jvedio.Utils.Media.ImageHelper;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Core.Crawler;
 using SuperUtils.Framework.ORM.Wrapper;
 

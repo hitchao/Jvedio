@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using Jvedio.Utils;
 using Jvedio.Utils.Sqlite;
 using Jvedio.Entity;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 
 namespace Jvedio.Entity
 {

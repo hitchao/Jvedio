@@ -1,5 +1,5 @@
-﻿using Jvedio.Logs;
-using Jvedio.Utils.Common;
+﻿using Jvedio.Core.Logs;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using Jvedio.Utils.Reflections;
 using Newtonsoft.Json;

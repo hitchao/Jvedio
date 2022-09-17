@@ -1,12 +1,13 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Priority_Queue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SuperUtils.Maths;
 
 namespace Jvedio.Core.CustomTask
 {
@@ -119,7 +120,7 @@ namespace Jvedio.Core.CustomTask
                     beforeTaskCount != DoneList.Count && DoneList.Count % DEFAULT_LONG_TASK_COUNT == 0)
                     {
                         beforeTaskCount = DoneList.Count;
-                        int delay = NumberHelper.generateRandomMS(LongTaskDelay);
+                        int delay = NumberHelper.GenerateRandomMS(LongTaskDelay);
                         Console.WriteLine("开始长暂停 " + delay);
                         onLongDelay?.Invoke(this, new MessageCallBackEventArgs(delay.ToString()));
                         await Task.Delay(delay);
@@ -127,7 +128,7 @@ namespace Jvedio.Core.CustomTask
                     else
                     {
                         // 短暂停
-                        if (WorkingList.Count != 0 && TaskDelay > 0) await Task.Delay(NumberHelper.generateRandomMS(TaskDelay, 1));
+                        if (WorkingList.Count != 0 && TaskDelay > 0) await Task.Delay(NumberHelper.GenerateRandomMS(TaskDelay, 1));
                     }
 
                     onLongDelay?.Invoke(this, new MessageCallBackEventArgs("0"));// 隐藏提示

@@ -1,4 +1,4 @@
-﻿using Jvedio.Logs;
+﻿using Jvedio.Core.Logs;
 using Jvedio.Mapper.BaseMapper;
 using SuperUtils.Framework.ORM.Mapper;
 using SuperUtils.Framework.ORM.Wrapper;

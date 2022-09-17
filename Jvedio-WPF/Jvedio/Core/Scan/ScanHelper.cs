@@ -11,12 +11,13 @@ using System.Security.Permissions;
 using Jvedio.Core.Enums;
 using System.Text;
 using Jvedio.Entity;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Core.Scan;
 using JvedioLib;
 using JvedioLib.Security;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Utils.IO;
+using SuperUtils.Time;
 
 namespace Jvedio
 {
@@ -284,7 +285,7 @@ namespace Jvedio
                         fatherPathDic.Add(father_path, 1);
                 });
 
-                object maxKey = CommonDataHelper.TryGetMaxCountKey(fatherPathDic);
+                object maxKey = DataHelper.TryGetMaxCountKey(fatherPathDic);
                 string maxValueKey = maxKey == null ? "" : maxKey.ToString();
                 if (!string.IsNullOrEmpty(maxValueKey))
                 {
@@ -531,7 +532,7 @@ namespace Jvedio
                 Size = fileInfo.Length,
                 VideoType = (VideoType)Identify.GetVideoType(VID),
                 FirstScanDate = DateHelper.Now(),
-                CreateDate = DateHelper.toLocalDate(fileInfo.CreationTime),
+                CreateDate = DateHelper.ToLocalDate(fileInfo.CreationTime),
             };
             if (size >= 0) video.Size = size;
             if (!string.IsNullOrEmpty(subsection)) video.SubSection = subsection;

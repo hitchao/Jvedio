@@ -1,4 +1,4 @@
-﻿using Jvedio.Logs;
+﻿using Jvedio.Core.Logs;
 using System;
 using System.IO;
 using System.Text;

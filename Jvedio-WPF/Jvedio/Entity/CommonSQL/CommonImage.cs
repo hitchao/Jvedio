@@ -1,7 +1,7 @@
 ﻿using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Mapper;
 using Jvedio.Core.Enums;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

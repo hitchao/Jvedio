@@ -3,7 +3,7 @@ using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Interfaces;
 using Jvedio.Core.Plugins;
 using Jvedio.Utils;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

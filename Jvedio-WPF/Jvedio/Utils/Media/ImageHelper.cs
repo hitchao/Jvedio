@@ -1,5 +1,5 @@
 ﻿using Jvedio.Entity;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

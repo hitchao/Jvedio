@@ -4,7 +4,7 @@ using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;

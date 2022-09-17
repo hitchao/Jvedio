@@ -3,7 +3,7 @@ using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.Media;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Time;
 
 namespace Jvedio.Entity
 {
@@ -185,7 +186,7 @@ namespace Jvedio.Entity
                 data.Title = System.IO.Path.GetFileName(data.Path);
             if (Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty
                 && !string.IsNullOrEmpty(data.LastScanDate) && string.IsNullOrEmpty(data.ReleaseDate))
-                data.ReleaseDate = DateHelper.toLocalDate(data.LastScanDate);
+                data.ReleaseDate = DateHelper.ToLocalDate(data.LastScanDate);
         }
 
         public static void setTagStamps(ref MetaData data)

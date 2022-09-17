@@ -348,8 +348,6 @@
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Core\CustomTask\TaskLogger.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
-    <Compile Include="Utils\Common\CommonDataHelper.cs" />
-    <Compile Include="Utils\Common\JsonUtils.cs" />
     <Compile Include="Utils\Reflections\ReflectionHelper.cs" />
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
@@ -357,9 +355,9 @@
     <Compile Include="WindowsDialog\Dialog_Sponsor.xaml.cs">
       <DependentUpon>Dialog_Sponsor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Entity\Actor.cs" />
-    <Compile Include="Entity\ActorInfo.cs" />
-    <Compile Include="Entity\Actress.cs" />
+    <Compile Include="Entity\Common\Actor.cs" />
+    <Compile Include="Entity\Common\ActorInfo.cs" />
+    <Compile Include="Entity\Common\Actress.cs" />
     <Compile Include="Core\Scan\ScanTask.cs" />
     <Compile Include="Entity\Base\ListNode.cs" />
     <Compile Include="Entity\CommonSQL\AIFaceInfo.cs" />
@@ -375,17 +373,17 @@
     <Compile Include="Entity\Data\Picture.cs" />
     <Compile Include="Entity\Data\UrlCode.cs" />
     <Compile Include="Entity\Data\Video.cs" />
-    <Compile Include="Entity\DetailMovie.cs" />
-    <Compile Include="Entity\Message.cs" />
-    <Compile Include="Entity\Movie.cs" />
-    <Compile Include="Entity\Notice.cs" />
-    <Compile Include="Entity\Serilizable.cs" />
+    <Compile Include="Entity\Common\DetailMovie.cs" />
+    <Compile Include="Entity\Common\Message.cs" />
+    <Compile Include="Entity\Common\Movie.cs" />
+    <Compile Include="Entity\Common\Notice.cs" />
+    <Compile Include="Entity\Common\Serilizable.cs" />
     <Compile Include="Core\Crawler\CrawlerServer.cs" />
-    <Compile Include="Entity\Server.cs" />
+    <Compile Include="Entity\Common\Server.cs" />
     <Compile Include="Entity\CommonSQL\Magnet.cs" />
     <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
     <Compile Include="Entity\CommonSQL\Translation.cs" />
-    <Compile Include="Entity\VideoInfo.cs" />
+    <Compile Include="Entity\Common\VideoInfo.cs" />
     <Compile Include="Core\Plugins\Theme\Theme.cs" />
     <Compile Include="Core\Plugins\Theme\ThemeManager.cs" />
     <Compile Include="WindowsDialog\Dialog_LoadPage.xaml.cs">
@@ -451,7 +449,7 @@
       <DependentUpon>Dialog_Thanks.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\External\Translate.cs" />
-    <Compile Include="Entity\MySqlite.cs" />
+    <Compile Include="Entity\Common\MySqlite.cs" />
     <Compile Include="Utils\Data\StringFormat.cs" />
     <Compile Include="Utils\Visual\VisualHelper.cs" />
     <Compile Include="ViewModels\VieModel_MetaDataEdit.cs" />
@@ -461,8 +459,8 @@
     </Compile>
     <Compile Include="Core\Net\VideoDownLoader.cs" />
     <Compile Include="Core\Media\ImageSlide.cs" />
-    <Compile Include="Logs\Logger.cs" />
-    <Compile Include="Entity\NFO.cs" />
+    <Compile Include="Core\Logs\Logger.cs" />
+    <Compile Include="Entity\Common\NFO.cs" />
     <Compile Include="Core\Scan\ScanHelper.cs" />
     <Compile Include="Windows\Dialog\Window_SelectPaths.xaml.cs">
       <DependentUpon>Window_SelectPaths.xaml</DependentUpon>

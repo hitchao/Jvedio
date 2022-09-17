@@ -2,7 +2,7 @@
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Plugins.Crawler;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using Newtonsoft.Json.Linq;
 using SuperControls.Style;

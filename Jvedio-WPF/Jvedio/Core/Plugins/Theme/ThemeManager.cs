@@ -1,9 +1,9 @@
 ﻿using ExCSS;
 using Jvedio.Core.Plugins;
 using Jvedio.Entity;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Utils;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

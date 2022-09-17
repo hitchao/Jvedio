@@ -2,8 +2,8 @@
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Core.Scan;
-using Jvedio.Logs;
-using Jvedio.Utils.Common;
+using Jvedio.Core.Logs;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using JvedioLib.Security;
 using Newtonsoft.Json;

@@ -1,4 +1,5 @@
-﻿using Jvedio.Utils.Common;
+﻿using SuperUtils.Common;
+using SuperUtils.Reflections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Jvedio.Entity
     {
         public override string ToString()
         {
-            return ClassUtils.toString(this);
+            return ClassUtils.ToString(this);
         }
     }
 }

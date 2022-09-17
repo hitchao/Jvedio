@@ -1,8 +1,8 @@
 ﻿using SuperControls.Style;
 using Jvedio.Core.Scan;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Utils;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Jvedio.Utils.IO;
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SuperUtils.Time;
+using SuperUtils.Reflections;
 
 namespace Jvedio
 {
@@ -45,7 +47,7 @@ namespace Jvedio
 
             public override string ToString()
             {
-                return ClassUtils.toString(this);
+                return ClassUtils.ToString(this);
             }
         }
 
@@ -121,7 +123,7 @@ namespace Jvedio
             update.Text = ScanResult.Update.Count.ToString();
             failNfo.Text = ScanResult.FailNFO.Count.ToString();
             scanDate.Text = ScanResult.ScanDate.ToString();
-            cost.Text = DateHelper.toReadableTime(ScanResult.ElapsedMilliseconds);
+            cost.Text = DateHelper.ToReadableTime(ScanResult.ElapsedMilliseconds);
 
         }
 

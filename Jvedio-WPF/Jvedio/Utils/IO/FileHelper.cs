@@ -1,7 +1,7 @@
 ﻿
 using SuperControls.Style;
 using Jvedio.CommonNet;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;

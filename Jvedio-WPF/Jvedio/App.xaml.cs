@@ -15,7 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using HandyControl.Tools;
 using Jvedio;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 
 namespace Jvedio
 {

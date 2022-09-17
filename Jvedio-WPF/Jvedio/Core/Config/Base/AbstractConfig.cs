@@ -1,6 +1,6 @@
 ﻿using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
 using Newtonsoft.Json;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;

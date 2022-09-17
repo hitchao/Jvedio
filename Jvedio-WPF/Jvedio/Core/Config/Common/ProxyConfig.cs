@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.Config.Base;
 using Jvedio.Core.WindowConfig;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using JvedioLib.Security;
 using MihaZupan;
 using System;

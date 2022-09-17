@@ -1,8 +1,8 @@
 ﻿using Jvedio.Core.Config.Base;
 using Jvedio.Core.Enums;
 using Jvedio.Core.WindowConfig;
-using Jvedio.Logs;
-using Jvedio.Utils.Common;
+using Jvedio.Core.Logs;
+using SuperUtils.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

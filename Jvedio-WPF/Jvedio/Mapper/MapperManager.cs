@@ -1,7 +1,7 @@
 ﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.DataBase.Tables;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Logs;
+using Jvedio.Core.Logs;
 using Jvedio.Mapper;
 using System;
 using System.Collections.Generic;

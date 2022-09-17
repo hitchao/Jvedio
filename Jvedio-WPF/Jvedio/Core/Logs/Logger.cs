@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Enums;
-using Jvedio.Utils.Common;
+using SuperUtils.Common;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Logs
+namespace Jvedio.Core.Logs
 {
 
     // todo 优化日志记录
