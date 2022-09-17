@@ -6,7 +6,6 @@ namespace Jvedio.Core.WindowConfig
     {
         private MetaData() : base($"WindowConfig.MetaData")
         {
-
         }
 
         private static MetaData _instance = null;
@@ -29,8 +28,5 @@ namespace Jvedio.Core.WindowConfig
         public long SortIndex { get; set; }
 
         public long PageSize { get; set; }
-
-
-
     }
 }

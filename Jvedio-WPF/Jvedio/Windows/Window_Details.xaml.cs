@@ -41,7 +41,6 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Details : Window
     {
-
         private List<string> oldLabels { get; set; }
 
         private VieModel_Details vieModel { get; set; }
@@ -65,8 +64,6 @@ namespace Jvedio
         {
             windowMain = GetWindowByName("Main") as Main;
         }
-
-
 
         public Window_Details(long dataID)
         {
@@ -120,7 +117,6 @@ namespace Jvedio
             searchLabelPopup.IsOpen = false;
         }
 
-
         private void SetShadow()
         {
             SuperControls.Style.Utils.DwmDropShadow.DropShadowToWindow(this);
@@ -161,14 +157,10 @@ namespace Jvedio
                         //    });
 
                         //}
-
                     }
                     actorInfo.SmallImage = smallimage;
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo);
                 }
-
-
-
             }
         }
 
@@ -176,8 +168,6 @@ namespace Jvedio
         {
             //await HttpHelper.AsyncDownLoadFile(actorInfo.ImageUrl, CrawlerHeader.Default);
         }
-
-
 
         public void InitDataIDs()
         {
@@ -203,15 +193,10 @@ namespace Jvedio
                 taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
         }
 
-
-
-
         public void Refresh()
         {
             vieModel.Load(DataID);
         }
-
-
 
         // todo
         public void SetSkin()
@@ -297,14 +282,7 @@ namespace Jvedio
             windowMain?.addToScreenShot(task);
         }
 
-
-
-
         public void CloseWindow(object sender, RoutedEventArgs e) => this.Close();
-
-
-
-
 
         //显示类别
         public void ShowSameGenre(object sender, MouseButtonEventArgs e)
@@ -347,8 +325,6 @@ namespace Jvedio
         public void ShowSameStudio(object sender, MouseButtonEventArgs e)
         {
             ShowSameString(sender, "Studio");
-
-
         }
 
         //显示系列
@@ -361,17 +337,12 @@ namespace Jvedio
             this.Close();
         }
 
-
-
         public void EditInfo(object sender, RoutedEventArgs e)
         {
-
             if (windowEdit != null) windowEdit.Close();
             windowEdit = new Window_Edit(vieModel.CurrentVideo.DataID);
             windowEdit.ShowDialog();
         }
-
-
 
         private void MoveWindow(object sender, MouseEventArgs e)
         {
@@ -384,7 +355,6 @@ namespace Jvedio
             scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
             e.Handled = true;
         }
-
 
         // todo 滚动过快导致演员超出
         public void PreviousMovie(object sender, MouseButtonEventArgs e)
@@ -412,8 +382,6 @@ namespace Jvedio
                 vieModel.SelectImageIndex = 0;
             }
         }
-
-
 
         public void NextMovie(object sender, MouseButtonEventArgs e)
         {
@@ -450,7 +418,7 @@ namespace Jvedio
 
         private string getExtraImagePath(FrameworkElement element, int depth = 0)
         {
-            if (element == null || depth < 0) return "";
+            if (element == null || depth < 0) return string.Empty;
             MenuItem menuItem = element as MenuItem;
             ContextMenu contextMenu = menuItem.Parent as ContextMenu;
             if (depth == 1) contextMenu = (menuItem.Parent as MenuItem).Parent as ContextMenu;
@@ -458,7 +426,7 @@ namespace Jvedio
             int.TryParse(border.Tag.ToString(), out int idx);
             if (idx >= 0 && idx < vieModel.CurrentVideo.PreviewImagePathList.Count)
                 return vieModel.CurrentVideo.PreviewImagePathList[idx];
-            return "";
+            return string.Empty;
         }
 
         public async void DeleteImage(object sender, RoutedEventArgs e)
@@ -486,13 +454,10 @@ namespace Jvedio
                     SetImage(0);
                 }
             }
-
-
         }
 
         public async void DeleteAllImage(object sender, RoutedEventArgs e)
         {
-
             for (int i = 0; i < vieModel.CurrentVideo.PreviewImagePathList.Count; i++)
             {
                 string path = vieModel.CurrentVideo.PreviewImagePathList[i];
@@ -501,14 +466,13 @@ namespace Jvedio
             vieModel.CurrentVideo.PreviewImageList.Clear();
             vieModel.CurrentVideo.PreviewImagePathList.Clear();
             if (vieModel.ShowScreenShot)
-                videoMapper.UpdateFieldById("ScreenShotPath", "", vieModel.CurrentVideo.DataID);
+                videoMapper.UpdateFieldById("ScreenShotPath", string.Empty, vieModel.CurrentVideo.DataID);
             else
-                videoMapper.UpdateFieldById("PreviewImagePath", "", vieModel.CurrentVideo.DataID);
+                videoMapper.UpdateFieldById("PreviewImagePath", string.Empty, vieModel.CurrentVideo.DataID);
             await Task.Delay(300);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
         }
-
 
         // todo
         private void SetToSmallPic(object sender, RoutedEventArgs e)
@@ -522,7 +486,6 @@ namespace Jvedio
         // todo
         private void SetToBigAndSmallPic(object sender, RoutedEventArgs e)
         {
-
             //string path = getExtraImagePath(sender as FrameworkElement, 1);
             //// todo 绝对地址
             //videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
@@ -530,10 +493,7 @@ namespace Jvedio
             //Refresh();
             //windowMain?.RefreshImage(vieModel.CurrentVideo);
             //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
-
         }
-
-
 
         private void SetToBigPic(object sender, RoutedEventArgs e)
         {
@@ -543,11 +503,6 @@ namespace Jvedio
             windowMain?.RefreshImage(vieModel.CurrentVideo);
             SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
         }
-
-
-
-
-
 
         public void CopyFile(object sender, RoutedEventArgs e)
         {
@@ -583,8 +538,6 @@ namespace Jvedio
                         catch (Exception ex) { Logger.LogF(ex); }
                     }
                 }
-
-
             }
             else
             {
@@ -600,7 +553,6 @@ namespace Jvedio
             }
             DeleteID(null, null);
         }
-
 
         public void DeleteID(object sender, RoutedEventArgs e)
         {
@@ -628,7 +580,6 @@ namespace Jvedio
             if (url.IsProperUrl())
                 FileHelper.TryOpenUrl(url);
         }
-
 
         public async void TranslateMovie(object sender, RoutedEventArgs e)
         {
@@ -692,7 +643,6 @@ namespace Jvedio
             //IsTranslating = false;
         }
 
-
         private void Grid_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -707,12 +657,7 @@ namespace Jvedio
                 EditInfo(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             else if (e.Key == Key.D)
                 DownLoad(sender, new RoutedEventArgs());
-
         }
-
-
-
-
 
         private void SetImage(int idx)
         {
@@ -748,8 +693,6 @@ namespace Jvedio
             }
         }
 
-
-
         private void ShowExtraImage(object sender, MouseButtonEventArgs e)
         {
             Border border = sender as Border;
@@ -759,15 +702,12 @@ namespace Jvedio
             SetImage(vieModel.SelectImageIndex);
         }
 
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
             ConfigManager.Detail.ShowScreenShot = vieModel.ShowScreenShot;
             ConfigManager.Detail.InfoSelectedIndex = vieModel.InfoSelectedIndex;
             ConfigManager.Detail.Save();
         }
-
 
         private void BigImage_DragOver(object sender, DragEventArgs e)
         {
@@ -800,13 +740,10 @@ namespace Jvedio
             //    CurrentVideo.extraimagePath.Add(fileInfo.FullName);
             //}
 
-
             //vieModel.CurrentVideo = null;
             //vieModel.CurrentVideo = CurrentVideo;
             //RefreshUI("", fileInfo.FullName);
             //SetImage(0);
-
-
         }
 
         private void Border_DragOver(object sender, DragEventArgs e)
@@ -871,7 +808,6 @@ namespace Jvedio
             //    SuperControls.Style.MessageCard.Success($"{Jvedio.Language.Resources.ImportNumber} {filepaths.Count}");
 
             //}
-
         }
 
         private void Rate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
@@ -882,10 +818,7 @@ namespace Jvedio
                 //更新主界面
                 windowMain?.RefreshGrade(vieModel.CurrentVideo);
             }
-
         }
-
-
 
         // 设置预览图鼠标滑过效果
         private void Border_MouseEnter(object sender, MouseEventArgs e)
@@ -922,8 +855,6 @@ namespace Jvedio
             ContentPresenter presenter = (ContentPresenter)imageItemsControl.ItemContainerGenerator
                 .ContainerFromItem(imageItemsControl.Items[vieModel.SelectImageIndex]);
             presenter?.BringIntoView();
-
-
         }
 
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -941,7 +872,6 @@ namespace Jvedio
                 NextMovie(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             else
                 PreviousMovie(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-
         }
 
         private MenuItem GetMenuItem(ContextMenu contextMenu, string header)
@@ -969,31 +899,26 @@ namespace Jvedio
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_DeleteFile);
                 if (menuItem != null) DeleteFile(menuItem, new RoutedEventArgs());
-
             }
             else if (e.Key == Key.S)
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_SyncInfo);
                 if (menuItem != null) DownLoad(menuItem, new RoutedEventArgs());
-
             }
             else if (e.Key == Key.E)
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_EditInfo);
                 if (menuItem != null) EditInfo(menuItem, new RoutedEventArgs());
-
             }
             else if (e.Key == Key.W)
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_OpenWebSite);
                 if (menuItem != null) OpenWeb(menuItem, new RoutedEventArgs());
-
             }
             else if (e.Key == Key.C)
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_CopyFile);
                 if (menuItem != null) CopyFile(menuItem, new RoutedEventArgs());
-
             }
             contextMenu.IsOpen = false;
         }
@@ -1004,8 +929,6 @@ namespace Jvedio
             PreviousGrid.IsEnabled = status;
             ImageChangeStackPanel.IsEnabled = status;
         }
-
-
 
         private void renderMagnets()
         {
@@ -1018,17 +941,14 @@ namespace Jvedio
             {
                 if (magnet.Tags == null) continue;
                 MenuItem menuItem = new MenuItem();
-                string tag = "";
+                string tag = string.Empty;
                 if (magnet.Tags.Count > 0) tag = "（" + string.Join(" ", magnet.Tags) + "）";
 
                 menuItem.Header = $"{magnet.Releasedate} {tag} {magnet.Size.ToProperFileSize()} {magnet.Title}";
                 menuItem.Click += (s, ev) => ClipBoard.TrySetDataObject(magnet.MagnetLink);
                 CopyMagnetsMenuItem.Items.Add(menuItem);
             }
-
         }
-
-
 
         private void DisposeImage()
         {
@@ -1054,8 +974,6 @@ namespace Jvedio
 
             video.PreviewImageList = new ObservableCollection<BitmapSource>();
             video.PreviewImagePathList = new ObservableCollection<string>();
-
-
 
             string BigImagePath = video.getBigImage();
             if (!isScreenShot)
@@ -1103,7 +1021,6 @@ namespace Jvedio
             {
                 if (Directory.Exists(imagePath))
                 {
-
                     foreach (var path in FileHelper.TryScanDIr(imagePath, "*.*", System.IO.SearchOption.AllDirectories))
                         imagePathList.Add(path);
 
@@ -1122,13 +1039,11 @@ namespace Jvedio
             return true;
         }
 
-
         private delegate void LoadExtraImageDelegate(BitmapSource bitmapSource);
 
         private void LoadExtraImage(BitmapSource bitmapSource)
         {
             vieModel.CurrentVideo.PreviewImageList.Add(bitmapSource);
-
         }
 
         private delegate void LoadExtraPathDelegate(string path);
@@ -1137,7 +1052,6 @@ namespace Jvedio
         {
             if (vieModel.CurrentVideo.PreviewImagePathList != null)
                 vieModel.CurrentVideo.PreviewImagePathList.Add(path);
-
         }
 
         private async void ExtraImageRadioButton_Click(object sender, RoutedEventArgs e)
@@ -1154,8 +1068,6 @@ namespace Jvedio
             scrollViewer.ScrollToHorizontalOffset(0);
         }
 
-
-
         private void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null)
@@ -1165,7 +1077,6 @@ namespace Jvedio
                 if (e.NewValue >= 100 || e.NewValue <= 0) taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
             }
         }
-
 
         // todo
         private void ProgressBar_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -1194,7 +1105,6 @@ namespace Jvedio
             FileHelper.TryOpenSelectPath(vieModel.CurrentVideo.Path);
         }
 
-
         private void GetPlot(object sender, RoutedEventArgs e)
         {
             //if (JvedioServers.DMM.Url.IsProperUrl())
@@ -1214,8 +1124,6 @@ namespace Jvedio
             //}
         }
 
-
-
         private void DownLoadMagnets(object sender, RoutedEventArgs e)
         {
             new Msgbox(this, "开发中").ShowDialog();
@@ -1234,7 +1142,6 @@ namespace Jvedio
                 contextMenu.Items.Add(menuItem);
             }
             contextMenu.IsOpen = true;
-
         }
 
         private void PlayVedio(object sender, MouseButtonEventArgs e)
@@ -1262,7 +1169,6 @@ namespace Jvedio
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
             border.Background = StyleManager.Common.HighLight.Background;
-
         }
 
         private void Image_MouseLeave(object sender, MouseEventArgs e)
@@ -1271,8 +1177,6 @@ namespace Jvedio
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
             border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
-
-
         }
 
         private void ScrollViewer_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -1322,7 +1226,6 @@ namespace Jvedio
 
         private void ShowAssoSubSection(object sender, RoutedEventArgs e)
         {
-
             if (vieModel.ViewAssociationDatas == null) return;
 
             Button button = sender as Button;
@@ -1397,7 +1300,6 @@ namespace Jvedio
                 string sql = $"delete from metadata_to_tagstamp where TagID='{TagID}' and DataID='{DataID}'";
                 tagStampMapper.ExecuteNonQuery(sql);
             }
-
         }
 
         private void StackPanel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1478,13 +1380,11 @@ namespace Jvedio
 
         private void LabelChanged(object sender, ListChangedEventArgs e)
         {
-
             if (e != null && e.List != null)
             {
                 vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
                 MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
             }
-
         }
 
         private void addLabel(string label)
@@ -1505,11 +1405,4 @@ namespace Jvedio
             searchLabelPopup.IsOpen = true;
         }
     }
-
-
-
-
-
-
-
 }

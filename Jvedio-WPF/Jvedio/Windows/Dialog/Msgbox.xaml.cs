@@ -6,7 +6,6 @@ using System.Windows.Input;
 
 namespace Jvedio
 {
-
     public partial class Msgbox : Window
     {
         public string Text;
@@ -48,8 +47,6 @@ namespace Jvedio
             window.Activate();
             window.Focus();
         }
-
-
 
         private void Confirm(object sender, RoutedEventArgs e)
         {

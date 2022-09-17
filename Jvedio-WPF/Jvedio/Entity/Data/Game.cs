@@ -2,7 +2,6 @@
 
 namespace Jvedio.Entity.Data
 {
-
     [Table(tableName: "metadata_game")]
     public class Game : MetaData
     {
@@ -12,7 +11,6 @@ namespace Jvedio.Entity.Data
 #pragma warning disable CS0108 // “Game.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
         public long DataID { get; set; }
 #pragma warning restore CS0108 // “Game.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
-
 
         public string Branch { get; set; }
 
@@ -48,8 +46,5 @@ namespace Jvedio.Entity.Data
             metaData.DataID = this.DataID;
             return metaData;
         }
-
-
-
     }
 }

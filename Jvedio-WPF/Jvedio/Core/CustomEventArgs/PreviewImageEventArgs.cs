@@ -12,7 +12,7 @@ namespace Jvedio.Core.CustomEventArgs
         {
             Path = path;
             FileByte = fileByte;
-            if (string.IsNullOrEmpty(Path)) Path = "";
+            if (string.IsNullOrEmpty(Path)) Path = string.Empty;
         }
     }
 }

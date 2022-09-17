@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.Plugins
 {
-
-
     /// <summary>
     /// 插件基本信息
     /// </summary>
@@ -39,7 +37,6 @@ namespace Jvedio.Core.Plugins
         {
             PluginList.AddRange(ThemeManager.PluginMetaDatas);
             PluginList.AddRange(CrawlerManager.PluginMetaDatas);
-
         }
 
         public static void Init()
@@ -55,7 +52,6 @@ namespace Jvedio.Core.Plugins
             if (PluginList?.Count > 0
                 && !string.IsNullOrEmpty(ConfigManager.Settings.PluginEnabledJson))
             {
-
                 string json = ConfigManager.Settings.PluginEnabledJson;
                 if (string.IsNullOrEmpty(json)) return;
                 Dictionary<string, bool> dict = JsonUtils.TryDeserializeObject<Dictionary<string, bool>>(json);
@@ -70,7 +66,6 @@ namespace Jvedio.Core.Plugins
             }
         }
 
-
         public static async Task<PluginMetaData> FetchPlugin(PluginMetaData data)
         {
             if (data == null || string.IsNullOrEmpty(data.PluginID)) return null;
@@ -82,7 +77,6 @@ namespace Jvedio.Core.Plugins
                 {
                     return fetchState.MetaData;
                 }
-
             }
 
             return await Task.Run(async () =>
@@ -120,7 +114,6 @@ namespace Jvedio.Core.Plugins
                return null;
            });
         }
-
 
         public static void DownloadPlugin(PluginMetaData data)
         {
@@ -191,6 +184,4 @@ namespace Jvedio.Core.Plugins
             });
         }
     }
-
-
 }

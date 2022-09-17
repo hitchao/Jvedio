@@ -9,6 +9,5 @@ namespace Jvedio.Entity
         public NoticeType NoticeType { get; set; }
 
         public string Message { get; set; }
-
     }
 }

@@ -7,14 +7,11 @@ namespace Jvedio.Mapper
 {
     public class PictureMapper : BaseMapper<Picture>
     {
-
-
-
         public static string BASE_SQL =
             $" FROM metadata_picture JOIN metadata on metadata.DataID=metadata_picture.DataID ";
 
-
-        public static string[] SelectFields = {
+        public static string[] SelectFields =
+        {
             "metadata.DataID",
             "PID",
             "metadata.Grade",
@@ -28,7 +25,8 @@ namespace Jvedio.Mapper
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
         };
 
-        public static string[] SelectAllFields = {
+        public static string[] SelectAllFields =
+        {
             "metadata.DataID",
             "DBId",
             "Title",
@@ -93,6 +91,5 @@ namespace Jvedio.Mapper
             }
             return null;
         }
-
     }
 }

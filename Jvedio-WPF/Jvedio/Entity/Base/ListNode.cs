@@ -8,8 +8,6 @@
 
         public ListNode<T> Head { get; set; }
 
-
-
         public ListNode(T item)
         {
             Data = item;

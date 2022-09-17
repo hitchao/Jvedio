@@ -10,9 +10,6 @@ namespace Jvedio.Mapper
 {
     public class MetaDataMapper : BaseMapper<MetaData>
     {
-
-
-
         public int deleteDataByIds(List<string> idList)
         {
             if (idList == null || idList.Count == 0) return 0;
@@ -32,8 +29,6 @@ namespace Jvedio.Mapper
                 c2 = MapperManager.gameMapper.DeleteByIds(idList);
             }
 
-
-
             StringBuilder builder = new StringBuilder();
             string ids = string.Join(",", idList);
             builder.Append("begin;");
@@ -43,7 +38,6 @@ namespace Jvedio.Mapper
             builder.Append($"delete from metadata_to_label where DataID in ({ids});");
             builder.Append($"delete from metadata_to_translation where DataID in ({ids});");
             builder.Append("commit;");
-
 
             if (dataType == DataType.Picture)
             {
@@ -61,10 +55,8 @@ namespace Jvedio.Mapper
             else
             {
                 // todo 日志
-
             }
             return 0;
-
         }
 
         public void SaveLabel(MetaData metaData, List<string> oldLabels)
@@ -103,8 +95,5 @@ namespace Jvedio.Mapper
                 ExecuteNonQuery(sql);
             }
         }
-
-
-
     }
 }

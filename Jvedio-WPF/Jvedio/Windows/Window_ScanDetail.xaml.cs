@@ -25,7 +25,6 @@ namespace Jvedio
             InitializeComponent();
         }
 
-
         public ScanResult ScanResult { get; set; }
 
         public class ScanDetail
@@ -44,19 +43,15 @@ namespace Jvedio
             }
         }
 
-
-
-
         public Window_ScanDetail(ScanResult scanResult) : this()
         {
             ScanResult = scanResult;
-
         }
 
         private string getExtension(string path)
         {
-            if (string.IsNullOrEmpty(path)) return "";
-            return System.IO.Path.GetExtension(path).ToLower().Replace(".", "");
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+            return System.IO.Path.GetExtension(path).ToLower().Replace(".", string.Empty);
         }
 
         private void BaseWindow_ContentRendered(object sender, EventArgs e)
@@ -70,7 +65,7 @@ namespace Jvedio
                     Handle = "未导入",
                     FilePath = item,
                     Extension = getExtension(item),
-                    Reason = "",
+                    Reason = string.Empty,
                 };
                 details.Add(detail);
             }
@@ -103,12 +98,11 @@ namespace Jvedio
                     Handle = "导入",
                     FilePath = item,
                     Extension = getExtension(item),
-                    Reason = "",
+                    Reason = string.Empty,
                 };
                 details.Add(detail);
             }
             dataGrid.ItemsSource = details;
-
 
             total.Text = ScanResult.TotalCount.ToString();
             import.Text = ScanResult.Import.Count.ToString();
@@ -117,10 +111,7 @@ namespace Jvedio
             failNfo.Text = ScanResult.FailNFO.Count.ToString();
             scanDate.Text = ScanResult.ScanDate.ToString();
             cost.Text = DateHelper.ToReadableTime(ScanResult.ElapsedMilliseconds);
-
         }
-
-
 
         private void CopyPath(object sender, RoutedEventArgs e)
         {
@@ -178,7 +169,6 @@ namespace Jvedio
                     }
                 }
                 builder.Append(Environment.NewLine);
-
             }
             builder.Append("详情：");
             builder.Append(Environment.NewLine);

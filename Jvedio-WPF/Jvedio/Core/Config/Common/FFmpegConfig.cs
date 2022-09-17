@@ -4,8 +4,6 @@ namespace Jvedio.Core.Config
 {
     public class FFmpegConfig : AbstractConfig
     {
-
-
         private FFmpegConfig() : base("FFmpegConfig")
         {
             ThreadNum = 2;
@@ -25,7 +23,6 @@ namespace Jvedio.Core.Config
 
             return _instance;
         }
-
 
         public string Path { get; set; }
 
@@ -50,7 +47,5 @@ namespace Jvedio.Core.Config
         public long GifHeight { get; set; }
 
         public long GifDuration { get; set; }
-
-
     }
 }

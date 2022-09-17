@@ -13,13 +13,11 @@ namespace Jvedio.Core.FFmpeg
     {
         public new static Dictionary<TaskStatus, string> STATUS_TO_TEXT_DICT = new Dictionary<TaskStatus, string>()
         {
-
-            {TaskStatus.WaitingToRun,"等待中..."},
-            {TaskStatus.Running,"截图中..."},
-            {TaskStatus.Canceled,"已取消"},
-            {TaskStatus.RanToCompletion,"已完成"},
+            { TaskStatus.WaitingToRun, "等待中..." },
+            { TaskStatus.Running, "截图中..." },
+            { TaskStatus.Canceled, "已取消" },
+            { TaskStatus.RanToCompletion, "已完成" },
         };
-
 
         public ScreenShotTask(Video video, bool gif = false) : this(video.toMetaData())
         {
@@ -43,7 +41,6 @@ namespace Jvedio.Core.FFmpeg
             if (obj is ScreenShotTask other)
                 return other.DataID.Equals(DataID);
             return false;
-
         }
 
         public override int GetHashCode()
@@ -51,13 +48,9 @@ namespace Jvedio.Core.FFmpeg
             return DataID.GetHashCode();
         }
 
-
-
-
         public DataType DataType { get; set; }
 
         public string Title { get; set; }
-
 
         public override void doWrok()
         {
@@ -87,7 +80,7 @@ namespace Jvedio.Core.FFmpeg
 
                 try
                 {
-                    string outputs = "";
+                    string outputs = string.Empty;
                     if (Gif)
                         outputs = await shot.AsyncGenrateGif();
                     else

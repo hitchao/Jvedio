@@ -4,7 +4,6 @@
     {
         public Actor(string name = "") : base(name)
         {
-
         }
     }
 }

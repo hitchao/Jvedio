@@ -21,14 +21,11 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Edit : SuperControls.Style.BaseWindow
     {
-
         private Main main { get; set; }
 
         private Window_Details windowDetails { get; set; }
 
         VieModel_Edit vieModel { get; set; }
-
-
 
         public Window_Edit(long dataID)
         {
@@ -40,13 +37,11 @@ namespace Jvedio
             ReLoad();
         }
 
-
         private void Init()
         {
             main = GetWindowByName("Main") as Main;
             windowDetails = GetWindowByName("Window_Details") as Window_Details;
             if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont;//设置字体
-
         }
 
         public void ReLoad()
@@ -58,7 +53,6 @@ namespace Jvedio
             subSectionTagPanel.TagList = vieModel.CurrentVideo.SubSectionList;
             subSectionTagPanel.Refresh();
         }
-
 
         private void SaveInfo(object sender, RoutedEventArgs e)
         {
@@ -76,19 +70,13 @@ namespace Jvedio
             {
                 SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
             }
-
         }
-
-
-
 
         private void ChoseMovieBorder_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
             e.Handled = true;//必须加
         }
-
-
 
         private void ChoseMovieBorder_Drop(object sender, DragEventArgs e)
         {
@@ -119,7 +107,6 @@ namespace Jvedio
             calcSize();
         }
 
-
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             DateTime date = DateTime.Now; ;
@@ -135,7 +122,6 @@ namespace Jvedio
             ConfigManager.Edit.MoreExpanded = vieModel.MoreExpanded;
             ConfigManager.Edit.Save();
         }
-
 
         private void NewGenre(object sender, RoutedEventArgs e)
         {
@@ -165,7 +151,6 @@ namespace Jvedio
             }
         }
 
-
         private void addLabel(string label)
         {
             if (vieModel.CurrentVideo.LabelList == null)
@@ -182,18 +167,13 @@ namespace Jvedio
         {
             if (e != null && e.List != null)
                 vieModel.CurrentVideo.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-
-
         }
 
         private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
                 vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-
         }
-
-
 
         private void SubSectionChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
@@ -202,12 +182,11 @@ namespace Jvedio
                 vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
                 calcSize();
             }
-
         }
 
         private void NewSubSection(object sender, RoutedEventArgs e)
         {
-            string text = SelectVideo("");
+            string text = SelectVideo(string.Empty);
             if (vieModel.CurrentVideo.SubSectionList == null)
                 vieModel.CurrentVideo.SubSectionList = new System.Collections.Generic.List<string>();
             vieModel.CurrentVideo.SubSectionList.Add(text);
@@ -216,7 +195,6 @@ namespace Jvedio
             subSectionTagPanel.TagList = vieModel.CurrentVideo.SubSectionList;
             calcSize();
             subSectionTagPanel.Refresh();
-
         }
 
         private void ChooseFile(object sender, MouseButtonEventArgs e)
@@ -225,13 +203,11 @@ namespace Jvedio
             calcSize();
         }
 
-
         public void calcSize()
         {
             long total = 0;
             if (vieModel.CurrentVideo.SubSectionList != null && vieModel.CurrentVideo.SubSectionList.Count > 0)
             {
-
                 foreach (var item in vieModel.CurrentVideo.SubSectionList)
                 {
                     if (File.Exists(item)) total += new FileInfo(item).Length;
@@ -244,7 +220,6 @@ namespace Jvedio
             vieModel.CurrentVideo.Size = total;
             vieModel.CurrentVideo.LastScanDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
-
 
         public string SelectVideo(string path)
         {
@@ -290,7 +265,6 @@ namespace Jvedio
 
         private void CurrentActorPageChange(object sender, EventArgs e)
         {
-
             Pagination pagination = sender as Pagination;
             vieModel.CurrentActorPage = pagination.CurrentPage;
             VieModel_Main.ActorPageQueue.Enqueue(pagination.CurrentPage);
@@ -316,7 +290,6 @@ namespace Jvedio
             return -1;
         }
 
-
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             long actorID = getDataID(sender as FrameworkElement);
@@ -335,7 +308,6 @@ namespace Jvedio
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
             border.Background = StyleManager.Common.HighLight.Background;
-
         }
 
         private void Image_MouseLeave(object sender, MouseEventArgs e)
@@ -344,8 +316,6 @@ namespace Jvedio
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
             border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
-
-
         }
 
         private void NewActor(object sender, MouseButtonEventArgs e)
@@ -369,11 +339,7 @@ namespace Jvedio
                     break;
                 }
             }
-
-
-
         }
-
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -384,7 +350,4 @@ namespace Jvedio
             searchLabelPopup.IsOpen = false;
         }
     }
-
-
-
 }

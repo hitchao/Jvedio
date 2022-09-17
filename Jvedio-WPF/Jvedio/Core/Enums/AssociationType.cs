@@ -3,6 +3,6 @@
     public enum AssociationType
     {
         SameActor,
-        Sequel,//续集
+        Sequel, //续集
     }
 }

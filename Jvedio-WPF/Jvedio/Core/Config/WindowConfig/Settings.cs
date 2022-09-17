@@ -13,7 +13,7 @@ namespace Jvedio.Core.WindowConfig
 
             TeenMode = true;
             AutoAddPrefix = true;
-            Prefix = "";
+            Prefix = string.Empty;
             AutoBackupPeriodIndex = 0;
             AutoBackup = true;
             DetailShowBg = true;
@@ -79,12 +79,9 @@ namespace Jvedio.Core.WindowConfig
 
         public string Prefix { get; set; }
 
-
         public bool AutoBackup { get; set; }
 
         public long AutoBackupPeriodIndex { get; set; }
-
-
 
         // 是否建立可播放索引
         public bool PlayableIndexCreated { get; set; }
@@ -99,6 +96,5 @@ namespace Jvedio.Core.WindowConfig
         public bool ListenEnabled { get; set; }
 
         public string ListenPort { get; set; }
-
     }
 }

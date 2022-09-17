@@ -11,11 +11,10 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_LoadPage : SuperControls.Style.BaseDialog
     {
-
 #pragma warning disable CS0612 // “ActorSearch”已过时
         public List<ActorSearch> ActorSearches;
 #pragma warning restore CS0612 // “ActorSearch”已过时
-        public string url = "";
+        public string url = string.Empty;
         public int VideoType = 1;
         public int StartPage = 1;
         public int EndPage = 500;
@@ -30,8 +29,6 @@ namespace Jvedio
             tb.Focus();
             tb.SelectAll();
         }
-
-
 
         private void SaveVedioType(object sender, RoutedEventArgs e)
         {
@@ -79,7 +76,7 @@ namespace Jvedio
             {
                 if (item.Length > 0)
                 {
-                    result.Add(item.Replace(" ", ""));
+                    result.Add(item.Replace(" ", string.Empty));
                 }
             }
             return result;

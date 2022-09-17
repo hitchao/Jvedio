@@ -5,7 +5,6 @@ using System.Windows.Controls;
 
 namespace Jvedio.Core.Extensions
 {
-
     /// <summary>
     /// https://stackoverflow.com/a/3652980/13454100
     /// </summary>
@@ -65,7 +64,6 @@ namespace Jvedio.Core.Extensions
             ElementToGroupNames.Remove(checkBox);
             checkBox.Checked -= MenuItemChecked;
         }
-
 
         static void MenuItemChecked(object sender, RoutedEventArgs e)
         {

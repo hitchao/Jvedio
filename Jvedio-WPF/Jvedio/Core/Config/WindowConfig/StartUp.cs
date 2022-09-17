@@ -9,7 +9,7 @@ namespace Jvedio.Core.WindowConfig
             Tile = false;
             ShowHideItem = false;
             SideIdx = 0;
-            SortType = "";
+            SortType = string.Empty;
             Sort = true;
         }
 

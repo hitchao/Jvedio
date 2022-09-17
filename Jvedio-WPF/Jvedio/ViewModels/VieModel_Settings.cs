@@ -18,11 +18,7 @@ namespace Jvedio.ViewModel
     {
         Window_Settings settings = GetWindowByName("Window_Settings") as Window_Settings;
 
-
         public Dictionary<string, object> PicPaths { get; set; }
-
-
-
 
         public VieModel_Settings()
         {
@@ -31,9 +27,6 @@ namespace Jvedio.ViewModel
             RenderPlugins();
             setBasePicPaths();
         }
-
-
-
 
         public void LoadScanPath(AppDatabase db)
         {
@@ -48,18 +41,13 @@ namespace Jvedio.ViewModel
             Servers = new ObservableCollection<Server>();
         }
 
-
         public void RenderPlugins()
         {
-
             InstalledPlugins = new List<PluginMetaData>();
             foreach (PluginMetaData plugin in PluginManager.PluginList)
                 InstalledPlugins.Add(plugin);
 
-
-
             RefreshCurrentPlugins();
-
 
             //if (AllFreshPlugins != null)
             //{
@@ -67,8 +55,6 @@ namespace Jvedio.ViewModel
             //    foreach (var item in getSortResult(AllFreshPlugins))
             //        CurrentFreshPlugins.Add(item);
             //}
-
-
         }
 
         public void RefreshCurrentPlugins()
@@ -82,7 +68,6 @@ namespace Jvedio.ViewModel
                 CurrentFreshPlugins.Add(item);
         }
 
-
         public int SortEnabledIndex = -1;           // 0 启用 1 未启用
         public PluginType SortPluginType = PluginType.None;
 
@@ -91,7 +76,6 @@ namespace Jvedio.ViewModel
             // 筛选
             IEnumerable<PluginMetaData> list = PluginMetaDatas;
             if (list == null || list.Count() == 0) return new List<PluginMetaData>();
-
 
             if (SortEnabledIndex >= 0)
             {
@@ -108,8 +92,6 @@ namespace Jvedio.ViewModel
             {
                 list = PluginMetaDatas.Where(arg => arg.PluginName.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
             }
-
-
 
             if (PluginSortIndex == 0)
             {
@@ -159,7 +141,6 @@ namespace Jvedio.ViewModel
                     if (!CrawlerServers.ContainsKey(pluginID))
                         CrawlerServers.Add(pluginID, crawlers);
                 }
-
             }
             DisplayCrawlerServers = new ObservableCollection<string>();
             foreach (string key in CrawlerServers.Keys)
@@ -184,9 +165,8 @@ namespace Jvedio.ViewModel
                         callback?.Invoke($"【{key}】 刮削器处地址为 {server.Url} 的 Headers 不合理，格式必须为：{format}");
                         return false;
                     }
-                    if (server.Headers == null) server.Headers = "";
+                    if (server.Headers == null) server.Headers = string.Empty;
                     list.Add(server);
-
                 }
             }
             ConfigManager.ServerConfig.CrawlerServers = list;
@@ -194,13 +174,10 @@ namespace Jvedio.ViewModel
             return true;
         }
 
-
-
         public int PIC_PATH_MODE_COUNT = 3;
 
         public void setBasePicPaths()
         {
-
             PicPaths = ConfigManager.Settings.PicPaths;
 
             PathType type = (PathType)PicPathMode;
@@ -212,9 +189,7 @@ namespace Jvedio.ViewModel
             PreviewImagePath = dict["PreviewImagePath"];
             ScreenShotPath = dict["ScreenShotPath"];
             ActorImagePath = dict["ActorImagePath"];
-
         }
-
 
         private int _TabControlSelectedIndex = (int)ConfigManager.Settings.TabControlSelectedIndex;
 
@@ -268,9 +243,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<Theme> _ThemeList;
-
 
         [Obsolete]
         public ObservableCollection<Theme> ThemeList
@@ -340,7 +313,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _PluginSearch = "";
+        private string _PluginSearch = string.Empty;
 
         public string PluginSearch
         {
@@ -352,9 +325,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
 
         private bool _PluginEnabled;
 
@@ -382,7 +352,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<Server> _Servers;
 
         public ObservableCollection<Server> Servers
@@ -395,7 +364,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private ObservableCollection<string> _ScanPath;
 
@@ -410,9 +378,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         private int _PicPathMode = (int)ConfigManager.Settings.PicPathMode;
 
         public int PicPathMode
@@ -426,7 +391,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _BasePicPath = "";
+        private string _BasePicPath = string.Empty;
 
         public string BasePicPath
         {
@@ -445,8 +410,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-        private string _BigImagePath = "";
+        private string _BigImagePath = string.Empty;
 
         public string BigImagePath
         {
@@ -459,7 +423,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _SmallImagePath = "";
+        private string _SmallImagePath = string.Empty;
 
         public string SmallImagePath
         {
@@ -472,7 +436,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _PreviewImagePath = "";
+        private string _PreviewImagePath = string.Empty;
 
         public string PreviewImagePath
         {
@@ -485,7 +449,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _ScreenShotPath = "";
+        private string _ScreenShotPath = string.Empty;
 
         public string ScreenShotPath
         {
@@ -498,7 +462,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _ActorImagePath = "";
+        private string _ActorImagePath = string.Empty;
 
         public string ActorImagePath
         {
@@ -510,9 +474,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
 
         private bool _DownloadPreviewImage = ConfigManager.Settings.DownloadPreviewImage;
 
@@ -526,7 +487,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private bool _SkipExistImage = ConfigManager.Settings.SkipExistImage;
 
@@ -566,7 +526,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private Dictionary<string, ObservableCollection<CrawlerServer>> _CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
 
@@ -649,7 +608,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private TaskStatus _TestProxyStatus;
 
         public TaskStatus TestProxyStatus
@@ -675,8 +633,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
 
         #region "扫描"
 
@@ -733,7 +689,6 @@ namespace Jvedio.ViewModel
         }
 
         #endregion
-
 
         #region "常规设置"
 
@@ -816,7 +771,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private bool _DetailShowBg = ConfigManager.Settings.DetailShowBg;
 
         public bool DetailShowBg
@@ -830,10 +784,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         #endregion
-
-
 
         #region "nfo"
         private bool _SaveInfoToNFO = ConfigManager.Settings.SaveInfoToNFO;
@@ -874,10 +825,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
-
 
         #endregion
 
@@ -929,7 +876,6 @@ namespace Jvedio.ViewModel
 
             set
             {
-
                 if (value <= 0 || value > 30) _ScreenShotNum = 10;
                 else _ScreenShotNum = value;
                 RaisePropertyChanged();
@@ -1040,11 +986,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         #endregion
-
 
         #region "重命名"
 
@@ -1087,10 +1029,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         #endregion
-
-
 
         #region "库"
         private bool _AutoBackup = ConfigManager.Settings.AutoBackup;
@@ -1145,13 +1084,9 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
         #endregion
 
-
         #region "端口"
-
 
         private bool _ListenEnabled = ConfigManager.Settings.ListenEnabled;
 
@@ -1178,7 +1113,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         #endregion
 

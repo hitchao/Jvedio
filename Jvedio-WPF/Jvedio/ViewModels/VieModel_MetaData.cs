@@ -56,19 +56,15 @@ namespace Jvedio.ViewModel
 #pragma warning restore CS0067 // 从不使用事件“VieModel_MetaData.ActorPageChangedCompleted”
         public event EventHandler RenderSqlChanged;
 
-
-
         public bool IsFlipOvering = false;
 
-        public static string PreviousSql = "";
+        public static string PreviousSql = string.Empty;
         public static double PreviousOffset = 0;
         public static int PreviousPage = 1;
 
         public string ClickFilterType = string.Empty;
 
-
         //public bool canRender = false;
-
 
         Window_MetaDatas metaDatas = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
 
@@ -78,9 +74,7 @@ namespace Jvedio.ViewModel
         public static Queue<int> pageQueue = new Queue<int>();
         public static Queue<int> ActorPageQueue = new Queue<int>();
 
-
         public AppDatabase CurrentAppDataBase;
-
 
         #region "RelayCommand"
         public RelayCommand<object> SelectCommand { get; set; }
@@ -94,7 +88,6 @@ namespace Jvedio.ViewModel
         public RelayCommand AddNewMovie { get; set; }
         #endregion
 
-
         public VieModel_MetaData()
         {
             SelectCommand = new RelayCommand<object>(t => GenerateSelect(t));
@@ -102,7 +95,6 @@ namespace Jvedio.ViewModel
             ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
             ShowClassifyCommand = new RelayCommand<object>(t => ShowClassify(t));
             AddNewMovie = new RelayCommand(AddSingleMovie);
-
 
             DataBases = new ObservableCollection<AppDatabase>();
 
@@ -117,7 +109,6 @@ namespace Jvedio.ViewModel
             //CurrentMovieList.AllowRemove = true;
         }
 
-
         public void refreshVideoRenderToken()
         {
             Console.WriteLine("刷新 Token");
@@ -125,9 +116,6 @@ namespace Jvedio.ViewModel
             renderDataCTS.Token.Register(() => { Console.WriteLine("取消加载页码的任务"); });
             renderDataCT = renderDataCTS.Token;
         }
-
-
-
 
         #region "界面显示属性"
 
@@ -144,7 +132,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private Visibility _ShowFirstRun = Visibility.Collapsed;
 
         public Visibility ShowFirstRun
@@ -157,7 +144,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private Visibility _ShowActorGrid = Visibility.Collapsed;
 
@@ -224,7 +210,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _CmdText = "";
+        private string _CmdText = string.Empty;
 
         public string CmdText
         {
@@ -249,7 +235,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private int _ProgressBarValue = 0;
 
@@ -303,9 +288,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         private bool _ShowMoreListBtn = false;
 
         public bool ShowMoreListBtn
@@ -331,7 +313,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private BitmapSource _BackgroundImage = StyleManager.BackgroundImage;
 
@@ -359,8 +340,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
         private bool _IsLoadingFilter = true;
 
         public bool IsLoadingFilter
@@ -374,7 +353,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private bool _IsLoadingMovie = true;
 
         public bool IsLoadingMovie
@@ -387,7 +365,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private bool _IsLoadingClassify = false;
 
@@ -415,7 +392,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private Thickness _MainGridThickness = new Thickness(10);
 
         public Thickness MainGridThickness
@@ -429,12 +405,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         #endregion
-
-
-
-
 
         #region "enum"
         private VideoType _ClassifyVedioType = 0;
@@ -450,24 +421,9 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-
-
         #endregion
 
-
         #region "ObservableCollection"
-
-
-
-
-
-
-
-
 
         private ObservableCollection<ScanTask> _ScanTasks = new ObservableCollection<ScanTask>();
 
@@ -482,9 +438,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         private ObservableCollection<Message> _Message = new ObservableCollection<Message>();
 
         public ObservableCollection<Message> Message
@@ -497,7 +450,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private ObservableCollection<char> _LettersNavigation;
 
@@ -513,7 +465,6 @@ namespace Jvedio.ViewModel
         }
 
         private ObservableCollection<AppDatabase> _DataBases;
-
 
         public ObservableCollection<AppDatabase> DataBases
         {
@@ -591,10 +542,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
         private ObservableCollection<Movie> _DetailsDataList;
-
 
         public ObservableCollection<Movie> DetailsDataList
         {
@@ -606,9 +554,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
 
         private List<MetaData> _SelectedData = new List<MetaData>();
 
@@ -622,7 +567,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private List<ActorInfo> _SelectedActors = new List<ActorInfo>();
 
@@ -650,7 +594,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<TagStamp> _TagStamps = new ObservableCollection<TagStamp>();
 
         public ObservableCollection<TagStamp> TagStamps
@@ -663,7 +606,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         public List<Movie> MovieList;
 
@@ -679,10 +621,8 @@ namespace Jvedio.ViewModel
             {
                 _GenreList = value;
                 RaisePropertyChanged();
-
             }
         }
-
 
         private List<ActorInfo> actorlist;
 
@@ -697,9 +637,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<ActorInfo> _CurrentActorList;
-
 
         public ObservableCollection<ActorInfo> CurrentActorList
         {
@@ -769,7 +707,6 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<string> _AllSearchCandidate;
 
-
         public ObservableCollection<string> AllSearchCandidate
         {
             get { return _AllSearchCandidate; }
@@ -778,12 +715,10 @@ namespace Jvedio.ViewModel
             {
                 _AllSearchCandidate = value;
                 RaisePropertyChanged();
-
             }
         }
 
         private bool _Searching = false;
-
 
         public bool Searching
         {
@@ -793,15 +728,10 @@ namespace Jvedio.ViewModel
             {
                 _Searching = value;
                 RaisePropertyChanged();
-
             }
         }
 
-
-
-
         private ObservableCollection<string> _FilePathClassification;
-
 
         public ObservableCollection<string> FilePathClassification
         {
@@ -811,12 +741,10 @@ namespace Jvedio.ViewModel
             {
                 _FilePathClassification = value;
                 RaisePropertyChanged();
-
             }
         }
 
         private ObservableCollection<string> _SearchHistory;
-
 
         public ObservableCollection<string> SearchHistory
         {
@@ -826,21 +754,11 @@ namespace Jvedio.ViewModel
             {
                 _SearchHistory = value;
                 RaisePropertyChanged();
-
             }
         }
         #endregion
 
-
         #region "Variable"
-
-
-
-
-
-
-
-
 
         private string _ScanStatus;
 
@@ -852,14 +770,8 @@ namespace Jvedio.ViewModel
             {
                 _ScanStatus = value;
                 RaisePropertyChanged();
-
             }
         }
-
-
-
-
-
 
         private List<string> _CurrentMovieLabelList;
 
@@ -871,10 +783,8 @@ namespace Jvedio.ViewModel
             {
                 _CurrentMovieLabelList = value;
                 RaisePropertyChanged();
-
             }
         }
-
 
         private int _ShowStampType = 0;
 
@@ -889,9 +799,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         private double _RecentWatchedCount = 0;
 
         public double RecentWatchedCount
@@ -904,7 +811,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private long _AllDataCount = 0;
 
@@ -945,7 +851,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private long _AllLabelCount = 0;
 
         public long AllLabelCount
@@ -958,7 +863,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         public bool _IsScanning = false;
 
@@ -973,7 +877,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         public bool _EnableEditActress = false;
 
         public bool EnableEditActress
@@ -987,9 +890,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         public string movieCount = "总计 0 个";
-
 
         private int _CurrentPage = 1;
 
@@ -1005,7 +906,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private int _PageSize = ConfigManager.MetaData.PageSize == 0 ? 40 : (int)ConfigManager.MetaData.PageSize;
 
         public int PageSize
@@ -1019,7 +919,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         public int _CurrentCount = 0;
 
         public int CurrentCount
@@ -1030,7 +929,6 @@ namespace Jvedio.ViewModel
             {
                 _CurrentCount = value;
                 RaisePropertyChanged();
-
             }
         }
 
@@ -1044,10 +942,8 @@ namespace Jvedio.ViewModel
             {
                 _CurrentActorCount = value;
                 RaisePropertyChanged();
-
             }
         }
-
 
         public long _TotalCount = 0;
 
@@ -1059,7 +955,6 @@ namespace Jvedio.ViewModel
             {
                 _TotalCount = value;
                 RaisePropertyChanged();
-
             }
         }
 
@@ -1073,10 +968,8 @@ namespace Jvedio.ViewModel
             {
                 totalpage = value;
                 RaisePropertyChanged();
-
             }
         }
-
 
         private int _ActorPageSize = 10;
 
@@ -1101,10 +994,8 @@ namespace Jvedio.ViewModel
             {
                 _ActorCurrentCount = value;
                 RaisePropertyChanged();
-
             }
         }
-
 
         private long _ActorTotalCount = 0;
 
@@ -1116,10 +1007,8 @@ namespace Jvedio.ViewModel
             {
                 _ActorTotalCount = value;
                 RaisePropertyChanged();
-
             }
         }
-
 
         private int currentactorpage = 1;
 
@@ -1135,7 +1024,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private long totalactorpage = 1;
 
         public long TotalActorPage
@@ -1149,11 +1037,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-
         private int _FlowNum = 0;
 
         public int FlowNum
@@ -1166,13 +1049,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
-
-
-
-
 
         public string textType = Jvedio.Language.Resources.AllVideo;
 
@@ -1191,7 +1067,6 @@ namespace Jvedio.ViewModel
 
         private bool _SearchFirstLetter = false;
 
-
         public bool SearchFirstLetter
         {
             get { return _SearchFirstLetter; }
@@ -1204,7 +1079,6 @@ namespace Jvedio.ViewModel
         }
 
         private string _SearchText = string.Empty;
-
 
         public string SearchText
         {
@@ -1220,7 +1094,6 @@ namespace Jvedio.ViewModel
 
         private string _SearchHint = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.ID;
 
-
         public string SearchHint
         {
             get { return _SearchHint; }
@@ -1231,7 +1104,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private ActorInfo _CurrentActorInfo;
 
@@ -1259,8 +1131,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
         private bool Checkingurl = false;
 
         public bool CheckingUrl
@@ -1286,7 +1156,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private bool searchInCurrent = false;
 
         public bool SearchInCurrent
@@ -1301,22 +1170,15 @@ namespace Jvedio.ViewModel
 
         #endregion
 
-
-
         public void LoadData()
         {
             Select();
         }
 
-
-
         public void Reset()
         {
             Select();
-
         }
-
-
 
         public void ShowAllLabels(object o)
         {
@@ -1328,7 +1190,6 @@ namespace Jvedio.ViewModel
         {
             TabSelectedIndex = 3;
         }
-
 
         public void initCurrentTagStamps()
         {
@@ -1357,7 +1218,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
 #pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         public async Task<bool> InitLettersNavigation()
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
@@ -1383,7 +1243,6 @@ namespace Jvedio.ViewModel
             return true;
         }
 
-
         public async void BeginSearch()
         {
             //GetSearchCandidate(Search.ToProperSql());
@@ -1397,14 +1256,7 @@ namespace Jvedio.ViewModel
             //string scanDir = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString());
             //List<string> files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly).ToList();
             //files.ForEach(arg => DataBases.Add(Path.GetFileNameWithoutExtension(arg).ToLower()));
-
         }
-
-
-
-
-
-
 
         private void AddSingleMovie()
         {
@@ -1420,8 +1272,6 @@ namespace Jvedio.ViewModel
             //        InsertID(item, result.VideoType);
             //    }
             //}
-
-
         }
 
         private void InsertID(string id, VideoType vedioType)
@@ -1447,7 +1297,6 @@ namespace Jvedio.ViewModel
             //}
         }
 
-
         public List<string> GetIDListFromString(string str, VideoType vedioType)
         {
             List<string> result = new List<string>();
@@ -1457,13 +1306,10 @@ namespace Jvedio.ViewModel
             //    if (AutoAddPrefix && Prefix != "")
             //        id = Prefix + id;
 
-
             //    if (vedioType == VideoType.Europe)
             //        id = id.Replace(" ", "");
             //    else
             //        id = id.ToUpper().Replace(" ", "");
-
-
 
             //    if (!string.IsNullOrEmpty(id) && !result.Contains(id)) result.Add(id);
             //}
@@ -1475,9 +1321,6 @@ namespace Jvedio.ViewModel
         //{
         //    if (!CurrentSearchCandidate.Contains(str)) CurrentSearchCandidate.Add(str);
         //}
-
-
-
 
         public async Task<List<string>> GetSearchCandidate()
         {
@@ -1523,10 +1366,8 @@ namespace Jvedio.ViewModel
             });
         }
 
-
         public void SaveSearchHistory()
         {
-
             try
             {
                 if (SearchHistory.Count <= 0)
@@ -1553,7 +1394,7 @@ namespace Jvedio.ViewModel
         {
             SearchHistory = new ObservableCollection<string>();
             if (!File.Exists("SearchHistory")) return;
-            string content = "";
+            string content = string.Empty;
             try
             {
                 using (StreamReader sr = new StreamReader("SearchHistory"))
@@ -1566,7 +1407,7 @@ namespace Jvedio.ViewModel
                 Logger.LogF(ex);
             }
 
-            if (content != "" && content.IndexOf("'") >= 0)
+            if (content != string.Empty && content.IndexOf("'") >= 0)
             {
                 foreach (var item in content.Split('\''))
                 {
@@ -1577,10 +1418,7 @@ namespace Jvedio.ViewModel
             {
                 SearchHistory.Add(content);
             }
-
         }
-
-
 
         /// <summary>
         /// 流动加载影片
@@ -1635,10 +1473,7 @@ namespace Jvedio.ViewModel
             //    }
 
             //});
-
-
         }
-
 
 #pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         public async Task<bool> ClearCurrentMovieList()
@@ -1653,8 +1488,6 @@ namespace Jvedio.ViewModel
             //    });
             //});
 
-
-
             //await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
             //{
             //    //CurrentMovieList.RaiseListChangedEvents = false;
@@ -1664,10 +1497,6 @@ namespace Jvedio.ViewModel
             //        CurrentMovieList[i].smallimage = null;
             //    }
             //});
-
-
-
-
 
             //await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
             //{
@@ -1690,11 +1519,6 @@ namespace Jvedio.ViewModel
 
             return true;
         }
-
-
-
-
-
 
         public List<Movie> Movies;
 
@@ -1753,9 +1577,6 @@ namespace Jvedio.ViewModel
             //    if (ShowStampType >= 1)
             //        Movies = Movies.Where(arg => arg.tagstamps.IndexOf(ShowStampType.ToString().ToTagString()) >= 0).ToList();
 
-
-
-
             //    foreach (Movie item in Movies)
             //    {
             //        Movie movie = item;
@@ -1778,8 +1599,6 @@ namespace Jvedio.ViewModel
             //IsLoadingMovie = loading;
         }
 
-
-
         private delegate void LoadDataDelegate(MetaData data, int idx);
 
         private void LoadData(MetaData data, int idx)
@@ -1796,7 +1615,6 @@ namespace Jvedio.ViewModel
                 {
                     CurrentDataList.Add(data);
                 }
-
             }
             else
             {
@@ -1807,16 +1625,12 @@ namespace Jvedio.ViewModel
             //Console.WriteLine($"渲染第 {CurrentPage} 页的数据");
         }
 
-
-
         //private delegate void LoadLabelDelegate(string str);
 
         //private void LoadLabel(string str) => LabelList.Add(str);
         //private void LoadTag(string str) => TagList.Add(str);
         //private void LoadStudio(string str) => StudioList.Add(str);
         //private void LoadDirector(string str) => DirectorList.Add(str);
-
-
 
         private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
 
@@ -1843,16 +1657,8 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-
-
-
         public async void SetClassify(bool refresh = false)
         {
-
             List<string> list;
 
             if (ClassifySelectedIndex == 0)
@@ -1933,9 +1739,7 @@ namespace Jvedio.ViewModel
                 }
                 SetClassifyLoadingStatus(false);
             }
-
         }
-
 
         public List<string> GetListByField(string field)
         {
@@ -1953,34 +1757,6 @@ namespace Jvedio.ViewModel
             }
             return result;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         public SelectWrapper<Video> getWrapper(SearchField searchType)
         {
@@ -2006,7 +1782,6 @@ namespace Jvedio.ViewModel
 
             return wrapper;
         }
-
 
         /// <summary>
         /// 在数据库中搜索影片
@@ -2034,12 +1809,7 @@ namespace Jvedio.ViewModel
             return true;
         }
 
-
-
-        #region "影片 => 翻页" 
-
-
-
+        #region "影片 => 翻页"
 
         public string getSortField(int sortindex)
         {
@@ -2078,13 +1848,10 @@ namespace Jvedio.ViewModel
                     wrapper.Select(PictureMapper.SelectFields);
                     break;
             }
-
-
         }
 
         public void setSql(ref string sql)
         {
-
             switch (Main.CurrentDataType)
             {
                 case DataType.Picture:
@@ -2122,31 +1889,25 @@ namespace Jvedio.ViewModel
                 }
                 else
                 {
-
                 }
-
             }
         }
 
-
         public void toLimit<T>(IWrapper<T> wrapper)
         {
-
             int row_count = PageSize;
             long offset = PageSize * (CurrentPage - 1);
             wrapper.Limit(offset, row_count);
         }
 
-        public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>() {
-            { "All","  "  },
-            { "Favorite","  "  },
-            { "RecentWatch","  "  },
+        public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>()
+        {
+            { "All", "  "  },
+            { "Favorite", "  "  },
+            { "RecentWatch", "  "  },
         };
 
-
-
         public SelectWrapper<MetaData> extraWrapper;
-
 
         public void GenerateSelect(object o = null)
         {
@@ -2199,8 +1960,6 @@ namespace Jvedio.ViewModel
             DataType dataType = Main.CurrentDataType;
             SelectWrapper<MetaData> wrapper = MetaData.InitWrapper(dataType);
 
-
-
             setSortOrder(wrapper);
             toLimit(wrapper);
             setSelectFields(ref wrapper);
@@ -2208,10 +1967,6 @@ namespace Jvedio.ViewModel
 
             string sql = PictureMapper.BASE_SQL;
             setSql(ref sql);
-
-
-
-
 
             // 标记
             // todo 标记全排除
@@ -2226,9 +1981,7 @@ namespace Jvedio.ViewModel
 
             string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
 
-
             TotalCount = metaDataMapper.SelectCount(count_sql);
-
 
             WrapperEventArg<MetaData> arg = new WrapperEventArg<MetaData>();
             arg.Wrapper = wrapper;
@@ -2241,13 +1994,10 @@ namespace Jvedio.ViewModel
             RenderCurrentData(sql);
         }
 
-
-
         public bool rendering = false;
 
         public void RenderCurrentData(string sql)
         {
-
             //if (rendering) return;
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             List<MetaData> datas = metaDataMapper.ToEntity<MetaData>(list, typeof(MetaData).GetProperties(), false);
@@ -2262,12 +2012,7 @@ namespace Jvedio.ViewModel
             DataList.AddRange(datas);
             CurrentCount = DataList.Count;
             render();
-
         }
-
-
-
-
 
         public void setData(ref MetaData data)
         {
@@ -2313,11 +2058,8 @@ namespace Jvedio.ViewModel
             MetaData.handleEmpty(ref data);// 设置标题和发行日期
         }
 
-
-
         public async void render()
         {
-
             if (CurrentDataList == null) CurrentDataList = new ObservableCollection<MetaData>();
             int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageMode);
             for (int i = 0; i < DataList.Count; i++)
@@ -2344,17 +2086,7 @@ namespace Jvedio.ViewModel
             PageChangedCompleted?.Invoke(this, null);
         }
 
-
         #endregion
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// 统计：加载时间 <70ms (15620个信息)
@@ -2368,7 +2100,6 @@ namespace Jvedio.ViewModel
                 AllDataCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType));
                 appDatabaseMapper.UpdateFieldById("Count", AllDataCount.ToString(), dbid);
 
-
                 FavoriteCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType).Gt("Grade", 0));
 
                 string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +
@@ -2379,12 +2110,8 @@ namespace Jvedio.ViewModel
                 DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                 DateTime date2 = DateTime.Now;
                 RecentViewCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
-
-
             });
         }
-
-
 
         public void LoadFilePathClassfication()
         {
@@ -2400,22 +2127,15 @@ namespace Jvedio.ViewModel
 
         private string GetPathByDepth(string path, int depth)
         {
-
-            if (string.IsNullOrEmpty(path) || path.IndexOf("\\") < 0) return "";
+            if (string.IsNullOrEmpty(path) || path.IndexOf("\\") < 0) return string.Empty;
             string[] paths = path.Split('\\');
-            string result = "";
+            string result = string.Empty;
             for (int i = 0; i < paths.Length - 1; i++)
             {
                 result += paths[i] + "\\";
                 if (i >= depth - 1) break;
             }
             return result;
-
-
-
         }
-
-
-
     }
 }

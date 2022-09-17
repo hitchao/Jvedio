@@ -11,10 +11,9 @@ namespace Jvedio.Core.Config
 {
     public class PluginConfig : AbstractConfig
     {
-
         private PluginConfig() : base("PluginConfig")
         {
-            PluginList = "";
+            PluginList = string.Empty;
         }
 
         private static PluginConfig _instance = null;
@@ -27,7 +26,6 @@ namespace Jvedio.Core.Config
         }
 
         public string PluginList { get; set; }
-
 
         public void FetchPluginMetaData(Action onRefresh = null)
         {

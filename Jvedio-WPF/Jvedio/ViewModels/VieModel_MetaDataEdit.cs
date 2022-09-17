@@ -15,9 +15,7 @@ namespace Jvedio.ViewModel
 {
     class VieModel_MetaDataEdit : ViewModelBase
     {
-
         Window_MetaDataEdit editWindow = GetWindowByName("Window_MetaDataEdit") as Window_MetaDataEdit;
-
 
         public MetaData _CurrentData;
 
@@ -71,7 +69,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         public bool _MoreExpanded = ConfigManager.Edit.MoreExpanded;
 
         public bool MoreExpanded
@@ -84,7 +81,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         public long _DataID;
 
@@ -99,7 +95,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private BitmapSource _CurrentImage;
 
         public BitmapSource CurrentImage
@@ -112,7 +107,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private List<ActorInfo> actorlist;
 
@@ -127,9 +121,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<ActorInfo> _CurrentActorList;
-
 
         public ObservableCollection<ActorInfo> CurrentActorList
         {
@@ -142,9 +134,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<string> _CurrentLabelList;
-
 
         public ObservableCollection<string> CurrentLabelList
         {
@@ -156,9 +146,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
 
         private int _TabControlSelectedIndex = 0;
 
@@ -172,10 +159,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
-
 
         private string _LabelText = String.Empty;
 
@@ -191,14 +174,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-
-
-
-
         public VieModel_MetaDataEdit(long dataid)
         {
             if (dataid <= 0) return;
@@ -206,7 +181,6 @@ namespace Jvedio.ViewModel
             TabControlSelectedIndex = (int)editWindow.CurrentDataType - 1;
             Reset();
         }
-
 
         private List<string> oldLabels;
 
@@ -242,19 +216,17 @@ namespace Jvedio.ViewModel
             getLabels();
         }
 
-
         private bool loadingLabel = false;
 
         public async void getLabels()
         {
             if (loadingLabel) return;
             loadingLabel = true;
-            string like_sql = "";
+            string like_sql = string.Empty;
 
             string search = LabelText.ToProperSql().Trim();
             if (!string.IsNullOrEmpty(search))
                 like_sql = $" and LabelName like '%{search}%' ";
-
 
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
@@ -304,12 +276,5 @@ namespace Jvedio.ViewModel
             }
             return update1 > 0 & update2 > 0;
         }
-
-
-
-
-
-
-
     }
 }

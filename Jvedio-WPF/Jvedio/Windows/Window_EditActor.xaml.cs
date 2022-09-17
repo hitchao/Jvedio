@@ -16,8 +16,6 @@ namespace Jvedio
     /// </summary>
     public partial class Window_EditActor : BaseWindow
     {
-
-
         private Main main { get; set; }
 
         private Window_EditActor()
@@ -38,8 +36,6 @@ namespace Jvedio
             LoadActor();
         }
 
-
-
         public void LoadActor()
         {
             if (this.ActorID <= 0) return;
@@ -51,8 +47,6 @@ namespace Jvedio
             CurrentActorInfo = null;
             CurrentActorInfo = actorInfo;
         }
-
-
 
         private void SaveActor(object sender, RoutedEventArgs e)
         {
@@ -69,7 +63,6 @@ namespace Jvedio
                     MessageCard.Success(Jvedio.Language.Resources.Message_Success);
                     main?.RefreshActor(CurrentActorInfo.ActorID);
                 }
-
             }
             else
             {
@@ -94,12 +87,11 @@ namespace Jvedio
                         MessageCard.Success("添加失败！");
                 }
             }
-
         }
 
         private void SetActorImage(object sender, RoutedEventArgs e)
         {
-            string imageFileName = "";
+            string imageFileName = string.Empty;
             System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
             OpenFileDialog1.Filter = Window_Settings.SupportPictureFormat;
@@ -137,7 +129,6 @@ namespace Jvedio
 
                 main?.RefreshActor(CurrentActorInfo.ActorID);
             }
-
         }
     }
 }

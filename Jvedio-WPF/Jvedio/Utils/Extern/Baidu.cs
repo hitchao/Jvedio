@@ -19,12 +19,9 @@ namespace SuperUtils.External
 
         public static void Init()
         {
-            clientId = Jvedio.Properties.Settings.Default.Baidu_API_KEY.Replace(" ", "");
-            clientSecret = Jvedio.Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", "");
+            clientId = Jvedio.Properties.Settings.Default.Baidu_API_KEY.Replace(" ", string.Empty);
+            clientSecret = Jvedio.Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", string.Empty);
         }
-
-
-
 
         public static string getAccessToken()
         {
@@ -38,13 +35,12 @@ namespace SuperUtils.External
             HttpResponseMessage response = client.PostAsync(authHost, new FormUrlEncodedContent(paraList)).Result;
             string result = response.Content.ReadAsStringAsync().Result;
             //Console.WriteLine(result);
-            return GetValue(result, "access_token").Replace("\"", "");
+            return GetValue(result, "access_token").Replace("\"", string.Empty);
         }
 
         public static string GetValue(string json, string key)
         {
-
-            string result = ""; //解析失败的默认返回值
+            string result = string.Empty; //解析失败的默认返回值
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             try
             {
@@ -58,12 +54,10 @@ namespace SuperUtils.External
 
             return result;
         }
-
     }
 
     public static class FaceDetect
     {
-
         // 人脸检测与属性分析    https://cloud.baidu.com/doc/FACE/s/yk37c1u4t
         public static string faceDetect(string token, Bitmap bitmap, string imagepath = "")
         {
@@ -74,7 +68,7 @@ namespace SuperUtils.External
             request.Method = "post";
             request.KeepAlive = true;
             string base64Str = ImageHelper.ImageToBase64(bitmap);
-            if (base64Str == null) return "";
+            if (base64Str == null) return string.Empty;
             //Console.WriteLine(base64Str);
             string str = "{\"image\":\"" + base64Str + "\",\"image_type\":\"BASE64\",\"face_field\":\"age,beauty,expression,face_shape,gender,glasses,landmark,landmark150,race,quality,eye_status,emotion,face_type,mask,spoofing\",\"max_face_num\":1,\"face_type\":\"LIVE\",\"liveness_control\":\"NONE\"}";
             byte[] buffer = encoding.GetBytes(str);
@@ -111,16 +105,11 @@ namespace SuperUtils.External
         //    });
 
         //}
-
-
-
     }
-
 
     public static class FaceParse
     {
         public static string FaceJson;
-
 
         public static (Dictionary<string, string>, Int32Rect) Parse(string json)
         {
@@ -136,7 +125,6 @@ namespace SuperUtils.External
                 try { if ((bool)result?.ContainsKey("face_num")) facenum = uint.Parse(result["face_num"].ToString()); } catch { }
                 if (facenum > 0)
                 {
-
                     object[] face_list_object = result["face_list"] as object[];
                     foreach (Dictionary<string, object> item in face_list_object)
                     {
@@ -164,12 +152,9 @@ namespace SuperUtils.External
                         int32Rect = new Int32Rect((int)float.Parse(location["left"].ToString()), (int)float.Parse(location["top"].ToString()), (int)float.Parse(location["width"].ToString()), (int)float.Parse(location["height"].ToString())); ;
                         return (dicresult, int32Rect);
                     }
-
                 }
             }
             return (dicresult, int32Rect);
-
-
         }
 
         public static void ShowDic(Dictionary<string, object> dict)

@@ -31,10 +31,8 @@ using static Jvedio.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
-
     public partial class WindowStartUp : SuperControls.Style.BaseWindow
     {
-
         private CancellationTokenSource cts;
         private CancellationToken ct;
         private VieModel_StartUp vieModel_StartUp;
@@ -49,7 +47,6 @@ namespace Jvedio
 
         public WindowStartUp()
         {
-
             InitializeComponent();
             this.Width = SystemParameters.PrimaryScreenWidth * 2 / 3;
             this.Height = SystemParameters.PrimaryScreenHeight * 2 / 3;
@@ -67,8 +64,6 @@ namespace Jvedio
             //FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers", "temp"));
             FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
         }
-
-
 
         // todo
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -90,7 +85,7 @@ namespace Jvedio
             ConfigManager.EnsurePicPaths();
 
             await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
-            //if (GlobalFont != null) 
+            //if (GlobalFont != null)
             //    this.FontFamily = GlobalFont;
             InitAppData();      // 初始化应用数据
             DeleteLogs();       // 清理日志
@@ -123,8 +118,6 @@ namespace Jvedio
                 vieModel_StartUp.Loading = false;
                 this.TitleHeight = DEFAULT_TITLE_HEIGHT;
             }
-
-
         }
 
         private async Task<bool> MovePlugins()
@@ -136,8 +129,6 @@ namespace Jvedio
                 DirHelper.TryDelete(path);
             return true;
         }
-
-
 
         private async Task<bool> BackupData()
         {
@@ -159,7 +150,6 @@ namespace Jvedio
                         {
                             backup = true;
                         }
-
                     }
                 }
                 else
@@ -183,15 +173,11 @@ namespace Jvedio
                     string origin = Path.Combine(CurrentUserFolder, "image");
                     DirHelper.TryCopy(origin, target3);
                 }
-
             }
 
             await Task.Delay(1);
             return false;
         }
-
-
-
 
         private async Task<bool> MoveOldFiles()
         {
@@ -214,8 +200,11 @@ namespace Jvedio
             string targetDir = Path.Combine(AllOldDataPath, "DataBase");
             if (Directory.Exists(targetDir)) DirHelper.TryDelete(targetDir);
             DirHelper.TryMoveDir(oldDataPath, targetDir);// 移动 DataBase
-            string[] moveFiles = { "SearchHistory", "ServersConfig", "RecentWatch",
-                "AI.sqlite", "Magnets.sqlite", "Translate.sqlite", "mylist.sqlite" };
+            string[] moveFiles =
+            {
+                "SearchHistory", "ServersConfig", "RecentWatch",
+                "AI.sqlite", "Magnets.sqlite", "Translate.sqlite", "mylist.sqlite"
+            };
 
             foreach (string filename in moveFiles)
             {
@@ -225,16 +214,10 @@ namespace Jvedio
             return true;
         }
 
-
-
-
-
-
         private void InitAppData()
         {
             try
             {
-
                 ScanHelper.InitSearchPattern();
                 // 读取配置文件，设置 debug
                 ReadConfig();
@@ -256,7 +239,7 @@ namespace Jvedio
                 if (!string.IsNullOrEmpty(item) && item.IndexOf("=") > 0 && item.Length >= 3)
                 {
                     string p = item.Split('=')[0];
-                    string v = item.Split('=')[1].Replace("\r", "");
+                    string v = item.Split('=')[1].Replace("\r", string.Empty);
                     if ("debug".Equals(p) && "true".Equals(v.ToLower()))
                     {
                         Properties.Settings.Default.Debug = true;
@@ -268,15 +251,11 @@ namespace Jvedio
                 }
             }
 
-
             Console.WriteLine("Properties.Settings.Default.Debug = " + Properties.Settings.Default.Debug);
-
-
         }
 
         private void DeleteLogs()
         {
-
             try
             {
                 // todo 清除日志
@@ -291,9 +270,6 @@ namespace Jvedio
             }
         }
 
-
-
-
         public void ClearLogBefore(int day, string filepath)
         {
             DateTime dateTime = DateTime.Now.AddDays(day);
@@ -304,7 +280,7 @@ namespace Jvedio
                 string[] files = Directory.GetFiles(filepath, "*.log", SearchOption.TopDirectoryOnly);
                 foreach (var file in files)
                 {
-                    DateTime.TryParse(file.Split('\\').Last().Replace(".log", ""), out DateTime date);
+                    DateTime.TryParse(file.Split('\\').Last().Replace(".log", string.Empty), out DateTime date);
                     if (date < dateTime) FileHelper.TryDeleteFile(file);
                 }
             }
@@ -331,8 +307,6 @@ namespace Jvedio
                 Logger.LogE(ex);
             }
 
-
-
             try
             {
                 //TODO
@@ -352,12 +326,10 @@ namespace Jvedio
             {
                 Logger.LogE(ex);
             }
-
         }
 
         public void EnsureDirExists()
         {
-
             foreach (var item in InitDirs)
             {
                 FileHelper.TryCreateDir(item);
@@ -366,9 +338,7 @@ namespace Jvedio
             {
                 FileHelper.TryCreateDir(Path.Combine(PicPath, item));
             }
-
         }
-
 
         public void EnsureFileExists()
         {
@@ -378,8 +348,6 @@ namespace Jvedio
                 this.Close();
             }
         }
-
-
 
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
@@ -404,7 +372,6 @@ namespace Jvedio
             }
         }
 
-
         private void RenameSqlite(object sender, RoutedEventArgs e)
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
@@ -426,12 +393,10 @@ namespace Jvedio
             vieModel_StartUp.refreshItem();
         }
 
-
         private void LanguageChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine(e.AddedItems[0].ToString());
         }
-
 
         private void ShowSettingsPopup(object sender, MouseButtonEventArgs e)
         {
@@ -445,9 +410,6 @@ namespace Jvedio
             }
             e.Handled = true;
         }
-
-
-
 
         private void ShowSortPopup(object sender, MouseButtonEventArgs e)
         {
@@ -474,8 +436,6 @@ namespace Jvedio
             }
         }
 
-
-
         private void SearchText_Changed(object sender, RoutedEventArgs e)
         {
             SuperControls.Style.SearchBox textBox = sender as SuperControls.Style.SearchBox;
@@ -484,10 +444,9 @@ namespace Jvedio
             vieModel_StartUp.Search();
         }
 
-
         private void NewDatabase(object sender, RoutedEventArgs e)
         {
-            vieModel_StartUp.CurrentSearch = "";
+            vieModel_StartUp.CurrentSearch = string.Empty;
             vieModel_StartUp.Sort = true;
             vieModel_StartUp.SortType = "创建时间";
             DialogInput input = new DialogInput(this, Jvedio.Language.Resources.NewLibrary);
@@ -507,12 +466,10 @@ namespace Jvedio
             RefreshDatabase();
         }
 
-
         public void RefreshDatabase()
         {
             vieModel_StartUp.ReadFromDataBase();
         }
-
 
         // todo 检视
         private void ChangeDataType(object sender, RoutedEventArgs e)
@@ -537,10 +494,6 @@ namespace Jvedio
                 return;
             }
 
-
-
-
-
             List<AppDatabase> appDatabases = appDatabaseMapper.SelectList();
             //加载数据库
             long id = ConfigManager.Main.CurrentDBId;
@@ -557,7 +510,6 @@ namespace Jvedio
                 {
                     return;
                 }
-
             }
             else
             {
@@ -627,7 +579,6 @@ namespace Jvedio
                         tabControl.SelectedIndex = 1;
                     }
                 }
-
             }
 
             //启动主窗口
@@ -674,8 +625,6 @@ namespace Jvedio
             this.Close();
         }
 
-
-
         private void SetImage(object sender, RoutedEventArgs e)
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
@@ -719,8 +668,6 @@ namespace Jvedio
             LoadDataBase();
         }
 
-
-
         private void ShowHideDataBase(object sender, RoutedEventArgs e)
         {
             vieModel_StartUp.ReadFromDataBase();
@@ -757,15 +704,12 @@ namespace Jvedio
                 // todo 关闭 main
                 //main.Close();
             }
-
         }
 
         private void listBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             LoadDataBase();
         }
-
-
 
         private void ShowHelpPicture(object sender, MouseButtonEventArgs e)
         {
@@ -775,7 +719,6 @@ namespace Jvedio
         private void ShowHelpGame(object sender, MouseButtonEventArgs e)
         {
             MessageCard.Info("新建库并打开后，将含有 EXE 的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
-
         }
 
         private void ShowHelpComics(object sender, MouseButtonEventArgs e)
@@ -819,7 +762,6 @@ namespace Jvedio
                 }
                 button.IsEnabled = true;
             }
-
         }
     }
 }

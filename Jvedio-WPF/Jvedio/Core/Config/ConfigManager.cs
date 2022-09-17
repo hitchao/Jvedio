@@ -29,9 +29,6 @@ namespace Jvedio
         public static Jvedio.Core.Config.PluginConfig PluginConfig = Jvedio.Core.Config.PluginConfig.createInstance();
         public static Jvedio.Core.Config.ThemeConfig ThemeConfig = Jvedio.Core.Config.ThemeConfig.createInstance();
 
-
-
-
         public static void InitConfig()
         {
             System.Reflection.FieldInfo[] fieldInfos = typeof(ConfigManager).GetFields();

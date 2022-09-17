@@ -4,7 +4,6 @@ namespace Jvedio.Core.Config
 {
     public class ScanConfig : AbstractConfig
     {
-
         private const double DEFAULT_MINFILESIZE = 1;       // 1 MB
 
         private ScanConfig() : base("ScanConfig")
@@ -21,8 +20,6 @@ namespace Jvedio.Core.Config
 
             return _instance;
         }
-
-
 
         public double _MinFileSize = DEFAULT_MINFILESIZE;
 
@@ -47,7 +44,5 @@ namespace Jvedio.Core.Config
         public bool CopyNFOPicture { get; set; }
 
         public bool FetchVID { get; set; }
-
-
     }
 }

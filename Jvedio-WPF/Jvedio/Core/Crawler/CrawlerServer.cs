@@ -11,7 +11,6 @@ using System.Runtime.CompilerServices;
 
 namespace Jvedio.Core.Crawler
 {
-
     /// <summary>
     /// 服务器源
     /// </summary>
@@ -19,7 +18,7 @@ namespace Jvedio.Core.Crawler
     {
         public CrawlerServer()
         {
-            PluginID = "";
+            PluginID = string.Empty;
         }
 
         public string PluginID { get; set; }
@@ -40,7 +39,6 @@ namespace Jvedio.Core.Crawler
             }
         }
 
-
         private bool _Enabled;
 
         public bool Enabled
@@ -56,8 +54,6 @@ namespace Jvedio.Core.Crawler
                 OnPropertyChanged();
             }
         }
-
-
 
         /// <summary>
         /// -1 不可用，1-可用，2-测试中
@@ -120,7 +116,6 @@ namespace Jvedio.Core.Crawler
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         public bool isHeaderProper()
         {
             if (string.IsNullOrEmpty(Headers)) return true;
@@ -134,7 +129,6 @@ namespace Jvedio.Core.Crawler
                 System.Console.WriteLine(ex.Message);
                 return false;
             }
-
         }
 
         public static RequestHeader parseHeader(CrawlerServer server)
@@ -167,5 +161,4 @@ namespace Jvedio.Core.Crawler
             return true;
         }
     }
-
 }

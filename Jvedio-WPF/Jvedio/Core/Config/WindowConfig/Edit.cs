@@ -6,7 +6,6 @@ namespace Jvedio.Core.WindowConfig
     {
         private Edit() : base($"WindowConfig.Edit")
         {
-
         }
 
         private static Edit _instance = null;

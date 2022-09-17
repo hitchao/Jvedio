@@ -13,11 +13,9 @@ namespace Jvedio
     /// </summary>
     public partial class Window_TagStamp : BaseWindow
     {
-
         public SolidColorBrush _BackgroundBrush = Brushes.Red;
 
         public SolidColorBrush BackgroundBrush { get { return _BackgroundBrush; } set { _BackgroundBrush = value; } }
-
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
 
@@ -27,11 +25,9 @@ namespace Jvedio
 
         private int idx = 0;
 
-
         public Window_TagStamp()
         {
             InitializeComponent();
-
         }
 
         public Window_TagStamp(string name, SolidColorBrush background, SolidColorBrush foreground) : this()
@@ -52,7 +48,6 @@ namespace Jvedio
         {
             this.DialogResult = false;
         }
-
 
         private async void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -79,7 +74,6 @@ namespace Jvedio
                 border2.Background = ColorPicker.SelectedBrush;
                 ForegroundBrush = ColorPicker.SelectedBrush;
             }
-
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)

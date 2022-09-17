@@ -3,7 +3,6 @@ using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity.CommonSQL
 {
-
     [Table(tableName: "common_ai_face")]
 
     public class AIFaceInfo

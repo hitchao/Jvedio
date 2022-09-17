@@ -5,8 +5,6 @@ namespace Jvedio.Entity
 {
     public class MySqlite : Sqlite
     {
-
-
         public MySqlite(string path) : base(path)
         {
             SqlitePath = path;
@@ -16,14 +14,9 @@ namespace Jvedio.Entity
             cmd.Connection = cn;
         }
 
-
         public void CloseDB()
         {
             this.Close();
         }
-
     }
-
-
-
 }

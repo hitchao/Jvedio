@@ -22,7 +22,6 @@ using static Jvedio.MapperManager;
 
 namespace Jvedio.Upgrade
 {
-
     // 【重点】
     public static class Jvedio4ToJvedio5
     {
@@ -49,7 +48,6 @@ namespace Jvedio.Upgrade
                     Logger.Error(ex);
                     continue;
                 }
-
             }
 
             List<AppDatabase> appDatabases = null;
@@ -62,8 +60,6 @@ namespace Jvedio.Upgrade
                 Logger.Error(ex);
                 return;
             }
-
-
 
             foreach (string name in dict.Keys)
             {
@@ -85,10 +81,7 @@ namespace Jvedio.Upgrade
                     Logger.Error(ex);
                     continue;
                 }
-
             }
-
-
         }
 
         public static void MoveRecentWatch()
@@ -118,10 +111,7 @@ namespace Jvedio.Upgrade
                     metaDataMapper.ExecuteNonQuery(sql);
                 }
             }
-
         }
-
-
 
         private static void setProgress(float current, string logText)
         {
@@ -132,10 +122,8 @@ namespace Jvedio.Upgrade
                     window_Progress.MainProgress = current;
                     window_Progress.LogText = logText;
                 }
-
             });
         }
-
 
         private static Window_Progress window_Progress;
 
@@ -143,7 +131,7 @@ namespace Jvedio.Upgrade
         {
             if (files == null || files.Length == 0) return true;
             bool result = false;
-            window_Progress = new Window_Progress("迁移数据", logText: "");
+            window_Progress = new Window_Progress("迁移数据", logText: string.Empty);
 
             // 不等待
             Task.Run(() => { App.Current.Dispatcher.Invoke(() => { window_Progress.ShowDialog(); }); });
@@ -156,14 +144,10 @@ namespace Jvedio.Upgrade
                     MessageBox.Show(err);
                 });
                 setProgress((100 * (float)i + 1) / (float)files.Length, $"迁移数据：{Path.GetFileName(file)}");
-
             }
             window_Progress.Close();
             return result;
         }
-
-
-
 
         /// <summary>
         /// 移动旧数据库到新数据库
@@ -191,7 +175,6 @@ namespace Jvedio.Upgrade
                     return false;
                 }
                 if (oldSqlite == null) return false;
-
 
                 // 1. 迁移 Code
                 dbName += "vdb";
@@ -247,7 +230,6 @@ namespace Jvedio.Upgrade
                     {
                         Logger.Error(ex);
                     }
-
 
                     if (library != null)
                     {
@@ -329,7 +311,6 @@ namespace Jvedio.Upgrade
                     }
                     actressReader?.Close();
                 }
-
 
                 Logger.Info($"actorMapper 用时：{watch.ElapsedMilliseconds} ms");
                 watch.Restart();
@@ -469,7 +450,6 @@ namespace Jvedio.Upgrade
                             return false;
                         }
 
-
                         Logger.Info($"videoMapper 用时：{watch.ElapsedMilliseconds} ms");
                         watch.Restart();
 
@@ -484,12 +464,10 @@ namespace Jvedio.Upgrade
                             Logger.Error(ex);
                         }
 
-
                         Logger.Info($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
                         watch.Restart();
                     }
                     sr?.Close();
-
                 }
                 oldSqlite.CloseDB();
 
@@ -503,15 +481,12 @@ namespace Jvedio.Upgrade
                     // 中文
                     if (video.IsCHS())
                         list.Add($"({video.DataID},2)");
-
                 }
                 if (list.Count > 0)
                 {
                     string sql = $"insert into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
 
                     videoMapper.ExecuteNonQuery(sql);
-
-
                 }
 
                 return true;
@@ -537,7 +512,6 @@ namespace Jvedio.Upgrade
                     $"values ({i + 1},'Title',{translation.TransaltionID})";
                 metaDataMapper.ExecuteNonQuery(sql);
             }
-
         }
 
         public static void handleLabel(List<Video> list)
@@ -563,7 +537,6 @@ namespace Jvedio.Upgrade
                 {
                     dataId_to_LabelID.Add($"({dataID},'{label}')");
                 }
-
             }
             if (dataId_to_LabelID.Count > 0)
             {
@@ -571,7 +544,6 @@ namespace Jvedio.Upgrade
                 $"insert or replace into metadata_to_label(DataID,LabelName) values {string.Join(",", dataId_to_LabelID)}";
                 metaDataMapper.ExecuteNonQuery(insert_sql);
             }
-
         }
 
         private static void handleActor(List<Video> list)
@@ -601,7 +573,6 @@ namespace Jvedio.Upgrade
             long count = metaDataMapper.SelectCount();
             for (int i = 0; i < list.Count; i++)
             {
-
                 string actor = list[i].ActorNames; // 演员A 演员B 演员C
                 string actorid = list[i].OldActorIDs;
                 if (string.IsNullOrEmpty(actor)) continue;
@@ -620,8 +591,6 @@ namespace Jvedio.Upgrade
                         urlCode.WebType = list[i].WebType;
                         urlCode.ValueType = "actor";
                         urlCodes.Add(urlCode);
-
-
                     }
                 }
                 for (int j = 0; j < actorNames.Length; j++)
@@ -630,9 +599,6 @@ namespace Jvedio.Upgrade
                     if (!dict.ContainsKey(actorName)) continue;
                     insert_list.Add($"({dict[actorName]},{list[i].DataID})");
                 }
-
-
-
             }
             urlCodeMapper.InsertBatch(urlCodes, InsertMode.Ignore);
 
@@ -643,8 +609,6 @@ namespace Jvedio.Upgrade
                 metaDataMapper.ExecuteNonQuery(sql);
             }
         }
-
-
 
         public static void MoveAI()
         {
@@ -669,7 +633,6 @@ namespace Jvedio.Upgrade
                 {
                     AIFaceInfo faceInfo = new AIFaceInfo()
                     {
-
                         Expression = sr["expression"]?.ToString(),
                         FaceShape = sr["face_shape"]?.ToString(),
                         Race = sr["race"]?.ToString(),
@@ -706,10 +669,8 @@ namespace Jvedio.Upgrade
                 Logger.Error(ex);
             }
 
-
             sr.Close();
             oldSqlite.CloseDB();
-
         }
 
         public static void MoveMagnets()
@@ -767,8 +728,6 @@ namespace Jvedio.Upgrade
                 Logger.Error(ex);
             }
 
-
-
             Dictionary<string, long> dict = new Dictionary<string, long>();
             try
             {
@@ -796,7 +755,6 @@ namespace Jvedio.Upgrade
 
             sr.Close();
             oldSqlite.CloseDB();
-
         }
 
         public static void MoveSearchHistory()
@@ -822,7 +780,6 @@ namespace Jvedio.Upgrade
             //        Logger.Error(ex);
             //    }
             //}
-
         }
 
         public static void MoveMyList()
@@ -894,9 +851,7 @@ namespace Jvedio.Upgrade
             catch (Exception ex)
             {
                 Logger.Error(ex);
-
             }
-
 
             if (dict.Count > 0)
             {
@@ -917,8 +872,6 @@ namespace Jvedio.Upgrade
                     metaDataMapper.ExecuteNonQuery(sql);
                 }
             }
-
-
         }
 
         public static void MoveTranslate()
@@ -938,7 +891,6 @@ namespace Jvedio.Upgrade
                 Logger.Error(ex);
             }
             if (oldSqlite == null || sr == null) return;
-
 
             // 先获得当前 transaltion 表的最大 id
             SelectWrapper<Translation> wrapper = new SelectWrapper<Translation>();
@@ -1002,7 +954,6 @@ namespace Jvedio.Upgrade
                 return;
             }
 
-
             SelectWrapper<Video> selectWrapper = new SelectWrapper<Video>();
             selectWrapper.Select("VID", "DataID").In("VID", set);
             List<Video> videos = null;
@@ -1034,7 +985,5 @@ namespace Jvedio.Upgrade
             sr.Close();
             oldSqlite.CloseDB();
         }
-
-
     }
 }

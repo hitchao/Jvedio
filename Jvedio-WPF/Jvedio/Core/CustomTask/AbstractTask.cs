@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.CustomTask
 {
-
-
-
     public class AbstractTask : ITask, INotifyPropertyChanged
     {
         public Stopwatch stopwatch { get; set; }
@@ -24,36 +21,29 @@ namespace Jvedio.Core.CustomTask
         protected CancellationTokenSource tokenCTS;
         protected CancellationToken token;
 
-
         public event EventHandler onError;
 
         public event EventHandler onCanceled;
 
         public event EventHandler onCompleted;
 
-
-
         public List<string> Logs { get; set; }
 
         protected TaskLogger logger { get; set; }
 
-
         public static Dictionary<TaskStatus, string> STATUS_TO_TEXT_DICT = new Dictionary<TaskStatus, string>()
         {
-
-            {TaskStatus.WaitingToRun,"等待中..."},
-            {TaskStatus.Running,"进行中..."},
-            {TaskStatus.Canceled,"已取消"},
-            {TaskStatus.RanToCompletion,"已完成"},
+            { TaskStatus.WaitingToRun, "等待中..." },
+            { TaskStatus.Running, "进行中..." },
+            { TaskStatus.Canceled, "已取消" },
+            { TaskStatus.RanToCompletion, "已完成" },
         };
-
 
         /// <summary>
         /// 任务调度
         /// </summary>
         public AbstractTask()
         {
-
             Status = System.Threading.Tasks.TaskStatus.WaitingToRun;
             CreateTime = DateHelper.Now();
 
@@ -70,16 +60,12 @@ namespace Jvedio.Core.CustomTask
             logger = new TaskLogger(Logs);
         }
 
-
-
         #region "property"
-
 
         public TaskStatus _Status;
 
         public TaskStatus Status
         {
-
             get
             {
                 return _Status;
@@ -90,7 +76,7 @@ namespace Jvedio.Core.CustomTask
                 _Status = value;
                 if (STATUS_TO_TEXT_DICT.ContainsKey(value))
                     StatusText = STATUS_TO_TEXT_DICT[value];
-                else StatusText = "";
+                else StatusText = string.Empty;
                 OnPropertyChanged();
             }
         }
@@ -99,7 +85,6 @@ namespace Jvedio.Core.CustomTask
 
         public string Message
         {
-
             get
             {
                 return _Message;
@@ -112,15 +97,10 @@ namespace Jvedio.Core.CustomTask
             }
         }
 
-
-
-
-
         public string _StatusText;
 
         public string StatusText
         {
-
             get
             {
                 return _StatusText;
@@ -134,12 +114,10 @@ namespace Jvedio.Core.CustomTask
             }
         }
 
-
         public long _ElapsedMilliseconds;
 
         public long ElapsedMilliseconds
         {
-
             get
             {
                 return _ElapsedMilliseconds;
@@ -156,7 +134,6 @@ namespace Jvedio.Core.CustomTask
 
         public float Progress
         {
-
             get
             {
                 return _Progress;
@@ -169,9 +146,6 @@ namespace Jvedio.Core.CustomTask
             }
         }
 
-
-
-
         /// <summary>
         /// 用于指示下载任务是否进行中
         /// </summary>
@@ -179,7 +153,6 @@ namespace Jvedio.Core.CustomTask
 
         public bool Running
         {
-
             get
             {
                 return _Running;
@@ -192,12 +165,10 @@ namespace Jvedio.Core.CustomTask
             }
         }
 
-
         public string _CreateTime;
 
         public string CreateTime
         {
-
             get
             {
                 return _CreateTime;
@@ -212,12 +183,10 @@ namespace Jvedio.Core.CustomTask
 
         #endregion
 
-
         protected virtual void OnError(EventArgs e)
         {
             EventHandler error = onError;
             error?.Invoke(this, e);
-
         }
 
         protected virtual void OnCanceled(EventArgs e)
@@ -231,7 +200,6 @@ namespace Jvedio.Core.CustomTask
             EventHandler eventHandler = onCompleted;
             eventHandler?.Invoke(this, e);
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -271,7 +239,6 @@ namespace Jvedio.Core.CustomTask
             logger.Info($"总计耗时：{ElapsedMilliseconds} ms");
         }
 
-
         public virtual void doWrok()
         {
             throw new NotImplementedException();
@@ -286,8 +253,6 @@ namespace Jvedio.Core.CustomTask
         {
             throw new NotImplementedException();
         }
-
-
 
         public virtual void Stop()
         {

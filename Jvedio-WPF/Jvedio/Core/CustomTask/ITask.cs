@@ -13,6 +13,5 @@
         void Restart();
 
         void Finished();
-
     }
 }

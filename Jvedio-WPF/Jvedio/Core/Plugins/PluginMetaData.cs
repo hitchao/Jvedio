@@ -13,12 +13,10 @@ namespace Jvedio.Core.Plugins
 {
     public enum PluginType
     {
-
         Crawler,
         Theme,
         None
     }
-
 
     public class AuthorInfo
     {
@@ -31,7 +29,6 @@ namespace Jvedio.Core.Plugins
             Infos = new Dictionary<string, string>();
         }
     }
-
 
     public class ReleaseNotes
     {
@@ -86,9 +83,7 @@ namespace Jvedio.Core.Plugins
 
         public string ImageUrl { get; set; }
 
-
         public PluginType Type { get; set; }
-
 
         public void SetPluginID(PluginType type, string value)
         {
@@ -98,7 +93,7 @@ namespace Jvedio.Core.Plugins
 
         public string GetRawPluginID()
         {
-            return PluginID.Replace(PluginType.ToString() + "-", "");
+            return PluginID.Replace(PluginType.ToString() + "-", string.Empty);
         }
 
         public static PluginMetaData ParseByPath(string jsonPath)
@@ -126,7 +121,6 @@ namespace Jvedio.Core.Plugins
             }
             return metaData;
         }
-
 
         public static List<string> GetFileListByJson(string content)
         {
@@ -190,7 +184,7 @@ namespace Jvedio.Core.Plugins
             if (data == null || string.IsNullOrEmpty(pluginDir)) return;
             string imagePath = Path.Combine(pluginDir, "images");
             List<string> list = FileHelper.TryGetAllFiles(imagePath, "plugin.*").ToList();
-            string path = "";
+            string path = string.Empty;
             foreach (var item in list)
             {
                 path = FileHelper.FindWithExt(item, ScanTask.PICTURE_EXTENSIONS_LIST);
@@ -237,7 +231,6 @@ namespace Jvedio.Core.Plugins
                     metaData.Authors.Add(authorInfo);
                 }
                 metaData.AuthorNames = string.Join("/", metaData.Authors.Select(arg => arg.Name));
-
             }
 
             JObject jObject = dict["ReleaseNotes"] as JObject;

@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.FFmpeg
 {
-
     //TODO 线程池
     public class ScreenShot
     {
@@ -34,7 +33,6 @@ namespace Jvedio.Core.FFmpeg
 
         private List<string> saveFileNames = new List<string>();
 
-
         public int TotalTaskCount { get; set; }
 
         public int CurrentTaskCount { get; set; }
@@ -51,14 +49,11 @@ namespace Jvedio.Core.FFmpeg
             Token = token;
         }
 
-
         public event EventHandler onProgress;
 
         public event EventHandler onError;
 
         private object ErrorLock = new object();
-
-
 
         public async Task<string> AsyncScreenShot()
         {
@@ -125,7 +120,6 @@ namespace Jvedio.Core.FFmpeg
             return outputs.ToString();
         }
 
-
         public void RunFFmpeg(object ffmpegParam)
         {
             StringBuilder currentOutput = new StringBuilder();
@@ -143,13 +137,11 @@ namespace Jvedio.Core.FFmpeg
                     RedirectStandardError = true
                 },
                 EnableRaisingEvents = true
-
             };
             try
             {
-
                 process.Start();
-                string processOutput = "";
+                string processOutput = string.Empty;
                 while ((processOutput = process.StandardError.ReadLine()) != null)
                 {
                     currentOutput.Append(processOutput);
@@ -177,10 +169,6 @@ namespace Jvedio.Core.FFmpeg
             }
         }
 
-
-
-
-
         public async Task<string> AsyncGenrateGif()
         {
             if (!File.Exists(FFmpegPath))
@@ -192,7 +180,6 @@ namespace Jvedio.Core.FFmpeg
             string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); //获得需要截图的视频进度
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
-
 
             string saveFileName = CurrentVideo.getGifPath();
             if (string.IsNullOrEmpty(saveFileName))
@@ -218,7 +205,6 @@ namespace Jvedio.Core.FFmpeg
             int width = (int)ConfigManager.FFmpegConfig.GifWidth;
             int height = (int)ConfigManager.FFmpegConfig.GifHeight;
             if (width <= 0) width = DEFAULT_GIF_WIDTH;
-
 
             if (ConfigManager.FFmpegConfig.GifAutoHeight)
             {

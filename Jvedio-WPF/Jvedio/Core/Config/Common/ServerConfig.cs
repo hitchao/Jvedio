@@ -27,8 +27,6 @@ namespace Jvedio.Core.Config
 
         public List<CrawlerServer> CrawlerServers { get; set; }
 
-
-
         public override void Read()
         {
             CrawlerServers = new List<CrawlerServer>();
@@ -67,8 +65,5 @@ namespace Jvedio.Core.Config
                 MapperManager.appConfigMapper.Insert(appConfig, InsertMode.Replace);
             }
         }
-
-
-
     }
 }

@@ -9,7 +9,6 @@ namespace Jvedio.Core.Config
 {
     public class ProxyConfig : AbstractConfig
     {
-
         private const int DEFAULT_TIMEOUT = 10;
 
         private ProxyConfig() : base("ProxyConfig")
@@ -33,7 +32,6 @@ namespace Jvedio.Core.Config
         /// </summary>
         public long ProxyMode { get; set; }
 
-
         // 自定义代理配置
         public long ProxyType { get; set; }  // 0-HTTP 1-SOCKS
 
@@ -44,7 +42,6 @@ namespace Jvedio.Core.Config
         public string UserName { get; set; }
 
         public string Password { get; set; }
-
 
         private long _HttpTimeout = DEFAULT_TIMEOUT;
 
@@ -63,11 +60,6 @@ namespace Jvedio.Core.Config
                     _HttpTimeout = value;
             }
         }
-
-
-
-
-
 
         public IWebProxy GetWebProxy()
         {
@@ -102,7 +94,6 @@ namespace Jvedio.Core.Config
                         proxy = new WebProxy(Server, (int)Port);
                         if (!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(pwd))
                         {
-
                             NetworkCredential credential = new NetworkCredential(UserName, pwd);
                             if (credential != null) proxy.Credentials = credential;
                         }
@@ -124,7 +115,6 @@ namespace Jvedio.Core.Config
             return proxy;
         }
 
-
         public string getRealPwd()
         {
             if (!string.IsNullOrEmpty(Password))
@@ -138,7 +128,7 @@ namespace Jvedio.Core.Config
                     Logger.LogF(ex);
                 }
             }
-            return "";
+            return string.Empty;
         }
     }
 }

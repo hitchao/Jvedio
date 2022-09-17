@@ -4,11 +4,10 @@ namespace Jvedio.Core.Config
 {
     public class ThemeConfig : AbstractConfig
     {
-
         private ThemeConfig() : base("ThemeConfig")
         {
             ThemeIndex = 0;
-            ThemeID = "";
+            ThemeID = string.Empty;
         }
 
         private static ThemeConfig _instance = null;

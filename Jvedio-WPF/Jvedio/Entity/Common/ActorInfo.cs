@@ -74,7 +74,6 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public long ImageID { get; set; }
 
-
         /// <summary>
         /// 出演的作品的数量
         /// </summary>
@@ -85,9 +84,6 @@ namespace Jvedio.Entity
 
         [TableField(exist: false)]
         public BitmapSource SmallImage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
-
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -116,8 +112,6 @@ namespace Jvedio.Entity
 
         public static void SetImage(ref ActorInfo actorInfo)
         {
-
-
             //加载图片
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             BitmapImage smallimage = null;
@@ -133,7 +127,7 @@ namespace Jvedio.Entity
 
         public string getImagePath(string dataPath = "", string ext = ".jpg", bool searchExt = true)
         {
-            string result = "";
+            string result = string.Empty;
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             string basePicPath = ConfigManager.Settings.PicPaths[pathType.ToString()].ToString();
             if (pathType != PathType.RelativeToData)
@@ -161,15 +155,12 @@ namespace Jvedio.Entity
             return result;
         }
 
-
         private string parseRelativeImageFileName(string path)
         {
-
             string dirName = System.IO.Path.GetDirectoryName(path);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(path).ToLower();
             List<string> list = FileHelper.TryGetAllFiles(dirName, "*.*").ToList();
             list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
-
 
             foreach (string item in list)
             {

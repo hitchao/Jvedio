@@ -24,9 +24,6 @@ namespace Jvedio.Core.Scan
             }
         }
 
-
-
-
         private static ScanTask CreatePicScanner(List<string> scanPaths, List<string> filePaths, IEnumerable<string> fileExt = null)
         {
             return new PictureScan(scanPaths, filePaths, fileExt);

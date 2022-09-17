@@ -8,7 +8,6 @@ namespace Jvedio.Mapper
 {
     public class AssociationMapper : BaseMapper<Association>
     {
-
         public List<Association> Associations { get; set; }
 
         public Dictionary<long, ListNode<long>> AdjacencyList { get; set; }
@@ -84,7 +83,6 @@ namespace Jvedio.Mapper
 
         private void FindAssoData(ref HashSet<long> set, Dictionary<long, ListNode<long>> dict, long target, ref HashSet<long> foundList)
         {
-
             if (foundList.Contains(target)) return;
             foreach (long key in dict.Keys)
             {
@@ -97,7 +95,6 @@ namespace Jvedio.Mapper
                         set.Add(node.Data);
                         node = node.Next;
                     }
-
                 }
                 else
                 {
@@ -119,7 +116,6 @@ namespace Jvedio.Mapper
                     }
                     if (found)
                     {
-
                         set.Add(key);
                         node = head.Next;
                         while (node != null)
@@ -127,7 +123,6 @@ namespace Jvedio.Mapper
                             set.Add(node.Data);
                             node = node.Next;
                         }
-
                     }
                 }
             }
@@ -138,7 +133,5 @@ namespace Jvedio.Mapper
                 FindAssoData(ref set, dict, item, ref foundList);
             }
         }
-
-
     }
 }

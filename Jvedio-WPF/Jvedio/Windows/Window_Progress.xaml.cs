@@ -17,9 +17,7 @@ namespace Jvedio.Windows
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
-
-        private string _MainText = "";
+        private string _MainText = string.Empty;
 
         public string MainText
         {
@@ -31,7 +29,7 @@ namespace Jvedio.Windows
             }
         }
 
-        private string _SubText = "";
+        private string _SubText = string.Empty;
 
         public string SubText
         {
@@ -67,7 +65,7 @@ namespace Jvedio.Windows
             }
         }
 
-        private string _LogText = "";
+        private string _LogText = string.Empty;
 
         public string LogText
         {
@@ -91,7 +89,6 @@ namespace Jvedio.Windows
             }
         }
 
-
         public Window_Progress()
         {
             InitializeComponent();
@@ -107,6 +104,5 @@ namespace Jvedio.Windows
             SubProgress = subProgress;
             LogText = logText;
         }
-
     }
 }

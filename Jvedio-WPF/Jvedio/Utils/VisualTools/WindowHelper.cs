@@ -8,7 +8,6 @@ namespace Jvedio.VisualTools
 {
     public static class WindowHelper
     {
-
         // todo 有些窗体名字没改，打不开
         // todo 检视
         public static void OpenWindowByName(string name, Window parent = null)
@@ -49,7 +48,6 @@ namespace Jvedio.VisualTools
                     window.BringIntoView();
                     window.Focus();
                 }
-
             }
         }
 

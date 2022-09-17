@@ -24,8 +24,6 @@ namespace Jvedio.Core.Scan
 
         public Dictionary<string, List<string>> pathDict;
 
-
-
         private (List<Game>, List<string>) parseGame()
         {
             // 仅支持根目录
@@ -47,7 +45,6 @@ namespace Jvedio.Core.Scan
 
             return (import, notImport);
         }
-
 
         private string getRealExe(List<string> exeList)
         {
@@ -79,7 +76,6 @@ namespace Jvedio.Core.Scan
                 handleImport(import);
                 handleNotImport(notImport);
 
-
                 stopwatch.Stop();
                 ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
                 ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
@@ -89,7 +85,6 @@ namespace Jvedio.Core.Scan
 
         private void handleImport(List<Game> import)
         {
-
             string sql = GameMapper.BASE_SQL;
             sql = "select metadata.DataID,Hash,Path,GID " + sql;
             List<Dictionary<string, object>> list = gameMapper.Select(sql);
@@ -115,7 +110,6 @@ namespace Jvedio.Core.Scan
                     toUpdate.Add(game);
                     ScanResult.Update.Add(game.Path, "哈希相同，路径不同");
                 }
-
             }
             import.RemoveAll(arg => existDatas.Where(t => arg.Hash.Equals(t.Hash) && !arg.Path.Equals(t.Path)).Any());
             // 1.3 需要 update
@@ -131,11 +125,8 @@ namespace Jvedio.Core.Scan
                     toUpdate.Add(data);
                     ScanResult.Update.Add(data.Path, " 哈希不同，路径相同");
                 }
-
             }
             import.RemoveAll(arg => existDatas.Where(t => arg.Path.Equals(t.Path) && !arg.Hash.Equals(t.Hash)).Any());
-
-
 
             // 1.3 需要 insert
             List<Game> toInsert = import;
@@ -152,7 +143,6 @@ namespace Jvedio.Core.Scan
                 ScanResult.Import.Add(data.Path);
             }
 
-
             List<MetaData> toInsertData = toInsert.Select(arg => arg.toMetaData()).ToList();
             if (toInsertData.Count <= 0) return;
             long.TryParse(metaDataMapper.InsertAndGetID(toInsertData[0]).ToString(), out long before);
@@ -162,7 +152,6 @@ namespace Jvedio.Core.Scan
                 //开启事务，这样子其他线程就不能更新
                 metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");
                 metaDataMapper.InsertBatch(toInsertData);
-
             }
             catch (Exception ex)
             {
@@ -182,11 +171,8 @@ namespace Jvedio.Core.Scan
             }
             try
             {
-
                 gameMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
                 gameMapper.InsertBatch(toInsert);
-
-
             }
             catch (Exception ex)
             {
@@ -206,6 +192,5 @@ namespace Jvedio.Core.Scan
                 ScanResult.NotImport.Add(path, "不导入");
             }
         }
-
     }
 }

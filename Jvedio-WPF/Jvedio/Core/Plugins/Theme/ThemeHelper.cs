@@ -5,21 +5,16 @@ namespace Jvedio.Core.Plugins.Theme
 {
     public class ThemeHelper
     {
-
         public static void SetSkin(string themeName)
         {
-
             if ("白色".Equals(themeName))
             {
                 Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/SuperControls.Style;Component/XAML/Skin/White.xaml", UriKind.RelativeOrAbsolute);
-
             }
             else
             {
                 Application.Current.Resources.MergedDictionaries[2].Source = new Uri("pack://application:,,,/SuperControls.Style;Component/XAML/Skin/DefaultColor.xaml", UriKind.RelativeOrAbsolute);
-
             }
-
 
             //Theme theme = ThemeLoader.loadTheme(themeName);
 
@@ -36,7 +31,6 @@ namespace Jvedio.Core.Plugins.Theme
             //}
 
             //Console.WriteLine(fonts);
-
         }
     }
 }

@@ -37,8 +37,6 @@ namespace Jvedio
     /// </summary>
     public partial class Window_MetaDatas : BaseWindow
     {
-
-
         public VieModel_MetaData vieModel;
         public static Msg msgCard = new Msg();
         public static bool CheckingScanStatus = false;
@@ -48,8 +46,6 @@ namespace Jvedio
         public string CurrentSQL;
 
         public Window_MetaDataEdit editWindow;
-
-
 
         public int firstidx = -1;
         public int secondidx = -1;
@@ -95,7 +91,6 @@ namespace Jvedio
                 WrapperEventArg<MetaData> arg = ev as WrapperEventArg<MetaData>;
                 CurrentWrapper = arg.Wrapper as SelectWrapper<MetaData>;
                 CurrentSQL = arg.SQL;
-
             };
 
             // 绑定消息
@@ -104,7 +99,6 @@ namespace Jvedio
                 MessageEventArg eventArg = ev as MessageEventArg;
                 vieModel.Message.Add(eventArg.Message);
             };
-
         }
 
         private void SortMenu_Click(object sender, RoutedEventArgs e)
@@ -122,7 +116,6 @@ namespace Jvedio
                         ConfigManager.MetaData.SortDescending = !ConfigManager.MetaData.SortDescending;
                     }
                     ConfigManager.MetaData.SortIndex = i;
-
                 }
                 else item.IsChecked = false;
             }
@@ -131,14 +124,11 @@ namespace Jvedio
 
         private void SideBorder_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
         }
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
         }
-
 
         private void GoToStartUp(object sender, MouseButtonEventArgs e)
         {
@@ -166,8 +156,6 @@ namespace Jvedio
             DatabaseComboBox.SelectedIndex = idx;
         }
 
-
-
         private void BindingEventAfterRender()
         {
             setComboboxID();
@@ -188,7 +176,7 @@ namespace Jvedio
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            //AppDatabase database = 
+            //AppDatabase database =
             vieModel.CurrentAppDataBase = (AppDatabase)e.AddedItems[0];
             ConfigManager.Main.CurrentDBId = vieModel.CurrentAppDataBase.DBId;
             //切换数据库
@@ -200,9 +188,6 @@ namespace Jvedio
             //vieModel.InitLettersNavigation();
             //vieModel.GetFilterInfo();
             AllRadioButton.IsChecked = true;
-
-
-
         }
 
         private async void RefreshCandiadte(object sender, TextChangedEventArgs e)
@@ -264,7 +249,6 @@ namespace Jvedio
                 {
                     msgCard.Error((ev as MessageCallBackEventArgs).Message);
                 });
-
             };
             vieModel.ScanTasks.Add(scanTask);
             scanTask.Start();
@@ -294,7 +278,6 @@ namespace Jvedio
                         {
                             Task.Delay(1000).Wait();
                         }
-
                     }
                 });
             }
@@ -303,7 +286,6 @@ namespace Jvedio
         private void ShowMsgScanPopup(object sender, MouseButtonEventArgs e)
         {
             scanStatusPopup.IsOpen = true;
-
         }
 
         private void HideScanPopup(object sender, MouseButtonEventArgs e)
@@ -313,7 +295,6 @@ namespace Jvedio
 
         private void ClearScanTasks(object sender, MouseButtonEventArgs e)
         {
-
             for (int i = vieModel.ScanTasks.Count - 1; i >= 0; i--)
             {
                 Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
@@ -432,8 +413,6 @@ namespace Jvedio
 
         public void PlayVideoWithPlayer(string filepath, long dataID = 0, string token = "")
         {
-
-
         }
 
         public void runGame(string exePath, long dataID)
@@ -459,7 +438,6 @@ namespace Jvedio
             {
                 Properties.Settings.Default.SmallImage_Width = Properties.Settings.Default.GlobalImageWidth;
                 Properties.Settings.Default.SmallImage_Height = (int)((double)Properties.Settings.Default.SmallImage_Width * (200 / 147));
-
             }
             else if (Properties.Settings.Default.ShowImageMode == "1")
             {
@@ -556,7 +534,6 @@ namespace Jvedio
                         secondidx = selectIdx;
                 }
 
-
                 Console.WriteLine("firstidx=" + firstidx);
                 Console.WriteLine("secondidx=" + secondidx);
                 if (firstidx >= 0 && secondidx >= 0)
@@ -588,9 +565,7 @@ namespace Jvedio
                         vieModel.SelectedData.Add(data);
                 }
 
-
                 SetSelected();
-
             }
             else
             {
@@ -609,7 +584,6 @@ namespace Jvedio
 
             itemsControl = MovieItemsControl;
 
-
             for (int i = 0; i < itemsControl.Items.Count; i++)
             {
                 ContentPresenter c = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
@@ -619,19 +593,15 @@ namespace Jvedio
                 long dataID = getDataID(border);
                 if (border != null)
                 {
-
                     border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
                     border.BorderBrush = Brushes.Transparent;
                     if (vieModel.EditMode && vieModel.SelectedData.Where(arg => arg.DataID == dataID).Any())
                     {
                         border.Background = StyleManager.Common.HighLight.Background;
                         border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
-
                     }
                 }
-
             }
-
         }
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
@@ -662,7 +632,6 @@ namespace Jvedio
                         runGame(game.Path, game.DataID);
                     }
                 }
-
             }
             e.Handled = true;
         }
@@ -691,7 +660,6 @@ namespace Jvedio
                 e.Handled = true;
                 return;
             }
-
 
             // 标记
             GifImage gifImage = e.Source as GifImage;
@@ -722,17 +690,13 @@ namespace Jvedio
                                     refreshTagStamp(ref data, arg.TagID);
                                     vieModel.CurrentDataList[i] = null;
                                     vieModel.CurrentDataList[i] = data;
-
                                 }
                             }
-
                         };
                         item.Items.Add(menu);
-
                     });
                 }
             }
-
         }
 
         private void initTagStamp()
@@ -778,25 +742,21 @@ namespace Jvedio
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_DeleteFile);
                 if (menuItem != null) DeleteFile(menuItem, new RoutedEventArgs());
-
             }
             else if (e.Key == Key.E)
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_EditInfo);
                 if (menuItem != null) EditInfo(menuItem, new RoutedEventArgs());
-
             }
             else if (e.Key == Key.W)
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_OpenWebSite);
                 if (menuItem != null) OpenWeb(menuItem, new RoutedEventArgs());
-
             }
             else if (e.Key == Key.C)
             {
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_CopyFile);
                 if (menuItem != null) CopyFile(menuItem, new RoutedEventArgs());
-
             }
             contextMenu.IsOpen = false;
         }
@@ -822,7 +782,6 @@ namespace Jvedio
 
         private void OpenWeb(object sender, RoutedEventArgs e)
         {
-
         }
 
         public void CopyFile(object sender, RoutedEventArgs e)
@@ -851,7 +810,6 @@ namespace Jvedio
             if (success)
                 msgCard.Success($"{Jvedio.Language.Resources.Message_Copied} {paths.Count}/{vieModel.SelectedData.Count}");
 
-
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedData.Clear();
         }
 
@@ -868,7 +826,6 @@ namespace Jvedio
             if (vieModel.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToDelete).ShowDialog() == false) { return; }
             int num = 0;
             int totalCount = vieModel.SelectedData.Count;
-
 
             DataType dataType = Main.CurrentDataType;
 
@@ -889,7 +846,6 @@ namespace Jvedio
                     msgCard.Error(ex.Message);
                     Logger.LogF(ex);
                 }
-
             }
 
             msgCard.Info($"已删除到回收站 {num}/{totalCount}");
@@ -950,16 +906,12 @@ namespace Jvedio
                     vieModel.CurrentDataList.RemoveAt(idx);
                     vieModel.DataList.RemoveAt(idx);
                 }
-
             }
-
 
             // todo FilterMovieList
             //vieModel.FilterMovieList.Remove(arg);
 
             int count = metaDataMapper.deleteDataByIds(to_delete.Select(arg => arg.DataID.ToString()).ToList());
-
-
 
             // todo 关闭详情窗口
             //if (!fromDetailWindow && FileProcess.GetWindowByName("Window_Details") is Window window)
@@ -1000,7 +952,6 @@ namespace Jvedio
                     {
                         vieModel.PictureList[i] = pictureMapper.SelectByID(dataID);
                         data = vieModel.PictureList[i].toMetaData();
-
                     }
                     else if (Main.CurrentDataType == DataType.Game)
                     {
@@ -1016,7 +967,7 @@ namespace Jvedio
                     {
                         vieModel.setData(ref data);
                         //vieModel.CurrentDataList[i].ViewImage = null;
-                        //vieModel.CurrentDataList[i].ViewImage = data.ViewImage; 
+                        //vieModel.CurrentDataList[i].ViewImage = data.ViewImage;
                         vieModel.CurrentDataList[i] = null;
                         vieModel.CurrentDataList[i] = data;
                     }
@@ -1025,6 +976,5 @@ namespace Jvedio
                 }
             }
         }
-
     }
 }

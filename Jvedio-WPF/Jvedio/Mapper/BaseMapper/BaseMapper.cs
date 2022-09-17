@@ -10,11 +10,9 @@ namespace Jvedio.Mapper.BaseMapper
 {
     public class BaseMapper<T> : AbstractMapper<T>
     {
-
         static SqliteMapper<T> SqliteMapper { get; set; }
 
         static MySQLMapper<T> MySQLMapper { get; set; }
-
 
         public override void Dispose()
         {
@@ -46,7 +44,6 @@ namespace Jvedio.Mapper.BaseMapper
             catch (Exception ex)
             {
                 Logger.Error(ex);
-
             }
             return -1;
         }
@@ -67,7 +64,6 @@ namespace Jvedio.Mapper.BaseMapper
         {
             if (SqliteMapper == null) SqliteMapper = new SqliteMapper<T>(sqlitePath);
         }
-
 
         public override bool IsTableExists(string tableName)
         {
@@ -112,8 +108,6 @@ namespace Jvedio.Mapper.BaseMapper
             }
             return 0;
         }
-
-
 
         public override long SelectCount(string sql)
         {
@@ -160,8 +154,6 @@ namespace Jvedio.Mapper.BaseMapper
             }
             return null;
         }
-
-
 
         public override T SelectOne(IWrapper<T> wrapper = null)
         {

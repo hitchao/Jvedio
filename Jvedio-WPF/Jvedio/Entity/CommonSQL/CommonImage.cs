@@ -3,7 +3,6 @@ using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity
 {
-
     [Table(tableName: "common_images")]
     public class CommonImage : Serilizable
     {

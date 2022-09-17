@@ -9,7 +9,6 @@ namespace Jvedio.Core.CustomTask
 {
     public class TaskDispatcher<T> where T : AbstractTask
     {
-
         // 优先级
         private static int MAX_PRIORITY = 5;
         private static int NORMAL_PRIORITY = 3;
@@ -56,7 +55,6 @@ namespace Jvedio.Core.CustomTask
             EnableLongTaskDelay = enableLongTaskDelay;
         }
 
-
         public static TaskDispatcher<T> createInstance(int taskDelay = DEFAULT_TASKDELAY, int longTaskDelay = DEFAULT_LONG_TASKDELAY, bool enableLongTaskDelay = false)
         {
             WaitingQueue = new SimplePriorityQueue<T>();
@@ -66,9 +64,6 @@ namespace Jvedio.Core.CustomTask
             if (instance == null) instance = new TaskDispatcher<T>(taskDelay, longTaskDelay, enableLongTaskDelay);
             return instance;
         }
-
-
-
 
         public void Enqueue(T task)
         {
@@ -86,13 +81,11 @@ namespace Jvedio.Core.CustomTask
             }
         }
 
-
         public void ClearDoneList()
         {
             DoneList.Clear();
             CanceldList.Clear();
         }
-
 
         public void BeginWork()
         {
@@ -157,7 +150,6 @@ namespace Jvedio.Core.CustomTask
                         }
                     }
 
-
                     // 将等待队列中的下载任务添加到工作队列
                     while (WorkingList.Count < MAX_TASK_COUNT && WaitingQueue.Count > 0)
                     {
@@ -191,16 +183,5 @@ namespace Jvedio.Core.CustomTask
                 }
             });
         }
-
-
-
-
-
-
-
-
-
-
-
     }
 }

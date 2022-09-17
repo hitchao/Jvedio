@@ -13,11 +13,9 @@ namespace Jvedio
     /// </summary>
     public partial class Window_SelectPaths : BaseWindow
     {
-
         public SolidColorBrush _BackgroundBrush = Brushes.Red;
 
         public SolidColorBrush BackgroundBrush { get { return _BackgroundBrush; } set { _BackgroundBrush = value; } }
-
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
 
@@ -27,7 +25,6 @@ namespace Jvedio
 
         private int idx = 0;
 
-
         public List<string> Folders { get; set; }
 
         public Window_SelectPaths()
@@ -35,8 +32,6 @@ namespace Jvedio
             InitializeComponent();
             Folders = new List<string>();
         }
-
-
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
@@ -47,7 +42,6 @@ namespace Jvedio
         {
             this.DialogResult = false;
         }
-
 
         private void PathListBox_DragOver(object sender, DragEventArgs e)
         {
@@ -71,7 +65,6 @@ namespace Jvedio
             }
             OnListChange();
         }
-
 
         public void AddPath(object sender, RoutedEventArgs e)
         {
@@ -109,7 +102,5 @@ namespace Jvedio
             Folders.Clear();
             OnListChange();
         }
-
-
     }
 }

@@ -26,7 +26,5 @@ namespace Jvedio.Core.WindowConfig
         public double Width { get; set; }
 
         public double Height { get; set; }
-
-
     }
 }

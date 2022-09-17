@@ -13,7 +13,6 @@ namespace Jvedio
     {
         public NewVideoDialogResult Result { get; private set; }
 
-
         public bool AutoAddPrefix { get; set; }
 
         public string Prefix { get; set; }
@@ -35,13 +34,11 @@ namespace Jvedio
 
             AutoAddPrefix = ConfigManager.Settings.AutoAddPrefix;
             Prefix = ConfigManager.Settings.Prefix;
-
-
         }
 
         protected override void Confirm(object sender, RoutedEventArgs e)
         {
-            Result = new NewVideoDialogResult(AddMovieTextBox.Text, AutoAddPrefix ? Prefix : "", VideoType);
+            Result = new NewVideoDialogResult(AddMovieTextBox.Text, AutoAddPrefix ? Prefix : string.Empty, VideoType);
             base.Confirm(sender, e);
         }
 
@@ -58,15 +55,12 @@ namespace Jvedio
         private void BaseDialog_ContentRendered(object sender, EventArgs e)
         {
             AddMovieTextBox.Focus();
-
         }
 
         private void SetChecked(object sender, RoutedEventArgs e)
         {
             AutoAddPrefix = (bool)(sender as CheckBox).IsChecked;
         }
-
-
 
         private void PrefixTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -91,8 +85,6 @@ namespace Jvedio
         }
     }
 
-
-
     public class NewVideoDialogResult
     {
         public string Text { get; set; }
@@ -101,15 +93,11 @@ namespace Jvedio
 
         public VideoType VideoType { get; set; }
 
-
         public NewVideoDialogResult(string text, string prefix, VideoType videoType)
         {
             Text = text;
             Prefix = prefix;
             VideoType = videoType;
-
         }
     }
-
-
 }

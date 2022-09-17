@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Jvedio.Core.Logs
 {
-
     // todo 优化日志记录
     /// <summary>
     /// 日志记录静态类
@@ -22,8 +21,6 @@ namespace Jvedio.Core.Logs
 
         private static readonly object ErrorLock = new object();
 
-
-
         public static void LogE(Exception e)
         {
             Console.WriteLine(e.StackTrace);
@@ -34,8 +31,8 @@ namespace Jvedio.Core.Logs
 
             string content;
             content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
-            content += Environment.NewLine + $"Message=>{ e.Message}";
-            content += Environment.NewLine + $"StackTrace=>{Environment.NewLine }{ GetAllFootprints(e)}";
+            content += Environment.NewLine + $"Message=>{e.Message}";
+            content += Environment.NewLine + $"StackTrace=>{Environment.NewLine}{GetAllFootprints(e)}";
 
             lock (ExceptionLock)
             {
@@ -45,7 +42,6 @@ namespace Jvedio.Core.Logs
                 }
             }
         }
-
 
         public static void LogF(Exception e)
         {
@@ -56,8 +52,8 @@ namespace Jvedio.Core.Logs
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             string content;
             content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
-            content += $"{Environment.NewLine }Message=>{ e.Message}";
-            content += $"{Environment.NewLine }StackTrace=>{Environment.NewLine }{ GetAllFootprints(e)}";
+            content += $"{Environment.NewLine}Message=>{e.Message}";
+            content += $"{Environment.NewLine}StackTrace=>{Environment.NewLine}{GetAllFootprints(e)}";
 
             lock (ExceptionLock)
             {
@@ -67,8 +63,6 @@ namespace Jvedio.Core.Logs
                 }
             }
         }
-
-
 
         public static void LogN(string NetWorkStatus)
         {
@@ -83,9 +77,7 @@ namespace Jvedio.Core.Logs
                     try { sr.Write(content); } catch { }
                 }
             }
-
         }
-
 
         public static void LogD(Exception e)
         {
@@ -96,8 +88,8 @@ namespace Jvedio.Core.Logs
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             string content;
             content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
-            content += $"{Environment.NewLine}Message=>{ e.Message}";
-            content += $"{Environment.NewLine}StackTrace=>{Environment.NewLine}{ GetAllFootprints(e)}";
+            content += $"{Environment.NewLine}Message=>{e.Message}";
+            content += $"{Environment.NewLine}StackTrace=>{Environment.NewLine}{GetAllFootprints(e)}";
             lock (DataBaseLock)
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
@@ -105,12 +97,11 @@ namespace Jvedio.Core.Logs
                     try { sr.Write(content); } catch { }
                 }
             }
-
         }
 
         public static string GetAllFootprints(Exception x)
         {
-            if (x == null) return "";
+            if (x == null) return string.Empty;
             try
             {
                 var st = new StackTrace(x, true);
@@ -124,7 +115,7 @@ namespace Jvedio.Core.Logs
                         if (frame.GetFileLineNumber() < 1)
                             continue;
                         string filename = frame.GetFileName();
-                        filename = string.IsNullOrEmpty(filename) ? "NULL" : filename.Replace(@"D:\Jvedio\Jvedio", "");
+                        filename = string.IsNullOrEmpty(filename) ? "NULL" : filename.Replace(@"D:\Jvedio\Jvedio", string.Empty);
                         traceString.Append($"{Jvedio.Language.Resources.File}: {filename}");
                         traceString.Append($" {Jvedio.Language.Resources.Method}: {frame.GetMethod().Name}");
                         traceString.Append($" {Jvedio.Language.Resources.RowNumber}: {frame.GetFileLineNumber()}{Environment.NewLine}");
@@ -137,9 +128,8 @@ namespace Jvedio.Core.Logs
             {
                 Console.WriteLine(ex.Message);
             }
-            return "";
+            return string.Empty;
         }
-
 
         public static void LogScanInfo(string content)
         {
@@ -170,8 +160,6 @@ namespace Jvedio.Core.Logs
             Log(LogType.Warning, content);
         }
 
-
-
         public static void Error(Exception e)
         {
             Console.WriteLine(e.StackTrace);
@@ -181,8 +169,8 @@ namespace Jvedio.Core.Logs
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             string content;
             content = Environment.NewLine + "【" + DateTime.Now.ToString() + "】【Error】";
-            content += $"{Environment.NewLine}#### Message ####{Environment.NewLine}{ e.Message}";
-            content += $"{Environment.NewLine }#### StackTrace ####{Environment.NewLine }{ GetAllFootprints(e)}";
+            content += $"{Environment.NewLine}#### Message ####{Environment.NewLine}{e.Message}";
+            content += $"{Environment.NewLine}#### StackTrace ####{Environment.NewLine}{GetAllFootprints(e)}";
 
             lock (ExceptionLock)
             {
@@ -214,9 +202,7 @@ namespace Jvedio.Core.Logs
                 }
                 Console.WriteLine(content);
             }
-
         }
-
 
         //public static void Error(string str)
         //{
@@ -233,8 +219,5 @@ namespace Jvedio.Core.Logs
         //        }
         //    }
         //}
-
-
-
     }
 }

@@ -6,7 +6,6 @@ namespace Jvedio
 {
     public partial class DialogInput : Window
     {
-
         public DialogInput(Window window, string title, string defaultContent = "")
         {
             InitializeComponent();
@@ -36,7 +35,6 @@ namespace Jvedio
                 this.Height = window.Height;
                 this.Width = window.Width;
             }
-
         }
 
         public string Text
@@ -48,7 +46,6 @@ namespace Jvedio
         {
             SetInputFocus();
         }
-
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
@@ -67,8 +64,6 @@ namespace Jvedio
             else if (e.Key == Key.Escape)
                 this.DialogResult = false;
         }
-
-
 
         private void SetInputFocus()
         {

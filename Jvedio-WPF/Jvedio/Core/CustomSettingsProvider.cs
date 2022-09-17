@@ -9,7 +9,6 @@ using System.Xml.Linq;
 
 namespace Jvedio.Core
 {
-
     // 修改 user.config 存储路径
     // https://stackoverflow.com/questions/2265271/custom-path-of-the-user-config
     class CustomSettingsProvider : SettingsProvider
@@ -23,14 +22,12 @@ namespace Jvedio.Core
         const string USER_SETTINGS = "userSettings";
         const string SETTING = "setting";
 
-
         /// <summary>
         /// Loads the file into memory.
         /// </summary>
         public CustomSettingsProvider()
         {
             SettingsDictionary = new Dictionary<string, SettingStruct>();
-
         }
 
         /// <summary>
@@ -171,7 +168,7 @@ namespace Jvedio.Core
         }
 
         /// <summary>
-        /// Creates an empty user.config file...looks like the one MS creates.  
+        /// Creates an empty user.config file...looks like the one MS creates.
         /// This could be overkill a simple key/value pairing would probably do.
         /// </summary>
         private void CreateEmptyConfig()
@@ -229,7 +226,6 @@ namespace Jvedio.Core
             {
                 return configPath;
             }
-
         }
 
         /// <summary>

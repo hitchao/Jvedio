@@ -5,17 +5,14 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Xml;
 
-
 namespace Jvedio
 {
-
     /// <summary>
     /// 数据库扫描路径
     /// </summary>
     [Obsolete]
     public class ScanPathConfig
     {
-
         private string DataBase = "info";
         private string baseDir = PathManager.CurrentUserFolder;
         private string filepath = Path.Combine(PathManager.oldDataPath, "ScanPathConfig");
@@ -28,7 +25,6 @@ namespace Jvedio
 
         public void Save(List<string> Paths)
         {
-
             InitXML();
             XmlDocument XmlDoc = new XmlDocument();
             XmlDoc.Load(filepath);
@@ -66,17 +62,14 @@ namespace Jvedio
                         XmlDoc.Load(filepath);
                     }
                     catch { CreateRoot = true; }
-
                 }
                 else
                 {
                     CreateRoot = true;
                 }
 
-
                 if (CreateRoot)
                 {
-
                     try
                     {
                         XmlNode header = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
@@ -106,14 +99,12 @@ namespace Jvedio
             }
         }
 
-
         public StringCollection Read()
         {
             StringCollection result = new StringCollection();
             if (!File.Exists(filepath)) InitXML();
             XmlDocument XmlDoc = new XmlDocument();
             XmlDoc.Load(filepath);
-
 
             XmlNodeList pathNodes = XmlDoc.SelectNodes($"/ScanPaths/DataBase[@Name='{DataBase}']/Path");
             if (pathNodes != null && pathNodes.Count > 0)
@@ -125,7 +116,5 @@ namespace Jvedio
             }
             return result;
         }
-
     }
-
 }

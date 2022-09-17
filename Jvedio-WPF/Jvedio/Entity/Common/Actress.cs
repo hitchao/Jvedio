@@ -6,39 +6,36 @@ using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
 {
-
     /// <summary>
     /// 主界面演员
     /// </summary>
     public class Actress : INotifyPropertyChanged, IDisposable
     {
-
         public static DateTime DEFAULT_DATETIME = new DateTime(1970, 01, 01);
 
-        public Actress() : this("") { }
+        public Actress() : this(string.Empty) { }
 
         public Actress(string name = "")
         {
-            id = "";
+            id = string.Empty;
             this.name = name;
             sex = 1;//女演员
-            actressimageurl = "";
+            actressimageurl = string.Empty;
             smallimage = MetaData.DefaultActorImage;
             bigimage = null;
-            birthday = "";
+            birthday = string.Empty;
             age = 0;
             height = 0;
-            cup = "";
+            cup = string.Empty;
             hipline = 0;
             waist = 0;
             chest = 0;
-            birthplace = "";
-            hobby = "";
-            sourceurl = "";
-            source = "";
-            imageurl = "";
+            birthplace = string.Empty;
+            hobby = string.Empty;
+            sourceurl = string.Empty;
+            source = string.Empty;
+            imageurl = string.Empty;
             like = 0;
-
         }
 
         public void Dispose()
@@ -63,7 +60,6 @@ namespace Jvedio.Entity
 
         public BitmapSource bigimage { get; set; }
 
-
         private string _birthday;
 
         public string birthday
@@ -76,7 +72,7 @@ namespace Jvedio.Entity
                 DateTime dateTime = DEFAULT_DATETIME;
                 if (DateTime.TryParse(value, out dateTime))
                     _birthday = dateTime.ToString("yyyy-MM-dd");
-                else _birthday = "";
+                else _birthday = string.Empty;
                 OnPropertyChanged();
             }
         }
@@ -120,13 +116,12 @@ namespace Jvedio.Entity
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    _cup = "";
+                    _cup = string.Empty;
                 else
                     _cup = value[0].ToString().ToUpper();
                 OnPropertyChanged();
             }
         }
-
 
         private int _hipline;
 
@@ -143,7 +138,6 @@ namespace Jvedio.Entity
             }
         }
 
-
         private int _waist;
 
         public int waist
@@ -158,7 +152,6 @@ namespace Jvedio.Entity
                 OnPropertyChanged();
             }
         }
-
 
         private int _chest;
 
@@ -200,11 +193,11 @@ namespace Jvedio.Entity
             {
                 ActorName = name,
                 Country = "Japan",
-                Nation = "",
+                Nation = string.Empty,
                 BirthPlace = birthplace,
                 Birthday = birthday,
                 Age = age,
-                BloodType = "",
+                BloodType = string.Empty,
                 Height = height,
                 Gender = Core.Enums.Gender.Girl,
                 Hobby = hobby,
@@ -212,19 +205,13 @@ namespace Jvedio.Entity
                 Chest = chest,
                 Waist = waist,
                 Hipline = hipline,
-                WebType = source.Replace("jav", ""),
+                WebType = source.Replace("jav", string.Empty),
                 WebUrl = string.IsNullOrEmpty(sourceurl) ? imageurl : sourceurl,
             };
             if (!string.IsNullOrEmpty(cup))
                 info.Cup = cup.ToCharArray()[0];
 
-
-
             return info;
         }
-
-
     }
-
-
 }

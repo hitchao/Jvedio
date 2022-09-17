@@ -5,9 +5,6 @@ using System.Windows.Data;
 
 namespace Jvedio
 {
-
-
-
     public class VideoTypeConverter : IValueConverter
     {
         //数字转换为选中项的地址
@@ -29,12 +26,7 @@ namespace Jvedio
             int intparameter = int.Parse(parameter.ToString());
             return (VideoType)intparameter;
         }
-
-
     }
-
-
-
 
     public class VidioTypeToIntConverter : IValueConverter
     {
@@ -52,5 +44,4 @@ namespace Jvedio
             return (VideoType)videoType;
         }
     }
-
 }

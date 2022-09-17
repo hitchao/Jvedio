@@ -7,7 +7,6 @@ using System.Windows.Media;
 
 namespace Jvedio.Entity.CommonSQL
 {
-
     [Table(tableName: "common_tagstamp")]
     public class TagStamp : INotifyPropertyChanged
     {
@@ -34,7 +33,6 @@ namespace Jvedio.Entity.CommonSQL
             }
         }
 
-
         public string _Background;
 
         public string Background
@@ -55,7 +53,6 @@ namespace Jvedio.Entity.CommonSQL
 
         [TableField(exist: false)]
         public long Count { get; set; }
-
 
         public bool _Selected = true;
 
@@ -86,7 +83,6 @@ namespace Jvedio.Entity.CommonSQL
 
         public string UpdateDate { get; set; }
 
-
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
@@ -99,7 +95,6 @@ namespace Jvedio.Entity.CommonSQL
             return TagID.GetHashCode();
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -107,9 +102,5 @@ namespace Jvedio.Entity.CommonSQL
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
-
-
-
 }

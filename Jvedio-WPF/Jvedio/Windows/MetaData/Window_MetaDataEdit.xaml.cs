@@ -22,9 +22,7 @@ namespace Jvedio
     /// </summary>
     public partial class Window_MetaDataEdit : SuperControls.Style.BaseWindow
     {
-
         Window_MetaDatas window_MetaDatas = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
-
 
         VieModel_MetaDataEdit vieModel;
 
@@ -42,9 +40,7 @@ namespace Jvedio
             vieModel = new VieModel_MetaDataEdit(dataID);
             this.DataContext = vieModel;
             ReLoad();
-
         }
-
 
         public void ReLoad()
         {
@@ -54,10 +50,7 @@ namespace Jvedio
             genreTagPanel.Refresh();
             labelTagPanel.TagList = vieModel.CurrentData.LabelList;
             labelTagPanel.Refresh();
-
         }
-
-
 
         private void UpdateMain(string oldID, string newID)
         {
@@ -80,7 +73,6 @@ namespace Jvedio
             //    }
             //    catch { }
             //}
-
 
             //for (int i = 0; i < main.vieModel.MovieList.Count; i++)
             //{
@@ -111,8 +103,6 @@ namespace Jvedio
             //}
         }
 
-
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             bool success = vieModel.Save();
@@ -128,19 +118,13 @@ namespace Jvedio
             {
                 SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
             }
-
         }
-
-
-
 
         private void ChoseMovieBorder_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
             e.Handled = true;//必须加
         }
-
-
 
         private void ChoseMovieBorder_Drop(object sender, DragEventArgs e)
         {
@@ -183,8 +167,6 @@ namespace Jvedio
             }
         }
 
-
-
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             DateTime date = DateTime.Now; ;
@@ -200,7 +182,6 @@ namespace Jvedio
             ConfigManager.Edit.MoreExpanded = vieModel.MoreExpanded;
             ConfigManager.Edit.Save();
         }
-
 
         private void NewGenre(object sender, RoutedEventArgs e)
         {
@@ -230,7 +211,6 @@ namespace Jvedio
             }
         }
 
-
         private void addLabel(string label)
         {
             if (vieModel.CurrentData.LabelList == null)
@@ -247,15 +227,12 @@ namespace Jvedio
         {
             if (e != null && e.List != null)
                 vieModel.CurrentData.Genre = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-
-
         }
 
         private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
                 vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-
         }
 
         private void ActorChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
@@ -269,16 +246,12 @@ namespace Jvedio
 
                 //vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
             }
-
         }
-
-
-
 
         private void ChooseFile(object sender, MouseButtonEventArgs e)
         {
             string path = vieModel.CurrentData.Path;
-            string result = "";
+            string result = string.Empty;
             if (CurrentDataType == DataType.Game)
             {
                 result = SelectData(path, "*.exe|*.exe");
@@ -309,11 +282,8 @@ namespace Jvedio
                     vieModel.CurrentComic.PicPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, imgPaths.Select(arg => Path.GetFileName(arg)));
                 }
 
-
-
                 calcSize();
             }
-
         }
 
         public string SelectData(string path, string filter)
@@ -344,17 +314,10 @@ namespace Jvedio
             vieModel.CurrentData.LastScanDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-
-
-
         private void AddToLabel(object sender, RoutedEventArgs e)
         {
             searchLabelPopup.IsOpen = true;
         }
-
-
-
-
 
         private long getDataID(UIElement o)
         {
@@ -369,15 +332,12 @@ namespace Jvedio
             return -1;
         }
 
-
-
         private void Image_MouseEnter(object sender, MouseEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
             border.Background = StyleManager.Common.HighLight.Background;
-
         }
 
         private void Image_MouseLeave(object sender, MouseEventArgs e)
@@ -386,10 +346,7 @@ namespace Jvedio
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
             border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
-
-
         }
-
 
         private void newLabel_Cancel(object sender, RoutedEventArgs e)
         {
@@ -398,7 +355,6 @@ namespace Jvedio
 
         private void newLabel_Confirm(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
@@ -421,7 +377,4 @@ namespace Jvedio
             }
         }
     }
-
-
-
 }

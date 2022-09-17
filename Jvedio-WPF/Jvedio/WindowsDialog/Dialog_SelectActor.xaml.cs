@@ -13,7 +13,6 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_SelectActor : SuperControls.Style.BaseDialog
     {
-
 #pragma warning disable CS0612 // “ActorSearch”已过时
         public List<ActorSearch> ActorSearches;
 #pragma warning restore CS0612 // “ActorSearch”已过时
@@ -33,11 +32,8 @@ namespace Jvedio
             ActorItemsControl.ItemsSource = this.ActorSearches;
         }
 
-
-
         private void ActorBorderMouseEnter(object sender, MouseEventArgs e)
         {
-
             Image image = sender as Image;
             int.TryParse(image.Tag.ToString(), out int id);
             if (SelectedActor.Contains(id)) return;
@@ -59,8 +55,6 @@ namespace Jvedio
                 border.BorderBrush = Brushes.Transparent;
                 border.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];
             }
-
-
         }
 
         private void SelectActor(object sender, MouseButtonEventArgs e)
@@ -72,8 +66,6 @@ namespace Jvedio
             else
                 SelectedActor.Remove(id);
             ActorBorderMouseEnter(sender, null);
-
-
         }
 
         private void SaveVedioType(object sender, RoutedEventArgs e)

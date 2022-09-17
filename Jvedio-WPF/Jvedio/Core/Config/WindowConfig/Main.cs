@@ -44,6 +44,5 @@ namespace Jvedio.Core.WindowConfig
         public bool FirstRun { get; set; }
 
         public bool ShowSearchHistory { get; set; }
-
     }
 }

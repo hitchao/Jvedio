@@ -2,7 +2,6 @@
 
 namespace Jvedio.Core.Crawler
 {
-
     [Obsolete]
     public class ActorSearch
     {
@@ -20,13 +19,11 @@ namespace Jvedio.Core.Crawler
         {
             Name = name;
             ID = 0;
-            Link = "";
-            Img = "";
-            Tag = "";
+            Link = string.Empty;
+            Img = string.Empty;
+            Tag = string.Empty;
         }
 
-        public ActorSearch() : this("") { }
-
-
+        public ActorSearch() : this(string.Empty) { }
     }
 }

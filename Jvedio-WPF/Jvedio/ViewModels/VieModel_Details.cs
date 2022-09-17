@@ -83,9 +83,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         private Video _CurrentVideo;
 
         public Video CurrentVideo
@@ -98,7 +95,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private VideoInfo _VideoInfo;
 
@@ -113,7 +109,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<string> labellist;
 
         public ObservableCollection<string> LabelList
@@ -127,10 +122,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
         private ObservableCollection<ActorInfo> _CurrentActorList = new ObservableCollection<ActorInfo>();
-
 
         public ObservableCollection<ActorInfo> CurrentActorList
         {
@@ -142,7 +134,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         public ObservableCollection<Video> _ViewAssociationDatas;
 
@@ -159,7 +150,6 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<string> _CurrentLabelList;
 
-
         public ObservableCollection<string> CurrentLabelList
         {
             get { return _CurrentLabelList; }
@@ -170,7 +160,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private string _LabelText = String.Empty;
 
@@ -186,12 +175,10 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         public void CleanUp()
         {
             MessengerInstance.Unregister(this);
         }
-
 
         public void LoadVideoInfo()
         {
@@ -199,14 +186,10 @@ namespace Jvedio.ViewModel
             VideoInfo = Video.GetMediaInfo(CurrentVideo.Path);
         }
 
-
-
         public void SaveLove()
         {
             metaDataMapper.UpdateFieldById("Grade", CurrentVideo.Grade.ToString(), CurrentVideo.DataID);
         }
-
-
 
         public void Load(long dataID)
         {
@@ -260,7 +243,6 @@ namespace Jvedio.ViewModel
             CurrentVideo.BigImage = image;
             if (InfoSelectedIndex == 1) LoadVideoInfo();
             QueryCompleted?.Invoke(this, new EventArgs());
-
         }
 
         public void LoadViewAssoData()
@@ -281,8 +263,6 @@ namespace Jvedio.ViewModel
             List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
             if (Videos == null) return;
-
-
 
             for (int i = 0; i < Videos.Count; i++)
             {
@@ -309,20 +289,15 @@ namespace Jvedio.ViewModel
 
         private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
-
-
-
-
         public async void getLabels()
         {
             if (loadingLabel) return;
             loadingLabel = true;
-            string like_sql = "";
+            string like_sql = string.Empty;
 
             string search = LabelText.ToProperSql().Trim();
             if (!string.IsNullOrEmpty(search))
                 like_sql = $" and LabelName like '%{search}%' ";
-
 
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
@@ -353,9 +328,5 @@ namespace Jvedio.ViewModel
         private delegate void LoadLabelDelegate(string str);
 
         private void LoadLabel(string str) => CurrentLabelList.Add(str);
-
-
     }
-
-
 }

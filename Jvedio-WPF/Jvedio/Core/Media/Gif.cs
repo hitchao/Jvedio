@@ -11,7 +11,7 @@ namespace Jvedio.Core.Media
     // todo 检视
     public class Gif
     {
-        private string GifPath = "";
+        private string GifPath = string.Empty;
 
         public Gif(string path)
         {
@@ -52,7 +52,6 @@ namespace Jvedio.Core.Media
         /// <returns></returns>
         public BitmapSource MakeFrame(int width, int height, BitmapSource rawFrame, FrameMetadata metadata, BitmapSource baseFrame)
         {
-
             DrawingVisual visual = new DrawingVisual();
             using (var context = visual.RenderOpen())
             {
@@ -152,5 +151,4 @@ namespace Jvedio.Core.Media
 
         public TimeSpan Delay { get; set; }
     }
-
 }

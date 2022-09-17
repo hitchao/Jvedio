@@ -3,11 +3,9 @@ using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity.CommonSQL
 {
-
     [Table(tableName: "common_search_histories")]
     public class SearchHistory
     {
-
         [TableId(IdType.AUTO)]
         public long ID { get; set; }
 

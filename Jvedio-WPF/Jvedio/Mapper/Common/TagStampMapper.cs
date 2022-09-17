@@ -25,12 +25,9 @@ namespace Jvedio.Mapper
                 "GROUP BY common_tagstamp.TagID;";
         }
 
-
-
         public List<TagStamp> getAllTagStamp()
         {
             return MapperManager.tagStampMapper.SelectList();
-
         }
     }
 }

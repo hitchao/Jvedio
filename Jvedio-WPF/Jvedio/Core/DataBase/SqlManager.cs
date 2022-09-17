@@ -24,9 +24,7 @@ namespace Jvedio.Core.DataBase
 
         public static string DEFAULT_SQLITE_CONFIG_PATH { get; set; }
 
-
         public static bool DataBaseBusy { get; set; }
-
 
         // *************** 数据库***************
 
@@ -36,7 +34,6 @@ namespace Jvedio.Core.DataBase
             DB_TABLENAME_APP_DATAS = Path.Combine(PathManager.CurrentUserFolder, "app_datas");
             DEFAULT_SQLITE_PATH = Path.Combine(PathManager.CurrentUserFolder, DB_TABLENAME_APP_DATAS + ".sqlite");
             DEFAULT_SQLITE_CONFIG_PATH = Path.Combine(PathManager.CurrentUserFolder, DB_TABLENAME_APP_CONFIG + ".sqlite");
-
 
             DataBaseBusy = false;
         }

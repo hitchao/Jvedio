@@ -2,11 +2,9 @@
 
 namespace Jvedio.Entity.CommonSQL
 {
-
     [Table(tableName: "app_configs")]
     public class AppConfig
     {
-
         [TableId(IdType.AUTO)]
         public long ConfigId { get; set; }
 

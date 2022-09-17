@@ -18,7 +18,6 @@ namespace Jvedio.Core
          * 3. 加载：键值对 => key=主题名，value=目录名
          *
          */
-
         /**
          * 【主题的目录结构】：
          * Themes
@@ -31,14 +30,11 @@ namespace Jvedio.Core
          *      - 主题2
          *      - ...
          */
-
-
         public static List<PluginMetaData> PluginMetaDatas { get; set; }
 
         public static List<Theme> Themes { get; set; }
 
         public static readonly string ThemePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins\\Themes");
-
 
         /// <summary>
         /// 获得所有主题并解析
@@ -105,11 +101,5 @@ namespace Jvedio.Core
             }
             return (theme, data);
         }
-
-
     }
-
-
-
-
 }

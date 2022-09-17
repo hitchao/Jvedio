@@ -17,7 +17,6 @@ using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.Net
 {
-
     // todo 检视
     public class DownLoadTask : AbstractTask
     {
@@ -26,7 +25,6 @@ namespace Jvedio.Core.Net
         public event EventHandler onDownloadSuccess;
 
         public event EventHandler onDownloadPreview;
-
 
         private static class Delay
         {
@@ -45,11 +43,10 @@ namespace Jvedio.Core.Net
 
         public new static Dictionary<TaskStatus, string> STATUS_TO_TEXT_DICT = new Dictionary<TaskStatus, string>()
         {
-
-            {TaskStatus.WaitingToRun,"等待中..."},
-            {TaskStatus.Running,"下载中..."},
-            {TaskStatus.Canceled,"已取消"},
-            {TaskStatus.RanToCompletion,"已完成"},
+            { TaskStatus.WaitingToRun, "等待中..." },
+            { TaskStatus.Running, "下载中..." },
+            { TaskStatus.Canceled, "已取消" },
+            { TaskStatus.RanToCompletion, "已完成" },
         };
 
         public DownLoadTask(MetaData data) : base()
@@ -64,14 +61,12 @@ namespace Jvedio.Core.Net
             if (obj is DownLoadTask other)
                 return other.DataID.Equals(DataID);
             return false;
-
         }
 
         public override int GetHashCode()
         {
             return DataID.GetHashCode();
         }
-
 
         public long DataID { get; set; }
 
@@ -80,7 +75,6 @@ namespace Jvedio.Core.Net
         public string Title { get; set; }
 
         public bool OverrideInfo { get; set; }//强制下载覆盖信息
-
 
         public override void doWrok()
         {
@@ -126,15 +120,12 @@ namespace Jvedio.Core.Net
                                 FinalizeWithCancel();
                                 return;
                             }
-
                         }
                         else
                         {
                             // 无 VID 的
 
                             Status = TaskStatus.Canceled;
-
-
                         }
                         // 等待了很久都没成功
 
@@ -144,7 +135,6 @@ namespace Jvedio.Core.Net
                     {
                         logger.Info("跳过信息刮削，准备下载图片");
                     }
-
 
                     bool success = true;// 是否刮削到信息（包括db的部分信息）
                     Progress = 33f;
@@ -188,7 +178,6 @@ namespace Jvedio.Core.Net
                         // 保存 nfo
                         video.SaveNfo();
 
-
                         onDownloadSuccess?.Invoke(this, null);
                     }
                     else
@@ -202,9 +191,6 @@ namespace Jvedio.Core.Net
                         return;
                     }
 
-
-
-
                     // 可能刮削了信息，但是没刮削图片
                     if (header == null)
                     {
@@ -213,10 +199,8 @@ namespace Jvedio.Core.Net
                         header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000;// 转为 ms
                     }
 
-
-
                     object o = getInfoFromExist("BigImageUrl", video, dict);
-                    string imageUrl = o != null ? o.ToString() : "";
+                    string imageUrl = o != null ? o.ToString() : string.Empty;
                     StatusText = "下载大图";
                     // 1. 大图
                     if (!string.IsNullOrEmpty(imageUrl))
@@ -242,17 +226,15 @@ namespace Jvedio.Core.Net
 
                     Progress = 66f;
 
-
                     if (Canceld)
                     {
                         FinalizeWithCancel();
                         return;
                     }
 
-
                     StatusText = "下载小图";
                     o = getInfoFromExist("SmallImageUrl", video, dict);
-                    imageUrl = o != null ? o.ToString() : "";
+                    imageUrl = o != null ? o.ToString() : string.Empty;
                     // 2. 小图
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
@@ -314,11 +296,9 @@ namespace Jvedio.Core.Net
                                     {
                                         if (!string.IsNullOrEmpty(error))
                                             logger.Error($"{url} => {error}");
-
                                     });
                                     if (fileByte != null && fileByte.Length > 0)
                                         FileHelper.ByteArrayToFile(fileByte, saveFileName);
-
                                 }
                                 else
                                 {
@@ -326,8 +306,6 @@ namespace Jvedio.Core.Net
                                 }
                             }
                         }
-
-
                     }
                     Progress = 88f;
                     if (Canceld)
@@ -335,8 +313,6 @@ namespace Jvedio.Core.Net
                         FinalizeWithCancel();
                         return;
                     }
-
-
 
                     // 4. 下载预览图
 
@@ -367,7 +343,6 @@ namespace Jvedio.Core.Net
                                     {
                                         if (!string.IsNullOrEmpty(error))
                                             logger.Error($"{url} => {error}");
-
                                     });
                                     if (fileByte != null && fileByte.Length > 0)
                                     {
@@ -399,12 +374,6 @@ namespace Jvedio.Core.Net
                 logger.Info($"总计耗时：{ElapsedMilliseconds} ms");
             });
         }
-
-
-
-
-
-
 
         private object getInfoFromExist(string type, Video video, Dictionary<string, object> dict)
         {

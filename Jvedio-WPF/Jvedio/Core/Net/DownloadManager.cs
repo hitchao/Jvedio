@@ -11,7 +11,5 @@ namespace Jvedio.Global
         {
             Dispatcher = TaskDispatcher<DownLoadTask>.createInstance(taskDelay: 3000, enableLongTaskDelay: true);
         }
-
-
     }
 }

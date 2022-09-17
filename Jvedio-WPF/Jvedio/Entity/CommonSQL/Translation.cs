@@ -2,7 +2,6 @@
 
 namespace Jvedio.Entity
 {
-
     [Table(tableName: "common_transaltions")]
     public class Translation : Serilizable
     {
@@ -25,6 +24,5 @@ namespace Jvedio.Entity
 
         [TableField(false)]
         public string VID { get; set; }
-
     }
 }

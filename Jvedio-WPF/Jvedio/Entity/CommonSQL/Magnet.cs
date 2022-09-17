@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Jvedio.Entity
 {
-
     [Table(tableName: "common_magnets")]
     public class Magnet
     {
@@ -63,6 +62,5 @@ namespace Jvedio.Entity
         public string CreateDate { get; set; }
 
         public string UpdateDate { get; set; }
-
     }
 }

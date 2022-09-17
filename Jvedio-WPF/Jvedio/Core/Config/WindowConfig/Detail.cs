@@ -20,7 +20,5 @@ namespace Jvedio.Core.WindowConfig
         public bool ShowScreenShot { get; set; }
 
         public long InfoSelectedIndex { get; set; }
-
-
     }
 }

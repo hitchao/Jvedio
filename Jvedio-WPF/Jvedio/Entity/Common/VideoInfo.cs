@@ -5,7 +5,6 @@
     /// </summary>
     public class VideoInfo
     {
-
         /* 视频信息 */
         public string Format { get; set; }//视频格式
 
@@ -33,7 +32,6 @@
 
         public string FrameCount { get; set; }//总帧数
 
-
         /* 音频信息 */
         public string AudioFormat { get; set; }
 
@@ -51,10 +49,8 @@
         {
             foreach (var item in typeof(VideoInfo).GetProperties())
             {
-                item.SetValue(this, "");
+                item.SetValue(this, string.Empty);
             }
         }
-
     }
-
 }

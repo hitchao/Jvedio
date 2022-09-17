@@ -4,7 +4,6 @@ namespace Jvedio.Core.Config
 {
     public class RenameConfig : AbstractConfig
     {
-
         public static string DEFAULT_NULL_STRING { get; set; }
 
         static RenameConfig()
@@ -16,7 +15,7 @@ namespace Jvedio.Core.Config
         {
             OutSplit = "[null]";
             InSplit = "[null]";
-            FormatString = "";
+            FormatString = string.Empty;
         }
 
         private static RenameConfig _instance = null;
@@ -28,7 +27,6 @@ namespace Jvedio.Core.Config
             return _instance;
         }
 
-
         public bool RemoveTitleSpace { get; set; }
 
         public bool AddRenameTag { get; set; }
@@ -38,6 +36,5 @@ namespace Jvedio.Core.Config
         public string InSplit { get; set; }
 
         public string FormatString { get; set; }
-
     }
 }

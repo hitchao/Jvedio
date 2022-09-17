@@ -5,8 +5,6 @@ namespace Jvedio.Core.Scan
 {
     public class ScanResult
     {
-
-
         public ScanResult()
         {
             Update = new Dictionary<string, string>();
@@ -16,7 +14,6 @@ namespace Jvedio.Core.Scan
             Logs = new List<string>();
             ScanDate = DateHelper.Now();
         }
-
 
         public Dictionary<string, string> Update { get; set; }
 
@@ -36,7 +33,5 @@ namespace Jvedio.Core.Scan
         public long ElapsedMilliseconds { get; set; }
 
         public long TotalCount { get; set; }
-
-
     }
 }

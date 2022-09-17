@@ -1,5 +1,4 @@
-﻿
-using HandyControl.Tools;
+﻿using HandyControl.Tools;
 using Jvedio.Core.Logs;
 using System;
 using System.Threading;
@@ -28,10 +27,9 @@ namespace Jvedio
                 Environment.Exit(0);
             }
 
-
             //UI线程未捕获异常处理事件
             this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
-            //Task线程内未捕获异常处理事件　　　　　
+            //Task线程内未捕获异常处理事件
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             //非UI线程未捕获异常处理事件
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
@@ -39,15 +37,11 @@ namespace Jvedio
             base.OnStartup(e);
         }
 
-
         protected override void OnExit(ExitEventArgs e)
         {
             Console.WriteLine("***************OnExit***************");
             base.OnExit(e);
         }
-
-
-
 
         private void SetLanguageDictionary()
         {
@@ -56,7 +50,6 @@ namespace Jvedio
             string lang = "en-US";
             switch (language)
             {
-
                 case 0:
                     lang = "zh-CN";
                     break;
@@ -96,12 +89,11 @@ namespace Jvedio
             ConfigHelper.Instance.SetLang(lang);//设置 handycontrol 的语言
         }
 
-
         void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             try
             {
-                //e.Handled = true; //把 Handled 属性设为true，表示此异常已处理，程序可以继续运行，不会强制退出      
+                //e.Handled = true; //把 Handled 属性设为true，表示此异常已处理，程序可以继续运行，不会强制退出
                 Console.WriteLine(e.Exception.StackTrace);
                 Console.WriteLine(e.Exception.Message);
                 Logger.LogE(e.Exception);
@@ -113,7 +105,6 @@ namespace Jvedio
                 Console.WriteLine(e.Exception.Message);
                 MessageBox.Show(Jvedio.Language.Resources.ErrorToShutdown);
             }
-
         }
 
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -148,8 +139,5 @@ namespace Jvedio
             Logger.LogE(e.Exception);
             e.SetObserved();//设置该异常已察觉（这样处理后就不会引起程序崩溃）
         }
-
-
-
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using Jvedio.CommonNet;
+﻿using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
@@ -20,7 +19,6 @@ namespace Jvedio.Core.Net
     {
         public DownLoadState State = DownLoadState.DownLoading;
 
-
         private bool Canceld { get; set; }
 
         private CancellationToken cancellationToken { get; set; }
@@ -37,7 +35,6 @@ namespace Jvedio.Core.Net
             cancellationToken = token;
         }
 
-
         /// <summary>
         /// 取消下载
         /// </summary>
@@ -46,7 +43,6 @@ namespace Jvedio.Core.Net
             Canceld = true;
             State = DownLoadState.Fail;
         }
-
 
         public async Task<Dictionary<string, object>> GetInfo(Action<RequestHeader> callBack)
         {
@@ -74,14 +70,13 @@ namespace Jvedio.Core.Net
             return result;
         }
 
-
         public (string url, string code) getUrlAndCode(CrawlerServer server)
         {
             // server != NULL
             // server.ServerName != NULL
             string baseUrl = server.Url;
             string url = baseUrl;
-            string code = "";
+            string code = string.Empty;
             string vid = CurrentVideo.VID;
             //if ("BUS".Equals(serverName))
             //{
@@ -104,7 +99,6 @@ namespace Jvedio.Core.Net
             //}
             return (url, code);
         }
-
 
         public (CrawlerServer, PluginMetaData) getCrawlerServer()
         {
@@ -137,8 +131,6 @@ namespace Jvedio.Core.Net
             return (crawler, PluginMetaData);
         }
 
-
-
         public async Task<byte[]> DownloadImage(string url, RequestHeader header, Action<string> onError = null)
         {
             try
@@ -153,8 +145,6 @@ namespace Jvedio.Core.Net
             return null;
         }
 
-
-
         public void Stop()
         {
             throw new NotImplementedException();
@@ -165,17 +155,4 @@ namespace Jvedio.Core.Net
             throw new NotImplementedException();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

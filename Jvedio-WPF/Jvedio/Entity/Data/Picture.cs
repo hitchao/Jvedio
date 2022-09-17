@@ -3,7 +3,6 @@ using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity.Data
 {
-
     [Table(tableName: "metadata_picture")]
     public class Picture : MetaData
     {
@@ -55,6 +54,5 @@ namespace Jvedio.Entity.Data
             comic.Hash = this.Hash;
             return comic;
         }
-
     }
 }

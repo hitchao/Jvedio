@@ -11,7 +11,6 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_Notice : SuperControls.Style.BaseDialog
     {
-
         public string Message { get; set; }
 
         public Dialog_Notice(Window owner, bool showbutton, string message) : base(owner, showbutton)
@@ -30,7 +29,7 @@ namespace Jvedio
         {
             string configName = "Notice";
             //获取本地的公告
-            string notices = "";
+            string notices = string.Empty;
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", configName);
             AppConfig appConfig = MapperManager.appConfigMapper.SelectOne(wrapper);

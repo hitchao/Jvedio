@@ -8,7 +8,7 @@ namespace Jvedio.Entity
     /// <summary>
     /// 详情页面的 Jvedio 影片，多了预览图、类别、演员、标签
     /// </summary>
-    /// 
+    ///
     [Obsolete]
     public class DetailMovie : Movie
     {
@@ -30,7 +30,6 @@ namespace Jvedio.Entity
             extraimagePath.Clear();
             base.Dispose();
         }
-
 
         public List<string> genrelist { get; set; }
 
@@ -55,10 +54,5 @@ namespace Jvedio.Entity
         public ObservableCollection<BitmapSource> extraimagelist { get; set; }
 
         public ObservableCollection<string> extraimagePath { get; set; }
-
-
-
-
     }
-
 }

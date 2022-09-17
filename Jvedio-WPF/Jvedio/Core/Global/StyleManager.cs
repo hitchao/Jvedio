@@ -24,7 +24,6 @@ namespace Jvedio
                 public static SolidColorBrush Background = (SolidColorBrush)Application.Current.Resources["Common.HighLight.Background"];
                 public static SolidColorBrush BorderBrush = (SolidColorBrush)Application.Current.Resources["Common.HighLight.BorderBrush"];
             }
-
         }
     }
 }

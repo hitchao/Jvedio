@@ -1,5 +1,4 @@
-﻿
-using SuperControls.Style;
+﻿using SuperControls.Style;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,6 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Filter : BaseWindow
     {
-
         Main main = GetWindowByName("Main") as Main;
 
         public Window_Filter()
@@ -24,26 +22,21 @@ namespace Jvedio
             InitializeComponent();
             initSize();         // 调整位置和大小
 
-
             SetCommonFilter(); // 加载默认
             LoadData(); // 加载过滤器
-
         }
 
         private void initSize()
         {
-
             if (ConfigManager.Filter.Width > 0)
                 this.Width = ConfigManager.Filter.Width;
             if (ConfigManager.Filter.Height > 0)
                 this.Height = ConfigManager.Filter.Height;
 
-
             if (ConfigManager.Filter.X > 0)
                 this.Left = ConfigManager.Filter.X;
             else
                 this.Left = (SystemParameters.PrimaryScreenWidth - this.Width) / 2;
-
 
             if (ConfigManager.Filter.Y > 0)
                 this.Top = ConfigManager.Filter.Y;
@@ -90,8 +83,6 @@ namespace Jvedio
                 "含演员头像",
             };
 
-
-
         private void SetCommonFilter()
         {
             foreach (string item in baseList)
@@ -117,10 +108,8 @@ namespace Jvedio
             List<string> dates = list.Select(x => x["ReleaseDate"].ToString())
                 .Where(arg => !string.IsNullOrEmpty(arg) && arg.LastIndexOf('-') > 5).ToList();
 
-
             HashSet<string> years = dates.Select(arg => arg.Split('-')[0]).ToHashSet().OrderBy(x => x).Where(arg => arg != "1900" && arg != "0001").ToHashSet();
             HashSet<string> months = dates.Select(arg => arg.Split('-')[1]).ToHashSet().OrderBy(x => x).ToHashSet();
-
 
             // 年份
             yearStackPanel.Children.Clear();
@@ -137,7 +126,6 @@ namespace Jvedio
             foreach (string item in new string[] { "<30min", "30min-1h", "1h-2h", ">2h" })
                 durationWrapPanel.Children.Add(buildToggleButton(item));
 
-
             LoadSingleDataFromMetaData(genreWrapPanel, "Genre");// 类别
             LoadSingleData(seriesWrapPanel, "Series");// 系列
             LoadSingleData(directorWrapPanel, "Director"); // 导演
@@ -145,11 +133,8 @@ namespace Jvedio
             LoadSingleData(publisherWrapPanel, "Publisher");// 发行商
         }
 
-
         private void LoadSingleData(WrapPanel wrapPanel, string field)
         {
-
-
             string sql = $"SELECT DISTINCT {field} FROM metadata_video join metadata on metadata.DataID=metadata_video.DataID " +
                     $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
 
@@ -184,7 +169,6 @@ namespace Jvedio
                 wrapPanel.Children.Add(buildToggleButton(item));
         }
 
-
         private ToggleButton buildToggleButton(string content, bool isChecked = false)
         {
             ToggleButton toggleButton = new ToggleButton();
@@ -195,10 +179,7 @@ namespace Jvedio
             toggleButton.IsChecked = isChecked;
             toggleButton.Style = (System.Windows.Style)App.Current.Resources["FlatToggleButtonStyle"];
             return toggleButton;
-
         }
-
-
 
         private void MoveWindow(object sender, MouseEventArgs e)
         {
@@ -207,7 +188,6 @@ namespace Jvedio
                 this.DragMove();
             }
         }
-
 
         private void HideWindow(object sender, RoutedEventArgs e)
         {
@@ -231,8 +211,6 @@ namespace Jvedio
             this.Topmost = (bool)toggleButton.IsChecked;
         }
 
-
-
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             ScrollViewer scrollViewer = sender as ScrollViewer;
@@ -244,10 +222,5 @@ namespace Jvedio
         {
             this.Hide();
         }
-
-
     }
-
-
-
 }

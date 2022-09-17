@@ -9,19 +9,15 @@ using System.Linq;
 
 namespace Jvedio.Core.Config.Base
 {
-
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public abstract class AbstractConfig : IConfig
     {
-
         protected string ConfigName { get; set; }
 
-
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="configName"></param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -53,7 +49,6 @@ namespace Jvedio.Core.Config.Base
                     prop.SetValue(this, value, null);
                 }
                 catch { continue; }
-
             }
         }
 

@@ -1,6 +1,4 @@
-﻿
-
-using Jvedio;
+﻿using Jvedio;
 using Jvedio.Core.Logs;
 using JvedioLib.Security;
 using System;
@@ -20,14 +18,11 @@ namespace SuperUtils.External
         public static string Youdao_appKey;
         public static string Youdao_appSecret;
 
-
-
         public static void InitYoudao()
         {
-            Youdao_appKey = Jvedio.Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", "");
-            Youdao_appSecret = Jvedio.Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", "");
+            Youdao_appKey = Jvedio.Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
+            Youdao_appSecret = Jvedio.Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
         }
-
 
         //TODO 国际化
         public static Task<string> Youdao(string q)
@@ -37,7 +32,6 @@ namespace SuperUtils.External
             long language = ConfigManager.Settings.SelectedLanguage;
             switch (language)
             {
-
                 case 0:
                     to = "zh-CHS";
                     break;
@@ -77,33 +71,30 @@ namespace SuperUtils.External
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return "";
+                    return string.Empty;
                 }
-
             });
-
         }
 
         public static string GetYoudaoResult(string content)
         {
-            if (content.IndexOf("translation") < 0) return "";
+            if (content.IndexOf("translation") < 0) return string.Empty;
             string pattern = @"""translation"":\["".+""\]";
             string result = Regex.Match(content, pattern).Value;
-            return result.Replace("\"translation\":[\"", "").Replace("\"]", "");
+            return result.Replace("\"translation\":[\"", string.Empty).Replace("\"]", string.Empty);
         }
-
 
         public static string ComputeHash(string input, HashAlgorithm algorithm)
         {
-            if (string.IsNullOrEmpty(input) || algorithm == null) return "";
+            if (string.IsNullOrEmpty(input) || algorithm == null) return string.Empty;
             Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
             Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
-            return BitConverter.ToString(hashedBytes).Replace("-", "");
+            return BitConverter.ToString(hashedBytes).Replace("-", string.Empty);
         }
 
         public static string Post(string url, Dictionary<String, String> dic)
         {
-            string result = "";
+            string result = string.Empty;
             if (string.IsNullOrEmpty(url)) return result;
             try
             {
@@ -145,7 +136,7 @@ namespace SuperUtils.External
             {
                 Logger.LogN(ex.Message);
             }
-            return "";
+            return string.Empty;
         }
 
         public static string Truncate(string q)
@@ -187,11 +178,9 @@ namespace SuperUtils.External
             return Value;
         }
 
-
-
         public static string GetResult(string content)
         {
-            if (content.IndexOf("dst") < 0) return "";
+            if (content.IndexOf("dst") < 0) return string.Empty;
             var lst = new List<string>();
             //dynamic json = JsonConvert.DeserializeObject(content);
             //foreach (var item in json.trans_result)
@@ -217,13 +206,9 @@ namespace SuperUtils.External
         public static string GenerateSign(string query, string appid, string pwd, string salt)
         {
             //http://api.fanyi.baidu.com/doc/21
-            //appid+q+salt+密钥 
+            //appid+q+salt+密钥
             string r = appid + query + salt + pwd;
             return Encrypt.CalculateMD5Hash(r);
         }
-
-
-
     }
-
 }

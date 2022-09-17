@@ -1,5 +1,4 @@
-﻿
-using Jvedio.Core.CustomEventArgs;
+﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Net;
 using SuperControls.Style;
 using SuperUtils.IO;
@@ -17,9 +16,7 @@ namespace Jvedio
     //https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.inotifypropertychanged?view=net-5.0
     public partial class Dialog_Upgrade : SuperControls.Style.BaseDialog, System.ComponentModel.INotifyPropertyChanged
     {
-
         private static string UpgradeProgram = "Jvedio.Update.exe";
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -27,9 +24,6 @@ namespace Jvedio
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
-
 
         private bool _IsUpgrading = false;
 
@@ -41,9 +35,7 @@ namespace Jvedio
                 _IsUpgrading = value;
                 NotifyPropertyChanged();
             }
-
         }
-
 
         private bool _IsChecking = false;
 
@@ -55,10 +47,9 @@ namespace Jvedio
                 _IsChecking = value;
                 NotifyPropertyChanged();
             }
-
         }
 
-        private string _LatestVersion = "";
+        private string _LatestVersion = string.Empty;
 
         public string LatestVersion
         {
@@ -69,10 +60,9 @@ namespace Jvedio
                 CanUpgrade = !string.IsNullOrEmpty(value);
                 NotifyPropertyChanged();
             }
-
         }
 
-        private string _ReleaseDate = "";
+        private string _ReleaseDate = string.Empty;
 
         public string ReleaseDate
         {
@@ -82,10 +72,9 @@ namespace Jvedio
                 _ReleaseDate = value;
                 NotifyPropertyChanged();
             }
-
         }
 
-        private string _ReleaseNote = "";
+        private string _ReleaseNote = string.Empty;
 
         public string ReleaseNote
         {
@@ -95,10 +84,9 @@ namespace Jvedio
                 _ReleaseNote = value;
                 NotifyPropertyChanged();
             }
-
         }
 
-        private string _LocalVersion = "";
+        private string _LocalVersion = string.Empty;
 
         public string LocalVersion
         {
@@ -108,7 +96,6 @@ namespace Jvedio
                 _LocalVersion = value;
                 NotifyPropertyChanged();
             }
-
         }
 
         private bool _CanUpgrade = false;
@@ -121,7 +108,6 @@ namespace Jvedio
                 _CanUpgrade = value;
                 NotifyPropertyChanged();
             }
-
         }
 
         private double _UpgradeProgress = 0;
@@ -134,7 +120,6 @@ namespace Jvedio
                 _UpgradeProgress = value;
                 NotifyPropertyChanged();
             }
-
         }
 
         public Dialog_Upgrade(Window owner, bool showbutton, string latestVersion, string releaseDate, string releaseNote) : base(owner, showbutton)
@@ -145,10 +130,9 @@ namespace Jvedio
             this.ReleaseDate = releaseDate;
             this.ReleaseNote = releaseNote;
             this.DataContext = this;
-
         }
 
-        public Dialog_Upgrade(Window owner) : this(owner, false, "", "", "")
+        public Dialog_Upgrade(Window owner) : this(owner, false, string.Empty, string.Empty, string.Empty)
         {
         }
 
@@ -160,8 +144,6 @@ namespace Jvedio
             IsChecking = false;
             base.OnClosing(e);
         }
-
-
 
         private async void BeginUpgrade(object sender, RoutedEventArgs e)
         {
@@ -194,7 +176,6 @@ namespace Jvedio
                         await Task.Delay(1000);
                         Application.Current.Shutdown();
                     }
-
                 };
                 UpgradeHelper.onDownloading += (s, _) =>
                 {
@@ -212,7 +193,6 @@ namespace Jvedio
                     SetFailUpgradeStatus(button);
                 };
 
-
                 button.Style = (System.Windows.Style)App.Current.Resources["ButtonDanger"];
                 bool success = await UpgradeHelper.BeginUpgrade((msg) =>
                   {
@@ -228,11 +208,6 @@ namespace Jvedio
             {
                 SetFailUpgradeStatus(button);
             }
-
-
-
-
-
         }
 
         private void SetFailUpgradeStatus(Button button)
@@ -249,14 +224,11 @@ namespace Jvedio
             FileHelper.TryOpenUrl(ReleaseUrl);
         }
 
-
-
         private void BaseDialog_ContentRendered(object sender, EventArgs e)
         {
             UpgradeSourceTextBlock.Text = $"{Jvedio.Language.Resources.UpgradeSource}：{UpgradeSource}";
             LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
-
 
         private async void CheckUpgrade(object sender, RoutedEventArgs e)
         {
@@ -274,9 +246,7 @@ namespace Jvedio
                 MessageCard.Error(ex.Message);
             }
 
-
             IsChecking = false;
         }
-
     }
 }

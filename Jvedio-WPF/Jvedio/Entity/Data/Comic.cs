@@ -3,7 +3,6 @@ using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity.Data
 {
-
     [Table(tableName: "metadata_comic")]
     public class Comic : Picture
     {
@@ -44,14 +43,11 @@ namespace Jvedio.Entity.Data
         public string ExtraInfo { get; set; }
 #pragma warning restore CS0108 // “Comic.ExtraInfo”隐藏继承的成员“Picture.ExtraInfo”。如果是有意隐藏，请使用关键字 new。
 
-
         public new MetaData toMetaData()
         {
             MetaData metaData = (MetaData)this;
             metaData.DataID = this.DataID;
             return metaData;
         }
-
-
     }
 }

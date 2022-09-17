@@ -17,11 +17,6 @@ namespace Jvedio.Core.Net
 {
     public static class UpgradeHelper
     {
-
-
-
-
-
         //public static string list_url = "https://hitchao.github.io/jvedioupdate/list";// 4.6 前的版本
         public const string LIST_URL = "https://hitchao.github.io/jvedioupdate/list.json";
         public static string file_url = "https://hitchao.github.io/jvedioupdate/File/";
@@ -39,10 +34,9 @@ namespace Jvedio.Core.Net
 
         public async static Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> getUpgardeInfo()
         {
-
-            string LatestVersion = "";
-            string ReleaseDate = "";
-            string ReleaseNote = "";
+            string LatestVersion = string.Empty;
+            string ReleaseDate = string.Empty;
+            string ReleaseNote = string.Empty;
             try
             {
                 HttpResult result = await HttpClient.Get(UpdateUrl, CrawlerHeader.GitHub);
@@ -62,20 +56,17 @@ namespace Jvedio.Core.Net
                         if (dict.ContainsKey("ReleaseDate") && dict["ReleaseDate"] != null)
                             ReleaseDate = dict["ReleaseDate"].ToString();
 
-
                         if (dict.ContainsKey("ReleaseNote") && dict["ReleaseNote"] != null)
                         {
                             Dictionary<string, string> d = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(dict["ReleaseNote"].ToString());
                             if (d != null && d.Count == TotalLanguages && ConfigManager.Settings.SelectedLanguage < languageDict.Count)
                             {
                                 string lang = languageDict[(int)ConfigManager.Settings.SelectedLanguage];
-                                ReleaseNote = d.ContainsKey(lang) ? d[lang] : "";
+                                ReleaseNote = d.ContainsKey(lang) ? d[lang] : string.Empty;
                             }
-
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -84,7 +75,6 @@ namespace Jvedio.Core.Net
 
             return (LatestVersion, ReleaseDate, ReleaseNote);
         }
-
 
         private static async Task<List<string>> GetFileList()
         {
@@ -126,11 +116,9 @@ namespace Jvedio.Core.Net
             {
                 onError?.Invoke(null, new MessageCallBackEventArgs(ex.Message));
                 Logger.Error(ex.Message);
-
             }
             return toDownload;
         }
-
 
         private static void WriteFile(byte[] filebyte, string savepath)
         {
@@ -151,7 +139,6 @@ namespace Jvedio.Core.Net
                 throw ex;
             }
         }
-
 
         public static async Task<bool> BeginUpgrade(Action<string> callback = null)
         {
@@ -177,7 +164,6 @@ namespace Jvedio.Core.Net
 
         private static async Task<bool> DownLoadFiles(List<string> list)
         {
-
             //新建临时文件夹
             string temppath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
 
@@ -186,8 +172,6 @@ namespace Jvedio.Core.Net
                 onError?.Invoke(null, new MessageCallBackEventArgs(ex.Message));
                 Canceld = true;
             });
-
-
 
             bool success = true;
             double count = 0;
@@ -211,7 +195,6 @@ namespace Jvedio.Core.Net
                         Logger.Error(ex);
                         break;
                     }
-
                 }
                 count++;
                 double progress = Math.Round(count / total * 100, 4); ;
@@ -223,12 +206,10 @@ namespace Jvedio.Core.Net
             return true;
         }
 
-
         public static void Cancel()
         {
             Canceld = true;
             Logger.Error("已取消下载任务");
         }
-
     }
 }

@@ -15,13 +15,9 @@ using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
 {
-
     [Table(tableName: "metadata")]
     public class MetaData : INotifyPropertyChanged
     {
-
-
-
         [TableId(IdType.AUTO)]
         public long DataID { get; set; }
 
@@ -131,7 +127,6 @@ namespace Jvedio.Entity
             }
         }
 
-
         private string _LastScanDate;
 
         public string LastScanDate
@@ -169,8 +164,6 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public long Count { get; set; }
 
-
-
         public static BitmapImage DefaultSmallImage { get; set; }
 
         public static BitmapImage DefaultBigImage { get; set; }
@@ -183,7 +176,6 @@ namespace Jvedio.Entity
             DefaultBigImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
             DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -251,7 +243,6 @@ namespace Jvedio.Entity
                 foreach (var item in Main.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
                     data.TagStamp.Add(item);
             }
-
         }
     }
 }

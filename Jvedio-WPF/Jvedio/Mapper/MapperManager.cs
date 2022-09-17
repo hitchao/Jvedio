@@ -41,12 +41,10 @@ namespace Jvedio
             tagStampMapper.Init();
             searchHistoryMapper.Init();
 
-
             foreach (string key in Sqlite.AppData.TABLES.Keys)
             {
                 appDatabaseMapper.CreateTable(key, Sqlite.AppData.TABLES[key]);
             }
-
 
             appConfigMapper.InitSqlite(SqlManager.DEFAULT_SQLITE_CONFIG_PATH);
 
@@ -54,9 +52,6 @@ namespace Jvedio
             {
                 appConfigMapper.CreateTable(key, Sqlite.AppConfig.TABLES[key]);
             }
-
-
-
 
             metaDataMapper.Init();
             videoMapper.Init();
@@ -76,7 +71,6 @@ namespace Jvedio
                 metaDataMapper.CreateTable(key, Sqlite.Data.TABLES[key]);
             }
 
-
             // 新增列
             foreach (string sql in Sqlite.SQL.SqlCommands)
             {
@@ -84,10 +78,8 @@ namespace Jvedio
                 catch (Exception ex) { Logger.Error(ex); }
             }
 
-
             Inited = true;
         }
-
 
         public static void Dispose()
         {
@@ -109,6 +101,5 @@ namespace Jvedio
             urlCodeMapper.Dispose();
             associationMapper.Dispose();
         }
-
     }
 }

@@ -9,5 +9,4 @@ namespace Jvedio.Core.CustomEventArgs
 
         public string SQL { get; set; }
     }
-
 }

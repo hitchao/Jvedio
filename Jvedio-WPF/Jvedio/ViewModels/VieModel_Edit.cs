@@ -17,7 +17,6 @@ namespace Jvedio.ViewModel
 {
     class VieModel_Edit : ViewModelBase
     {
-
         private Window_Edit windowEdit { get; set; }
 
         private List<string> oldLabels { get; set; }
@@ -45,7 +44,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         public bool _MoreExpanded = ConfigManager.Edit.MoreExpanded;
 
         public bool MoreExpanded
@@ -58,7 +56,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         public long _DataID;
 
@@ -73,9 +70,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         private List<ActorInfo> actorlist;
 
         public List<ActorInfo> ActorList
@@ -89,9 +83,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<ActorInfo> _CurrentActorList;
-
 
         public ObservableCollection<ActorInfo> CurrentActorList
         {
@@ -104,9 +96,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private ObservableCollection<string> _CurrentLabelList;
-
 
         public ObservableCollection<string> CurrentLabelList
         {
@@ -119,12 +109,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
         private ObservableCollection<ActorInfo> _ViewActors;
-
 
         /// <summary>
         /// 用户可见的 ActorLIst
@@ -163,10 +148,8 @@ namespace Jvedio.ViewModel
             {
                 _CurrentActorCount = value;
                 RaisePropertyChanged();
-
             }
         }
-
 
         private long _ActorTotalCount = 0;
 
@@ -178,7 +161,6 @@ namespace Jvedio.ViewModel
             {
                 _ActorTotalCount = value;
                 RaisePropertyChanged();
-
             }
         }
 
@@ -194,7 +176,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
 
         private string _SearchText = String.Empty;
 
@@ -250,7 +231,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
         private BitmapSource _CurrentImage;
 
         public BitmapSource CurrentImage
@@ -264,15 +244,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-
-
-
-
-
         public void Reset()
         {
             CurrentVideo = null;
@@ -285,18 +256,15 @@ namespace Jvedio.ViewModel
             getLabels();
         }
 
-
-
         public async void getLabels()
         {
             if (loadingLabel) return;
             loadingLabel = true;
-            string like_sql = "";
+            string like_sql = string.Empty;
 
             string search = LabelText.ToProperSql().Trim();
             if (!string.IsNullOrEmpty(search))
                 like_sql = $" and LabelName like '%{search}%' ";
-
 
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
@@ -346,10 +314,7 @@ namespace Jvedio.ViewModel
             // 演员
             MapperManager.videoMapper.SaveActor(CurrentVideo, ViewActors.ToList());
 
-
-
             return update1 > 0 & update2 > 0;
-
         }
 
         private delegate void LoadActorDelegate(ActorInfo actor, int idx);
@@ -367,7 +332,6 @@ namespace Jvedio.ViewModel
                 {
                     CurrentActorList.Add(actor);
                 }
-
             }
             else
             {
@@ -376,7 +340,6 @@ namespace Jvedio.ViewModel
             }
             CurrentActorCount = CurrentActorList.Count;
         }
-
 
         public async void SelectActor()
         {
@@ -398,13 +361,13 @@ namespace Jvedio.ViewModel
                          "join metadata " +
                          "on metadata_to_actor.DataID=metadata.DataID " +
                          $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
+                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
                          "GROUP BY actor_info.ActorID " +
                          "UNION " +
                          "select actor_info.ActorID  " +
                          "FROM actor_info WHERE NOT EXISTS " +
                          "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
-                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
+                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
                          "GROUP BY actor_info.ActorID)";
 
             ActorTotalCount = actorMapper.SelectCount(count_sql);
@@ -421,14 +384,13 @@ namespace Jvedio.ViewModel
                         $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                         $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                       $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
+                       $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
                         $"GROUP BY actor_info.ActorID " +
                         "UNION " +
                        $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
                         "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
-                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} "
+                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} "
                          + ActorToLimit();
-
 
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { windowEdit.actorPagination.Total = ActorTotalCount; });
@@ -466,7 +428,6 @@ namespace Jvedio.ViewModel
 
         public string ActorToLimit()
         {
-
             int row_count = ActorPageSize;
             long offset = ActorPageSize * (CurrentActorPage - 1);
             return $" LIMIT {offset},{row_count}";

@@ -1,5 +1,4 @@
-﻿
-using Jvedio.Core.Logs;
+﻿using Jvedio.Core.Logs;
 using System;
 using System.IO;
 using System.Xml;
@@ -14,7 +13,7 @@ namespace Jvedio.Entity
         //NFO 标准：https://kodi.wiki/view/NFO_files/Movies
 
         private XmlDocument XmlDoc = new XmlDocument();
-        private string FilePath = "";
+        private string FilePath = string.Empty;
 
         public NFO(string FP, string RootNodeName)
         {
@@ -105,11 +104,11 @@ namespace Jvedio.Entity
                 if (XN is object)
                     return XN.InnerText;
                 else
-                    return "";
+                    return string.Empty;
             }
             else
             {
-                return "";
+                return string.Empty;
             }
         }
 
@@ -127,6 +126,4 @@ namespace Jvedio.Entity
             }
         }
     }
-
-
 }

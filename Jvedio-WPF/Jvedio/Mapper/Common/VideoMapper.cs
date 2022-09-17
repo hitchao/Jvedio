@@ -8,13 +8,11 @@ using System.Text;
 
 namespace Jvedio.Mapper
 {
-
     // todo 代码检视
     public class VideoMapper : BaseMapper<Video>
     {
-
-
-        public static string[] SelectFields = {
+        public static string[] SelectFields =
+        {
             "metadata.DataID",
             "DBId",
             "Title",
@@ -80,7 +78,6 @@ namespace Jvedio.Mapper
             return null;
         }
 
-
         public void SaveActor(Video video, List<ActorInfo> newActorInfos)
         {
             List<ActorInfo> oldActorInfos = video.ActorInfos;
@@ -133,7 +130,6 @@ namespace Jvedio.Mapper
             builder.Append("commit;");
             MapperManager.videoMapper.ExecuteNonQuery(builder.ToString());
         }
-
 
         public static string BASE_SQL =
             $" FROM metadata_video JOIN metadata on metadata.DataID=metadata_video.DataID ";

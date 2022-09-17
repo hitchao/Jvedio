@@ -5,7 +5,6 @@ namespace Jvedio.Entity
     [Table(tableName: "common_url_code")]
     public class UrlCode
     {
-
         [TableId(IdType.AUTO)]
         public long CodeId { get; set; }
 

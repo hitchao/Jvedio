@@ -18,61 +18,57 @@ using System.Xml;
 
 namespace Jvedio.Entity
 {
-
-
-
     /// <summary>
     /// Jvedio 影片
     /// </summary>
     public class Movie : IDisposable
     {
-
         private const int DEFAULT_RELEASE_YEAR = 1970;
 
         public Movie(string id)
         {
             this.id = id;
-            title = "";
+            title = string.Empty;
             filesize = 0;
-            filepath = "";
+            filepath = string.Empty;
             hassubsection = false;
-            subsection = "";
+            subsection = string.Empty;
             subsectionlist = new List<string>();
-            tagstamps = "";
+            tagstamps = string.Empty;
             vediotype = 1;
-            scandate = "";
+            scandate = string.Empty;
             visits = 0;
-            releasedate = "";
-            director = "";
-            tag = "";
+            releasedate = string.Empty;
+            director = string.Empty;
+            tag = string.Empty;
             runtime = 0;
-            genre = "";
-            actor = "";
-            actorid = "";
-            studio = "";
+            genre = string.Empty;
+            actor = string.Empty;
+            actorid = string.Empty;
+            studio = string.Empty;
             rating = 0;
-            chinesetitle = "";
+            chinesetitle = string.Empty;
             favorites = 0;
-            label = "";
-            plot = "";
-            outline = "";
+            label = string.Empty;
+            plot = string.Empty;
+            outline = string.Empty;
             year = 1970;
             runtime = 0;
-            country = "";
+            country = string.Empty;
             countrycode = 0;
-            otherinfo = "";
-            sourceurl = "";
-            source = "";
-            actressimageurl = "";
-            smallimageurl = "";
-            bigimageurl = "";
-            extraimageurl = "";
+            otherinfo = string.Empty;
+            sourceurl = string.Empty;
+            source = string.Empty;
+            actressimageurl = string.Empty;
+            smallimageurl = string.Empty;
+            bigimageurl = string.Empty;
+            extraimageurl = string.Empty;
             smallimage = MetaData.DefaultSmallImage;
             bigimage = MetaData.DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
         }
 
-        public Movie() : this("") { }
+        public Movie() : this(string.Empty) { }
 
         public virtual void Dispose()
         {
@@ -81,12 +77,10 @@ namespace Jvedio.Entity
             bigimage = null;
         }
 
-
         public bool IsToDownLoadInfo()
         {
-            return this != null && (this.title == "" || this.sourceurl == "" || this.smallimageurl == "" || this.bigimageurl == "");
+            return this != null && (this.title == string.Empty || this.sourceurl == string.Empty || this.smallimageurl == string.Empty || this.bigimageurl == string.Empty);
         }
-
 
         public bool isNullMovie()
         {
@@ -96,7 +90,6 @@ namespace Jvedio.Entity
                 string.IsNullOrEmpty(filepath) &&
                 filesize == 0;
         }
-
 
         public string id { get; set; }
 
@@ -156,7 +149,6 @@ namespace Jvedio.Entity
 
         public string scandate { get; set; }
 
-
         private string _releasedate;
 
         public string releasedate
@@ -178,7 +170,6 @@ namespace Jvedio.Entity
         public string genre { get; set; }
 
         public string tag { get; set; }
-
 
         public string actor { get; set; }
 
@@ -220,7 +211,6 @@ namespace Jvedio.Entity
 
         public string extraimageurl { get; set; }
 
-
         private Uri _GifUri;
 
         public Uri GifUri
@@ -235,7 +225,6 @@ namespace Jvedio.Entity
                 _GifUri = value;
                 OnPropertyChanged();
             }
-
         }
 
         private BitmapSource _smallimage;
@@ -246,7 +235,6 @@ namespace Jvedio.Entity
 
         public BitmapSource bigimage { get { return _bigimage; } set { _bigimage = value; OnPropertyChanged(); } }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -254,7 +242,6 @@ namespace Jvedio.Entity
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
 
         public static Movie GetInfoFromNfo(string path)
         {
@@ -277,8 +264,8 @@ namespace Jvedio.Entity
                 {
                     switch (node.Name)
                     {
-                        case "id": movie.id = string.IsNullOrEmpty(node.InnerText) ? "" : node.InnerText.ToUpper(); break;
-                        case "num": movie.id = string.IsNullOrEmpty(node.InnerText) ? "" : node.InnerText.ToUpper(); break;
+                        case "id": movie.id = string.IsNullOrEmpty(node.InnerText) ? string.Empty : node.InnerText.ToUpper(); break;
+                        case "num": movie.id = string.IsNullOrEmpty(node.InnerText) ? string.Empty : node.InnerText.ToUpper(); break;
                         case "title": movie.title = node.InnerText; break;
                         case "release": movie.releasedate = node.InnerText; break;
                         case "releasedate": movie.releasedate = node.InnerText; break;
@@ -293,7 +280,6 @@ namespace Jvedio.Entity
                         case "source": movie.sourceurl = node.InnerText; break;
                         case "set": movie.tag = node.InnerText; break;
                         default: break;
-
                     }
                 }
                 catch (Exception ex)
@@ -306,7 +292,6 @@ namespace Jvedio.Entity
 
             // 对于 NFO ，只要没有 VID，就不导入
             if (string.IsNullOrEmpty(movie.id)) return null;
-
 
             if (!string.IsNullOrEmpty(movie.id))
                 movie.vediotype = Identify.GetVideoType(movie.id);
@@ -344,7 +329,7 @@ namespace Jvedio.Entity
                 foreach (XmlNode item in tagNodes)
                 {
                     if (!string.IsNullOrEmpty(item.InnerText))
-                        tags.Add(item.InnerText.Replace(" ", ""));
+                        tags.Add(item.InnerText.Replace(" ", string.Empty));
                 }
                 if (movie.id.IndexOf("FC2") >= 0)
                     movie.genre = string.Join(sep, tags);
@@ -419,7 +404,7 @@ namespace Jvedio.Entity
                 Title = title,
                 Size = (long)filesize,
                 Path = filepath,
-                Hash = "",
+                Hash = string.Empty,
                 Country = country,
                 ReleaseDate = releasedate,
                 ReleaseYear = year,
@@ -431,13 +416,12 @@ namespace Jvedio.Entity
                 Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, genre.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)),
                 Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, label.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)),
                 Grade = favorites,
-                ViewDate = "",
+                ViewDate = string.Empty,
                 FirstScanDate = scandate,
                 LastScanDate = otherinfo,
             };
             return result;
         }
-
 
         private static XmlNodeList TrySelectNode(XmlDocument doc, string node)
         {
@@ -468,7 +452,7 @@ namespace Jvedio.Entity
             video.Outline = outline;
             video.Duration = runtime;
             video.SubSection = subsection.Replace(';', SuperUtils.Values.ConstValues.Separator);
-            video.WebType = source.Replace("jav", "").Replace("fc2adult", "fc2");
+            video.WebType = source.Replace("jav", string.Empty).Replace("fc2adult", "fc2");
             video.WebUrl = sourceurl;
             //video.ImageUrls = json;   // 让 ImageUrls 为空，这样子导入旧的数据库后就会自动同步新信息
             video.ActorNames = actor;   // 演员
@@ -476,10 +460,5 @@ namespace Jvedio.Entity
                 : actressimageurl.Split(SuperUtils.Values.ConstValues.Separator).ToList();
             return video;
         }
-
-
-
-
     }
-
 }

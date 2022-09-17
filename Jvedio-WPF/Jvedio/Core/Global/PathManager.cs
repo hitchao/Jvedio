@@ -18,7 +18,6 @@ namespace Jvedio.Core.Global
 
         public static string AllOldDataPath { get; set; }
 
-
         public static string BackupPath { get; set; }
 
         public static string LogPath { get; set; }
@@ -81,7 +80,7 @@ namespace Jvedio.Core.Global
             //初始化文件夹
             InitDirs = new[] { BackupPath, LogPath, PicPath, ProjectImagePath, AllOldDataPath, Path.Combine(BasePluginsPath, "themes"), Path.Combine(BasePluginsPath, "crawlers") };
             oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");// Jvedio 5.0 之前的
-            BasePicPath = "";
+            BasePicPath = string.Empty;
             PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
         }
     }

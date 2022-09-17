@@ -11,17 +11,12 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_StartUp : ViewModelBase
     {
-
-
         public bool Sort = ConfigManager.StartUp.Sort;
         public string SortType = ConfigManager.StartUp.SortType;
-        public string CurrentSearch = "";
+        public string CurrentSearch = string.Empty;
         public long CurrentSideIdx = ConfigManager.StartUp.SideIdx;
 
-
         #region "属性"
-
-
 
         private bool _Tile = ConfigManager.StartUp.Tile;
 
@@ -73,9 +68,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
         private ObservableCollection<AppDatabase> _Databases;
 
         public ObservableCollection<AppDatabase> Databases
@@ -117,7 +109,6 @@ namespace Jvedio.ViewModel
 
         #endregion
 
-
         public VieModel_StartUp()
         {
             ReadFromDataBase();
@@ -141,9 +132,6 @@ namespace Jvedio.ViewModel
             ReadFromDataBase();
         }
 
-
-
-
         public void Search()
         {
             CurrentDatabases = null;
@@ -154,7 +142,7 @@ namespace Jvedio.ViewModel
             }
             if (string.IsNullOrEmpty(CurrentSearch))
             {
-                CurrentSearch = "";
+                CurrentSearch = string.Empty;
                 CurrentDatabases = Databases;
             }
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
@@ -208,6 +196,5 @@ namespace Jvedio.ViewModel
             infos.ForEach(item => temp.Add(item));
             CurrentDatabases = temp;
         }
-
     }
 }

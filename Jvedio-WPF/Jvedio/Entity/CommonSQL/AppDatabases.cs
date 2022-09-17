@@ -17,12 +17,10 @@ namespace Jvedio.Entity
     [Table(tableName: "app_databases")]
     public class AppDatabase : Serilizable, INotifyPropertyChanged
     {
-
         public AppDatabase()
         {
             Image = new BitmapImage(new Uri("/Resources/Picture/datalist_video.png", UriKind.Relative));
         }
-
 
         // 默认 IdType.AUTO
         [TableId(IdType.AUTO)]
@@ -32,7 +30,7 @@ namespace Jvedio.Entity
 
         public string Name { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
 
-        public string _ImagePath = "";
+        public string _ImagePath = string.Empty;
 
         public string ImagePath
         {
@@ -79,7 +77,6 @@ namespace Jvedio.Entity
 
         public string ExtraInfo { get; set; }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -101,19 +98,16 @@ namespace Jvedio.Entity
             return this.DataType.GetHashCode() + this.Name.GetHashCode();
         }
 
-
         static Dictionary<DataType, string> typeDict = new Dictionary<DataType, string>()
         {
-            {DataType.Video,"metadata_video" },
-            {DataType.Comics,"metadata_comic" },
-            {DataType.Game,"metadata_game" },
-            {DataType.Picture,"metadata_picture" },
+            { DataType.Video, "metadata_video" },
+            { DataType.Comics, "metadata_comic" },
+            { DataType.Game, "metadata_game" },
+            { DataType.Picture, "metadata_picture" },
         };
-
 
         public void deleteByID(long id)
         {
-
             StringBuilder builder = new StringBuilder();
             builder.Append("begin;");
             builder.Append($"delete from {typeDict[DataType]} where DataID in( SELECT DataID FROM metadata where DBId ='{id}');");
@@ -132,7 +126,6 @@ namespace Jvedio.Entity
             {
                 throw new SqlException(builder.ToString(), ex);
             }
-
         }
     }
 }

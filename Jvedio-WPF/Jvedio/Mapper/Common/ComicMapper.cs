@@ -10,8 +10,8 @@ namespace Jvedio.Mapper
         public static string BASE_SQL =
             $" FROM metadata_comic JOIN metadata on metadata.DataID=metadata_comic.DataID ";
 
-
-        public static string[] SelectFields = {
+        public static string[] SelectFields =
+        {
             "metadata.DataID",
             "CID",
             "metadata.Grade",
@@ -24,7 +24,8 @@ namespace Jvedio.Mapper
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
         };
 
-        public static string[] SelectAllFields = {
+        public static string[] SelectAllFields =
+        {
             "metadata.DataID",
             "DBId",
             "Title",
@@ -60,19 +61,18 @@ namespace Jvedio.Mapper
             "WebType",
             "WebUrl",
             "ExtraInfo",
-
         };
 
         public static List<string> SortDict = new List<string>()
         {
-             "Size" ,
-             "FirstScanDate" ,
-             "LastScanDate" ,
-             "Grade" ,
-            "Title" ,
-             "ViewCount" ,
-            "ReleaseDate" ,
-            "Rating" ,
+             "Size",
+             "FirstScanDate",
+             "LastScanDate",
+             "Grade",
+            "Title",
+             "ViewCount",
+            "ReleaseDate",
+            "Rating",
         };
 
         public Comic SelectByID(long dataid)

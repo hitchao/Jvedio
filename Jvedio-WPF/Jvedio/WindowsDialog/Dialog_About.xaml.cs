@@ -1,5 +1,4 @@
-﻿
-using SuperControls.Style;
+﻿using SuperControls.Style;
 using SuperUtils.IO;
 using System;
 using System.Windows;
@@ -12,9 +11,6 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_About : SuperControls.Style.BaseDialog
     {
-
-
-
         public Dialog_About(Window owner) : base(owner, false)
         {
             InitializeComponent();

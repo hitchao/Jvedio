@@ -12,7 +12,6 @@ using System.Windows.Threading;
 
 namespace Jvedio.Core.Media
 {
-
     /// <summary>
     /// 预览图展示效果
     /// 改编于 http://www.codescratcher.com/wpf/create-image-slideshow-wpf/#DownloadPopup
@@ -23,7 +22,7 @@ namespace Jvedio.Core.Media
         private DispatcherTimer timerImageChange;
         private List<ImageSource> Images;
         private static string[] ValidImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
-        private string strImagePath = "";
+        private string strImagePath = string.Empty;
         private int CurrentSourceIndex, CurrentCtrlIndex, IntervalTimer = 2;
         private int MaxViewNum = 10;//最多展示的图片数量
         private bool stop = false;
@@ -58,12 +57,10 @@ namespace Jvedio.Core.Media
             timerImageChange.Stop();
         }
 
-
         public void LoadAllImage()
         {
             LoadImageFolder(strImagePath, MaxViewNum);
         }
-
 
         private void LoadImageFolder(string folder, int number)
         {
@@ -103,7 +100,6 @@ namespace Jvedio.Core.Media
 
         private void timerImageChange_Tick(object sender, EventArgs e)
         {
-
             if (!stop)
                 PlaySlideShow();
 
@@ -152,7 +148,5 @@ namespace Jvedio.Core.Media
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
-
-
     }
 }

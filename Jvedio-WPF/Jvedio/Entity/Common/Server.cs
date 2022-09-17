@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 namespace Jvedio.Entity
 {
-
     /// <summary>
     /// 服务器源
     /// </summary>
@@ -16,22 +15,18 @@ namespace Jvedio.Entity
             this.Name = name;
         }
 
-
         public Server()
         {
-
         }
 
-
         private bool isEnable = false;
-        private string url = "";
-        private string cookie = "";
+        private string url = string.Empty;
+        private string cookie = string.Empty;
         private int available = 0;//指示测试是否通过
-        private string name = "";
-        private string lastRefreshDate = "";
+        private string name = string.Empty;
+        private string lastRefreshDate = string.Empty;
 
         public bool IsEnable { get => isEnable; set { isEnable = value; OnPropertyChanged(); } }
-
 
         public string Url
         {
@@ -57,7 +52,6 @@ namespace Jvedio.Entity
 
         public string LastRefreshDate { get => lastRefreshDate; set { lastRefreshDate = value; OnPropertyChanged(); } }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -65,8 +59,5 @@ namespace Jvedio.Entity
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
     }
-
 }

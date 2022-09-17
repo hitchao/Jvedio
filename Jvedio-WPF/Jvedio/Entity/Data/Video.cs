@@ -23,7 +23,6 @@ using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
 {
-
     // todo 检视
 
     [Table(tableName: "metadata_video")]
@@ -31,8 +30,6 @@ namespace Jvedio.Entity
     public class Video : MetaData
 #pragma warning restore CS0659 // “Video”重写 Object.Equals(object o) 但不重写 Object.GetHashCode()
     {
-
-
         public Video() : this(true) { }
 
         public Video(bool _initDefaultImage = true)
@@ -70,7 +67,6 @@ namespace Jvedio.Entity
             }
         }
 
-
         public static void handleEmpty(ref Video video)
         {
             if (Properties.Settings.Default.ShowFileNameIfTitleEmpty
@@ -80,7 +76,6 @@ namespace Jvedio.Entity
                 && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
                 video.ReleaseDate = DateHelper.ToLocalDate(video.LastScanDate);
         }
-
 
         [TableId(IdType.AUTO)]
         public long MVID { get; set; }
@@ -121,7 +116,7 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public List<string> SubSectionList { get; set; }
 
-        private string _SubSection = "";
+        private string _SubSection = string.Empty;
 
         public string SubSection
         {
@@ -139,7 +134,6 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public bool HasSubSection { get; set; }
 
-
         [TableField(exist: false)]
         public ObservableCollection<string> PreviewImagePathList { get; set; }
 
@@ -153,7 +147,6 @@ namespace Jvedio.Entity
         public string WebUrl { get; set; }
 
         public string ExtraInfo { get; set; }
-
 
         private BitmapSource _smallimage;
 
@@ -170,7 +163,6 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public Uri GifUri { get { return _GifUri; } set { _GifUri = value; OnPropertyChanged(); } }
 
-
         [TableField(exist: false)]
 #pragma warning disable CS0108 // “Video.TagStamp”隐藏继承的成员“MetaData.TagStamp”。如果是有意隐藏，请使用关键字 new。
         public ObservableCollection<TagStamp> TagStamp { get; set; }
@@ -180,8 +172,6 @@ namespace Jvedio.Entity
 #pragma warning disable CS0108 // “Video.TagIDs”隐藏继承的成员“MetaData.TagIDs”。如果是有意隐藏，请使用关键字 new。
         public string TagIDs { get; set; }
 #pragma warning restore CS0108 // “Video.TagIDs”隐藏继承的成员“MetaData.TagIDs”。如果是有意隐藏，请使用关键字 new。
-
-
 
         private string _ActorNames;
 
@@ -209,7 +199,6 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public string OldActorIDs { get; set; }
 
-
         private List<ActorInfo> _ActorInfos;
 
         [TableField(exist: false)]
@@ -222,7 +211,6 @@ namespace Jvedio.Entity
                 _ActorInfos = value;
                 if (value != null)
                 {
-
                     ActorNames = string.Join(SuperUtils.Values.ConstValues.SeparatorString,
                         value.Select(arg => arg.ActorName).ToList());
                 }
@@ -233,14 +221,11 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public List<Magnet> Magnets { get; set; }
 
-
         [TableField(exist: false)]
         public bool HasAssociation { get; set; }
 
-
         [TableField(exist: false)]
         public List<long> AssociationList { get; set; }
-
 
         // 仅用于 NFO 导入的时候的图片地址
         [TableField(exist: false)]
@@ -259,14 +244,14 @@ namespace Jvedio.Entity
         /// <returns></returns>
         private string getImagePath(ImageType imageType, string ext = null)
         {
-            string result = "";
+            string result = string.Empty;
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             string basePicPath = ConfigManager.Settings.PicPaths[pathType.ToString()].ToString();
             if (pathType != PathType.RelativeToData)
             {
                 if (pathType == PathType.RelativeToApp)
                     basePicPath = System.IO.Path.Combine(PathManager.CurrentUserFolder, basePicPath);
-                string saveDir = "";
+                string saveDir = string.Empty;
                 if (imageType == ImageType.Big)
                     saveDir = System.IO.Path.Combine(basePicPath, "BigPic");
                 else if (imageType == ImageType.Small)
@@ -279,23 +264,17 @@ namespace Jvedio.Entity
                     saveDir = System.IO.Path.Combine(basePicPath, "Gif");
                 if (!Directory.Exists(saveDir)) FileHelper.TryCreateDir(saveDir);
                 if (!string.IsNullOrEmpty(VID))
-                    result = System.IO.Path.Combine(saveDir, $"{VID}{(string.IsNullOrEmpty(ext) ? "" : ext)}");
+                    result = System.IO.Path.Combine(saveDir, $"{VID}{(string.IsNullOrEmpty(ext) ? string.Empty : ext)}");
                 else
-                    result = System.IO.Path.Combine(saveDir, $"{Hash}{(string.IsNullOrEmpty(ext) ? "" : ext)}");
+                    result = System.IO.Path.Combine(saveDir, $"{Hash}{(string.IsNullOrEmpty(ext) ? string.Empty : ext)}");
             }
             else
             {
-
             }
             if (!string.IsNullOrEmpty(result))
                 return System.IO.Path.GetFullPath(result);
-            return "";
+            return string.Empty;
         }
-
-
-
-
-
 
         public override string ToString()
         {
@@ -309,7 +288,6 @@ namespace Jvedio.Entity
             return metaData;
         }
 
-
         public Dictionary<string, string> ToDictionary()
         {
             List<string> fields = new List<string> { "VideoType", "DataID", "VID", "Size", "Path", "Hash", "DataType" };
@@ -320,7 +298,7 @@ namespace Jvedio.Entity
                 if (fields.Contains(info.Name))
                 {
                     object value = info.GetValue(this);
-                    if (value == null) value = "";
+                    if (value == null) value = string.Empty;
                     dict.Add(info.Name, value.ToString());
                 }
             }
@@ -336,12 +314,10 @@ namespace Jvedio.Entity
 
         private static string parseRelativeImageFileName(string path)
         {
-
             string dirName = System.IO.Path.GetDirectoryName(path);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(path).ToLower();
             List<string> list = FileHelper.TryGetAllFiles(dirName, "*.*").ToList();
             list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
-
 
             foreach (string item in list)
             {
@@ -370,13 +346,11 @@ namespace Jvedio.Entity
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
-
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string smallPath = System.IO.Path.Combine(basePicPath, dict["SmallImagePath"]);
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
                 smallImagePath = parseRelativeImageFileName(smallPath);
-
             }
             // 替换成其他扩展名
             if (searchExt && !File.Exists(smallImagePath))
@@ -391,7 +365,6 @@ namespace Jvedio.Entity
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
-
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string bigPath = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["BigImagePath"]));
@@ -475,7 +448,6 @@ namespace Jvedio.Entity
                             info.SetValue(this, val);
                         }
                     }
-
                 }
             }
             // 图片地址
@@ -483,10 +455,9 @@ namespace Jvedio.Entity
             return true;
         }
 
-
         private string parseImageUrlFromDict(Dictionary<string, object> dict)
         {
-            if (dict == null || dict.Count == 0 || string.IsNullOrEmpty(ImageUrls)) return "";
+            if (dict == null || dict.Count == 0 || string.IsNullOrEmpty(ImageUrls)) return string.Empty;
             Dictionary<string, object> result = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(ImageUrls);
             if (result == null) result = new Dictionary<string, object>();
             if (dict.ContainsKey("SmallImageUrl")) result["SmallImageUrl"] = dict["SmallImageUrl"];
@@ -497,7 +468,6 @@ namespace Jvedio.Entity
             return JsonConvert.SerializeObject(result);
         }
 
-
         public void SaveNfo()
         {
             if (!ConfigManager.Settings.SaveInfoToNFO) return;
@@ -507,7 +477,7 @@ namespace Jvedio.Entity
             string saveName = $"{VID.ToProperFileName()}.nfo";
             if (string.IsNullOrEmpty(VID)) saveName = $"{System.IO.Path.GetFileNameWithoutExtension(Path)}.nfo";
 
-            string saveFileName = "";
+            string saveFileName = string.Empty;
 
             if (Directory.Exists(dir))
                 saveFileName = System.IO.Path.Combine(dir, saveName);
@@ -519,7 +489,6 @@ namespace Jvedio.Entity
             if (string.IsNullOrEmpty(saveFileName)) return;
             if (overrideInfo || !File.Exists(saveFileName))
                 SaveToNFO(this, saveFileName);
-
         }
 
         public static string ToSqlField(string content)
@@ -587,11 +556,9 @@ namespace Jvedio.Entity
 
             else
             {
-                return "";
+                return string.Empty;
             }
-
         }
-
 
         public string[] ToFileName()
         {
@@ -601,7 +568,7 @@ namespace Jvedio.Entity
             string name = System.IO.Path.GetFileNameWithoutExtension(Path);
             string dir = fileInfo.Directory.FullName;
             string ext = fileInfo.Extension;
-            string newName = "";
+            string newName = string.Empty;
             MatchCollection matches = Regex.Matches(formatString, "\\{[a-zA-Z]+\\}");
             PropertyInfo[] PropertyList = this.GetType().GetProperties();
 
@@ -610,7 +577,7 @@ namespace Jvedio.Entity
                 newName = formatString;
                 foreach (Match match in matches)
                 {
-                    string property = match.Value.Replace("{", "").Replace("}", "");
+                    string property = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
                     try
                     {
                         ReplaceWithValue(ref newName, property, PropertyList);
@@ -619,14 +586,13 @@ namespace Jvedio.Entity
                     {
                         throw ex;
                     }
-
                 }
             }
 
             //替换掉特殊字符
             foreach (char item in FileHelper.BANFILECHAR)
             {
-                newName = newName.Replace(item.ToString(), "");
+                newName = newName.Replace(item.ToString(), string.Empty);
             }
             if (ConfigManager.RenameConfig.RemoveTitleSpace) newName = newName.Trim();
 
@@ -649,15 +615,11 @@ namespace Jvedio.Entity
                 else
                     return new string[] { System.IO.Path.Combine(dir, $"{newName}{ext}") };
             }
-
-
         }
-
-
 
         private void ReplaceWithValue(ref string result, string property, PropertyInfo[] PropertyList)
         {
-            string inSplit = ConfigManager.RenameConfig.InSplit.Equals("[null]") ? "" : ConfigManager.RenameConfig.InSplit;
+            string inSplit = ConfigManager.RenameConfig.InSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.InSplit;
             foreach (PropertyInfo item in PropertyList)
             {
                 string name = item.Name;
@@ -690,7 +652,7 @@ namespace Jvedio.Entity
                             {
                                 result = result.Remove(idx - 1, 1);
                             }
-                            result = result.Replace("{" + property + "}", "");
+                            result = result.Replace("{" + property + "}", string.Empty);
                         }
                         else
                             result = result.Replace("{" + property + "}", value);
@@ -702,17 +664,14 @@ namespace Jvedio.Entity
                         {
                             result = result.Remove(idx - 1);
                         }
-                        result = result.Replace("{" + property + "}", "");
+                        result = result.Replace("{" + property + "}", string.Empty);
                     }
                     break;
                 }
             }
-
         }
 
-
         public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
-
 
         public bool IsHDV()
         {
@@ -728,7 +687,6 @@ namespace Jvedio.Entity
 
         public void CleanInfo()
         {
-
         }
 
         public static void SetImage(ref Video video, int imageMode = 0)
@@ -741,15 +699,12 @@ namespace Jvedio.Entity
                 if (bigimage == null) bigimage = MetaData.DefaultBigImage;
                 video.SmallImage = smallimage;
                 video.BigImage = bigimage;
-
             }
             else if (imageMode == 2)
             {
-
                 //string gifpath = Video.parseImagePath(video.GifImagePath);
                 //if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
             }
-
         }
 
         /// <summary>
@@ -829,13 +784,11 @@ namespace Jvedio.Entity
                 {
                     MI?.Close();
                 }
-
-
             }
             if (!string.IsNullOrEmpty(videoInfo.Width) && !string.IsNullOrEmpty(videoInfo.Height)) videoInfo.Resolution = videoInfo.Width + "x" + videoInfo.Height;
             if (!string.IsNullOrEmpty(videoPath))
             {
-                videoInfo.Extension = System.IO.Path.GetExtension(videoPath)?.ToUpper().Replace(".", "");
+                videoInfo.Extension = System.IO.Path.GetExtension(videoPath)?.ToUpper().Replace(".", string.Empty);
                 videoInfo.FileName = System.IO.Path.GetFileNameWithoutExtension(videoPath);
             }
             return videoInfo;
@@ -873,7 +826,6 @@ namespace Jvedio.Entity
                 if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("tag", item);
             }
 
-
             try
             {
                 Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(video.ImageUrls);
@@ -890,15 +842,11 @@ namespace Jvedio.Entity
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
             }
-
-
-
 
             if (video.ActorInfos != null && video.ActorInfos.Count > 0)
             {

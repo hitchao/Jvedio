@@ -17,21 +17,16 @@ namespace Jvedio.Core.Plugins.Crawler
         /**
          * 文件类型：DLL 文件，或者 cs 文件
          * 执行方式：反射加载
-         * 
+         *
          */
-
-
         public static List<PluginMetaData> PluginMetaDatas { get; set; }
 
         public static string BaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
-
 
         // todo DLL 签名验证
         public static void LoadAllCrawlers()
         {
             // 移动
-
-
 
             // 扫描
             List<string> list = DirHelper.TryGetDirList(BaseDir).ToList();
@@ -57,7 +52,6 @@ namespace Jvedio.Core.Plugins.Crawler
             ConfigManager.ServerConfig.Read();// 必须在加载所有爬虫插件后在初始化
         }
 
-
         public static bool NeedToCopy(string dllPath)
         {
             string target = Path.Combine(BaseDir, Path.GetFileName(dllPath));
@@ -67,7 +61,6 @@ namespace Jvedio.Core.Plugins.Crawler
             string m2 = JvedioLib.Security.Encrypt.GetFileMD5(target);
             return !m1.Equals(m2);
         }
-
 
         private static PluginMetaData GetPluginData(string dllPath)
         {
@@ -83,10 +76,8 @@ namespace Jvedio.Core.Plugins.Crawler
             if (classType == null) return null;
             data.Installed = true;
 
-
             return data;
         }
-
 
         private static string GetCrawlerJsonPath(string dllPath)
         {
@@ -94,10 +85,6 @@ namespace Jvedio.Core.Plugins.Crawler
             string name = Path.GetFileNameWithoutExtension(dllPath);
             return Path.Combine(dir, name + ".json");
         }
-
-
-
-
 
         private static Type getPublicType(Type[] types)
         {
@@ -138,9 +125,5 @@ namespace Jvedio.Core.Plugins.Crawler
             }
             return null;
         }
-
-
-
-
     }
 }

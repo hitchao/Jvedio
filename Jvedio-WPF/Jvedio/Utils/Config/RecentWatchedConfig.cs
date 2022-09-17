@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-
 namespace Jvedio
 {
-
     /// <summary>
     /// 使用XML 文件存储最近观看的影片
     /// </summary>
-    /// 
+    ///
     [Obsolete]
     public class RecentWatchedConfig
     {
-        private string Date = "";
+        private string Date = string.Empty;
         private string filepath = "RecentWatch";
 
         public RecentWatchedConfig(string date = "")
@@ -37,17 +35,14 @@ namespace Jvedio
                         XmlDoc.Load(filepath);
                     }
                     catch { CreateRoot = true; }
-
                 }
                 else
                 {
                     CreateRoot = true;
                 }
 
-
                 if (CreateRoot)
                 {
-
                     try
                     {
                         XmlNode header = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
@@ -101,7 +96,6 @@ namespace Jvedio
             XmlDoc.Save(filepath);
         }
 
-
         public bool Clear()
         {
             if (!File.Exists(filepath)) InitXML();
@@ -144,7 +138,6 @@ namespace Jvedio
                                 if (!result.ContainsKey(dateTime)) result.Add(dateTime, id);
                             }
                         }
-
                     }
                 }
             }
@@ -166,11 +159,5 @@ namespace Jvedio
 
             XmlDoc.Save(filepath);
         }
-
-
-
-
-
     }
-
 }

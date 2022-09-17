@@ -18,7 +18,6 @@ namespace Jvedio.Core.Plugins
 
         public string Image { get; set; }
 
-
         // 不在 dll 内的字段
         public bool Enabled { get; set; }
 
@@ -35,7 +34,6 @@ namespace Jvedio.Core.Plugins
         public string ImageUrl { get; set; }
 
         public PluginType Type { get; set; }
-
 
         public string _Path;
 
@@ -54,7 +52,6 @@ namespace Jvedio.Core.Plugins
         {
             Enabled = true;
         }
-
 
         public static PluginMetaData ParseDict(Dictionary<string, string> dict)
         {
@@ -89,6 +86,5 @@ namespace Jvedio.Core.Plugins
         {
             return ServerName.GetHashCode() ^ Name.GetHashCode();
         }
-
     }
 }

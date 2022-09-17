@@ -21,14 +21,12 @@ namespace Jvedio.Core.Media
 
         private static bool ShowGif = false;
 
-
         #region "DependencyProperty"
         public int FrameIndex
         {
             get { return (int)GetValue(FrameIndexProperty); }
             set { SetValue(FrameIndexProperty, value); }
         }
-
 
         public static readonly DependencyProperty FrameIndexProperty =
             DependencyProperty.Register("FrameIndex", typeof(int), typeof(GifImage), new UIPropertyMetadata(0, new PropertyChangedCallback(ChangingFrameIndex)));
@@ -96,7 +94,6 @@ namespace Jvedio.Core.Media
             set { SetValue(BigImageSourceProperty, value); }
         }
 
-
         public enum ViewSourceType
         {
             None,
@@ -104,8 +101,6 @@ namespace Jvedio.Core.Media
             BigImage,
             Gif
         }
-
-
 
         public static readonly DependencyProperty SourceTypeProperty =
             DependencyProperty.Register("SourceType", typeof(ViewSourceType), typeof(GifImage), new UIPropertyMetadata(ViewSourceType.None, SourceTypePropertyChanged));
@@ -116,8 +111,6 @@ namespace Jvedio.Core.Media
             set { SetValue(SourceTypeProperty, value); }
         }
 
-
-
         private static void SourceTypePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             ViewSourceType type = (ViewSourceType)e.NewValue;
@@ -126,22 +119,17 @@ namespace Jvedio.Core.Media
             gifImage.Initialize();
         }
 
-
         #endregion
-
 
         static GifImage()
         {
             VisibilityProperty.OverrideMetadata(typeof(GifImage),
                 new FrameworkPropertyMetadata(VisibilityPropertyChanged));
-
         }
 
         private static void VisibilityPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-
         }
-
 
         private void Initialize()
         {
@@ -174,9 +162,6 @@ namespace Jvedio.Core.Media
             }
         }
 
-
-
-
         protected override void OnMouseEnter(MouseEventArgs e)
         {
             if (ShowGif && gif != null)
@@ -199,10 +184,6 @@ namespace Jvedio.Core.Media
             bitmapImages = null;
             GC.Collect();
         }
-
-
-
-
 
         /// <summary>
         /// Starts the animation
@@ -233,6 +214,5 @@ namespace Jvedio.Core.Media
             this.Source = null;
             this.GifSource = null;
         }
-
     }
 }
