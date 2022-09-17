@@ -4,7 +4,7 @@ using Jvedio.Core.Exceptions;
 using Jvedio.Core.Scan;
 using Jvedio.Core.Logs;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using JvedioLib.Security;
 using Newtonsoft.Json;
 using System;

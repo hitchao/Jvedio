@@ -1,9 +1,9 @@
 ﻿using SuperControls.Style;
 using Jvedio.Core.Scan;
 using Jvedio.Core.Logs;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
 using System.Data;

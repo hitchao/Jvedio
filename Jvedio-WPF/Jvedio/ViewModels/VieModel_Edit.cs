@@ -7,9 +7,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-
-using Jvedio.Utils.Media;
-using static Jvedio.Utils.CustomExtension;
+using SuperUtils.Media;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.IO;
@@ -18,9 +16,10 @@ using Jvedio.Mapper.BaseMapper;
 using System.Windows;
 using System.Windows.Threading;
 using Jvedio.Core.Enums;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio.ViewModel
 {

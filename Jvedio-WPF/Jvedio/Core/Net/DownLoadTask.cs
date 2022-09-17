@@ -5,7 +5,7 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
@@ -226,7 +226,7 @@ namespace Jvedio.Core.Net
                                      logger.Error($"{imageUrl} => {error}");
                              });
                             if (fileByte != null && fileByte.Length > 0)
-                                FileHelper.ByteArrayToFile(fileByte, saveFileName, (error) => logger.Error(error));
+                                FileHelper.ByteArrayToFile(fileByte, saveFileName);
                             await Task.Delay(Delay.BIG_IMAGE);
                         }
                         else
@@ -260,7 +260,7 @@ namespace Jvedio.Core.Net
                                     logger.Error($"{imageUrl} => {error}");
                             });
                             if (fileByte != null && fileByte.Length > 0)
-                                FileHelper.ByteArrayToFile(fileByte, saveFileName, (error) => logger.Error(error));
+                                FileHelper.ByteArrayToFile(fileByte, saveFileName);
                             await Task.Delay(Delay.SMALL_IMAGE);
                         }
                         else
@@ -312,7 +312,7 @@ namespace Jvedio.Core.Net
 
                                     });
                                     if (fileByte != null && fileByte.Length > 0)
-                                        FileHelper.ByteArrayToFile(fileByte, saveFileName, (error) => logger.Error(error));
+                                        FileHelper.ByteArrayToFile(fileByte, saveFileName);
 
                                 }
                                 else
@@ -366,7 +366,7 @@ namespace Jvedio.Core.Net
                                     });
                                     if (fileByte != null && fileByte.Length > 0)
                                     {
-                                        FileHelper.ByteArrayToFile(fileByte, saveFileName, (error) => logger.Error(error));
+                                        FileHelper.ByteArrayToFile(fileByte, saveFileName);
                                         PreviewImageEventArgs arg = new PreviewImageEventArgs(saveFileName, fileByte);
                                         onDownloadPreview?.Invoke(this, arg);
                                     }

@@ -11,8 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Jvedio.Utils;
-using Jvedio.Utils.Sqlite;
+using SuperUtils;
+using SuperUtils.Sql;
 using Jvedio.Entity;
 using Jvedio.Core.Logs;
 

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jvedio.Utils.Reflections
+namespace SuperUtils.Reflections
 {
     public static class ReflectionHelper
     {

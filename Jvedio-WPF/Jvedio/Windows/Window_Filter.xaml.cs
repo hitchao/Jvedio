@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
 namespace Jvedio
 {
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
-using Jvedio.Utils;
+using SuperUtils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,8 +10,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-using static Jvedio.Utils.CustomExtension;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
+using SuperUtils.Framework.ORM.Utils;
+
 namespace Jvedio.ViewModel
 {
     class VieModel_MetaDataEdit : ViewModelBase

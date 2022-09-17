@@ -17,12 +17,11 @@ using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Core.Logs;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
-using Jvedio.Utils.Data;
-using Jvedio.Utils.IO;
-using Jvedio.Utils.Media;
-using Jvedio.Utils.Visual;
+using SuperUtils.IO;
+using SuperUtils.Media;
+using SuperUtils.Visual;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
@@ -49,11 +48,12 @@ using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Main.Msg;
-using static Jvedio.Utils.Media.ImageHelper;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Media.ImageHelper;
+using static SuperUtils.Visual.VisualHelper;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Time;
+using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio
 {
@@ -129,6 +129,14 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            SuperUtils.Handler.ExceptionHandler.OnError += (ex) =>
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageCard.Error(ex.Message);
+                });
+            };
+
 
             AdjustWindow();// 还原窗口为上一次状态
             ConfigFirstRun();
@@ -152,6 +160,8 @@ namespace Jvedio
             OpenListen();
             //OpenWindowByName("Window_Settings");
             //new Msgbox(this, "demo").ShowDialog();
+
+
 
         }
 
@@ -720,11 +730,11 @@ namespace Jvedio
                     notices = appConfig.ConfigValue;
                 HttpResult httpResult = await HttpClient.Get(NoticeUrl, CrawlerHeader.GitHub);
                 //判断公告是否内容不同
-                if (httpResult.StatusCode == HttpStatusCode.OK && !StringFormat.HandleNewLine(httpResult.SourceCode).Equals(notices))
+                if (httpResult.StatusCode == HttpStatusCode.OK && !SqlStringFormat.HandleNewLine(httpResult.SourceCode).Equals(notices))
                 {
                     //覆盖原有公告
                     string json = httpResult.SourceCode;
-                    appConfig.ConfigValue = StringFormat.HandleNewLine(httpResult.SourceCode);
+                    appConfig.ConfigValue = SqlStringFormat.HandleNewLine(httpResult.SourceCode);
                     appConfig.ConfigName = configName;
                     appConfigMapper.Insert(appConfig, InsertMode.Replace);
 
@@ -2525,10 +2535,7 @@ namespace Jvedio
             {
                 string url = video.WebUrl;
                 if (url.IsProperUrl())
-                    FileHelper.TryOpenUrl(url, (err) =>
-                    {
-                        MessageCard.Error(err);
-                    });
+                    FileHelper.TryOpenUrl(url);
             }
         }
 
@@ -3977,7 +3984,7 @@ namespace Jvedio
 
                     Video video = videoMapper.SelectOne(new SelectWrapper<Video>().Eq("DataID", dataid));
                     if (video == null) continue;
-                    SetImage(ref video);
+                    Video.SetImage(ref video);
                     vieModel.CurrentVideoList[i].SmallImage = null;
                     vieModel.CurrentVideoList[i].BigImage = null;
                     vieModel.CurrentVideoList[i].SmallImage = video.SmallImage;
@@ -3997,7 +4004,7 @@ namespace Jvedio
 
                     Video video = videoMapper.SelectVideoByID(dataID);
                     if (video == null) continue;
-                    SetImage(ref video);
+                    Video.SetImage(ref video);
                     Video.setTagStamps(ref video);// 设置标签戳
                     Video.handleEmpty(ref video);// 设置标题和发行日期
                                                  // 设置关联

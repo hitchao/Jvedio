@@ -1,5 +1,5 @@
 ﻿using SuperControls.Style;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +13,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Jvedio.Utils;
+using SuperUtils;
 using System.IO;
+using SuperUtils.Common;
 
 namespace Jvedio
 {

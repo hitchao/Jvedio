@@ -10,7 +10,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Jvedio.Core.Enums;
 using Jvedio.Entity;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
 
 namespace Jvedio

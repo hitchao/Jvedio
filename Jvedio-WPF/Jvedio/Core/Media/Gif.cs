@@ -1,4 +1,4 @@
-﻿using Jvedio.Utils;
+﻿using SuperUtils;
 using SuperUtils.Common;
 using System;
 using System.Collections.Generic;

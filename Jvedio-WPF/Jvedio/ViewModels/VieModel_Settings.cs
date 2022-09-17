@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
 
 namespace Jvedio.ViewModel
 {

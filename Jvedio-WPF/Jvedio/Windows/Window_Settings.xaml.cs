@@ -8,11 +8,11 @@ using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
 using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
-using Jvedio.Utils.External;
-using Jvedio.Utils.IO;
-using Jvedio.Utils.Media;
+using SuperUtils.External;
+using SuperUtils.IO;
+using SuperUtils.Media;
 using Jvedio.ViewModel;
 using JvedioLib.Security;
 using Newtonsoft.Json;
@@ -40,7 +40,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.GlobalVariable;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
 
 namespace Jvedio
 {

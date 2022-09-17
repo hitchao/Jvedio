@@ -5,7 +5,7 @@ using Jvedio.Core.Enums;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Mapper;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;

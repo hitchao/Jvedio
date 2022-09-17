@@ -4,7 +4,6 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.Core.Logs;
 using Jvedio.Mapper;
 using SuperUtils.Common;
-using Jvedio.Utils.Data;
 using Jvedio.Windows;
 using Newtonsoft.Json;
 using SuperUtils.Framework.ORM.Attributes;
@@ -19,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
+using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Time;
 
 namespace Jvedio.Upgrade
@@ -909,7 +909,7 @@ namespace Jvedio.Upgrade
                         if (string.IsNullOrEmpty(VID) || !dict.ContainsKey(VID)) continue;
                         long dataID = dict[VID];
                         if (dataID <= 0) continue;
-                        values.Add($"('{StringFormat.Format(labelName)}',{StringFormat.Format(dataID)})");
+                        values.Add($"('{SqlStringFormat.Format(labelName)}',{SqlStringFormat.Format(dataID)})");
                     }
                     string sql = "insert or replace into metadata_to_label(LabelName,DataID) " +
                              $"values {string.Join(",", values)}";

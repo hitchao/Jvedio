@@ -2,7 +2,7 @@
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Mapper;
 using Jvedio.Core.Enums;
-using Jvedio.Utils.Visual;
+using SuperUtils.Visual;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

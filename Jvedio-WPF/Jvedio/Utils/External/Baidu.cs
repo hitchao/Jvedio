@@ -9,8 +9,8 @@ using System.Web.Script.Serialization;
 using System.Windows;
 using System.Threading.Tasks;
 using Jvedio.Entity;
-using Jvedio.Utils.Media;
-namespace Jvedio.Utils.External
+using SuperUtils.Media;
+namespace SuperUtils.External
 {
     public static class AccessToken
 
@@ -20,8 +20,8 @@ namespace Jvedio.Utils.External
 
         public static void Init()
         {
-            clientId = Properties.Settings.Default.Baidu_API_KEY.Replace(" ", "");
-            clientSecret = Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", "");
+            clientId = Jvedio.Properties.Settings.Default.Baidu_API_KEY.Replace(" ", "");
+            clientSecret = Jvedio.Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", "");
         }
 
 

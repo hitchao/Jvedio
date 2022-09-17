@@ -3,9 +3,9 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using JvedioLib.Security;
 using Newtonsoft.Json;
 using System;
@@ -16,10 +16,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Time;
 using SuperUtils.Reflections;
+using SuperUtils.IO;
+using SuperUtils.Media;
+using Jvedio.Core.Logs;
 
 namespace Jvedio.Entity
 {
@@ -707,6 +710,117 @@ namespace Jvedio.Entity
         {
 
         }
+
+        public static void SetImage(ref Video video, int imageMode = 0)
+        {
+            if (imageMode < 2)
+            {
+                BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.getSmallImage());
+                BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.getBigImage());
+                if (smallimage == null) smallimage = GlobalVariable.DefaultSmallImage;
+                if (bigimage == null) bigimage = GlobalVariable.DefaultBigImage;
+                video.SmallImage = smallimage;
+                video.BigImage = bigimage;
+
+            }
+            else if (imageMode == 2)
+            {
+
+                //string gifpath = Video.parseImagePath(video.GifImagePath);
+                //if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
+            }
+
+        }
+
+        /// <summary>
+        /// 获取视频信息 （wmv  10ms，其他  100ms）
+        /// </summary>
+        /// <param name="VideoName"></param>
+        /// <returns></returns>
+        public static VideoInfo GetMediaInfo(string videoPath)
+        {
+            VideoInfo videoInfo = new VideoInfo();
+            if (File.Exists(videoPath))
+            {
+                MediaInfo MI = null;
+                try
+                {
+                    MI = new MediaInfo();
+                    MI.Open(videoPath);
+                    //全局
+                    string format = MI.Get(StreamKind.General, 0, "Format");
+                    string bitrate = MI.Get(StreamKind.General, 0, "BitRate/String");
+                    string duration = MI.Get(StreamKind.General, 0, "Duration/String1");
+                    string fileSize = MI.Get(StreamKind.General, 0, "FileSize/String");
+                    //视频
+                    string vid = MI.Get(StreamKind.Video, 0, "ID");
+                    string video = MI.Get(StreamKind.Video, 0, "Format");
+                    string vBitRate = MI.Get(StreamKind.Video, 0, "BitRate/String");
+                    string vSize = MI.Get(StreamKind.Video, 0, "StreamSize/String");
+                    string width = MI.Get(StreamKind.Video, 0, "Width");
+                    string height = MI.Get(StreamKind.Video, 0, "Height");
+                    string risplayAspectRatio = MI.Get(StreamKind.Video, 0, "DisplayAspectRatio/String");
+                    string risplayAspectRatio2 = MI.Get(StreamKind.Video, 0, "DisplayAspectRatio");
+                    string frameRate = MI.Get(StreamKind.Video, 0, "FrameRate/String");
+                    string bitDepth = MI.Get(StreamKind.Video, 0, "BitDepth/String");
+                    string pixelAspectRatio = MI.Get(StreamKind.Video, 0, "PixelAspectRatio");
+                    string encodedLibrary = MI.Get(StreamKind.Video, 0, "Encoded_Library");
+                    string encodeTime = MI.Get(StreamKind.Video, 0, "Encoded_Date");
+                    string codecProfile = MI.Get(StreamKind.Video, 0, "Codec_Profile");
+                    string frameCount = MI.Get(StreamKind.Video, 0, "FrameCount");
+
+                    //音频
+                    string aid = MI.Get(StreamKind.Audio, 0, "ID");
+                    string audio = MI.Get(StreamKind.Audio, 0, "Format");
+                    string aBitRate = MI.Get(StreamKind.Audio, 0, "BitRate/String");
+                    string samplingRate = MI.Get(StreamKind.Audio, 0, "SamplingRate/String");
+                    string channel = MI.Get(StreamKind.Audio, 0, "Channel(s)");
+                    string aSize = MI.Get(StreamKind.Audio, 0, "StreamSize/String");
+
+                    string audioInfo = MI.Get(StreamKind.Audio, 0, "Inform") + MI.Get(StreamKind.Audio, 1, "Inform") + MI.Get(StreamKind.Audio, 2, "Inform") + MI.Get(StreamKind.Audio, 3, "Inform");
+                    string vi = MI.Get(StreamKind.Video, 0, "Inform");
+
+                    videoInfo = new VideoInfo()
+                    {
+                        Format = format,
+                        BitRate = vBitRate,
+                        Duration = duration,
+                        FileSize = fileSize,
+                        Width = width,
+                        Height = height,
+
+                        DisplayAspectRatio = risplayAspectRatio,
+                        FrameRate = frameRate,
+                        BitDepth = bitDepth,
+                        PixelAspectRatio = pixelAspectRatio,
+                        Encoded_Library = encodedLibrary,
+                        FrameCount = frameCount,
+                        AudioFormat = audio,
+                        AudioBitRate = aBitRate,
+                        AudioSamplingRate = samplingRate,
+                        Channel = channel
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogF(ex);
+                }
+                finally
+                {
+                    MI?.Close();
+                }
+
+
+            }
+            if (!string.IsNullOrEmpty(videoInfo.Width) && !string.IsNullOrEmpty(videoInfo.Height)) videoInfo.Resolution = videoInfo.Width + "x" + videoInfo.Height;
+            if (!string.IsNullOrEmpty(videoPath))
+            {
+                videoInfo.Extension = System.IO.Path.GetExtension(videoPath)?.ToUpper().Replace(".", "");
+                videoInfo.FileName = System.IO.Path.GetFileNameWithoutExtension(videoPath);
+            }
+            return videoInfo;
+        }
+
 
     }
 }

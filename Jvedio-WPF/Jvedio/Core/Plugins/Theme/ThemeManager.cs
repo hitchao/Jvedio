@@ -2,9 +2,9 @@
 using Jvedio.Core.Plugins;
 using Jvedio.Entity;
 using Jvedio.Core.Logs;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

@@ -1,5 +1,5 @@
 ﻿using DynamicData.Annotations;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
 using Jvedio.Entity;
 using System;

@@ -9,7 +9,7 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.Entity.Data;
 using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
 using JvedioLib.Security;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -26,8 +26,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
 using SuperUtils.Time;
+using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio.ViewModel
 {

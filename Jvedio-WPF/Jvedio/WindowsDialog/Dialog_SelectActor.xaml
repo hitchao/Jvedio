@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:super="https://github.com/SuperStudio/SuperControls"
         xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
-        xmlns:converter="clr-namespace:Jvedio.Utils.Converter;assembly=Jvedio.Utils"
+        xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
         x:Class="Jvedio.Dialog_SelectActor"
         mc:Ignorable="d"
         Title="{x:Static lang:Resources.ChooseActor}" 

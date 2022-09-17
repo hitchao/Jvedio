@@ -1,8 +1,8 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
-using Jvedio.Utils.IO;
-using Jvedio.Utils.Media;
+using SuperUtils.IO;
+using SuperUtils.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,7 +63,7 @@ namespace Jvedio.Core.FFmpeg
             string originPath = CurrentVideo.Path;
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
-            string[] cutoffArray = MediaParse.GetCutOffArray(originPath); //获得需要截图的视频进度
+            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); //获得需要截图的视频进度
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
             int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum;// 截图线程
@@ -185,7 +185,7 @@ namespace Jvedio.Core.FFmpeg
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
 
-            string[] cutoffArray = MediaParse.GetCutOffArray(originPath); //获得需要截图的视频进度
+            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); //获得需要截图的视频进度
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
 

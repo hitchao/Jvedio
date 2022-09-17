@@ -2,8 +2,8 @@
 using Jvedio.Core.Enums;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
-using Jvedio.Utils.IO;
-using Jvedio.Utils.Visual;
+using SuperUtils.IO;
+using SuperUtils.Visual;
 using Jvedio.ViewModel;
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
 using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio

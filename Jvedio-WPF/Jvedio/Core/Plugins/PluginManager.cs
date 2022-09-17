@@ -3,7 +3,7 @@ using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Plugins.Crawler;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using Newtonsoft.Json.Linq;
 using SuperControls.Style;
 using System;
@@ -147,13 +147,7 @@ namespace Jvedio.Core.Plugins
                     {
                         string savePath = System.IO.Path.Combine(base_path, "main.json");
 
-                        FileHelper.ByteArrayToFile(result.FileByte, savePath, (err) =>
-                        {
-                            App.Current.Dispatcher.Invoke(() =>
-                            {
-                                MessageCard.Error(err);
-                            });
-                        });
+                        FileHelper.ByteArrayToFile(result.FileByte, savePath);
                     }
                     result = await HttpClient.Get(url_readme, Header, CommonNet.Enums.HttpMode.String);
                     if (result.StatusCode == HttpStatusCode.OK && result.SourceCode != null)
@@ -166,13 +160,7 @@ namespace Jvedio.Core.Plugins
                     {
                         string savePath = System.IO.Path.Combine(base_path, "images");
                         DirHelper.TryCreateDirectory(savePath);
-                        FileHelper.ByteArrayToFile(result.FileByte, System.IO.Path.Combine(savePath, "plugin.png"), (err) =>
-                        {
-                            App.Current.Dispatcher.Invoke(() =>
-                            {
-                                MessageCard.Error(err);
-                            });
-                        });
+                        FileHelper.ByteArrayToFile(result.FileByte, System.IO.Path.Combine(savePath, "plugin.png"));
                     }
                     // 根据 main.json，下载文件
                     string json = httpResult.SourceCode;
@@ -188,13 +176,7 @@ namespace Jvedio.Core.Plugins
                             {
                                 string path = System.IO.Path.GetDirectoryName(savePath);
                                 DirHelper.TryCreateDirectory(path);
-                                FileHelper.ByteArrayToFile(result.FileByte, savePath, (err) =>
-                                {
-                                    App.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        MessageCard.Error(err);
-                                    });
-                                });
+                                FileHelper.ByteArrayToFile(result.FileByte, savePath);
                             }
                         }
                     }

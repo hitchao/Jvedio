@@ -1,11 +1,12 @@
-﻿using Jvedio.Utils.Reflections;
+﻿using Jvedio;
+using SuperUtils.Reflections;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Jvedio.Utils.Visual
+namespace SuperUtils.Visual
 {
     public static class VisualHelper
     {

@@ -8,9 +8,9 @@ using Jvedio.Core.Scan;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Utils;
-using Jvedio.Utils.IO;
-using Jvedio.Utils.Visual;
+using SuperUtils;
+using SuperUtils.IO;
+using SuperUtils.Visual;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using System;
@@ -29,12 +29,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-using Jvedio.Utils.Media;
-using static Jvedio.Utils.Visual.VisualHelper;
-using static Jvedio.Utils.Media.ImageHelper;
+using SuperUtils.Media;
+using static SuperUtils.Visual.VisualHelper;
+using static SuperUtils.Media.ImageHelper;
 using Jvedio.Core.Logs;
 using Jvedio.Core.Crawler;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Common;
 
 namespace Jvedio
 {
@@ -623,10 +624,7 @@ namespace Jvedio
             string url = vieModel.CurrentVideo.WebUrl;
             if (string.IsNullOrEmpty(url)) return;
             if (url.IsProperUrl())
-                FileHelper.TryOpenUrl(url, (err) =>
-                {
-                    MessageCard.Error(err);
-                });
+                FileHelper.TryOpenUrl(url);
         }
 
 

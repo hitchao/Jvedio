@@ -431,26 +431,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utils\IO\ClipBoard.cs" />
-    <Compile Include="Utils\IO\DirHelper.cs" />
-    <Compile Include="Utils\IO\FileHelper.cs" />
-    <Compile Include="Utils\IO\NFOHelper.cs" />
-    <Compile Include="Utils\IO\StreamHelper.cs" />
+    <Compile Include="Utils\Other\NFOHelper.cs" />
     <Compile Include="Utils\Other\Converter.cs" />
     <Compile Include="Core\Media\Gif.cs" />
     <Compile Include="Core\Media\GifImage.cs" />
     <Compile Include="Core\FFmpeg\ScreenShot.cs" />
-    <Compile Include="Utils\Media\MediaParse.cs" />
     <Compile Include="Utils\Config\RecentWatchedConfig.cs" />
     <Compile Include="Utils\Config\ScanPathConfig.cs" />
-    <Compile Include="Utils\Media\MediaInfo.cs" />
-    <Compile Include="Utils\Media\ImageHelper.cs" />
     <Compile Include="WindowsDialog\Dialog_Thanks.xaml.cs">
       <DependentUpon>Dialog_Thanks.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\External\Translate.cs" />
     <Compile Include="Entity\Common\MySqlite.cs" />
-    <Compile Include="Utils\Data\StringFormat.cs" />
     <Compile Include="Utils\Visual\VisualHelper.cs" />
     <Compile Include="ViewModels\VieModel_MetaDataEdit.cs" />
     <Compile Include="ViewModels\VieModel_MetaData.cs" />
@@ -969,10 +961,6 @@
     <ProjectReference Include="..\Jvedio.Style\Jvedio.Style.csproj">
       <Project>{c398561c-9e61-4258-a9a0-1692832a6a95}</Project>
       <Name>Jvedio.Style</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Jvedio.Utils\Jvedio.Utils.csproj">
-      <Project>{0eb5999e-c297-4a50-abb0-615bb92176dc}</Project>
-      <Name>Jvedio.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

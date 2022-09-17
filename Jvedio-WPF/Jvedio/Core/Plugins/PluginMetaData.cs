@@ -2,7 +2,7 @@
 using Jvedio.Core.Scan;
 using Jvedio.Core.Logs;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

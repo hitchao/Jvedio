@@ -1,7 +1,7 @@
 ﻿using Jvedio.Core.Logs;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
-using Jvedio.Utils.Reflections;
+using SuperUtils.IO;
+using SuperUtils.Reflections;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

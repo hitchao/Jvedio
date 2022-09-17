@@ -2,8 +2,9 @@
 using Jvedio.Core.Logs;
 using Jvedio.Entity;
 using Jvedio.Mapper;
-using Jvedio.Utils;
-using Jvedio.Utils.Media;
+using SuperUtils;
+using SuperUtils.Media;
+using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.GlobalVariable;
 using static Jvedio.MapperManager;
-using static Jvedio.Utils.Media.ImageHelper;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Media.ImageHelper;
+using static SuperUtils.Visual.VisualHelper;
 
 namespace Jvedio.ViewModel
 {
@@ -180,7 +181,7 @@ namespace Jvedio.ViewModel
         public void LoadVideoInfo()
         {
             // todo 分段视频
-            VideoInfo = MediaParse.GetMediaInfo(CurrentVideo.Path);
+            VideoInfo = Video.GetMediaInfo(CurrentVideo.Path);
         }
 
 

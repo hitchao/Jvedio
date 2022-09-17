@@ -6,7 +6,7 @@ using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Net;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

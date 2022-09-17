@@ -1,7 +1,7 @@
 ﻿
 using Jvedio.Core.Enums;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Utils.Media;
+using SuperUtils.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

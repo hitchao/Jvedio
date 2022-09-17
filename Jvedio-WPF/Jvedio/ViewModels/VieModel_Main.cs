@@ -12,9 +12,9 @@ using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using Jvedio.Utils;
+using SuperUtils;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using JvedioLib.Security;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -32,9 +32,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-using static Jvedio.Utils.Media.ImageHelper;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Media.ImageHelper;
+using static SuperUtils.Visual.VisualHelper;
 using SuperUtils.Time;
+using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio.ViewModel
 {
@@ -2145,7 +2146,7 @@ namespace Jvedio.ViewModel
                 rendering = true;
                 Video video = VideoList[i];
                 if (video == null) continue;
-                SetImage(ref video, imageMode);
+                Video.SetImage(ref video, imageMode);
                 Video.setTagStamps(ref video);// 设置标签戳
                 Video.handleEmpty(ref video);// 设置标题和发行日期
                 // 设置关联

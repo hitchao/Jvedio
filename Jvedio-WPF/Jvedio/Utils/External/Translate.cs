@@ -1,5 +1,6 @@
 ﻿
 
+using Jvedio;
 using Jvedio.Core.Logs;
 using JvedioLib.Security;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Jvedio.Utils.External
+namespace SuperUtils.External
 {
     //https://ai.youdao.com/DOCSIRMA/html/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%BF%BB%E8%AF%91/API%E6%96%87%E6%A1%A3/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1-API%E6%96%87%E6%A1%A3.html
     public static class Translate
@@ -24,8 +25,8 @@ namespace Jvedio.Utils.External
 
         public static void InitYoudao()
         {
-            Youdao_appKey = Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", "");
-            Youdao_appSecret = Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", "");
+            Youdao_appKey = Jvedio.Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", "");
+            Youdao_appSecret = Jvedio.Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", "");
         }
 
 

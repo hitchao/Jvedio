@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using static Jvedio.GlobalVariable;
-using Jvedio.Utils;
+using SuperUtils;
 using Jvedio.Entity;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;

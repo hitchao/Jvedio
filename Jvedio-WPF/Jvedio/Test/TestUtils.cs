@@ -1,5 +1,5 @@
-﻿using Jvedio.Utils;
-using Jvedio.Utils.IO;
+﻿using SuperUtils;
+using SuperUtils.IO;
 using JvedioLib.Security;
 using System;
 using System.Collections.Generic;

@@ -45,6 +45,9 @@
     <Reference Include="SuperControls.Style">
       <HintPath>..\..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
     </Reference>
+    <Reference Include="SuperUtils">
+      <HintPath>..\..\..\..\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -167,10 +170,6 @@
     <ProjectReference Include="..\Jvedio.Language\Jvedio.Language.csproj">
       <Project>{d7a06c53-5742-4894-820e-3697f81a3785}</Project>
       <Name>Jvedio.Language</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Jvedio.Utils\Jvedio.Utils.csproj">
-      <Project>{0eb5999e-c297-4a50-abb0-615bb92176dc}</Project>
-      <Name>Jvedio.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

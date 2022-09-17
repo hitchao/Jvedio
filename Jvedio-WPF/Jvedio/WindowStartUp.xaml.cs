@@ -10,7 +10,7 @@ using Jvedio.Entity;
 using Jvedio.Core.Logs;
 using Jvedio.Upgrade;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using Jvedio.ViewModel;
 using JvedioLib.Security;
 using Newtonsoft.Json;
@@ -27,7 +27,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-using static Jvedio.Utils.Visual.VisualHelper;
+using static SuperUtils.Visual.VisualHelper;
 using SuperUtils.Time;
 
 namespace Jvedio

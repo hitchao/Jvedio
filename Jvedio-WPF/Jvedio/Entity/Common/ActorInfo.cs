@@ -2,8 +2,8 @@
 using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
 using SuperUtils.Common;
-using Jvedio.Utils.IO;
-using Jvedio.Utils.Media;
+using SuperUtils.IO;
+using SuperUtils.Media;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Mapper;
 using System.Collections.Generic;

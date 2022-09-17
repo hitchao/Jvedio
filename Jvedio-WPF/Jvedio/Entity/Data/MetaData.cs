@@ -4,7 +4,7 @@ using Jvedio.Core.Enums;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
 using SuperUtils.Common;
-using Jvedio.Utils.Media;
+using SuperUtils.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

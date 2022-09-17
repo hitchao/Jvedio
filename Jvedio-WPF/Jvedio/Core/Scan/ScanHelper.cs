@@ -16,7 +16,7 @@ using Jvedio.Core.Scan;
 using JvedioLib;
 using JvedioLib.Security;
 using Jvedio.Core.Logs;
-using Jvedio.Utils.IO;
+using SuperUtils.IO;
 using SuperUtils.Time;
 
 namespace Jvedio

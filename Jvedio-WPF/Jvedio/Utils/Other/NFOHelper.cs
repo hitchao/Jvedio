@@ -4,8 +4,9 @@ using SuperUtils.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Jvedio;
 
-namespace Jvedio.Utils.IO
+namespace SuperUtils.IO
 {
     public static class NFOHelper
     {

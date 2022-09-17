@@ -1,15 +1,16 @@
 ﻿using SuperControls.Style;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
-using Jvedio.Utils;
-using Jvedio.Utils.IO;
+using SuperUtils;
+using SuperUtils.IO;
 using System;
 using System.IO;
 using System.Windows;
 using static Jvedio.MapperManager;
-using static Jvedio.Utils.Visual.VisualHelper;
-using static Jvedio.Utils.Media.ImageHelper;
+using static SuperUtils.Visual.VisualHelper;
+using static SuperUtils.Media.ImageHelper;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio
 {
