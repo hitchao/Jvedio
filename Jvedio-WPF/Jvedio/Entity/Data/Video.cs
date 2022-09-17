@@ -24,7 +24,6 @@ using System.Windows.Media.Imaging;
 namespace Jvedio.Entity
 {
     // todo 检视
-
     [Table(tableName: "metadata_video")]
 #pragma warning disable CS0659 // “Video”重写 Object.Equals(object o) 但不重写 Object.GetHashCode()
     public class Video : MetaData
@@ -155,9 +154,13 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public BitmapSource SmallImage
         {
-            get { return _smallimage; } 
-set { _smallimage = value;
-                OnPropertyChanged(); }
+            get { return _smallimage; }
+
+            set
+            {
+                _smallimage = value;
+                OnPropertyChanged();
+            }
         }
 
         private BitmapSource _bigimage;
@@ -165,9 +168,13 @@ set { _smallimage = value;
         [TableField(exist: false)]
         public BitmapSource BigImage
         {
-            get { return _bigimage; } 
-set { _bigimage = value;
-                OnPropertyChanged(); }
+            get { return _bigimage; }
+
+            set
+            {
+                _bigimage = value;
+                OnPropertyChanged();
+            }
         }
 
         private Uri _GifUri;
@@ -175,9 +182,13 @@ set { _bigimage = value;
         [TableField(exist: false)]
         public Uri GifUri
         {
-            get { return _GifUri; } 
-set { _GifUri = value;
-                OnPropertyChanged(); }
+            get { return _GifUri; }
+
+            set
+            {
+                _GifUri = value;
+                OnPropertyChanged();
+            }
         }
 
         [TableField(exist: false)]
@@ -501,7 +512,6 @@ set { _GifUri = value;
             if (!ConfigManager.Settings.SaveInfoToNFO) return;
             string dir = ConfigManager.Settings.NFOSavePath;
             bool overrideInfo = ConfigManager.Settings.OverrideInfo;
-            ;
 
             string saveName = $"{VID.ToProperFileName()}.nfo";
             if (string.IsNullOrEmpty(VID)) saveName = $"{System.IO.Path.GetFileNameWithoutExtension(Path)}.nfo";
@@ -583,7 +593,6 @@ set { _GifUri = value;
             {
                 return "Rating";
             }
-
             else
             {
                 return string.Empty;
@@ -600,7 +609,7 @@ set { _GifUri = value;
             string ext = fileInfo.Extension;
             string newName = string.Empty;
             MatchCollection matches = Regex.Matches(formatString, "\\{[a-zA-Z]+\\}");
-            PropertyInfo[] PropertyList = this.GetType().GetProperties();
+            PropertyInfo[] propertyList = this.GetType().GetProperties();
 
             if (matches != null && matches.Count > 0)
             {
@@ -610,7 +619,7 @@ set { _GifUri = value;
                     string property = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
                     try
                     {
-                        ReplaceWithValue(ref newName, property, PropertyList);
+                        ReplaceWithValue(ref newName, property, propertyList);
                     }
                     catch (Exception ex)
                     {
@@ -649,10 +658,10 @@ set { _GifUri = value;
             }
         }
 
-        private void ReplaceWithValue(ref string result, string property, PropertyInfo[] PropertyList)
+        private void ReplaceWithValue(ref string result, string property, PropertyInfo[] propertyList)
         {
             string inSplit = ConfigManager.RenameConfig.InSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.InSplit;
-            foreach (PropertyInfo item in PropertyList)
+            foreach (PropertyInfo item in propertyList)
             {
                 string name = item.Name;
                 if (name == property)
@@ -746,52 +755,50 @@ set { _GifUri = value;
         /// <summary>
         /// 获取视频信息 （wmv  10ms，其他  100ms）
         /// </summary>
-        /// <param name="VideoName"></param>
-        /// <returns></returns>
         public static VideoInfo GetMediaInfo(string videoPath)
         {
             VideoInfo videoInfo = new VideoInfo();
             if (File.Exists(videoPath))
             {
-                MediaInfo MI = null;
+                MediaInfo mI = null;
                 try
                 {
-                    MI = new MediaInfo();
-                    MI.Open(videoPath);
+                    mI = new MediaInfo();
+                    mI.Open(videoPath);
 
                     // 全局
-                    string format = MI.Get(StreamKind.General, 0, "Format");
-                    string bitrate = MI.Get(StreamKind.General, 0, "BitRate/String");
-                    string duration = MI.Get(StreamKind.General, 0, "Duration/String1");
-                    string fileSize = MI.Get(StreamKind.General, 0, "FileSize/String");
+                    string format = mI.Get(StreamKind.General, 0, "Format");
+                    string bitrate = mI.Get(StreamKind.General, 0, "BitRate/String");
+                    string duration = mI.Get(StreamKind.General, 0, "Duration/String1");
+                    string fileSize = mI.Get(StreamKind.General, 0, "FileSize/String");
 
                     // 视频
-                    string vid = MI.Get(StreamKind.Video, 0, "ID");
-                    string video = MI.Get(StreamKind.Video, 0, "Format");
-                    string vBitRate = MI.Get(StreamKind.Video, 0, "BitRate/String");
-                    string vSize = MI.Get(StreamKind.Video, 0, "StreamSize/String");
-                    string width = MI.Get(StreamKind.Video, 0, "Width");
-                    string height = MI.Get(StreamKind.Video, 0, "Height");
-                    string risplayAspectRatio = MI.Get(StreamKind.Video, 0, "DisplayAspectRatio/String");
-                    string risplayAspectRatio2 = MI.Get(StreamKind.Video, 0, "DisplayAspectRatio");
-                    string frameRate = MI.Get(StreamKind.Video, 0, "FrameRate/String");
-                    string bitDepth = MI.Get(StreamKind.Video, 0, "BitDepth/String");
-                    string pixelAspectRatio = MI.Get(StreamKind.Video, 0, "PixelAspectRatio");
-                    string encodedLibrary = MI.Get(StreamKind.Video, 0, "Encoded_Library");
-                    string encodeTime = MI.Get(StreamKind.Video, 0, "Encoded_Date");
-                    string codecProfile = MI.Get(StreamKind.Video, 0, "Codec_Profile");
-                    string frameCount = MI.Get(StreamKind.Video, 0, "FrameCount");
+                    string vid = mI.Get(StreamKind.Video, 0, "ID");
+                    string video = mI.Get(StreamKind.Video, 0, "Format");
+                    string vBitRate = mI.Get(StreamKind.Video, 0, "BitRate/String");
+                    string vSize = mI.Get(StreamKind.Video, 0, "StreamSize/String");
+                    string width = mI.Get(StreamKind.Video, 0, "Width");
+                    string height = mI.Get(StreamKind.Video, 0, "Height");
+                    string risplayAspectRatio = mI.Get(StreamKind.Video, 0, "DisplayAspectRatio/String");
+                    string risplayAspectRatio2 = mI.Get(StreamKind.Video, 0, "DisplayAspectRatio");
+                    string frameRate = mI.Get(StreamKind.Video, 0, "FrameRate/String");
+                    string bitDepth = mI.Get(StreamKind.Video, 0, "BitDepth/String");
+                    string pixelAspectRatio = mI.Get(StreamKind.Video, 0, "PixelAspectRatio");
+                    string encodedLibrary = mI.Get(StreamKind.Video, 0, "Encoded_Library");
+                    string encodeTime = mI.Get(StreamKind.Video, 0, "Encoded_Date");
+                    string codecProfile = mI.Get(StreamKind.Video, 0, "Codec_Profile");
+                    string frameCount = mI.Get(StreamKind.Video, 0, "FrameCount");
 
                     // 音频
-                    string aid = MI.Get(StreamKind.Audio, 0, "ID");
-                    string audio = MI.Get(StreamKind.Audio, 0, "Format");
-                    string aBitRate = MI.Get(StreamKind.Audio, 0, "BitRate/String");
-                    string samplingRate = MI.Get(StreamKind.Audio, 0, "SamplingRate/String");
-                    string channel = MI.Get(StreamKind.Audio, 0, "Channel(s)");
-                    string aSize = MI.Get(StreamKind.Audio, 0, "StreamSize/String");
+                    string aid = mI.Get(StreamKind.Audio, 0, "ID");
+                    string audio = mI.Get(StreamKind.Audio, 0, "Format");
+                    string aBitRate = mI.Get(StreamKind.Audio, 0, "BitRate/String");
+                    string samplingRate = mI.Get(StreamKind.Audio, 0, "SamplingRate/String");
+                    string channel = mI.Get(StreamKind.Audio, 0, "Channel(s)");
+                    string aSize = mI.Get(StreamKind.Audio, 0, "StreamSize/String");
 
-                    string audioInfo = MI.Get(StreamKind.Audio, 0, "Inform") + MI.Get(StreamKind.Audio, 1, "Inform") + MI.Get(StreamKind.Audio, 2, "Inform") + MI.Get(StreamKind.Audio, 3, "Inform");
-                    string vi = MI.Get(StreamKind.Video, 0, "Inform");
+                    string audioInfo = mI.Get(StreamKind.Audio, 0, "Inform") + mI.Get(StreamKind.Audio, 1, "Inform") + mI.Get(StreamKind.Audio, 2, "Inform") + mI.Get(StreamKind.Audio, 3, "Inform");
+                    string vi = mI.Get(StreamKind.Video, 0, "Inform");
 
                     videoInfo = new VideoInfo()
                     {
@@ -820,7 +827,7 @@ set { _GifUri = value;
                 }
                 finally
                 {
-                    MI?.Close();
+                    mI?.Close();
                 }
             }
 
@@ -838,10 +845,10 @@ set { _GifUri = value;
         /// 保存信息到 NFO 文件
         /// </summary>
         /// <param name="video"></param>
-        /// <param name="NfoPath"></param>
-        public static void SaveToNFO(Video video, string NfoPath)
+        /// <param name="nfoPath"></param>
+        public static void SaveToNFO(Video video, string nfoPath)
         {
-            var nfo = new NFO(NfoPath, "movie");
+            var nfo = new NFO(nfoPath, "movie");
             nfo.SetNodeText("source", video.WebUrl);
             nfo.SetNodeText("title", video.Title);
             nfo.SetNodeText("director", video.Director);

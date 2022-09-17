@@ -33,7 +33,7 @@ namespace Jvedio.Core.Config
         public long ProxyMode { get; set; }
 
         // 自定义代理配置
-        public long ProxyType { get; set; }  // 0-HTTP 1-SOCKS
+        public long ProxyType { get; set; } // 0-HTTP 1-SOCKS
 
         public string Server { get; set; }
 

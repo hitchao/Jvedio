@@ -69,12 +69,12 @@ namespace Jvedio
         public void BindingEvents()
         {
             // 设置排序类型
-            var MenuItems = SortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
-            for (int i = 0; i < MenuItems.Count; i++)
+            var menuItems = SortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
+            for (int i = 0; i < menuItems.Count; i++)
             {
-                MenuItems[i].Click += SortMenu_Click;
-                MenuItems[i].IsCheckable = true;
-                if (i == ConfigManager.MetaData.SortIndex) MenuItems[i].IsChecked = true;
+                menuItems[i].Click += SortMenu_Click;
+                menuItems[i].IsCheckable = true;
+                if (i == ConfigManager.MetaData.SortIndex) menuItems[i].IsChecked = true;
             }
 
             vieModel.PageChangedCompleted += (s, ev) =>
@@ -184,7 +184,6 @@ namespace Jvedio
             ConfigManager.Main.CurrentDBId = vieModel.CurrentAppDataBase.DBId;
 
             // 切换数据库
-
             vieModel.Statistic();
             vieModel.Reset();
             vieModel.initCurrentTagStamps();
@@ -273,8 +272,7 @@ namespace Jvedio
                         Console.WriteLine("检查状态");
                         if (vieModel.ScanTasks.All(arg =>
                          arg.Status == System.Threading.Tasks.TaskStatus.Canceled ||
-                         arg.Status == System.Threading.Tasks.TaskStatus.RanToCompletion
-                        ))
+                         arg.Status == System.Threading.Tasks.TaskStatus.RanToCompletion))
                         {
                             vieModel.ScanStatus = "Complete";
                             CheckingScanStatus = false;
@@ -305,8 +303,7 @@ namespace Jvedio
             {
                 Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
                 if (scanTask.Status == System.Threading.Tasks.TaskStatus.Canceled ||
-                    scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion
-                    )
+                    scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
                 {
                     vieModel.ScanTasks.RemoveAt(i);
                 }
@@ -531,10 +528,10 @@ namespace Jvedio
         {
             if (!canShowDetails) return;
             FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
-            long ID = getDataID(element);
+            long iD = getDataID(element);
             if (vieModel.EditMode)
             {
-                MetaData data = vieModel.CurrentDataList.Where(arg => arg.DataID == ID).FirstOrDefault();
+                MetaData data = vieModel.CurrentDataList.Where(arg => arg.DataID == iD).FirstOrDefault();
                 int selectIdx = vieModel.CurrentDataList.IndexOf(data);
 
                 // 多选
@@ -734,7 +731,7 @@ namespace Jvedio
                 if (!list.Contains(newTagID.ToString()))
                 {
                     list.Add(newTagID.ToString());
-                    data.TagIDs = String.Join(",", list);
+                    data.TagIDs = string.Join(",", list);
                     data.TagStamp = new ObservableCollection<TagStamp>();
                     foreach (var arg in list)
                     {
@@ -803,7 +800,7 @@ namespace Jvedio
 
         public void CopyFile(object sender, RoutedEventArgs e)
         {
-            handleMenuSelected((sender));
+            handleMenuSelected(sender);
             StringCollection paths = new StringCollection();
             DataType dataType = Main.CurrentDataType;
             foreach (var item in vieModel.SelectedData)
@@ -845,7 +842,7 @@ namespace Jvedio
 
         public void DeleteFile(object sender, RoutedEventArgs e)
         {
-            handleMenuSelected((sender));
+            handleMenuSelected(sender);
             if (vieModel.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToDelete).ShowDialog() == false)
             {
                 return;
@@ -940,7 +937,6 @@ namespace Jvedio
 
             // todo FilterMovieList
             // vieModel.FilterMovieList.Remove(arg);
-
             int count = metaDataMapper.deleteDataByIds(to_delete.Select(arg => arg.DataID.ToString()).ToList());
 
             // todo 关闭详情窗口
@@ -956,7 +952,6 @@ namespace Jvedio
             //        }
             //    }
             // }
-
             msgCard.Info($"{Jvedio.Language.Resources.SuccessDelete} {count}/{to_delete.Count} ");
 
             // 修复数字显示

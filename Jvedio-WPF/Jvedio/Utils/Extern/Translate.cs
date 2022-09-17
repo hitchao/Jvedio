@@ -48,19 +48,18 @@ namespace SuperUtils.External
             return Task.Run(() =>
             {
                 InitYoudao();
-                Dictionary<String, String> dic = new Dictionary<String, String>();
+                Dictionary<string, string> dic = new Dictionary<string, string>();
                 string url = "https://openapi.youdao.com/api";
 
                 string salt = DateTime.Now.Millisecond.ToString();
                 dic.Add("from", from);
                 dic.Add("to", to);
                 dic.Add("signType", "v3");
-                TimeSpan ts = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
                 long millis = (long)ts.TotalMilliseconds;
                 string curtime = Convert.ToString(millis / 1000);
                 dic.Add("curtime", curtime);
                 string signStr = Youdao_appKey + Truncate(q) + salt + curtime + Youdao_appSecret;
-                ;
                 string sign = ComputeHash(signStr, new SHA256CryptoServiceProvider());
                 dic.Add("q", System.Web.HttpUtility.UrlEncode(q));
                 dic.Add("appKey", Youdao_appKey);
@@ -89,12 +88,12 @@ namespace SuperUtils.External
         public static string ComputeHash(string input, HashAlgorithm algorithm)
         {
             if (string.IsNullOrEmpty(input) || algorithm == null) return string.Empty;
-            Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-            Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
             return BitConverter.ToString(hashedBytes).Replace("-", string.Empty);
         }
 
-        public static string Post(string url, Dictionary<String, String> dic)
+        public static string Post(string url, Dictionary<string, string> dic)
         {
             string result = string.Empty;
             if (string.IsNullOrEmpty(url)) return result;
@@ -152,17 +151,17 @@ namespace SuperUtils.External
             return len <= 20 ? q : (q.Substring(0, 10) + len + q.Substring(len - 10, 10));
         }
 
-        private static bool SaveBinaryFile(WebResponse response, string FileName)
+        private static bool SaveBinaryFile(WebResponse response, string fileName)
         {
-            string FilePath = FileName + DateTime.Now.Millisecond.ToString() + ".mp3";
+            string filePath = fileName + DateTime.Now.Millisecond.ToString() + ".mp3";
             bool Value = true;
             byte[] buffer = new byte[1024];
 
             try
             {
-                if (File.Exists(FilePath))
-                    File.Delete(FilePath);
-                Stream outStream = System.IO.File.Create(FilePath);
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+                Stream outStream = System.IO.File.Create(filePath);
                 Stream inStream = response.GetResponseStream();
 
                 int l;

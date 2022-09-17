@@ -103,7 +103,7 @@ namespace Jvedio
                     }
                 }
 
-                vieModel.CurrentVideo.SubSection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
+                vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
                 ReLoad();
             }
 
@@ -113,7 +113,6 @@ namespace Jvedio
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             DateTime date = DateTime.Now;
-            ;
             bool success = DateTime.TryParse((sender as SearchBox).Text, out date);
             if (success)
             {
@@ -228,15 +227,15 @@ namespace Jvedio
 
         public string SelectVideo(string path)
         {
-            System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
-            OpenFileDialog1.FileName = path;
-            OpenFileDialog1.Filter = Window_Settings.SupportVideoFormat;
-            OpenFileDialog1.FilterIndex = 1;
-            OpenFileDialog1.RestoreDirectory = true;
-            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
+            openFileDialog1.FileName = path;
+            openFileDialog1.Filter = Window_Settings.SupportVideoFormat;
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                string filename = OpenFileDialog1.FileName;
+                string filename = openFileDialog1.FileName;
                 if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
                     return filename;
             }

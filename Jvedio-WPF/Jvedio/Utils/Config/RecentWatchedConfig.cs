@@ -25,14 +25,14 @@ namespace Jvedio
             try
             {
                 if (string.IsNullOrEmpty(Date)) return false;
-                XmlDocument XmlDoc = new XmlDocument();
+                XmlDocument xmlDoc = new XmlDocument();
                 string Root = "RecentWatch";
                 bool CreateRoot = false;
                 if (File.Exists(filepath))
                 {
                     try
                     {
-                        XmlDoc.Load(filepath);
+                        xmlDoc.Load(filepath);
                     }
                     catch
                     {
@@ -48,29 +48,29 @@ namespace Jvedio
                 {
                     try
                     {
-                        XmlNode header = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-                        XmlDoc.AppendChild(header);
+                        XmlNode header = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+                        xmlDoc.AppendChild(header);
                     }
                     catch
                     {
                     }
 
                     // 生成根节点
-                    var xm = XmlDoc.CreateElement(Root);
-                    XmlDoc.AppendChild(xm);
+                    var xm = xmlDoc.CreateElement(Root);
+                    xmlDoc.AppendChild(xm);
                 }
 
-                XmlElement rootElement = XmlDoc.DocumentElement;
-                XmlNode node = XmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{Date}']");
+                XmlElement rootElement = xmlDoc.DocumentElement;
+                XmlNode node = xmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{Date}']");
                 if (node == null)
                 {
                     // 不存在该节点
-                    XmlElement XE = XmlDoc.CreateElement("Date");
+                    XmlElement XE = xmlDoc.CreateElement("Date");
                     XE.SetAttribute("Name", Date);
                     rootElement.AppendChild(XE);
                 }
 
-                XmlDoc.Save(filepath);
+                xmlDoc.Save(filepath);
                 return true;
             }
             catch
@@ -79,13 +79,13 @@ namespace Jvedio
             }
         }
 
-        public void Save(List<string> IDs)
+        public void Save(List<string> iDs)
         {
             InitXML();
-            XmlDocument XmlDoc = new XmlDocument();
-            XmlDoc.Load(filepath);
-            XmlNode pathNodes = XmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{Date}']");
-            XmlNodeList xmlNodeList = XmlDoc.SelectNodes($"/RecentWatch/Date[@Name='{Date}']/ID");
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(filepath);
+            XmlNode pathNodes = xmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{Date}']");
+            XmlNodeList xmlNodeList = xmlDoc.SelectNodes($"/RecentWatch/Date[@Name='{Date}']/ID");
             if (xmlNodeList != null && xmlNodeList.Count > 0)
             {
                 foreach (XmlNode item in xmlNodeList)
@@ -94,26 +94,26 @@ namespace Jvedio
                 }
             }
 
-            foreach (string path in IDs)
+            foreach (string path in iDs)
             {
-                XmlElement xe = XmlDoc.CreateElement("ID");
+                XmlElement xe = xmlDoc.CreateElement("ID");
                 xe.InnerText = path;
                 pathNodes.AppendChild(xe);
             }
 
-            XmlDoc.Save(filepath);
+            xmlDoc.Save(filepath);
         }
 
         public bool Clear()
         {
             if (!File.Exists(filepath)) InitXML();
-            XmlDocument XmlDoc = new XmlDocument();
+            XmlDocument xmlDoc = new XmlDocument();
             try
             {
-                XmlDoc.Load(filepath);
-                XmlElement root = XmlDoc.DocumentElement;
+                xmlDoc.Load(filepath);
+                XmlElement root = xmlDoc.DocumentElement;
                 root.RemoveAll();
-                XmlDoc.Save(filepath);
+                xmlDoc.Save(filepath);
             }
             catch
             {
@@ -127,9 +127,9 @@ namespace Jvedio
         {
             Dictionary<DateTime, List<string>> result = new Dictionary<DateTime, List<string>>();
             if (!File.Exists(filepath)) InitXML();
-            XmlDocument XmlDoc = new XmlDocument();
-            XmlDoc.Load(filepath);
-            XmlNodeList dateNodes = XmlDoc.SelectNodes($"/RecentWatch/Date");
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(filepath);
+            XmlNodeList dateNodes = xmlDoc.SelectNodes($"/RecentWatch/Date");
 
             if (dateNodes != null && dateNodes.Count > 0)
             {
@@ -138,7 +138,7 @@ namespace Jvedio
                     string date = xmlNode.Attributes[0].Value;
                     if (!string.IsNullOrEmpty(date))
                     {
-                        XmlNodeList IDNodes = XmlDoc.SelectNodes($"/RecentWatch/Date[@Name='{date}']/ID");
+                        XmlNodeList IDNodes = xmlDoc.SelectNodes($"/RecentWatch/Date[@Name='{date}']/ID");
                         if (IDNodes != null && IDNodes.Count > 0)
                         {
                             DateTime dateTime;
@@ -164,17 +164,17 @@ namespace Jvedio
         public void Remove(DateTime dateTime)
         {
             InitXML();
-            XmlDocument XmlDoc = new XmlDocument();
-            XmlDoc.Load(filepath);
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(filepath);
 
-            XmlNode root = XmlDoc.SelectSingleNode($"/RecentWatch");
-            XmlNode node = XmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{dateTime.ToString("yyyy-MM-dd")}']");
+            XmlNode root = xmlDoc.SelectSingleNode($"/RecentWatch");
+            XmlNode node = xmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{dateTime.ToString("yyyy-MM-dd")}']");
             if (root != null && node != null)
             {
                 root.RemoveChild(node);
             }
 
-            XmlDoc.Save(filepath);
+            xmlDoc.Save(filepath);
         }
     }
 }

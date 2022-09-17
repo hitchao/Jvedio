@@ -34,7 +34,7 @@ namespace Jvedio.Core.Net
 
         public async static Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> getUpgardeInfo()
         {
-            string LatestVersion = string.Empty;
+            string latestVersion = string.Empty;
             string ReleaseDate = string.Empty;
             string ReleaseNote = string.Empty;
             try
@@ -51,7 +51,7 @@ namespace Jvedio.Core.Net
                     else
                     {
                         if (dict.ContainsKey("LatestVersion") && dict["LatestVersion"] != null)
-                            LatestVersion = dict["LatestVersion"].ToString();
+                            latestVersion = dict["LatestVersion"].ToString();
 
                         if (dict.ContainsKey("ReleaseDate") && dict["ReleaseDate"] != null)
                             ReleaseDate = dict["ReleaseDate"].ToString();
@@ -73,7 +73,7 @@ namespace Jvedio.Core.Net
                 throw ex;
             }
 
-            return (LatestVersion, ReleaseDate, ReleaseNote);
+            return (latestVersion, ReleaseDate, ReleaseNote);
         }
 
         private static async Task<List<string>> GetFileList()
@@ -202,7 +202,6 @@ namespace Jvedio.Core.Net
 
                 count++;
                 double progress = Math.Round(count / total * 100, 4);
-                ;
                 if (!Canceld) onDownloading?.Invoke(null, new MessageCallBackEventArgs(progress.ToString()));
             }
 

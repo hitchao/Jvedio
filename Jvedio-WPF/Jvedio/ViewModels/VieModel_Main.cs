@@ -201,7 +201,6 @@ namespace Jvedio.ViewModel
         //        RaisePropertyChanged();
         //    }
         // }
-
         private Visibility _ActorProgressBarVisibility = Visibility.Collapsed;
 
         public Visibility ActorProgressBarVisibility
@@ -1472,10 +1471,10 @@ namespace Jvedio.ViewModel
                 foreach (Dictionary<string, object> item in list)
                 {
                     if (!item.ContainsKey("LabelName") || !item.ContainsKey("Count")) continue;
-                    string LabelName = item["LabelName"].ToString();
+                    string labelName = item["LabelName"].ToString();
                     long.TryParse(item["Count"].ToString(), out long count);
-                    if (string.IsNullOrEmpty(LabelName)) continue;
-                    labels.Add($"{LabelName}({count})");
+                    if (string.IsNullOrEmpty(labelName)) continue;
+                    labels.Add($"{labelName}({count})");
                 }
             }
 
@@ -1520,7 +1519,6 @@ namespace Jvedio.ViewModel
                             if (search && g.IndexOf(searchText) < 0) continue;
                             if (genreDict.ContainsKey(g))
                                 genreDict[g] = genreDict[g] + 1;
-
                             else
                                 genreDict.Add(g, 1);
                         }
@@ -1622,7 +1620,6 @@ namespace Jvedio.ViewModel
         }
 
         // 获得演员，信息照片都获取
-
         #region "演员"
 
         public bool renderingActor { get; set; }
@@ -1694,8 +1691,8 @@ namespace Jvedio.ViewModel
 
         public static Dictionary<string, string> Actor_SELECT_TYPE = new Dictionary<string, string>()
         {
-            { "All", "  "  },
-            { "Favorite", "  "  },
+            { "All", "  " },
+            { "Favorite", "  " },
         };
 
         public async void SelectActor()
@@ -1779,8 +1776,11 @@ namespace Jvedio.ViewModel
                 {
                     renderActorCT.ThrowIfCancellationRequested();
                 }
-                catch (OperationCanceledException) { renderVideoCTS?.Dispose();
-                    break; }
+                catch (OperationCanceledException)
+                {
+                    renderVideoCTS?.Dispose();
+                    break;
+                }
 
                 renderingActor = true;
                 ActorInfo actorInfo = ActorList[i];
@@ -1808,16 +1808,16 @@ namespace Jvedio.ViewModel
         {
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             if (string.IsNullOrEmpty(SearchText)) return null;
-            string FormatSearch = SearchText.ToProperSql().Trim();
-            if (string.IsNullOrEmpty(FormatSearch)) return null;
-            string searchContent = FormatSearch;
+            string formatSearch = SearchText.ToProperSql().Trim();
+            if (string.IsNullOrEmpty(formatSearch)) return null;
+            string searchContent = formatSearch;
 
             switch (searchType)
             {
                 case SearchField.VID:
 
-                    string vid = Identify.GetVID(FormatSearch);
-                    if (string.IsNullOrEmpty(vid)) searchContent = FormatSearch;
+                    string vid = Identify.GetVID(formatSearch);
+                    if (string.IsNullOrEmpty(vid)) searchContent = formatSearch;
                     else searchContent = vid;
                     wrapper.Like("VID", searchContent);
                     break;
@@ -1907,9 +1907,9 @@ namespace Jvedio.ViewModel
 
         public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>()
         {
-            { "All", "  "  },
-            { "Favorite", "  "  },
-            { "RecentWatch", "  "  },
+            { "All", "  " },
+            { "Favorite", "  " },
+            { "RecentWatch", "  " },
         };
 
         public void GenerateSelect(object o = null)
@@ -2032,7 +2032,6 @@ namespace Jvedio.ViewModel
             if (checkedMenus.Count > 0 && checkedMenus.Count < 4)
             {
                 // VideoType = 0 or VideoType = 1 or VideoType=2
-
                 if (checkedMenus.Count == 1)
                 {
                     int idx = allMenus.IndexOf(checkedMenus[0]);
@@ -2085,11 +2084,11 @@ namespace Jvedio.ViewModel
         public void RenderCurrentVideo(string sql)
         {
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
             VideoList = new List<Video>();
-            if (Videos == null) Videos = new List<Video>();
-            VideoList.AddRange(Videos);
+            if (videos == null) videos = new List<Video>();
+            VideoList.AddRange(videos);
             CurrentCount = VideoList.Count;
             render();
         }
@@ -2104,8 +2103,11 @@ namespace Jvedio.ViewModel
                 {
                     renderVideoCT.ThrowIfCancellationRequested();
                 }
-                catch (OperationCanceledException) { renderVideoCTS?.Dispose();
-                    break; }
+                catch (OperationCanceledException)
+                {
+                    renderVideoCTS?.Dispose();
+                    break;
+                }
 
                 rendering = true;
                 Video video = VideoList[i];
@@ -2195,13 +2197,13 @@ namespace Jvedio.ViewModel
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
 
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
-            if (Videos == null) return;
+            if (videos == null) return;
 
-            for (int i = 0; i < Videos.Count; i++)
+            for (int i = 0; i < videos.Count; i++)
             {
-                Video video = Videos[i];
+                Video video = videos[i];
                 if (video == null) continue;
                 BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
                 BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
@@ -2230,7 +2232,7 @@ namespace Jvedio.ViewModel
             }
 
             // 清除
-            for (int i = ViewAssociationDatas.Count - 1; i > Videos.Count - 1; i--)
+            for (int i = ViewAssociationDatas.Count - 1; i > videos.Count - 1; i--)
             {
                 ViewAssociationDatas.RemoveAt(i);
             }
@@ -2266,13 +2268,13 @@ namespace Jvedio.ViewModel
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
 
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
-            if (Videos == null) return;
+            if (videos == null) return;
 
-            for (int i = 0; i < Videos.Count; i++)
+            for (int i = 0; i < videos.Count; i++)
             {
-                Video video = Videos[i];
+                Video video = videos[i];
                 if (video == null) continue;
                 BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
                 BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
@@ -2284,7 +2286,7 @@ namespace Jvedio.ViewModel
             }
 
             // 清除
-            for (int i = AssociationDatas.Count - 1; i > Videos.Count - 1; i--)
+            for (int i = AssociationDatas.Count - 1; i > videos.Count - 1; i--)
             {
                 AssociationDatas.RemoveAt(i);
             }

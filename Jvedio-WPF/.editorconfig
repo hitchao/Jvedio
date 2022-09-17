@@ -53,3 +53,54 @@ dotnet_diagnostic.SA1504.severity = none
 
 # SA1602: Enumeration items should be documented
 dotnet_diagnostic.SA1602.severity = none
+
+# SA1520: Use braces consistently
+dotnet_diagnostic.SA1520.severity = none
+
+# SA1401: Fields should be private
+dotnet_diagnostic.SA1401.severity = none
+
+# SA1306: Field names should begin with lower-case letter
+dotnet_diagnostic.SA1306.severity = none
+
+# SA1310: Field names should not contain underscore
+dotnet_diagnostic.SA1310.severity = none
+
+# SA1203: Constants should appear before fields
+dotnet_diagnostic.SA1203.severity = none
+
+# SA1312: Variable names should begin with lower-case letter
+dotnet_diagnostic.SA1312.severity = none
+
+# SA1623: Property summary documentation should match accessors
+dotnet_diagnostic.SA1623.severity = none
+
+# SA1116: Split parameters should start on line after declaration
+dotnet_diagnostic.SA1116.severity = none
+
+# SA1118: Parameter should not span multiple lines
+dotnet_diagnostic.SA1118.severity = none
+
+# SA1611: Element parameters should be documented
+dotnet_diagnostic.SA1611.severity = none
+
+# SA1307: Accessible fields should begin with upper-case letter
+dotnet_diagnostic.SA1307.severity = none
+
+# SA1519: Braces should not be omitted from multi-line child statement
+dotnet_diagnostic.SA1519.severity = none
+
+# SA1407: Arithmetic expressions should declare precedence
+dotnet_diagnostic.SA1407.severity = none
+
+# SA1202: Elements should be ordered by access
+dotnet_diagnostic.SA1202.severity = none
+
+# SA1402: File may only contain a single type
+dotnet_diagnostic.SA1402.severity = none
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = none
+
+# CS0612: Type or member is obsolete
+dotnet_diagnostic.CS0612.severity = none

@@ -93,7 +93,6 @@ namespace Jvedio
             DeleteLogs();       // 清理日志
 
             // GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
-
             await BackupData(); // 备份文件
             await MovePlugins();
             ThemeManager.LoadAllThemes();       // 加载主题
@@ -229,7 +228,6 @@ namespace Jvedio
                 // 读取配置文件，设置 debug
                 ReadConfig();
             }
-
             catch (Exception ex)
             {
                 Logger.LogE(ex);
@@ -535,7 +533,6 @@ namespace Jvedio
             }
 
             // 检测该 id 是否在数据库中存在
-
             if (database == null)
             {
                 MessageCard.Error("默认打开的数据库被删除了，取消启动时默认打开");
@@ -555,7 +552,6 @@ namespace Jvedio
                 ConfigManager.Main.CurrentDBId = id;
 
                 // 是否需要扫描
-
                 if (ConfigManager.ScanConfig.ScanOnStartUp)
                 {
                     if (!string.IsNullOrEmpty(database.ScanPath))

@@ -330,13 +330,13 @@ namespace Jvedio.Core.Scan
             // 复制图片
             if (ConfigManager.ScanConfig.CopyNFOPicture)
             {
-                Dictionary<string, object> PicPaths = ConfigManager.Settings.PicPaths;
-                if (PicPaths != null && PicPaths.ContainsKey(PathType.RelativeToData.ToString()))
+                Dictionary<string, object> picPaths = ConfigManager.Settings.PicPaths;
+                if (picPaths != null && picPaths.ContainsKey(PathType.RelativeToData.ToString()))
                 {
                     Dictionary<string, string> dict = null;
                     try
                     {
-                        dict = (Dictionary<string, string>)PicPaths[PathType.RelativeToData.ToString()];
+                        dict = (Dictionary<string, string>)picPaths[PathType.RelativeToData.ToString()];
                     }
                     catch (Exception ex)
                     {

@@ -121,17 +121,17 @@ namespace Jvedio.Core.Media
                 Image imgFadeIn = ImageControls[CurrentCtrlIndex];
                 ImageSource newSource = Images[CurrentSourceIndex];
                 imgFadeIn.Source = newSource;
-                Storyboard StboardFadeOut = new Storyboard();
+                Storyboard stboardFadeOut = new Storyboard();
                 DoubleAnimation FadeOutAnimation = new DoubleAnimation()
                 {
                     To = 0.0,
                     Duration = new Duration(TimeSpan.FromSeconds(0.5)),
                 };
                 Storyboard.SetTargetProperty(FadeOutAnimation, new PropertyPath("Opacity"));
-                StboardFadeOut.Children.Add(FadeOutAnimation);
-                StboardFadeOut.Begin(imgFadeOut);
+                stboardFadeOut.Children.Add(FadeOutAnimation);
+                stboardFadeOut.Begin(imgFadeOut);
 
-                Storyboard StboardFadeIn = new Storyboard();
+                Storyboard stboardFadeIn = new Storyboard();
                 DoubleAnimation FadeInAnimation = new DoubleAnimation()
                 {
                     From = 0.0,
@@ -139,8 +139,8 @@ namespace Jvedio.Core.Media
                     Duration = new Duration(TimeSpan.FromSeconds(0.25)),
                 };
                 Storyboard.SetTargetProperty(FadeInAnimation, new PropertyPath("Opacity"));
-                StboardFadeIn.Children.Add(FadeInAnimation);
-                StboardFadeIn.Begin(imgFadeIn);
+                stboardFadeIn.Children.Add(FadeInAnimation);
+                stboardFadeIn.Begin(imgFadeIn);
                 if (stop)
                 {
                     Images = null;

@@ -110,7 +110,7 @@ namespace Jvedio.Core
             {
                 var setting = new SettingStruct()
                 {
-                    value = (value.PropertyValue == null ? String.Empty : value.PropertyValue.ToString()),
+                    value = value.PropertyValue == null ? string.Empty : value.PropertyValue.ToString(),
                     name = value.Name,
                     serializeAs = value.Property.SerializeAs.ToString(),
                 };
@@ -161,9 +161,9 @@ namespace Jvedio.Core
             {
                 var newSetting = new SettingStruct()
                 {
-                    name = element.Attribute(NAME) == null ? String.Empty : element.Attribute(NAME).Value,
+                    name = element.Attribute(NAME) == null ? string.Empty : element.Attribute(NAME).Value,
                     serializeAs = element.Attribute(SERIALIZE_AS) == null ? "String" : element.Attribute(SERIALIZE_AS).Value,
-                    value = element.Value ?? String.Empty,
+                    value = element.Value ?? string.Empty,
                 };
                 SettingsDictionary.Add(element.Attribute(NAME).Value, newSetting);
             }
@@ -207,12 +207,12 @@ namespace Jvedio.Core
                     var newSetting = new XElement(SETTING);
                     newSetting.Add(new XAttribute(NAME, entry.Value.name));
                     newSetting.Add(new XAttribute(SERIALIZE_AS, entry.Value.serializeAs));
-                    newSetting.Value = (entry.Value.value ?? String.Empty);
+                    newSetting.Value = entry.Value.value ?? string.Empty;
                     settingsSection.Add(newSetting);
                 }
                 else // update the value if it exists.
                 {
-                    setting.Value = (entry.Value.value ?? String.Empty);
+                    setting.Value = entry.Value.value ?? string.Empty;
                 }
             }
 

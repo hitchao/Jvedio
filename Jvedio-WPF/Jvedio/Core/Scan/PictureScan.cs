@@ -51,7 +51,7 @@ namespace Jvedio.Core.Scan
                 picture.VideoPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, videoPaths);
                 picture.PicPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, imgPaths.Select(arg => Path.GetFileName(arg)));
                 picture.Path = path;
-                Int64 totalSize = 0;
+                long totalSize = 0;
                 foreach (string imgPath in imgPaths)
                 {
                     totalSize += new FileInfo(imgPath).Length;
@@ -85,8 +85,11 @@ namespace Jvedio.Core.Scan
                 {
                     CheckStatus();
                 }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
-                    return; }
+                catch (TaskCanceledException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
 
                 ScanHelper scanHelper = new ScanHelper();
 
@@ -96,8 +99,11 @@ namespace Jvedio.Core.Scan
                 {
                     CheckStatus();
                 }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
-                    return; }
+                catch (TaskCanceledException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
 
                 handleImport(import);
                 handleNotImport(notImport);

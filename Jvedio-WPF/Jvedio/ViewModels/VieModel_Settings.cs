@@ -71,10 +71,10 @@ namespace Jvedio.ViewModel
         public int SortEnabledIndex = -1;           // 0 启用 1 未启用
         public PluginType SortPluginType = PluginType.None;
 
-        public List<PluginMetaData> GetSortResult(IEnumerable<PluginMetaData> PluginMetaDatas)
+        public List<PluginMetaData> GetSortResult(IEnumerable<PluginMetaData> pluginMetaDatas)
         {
             // 筛选
-            IEnumerable<PluginMetaData> list = PluginMetaDatas;
+            IEnumerable<PluginMetaData> list = pluginMetaDatas;
             if (list == null || list.Count() == 0) return new List<PluginMetaData>();
 
             if (SortEnabledIndex >= 0)
@@ -90,7 +90,7 @@ namespace Jvedio.ViewModel
 
             if (!string.IsNullOrEmpty(PluginSearch))
             {
-                list = PluginMetaDatas.Where(arg => arg.PluginName.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
+                list = pluginMetaDatas.Where(arg => arg.PluginName.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
             }
 
             if (PluginSortIndex == 0)

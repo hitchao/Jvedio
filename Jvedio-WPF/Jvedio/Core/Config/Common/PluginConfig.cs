@@ -29,10 +29,10 @@ namespace Jvedio.Core.Config
 
         public void FetchPluginMetaData(Action onRefresh = null)
         {
-            RequestHeader Header = CrawlerHeader.GitHub;
+            RequestHeader header = CrawlerHeader.GitHub;
             Task.Run(async () =>
             {
-                HttpResult httpResult = await HttpClient.Get(UrlManager.PLUGIN_LIST_URL, Header);
+                HttpResult httpResult = await HttpClient.Get(UrlManager.PLUGIN_LIST_URL, header);
                 if (httpResult.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
                 {
                     // 更新插件

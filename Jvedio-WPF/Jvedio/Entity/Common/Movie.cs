@@ -103,9 +103,13 @@ namespace Jvedio.Entity
 
         public string title
         {
-            get { return _title; } 
-set { _title = value;
-                OnPropertyChanged(); }
+            get { return _title; }
+
+            set
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
         }
 
         public double filesize { get; set; }
@@ -239,18 +243,26 @@ set { _title = value;
 
         public BitmapSource smallimage
         {
-            get { return _smallimage; } 
-set { _smallimage = value;
-                OnPropertyChanged(); }
+            get { return _smallimage; }
+
+            set
+            {
+                _smallimage = value;
+                OnPropertyChanged();
+            }
         }
 
         private BitmapSource _bigimage;
 
         public BitmapSource bigimage
         {
-            get { return _bigimage; } 
-set { _bigimage = value;
-                OnPropertyChanged(); }
+            get { return _bigimage; }
+
+            set
+            {
+                _bigimage = value;
+                OnPropertyChanged();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -328,7 +340,7 @@ set { _bigimage = value;
                         if (list.Count == 1)
                             movie.filepath = list[0]; // 默认取第一个
                         else
-                            movie.subsection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, list); // 分段视频
+                            movie.subsection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list); // 分段视频
                     }
                     else
                     {

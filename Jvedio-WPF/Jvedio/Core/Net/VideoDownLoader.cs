@@ -49,7 +49,7 @@ namespace Jvedio.Core.Net
             // 下载信息
             State = DownLoadState.DownLoading;
             Dictionary<string, object> result = new Dictionary<string, object>();
-            (CrawlerServer crawler, PluginMetaData PluginMetaData) = getCrawlerServer();
+            (CrawlerServer crawler, PluginMetaData pluginMetaData) = getCrawlerServer();
             (string url, string code) = getUrlAndCode(crawler);
             Header = CrawlerServer.parseHeader(crawler);
             callBack?.Invoke(Header);
@@ -61,7 +61,7 @@ namespace Jvedio.Core.Net
             dataInfo["url"] = url;
 
             // 路径就是 pluginID 组合
-            Plugin plugin = new Plugin(PluginMetaData.GetFilePath(), "GetInfo", new object[] { false, Header, dataInfo });
+            Plugin plugin = new Plugin(pluginMetaData.GetFilePath(), "GetInfo", new object[] { false, Header, dataInfo });
 
             // 等待很久
             object o = await plugin.InvokeAsyncMethod();
@@ -107,19 +107,18 @@ namespace Jvedio.Core.Net
         public (CrawlerServer, PluginMetaData) getCrawlerServer()
         {
             // 获取信息类型，并设置爬虫类型
-
             if (ConfigManager.ServerConfig.CrawlerServers.Count == 0 || CrawlerManager.PluginMetaDatas?.Count == 0)
                 throw new CrawlerNotFoundException();
-            List<PluginMetaData> PluginMetaDatas = CrawlerManager.PluginMetaDatas.Where(arg => arg.Enabled).ToList();
-            if (PluginMetaDatas.Count == 0)
+            List<PluginMetaData> pluginMetaDatas = CrawlerManager.PluginMetaDatas.Where(arg => arg.Enabled).ToList();
+            if (pluginMetaDatas.Count == 0)
                 throw new CrawlerNotFoundException();
 
             PluginMetaData PluginMetaData = null;
             List<CrawlerServer> crawlers = null;
-            for (int i = 0; i < PluginMetaDatas.Count; i++)
+            for (int i = 0; i < pluginMetaDatas.Count; i++)
             {
                 // 一组支持刮削的网址列表
-                PluginMetaData = PluginMetaDatas[i];
+                PluginMetaData = pluginMetaDatas[i];
                 crawlers = ConfigManager.ServerConfig.CrawlerServers
                     .Where(arg => arg.Enabled && !string.IsNullOrEmpty(arg.PluginID) &&
                     arg.PluginID.ToLower().Equals(PluginMetaData.PluginID.ToLower())

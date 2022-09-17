@@ -62,7 +62,7 @@ namespace Jvedio
 
         public static string SupportVideoFormat { get; set; }
 
-        public static string SupportPictureFormat { get; set; }        // bmp,gif,ico,jpe,jpeg,jpg,png
+        public static string SupportPictureFormat { get; set; } // bmp,gif,ico,jpe,jpeg,jpg,png
 
         #region "热键"
         [DllImport("user32.dll")]
@@ -159,7 +159,7 @@ namespace Jvedio
 
         private void hotkeyTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            Key currentKey = (e.Key == Key.System ? e.SystemKey : e.Key);
+            Key currentKey = e.Key == Key.System ? e.SystemKey : e.Key;
 
             if (currentKey == Key.LeftCtrl | currentKey == Key.LeftAlt | currentKey == Key.LeftShift)
             {
@@ -210,7 +210,7 @@ namespace Jvedio
 
         private void hotkeyTextBox_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            Key currentKey = (e.Key == Key.System ? e.SystemKey : e.Key);
+            Key currentKey = e.Key == Key.System ? e.SystemKey : e.Key;
 
             if (currentKey == Key.LeftCtrl | currentKey == Key.LeftAlt | currentKey == Key.LeftShift)
             {
@@ -324,10 +324,10 @@ namespace Jvedio
             return Task.Run(() =>
             {
                 string token = AccessToken.getAccessToken();
-                string FaceJson = FaceDetect.faceDetect(token, bitmap);
+                string faceJson = FaceDetect.faceDetect(token, bitmap);
                 Dictionary<string, string> result;
                 Int32Rect int32Rect;
-                (result, int32Rect) = FaceParse.Parse(FaceJson);
+                (result, int32Rect) = FaceParse.Parse(faceJson);
                 return (result, int32Rect);
             });
         }
@@ -354,11 +354,11 @@ namespace Jvedio
                     imageAwesome.Spin = false;
                     imageAwesome.Foreground = new SolidColorBrush(Color.FromRgb(32, 183, 89));
 
-                    string Youdao_appKey = Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
+                    string youdao_appKey = Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
                     string Youdao_appSecret = Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
 
                     // 成功，保存在本地
-                    SaveKeyValue(Youdao_appKey, Youdao_appSecret, "youdao.key");
+                    SaveKeyValue(youdao_appKey, Youdao_appSecret, "youdao.key");
                 }
                 else
                 {
@@ -451,13 +451,13 @@ namespace Jvedio
 
         private void SetVideoPlayerPath(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            OpenFileDialog1.Title = Jvedio.Language.Resources.Choose;
-            OpenFileDialog1.Filter = "exe|*.exe";
-            OpenFileDialog1.FilterIndex = 1;
-            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog1.Title = Jvedio.Language.Resources.Choose;
+            openFileDialog1.Filter = "exe|*.exe";
+            openFileDialog1.FilterIndex = 1;
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                string exePath = OpenFileDialog1.FileName;
+                string exePath = openFileDialog1.FileName;
                 if (File.Exists(exePath))
                     Properties.Settings.Default.VedioPlayerPath = exePath;
             }
@@ -471,7 +471,6 @@ namespace Jvedio
             //    App.Current.Windows[0].Opacity = 1;
 
             // 保存扫描库
-
             if (DatabaseComboBox.ItemsSource != null && DatabaseComboBox.SelectedItem != null)
             {
                 AppDatabase db = DatabaseComboBox.SelectedItem as AppDatabase;
@@ -524,14 +523,14 @@ namespace Jvedio
 
         private void SetFFMPEGPath(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseFFmpeg;
-            OpenFileDialog1.FileName = "ffmpeg.exe";
-            OpenFileDialog1.Filter = "ffmpeg.exe|*.exe";
-            OpenFileDialog1.FilterIndex = 1;
-            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog1.Title = Jvedio.Language.Resources.ChooseFFmpeg;
+            openFileDialog1.FileName = "ffmpeg.exe";
+            openFileDialog1.Filter = "ffmpeg.exe|*.exe";
+            openFileDialog1.FilterIndex = 1;
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                string exePath = OpenFileDialog1.FileName;
+                string exePath = openFileDialog1.FileName;
                 if (File.Exists(exePath))
                 {
                     if (new FileInfo(exePath).Name.ToLower() == "ffmpeg.exe")
@@ -557,7 +556,6 @@ namespace Jvedio
         public void SetLanguage()
         {
             // https://blog.csdn.net/fenglailea/article/details/45888799
-
             long language = vieModel.SelectedLanguage;
             string hint = string.Empty;
             if (language == 1)
@@ -634,7 +632,6 @@ namespace Jvedio
             SetScanDatabases();
 
             // if (vieModel.DataBases?.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
-
             ShowViewRename(ConfigManager.RenameConfig.FormatString);
 
             SetCheckedBoxChecked();
@@ -715,11 +712,11 @@ namespace Jvedio
             adjustPluginViewListBox();
 
             // 设置插件排序
-            var MenuItems = pluginSortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
-            for (int i = 0; i < MenuItems.Count; i++)
+            var menuItems = pluginSortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
+            for (int i = 0; i < menuItems.Count; i++)
             {
-                MenuItems[i].Click += SortMenu_Click;
-                MenuItems[i].IsCheckable = true;
+                menuItems[i].Click += SortMenu_Click;
+                menuItems[i].IsCheckable = true;
             }
 
             // 同步远程插件
@@ -750,11 +747,11 @@ namespace Jvedio
                             continue;
 
                         List<Dictionary<string, string>> datas = null;
-                        JArray Data = null;
+                        JArray data = null;
                         try
                         {
-                            Data = (JArray)dict[key];
-                            datas = Data.ToObject<List<Dictionary<string, string>>>();
+                            data = (JArray)dict[key];
+                            datas = data.ToObject<List<Dictionary<string, string>>>();
                         }
                         catch (Exception ex)
                         {
@@ -810,10 +807,10 @@ namespace Jvedio
             string pluginList = ConfigManager.PluginConfig.PluginList;
             if (!string.IsNullOrEmpty(pluginList))
             {
-                List<PluginMetaData> PluginMetaDatas = ParsePluginMetaDataFromJson(pluginList);
-                if (PluginMetaDatas?.Count > 0)
+                List<PluginMetaData> pluginMetaDatas = ParsePluginMetaDataFromJson(pluginList);
+                if (pluginMetaDatas?.Count > 0)
                 {
-                    foreach (PluginMetaData info in PluginMetaDatas)
+                    foreach (PluginMetaData info in pluginMetaDatas)
                     {
                         PluginMetaData installed = vieModel.InstalledPlugins.Where(arg => arg.PluginID.Equals(info.PluginID)).FirstOrDefault();
                         if (installed == null)
@@ -1108,8 +1105,8 @@ namespace Jvedio
         private void ReplaceWithValue(string property)
         {
             string inSplit = ConfigManager.RenameConfig.InSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.InSplit;
-            PropertyInfo[] PropertyList = SampleVideo.GetType().GetProperties();
-            foreach (PropertyInfo item in PropertyList)
+            PropertyInfo[] propertyList = SampleVideo.GetType().GetProperties();
+            foreach (PropertyInfo item in propertyList)
             {
                 string name = item.Name;
                 if (name == property)
@@ -1291,7 +1288,6 @@ namespace Jvedio
             ConfigManager.FFmpegConfig.GifDuration = vieModel.GifDuration;
 
             // 重命名
-
             ConfigManager.RenameConfig.AddRenameTag = vieModel.AddRenameTag;
             ConfigManager.RenameConfig.RemoveTitleSpace = vieModel.RemoveTitleSpace;
             ConfigManager.RenameConfig.FormatString = vieModel.FormatString;
@@ -1388,8 +1384,8 @@ namespace Jvedio
             if (vieModel.CrawlerServers?.Count > 0)
             {
                 string pluginID = PluginType.Crawler.ToString() + "-" + vieModel.DisplayCrawlerServers[idx];
-                PluginMetaData PluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
-                if (PluginMetaData != null && PluginMetaData.Enabled) vieModel.PluginEnabled = true;
+                PluginMetaData pluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+                if (pluginMetaData != null && pluginMetaData.Enabled) vieModel.PluginEnabled = true;
                 else vieModel.PluginEnabled = false;
                 ServersDataGrid.ItemsSource = null;
                 ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
@@ -1419,9 +1415,9 @@ namespace Jvedio
         private void pluginViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             object item = pluginViewListBox.SelectedItem;
-            if (item != null && item is PluginMetaData PluginMetaData)
+            if (item != null && item is PluginMetaData pluginMetaData)
             {
-                vieModel.CurrentPlugin = vieModel.InstalledPlugins.Where(arg => arg.PluginID.Equals(PluginMetaData.PluginID)).FirstOrDefault();
+                vieModel.CurrentPlugin = vieModel.InstalledPlugins.Where(arg => arg.PluginID.Equals(pluginMetaData.PluginID)).FirstOrDefault();
                 richTextBox.Document = MarkDown.parse(vieModel.CurrentPlugin.ReleaseNotes.MarkDown);
                 pluginDetailGrid.Visibility = Visibility.Visible;
             }
@@ -1430,9 +1426,9 @@ namespace Jvedio
         private async void freshViewListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             object item = freshViewListBox.SelectedItem;
-            if (item != null && item is PluginMetaData PluginMetaData)
+            if (item != null && item is PluginMetaData pluginMetaData)
             {
-                PluginMetaData data = vieModel.AllFreshPlugins.Where(arg => arg.PluginID.Equals(PluginMetaData.PluginID)).FirstOrDefault();
+                PluginMetaData data = vieModel.AllFreshPlugins.Where(arg => arg.PluginID.Equals(pluginMetaData.PluginID)).FirstOrDefault();
                 vieModel.CurrentPlugin = data;
                 richTextBox.Document.Blocks.Clear();
                 pluginDetailGrid.Visibility = Visibility.Visible;
@@ -1570,7 +1566,6 @@ namespace Jvedio
             data = data.Where(arg => arg.Key.IndexOf(" ") < 0).ToDictionary(x => x.Key, y => y.Value);
 
             // }
-
             string json = JsonConvert.SerializeObject(data);
             if (json.Equals("{}"))
                 return json;
@@ -1670,18 +1665,18 @@ namespace Jvedio
         {
             string pluginID = vieModel.CurrentPlugin.PluginID;
             PluginMetaData pluginMetaData;
-            bool Installing = false;
+            bool installing = false;
             pluginMetaData = vieModel.InstalledPlugins.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
             if (pluginMetaData != null)
             {
-                Installing = true;
+                installing = true;
             }
             else
             {
                 pluginMetaData = vieModel.CurrentFreshPlugins.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
             }
 
-            pluginMetaData.Installing = Installing;
+            pluginMetaData.Installing = installing;
 
             // 加入到下载列表中
             if (PluginManager.DownloadingList.Any(arg => arg.Equals(pluginMetaData.PluginID)))

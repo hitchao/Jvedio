@@ -67,8 +67,11 @@ namespace Jvedio.Core.Scan
                 {
                     CheckStatus();
                 }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
-                    return; }
+                catch (TaskCanceledException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
 
                 ScanHelper scanHelper = new ScanHelper();
 
@@ -78,8 +81,11 @@ namespace Jvedio.Core.Scan
                 {
                     CheckStatus();
                 }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
-                    return; }
+                catch (TaskCanceledException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
 
                 handleImport(import);
                 handleNotImport(notImport);

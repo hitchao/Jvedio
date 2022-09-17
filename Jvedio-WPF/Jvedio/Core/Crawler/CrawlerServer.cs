@@ -139,7 +139,6 @@ namespace Jvedio.Core.Crawler
             result.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
             string header = server.Headers;
             if (string.IsNullOrEmpty(header)) return CrawlerHeader.Default;
-            ;
             Dictionary<string, string> dict = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(header);
             if (dict != null && dict.Count > 0)
             {

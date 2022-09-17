@@ -12,9 +12,9 @@ namespace Jvedio.Entity
             Tags = new List<string>();
         }
 
-        public Magnet(long DataID) : base()
+        public Magnet(long dataID) : base()
         {
-            this.DataID = DataID;
+            this.DataID = dataID;
         }
 
         [TableId(IdType.AUTO)]

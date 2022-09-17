@@ -28,8 +28,11 @@ namespace Jvedio.Entity
 
         public bool IsEnable
         {
-            get => isEnable; set { isEnable = value;
-                OnPropertyChanged(); }
+            get => isEnable; set
+            {
+                isEnable = value;
+                OnPropertyChanged();
+            }
         }
 
         public string Url
@@ -43,8 +46,11 @@ namespace Jvedio.Entity
 
         public string Cookie
         {
-            get => cookie; set { cookie = value;
-                OnPropertyChanged(); }
+            get => cookie; set
+            {
+                cookie = value;
+                OnPropertyChanged();
+            }
         }
 
         public int Available
@@ -58,14 +64,20 @@ namespace Jvedio.Entity
 
         public string Name
         {
-            get => name; set { name = value;
-                OnPropertyChanged(); }
+            get => name; set
+            {
+                name = value;
+                OnPropertyChanged();
+            }
         }
 
         public string LastRefreshDate
         {
-            get => lastRefreshDate; set { lastRefreshDate = value;
-                OnPropertyChanged(); }
+            get => lastRefreshDate; set
+            {
+                lastRefreshDate = value;
+                OnPropertyChanged();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

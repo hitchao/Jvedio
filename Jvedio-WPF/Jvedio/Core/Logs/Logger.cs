@@ -84,7 +84,7 @@ namespace Jvedio.Core.Logs
             }
         }
 
-        public static void LogN(string NetWorkStatus)
+        public static void LogN(string netWorkStatus)
         {
             string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\NetWork";
             if (!Directory.Exists(path))
@@ -93,7 +93,7 @@ namespace Jvedio.Core.Logs
             }
 
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-            string content = Environment.NewLine + "【" + DateTime.Now.ToString() + $"】=>{NetWorkStatus}";
+            string content = Environment.NewLine + "【" + DateTime.Now.ToString() + $"】=>{netWorkStatus}";
             lock (NetWorkLock)
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))

@@ -54,7 +54,6 @@ namespace Jvedio.Core.Media
         //    if ((bool)e.NewValue)
         //        (sender as GifImage).StartAnimation();
         // }
-
         public string GifSource
         {
             get { return (string)GetValue(GifSourceProperty); }

@@ -84,11 +84,11 @@ namespace Jvedio.Core.Plugins
                FetchState fetchState = new FetchState();
                fetchState.Downloading = true;
                fetchState.PluginID = data.PluginID;
-               RequestHeader Header = CrawlerHeader.GitHub;
+               RequestHeader header = CrawlerHeader.GitHub;
                string base_url = $"https://hitchao.github.io/Jvedio-Plugin/plugins/{data.PluginType.ToString().ToLower()}s/{data.GetRawPluginID()}";
                string url_main_json = $"{base_url}/main.json";
                string url_readme = $"{base_url}/readme.md";
-               HttpResult httpResult = await HttpClient.Get(url_main_json, Header);
+               HttpResult httpResult = await HttpClient.Get(url_main_json, header);
                if (httpResult.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
                {
                    // 解析 main.json
@@ -97,7 +97,7 @@ namespace Jvedio.Core.Plugins
                    if (string.IsNullOrEmpty(pluginMeta.ReleaseNotes.MarkDown))
                    {
                        // 下载 markdown
-                       HttpResult http = await HttpClient.Get(url_readme, Header);
+                       HttpResult http = await HttpClient.Get(url_readme, header);
                        if (httpResult.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
                        {
                            pluginMeta.ReleaseNotes.MarkDown = http.SourceCode;
@@ -120,7 +120,7 @@ namespace Jvedio.Core.Plugins
         {
             Task.Run(async () =>
             {
-                RequestHeader Header = CrawlerHeader.GitHub;
+                RequestHeader header = CrawlerHeader.GitHub;
                 string base_url = $"https://hitchao.github.io/Jvedio-Plugin/plugins/{data.PluginType.ToString().ToLower()}s/{data.GetRawPluginID()}";
                 string url_main_json = $"{base_url}/main.json";
                 string url_readme = $"{base_url}/readme.md";
@@ -133,13 +133,13 @@ namespace Jvedio.Core.Plugins
                         MessageCard.Error(err.Message);
                     });
                 });
-                HttpResult httpResult = await HttpClient.Get(url_main_json, Header);
+                HttpResult httpResult = await HttpClient.Get(url_main_json, header);
                 if (httpResult.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
                 {
                     // 解析 main.json
 
                     // 下载 main.json, readme.md, plugin.png
-                    HttpResult result = await HttpClient.Get(url_main_json, Header, CommonNet.Enums.HttpMode.Stream);
+                    HttpResult result = await HttpClient.Get(url_main_json, header, CommonNet.Enums.HttpMode.Stream);
                     if (result.StatusCode == HttpStatusCode.OK && result.FileByte != null)
                     {
                         string savePath = System.IO.Path.Combine(base_path, "main.json");
@@ -147,14 +147,14 @@ namespace Jvedio.Core.Plugins
                         FileHelper.ByteArrayToFile(result.FileByte, savePath);
                     }
 
-                    result = await HttpClient.Get(url_readme, Header, CommonNet.Enums.HttpMode.String);
+                    result = await HttpClient.Get(url_readme, header, CommonNet.Enums.HttpMode.String);
                     if (result.StatusCode == HttpStatusCode.OK && result.SourceCode != null)
                     {
                         string savePath = System.IO.Path.Combine(base_path, "readme.md");
                         FileHelper.TryWriteToFile(savePath, result.SourceCode);
                     }
 
-                    result = await HttpClient.Get(url_plugin_image, Header, CommonNet.Enums.HttpMode.Stream);
+                    result = await HttpClient.Get(url_plugin_image, header, CommonNet.Enums.HttpMode.Stream);
                     if (result.StatusCode == HttpStatusCode.OK && result.FileByte != null)
                     {
                         string savePath = System.IO.Path.Combine(base_path, "images");
@@ -171,7 +171,7 @@ namespace Jvedio.Core.Plugins
                         {
                             string url = System.IO.Path.Combine(base_url, item);
                             string savePath = System.IO.Path.Combine(base_path, item);
-                            result = await HttpClient.Get(url, Header, CommonNet.Enums.HttpMode.Stream);
+                            result = await HttpClient.Get(url, header, CommonNet.Enums.HttpMode.Stream);
                             if (result.StatusCode == HttpStatusCode.OK && result.FileByte != null)
                             {
                                 string path = System.IO.Path.GetDirectoryName(savePath);

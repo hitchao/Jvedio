@@ -20,10 +20,10 @@ namespace Jvedio.Entity.CommonSQL
 
         public string UpdateDate { get; set; }
 
-        public Association(long MainDataID, long SubDataID)
+        public Association(long mainDataID, long subDataID)
         {
-            this.MainDataID = MainDataID;
-            this.SubDataID = SubDataID;
+            this.MainDataID = mainDataID;
+            this.SubDataID = subDataID;
         }
 
         public Association()

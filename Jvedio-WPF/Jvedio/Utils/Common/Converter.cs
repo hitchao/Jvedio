@@ -23,7 +23,6 @@ namespace Jvedio
         }
 
         // 选中项地址转换为数字
-
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null | parameter == null) return 0;

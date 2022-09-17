@@ -172,7 +172,6 @@ namespace Jvedio
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             DateTime date = DateTime.Now;
-            ;
             bool success = DateTime.TryParse((sender as SearchBox).Text, out date);
             if (success)
             {
@@ -196,7 +195,7 @@ namespace Jvedio
                 if (vieModel.CurrentData.GenreList == null)
                     vieModel.CurrentData.GenreList = new System.Collections.Generic.List<string>();
                 vieModel.CurrentData.GenreList.Add(text);
-                vieModel.CurrentData.Genre = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.GenreList);
+                vieModel.CurrentData.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.GenreList);
                 genreTagPanel.TagList = null;
                 genreTagPanel.TagList = vieModel.CurrentData.GenreList;
                 genreTagPanel.Refresh();
@@ -220,7 +219,7 @@ namespace Jvedio
                 vieModel.CurrentData.LabelList = new System.Collections.Generic.List<string>();
             if (vieModel.CurrentData.LabelList.Contains(label)) return;
             vieModel.CurrentData.LabelList.Add(label);
-            vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.LabelList);
+            vieModel.CurrentData.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.LabelList);
             labelTagPanel.TagList = null;
             labelTagPanel.TagList = vieModel.CurrentData.LabelList;
             labelTagPanel.Refresh();
@@ -229,13 +228,13 @@ namespace Jvedio
         private void GenreChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
-                vieModel.CurrentData.Genre = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
+                vieModel.CurrentData.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
         }
 
         private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
-                vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
+                vieModel.CurrentData.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
         }
 
         private void ActorChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
@@ -276,7 +275,7 @@ namespace Jvedio
                     List<string> imgPaths = enumerable.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
                     vieModel.CurrentPicture.PicCount = imgPaths.Count;
                     vieModel.CurrentPicture.PicPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, imgPaths.Select(arg => Path.GetFileName(arg)));
-                    vieModel.CurrentPicture.VideoPaths = String.Join(SuperUtils.Values.ConstValues.SeparatorString, videoPaths);
+                    vieModel.CurrentPicture.VideoPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, videoPaths);
                 }
                 else if (CurrentDataType == DataType.Comics)
                 {

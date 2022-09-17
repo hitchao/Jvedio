@@ -160,7 +160,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _LabelText = String.Empty;
+        private string _LabelText = string.Empty;
 
         public string LabelText
         {
@@ -238,9 +238,9 @@ namespace Jvedio.ViewModel
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)
             {
-                string LabelName = item["LabelName"].ToString();
+                string labelName = item["LabelName"].ToString();
                 long.TryParse(item["Count"].ToString(), out long count);
-                labels.Add($"{LabelName}({count})");
+                labels.Add($"{labelName}({count})");
             }
 
             CurrentLabelList = new ObservableCollection<string>();

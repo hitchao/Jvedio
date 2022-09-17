@@ -69,10 +69,10 @@ namespace Jvedio.Mapper
              "FirstScanDate",
              "LastScanDate",
              "Grade",
-            "Title",
+             "Title",
              "ViewCount",
-            "ReleaseDate",
-            "Rating",
+             "ReleaseDate",
+             "Rating",
         };
 
         public Comic SelectByID(long dataid)

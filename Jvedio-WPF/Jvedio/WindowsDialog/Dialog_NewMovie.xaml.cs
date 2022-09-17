@@ -75,7 +75,7 @@ namespace Jvedio
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            VideoType = (VideoType)((sender as ComboBox).SelectedIndex);
+            VideoType = (VideoType)(sender as ComboBox).SelectedIndex;
         }
 
         private void BaseDialog_Closing(object sender, System.ComponentModel.CancelEventArgs e)

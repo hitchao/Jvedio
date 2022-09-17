@@ -27,7 +27,6 @@ namespace Jvedio.Core.DataBase
         public static bool DataBaseBusy { get; set; }
 
         // *************** 数据库***************
-
         public static void Init()
         {
             DB_TABLENAME_APP_CONFIG = Path.Combine(PathManager.CurrentUserFolder, "app_configs");

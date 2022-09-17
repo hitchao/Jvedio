@@ -449,7 +449,6 @@ namespace Jvedio
                 vieModel.CurrentVideo.PreviewImageList.RemoveAt(idx);
 
                 // todo 更新数据库 路径
-
                 if (deleteBigImage && idx == 0)
                 {
                     await Task.Delay(300); // todo 等待删除完成
@@ -997,20 +996,19 @@ namespace Jvedio
             video.PreviewImageList = new ObservableCollection<BitmapSource>();
             video.PreviewImagePathList = new ObservableCollection<string>();
 
-            string BigImagePath = video.getBigImage();
+            string bigImagePath = video.getBigImage();
             if (!isScreenShot)
             {
-                if (File.Exists(BigImagePath))
+                if (File.Exists(bigImagePath))
                 {
                     video.PreviewImageList.Add(video.BigImage);
-                    video.PreviewImagePathList.Add(BigImagePath);
+                    video.PreviewImagePathList.Add(bigImagePath);
                 }
                 else
                 {
                     if (video.BigImage == MetaData.DefaultBigImage)
                     {
                         // 检查有无截图
-
                         string path = video.getScreenShot();
                         if (Directory.Exists(path))
                         {
@@ -1311,19 +1309,19 @@ namespace Jvedio
             MenuItem menuItem = sender as MenuItem;
             Label label = (menuItem.Parent as ContextMenu).PlacementTarget as Label;
             if (label == null || label.Tag == null) return;
-            long.TryParse(label.Tag.ToString(), out long TagID);
+            long.TryParse(label.Tag.ToString(), out long tagID);
 
             ItemsControl itemsControl = label.FindParentOfType<ItemsControl>();
             if (itemsControl == null || itemsControl.Tag == null || itemsControl.ItemsSource == null) return;
             long.TryParse(itemsControl.Tag.ToString(), out long DataID);
-            if (TagID <= 0 || DataID <= 0) return;
+            if (tagID <= 0 || DataID <= 0) return;
             ObservableCollection<TagStamp> tagStamps = itemsControl.ItemsSource as ObservableCollection<TagStamp>;
             if (tagStamps == null) return;
-            TagStamp tagStamp = tagStamps.Where(arg => arg.TagID.Equals(TagID)).FirstOrDefault();
+            TagStamp tagStamp = tagStamps.Where(arg => arg.TagID.Equals(tagID)).FirstOrDefault();
             if (tagStamp != null)
             {
                 tagStamps.Remove(tagStamp);
-                string sql = $"delete from metadata_to_tagstamp where TagID='{TagID}' and DataID='{DataID}'";
+                string sql = $"delete from metadata_to_tagstamp where TagID='{tagID}' and DataID='{DataID}'";
                 tagStampMapper.ExecuteNonQuery(sql);
             }
         }

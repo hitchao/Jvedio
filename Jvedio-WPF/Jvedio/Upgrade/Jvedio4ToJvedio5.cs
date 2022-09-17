@@ -27,8 +27,8 @@ namespace Jvedio.Upgrade
     {
         public static void MoveScanPathConfig(string[] files)
         {
-            string ScanPathConfig = Path.Combine(PathManager.oldDataPath, "ScanPathConfig");
-            if (!File.Exists(ScanPathConfig)) return;
+            string scanPathConfig = Path.Combine(PathManager.oldDataPath, "ScanPathConfig");
+            if (!File.Exists(scanPathConfig)) return;
 
             Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
             foreach (string file in files)
@@ -86,8 +86,8 @@ namespace Jvedio.Upgrade
 
         public static void MoveRecentWatch()
         {
-            string RecentWatchPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentWatch");
-            if (!File.Exists(RecentWatchPath)) return;
+            string recentWatchPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentWatch");
+            if (!File.Exists(recentWatchPath)) return;
             RecentWatchedConfig recentWatchedConfig = new RecentWatchedConfig();
             Dictionary<DateTime, List<string>> dict = null;
             try
@@ -431,8 +431,11 @@ namespace Jvedio.Upgrade
                         {
                             before = metaDataMapper.SelectCount();
                         }
-                        catch (Exception ex) { Logger.Error(ex);
-                            return false; }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                            return false;
+                        }
 
                         try
                         {
@@ -852,8 +855,11 @@ namespace Jvedio.Upgrade
                         {
                             list.Add(sr.GetString(0));
                         }
-                        catch (Exception ex) { Logger.Error(ex);
-                            continue; }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                            continue;
+                        }
                     }
 
                     datas.Add(table, list);
@@ -900,10 +906,10 @@ namespace Jvedio.Upgrade
                     List<string> id_list = datas[key];
                     string labelName = key;
                     List<string> values = new List<string>();
-                    foreach (string VID in id_list)
+                    foreach (string vID in id_list)
                     {
-                        if (string.IsNullOrEmpty(VID) || !dict.ContainsKey(VID)) continue;
-                        long dataID = dict[VID];
+                        if (string.IsNullOrEmpty(vID) || !dict.ContainsKey(vID)) continue;
+                        long dataID = dict[vID];
                         if (dataID <= 0) continue;
                         values.Add($"('{SqlStringFormat.Format(labelName)}',{SqlStringFormat.Format(dataID)})");
                     }
@@ -1019,9 +1025,9 @@ namespace Jvedio.Upgrade
                     long dataID = -1;
                     if (dict.ContainsKey(translation.VID)) dataID = dict[translation.VID];
                     if (dataID <= 0) continue;
-                    string FieldType = i % 2 == 0 ? "Title" : "Plot";
+                    string fieldType = i % 2 == 0 ? "Title" : "Plot";
                     string sql = "insert or replace into metadata_to_translation(DataID,FieldType,TransaltionID) " +
-                                $"values ({dataID},'{FieldType}',{i + l})";
+                                $"values ({dataID},'{fieldType}',{i + l})";
                     metaDataMapper.ExecuteNonQuery(sql);
                 }
             }

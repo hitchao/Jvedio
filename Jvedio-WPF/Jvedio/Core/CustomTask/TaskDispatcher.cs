@@ -21,17 +21,17 @@ namespace Jvedio.Core.CustomTask
         private static int CHECK_PERIOD = 1000;     // 调度器运行周期
         private long beforeTaskCount = 0;           // 上一次长暂停的 DoneList 数目，避免重复长暂停
 
-        public bool Working { get; set; }               // 调度器是否在工作中
+        public bool Working { get; set; } // 调度器是否在工作中
 
-        public bool Cancel { get; set; }                // 调度器是否被取消了
+        public bool Cancel { get; set; } // 调度器是否被取消了
 
-        public double Progress { get; set; }            // 总的工作进度
+        public double Progress { get; set; } // 总的工作进度
 
-        private int TaskDelay { get; set; }             // 每一批次任务完成后暂停的时间
+        private int TaskDelay { get; set; } // 每一批次任务完成后暂停的时间
 
-        private int LongTaskDelay { get; set; }         // 每一批次任务完成后暂停的时间
+        private int LongTaskDelay { get; set; } // 每一批次任务完成后暂停的时间
 
-        private bool EnableLongTaskDelay { get; set; }  // 每一批次任务完成后暂停的时间
+        private bool EnableLongTaskDelay { get; set; } // 每一批次任务完成后暂停的时间
 
         public event EventHandler onWorking;
 

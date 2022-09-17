@@ -177,7 +177,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _SearchText = String.Empty;
+        private string _SearchText = string.Empty;
 
         public string SearchText
         {
@@ -191,7 +191,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _LabelText = String.Empty;
+        private string _LabelText = string.Empty;
 
         public string LabelText
         {
@@ -205,7 +205,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _ActorName = String.Empty;
+        private string _ActorName = string.Empty;
 
         public string ActorName
         {
@@ -278,9 +278,9 @@ namespace Jvedio.ViewModel
                 {
                     if (!item.ContainsKey("LabelName") || !item.ContainsKey("Count") ||
                         item["LabelName"] == null || item["Count"] == null) continue;
-                    string LabelName = item["LabelName"].ToString();
+                    string labelName = item["LabelName"].ToString();
                     long.TryParse(item["Count"].ToString(), out long count);
-                    labels.Add($"{LabelName}({count})");
+                    labels.Add($"{labelName}({count})");
                 }
             }
 
@@ -357,7 +357,6 @@ namespace Jvedio.ViewModel
             //             "on metadata_to_actor.DataID=metadata.DataID " +
             //             $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
             //             like_sql + "GROUP BY actor_info.ActorID );";
-
             string count_sql = "SELECT count(*) as Count " +
                          "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
                          "on metadata_to_actor.ActorID=actor_info.ActorID " +
@@ -383,7 +382,6 @@ namespace Jvedio.ViewModel
             //    like_sql +
             //    $"GROUP BY actor_info.ActorID ORDER BY Count DESC"
             //    + ActorToLimit();
-
             string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
                         $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                         $"join metadata on metadata_to_actor.DataID=metadata.DataID " +

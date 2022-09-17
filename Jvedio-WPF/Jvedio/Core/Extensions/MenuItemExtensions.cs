@@ -10,20 +10,20 @@ namespace Jvedio.Core.Extensions
     /// </summary>
     public class MenuItemExtensions : DependencyObject
     {
-        public static Dictionary<MenuItem, String> ElementToGroupNames = new Dictionary<MenuItem, String>();
+        public static Dictionary<MenuItem, string> ElementToGroupNames = new Dictionary<MenuItem, string>();
 
         public static readonly DependencyProperty GroupNameProperty =
             DependencyProperty.RegisterAttached("GroupName",
-                                         typeof(String),
+                                         typeof(string),
                                          typeof(MenuItemExtensions),
-                                         new PropertyMetadata(String.Empty, OnGroupNameChanged));
+                                         new PropertyMetadata(string.Empty, OnGroupNameChanged));
 
-        public static void SetGroupName(MenuItem element, String value)
+        public static void SetGroupName(MenuItem element, string value)
         {
             element.SetValue(GroupNameProperty, value);
         }
 
-        public static String GetGroupName(MenuItem element)
+        public static string GetGroupName(MenuItem element)
         {
             return element.GetValue(GroupNameProperty).ToString();
         }
@@ -35,9 +35,9 @@ namespace Jvedio.Core.Extensions
 
             if (menuItem != null)
             {
-                String newGroupName = e.NewValue.ToString();
-                String oldGroupName = e.OldValue.ToString();
-                if (String.IsNullOrEmpty(newGroupName))
+                string newGroupName = e.NewValue.ToString();
+                string oldGroupName = e.OldValue.ToString();
+                if (string.IsNullOrEmpty(newGroupName))
                 {
                     // Removing the toggle button from grouping
                     RemoveCheckboxFromGrouping(menuItem);
@@ -47,7 +47,7 @@ namespace Jvedio.Core.Extensions
                     // Switching to a new group
                     if (newGroupName != oldGroupName)
                     {
-                        if (!String.IsNullOrEmpty(oldGroupName))
+                        if (!string.IsNullOrEmpty(oldGroupName))
                         {
                             // Remove the old group mapping
                             RemoveCheckboxFromGrouping(menuItem);

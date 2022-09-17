@@ -65,7 +65,6 @@ namespace Jvedio.ViewModel
         public string ClickFilterType = string.Empty;
 
         // public bool canRender = false;
-
         Window_MetaDatas metaDatas = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
 
         public CancellationTokenSource renderDataCTS;
@@ -1325,7 +1324,6 @@ namespace Jvedio.ViewModel
         // {
         //    if (!CurrentSearchCandidate.Contains(str)) CurrentSearchCandidate.Add(str);
         // }
-
         public async Task<List<string>> GetSearchCandidate()
         {
             return await Task.Run(() =>
@@ -1523,7 +1521,6 @@ namespace Jvedio.ViewModel
             //    //else
             //    main.MovieItemsControl.ItemsSource = CurrentMovieList;
             // });
-
             return true;
         }
 
@@ -1640,7 +1637,6 @@ namespace Jvedio.ViewModel
         // private void LoadTag(string str) => TagList.Add(str);
         // private void LoadStudio(string str) => StudioList.Add(str);
         // private void LoadDirector(string str) => DirectorList.Add(str);
-
         private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
 
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
@@ -1655,9 +1651,9 @@ namespace Jvedio.ViewModel
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)
             {
-                string LabelName = item["LabelName"].ToString();
+                string labelName = item["LabelName"].ToString();
                 long.TryParse(item["Count"].ToString(), out long count);
-                labels.Add($"{LabelName}({count})");
+                labels.Add($"{labelName}({count})");
             }
 
             LabelList = new ObservableCollection<string>();
@@ -1776,16 +1772,16 @@ namespace Jvedio.ViewModel
         {
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             if (string.IsNullOrEmpty(SearchText)) return null;
-            string FormatSearch = SearchText.ToProperSql().Trim();
-            if (string.IsNullOrEmpty(FormatSearch)) return null;
-            string searchContent = FormatSearch;
+            string formatSearch = SearchText.ToProperSql().Trim();
+            if (string.IsNullOrEmpty(formatSearch)) return null;
+            string searchContent = formatSearch;
 
             switch (searchType)
             {
                 case SearchField.VID:
 
-                    string vid = Identify.GetVID(FormatSearch);
-                    if (string.IsNullOrEmpty(vid)) searchContent = FormatSearch;
+                    string vid = Identify.GetVID(formatSearch);
+                    if (string.IsNullOrEmpty(vid)) searchContent = formatSearch;
                     else searchContent = vid;
                     wrapper.Like("VID", searchContent);
                     break;
@@ -1917,9 +1913,9 @@ namespace Jvedio.ViewModel
 
         public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>()
         {
-            { "All", "  "  },
-            { "Favorite", "  "  },
-            { "RecentWatch", "  "  },
+            { "All", "  " },
+            { "Favorite", "  " },
+            { "RecentWatch", "  " },
         };
 
         public SelectWrapper<MetaData> extraWrapper;
@@ -2091,8 +2087,11 @@ namespace Jvedio.ViewModel
                 {
                     renderDataCT.ThrowIfCancellationRequested();
                 }
-                catch (OperationCanceledException ex) { renderDataCTS?.Dispose();
-                    break; }
+                catch (OperationCanceledException ex)
+                {
+                    renderDataCTS?.Dispose();
+                    break;
+                }
 #pragma warning restore CS0168 // 声明了变量“ex”，但从未使用过
                 rendering = true;
                 MetaData data = DataList[i];

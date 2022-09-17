@@ -34,7 +34,7 @@ namespace Jvedio.Core.DataBase
         {
             if (Connection == null)
             {
-                if (String.IsNullOrEmpty(DatabaseName))
+                if (string.IsNullOrEmpty(DatabaseName))
                     return false;
                 string connstring = string.Format("server={0};port={1}; database={2}; user={3}; password={4}", Server, Port, DatabaseName, UserName, Password);
                 Connection = new MySqlConnection(connstring);

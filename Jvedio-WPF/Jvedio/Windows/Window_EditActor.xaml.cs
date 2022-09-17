@@ -94,14 +94,14 @@ namespace Jvedio
         private void SetActorImage(object sender, RoutedEventArgs e)
         {
             string imageFileName = string.Empty;
-            System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
-            OpenFileDialog1.Filter = Window_Settings.SupportPictureFormat;
-            OpenFileDialog1.FilterIndex = 1;
-            OpenFileDialog1.RestoreDirectory = true;
-            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
+            openFileDialog1.Filter = Window_Settings.SupportPictureFormat;
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                string filename = OpenFileDialog1.FileName;
+                string filename = openFileDialog1.FileName;
                 if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
                     imageFileName = filename;
             }

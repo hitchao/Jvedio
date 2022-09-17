@@ -162,7 +162,6 @@ namespace SuperUtils.External
                         dicresult.Add("mask", mask["type"].ToString());
 
                         int32Rect = new Int32Rect((int)float.Parse(location["left"].ToString()), (int)float.Parse(location["top"].ToString()), (int)float.Parse(location["width"].ToString()), (int)float.Parse(location["height"].ToString()));
-                        ;
                         return (dicresult, int32Rect);
                     }
                 }

@@ -62,7 +62,6 @@ namespace Jvedio.Core.Config
                 AppConfig appConfig = new AppConfig();
                 appConfig.ConfigName = ConfigName;
                 appConfig.ConfigValue = JsonConvert.SerializeObject(CrawlerServers);
-                ;
                 MapperManager.appConfigMapper.Insert(appConfig, InsertMode.Replace);
             }
         }

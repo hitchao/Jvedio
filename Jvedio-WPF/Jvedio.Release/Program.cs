@@ -85,7 +85,7 @@ namespace Jvedio.Release
                         {
                             file.Delete();
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             continue;
                         }

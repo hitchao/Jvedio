@@ -172,7 +172,7 @@ namespace Jvedio.Entity
     { "CheckBox.Checked.Foreground", "#FFFFFF" },
     { "CheckBox.Checked.Hover.Background", "#008000" },
     { "TextBox.PlaceHolder.Foreground", "#808080" },
-};
+        };
 
         public static Dictionary<string, string> DEFAULT_WHITE_COLORS = new Dictionary<string, string>()
         {
@@ -263,7 +263,7 @@ namespace Jvedio.Entity
     { "CheckBox.Checked.Foreground", "#FFFFFF" },
     { "CheckBox.Checked.Hover.Background", "#008000" },
     { "TextBox.PlaceHolder.Foreground", "#4B4B4B" },
-};
+        };
 
         public static List<string> ColorKeys = DEFAULT_BALCK_COLORS.Keys.ToList();
 

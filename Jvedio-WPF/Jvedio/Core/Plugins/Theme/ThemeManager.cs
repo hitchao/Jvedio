@@ -73,8 +73,8 @@ namespace Jvedio.Core
                     continue;
                 }
 
-                string ID = Path.GetFileName(path);
-                theme.ID = ID;
+                string iD = Path.GetFileName(path);
+                theme.ID = iD;
                 theme.ViewImage = theme.GetViewImage();
                 Themes.Add(theme);
                 data.Installed = true;

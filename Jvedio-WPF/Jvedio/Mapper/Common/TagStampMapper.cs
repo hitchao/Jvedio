@@ -13,7 +13,6 @@ namespace Jvedio.Mapper
         //        "on metadata.DataID=metadata_to_tagstamp.DataID " +
         //        $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
         //        "GROUP BY common_tagstamp.TagID;";
-
         public static string GetTagSql()
         {
             return "SELECT common_tagstamp.*,count(common_tagstamp.TagID) as Count from metadata_to_tagstamp " +

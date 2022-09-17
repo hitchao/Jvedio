@@ -160,9 +160,9 @@ namespace JvedioLib.Security
             return result == null ? string.Empty : result.ToString();
         }
 
-        public static int GetVideoType(string VID)
+        public static int GetVideoType(string vID)
         {
-            object result = InvokeMethod(new object[] { VID });
+            object result = InvokeMethod(new object[] { vID });
             if (result == null) return 0;
             int.TryParse(result.ToString(), out int v);
             return v;

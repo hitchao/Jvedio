@@ -21,11 +21,11 @@ namespace Jvedio
 {
     public class ScanHelper
     {
-        public static double MinFileSize { get; set; }          // 最小文件大小吗，单位 B
+        public static double MinFileSize { get; set; } // 最小文件大小吗，单位 B
 
         public static string SubSectionFeature { get; set; }
 
-        public static List<string> FilePattern { get; set; }    // 文件格式
+        public static List<string> FilePattern { get; set; } // 文件格式
 
         private const int DEFAULT_MIN_FILESIZE = 1 * 1024 * 1024;
 
@@ -43,7 +43,7 @@ namespace Jvedio
         }
 
         public (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO)
-            parseMovie(List<string> filepaths, List<string> FileExt, CancellationToken ct, bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
+            parseMovie(List<string> filepaths, List<string> fileExt, CancellationToken ct, bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
         {
             List<Video> import = new List<Video>();
             List<string> failNFO = new List<string>();
@@ -67,7 +67,7 @@ namespace Jvedio
                         nfoPaths.Add(item);
                     else
                     {
-                        if (FileExt.Contains(Path.GetExtension(item).ToLower()))
+                        if (fileExt.Contains(Path.GetExtension(item).ToLower()))
                             videoPaths.Add(item);
                         else
                             notImport.Add(item, NotImportReason.NotInExtension);
@@ -140,11 +140,11 @@ namespace Jvedio
             return (import, notImport, failNFO);
         }
 
-        public static bool IsProperMovie(string FilePath)
+        public static bool IsProperMovie(string filePath)
         {
-            return File.Exists(FilePath) &&
-                FilePattern.Contains(System.IO.Path.GetExtension(FilePath).ToLower()) &&
-                new System.IO.FileInfo(FilePath).Length >= MinFileSize;
+            return File.Exists(filePath) &&
+                FilePattern.Contains(System.IO.Path.GetExtension(filePath).ToLower()) &&
+                new System.IO.FileInfo(filePath).Length >= MinFileSize;
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -187,29 +187,35 @@ namespace Jvedio
         }
 
         // 根据 视频后缀文件大小筛选
-        public List<string> FirstFilter(List<string> FilePathList, string ID = "")
+        public List<string> FirstFilter(List<string> filePathList, string ID = "")
         {
-            if (FilePathList == null || FilePathList.Count == 0) return new List<string>();
+            if (filePathList == null || filePathList.Count == 0) return new List<string>();
             try
             {
                 if (ID == string.Empty)
                 {
-                    return FilePathList
+                    return filePathList
                         .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
                         .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize).
                         OrderBy(s => s).ToList();
                 }
                 else
                 {
-                    return FilePathList
+                    return filePathList
                         .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
                         .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize)
-                        .Where(s => { try
-{
-    return Identify.GetVID(new FileInfo(s).Name).ToUpper() == ID.ToUpper();
-}
-catch { Logger.LogScanInfo($"错误路径：{s}");
-                                return false; } })
+                        .Where(s =>
+                        {
+                            try
+                            {
+                                return Identify.GetVID(new FileInfo(s).Name).ToUpper() == ID.ToUpper();
+                            }
+                            catch
+                            {
+                                Logger.LogScanInfo($"错误路径：{s}");
+                                return false;
+                            }
+                        })
                         .OrderBy(s => s).ToList();
                 }
             }
@@ -243,10 +249,10 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
         public static List<string> GetSubSectionFeature()
         {
             List<string> result = new List<string>();
-            string SplitFeature = SubSectionFeature.Replace("，", ",");
-            if (SplitFeature.Split(',').Count() > 0)
+            string splitFeature = SubSectionFeature.Replace("，", ",");
+            if (splitFeature.Split(',').Count() > 0)
             {
-                foreach (var item in SplitFeature.Split(','))
+                foreach (var item in splitFeature.Split(','))
                 {
                     if (!result.Contains(item)) result.Add(item);
                 }
@@ -258,23 +264,23 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
         /// <summary>
         /// 给出一组视频路径，返回否是分段视频，并返回分段的视频列表，以及不是分段的视频列表
         /// </summary>
-        /// <param name="FilePathList"></param>
+        /// <param name="filePathList"></param>
         /// <returns></returns>
 
-        public static (bool, List<string>, List<string>) HandleSubSection(List<string> FilePathList)
+        public static (bool, List<string>, List<string>) HandleSubSection(List<string> filePathList)
         {
-            bool IsSubSection = true;
+            bool isSubSection = true;
             List<string> notSubSection = new List<string>();
-            if (FilePathList == null || FilePathList.Count == 0) return (false, new List<string>(), new List<string>());
+            if (filePathList == null || filePathList.Count == 0) return (false, new List<string>(), new List<string>());
 
-            string fatherPath = new FileInfo(FilePathList[0]).Directory.FullName;
-            bool sameFatherPath = FilePathList.All(arg => fatherPath.ToLower().Equals(FileHelper.TryGetFullName(arg)?.ToLower()));
+            string fatherPath = new FileInfo(filePathList[0]).Directory.FullName;
+            bool sameFatherPath = filePathList.All(arg => fatherPath.ToLower().Equals(FileHelper.TryGetFullName(arg)?.ToLower()));
 
             if (!sameFatherPath)
             {
                 // 并不是所有父目录都相同，提取出父目录最多的文件
                 Dictionary<string, int> fatherPathDic = new Dictionary<string, int>();
-                FilePathList.ForEach(path =>
+                filePathList.ForEach(path =>
                 {
                     string father_path = new FileInfo(path).Directory.FullName;
                     if (fatherPathDic.ContainsKey(father_path))
@@ -298,7 +304,7 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
                         Logger.Error(e);
                     }
 
-                    FilePathList = FilePathList.Where(arg => maxValueKey.Equals(FileHelper.TryGetFullName(arg))).ToList();
+                    filePathList = filePathList.Where(arg => maxValueKey.Equals(FileHelper.TryGetFullName(arg))).ToList();
                 }
             }
 
@@ -311,21 +317,21 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
             string regexFeature = "(" + builder.ToString().Substring(0, builder.Length - 1) + ")[1-9]{1}";
 
             builder.Clear();
-            List<string> originPaths = FilePathList.Select(arg => arg).ToList();
-            FilePathList = originPaths.Select(arg => Path.GetFileNameWithoutExtension(arg).ToLower()).OrderBy(arg => arg).ToList();
-            foreach (var item in FilePathList)
+            List<string> originPaths = filePathList.Select(arg => arg).ToList();
+            filePathList = originPaths.Select(arg => Path.GetFileNameWithoutExtension(arg).ToLower()).OrderBy(arg => arg).ToList();
+            foreach (var item in filePathList)
                 foreach (var re in Regex.Matches(item, regexFeature))
                     builder.Append(re.ToString());
 
-            string MatchesName = builder.ToString();
-            for (int i = 1; i <= FilePathList.Count; i++)
+            string matchesName = builder.ToString();
+            for (int i = 1; i <= filePathList.Count; i++)
             {
-                IsSubSection &= MatchesName.IndexOf(i.ToString()) >= 0;
+                isSubSection &= matchesName.IndexOf(i.ToString()) >= 0;
             }
 
-            if (!IsSubSection)
+            if (!isSubSection)
             {
-                IsSubSection = true;
+                isSubSection = true;
 
                 // 数字后面存在 A,B,C……
                 // XXX-000-A
@@ -337,22 +343,22 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
                 regexFeature = "((" + builder.ToString().Substring(0, builder.Length - 1) + ")|[0-9]{1,})[a-n]{1}";
 
                 builder.Clear();
-                foreach (var item in FilePathList)
+                foreach (var item in filePathList)
                     foreach (var re in Regex.Matches(item, regexFeature, RegexOptions.IgnoreCase))
                         builder.Append(re.ToString());
-                MatchesName = builder.ToString().ToLower();
+                matchesName = builder.ToString().ToLower();
 
                 string characters = "abcdefghijklmn";
-                for (int i = 0; i < Math.Min(FilePathList.Count, characters.Length); i++)
-                    IsSubSection &= MatchesName.IndexOf(characters[i]) >= 0;
+                for (int i = 0; i < Math.Min(filePathList.Count, characters.Length); i++)
+                    isSubSection &= matchesName.IndexOf(characters[i]) >= 0;
             }
 
             // 排序文件名
             originPaths = originPaths.OrderBy(arg => arg).ToList();
-            if (!IsSubSection)
-                return (IsSubSection, new List<string>(), originPaths);
+            if (!isSubSection)
+                return (isSubSection, new List<string>(), originPaths);
 
-            return (IsSubSection, originPaths, notSubSection);
+            return (isSubSection, originPaths, notSubSection);
         }
 
         public List<string> GetAllFilesFromFolder(string root, CancellationToken cancellationToken, string pattern = "", Action<string> callBack = null)
@@ -398,21 +404,21 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
         /// <summary>
         /// 分类视频并导入
         /// </summary>
-        /// <param name="VideoPaths"></param>
+        /// <param name="videoPaths"></param>
         /// <param name="ct"></param>
         /// <param name="callBack"></param>
         /// <returns></returns>
-        public List<Video> DistinctMovie(List<string> VideoPaths, CancellationToken ct, Action<Dictionary<string, NotImportReason>> sameVideoCallBack)
+        public List<Video> DistinctMovie(List<string> videoPaths, CancellationToken ct, Action<Dictionary<string, NotImportReason>> sameVideoCallBack)
         {
             List<Video> result = new List<Video>();
-            Dictionary<string, List<string>> VIDDict = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> vIDDict = new Dictionary<string, List<string>>();
 
             string sep = SuperUtils.Values.ConstValues.SeparatorString;
 
             List<string> noVIDList = new List<string>();
 
             // 检查无识别码的视频
-            foreach (string path in VideoPaths)
+            foreach (string path in videoPaths)
             {
                 if (!File.Exists(path)) continue;
                 string VID = string.Empty;
@@ -427,28 +433,28 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
                 {
                     // 有识别码
                     // 检查 重复或分段的视频
-                    if (!VIDDict.ContainsKey(VID))
+                    if (!vIDDict.ContainsKey(VID))
                     {
                         List<string> pathlist = new List<string> { path };
-                        VIDDict.Add(VID, pathlist);
+                        vIDDict.Add(VID, pathlist);
                     }
                     else
                     {
-                        VIDDict[VID].Add(path); // 每个 VID 对应一组视频路径，视频路径 >=2 的可能为分段视频
+                        vIDDict[VID].Add(path); // 每个 VID 对应一组视频路径，视频路径 >=2 的可能为分段视频
                     }
                 }
             }
 
             // 检查分段或者重复的视频
-            foreach (string VID in VIDDict.Keys)
+            foreach (string vID in vIDDict.Keys)
             {
-                List<string> paths = VIDDict[VID];
+                List<string> paths = vIDDict[vID];
                 if (paths.Count <= 1)
                 {
                     // 一个 VID 对应 一个路径
                     string path = paths[0];
 
-                    result.Add(ParseVideo(VID, path));
+                    result.Add(ParseVideo(vID, path));
                 }
                 else
                 {
@@ -471,7 +477,7 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
                         long size = subSectionList.Sum(arg => FileHelper.TryGetFileLength(arg));
                         string subsection = string.Join(sep, subSectionList);
                         string firstPath = subSectionList[0];
-                        result.Add(ParseVideo(VID, firstPath, subsection, size));
+                        result.Add(ParseVideo(vID, firstPath, subsection, size));
                     }
                     else
                     {
@@ -500,7 +506,7 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
                         }
 
                         if (notSubSection.Count > 0)
-                            result.Add(ParseVideo(VID, notSubSection[maxIndex]));
+                            result.Add(ParseVideo(vID, notSubSection[maxIndex]));
                         sameVideoCallBack?.Invoke(list);
                     }
                 }
@@ -516,15 +522,15 @@ catch { Logger.LogScanInfo($"错误路径：{s}");
             return result;
         }
 
-        private Video ParseVideo(string VID, string path, string subsection = "", long size = -1, bool calcHash = false)
+        private Video ParseVideo(string vID, string path, string subsection = "", long size = -1, bool calcHash = false)
         {
             FileInfo fileInfo = new FileInfo(path); // 原生的速度最快
             Video video = new Video()
             {
                 Path = path,
-                VID = VID,
+                VID = vID,
                 Size = fileInfo.Length,
-                VideoType = (VideoType)Identify.GetVideoType(VID),
+                VideoType = (VideoType)Identify.GetVideoType(vID),
                 FirstScanDate = DateHelper.Now(),
                 CreateDate = DateHelper.ToLocalDate(fileInfo.CreationTime),
             };

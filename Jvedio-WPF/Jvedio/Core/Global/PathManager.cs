@@ -43,7 +43,6 @@ namespace Jvedio.Core.Global
         public static string[] InitDirs { get; set; }
 
         // *************** 目录 ***************
-
         public static void Init()
         {
             CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);

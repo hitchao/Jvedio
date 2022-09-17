@@ -20,7 +20,7 @@ namespace Jvedio.Core.Net
     // todo 检视
     public class DownLoadTask : AbstractTask
     {
-        public bool DownloadPreview { get; set; }   // 是否下载预览图
+        public bool DownloadPreview { get; set; } // 是否下载预览图
 
         public event EventHandler onDownloadSuccess;
 
@@ -126,12 +126,10 @@ namespace Jvedio.Core.Net
                         else
                         {
                             // 无 VID 的
-
                             Status = TaskStatus.Canceled;
                         }
 
                         // 等待了很久都没成功
-
                         await Task.Delay(Delay.INFO);
                     }
                     else
@@ -141,7 +139,7 @@ namespace Jvedio.Core.Net
 
                     bool success = true; // 是否刮削到信息（包括db的部分信息）
                     Progress = 33f;
-                    if ((dict != null && dict.ContainsKey("Error")))
+                    if (dict != null && dict.ContainsKey("Error"))
                     {
                         string error = dict["Error"].ToString();
                         if (!string.IsNullOrEmpty(error))
@@ -282,13 +280,13 @@ namespace Jvedio.Core.Net
                     object urls = getInfoFromExist("ActressImageUrl", video, dict);
 
                     // 3. 演员信息和头像
-                    if (names != null && urls != null && names is List<string> ActorNames && urls is List<string> ActressImageUrl)
+                    if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl)
                     {
-                        if (ActorNames != null && ActressImageUrl != null && ActorNames.Count == ActressImageUrl.Count)
+                        if (actorNames != null && ActressImageUrl != null && actorNames.Count == ActressImageUrl.Count)
                         {
-                            for (int i = 0; i < ActorNames.Count; i++)
+                            for (int i = 0; i < actorNames.Count; i++)
                             {
-                                string actorName = ActorNames[i];
+                                string actorName = actorNames[i];
                                 string url = ActressImageUrl[i];
                                 ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
                                 if (actorInfo == null || actorInfo.ActorID <= 0)
@@ -331,7 +329,6 @@ namespace Jvedio.Core.Net
                     }
 
                     // 4. 下载预览图
-
                     urls = getInfoFromExist("ExtraImageUrl", video, dict);
                     if (DownloadPreview && urls != null && urls is List<string> imageUrls)
                     {
@@ -354,7 +351,7 @@ namespace Jvedio.Core.Net
                                 string saveFileName = Path.Combine(saveFiledir, Path.GetFileName(url));
                                 if (!File.Exists(saveFileName))
                                 {
-                                    StatusText = $"下载预览图 {(i + 1)}/{imageUrls.Count}";
+                                    StatusText = $"下载预览图 {i + 1}/{imageUrls.Count}";
                                     byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
                                     {
                                         if (!string.IsNullOrEmpty(error))

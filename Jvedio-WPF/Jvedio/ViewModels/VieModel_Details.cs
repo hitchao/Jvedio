@@ -161,7 +161,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _LabelText = String.Empty;
+        private string _LabelText = string.Empty;
 
         public string LabelText
         {
@@ -237,7 +237,6 @@ namespace Jvedio.ViewModel
                     CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size)
                         .ThenByDescending(arg => arg.Releasedate)
                         .ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList();
-                    ;
                 }
                 catch (Exception ex)
                 {
@@ -267,13 +266,13 @@ namespace Jvedio.ViewModel
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
 
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> Videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
+            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
-            if (Videos == null) return;
+            if (videos == null) return;
 
-            for (int i = 0; i < Videos.Count; i++)
+            for (int i = 0; i < videos.Count; i++)
             {
-                Video video = Videos[i];
+                Video video = videos[i];
                 if (video == null) continue;
                 BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
                 BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
@@ -286,7 +285,7 @@ namespace Jvedio.ViewModel
             }
 
             // 清除
-            for (int i = ViewAssociationDatas.Count - 1; i > Videos.Count - 1; i--)
+            for (int i = ViewAssociationDatas.Count - 1; i > videos.Count - 1; i--)
             {
                 ViewAssociationDatas.RemoveAt(i);
             }
@@ -318,9 +317,9 @@ namespace Jvedio.ViewModel
                 {
                     if (!item.ContainsKey("LabelName") || !item.ContainsKey("Count") ||
                         item["LabelName"] == null || item["Count"] == null) continue;
-                    string LabelName = item["LabelName"].ToString();
+                    string labelName = item["LabelName"].ToString();
                     long.TryParse(item["Count"].ToString(), out long count);
-                    labels.Add($"{LabelName}({count})");
+                    labels.Add($"{labelName}({count})");
                 }
             }
 
