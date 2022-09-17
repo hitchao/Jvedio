@@ -149,7 +149,7 @@ namespace Jvedio
         public void setDataBases()
         {
             List<AppDatabase> appDatabases =
-                appDatabaseMapper.SelectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)GlobalVariable.CurrentDataType));
+                appDatabaseMapper.SelectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)Main.CurrentDataType));
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             appDatabases.ForEach(db => temp.Add(db));
             vieModel.DataBases = temp;
@@ -251,7 +251,7 @@ namespace Jvedio
                 else
                     paths.Add(item);
             }
-            ScanTask scanTask = ScanFactory.ProduceScanner(GlobalVariable.CurrentDataType, paths, files);
+            ScanTask scanTask = ScanFactory.ProduceScanner(Main.CurrentDataType, paths, files);
             scanTask.onCanceled += (s, ev) =>
             {
                 //msgCard.Warning("取消扫描任务");
@@ -668,7 +668,7 @@ namespace Jvedio
         {
             Grid grid = sender as Grid;
             Border border = grid.FindName("runBorder") as Border;
-            if (GlobalVariable.CurrentDataType == Core.Enums.DataType.Game && !vieModel.EditMode)
+            if (Main.CurrentDataType == Core.Enums.DataType.Game && !vieModel.EditMode)
             {
                 border.Visibility = Visibility.Visible;
             }
@@ -700,7 +700,7 @@ namespace Jvedio
                 if (item.Name == "TagMenuItems")
                 {
                     item.Items.Clear();
-                    GlobalVariable.TagStamps.ForEach(arg =>
+                    Main.TagStamps.ForEach(arg =>
                     {
                         MenuItem menu = new MenuItem()
                         {
@@ -734,7 +734,7 @@ namespace Jvedio
 
         private void initTagStamp()
         {
-            GlobalVariable.TagStamps = tagStampMapper.getAllTagStamp();
+            Main.TagStamps = tagStampMapper.getAllTagStamp();
             vieModel.initCurrentTagStamps();
         }
 
@@ -744,7 +744,7 @@ namespace Jvedio
             if (string.IsNullOrEmpty(tagIDs))
             {
                 data.TagStamp = new ObservableCollection<TagStamp>();
-                data.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
+                data.TagStamp.Add(Main.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
             }
             else
             {
@@ -757,7 +757,7 @@ namespace Jvedio
                     foreach (var arg in list)
                     {
                         long.TryParse(arg, out long id);
-                        data.TagStamp.Add(GlobalVariable.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
+                        data.TagStamp.Add(Main.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
                     }
                 }
             }
@@ -813,7 +813,7 @@ namespace Jvedio
         private void EditInfo(object sender, RoutedEventArgs e)
         {
             editWindow?.Close();
-            editWindow = new Window_MetaDataEdit(GetIDFromMenuItem(sender), GlobalVariable.CurrentDataType);
+            editWindow = new Window_MetaDataEdit(GetIDFromMenuItem(sender), Main.CurrentDataType);
             editWindow.ShowDialog();
         }
 
@@ -826,7 +826,7 @@ namespace Jvedio
         {
             handleMenuSelected((sender));
             StringCollection paths = new StringCollection();
-            DataType dataType = GlobalVariable.CurrentDataType;
+            DataType dataType = Main.CurrentDataType;
             foreach (var item in vieModel.SelectedData)
             {
                 string path = item.Path;
@@ -867,7 +867,7 @@ namespace Jvedio
             int totalCount = vieModel.SelectedData.Count;
 
 
-            DataType dataType = GlobalVariable.CurrentDataType;
+            DataType dataType = Main.CurrentDataType;
 
             foreach (var item in vieModel.SelectedData)
             {
@@ -993,18 +993,18 @@ namespace Jvedio
                 if (vieModel.CurrentDataList[i]?.DataID == dataID)
                 {
                     MetaData data = null;
-                    if (GlobalVariable.CurrentDataType == DataType.Picture)
+                    if (Main.CurrentDataType == DataType.Picture)
                     {
                         vieModel.PictureList[i] = pictureMapper.SelectByID(dataID);
                         data = vieModel.PictureList[i].toMetaData();
 
                     }
-                    else if (GlobalVariable.CurrentDataType == DataType.Game)
+                    else if (Main.CurrentDataType == DataType.Game)
                     {
                         vieModel.GameList[i] = gameMapper.SelectByID(dataID);
                         data = vieModel.GameList[i].toMetaData();
                     }
-                    else if (GlobalVariable.CurrentDataType == DataType.Comics)
+                    else if (Main.CurrentDataType == DataType.Comics)
                     {
                         vieModel.ComicList[i] = comicMapper.SelectByID(dataID);
                         data = vieModel.ComicList[i].toMetaData();

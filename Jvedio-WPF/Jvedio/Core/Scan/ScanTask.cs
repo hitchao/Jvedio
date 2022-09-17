@@ -24,6 +24,7 @@ using Newtonsoft.Json;
 using Jvedio.Core.Enums;
 using JvedioLib.Security;
 using SuperUtils.Time;
+using Jvedio.Core.DataBase;
 
 namespace Jvedio.Core.Scan
 {
@@ -437,7 +438,7 @@ namespace Jvedio.Core.Scan
             // 更新演员
             if (!string.IsNullOrEmpty(video.ActorNames))
             {
-                List<string> list = video.ActorNames.Split(GlobalVariable.Separator).ToList();
+                List<string> list = video.ActorNames.Split(SuperUtils.Values.ConstValues.Separator).ToList();
                 List<string> urls = video.ActorThumbs;
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -488,7 +489,7 @@ namespace Jvedio.Core.Scan
 
                 metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
                 metaDataMapper.InsertBatch(toInsertData);
-                GlobalVariable.DataBaseBusy = true;
+                SqlManager.DataBaseBusy = true;
 
             }
             catch (Exception ex)
@@ -499,7 +500,7 @@ namespace Jvedio.Core.Scan
             finally
             {
                 metaDataMapper.ExecuteNonQuery("END TRANSACTION;");
-                GlobalVariable.DataBaseBusy = false;
+                SqlManager.DataBaseBusy = false;
             }
 
             // 处理 DataID
@@ -512,7 +513,7 @@ namespace Jvedio.Core.Scan
             try
             {
                 videoMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
-                GlobalVariable.DataBaseBusy = true;
+                SqlManager.DataBaseBusy = true;
                 videoMapper.InsertBatch(toInsert);
             }
             catch (Exception ex)
@@ -523,7 +524,7 @@ namespace Jvedio.Core.Scan
             finally
             {
                 videoMapper.ExecuteNonQuery("END TRANSACTION;");
-                GlobalVariable.DataBaseBusy = false;
+                SqlManager.DataBaseBusy = false;
             }
 
             AddTags(toInsert);

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Framework.ORM.Utils;
 
@@ -195,7 +195,8 @@ namespace Jvedio.ViewModel
 
         public void Reset()
         {
-            if (CurrentDataType == Core.Enums.DataType.Picture)
+            Core.Enums.DataType dataType = Main.CurrentDataType;
+            if (dataType == Core.Enums.DataType.Picture)
             {
                 TabControlSelectedIndex = 0;
                 CurrentPicture = null;
@@ -203,7 +204,7 @@ namespace Jvedio.ViewModel
                 oldLabels = CurrentPicture.LabelList?.Select(arg => arg).ToList();
                 CurrentData = CurrentPicture.toMetaData();
             }
-            else if (CurrentDataType == Core.Enums.DataType.Game)
+            else if (dataType == Core.Enums.DataType.Game)
             {
                 TabControlSelectedIndex = 1;
                 CurrentGame = null;
@@ -213,7 +214,7 @@ namespace Jvedio.ViewModel
                 //if (File.Exists(CurrentGame.BigImagePath))
                 //    CurrentImage = ImageHelper.ReadImageFromFile(CurrentGame.BigImagePath);
             }
-            else if (CurrentDataType == Core.Enums.DataType.Comics)
+            else if (dataType == Core.Enums.DataType.Comics)
             {
                 TabControlSelectedIndex = 2;
                 CurrentComic = null;
@@ -266,17 +267,18 @@ namespace Jvedio.ViewModel
             int update1 = metaDataMapper.UpdateById(CurrentData);
             metaDataMapper.SaveLabel(CurrentData, oldLabels);// 标签
             int update2 = 0;
-            if (CurrentDataType == Core.Enums.DataType.Picture)
+            Core.Enums.DataType dataType = Main.CurrentDataType;
+            if (dataType == Core.Enums.DataType.Picture)
             {
                 if (CurrentPicture == null) return false;
                 update2 = pictureMapper.UpdateById(CurrentPicture);
             }
-            else if (CurrentDataType == Core.Enums.DataType.Game)
+            else if (dataType == Core.Enums.DataType.Game)
             {
                 if (CurrentGame == null) return false;
                 update2 = gameMapper.UpdateById(CurrentGame);
             }
-            else if (CurrentDataType == Core.Enums.DataType.Comics)
+            else if (dataType == Core.Enums.DataType.Comics)
             {
                 if (CurrentComic == null) return false;
                 update2 = comicMapper.UpdateById(CurrentComic);

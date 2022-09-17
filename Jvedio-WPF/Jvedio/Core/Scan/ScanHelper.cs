@@ -411,7 +411,7 @@ namespace Jvedio
             List<Video> result = new List<Video>();
             Dictionary<string, List<string>> VIDDict = new Dictionary<string, List<string>>();
 
-            string sep = GlobalVariable.Separator.ToString();
+            string sep = SuperUtils.Values.ConstValues.SeparatorString;
 
             List<string> noVIDList = new List<string>();
             //检查无识别码的视频

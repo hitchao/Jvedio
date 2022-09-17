@@ -32,7 +32,7 @@ namespace Jvedio.Mapper
             "FavoriteCount",
             "Genre",
             "Grade",
-            $"(select group_concat(LabelName,'{GlobalVariable.Separator}') from metadata_to_label where metadata_to_label.DataID=metadata.DataID) as Label",
+            $"(select group_concat(LabelName,'{SuperUtils.Values.ConstValues.Separator}') from metadata_to_label where metadata_to_label.DataID=metadata.DataID) as Label",
             "ViewDate",
             "FirstScanDate",
             "LastScanDate",

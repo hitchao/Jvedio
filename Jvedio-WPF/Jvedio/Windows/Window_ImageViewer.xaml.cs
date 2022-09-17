@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Jvedio.GlobalVariable;
+
 
 namespace Jvedio
 {
@@ -34,7 +34,7 @@ namespace Jvedio
         {
             if (Properties.Settings.Default.EnableWindowFade)
             {
-                var anim = new DoubleAnimation(0, (Duration)FadeInterval);
+                var anim = new DoubleAnimation(0, (Duration)Main.FadeInterval);
                 anim.Completed += (s, _) => this.Close();
                 this.BeginAnimation(UIElement.OpacityProperty, anim);
             }

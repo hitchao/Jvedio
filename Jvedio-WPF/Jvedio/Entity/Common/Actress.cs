@@ -27,7 +27,7 @@ namespace Jvedio.Entity
             this.name = name;
             sex = 1;//女演员
             actressimageurl = "";
-            smallimage = GlobalVariable.DefaultActorImage;
+            smallimage = MetaData.DefaultActorImage;
             bigimage = null;
             birthday = "";
             age = 0;

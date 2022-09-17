@@ -22,6 +22,8 @@ namespace Jvedio.Entity
     public class MetaData : INotifyPropertyChanged
     {
 
+
+
         [TableId(IdType.AUTO)]
         public long DataID { get; set; }
         public long DBId { get; set; }
@@ -65,7 +67,7 @@ namespace Jvedio.Entity
                 _Genre = value;
                 GenreList = new List<string>();
                 if (!string.IsNullOrEmpty(value))
-                    GenreList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    GenreList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 OnPropertyChanged();
             }
@@ -86,7 +88,7 @@ namespace Jvedio.Entity
                 _Label = value;
                 LabelList = new List<string>();
                 if (!string.IsNullOrEmpty(value))
-                    LabelList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    LabelList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 OnPropertyChanged();
             }
         }
@@ -136,6 +138,19 @@ namespace Jvedio.Entity
         public long Count { get; set; }
 
 
+
+        public static BitmapImage DefaultSmallImage { get; set; }
+        public static BitmapImage DefaultBigImage { get; set; }
+        public static BitmapImage DefaultActorImage { get; set; }
+
+        static MetaData()
+        {
+            DefaultSmallImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_S.png", UriKind.Relative));
+            DefaultBigImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
+            DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -168,14 +183,14 @@ namespace Jvedio.Entity
         {
             if (data == null) return;
             BitmapImage image = ImageHelper.ReadImageFromFile(imgPath);
-            if (image == null) image = GlobalVariable.DefaultBigImage;
+            if (image == null) image = MetaData.DefaultBigImage;
             data.ViewImage = image;
         }
         public static void SetImage(ref Video video, string imgPath)
         {
             if (video == null) return;
             BitmapImage image = ImageHelper.ReadImageFromFile(imgPath);
-            if (image == null) image = GlobalVariable.DefaultBigImage;
+            if (image == null) image = MetaData.DefaultBigImage;
             video.ViewImage = image;
         }
         public static void handleEmpty(ref MetaData data)
@@ -197,7 +212,7 @@ namespace Jvedio.Entity
             if (list != null && list.Count > 0)
             {
                 data.TagStamp = new ObservableCollection<TagStamp>();
-                foreach (var item in GlobalVariable.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
+                foreach (var item in Main.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
                     data.TagStamp.Add(item);
             }
 

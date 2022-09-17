@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Jvedio.Core.Global;
 
 namespace Jvedio.Core.Plugins
 {
@@ -128,7 +129,7 @@ namespace Jvedio.Core.Plugins
                 string url_main_json = $"{base_url}/main.json";
                 string url_readme = $"{base_url}/readme.md";
                 string url_plugin_image = $"{base_url}/images/plugin.png";
-                string base_path = System.IO.Path.Combine(GlobalVariable.BasePluginsPath, "temp", data.PluginType.ToString().ToLower() + "s", data.GetRawPluginID());
+                string base_path = System.IO.Path.Combine(PathManager.BasePluginsPath, "temp", data.PluginType.ToString().ToLower() + "s", data.GetRawPluginID());
                 DirHelper.TryCreateDirectory(base_path, (err) =>
                 {
                     App.Current.Dispatcher.Invoke(() =>

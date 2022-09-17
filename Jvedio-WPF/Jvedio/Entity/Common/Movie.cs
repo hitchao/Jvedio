@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Xml;
+using Jvedio.Core.Config;
 
 namespace Jvedio.Entity
 {
@@ -66,8 +67,8 @@ namespace Jvedio.Entity
             smallimageurl = "";
             bigimageurl = "";
             extraimageurl = "";
-            smallimage = GlobalVariable.DefaultSmallImage;
-            bigimage = GlobalVariable.DefaultBigImage;
+            smallimage = MetaData.DefaultSmallImage;
+            bigimage = MetaData.DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
         }
         public Movie() : this("") { }
@@ -285,7 +286,7 @@ namespace Jvedio.Entity
                         if (list.Count == 1)
                             movie.filepath = list[0];// 默认取第一个
                         else
-                            movie.subsection = String.Join(GlobalVariable.Separator.ToString(), list); //分段视频
+                            movie.subsection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, list); //分段视频
                     }
                     else
                     {
@@ -296,7 +297,7 @@ namespace Jvedio.Entity
                 }
             }
 
-            string sep = GlobalVariable.Separator.ToString();
+            string sep = SuperUtils.Values.ConstValues.SeparatorString;
 
             //tag
             XmlNodeList tagNodes = TrySelectNode(doc, "/movie/tag");
@@ -350,7 +351,7 @@ namespace Jvedio.Entity
                     if (!string.IsNullOrEmpty(item.InnerText))
                         thumbs.Add(item.InnerText);
                     else
-                        thumbs.Add(GlobalVariable.DEFAULT_NULL_STRING);
+                        thumbs.Add(RenameConfig.DEFAULT_NULL_STRING);
                 }
                 movie.actressimageurl = string.Join(sep, thumbs);
             }
@@ -390,8 +391,8 @@ namespace Jvedio.Entity
                 Rating = rating,
                 RatingCount = 0,
                 FavoriteCount = 0,
-                Genre = string.Join(GlobalVariable.Separator.ToString(), genre.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)),
-                Label = string.Join(GlobalVariable.Separator.ToString(), label.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)),
+                Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, genre.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)),
+                Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, label.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)),
                 Grade = favorites,
                 ViewDate = "",
                 FirstScanDate = scandate,
@@ -428,13 +429,13 @@ namespace Jvedio.Entity
             video.Plot = plot;
             video.Outline = outline;
             video.Duration = runtime;
-            video.SubSection = subsection.Replace(';', GlobalVariable.Separator);
+            video.SubSection = subsection.Replace(';', SuperUtils.Values.ConstValues.Separator);
             video.WebType = source.Replace("jav", "").Replace("fc2adult", "fc2");
             video.WebUrl = sourceurl;
             //video.ImageUrls = json;   // 让 ImageUrls 为空，这样子导入旧的数据库后就会自动同步新信息
             video.ActorNames = actor;   // 演员
             video.ActorThumbs = string.IsNullOrEmpty(actressimageurl) ? new List<string>()
-                : actressimageurl.Split(GlobalVariable.Separator).ToList();
+                : actressimageurl.Split(SuperUtils.Values.ConstValues.Separator).ToList();
             return video;
         }
 

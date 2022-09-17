@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jvedio.Entity;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -79,7 +80,7 @@ namespace Jvedio.Core.Media
                               select CreateImageSource(file.FullName, true);
                 Images.AddRange(sources);
             }
-            if (Images.Count == 0) Images.Add(GlobalVariable.DefaultBigImage);
+            if (Images.Count == 0) Images.Add(MetaData.DefaultBigImage);
         }
 
         private ImageSource CreateImageSource(string file, bool forcePreLoad)

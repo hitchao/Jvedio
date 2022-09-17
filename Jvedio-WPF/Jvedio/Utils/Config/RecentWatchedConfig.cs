@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
-using static Jvedio.GlobalVariable;
+
 
 namespace Jvedio
 {

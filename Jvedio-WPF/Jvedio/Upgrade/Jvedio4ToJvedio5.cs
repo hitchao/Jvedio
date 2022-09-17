@@ -17,9 +17,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Time;
+using Jvedio.Core.Global;
 
 namespace Jvedio.Upgrade
 {
@@ -29,7 +30,7 @@ namespace Jvedio.Upgrade
     {
         public static void MoveScanPathConfig(string[] files)
         {
-            string ScanPathConfig = Path.Combine(oldDataPath, "ScanPathConfig");
+            string ScanPathConfig = Path.Combine(PathManager.oldDataPath, "ScanPathConfig");
             if (!File.Exists(ScanPathConfig)) return;
 
             Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
@@ -453,9 +454,9 @@ namespace Jvedio.Upgrade
                             video.ActorNames = arg.actor;
                             video.OldActorIDs = arg.actorid;
                             video.Size = (long)arg.filesize;
-                            video.Genre = arg.genre.Replace(' ', Separator);
-                            video.Series = arg.tag.Replace(' ', Separator);
-                            video.Label = arg.label.Replace(' ', Separator);
+                            video.Genre = arg.genre.Replace(' ', SuperUtils.Values.ConstValues.Separator);
+                            video.Series = arg.tag.Replace(' ', SuperUtils.Values.ConstValues.Separator);
+                            video.Label = arg.label.Replace(' ', SuperUtils.Values.ConstValues.Separator);
                             videos.Add(video);
                         });
 
@@ -549,7 +550,7 @@ namespace Jvedio.Upgrade
             {
                 string lab = video.Label;
                 if (string.IsNullOrEmpty(lab)) continue;
-                List<string> labels = lab.Split(new char[] { ' ', GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).Select(arg => arg.Trim()).ToList();
+                List<string> labels = lab.Split(new char[] { ' ', SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).Select(arg => arg.Trim()).ToList();
                 if (labels.Count <= 0) continue;
                 labelSet.UnionWith(labels);
                 label_dict.Add(video.DataID, labels);
@@ -741,7 +742,7 @@ namespace Jvedio.Upgrade
                         MagnetLink = sr["link"].ToString(),
                         Title = sr["title"].ToString(),
                         Releasedate = sr["releasedate"].ToString(),
-                        Tag = sr["tag"].ToString().Replace(' ', GlobalVariable.Separator),
+                        Tag = sr["tag"].ToString().Replace(' ', SuperUtils.Values.ConstValues.Separator),
                         VID = sr["id"].ToString(),
                     };
                     set.Add(magnet.VID);

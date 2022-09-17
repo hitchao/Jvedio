@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Enums;
+using Jvedio.Core.Global;
 using Jvedio.Core.Logs;
 using Jvedio.Core.Scan;
 using Jvedio.Entity.CommonSQL;
@@ -43,8 +44,8 @@ namespace Jvedio.Entity
         // 延迟加载图片
         public void InitDefaultImage()
         {
-            SmallImage = GlobalVariable.DefaultSmallImage;
-            BigImage = GlobalVariable.DefaultBigImage;
+            SmallImage = MetaData.DefaultSmallImage;
+            BigImage = MetaData.DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
             PreviewImageList = new ObservableCollection<BitmapSource>();
         }
@@ -64,7 +65,7 @@ namespace Jvedio.Entity
             if (list != null && list.Count > 0)
             {
                 video.TagStamp = new ObservableCollection<TagStamp>();
-                foreach (var item in GlobalVariable.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
+                foreach (var item in Main.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
                     video.TagStamp.Add(item);
             }
         }
@@ -117,7 +118,7 @@ namespace Jvedio.Entity
             set
             {
                 _SubSection = value;
-                SubSectionList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                SubSectionList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 if (SubSectionList.Count >= 2) HasSubSection = true;
                 OnPropertyChanged();
             }
@@ -173,7 +174,7 @@ namespace Jvedio.Entity
             {
                 _ActorNames = value;
                 if (!string.IsNullOrEmpty(value))
-                    ActorNameList = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    ActorNameList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 OnPropertyChanged();
             }
@@ -201,7 +202,7 @@ namespace Jvedio.Entity
                 if (value != null)
                 {
 
-                    ActorNames = string.Join(GlobalVariable.Separator.ToString(),
+                    ActorNames = string.Join(SuperUtils.Values.ConstValues.SeparatorString,
                         value.Select(arg => arg.ActorName).ToList());
                 }
                 OnPropertyChanged();
@@ -242,7 +243,7 @@ namespace Jvedio.Entity
             if (pathType != PathType.RelativeToData)
             {
                 if (pathType == PathType.RelativeToApp)
-                    basePicPath = System.IO.Path.Combine(GlobalVariable.CurrentUserFolder, basePicPath);
+                    basePicPath = System.IO.Path.Combine(PathManager.CurrentUserFolder, basePicPath);
                 string saveDir = "";
                 if (imageType == ImageType.Big)
                     saveDir = System.IO.Path.Combine(basePicPath, "BigPic");
@@ -437,7 +438,7 @@ namespace Jvedio.Entity
                     if (value == null) continue;
                     if (value is List<string> list)
                     {
-                        info.SetValue(this, string.Join(GlobalVariable.Separator.ToString(), list));
+                        info.SetValue(this, string.Join(SuperUtils.Values.ConstValues.SeparatorString, list));
                     }
                     else if (value is string str)
                     {
@@ -600,7 +601,7 @@ namespace Jvedio.Entity
             }
 
             //替换掉特殊字符
-            foreach (char item in GlobalVariable.BANFILECHAR)
+            foreach (char item in FileHelper.BANFILECHAR)
             {
                 newName = newName.Replace(item.ToString(), "");
             }
@@ -645,7 +646,7 @@ namespace Jvedio.Entity
                         string value = o.ToString();
 
                         if (property == "ActorNames" || property == "Genre" || property == "Label")
-                            value = value.Replace(GlobalVariable.Separator.ToString(), inSplit);
+                            value = value.Replace(SuperUtils.Values.ConstValues.SeparatorString, inSplit);
 
                         if (property == "VideoType")
                         {
@@ -692,14 +693,14 @@ namespace Jvedio.Entity
 
         public bool IsHDV()
         {
-            return Identify.IsHDV(Size) || Identify.IsHDV(Path) || Genre?.IndexOfAnyString(GlobalVariable.TagStrings_HD) >= 0 ||
-                    Series?.IndexOfAnyString(GlobalVariable.TagStrings_HD) >= 0 || Label?.IndexOfAnyString(GlobalVariable.TagStrings_HD) >= 0;
+            return Identify.IsHDV(Size) || Identify.IsHDV(Path) || Genre?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
+                    Series?.IndexOfAnyString(Main.TagStrings_HD) >= 0 || Label?.IndexOfAnyString(Main.TagStrings_HD) >= 0;
         }
 
         public bool IsCHS()
         {
-            return Identify.IsCHS(Path) || Genre?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0 ||
-                     Series?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0 || Label?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0;
+            return Identify.IsCHS(Path) || Genre?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
+                     Series?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 || Label?.IndexOfAnyString(Main.TagStrings_Translated) >= 0;
         }
 
         public void CleanInfo()
@@ -713,8 +714,8 @@ namespace Jvedio.Entity
             {
                 BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.getSmallImage());
                 BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.getBigImage());
-                if (smallimage == null) smallimage = GlobalVariable.DefaultSmallImage;
-                if (bigimage == null) bigimage = GlobalVariable.DefaultBigImage;
+                if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
+                if (bigimage == null) bigimage = MetaData.DefaultBigImage;
                 video.SmallImage = smallimage;
                 video.BigImage = bigimage;
 
@@ -839,12 +840,12 @@ namespace Jvedio.Entity
             nfo.SetNodeText("num", video.VID);
 
             // 类别
-            foreach (var item in video.Genre?.Split(GlobalVariable.Separator))
+            foreach (var item in video.Genre?.Split(SuperUtils.Values.ConstValues.Separator))
             {
                 if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("genre", item);
             }
             // 系列
-            foreach (var item in video.Series?.Split(GlobalVariable.Separator))
+            foreach (var item in video.Series?.Split(SuperUtils.Values.ConstValues.Separator))
             {
                 if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("tag", item);
             }

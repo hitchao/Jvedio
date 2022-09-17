@@ -272,6 +272,7 @@
     <Compile Include="Core\Config\Base\AbstractConfig.cs" />
     <Compile Include="Core\Config\Base\IConfig.cs" />
     <Compile Include="Core\Config\Common\ThemeConfig.cs" />
+    <Compile Include="Core\DataBase\SqlManager.cs" />
     <Compile Include="Core\Enums\NotImportReason.cs" />
     <Compile Include="Core\Enums\SearchMode.cs" />
     <Compile Include="Core\Enums\ThemeSingleColor.cs" />
@@ -304,6 +305,7 @@
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
+    <Compile Include="Core\Global\PathManager.cs" />
     <Compile Include="Core\Global\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
@@ -465,7 +467,6 @@
     <Compile Include="Windows\Dialog\Msgbox.xaml.cs">
       <DependentUpon>Msgbox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\Global\GlobalVariable.cs" />
     <Compile Include="ViewModels\VieModel_Details.cs" />
     <Compile Include="ViewModels\VieModel_Edit.cs" />
     <Compile Include="ViewModels\VieModel_Main.cs" />

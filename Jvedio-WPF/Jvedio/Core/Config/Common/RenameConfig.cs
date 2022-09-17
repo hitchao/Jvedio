@@ -11,7 +11,11 @@ namespace Jvedio.Core.Config
     public class RenameConfig : AbstractConfig
     {
 
-
+        public static string DEFAULT_NULL_STRING { get; set; }
+        static RenameConfig()
+        {
+            DEFAULT_NULL_STRING = "NULL";
+        }
         private RenameConfig() : base("RenameConfig")
         {
             OutSplit = "[null]";

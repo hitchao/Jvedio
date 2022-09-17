@@ -45,7 +45,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using static Jvedio.Main.Msg;
 using static SuperUtils.Media.ImageHelper;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
@@ -56,6 +56,8 @@ using SuperUtils.Time;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.WPF.VisualTools;
 using static Jvedio.Core.Global.UrlManager;
+using Jvedio.Core.Global;
+using static Jvedio.Window_Settings;
 
 namespace Jvedio
 {
@@ -105,6 +107,39 @@ namespace Jvedio
         public static List<string> ClickFilterDict { get; set; }
 
         private long CurrentAssoDataID { get; set; }// 当前正在关联的影片的 dataID
+
+
+        // 标签戳，全局缓存，避免每次都查询
+        public static List<TagStamp> TagStamps { get; set; }
+
+        //如果包含以下文本，则显示对应的标签戳
+        public static string[] TagStrings_HD { get; set; }
+        public static string[] TagStrings_Translated { get; set; }
+        public static TimeSpan FadeInterval { get; set; }
+        public static DataBaseType CurrentDataBaseType { get; set; }
+        public static bool ClickGoBackToStartUp { get; set; }//是否是点击了返回去到 Startup
+
+        public static DataType CurrentDataType { get; set; }
+
+
+
+
+        static Main()
+        {
+            TagStamps = new List<TagStamp>();
+            TagStrings_HD = new string[] { "hd", "高清" };
+            TagStrings_Translated = new string[] { "中文", "日本語", "Translated", "English" };
+            FadeInterval = TimeSpan.FromMilliseconds(150);//淡入淡出时间
+
+            CurrentDataBaseType = DataBaseType.SQLite;
+
+            ClickGoBackToStartUp = false;
+            CurrentDataType = DataType.Video;
+
+            //每页数目
+            Properties.Settings.Default.OnlyShowSubSection = false;
+        }
+
 
         public void Init()
         {
@@ -256,7 +291,7 @@ namespace Jvedio
         }
         private void initTagStamp()
         {
-            GlobalVariable.TagStamps = tagStampMapper.getAllTagStamp();
+            Main.TagStamps = tagStampMapper.getAllTagStamp();
             vieModel.InitCurrentTagStamps();
         }
 
@@ -421,7 +456,7 @@ namespace Jvedio
         public void setDataBases()
         {
             List<AppDatabase> appDatabases =
-                appDatabaseMapper.SelectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)GlobalVariable.CurrentDataType));
+                appDatabaseMapper.SelectList(new SelectWrapper<AppDatabase>().Eq("DataType", (int)Main.CurrentDataType));
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             appDatabases.ForEach(db => temp.Add(db));
             vieModel.DataBases = temp;
@@ -436,7 +471,7 @@ namespace Jvedio
         private void setRecentWatched()
         {
             SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("DataType", (int)GlobalVariable.CurrentDataType).NotEq("ViewDate", "");
+            wrapper.Eq("DataType", (int)Main.CurrentDataType).NotEq("ViewDate", "");
             long count = metaDataMapper.SelectCount(wrapper);
             vieModel.RecentWatchedCount = count;
         }
@@ -654,7 +689,7 @@ namespace Jvedio
         {
             for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
             {
-                if (vieModel.CurrentVideoList[i].BigImage == GlobalVariable.DefaultBigImage)
+                if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage)
                 {
                     // 检查有无截图
                     Video video = vieModel.CurrentVideoList[i];
@@ -1521,7 +1556,7 @@ namespace Jvedio
                 {
                     await Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
                     {
-                        ImageSlide imageSlide = new ImageSlide(BasePicPath + $"ExtraPic\\{images1[i - idx].Tag}", images1[i - idx], images2[i - idx]);
+                        ImageSlide imageSlide = new ImageSlide(PathManager.BasePicPath + $"ExtraPic\\{images1[i - idx].Tag}", images1[i - idx], images2[i - idx]);
                         ImageSlides.Add(imageSlide);
 
                     });
@@ -2092,7 +2127,7 @@ namespace Jvedio
                         if (video.HasSubSection)
                         {
                             List<string> list = dict[dataID];
-                            string SubSection = string.Join(GlobalVariable.Separator.ToString(), list);
+                            string SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
                             vieModel.CurrentVideoList[i].Path = list[0];
                             vieModel.CurrentVideoList[i].SubSection = SubSection;
                             metaDataMapper.UpdateFieldById("Path", list[0], dataID);
@@ -3056,23 +3091,23 @@ namespace Jvedio
                 string bgPath = Path.GetFullPath(Path.Combine(theme.GetThemePath(), theme.Images.Background));
                 if (File.Exists(bgPath))
                 {
-                    GlobalVariable.BackgroundImage = ImageHelper.BitmapImageFromFile(bgPath);
+                    StyleManager.BackgroundImage = ImageHelper.BitmapImageFromFile(bgPath);
                     // 设置颜色绑定
                     SetBgImageProperty(true, ref theme);
                 }
                 else
                 {
                     SetBgImageProperty(false, ref theme);
-                    GlobalVariable.BackgroundImage = null;
+                    StyleManager.BackgroundImage = null;
                 }
             }
             else
             {
                 SetBgImageProperty(false, ref theme);
-                GlobalVariable.BackgroundImage = null;
+                StyleManager.BackgroundImage = null;
             }
 
-            BgImage.Source = GlobalVariable.BackgroundImage;
+            BgImage.Source = StyleManager.BackgroundImage;
 
             // 设置颜色
             if (theme.Colors != null && theme.Colors.Count > 0)
@@ -3505,7 +3540,7 @@ namespace Jvedio
             if (!deleted && string.IsNullOrEmpty(tagIDs))
             {
                 video.TagStamp = new ObservableCollection<TagStamp>();
-                video.TagStamp.Add(GlobalVariable.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
+                video.TagStamp.Add(Main.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
                 video.TagIDs = newTagID.ToString();
             }
             else
@@ -3520,7 +3555,7 @@ namespace Jvedio
                 foreach (var arg in list)
                 {
                     long.TryParse(arg, out long id);
-                    video.TagStamp.Add(GlobalVariable.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
+                    video.TagStamp.Add(Main.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
                 }
             }
         }
@@ -3556,7 +3591,7 @@ namespace Jvedio
                 if ("TagMenuItems".Equals(item.Name) && item is MenuItem menuItem)
                 {
                     menuItem.Items.Clear();
-                    GlobalVariable.TagStamps.ForEach(arg =>
+                    Main.TagStamps.ForEach(arg =>
                     {
                         string tagID = arg.TagID.ToString();
                         MenuItem menu = new MenuItem()
@@ -3897,7 +3932,7 @@ namespace Jvedio
             long.TryParse(tag, out long id);
             if (id <= 0) return;
 
-            TagStamp tagStamp = GlobalVariable.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
+            TagStamp tagStamp = Main.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
             Window_TagStamp window_TagStamp = new Window_TagStamp(tagStamp.TagName, tagStamp.BackgroundBrush, tagStamp.ForegroundBrush);
             bool? dialog = window_TagStamp.ShowDialog();
             if ((bool)dialog)
@@ -3921,7 +3956,7 @@ namespace Jvedio
             string tag = (contextMenu.PlacementTarget as PathCheckButton).Tag.ToString();
             long.TryParse(tag, out long id);
             if (id <= 0) return;
-            TagStamp tagStamp = GlobalVariable.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
+            TagStamp tagStamp = Main.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
             if (tagStamp.TagID == 1 || tagStamp.TagID == 2)
             {
                 msgCard.Error("默认标记不可删除");
@@ -4031,7 +4066,7 @@ namespace Jvedio
 
                     if (ConfigManager.Settings.AutoGenScreenShot)
                     {
-                        if (vieModel.CurrentVideoList[i].BigImage == GlobalVariable.DefaultBigImage)
+                        if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage)
                         {
                             // 检查有无截图
                             string path = video.getScreenShot();
@@ -4339,7 +4374,7 @@ namespace Jvedio
 
         private void GoToStartUp(object sender, MouseButtonEventArgs e)
         {
-            GlobalVariable.ClickGoBackToStartUp = true;
+            Main.ClickGoBackToStartUp = true;
             SetWindowVisualStatus(false);// 隐藏所有窗体
             WindowStartUp windowStartUp = GetWindowByName("WindowStartUp") as WindowStartUp;
             if (windowStartUp == null) windowStartUp = new WindowStartUp();

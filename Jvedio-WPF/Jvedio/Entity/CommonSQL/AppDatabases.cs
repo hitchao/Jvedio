@@ -11,6 +11,8 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Media.Imaging;
+using Jvedio.Core.Global;
+
 namespace Jvedio.Entity
 {
     [Table(tableName: "app_databases")]
@@ -36,7 +38,7 @@ namespace Jvedio.Entity
             set
             {
                 _ImagePath = value;
-                string actual_path = Path.Combine(GlobalVariable.ProjectImagePath, ImagePath);
+                string actual_path = Path.Combine(PathManager.ProjectImagePath, ImagePath);
                 if (File.Exists(actual_path)) Image = ImageHelper.BitmapImageFromFile(actual_path);
                 OnPropertyChanged();
             }

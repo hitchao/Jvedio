@@ -13,7 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml;
-using static Jvedio.GlobalVariable;
+
 
 using System.Windows.Documents;
 using System.Windows.Media;

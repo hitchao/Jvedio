@@ -50,7 +50,7 @@ namespace Jvedio
             }
 
 
-            appConfigMapper.InitSqlite(GlobalVariable.DEFAULT_SQLITE_CONFIG_PATH);
+            appConfigMapper.InitSqlite(SqlManager.DEFAULT_SQLITE_CONFIG_PATH);
 
             foreach (string key in Sqlite.AppConfig.TABLES.Keys)
             {

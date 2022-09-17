@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.GlobalVariable;
+
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
 using static Jvedio.VisualTools.WindowHelper;
@@ -241,7 +241,7 @@ namespace Jvedio.ViewModel
             }
 
             BitmapImage image = BitmapImageFromFile(CurrentVideo.getBigImage());
-            if (image == null) image = DefaultBigImage;
+            if (image == null) image = MetaData.DefaultBigImage;
             CurrentVideo.BigImage = image;
             if (InfoSelectedIndex == 1) LoadVideoInfo();
             QueryCompleted?.Invoke(this, new EventArgs());
@@ -275,7 +275,7 @@ namespace Jvedio.ViewModel
                 if (video == null) continue;
                 BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
                 BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
-                if (smallimage == null) smallimage = DefaultSmallImage;
+                if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.setTagStamps(ref video);// 设置标签戳

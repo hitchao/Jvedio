@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Logs;
+﻿using Jvedio.Core.Global;
+using Jvedio.Core.Logs;
 using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
@@ -141,7 +142,7 @@ namespace Jvedio.Core
             {
                 try
                 {
-                    Directory.CreateDirectory(GlobalVariable.CurrentUserFolder);
+                    Directory.CreateDirectory(PathManager.CurrentUserFolder);
                 }
                 catch (Exception ex)
                 {

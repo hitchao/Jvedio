@@ -5,6 +5,7 @@ using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using Jvedio.Core.Enums;
+using Jvedio.Core.DataBase;
 
 namespace Jvedio.Mapper.BaseMapper
 {
@@ -17,12 +18,12 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override void Dispose()
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 SqliteMapper.Dispose();
                 SqliteMapper = null;
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 MySQLMapper.Dispose();
                 MySQLMapper = null;
@@ -33,11 +34,11 @@ namespace Jvedio.Mapper.BaseMapper
         {
             try
             {
-                if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+                if (Main.CurrentDataBaseType == DataBaseType.SQLite)
                 {
                     return SqliteMapper.ExecuteNonQuery(sql);
                 }
-                else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+                else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
                 {
                     return MySQLMapper.ExecuteNonQuery(sql);
                 }
@@ -52,11 +53,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override void Init()
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
-                if (SqliteMapper == null) SqliteMapper = new SqliteMapper<T>(GlobalVariable.DEFAULT_SQLITE_PATH);
+                if (SqliteMapper == null) SqliteMapper = new SqliteMapper<T>(SqlManager.DEFAULT_SQLITE_PATH);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 if (MySQLMapper == null) MySQLMapper = new MySQLMapper<T>();
             }
@@ -70,11 +71,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override bool IsTableExists(string tableName)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.IsTableExists(tableName);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.IsTableExists(tableName);
             }
@@ -88,11 +89,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override T SelectById(IWrapper<T> wrapper)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.SelectById(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.SelectById(wrapper);
             }
@@ -101,11 +102,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override long SelectCount(IWrapper<T> wrapper = null)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.SelectCount(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.SelectCount(wrapper);
             }
@@ -116,11 +117,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override long SelectCount(string sql)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.SelectCount(sql);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.SelectCount(sql);
             }
@@ -129,11 +130,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override string SelectLastInsertRowId()
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.SelectLastInsertRowId();
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.SelectLastInsertRowId();
             }
@@ -144,11 +145,11 @@ namespace Jvedio.Mapper.BaseMapper
         {
             try
             {
-                if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+                if (Main.CurrentDataBaseType == DataBaseType.SQLite)
                 {
                     return SqliteMapper.SelectList(wrapper);
                 }
-                else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+                else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
                 {
                     return MySQLMapper.SelectList(wrapper);
                 }
@@ -164,11 +165,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override T SelectOne(IWrapper<T> wrapper = null)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.SelectOne(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.SelectOne(wrapper);
             }
@@ -177,11 +178,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override List<Dictionary<string, object>> Select(IWrapper<T> wrapper)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.Select(wrapper);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.Select(wrapper);
             }
@@ -190,11 +191,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override List<Dictionary<string, object>> Select(string sql)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.Select(sql);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.Select(sql);
             }
@@ -203,11 +204,11 @@ namespace Jvedio.Mapper.BaseMapper
 
         public override object InsertAndGetID(T entity)
         {
-            if (GlobalVariable.CurrentDataBaseType == DataBaseType.SQLite)
+            if (Main.CurrentDataBaseType == DataBaseType.SQLite)
             {
                 return SqliteMapper.InsertAndGetID(entity);
             }
-            else if (GlobalVariable.CurrentDataBaseType == DataBaseType.MySQL)
+            else if (Main.CurrentDataBaseType == DataBaseType.MySQL)
             {
                 return MySQLMapper.InsertAndGetID(entity);
             }

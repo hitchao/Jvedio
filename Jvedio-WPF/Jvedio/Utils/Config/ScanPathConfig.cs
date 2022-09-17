@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jvedio.Core.Global;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
-using static Jvedio.GlobalVariable;
+
 
 namespace Jvedio
 {
@@ -20,8 +21,8 @@ namespace Jvedio
     {
 
         private string DataBase = "info";
-        private string baseDir = GlobalVariable.CurrentUserFolder;
-        private string filepath = Path.Combine(oldDataPath, "ScanPathConfig");
+        private string baseDir = PathManager.CurrentUserFolder;
+        private string filepath = Path.Combine(PathManager.oldDataPath, "ScanPathConfig");
 
         public ScanPathConfig(string databasename)
         {

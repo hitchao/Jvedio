@@ -18,7 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.GlobalVariable;
+
 
 namespace Jvedio
 {

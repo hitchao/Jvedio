@@ -56,8 +56,8 @@ namespace Jvedio.Core.Scan
                 picture.DataType = dataType;
                 picture.Title = Path.GetFileName(path);
                 picture.PicCount = imgPaths.Count;
-                picture.VideoPaths = string.Join(GlobalVariable.Separator.ToString(), videoPaths);
-                picture.PicPaths = string.Join(GlobalVariable.Separator.ToString(), imgPaths.Select(arg => Path.GetFileName(arg)));
+                picture.VideoPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, videoPaths);
+                picture.PicPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, imgPaths.Select(arg => Path.GetFileName(arg)));
                 picture.Path = path;
                 Int64 totalSize = 0;
                 foreach (string imgPath in imgPaths)

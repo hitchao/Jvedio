@@ -26,9 +26,12 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Time;
+using Jvedio.Core.Global;
+using static Jvedio.Core.Global.PathManager;
+using Jvedio.Core.DataBase;
 
 namespace Jvedio
 {
@@ -72,7 +75,6 @@ namespace Jvedio
         {
             EnsureSettings();           // 修复设置错误
             EnsureFileExists();         // 判断文件是否存在
-            InitProperties();           // 初始化全局变量
             EnsureDirExists();          // 创建文件夹
             ConfigManager.Init();        // 初始化全局配置
             try
@@ -114,9 +116,9 @@ namespace Jvedio
                 if (i == vieModel_StartUp.CurrentSideIdx) radioButtons[i].IsChecked = true;
                 else radioButtons[i].IsChecked = false;
             }
-            GlobalVariable.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
+            Main.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
 
-            if (!ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault)
+            if (!Main.ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault)
             {
                 tabControl.SelectedIndex = 0;
                 LoadDataBase();
@@ -133,8 +135,8 @@ namespace Jvedio
         private async Task<bool> MovePlugins()
         {
             await Task.Delay(1);
-            string path = Path.Combine(GlobalVariable.BasePluginsPath, "temp");
-            bool success = DirHelper.TryCopy(path, GlobalVariable.BasePluginsPath);
+            string path = Path.Combine(PathManager.BasePluginsPath, "temp");
+            bool success = DirHelper.TryCopy(path, PathManager.BasePluginsPath);
             if (success)
                 DirHelper.TryDelete(path);
             return true;
@@ -148,7 +150,7 @@ namespace Jvedio
             {
                 int period = Jvedio.Core.WindowConfig.Settings.BackUpPeriods[(int)ConfigManager.Settings.AutoBackupPeriodIndex];
                 bool backup = false;
-                string[] arr = DirHelper.TryGetDirList(GlobalVariable.BackupPath);
+                string[] arr = DirHelper.TryGetDirList(PathManager.BackupPath);
                 if (arr != null && arr.Length > 0)
                 {
                     for (int i = arr.Length - 1; i >= 0; i--)
@@ -181,8 +183,8 @@ namespace Jvedio
                     string target1 = Path.Combine(dir, "app_configs.sqlite");
                     string target2 = Path.Combine(dir, "app_datas.sqlite");
                     string target3 = Path.Combine(dir, "image");
-                    FileHelper.TryCopyFile(DEFAULT_SQLITE_CONFIG_PATH, target1);
-                    FileHelper.TryCopyFile(DEFAULT_SQLITE_PATH, target2);
+                    FileHelper.TryCopyFile(SqlManager.DEFAULT_SQLITE_CONFIG_PATH, target1);
+                    FileHelper.TryCopyFile(SqlManager.DEFAULT_SQLITE_PATH, target2);
                     string origin = Path.Combine(CurrentUserFolder, "image");
                     DirHelper.TryCopy(origin, target3);
                 }
@@ -524,7 +526,7 @@ namespace Jvedio
             StackPanel stackPanel = radioButton.Parent as StackPanel;
             int idx = stackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
             vieModel_StartUp.CurrentSideIdx = idx;
-            GlobalVariable.CurrentDataType = (DataType)idx;
+            Main.CurrentDataType = (DataType)idx;
             ConfigManager.StartUp.SideIdx = idx;
             vieModel_StartUp.ReadFromDataBase();
         }
@@ -548,7 +550,7 @@ namespace Jvedio
             //加载数据库
             long id = ConfigManager.Main.CurrentDBId;
             AppDatabase database = null;
-            if (ClickGoBackToStartUp || !ConfigManager.Settings.OpenDataBaseDefault)
+            if (Main.ClickGoBackToStartUp || !ConfigManager.Settings.OpenDataBaseDefault)
             {
                 if (listBox.SelectedIndex >= 0 && listBox.SelectedIndex < vieModel_StartUp.CurrentDatabases.Count)
                 {
@@ -634,7 +636,7 @@ namespace Jvedio
             }
 
             //启动主窗口
-            if (CurrentDataType == DataType.Video)
+            if (Main.CurrentDataType == DataType.Video)
             {
                 Main main = GetWindowByName("Main") as Main;
                 if (main == null)
@@ -661,7 +663,7 @@ namespace Jvedio
                 if (metaData == null)
                 {
                     metaData = new Window_MetaDatas();
-                    metaData.Title = "Jvedio-" + CurrentDataType.ToString();
+                    metaData.Title = "Jvedio-" + Main.CurrentDataType.ToString();
                     Application.Current.MainWindow = metaData;
                 }
                 else
@@ -707,7 +709,7 @@ namespace Jvedio
             string name = Path.GetFileNameWithoutExtension(imagePath);
             string ext = Path.GetExtension(imagePath).ToLower();
             string newName = $"{id}_{name}{ext}";
-            string newPath = Path.Combine(GlobalVariable.ProjectImagePath, newName);
+            string newPath = Path.Combine(PathManager.ProjectImagePath, newName);
             FileHelper.TryCopyFile(imagePath, newPath);
 
             AppDatabase app1 = vieModel_StartUp.Databases.Where(x => x.DBId == id).SingleOrDefault();
@@ -803,7 +805,7 @@ namespace Jvedio
                 // todo 多数据库
                 MapperManager.Dispose();
                 await Task.Delay(1000);
-                bool success = FileHelper.TryDeleteFile(DEFAULT_SQLITE_PATH, (error) =>
+                bool success = FileHelper.TryDeleteFile(SqlManager.DEFAULT_SQLITE_PATH, (error) =>
                 {
                     MessageCard.Error($"初始化失败：{error}");
                 });

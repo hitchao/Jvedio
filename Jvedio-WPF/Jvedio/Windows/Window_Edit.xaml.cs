@@ -45,7 +45,7 @@ namespace Jvedio
         {
             main = GetWindowByName("Main") as Main;
             windowDetails = GetWindowByName("Window_Details") as Window_Details;
-            if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
+            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont;//设置字体
 
         }
 
@@ -113,7 +113,7 @@ namespace Jvedio
                         vieModel.CurrentVideo.SubSectionList.Add(file);
                     }
                 }
-                vieModel.CurrentVideo.SubSection = String.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentVideo.SubSectionList);
+                vieModel.CurrentVideo.SubSection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
                 ReLoad();
             }
             calcSize();
@@ -147,7 +147,7 @@ namespace Jvedio
                 if (vieModel.CurrentVideo.GenreList == null)
                     vieModel.CurrentVideo.GenreList = new System.Collections.Generic.List<string>();
                 vieModel.CurrentVideo.GenreList.Add(text);
-                vieModel.CurrentVideo.Genre = string.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentVideo.GenreList);
+                vieModel.CurrentVideo.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.GenreList);
                 genreTagPanel.TagList = null;
                 genreTagPanel.TagList = vieModel.CurrentVideo.GenreList;
                 genreTagPanel.Refresh();
@@ -172,7 +172,7 @@ namespace Jvedio
                 vieModel.CurrentVideo.LabelList = new System.Collections.Generic.List<string>();
             if (vieModel.CurrentVideo.LabelList.Contains(label)) return;
             vieModel.CurrentVideo.LabelList.Add(label);
-            vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentVideo.LabelList);
+            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.LabelList);
             labelTagPanel.TagList = null;
             labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
             labelTagPanel.Refresh();
@@ -181,7 +181,7 @@ namespace Jvedio
         private void GenreChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
-                vieModel.CurrentVideo.Genre = string.Join(GlobalVariable.Separator.ToString(), e.List);
+                vieModel.CurrentVideo.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
 
 
         }
@@ -189,7 +189,7 @@ namespace Jvedio
         private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
-                vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), e.List);
+                vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
 
         }
 
@@ -199,7 +199,7 @@ namespace Jvedio
         {
             if (e != null && e.List != null)
             {
-                vieModel.CurrentVideo.SubSection = string.Join(GlobalVariable.Separator.ToString(), e.List);
+                vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
                 calcSize();
             }
 
@@ -211,7 +211,7 @@ namespace Jvedio
             if (vieModel.CurrentVideo.SubSectionList == null)
                 vieModel.CurrentVideo.SubSectionList = new System.Collections.Generic.List<string>();
             vieModel.CurrentVideo.SubSectionList.Add(text);
-            vieModel.CurrentVideo.SubSection = string.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentVideo.SubSectionList);
+            vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
             subSectionTagPanel.TagList = null;
             subSectionTagPanel.TagList = vieModel.CurrentVideo.SubSectionList;
             calcSize();
@@ -251,7 +251,7 @@ namespace Jvedio
             System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
             OpenFileDialog1.FileName = path;
-            OpenFileDialog1.Filter = GlobalVariable.SupportVideoFormat;
+            OpenFileDialog1.Filter = Window_Settings.SupportVideoFormat;
             OpenFileDialog1.FilterIndex = 1;
             OpenFileDialog1.RestoreDirectory = true;
             if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)

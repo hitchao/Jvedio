@@ -1,15 +1,13 @@
 ﻿using Jvedio.Core.Config.Base;
 using Jvedio.Core.Enums;
-using Jvedio.Core.WindowConfig;
+using Jvedio.Core.Global;
 using Jvedio.Core.Logs;
-using SuperUtils.Common;
+using Jvedio.Core.WindowConfig;
 using Newtonsoft.Json;
+using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio
 {
@@ -64,7 +62,7 @@ namespace Jvedio
             if (string.IsNullOrEmpty(Settings.PicPathJson))
             {
                 Dictionary<string, object> dict = new Dictionary<string, object>();
-                dict.Add(PathType.Absolute.ToString(), GlobalVariable.PicPath);
+                dict.Add(PathType.Absolute.ToString(), PathManager.PicPath);
                 dict.Add(PathType.RelativeToApp.ToString(), "./Pic");
 
                 Dictionary<string, string> d = new Dictionary<string, string>();

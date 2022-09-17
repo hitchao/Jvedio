@@ -25,7 +25,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Time;
 using SuperUtils.Framework.ORM.Utils;
@@ -311,7 +311,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private BitmapSource _BackgroundImage = GlobalVariable.BackgroundImage;
+        private BitmapSource _BackgroundImage = StyleManager.BackgroundImage;
 
         public BitmapSource BackgroundImage
         {
@@ -1219,7 +1219,7 @@ namespace Jvedio.ViewModel
             List<TagStamp> tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
             TagStamps = new ObservableCollection<TagStamp>();
             // 先增加默认的：高清、中文
-            foreach (TagStamp item in GlobalVariable.TagStamps)
+            foreach (TagStamp item in Main.TagStamps)
             {
                 TagStamp tagStamp = tagStamps.Where(arg => arg.TagID == item.TagID).FirstOrDefault();
                 if (tagStamp != null) TagStamps.Add(tagStamp);
@@ -1744,7 +1744,7 @@ namespace Jvedio.ViewModel
                 {
                     string genre = item["Genre"].ToString();
                     if (string.IsNullOrEmpty(genre)) continue;
-                    List<string> genres = genre.Split(GlobalVariable.Separator).ToList();
+                    List<string> genres = genre.Split(SuperUtils.Values.ConstValues.Separator).ToList();
                     foreach (string g in genres)
                     {
                         if (genreDict.ContainsKey(g))
@@ -1916,7 +1916,7 @@ namespace Jvedio.ViewModel
 
         public string getSortField(int sortindex)
         {
-            switch (GlobalVariable.CurrentDataType)
+            switch (Main.CurrentDataType)
             {
                 case DataType.Picture:
                     return PictureMapper.SortDict[sortindex];
@@ -1936,7 +1936,7 @@ namespace Jvedio.ViewModel
 
         public void setSelectFields(ref SelectWrapper<MetaData> wrapper)
         {
-            switch (GlobalVariable.CurrentDataType)
+            switch (Main.CurrentDataType)
             {
                 case DataType.Picture:
                     wrapper.Select(PictureMapper.SelectFields);
@@ -1958,7 +1958,7 @@ namespace Jvedio.ViewModel
         public void setSql(ref string sql)
         {
 
-            switch (CurrentDataType)
+            switch (Main.CurrentDataType)
             {
                 case DataType.Picture:
                     sql = PictureMapper.BASE_SQL;
@@ -2069,7 +2069,7 @@ namespace Jvedio.ViewModel
                 metaDatas.MovieScrollViewer.ScrollToTop();//滚到顶部
             });
 
-            DataType dataType = GlobalVariable.CurrentDataType;
+            DataType dataType = Main.CurrentDataType;
             SelectWrapper<MetaData> wrapper = MetaData.InitWrapper(dataType);
 
 
@@ -2124,11 +2124,11 @@ namespace Jvedio.ViewModel
             //if (rendering) return;
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             List<MetaData> datas = metaDataMapper.ToEntity<MetaData>(list, typeof(MetaData).GetProperties(), false);
-            if (GlobalVariable.CurrentDataType == DataType.Picture)
+            if (Main.CurrentDataType == DataType.Picture)
                 PictureList = pictureMapper.ToEntity<Picture>(list, typeof(Picture).GetProperties(), false);
-            else if (GlobalVariable.CurrentDataType == DataType.Comics)
+            else if (Main.CurrentDataType == DataType.Comics)
                 ComicList = pictureMapper.ToEntity<Comic>(list, typeof(Comic).GetProperties(), false);
-            else if (GlobalVariable.CurrentDataType == DataType.Game)
+            else if (Main.CurrentDataType == DataType.Game)
                 GameList = gameMapper.ToEntity<Game>(list, typeof(Game).GetProperties(), false);
             DataList = new List<MetaData>();
             if (datas == null) datas = new List<MetaData>();
@@ -2146,7 +2146,7 @@ namespace Jvedio.ViewModel
         {
             long dataID = data.DataID;
 
-            DataType dataType = GlobalVariable.CurrentDataType;
+            DataType dataType = Main.CurrentDataType;
 
             if (dataType == DataType.Picture)
             {
@@ -2154,11 +2154,11 @@ namespace Jvedio.ViewModel
                 if (picture != null)
                 {
                     if (!string.IsNullOrEmpty(picture.PicPaths))
-                        MetaData.SetImage(ref data, Path.Combine(data.Path, picture.PicPaths.Split(GlobalVariable.Separator)[0]));
+                        MetaData.SetImage(ref data, Path.Combine(data.Path, picture.PicPaths.Split(SuperUtils.Values.ConstValues.Separator)[0]));
 
                     if (!string.IsNullOrEmpty(picture.VideoPaths))
                     {
-                        data.AttachedVideos = picture.VideoPaths.Split(GlobalVariable.Separator).ToList();
+                        data.AttachedVideos = picture.VideoPaths.Split(SuperUtils.Values.ConstValues.Separator).ToList();
                         data.HasVideo = true;
                     }
                     data.Count = picture.PicCount;
@@ -2170,7 +2170,7 @@ namespace Jvedio.ViewModel
                 if (comic != null)
                 {
                     if (!string.IsNullOrEmpty(comic.PicPaths))
-                        MetaData.SetImage(ref data, Path.Combine(data.Path, comic.PicPaths.Split(GlobalVariable.Separator)[0]));
+                        MetaData.SetImage(ref data, Path.Combine(data.Path, comic.PicPaths.Split(SuperUtils.Values.ConstValues.Separator)[0]));
                     data.Count = comic.PicCount;
                 }
             }
@@ -2237,7 +2237,7 @@ namespace Jvedio.ViewModel
             Task.Run(() =>
             {
                 long dbid = ConfigManager.Main.CurrentDBId;
-                int dataType = (int)GlobalVariable.CurrentDataType;
+                int dataType = (int)Main.CurrentDataType;
                 AllDataCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType));
                 appDatabaseMapper.UpdateFieldById("Count", AllDataCount.ToString(), dbid);
 

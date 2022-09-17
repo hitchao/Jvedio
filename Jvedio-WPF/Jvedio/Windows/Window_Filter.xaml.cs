@@ -156,7 +156,7 @@ namespace Jvedio
                  .Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             HashSet<string> set = new HashSet<string>();
             foreach (string item in dataList)
-                foreach (string data in item.Split(GlobalVariable.Separator))
+                foreach (string data in item.Split(SuperUtils.Values.ConstValues.Separator))
                     set.Add(data);
             wrapPanel.Children.Clear();
             wrapPanel.Children.Add(buildToggleButton("全部", true));
@@ -173,7 +173,7 @@ namespace Jvedio
                  .Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             HashSet<string> set = new HashSet<string>();
             foreach (string item in dataList)
-                foreach (string data in item.Split(GlobalVariable.Separator))
+                foreach (string data in item.Split(SuperUtils.Values.ConstValues.Separator))
                     set.Add(data);
             wrapPanel.Children.Clear();
             wrapPanel.Children.Add(buildToggleButton("全部", true));

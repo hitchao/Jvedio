@@ -5,11 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Jvedio
 {
     public static class StyleManager
     {
+        public static BitmapSource BackgroundImage { get; set; }
+        public static FontFamily GlobalFont { get; set; }
+        public static string[] FontExt { get; set; }
+
+        static StyleManager()
+        {
+            FontExt = new[] { ".otf", ".ttf" };
+        }
+
         public static class Common
         {
             public static class HighLight

@@ -103,7 +103,7 @@ namespace Jvedio
             string imageFileName = "";
             System.Windows.Forms.OpenFileDialog OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             OpenFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
-            OpenFileDialog1.Filter = GlobalVariable.SupportPictureFormat;
+            OpenFileDialog1.Filter = Window_Settings.SupportPictureFormat;
             OpenFileDialog1.FilterIndex = 1;
             OpenFileDialog1.RestoreDirectory = true;
             if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)

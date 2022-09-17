@@ -31,7 +31,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using static SuperUtils.Media.ImageHelper;
 using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Time;
@@ -41,6 +41,8 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_Main : ViewModelBase
     {
+
+
 
         public event EventHandler PageChangedCompleted;
         public event EventHandler ActorPageChangedCompleted;
@@ -1197,7 +1199,7 @@ namespace Jvedio.ViewModel
                 tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
             TagStamps = new ObservableCollection<TagStamp>();
             // 先增加默认的：高清、中文
-            foreach (TagStamp item in GlobalVariable.TagStamps)
+            foreach (TagStamp item in Main.TagStamps)
             {
                 TagStamp tagStamp = tagStamps.Where(arg => arg.TagID == item.TagID).FirstOrDefault();
                 if (tagStamp != null) TagStamps.Add(tagStamp);
@@ -1345,7 +1347,7 @@ namespace Jvedio.ViewModel
                 if (!dict.ContainsKey(field)) continue;
                 string value = dict[field].ToString();
                 if (string.IsNullOrEmpty(value)) continue;
-                string[] arr = value.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries);
+                string[] arr = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries);
                 if (arr != null && arr.Length > 0)
                 {
                     foreach (var item in arr)
@@ -1522,7 +1524,7 @@ namespace Jvedio.ViewModel
                         if (!item.ContainsKey("Genre")) continue;
                         string genre = item["Genre"].ToString();
                         if (string.IsNullOrEmpty(genre)) continue;
-                        List<string> genres = genre.Split(new char[] { GlobalVariable.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        List<string> genres = genre.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         foreach (string g in genres)
                         {
                             if (search && g.IndexOf(searchText) < 0) continue;
@@ -2265,7 +2267,7 @@ namespace Jvedio.ViewModel
                 if (video == null) continue;
                 BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
                 BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
-                if (smallimage == null) smallimage = DefaultSmallImage;
+                if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.setTagStamps(ref video);// 设置标签戳
@@ -2344,7 +2346,7 @@ namespace Jvedio.ViewModel
                 if (video == null) continue;
                 BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
                 BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
-                if (smallimage == null) smallimage = DefaultSmallImage;
+                if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.handleEmpty(ref video);// 设置标题和发行日期

@@ -19,7 +19,7 @@ namespace Jvedio.Mapper
             if (idList == null || idList.Count == 0) return 0;
             int c1 = MapperManager.metaDataMapper.DeleteByIds(idList);
             int c2 = 0;
-            DataType dataType = GlobalVariable.CurrentDataType;
+            DataType dataType = Main.CurrentDataType;
             if (dataType == DataType.Picture)
             {
                 c2 = MapperManager.pictureMapper.DeleteByIds(idList);

@@ -39,9 +39,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using static Jvedio.GlobalVariable;
+
 using static Jvedio.VisualTools.WindowHelper;
 using static Jvedio.Core.Global.UrlManager;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace Jvedio
 {
@@ -60,6 +62,54 @@ namespace Jvedio
         public static Video SampleVideo { get; set; }
 
         public static string DEFAULT_TEST_URL = "https://www.baidu.com/";
+
+        public static string SupportVideoFormat { get; set; }
+        public static string SupportPictureFormat { get; set; }        //bmp,gif,ico,jpe,jpeg,jpg,png
+
+
+        #region "热键"
+        [DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        public const int HOTKEY_ID = 2415;
+        public static uint VK;
+        public static IntPtr _windowHandle;
+        public static HwndSource _source;
+        public static bool WindowsVisible = true;
+        public static List<string> OpeningWindows = new List<string>();
+        public static List<Key> funcKeys = new List<Key>();     // 功能键 [1,3] 个
+        public static Key key = Key.None;                       // 基础键 1 个
+        public static List<Key> _funcKeys = new List<Key>();
+        public static Key _key = Key.None;
+
+        public enum Modifiers
+        {
+            None = 0x0000,
+            Alt = 0x0001,
+            Control = 0x0002,
+            Shift = 0x0004,
+            Win = 0x0008
+        }
+
+        public static bool IsProperFuncKey(List<Key> keyList)
+        {
+            bool result = true;
+            List<Key> keys = new List<Key>() { Key.LeftCtrl, Key.LeftAlt, Key.LeftShift };
+
+            foreach (Key item in keyList)
+            {
+                if (!keys.Contains(item))
+                {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        #endregion
 
 
         static Window_Settings()
@@ -85,6 +135,8 @@ namespace Jvedio
                 Country = Jvedio.Language.Resources.SampleMovie_Country
             };
 
+            SupportVideoFormat = $"{Jvedio.Language.Resources.NormalVedio}(*.avi, *.mp4, *.mkv, *.mpg, *.rmvb)| *.avi; *.mp4; *.mkv; *.mpg; *.rmvb|{Jvedio.Language.Resources.OtherVedio}((*.rm, *.mov, *.mpeg, *.flv, *.wmv, *.m4v)| *.rm; *.mov; *.mpeg; *.flv; *.wmv; *.m4v|{Jvedio.Language.Resources.AllFile} (*.*)|*.*";
+            SupportPictureFormat = $"图片(*.bmp, *.jpe, *.jpeg, *.jpg, *.png)|*.bmp;*.jpe;*.jpeg;*.jpg;*.png";
 
         }
 
@@ -93,7 +145,7 @@ namespace Jvedio
             InitializeComponent();
 
             windowMain = GetWindowByName("Main") as Main;
-            if (GlobalFont != null) this.FontFamily = GlobalFont;
+            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont;
             vieModel = new VieModel_Settings();
             this.DataContext = vieModel;
 
@@ -470,7 +522,6 @@ namespace Jvedio
              });
             if (success)
             {
-                GlobalVariable.InitProperties();
                 ScanHelper.InitSearchPattern();
                 SavePath();
                 SaveSettings();

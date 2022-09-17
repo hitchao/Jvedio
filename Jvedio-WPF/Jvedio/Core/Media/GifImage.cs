@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jvedio.Entity;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -168,7 +169,7 @@ namespace Jvedio.Core.Media
                 }
                 else
                 {
-                    this.Source = GlobalVariable.DefaultBigImage;
+                    this.Source = MetaData.DefaultBigImage;
                 }
             }
         }

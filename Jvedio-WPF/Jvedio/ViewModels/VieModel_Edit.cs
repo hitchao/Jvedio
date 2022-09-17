@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using SuperUtils.Media;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
@@ -430,7 +430,7 @@ namespace Jvedio.ViewModel
                     string smallImagePath = actorInfo.getImagePath();
                     smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
                 }
-                if (smallimage == null) smallimage = DefaultActorImage;
+                if (smallimage == null) smallimage = MetaData.DefaultActorImage;
                 actorInfo.SmallImage = smallimage;
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
             }

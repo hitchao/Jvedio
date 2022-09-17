@@ -27,7 +27,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.GlobalVariable;
+
 using SuperUtils.Media;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 using static Jvedio.VisualTools.WindowHelper;
@@ -145,7 +145,7 @@ namespace Jvedio
                     BitmapImage smallimage = ReadImageFromFile(imagePath);
                     if (smallimage == null)
                     {
-                        smallimage = DefaultActorImage;
+                        smallimage = MetaData.DefaultActorImage;
                         //// 根据地址下载图片
                         //if (!string.IsNullOrEmpty(actorInfo.ImageUrl))
                         //{
@@ -218,7 +218,7 @@ namespace Jvedio
         {
             BgImage.Source = null;
             if (ConfigManager.Settings.DetailShowBg)
-                BgImage.Source = GlobalVariable.BackgroundImage;
+                BgImage.Source = StyleManager.BackgroundImage;
             ////设置字体
             //if (GlobalFont != null) this.FontFamily = GlobalFont;
         }
@@ -1066,7 +1066,7 @@ namespace Jvedio
                 }
                 else
                 {
-                    if (video.BigImage == GlobalVariable.DefaultBigImage)
+                    if (video.BigImage == MetaData.DefaultBigImage)
                     {
                         // 检查有无截图
 
@@ -1478,7 +1478,7 @@ namespace Jvedio
 
             if (e != null && e.List != null)
             {
-                vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), e.List);
+                vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
                 MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
             }
 
@@ -1490,7 +1490,7 @@ namespace Jvedio
                 vieModel.CurrentVideo.LabelList = new System.Collections.Generic.List<string>();
             if (vieModel.CurrentVideo.LabelList.Contains(label)) return;
             vieModel.CurrentVideo.LabelList.Add(label);
-            vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentVideo.LabelList);
+            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.LabelList);
             labelTagPanel.TagList = null;
             labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
             labelTagPanel.Refresh();

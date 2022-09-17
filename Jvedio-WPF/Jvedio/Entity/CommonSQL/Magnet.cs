@@ -41,7 +41,7 @@ namespace Jvedio.Entity
                 Tags = new List<string>();
                 if (!string.IsNullOrEmpty(value))
                 {
-                    Tags.AddRange(value.Split(new char[] { ' ', GlobalVariable.Separator },
+                    Tags.AddRange(value.Split(new char[] { ' ', SuperUtils.Values.ConstValues.Separator },
                         StringSplitOptions.RemoveEmptyEntries));
                 }
             }

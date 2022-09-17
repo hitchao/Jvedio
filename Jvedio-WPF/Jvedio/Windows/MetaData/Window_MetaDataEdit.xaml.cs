@@ -164,7 +164,7 @@ namespace Jvedio
                 //        vieModel.CurrentData.SubSectionList.Add(file);
                 //    }
                 //}
-                //vieModel.CurrentData.SubSection = String.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentData.SubSectionList);
+                //vieModel.CurrentData.SubSection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.SubSectionList);
                 //ReLoad();
             }
             calcSize();
@@ -211,7 +211,7 @@ namespace Jvedio
                 if (vieModel.CurrentData.GenreList == null)
                     vieModel.CurrentData.GenreList = new System.Collections.Generic.List<string>();
                 vieModel.CurrentData.GenreList.Add(text);
-                vieModel.CurrentData.Genre = String.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentData.GenreList);
+                vieModel.CurrentData.Genre = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.GenreList);
                 genreTagPanel.TagList = null;
                 genreTagPanel.TagList = vieModel.CurrentData.GenreList;
                 genreTagPanel.Refresh();
@@ -236,7 +236,7 @@ namespace Jvedio
                 vieModel.CurrentData.LabelList = new System.Collections.Generic.List<string>();
             if (vieModel.CurrentData.LabelList.Contains(label)) return;
             vieModel.CurrentData.LabelList.Add(label);
-            vieModel.CurrentData.Label = String.Join(GlobalVariable.Separator.ToString(), vieModel.CurrentData.LabelList);
+            vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.LabelList);
             labelTagPanel.TagList = null;
             labelTagPanel.TagList = vieModel.CurrentData.LabelList;
             labelTagPanel.Refresh();
@@ -245,7 +245,7 @@ namespace Jvedio
         private void GenreChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
-                vieModel.CurrentData.Genre = String.Join(GlobalVariable.Separator.ToString(), e.List);
+                vieModel.CurrentData.Genre = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
 
 
         }
@@ -253,7 +253,7 @@ namespace Jvedio
         private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
         {
             if (e != null && e.List != null)
-                vieModel.CurrentData.Label = String.Join(GlobalVariable.Separator.ToString(), e.List);
+                vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
 
         }
 
@@ -266,7 +266,7 @@ namespace Jvedio
                     Console.WriteLine(item);
                 }
 
-                //vieModel.CurrentData.Label = String.Join(GlobalVariable.Separator.ToString(), e.List);
+                //vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
             }
 
         }
@@ -297,15 +297,15 @@ namespace Jvedio
                     List<string> videoPaths = enumerable.Where(arg => ScanTask.VIDEO_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
                     List<string> imgPaths = enumerable.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
                     vieModel.CurrentPicture.PicCount = imgPaths.Count;
-                    vieModel.CurrentPicture.PicPaths = string.Join(GlobalVariable.Separator.ToString(), imgPaths.Select(arg => Path.GetFileName(arg)));
-                    vieModel.CurrentPicture.VideoPaths = String.Join(GlobalVariable.Separator.ToString(), videoPaths);
+                    vieModel.CurrentPicture.PicPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, imgPaths.Select(arg => Path.GetFileName(arg)));
+                    vieModel.CurrentPicture.VideoPaths = String.Join(SuperUtils.Values.ConstValues.SeparatorString, videoPaths);
                 }
                 else if (CurrentDataType == DataType.Comics)
                 {
                     IEnumerable<string> enumerable = DirHelper.GetFileList(result);
                     List<string> imgPaths = enumerable.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
                     vieModel.CurrentComic.PicCount = imgPaths.Count;
-                    vieModel.CurrentComic.PicPaths = string.Join(GlobalVariable.Separator.ToString(), imgPaths.Select(arg => Path.GetFileName(arg)));
+                    vieModel.CurrentComic.PicPaths = string.Join(SuperUtils.Values.ConstValues.SeparatorString, imgPaths.Select(arg => Path.GetFileName(arg)));
                 }
 
 
@@ -412,7 +412,7 @@ namespace Jvedio
         private void ChooseImage(object sender, MouseButtonEventArgs e)
         {
             string path = Path.GetDirectoryName(vieModel.CurrentData.Path);
-            string imgPath = SelectData(path, GlobalVariable.SupportPictureFormat);
+            string imgPath = SelectData(path, Window_Settings.SupportPictureFormat);
             if (File.Exists(imgPath))
             {
                 vieModel.CurrentImage = ReadImageFromFile(imgPath);

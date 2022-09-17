@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using SuperUtils.Reflections;
+using Jvedio.Core.Global;
 
 namespace Jvedio.Entity
 {
@@ -106,7 +107,7 @@ namespace Jvedio.Entity
                 string smallImagePath = actorInfo.getImagePath();
                 smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
             }
-            if (smallimage == null) smallimage = GlobalVariable.DefaultActorImage;
+            if (smallimage == null) smallimage = MetaData.DefaultActorImage;
             actorInfo.SmallImage = smallimage;
         }
 
@@ -118,7 +119,7 @@ namespace Jvedio.Entity
             if (pathType != PathType.RelativeToData)
             {
                 if (pathType == PathType.RelativeToApp)
-                    basePicPath = System.IO.Path.Combine(GlobalVariable.CurrentUserFolder, basePicPath);
+                    basePicPath = System.IO.Path.Combine(PathManager.CurrentUserFolder, basePicPath);
                 string saveDir = System.IO.Path.Combine(basePicPath, "Actresses");
                 if (!Directory.Exists(saveDir)) FileHelper.TryCreateDir(saveDir);
                 // 优先使用 1_name.jpg 的方式
