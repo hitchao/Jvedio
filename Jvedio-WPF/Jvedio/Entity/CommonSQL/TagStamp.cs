@@ -1,15 +1,8 @@
 ﻿using DynamicData.Annotations;
 using SuperUtils.Framework.ORM.Attributes;
-using SuperUtils.Framework.ORM.Mapper;
-using Jvedio.Core.Enums;
-using SuperUtils.Visual;
-using System;
-using System.Collections.Generic;
+using SuperUtils.WPF.VisualTools;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Jvedio.Entity.CommonSQL

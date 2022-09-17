@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Windows;
 using static Jvedio.MapperManager;
-using static SuperUtils.Visual.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.ORM.Utils;

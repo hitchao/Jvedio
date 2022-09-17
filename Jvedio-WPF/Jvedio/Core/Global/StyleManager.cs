@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Jvedio
 {
-    public static class GlobalStyle
+    public static class StyleManager
     {
         public static class Common
         {

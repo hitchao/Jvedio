@@ -16,7 +16,7 @@ using Jvedio.Mapper.BaseMapper;
 using System.Windows;
 using System.Windows.Threading;
 using Jvedio.Core.Enums;
-using static SuperUtils.Visual.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.ORM.Utils;

@@ -8,11 +8,11 @@ using System.ComponentModel;
 using DynamicData.Annotations;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
-using SuperUtils.Visual;
 using System.IO;
 using Jvedio.Core;
 using System.Windows.Media.Imaging;
 using SuperUtils.Media;
+using SuperUtils.WPF.VisualTools;
 
 namespace Jvedio.Entity
 {

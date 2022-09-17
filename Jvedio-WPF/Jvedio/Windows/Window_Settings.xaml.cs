@@ -40,7 +40,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.GlobalVariable;
-using static SuperUtils.Visual.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
+using static Jvedio.Core.Global.UrlManager;
 
 namespace Jvedio
 {
@@ -1963,7 +1964,7 @@ namespace Jvedio
 
         private void ShowUploadHelp(object sender, RoutedEventArgs e)
         {
-            FileHelper.TryOpenUrl(GlobalVariable.PLUGIN_UPLOAD_HELP);
+            FileHelper.TryOpenUrl(PLUGIN_UPLOAD_HELP);
         }
 
         private void DeletePlugin(object sender, RoutedEventArgs e)

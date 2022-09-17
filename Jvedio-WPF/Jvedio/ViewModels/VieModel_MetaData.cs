@@ -26,7 +26,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-using static SuperUtils.Visual.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Time;
 using SuperUtils.Framework.ORM.Utils;
 

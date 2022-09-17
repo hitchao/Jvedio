@@ -27,7 +27,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
-using static SuperUtils.Visual.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Time;
 
 namespace Jvedio

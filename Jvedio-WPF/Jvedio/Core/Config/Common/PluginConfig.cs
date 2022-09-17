@@ -2,13 +2,9 @@
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Config.Base;
 using Jvedio.Core.Crawler;
-using Jvedio.Core.WindowConfig;
+using Jvedio.Core.Global;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Jvedio.Core.Config
@@ -37,7 +33,7 @@ namespace Jvedio.Core.Config
             RequestHeader Header = CrawlerHeader.GitHub;
             Task.Run(async () =>
             {
-                HttpResult httpResult = await HttpClient.Get(GlobalVariable.PLUGIN_LIST_URL, Header);
+                HttpResult httpResult = await HttpClient.Get(UrlManager.PLUGIN_LIST_URL, Header);
                 if (httpResult.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
                 {
                     // 更新插件

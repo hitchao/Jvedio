@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using SuperUtils.Reflections;
-using SuperUtils.Visual;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using static SuperUtils.Visual.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 
 namespace Jvedio.Core.Command
 {

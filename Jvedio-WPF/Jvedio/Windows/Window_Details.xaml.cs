@@ -10,7 +10,6 @@ using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using SuperUtils;
 using SuperUtils.IO;
-using SuperUtils.Visual;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using System;
@@ -30,12 +29,14 @@ using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using SuperUtils.Media;
-using static SuperUtils.Visual.VisualHelper;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
 using Jvedio.Core.Logs;
 using Jvedio.Core.Crawler;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Common;
+using SuperUtils.WPF.VisualTools;
 
 namespace Jvedio
 {
@@ -1257,7 +1258,7 @@ namespace Jvedio
             FrameworkElement element = sender as FrameworkElement;
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
-            border.Background = GlobalStyle.Common.HighLight.Background;
+            border.Background = StyleManager.Common.HighLight.Background;
 
         }
 

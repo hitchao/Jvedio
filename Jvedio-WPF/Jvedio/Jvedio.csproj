@@ -304,6 +304,7 @@
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
+    <Compile Include="Core\Global\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
     <Compile Include="Core\Net\UpgradeHelper.cs" />
@@ -326,7 +327,7 @@
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
-    <Compile Include="Core\Global\GlobalStyle.cs" />
+    <Compile Include="Core\Global\StyleManager.cs" />
     <Compile Include="Core\Plugins\Plugin.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
     <Compile Include="Core\Plugins\PluginManager.cs" />
@@ -348,7 +349,6 @@
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Core\CustomTask\TaskLogger.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
-    <Compile Include="Utils\Reflections\ReflectionHelper.cs" />
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
@@ -426,13 +426,12 @@
     <Compile Include="Test\TestMapper.cs" />
     <Compile Include="Test\TestUtils.cs" />
     <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
-    <Compile Include="Utils\External\Baidu.cs" />
+    <Compile Include="Utils\Extern\Baidu.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utils\Other\NFOHelper.cs" />
-    <Compile Include="Utils\Other\Converter.cs" />
+    <Compile Include="Utils\Common\Converter.cs" />
     <Compile Include="Core\Media\Gif.cs" />
     <Compile Include="Core\Media\GifImage.cs" />
     <Compile Include="Core\FFmpeg\ScreenShot.cs" />
@@ -441,9 +440,9 @@
     <Compile Include="WindowsDialog\Dialog_Thanks.xaml.cs">
       <DependentUpon>Dialog_Thanks.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\External\Translate.cs" />
+    <Compile Include="Utils\Extern\Translate.cs" />
     <Compile Include="Entity\Common\MySqlite.cs" />
-    <Compile Include="Utils\Visual\VisualHelper.cs" />
+    <Compile Include="Utils\VisualTools\WindowHelper.cs" />
     <Compile Include="ViewModels\VieModel_MetaDataEdit.cs" />
     <Compile Include="ViewModels\VieModel_MetaData.cs" />
     <Compile Include="Windows\Dialog\DialogInput.xaml.cs">

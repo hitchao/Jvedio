@@ -21,7 +21,6 @@ using SuperUtils;
 using SuperUtils.Common;
 using SuperUtils.IO;
 using SuperUtils.Media;
-using SuperUtils.Visual;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
@@ -49,11 +48,14 @@ using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Main.Msg;
 using static SuperUtils.Media.ImageHelper;
-using static SuperUtils.Visual.VisualHelper;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Time;
 using SuperUtils.Framework.ORM.Utils;
+using SuperUtils.WPF.VisualTools;
+using static Jvedio.Core.Global.UrlManager;
 
 namespace Jvedio
 {
@@ -1232,8 +1234,8 @@ namespace Jvedio
                     if (Properties.Settings.Default.ActorEditMode && vieModel.SelectedActors != null &&
                         vieModel.SelectedActors.Where(arg => arg.ActorID == actorID).Any())
                     {
-                        border.Background = GlobalStyle.Common.HighLight.Background;
-                        border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                        border.Background = StyleManager.Common.HighLight.Background;
+                        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
 
                     }
                 }
@@ -1251,7 +1253,7 @@ namespace Jvedio
             {
                 Border border = grid.Children[0] as Border;
                 if (border != null)
-                    border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                    border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
             }
         }
 
@@ -1267,7 +1269,7 @@ namespace Jvedio
                 Border border = grid.Children[0] as Border;
                 if (actorID <= 0 || border == null || vieModel.SelectedActors == null) return;
                 if (vieModel.SelectedActors.Where(arg => arg.ActorID == actorID).Any())
-                    border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                    border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
                 else
                     border.BorderBrush = Brushes.Transparent;
             }
@@ -1432,8 +1434,8 @@ namespace Jvedio
                     if (Properties.Settings.Default.EditMode && vieModel.SelectedVideo != null &&
                         vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
                     {
-                        border.Background = GlobalStyle.Common.HighLight.Background;
-                        border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                        border.Background = StyleManager.Common.HighLight.Background;
+                        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
 
                     }
                 }
@@ -4600,7 +4602,7 @@ namespace Jvedio
                 GifImage image = sender as GifImage;
                 Grid grid = image.FindParentOfType<Grid>("rootGrid");
                 Border border = grid.Children[0] as Border;
-                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
             }
         }
 
@@ -4615,7 +4617,7 @@ namespace Jvedio
                 Border border = grid.Children[0] as Border;
                 if (vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
                 {
-                    border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                    border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
                 }
                 else
                 {
@@ -4933,8 +4935,8 @@ namespace Jvedio
                     border.BorderBrush = Brushes.Transparent;
                     if (vieModel.AssociationSelectedDatas.Where(arg => arg.DataID == dataID).Any())
                     {
-                        border.Background = GlobalStyle.Common.HighLight.Background;
-                        border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                        border.Background = StyleManager.Common.HighLight.Background;
+                        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
                     }
                 }
 
@@ -4949,7 +4951,7 @@ namespace Jvedio
             if (grid == null || grid.Children.Count <= 0) return;
             Border border = grid.Children[0] as Border;
             if (border != null)
-                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
 
 
         }
@@ -4966,7 +4968,7 @@ namespace Jvedio
             Border border = grid.Children[0] as Border;
             if (border == null || vieModel.AssociationSelectedDatas == null) return;
             if (vieModel.AssociationSelectedDatas.Where(arg => arg.DataID == dataID).Any())
-                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
             else
                 border.BorderBrush = Brushes.Transparent;
         }

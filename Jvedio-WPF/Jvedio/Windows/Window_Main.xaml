@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
+    xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ext="clr-namespace:Jvedio.Core.Extensions"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
@@ -46,10 +47,10 @@
 
 
         <!--<local:MovieStampTypeToVisibilityConverter x:Key="MovieStampTypeToVisibilityConverter" />-->
-        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <local:NotEqualConverter x:Key="NotEqualConverter" />
-        <local:MultiLargerConverter x:Key="MultiLargerConverter" />
-        <local:MultiUnitConverter x:Key="MultiUnitConverter" />
+        <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <converter:NotEqualConverter x:Key="NotEqualConverter" />
+        <converter:MultiLargerConverter x:Key="MultiLargerConverter" />
+        <converter:MultiUnitConverter x:Key="MultiUnitConverter" />
 
 
         <Style x:Key="ItemsControlVirtualizedWrapPanelStyle" TargetType="ItemsControl">

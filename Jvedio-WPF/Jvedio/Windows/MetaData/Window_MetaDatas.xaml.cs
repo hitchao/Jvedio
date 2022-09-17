@@ -1,44 +1,34 @@
-﻿using SuperControls.Style;
-using DynamicData;
-using Jvedio.Core;
+﻿using DynamicData;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
+using Jvedio.Core.Logs;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
-using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Entity.Data;
-using Jvedio.Core.Logs;
-using SuperUtils.Common;
-using SuperUtils.IO;
-using SuperUtils.Visual;
 using Jvedio.ViewModel;
-using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.FileIO;
+using SuperControls.Style;
+using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.IO;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using static Jvedio.MapperManager;
 using static Jvedio.Main;
 using static Jvedio.Main.Msg;
-using static SuperUtils.Visual.VisualHelper;
-using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.Time;
+using static Jvedio.MapperManager;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
 
 namespace Jvedio
 {
@@ -515,7 +505,7 @@ namespace Jvedio
                 GifImage image = sender as GifImage;
                 Grid grid = image.FindParentOfType<Grid>("rootGrid");
                 Border border = grid.Children[0] as Border;
-                border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
             }
         }
 
@@ -529,7 +519,7 @@ namespace Jvedio
                 Border border = grid.Children[0] as Border;
                 if (vieModel.SelectedData.Where(arg => arg.DataID == dataID).Any())
                 {
-                    border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                    border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
                 }
                 else
                 {
@@ -631,8 +621,8 @@ namespace Jvedio
                     border.BorderBrush = Brushes.Transparent;
                     if (vieModel.EditMode && vieModel.SelectedData.Where(arg => arg.DataID == dataID).Any())
                     {
-                        border.Background = GlobalStyle.Common.HighLight.Background;
-                        border.BorderBrush = GlobalStyle.Common.HighLight.BorderBrush;
+                        border.Background = StyleManager.Common.HighLight.Background;
+                        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
 
                     }
                 }

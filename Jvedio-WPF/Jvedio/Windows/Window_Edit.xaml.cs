@@ -3,7 +3,6 @@ using Jvedio.Core.Enums;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using SuperUtils.IO;
-using SuperUtils.Visual;
 using Jvedio.ViewModel;
 using System;
 using System.IO;
@@ -12,7 +11,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static SuperUtils.Visual.VisualHelper;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 using SuperUtils.Framework.ORM.Wrapper;
 
 namespace Jvedio
@@ -334,7 +334,7 @@ namespace Jvedio
             FrameworkElement element = sender as FrameworkElement;
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             Border border = grid.Children[0] as Border;
-            border.Background = GlobalStyle.Common.HighLight.Background;
+            border.Background = StyleManager.Common.HighLight.Background;
 
         }
 

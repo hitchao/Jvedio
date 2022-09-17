@@ -15,7 +15,7 @@ using System.Windows.Threading;
 using static Jvedio.GlobalVariable;
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
-using static SuperUtils.Visual.VisualHelper;
+using static Jvedio.VisualTools.WindowHelper;
 
 namespace Jvedio.ViewModel
 {

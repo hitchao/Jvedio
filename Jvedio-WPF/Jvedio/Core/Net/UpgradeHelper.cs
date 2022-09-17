@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Jvedio.Core.Global.UrlManager;
 
 namespace Jvedio.Core.Net
 {
@@ -46,7 +47,7 @@ namespace Jvedio.Core.Net
             string ReleaseNote = "";
             try
             {
-                HttpResult result = await HttpClient.Get(GlobalVariable.UpdateUrl, CrawlerHeader.GitHub);
+                HttpResult result = await HttpClient.Get(UpdateUrl, CrawlerHeader.GitHub);
                 if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(result.SourceCode))
                 {
                     string sourceCode = result.SourceCode;

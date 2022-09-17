@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using static Jvedio.GlobalVariable;
+using static Jvedio.Core.Global.UrlManager;
 
 namespace Jvedio
 {
@@ -249,7 +249,7 @@ namespace Jvedio
 
         private void BaseDialog_ContentRendered(object sender, EventArgs e)
         {
-            UpgradeSourceTextBlock.Text = $"{Jvedio.Language.Resources.UpgradeSource}：{GlobalVariable.UpgradeSource}";
+            UpgradeSourceTextBlock.Text = $"{Jvedio.Language.Resources.UpgradeSource}：{UpgradeSource}";
             LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 

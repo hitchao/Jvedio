@@ -2,15 +2,16 @@
     x:Class="Jvedio.Window_MetaDatas"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
+    xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="Jvedio"
     Width="1100"
     Height="600"
@@ -30,13 +31,13 @@
 
     <super:BaseWindow.Resources>
 
- 
+
         <!--<local:MovieStampTypeToVisibilityConverter x:Key="MovieStampTypeToVisibilityConverter" />-->
-        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <local:NotEqualConverter x:Key="NotEqualConverter" />
-        <local:MultiLargerConverter x:Key="MultiLargerConverter" />
-        <local:MultiUnitConverter x:Key="MultiUnitConverter" />
- 
+        <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <converter:NotEqualConverter x:Key="NotEqualConverter" />
+        <converter:MultiLargerConverter x:Key="MultiLargerConverter" />
+        <converter:MultiUnitConverter x:Key="MultiUnitConverter" />
+
 
         <Style
             x:Key="SearchBoxListItemContainerStyle"
@@ -260,7 +261,7 @@
                         HorizontalAlignment="Stretch"
                         Click="GoToStartUp"
                         Content="返回选择" />
- -->
+                    -->
                     <super:TogglePanel
                         Grid.Row="2"
                         Padding="0,5"
