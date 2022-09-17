@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Release", "Jvedio.Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Update", "Jvedio.Update\Jvedio.Update.csproj", "{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Test", "Jvedio.Test\Jvedio.Test.csproj", "{1E60B364-DCA1-47C1-B8CB-F189AFF3D0C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E60B364-DCA1-47C1-B8CB-F189AFF3D0C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E60B364-DCA1-47C1-B8CB-F189AFF3D0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E60B364-DCA1-47C1-B8CB-F189AFF3D0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E60B364-DCA1-47C1-B8CB-F189AFF3D0C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

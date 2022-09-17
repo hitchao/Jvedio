@@ -425,8 +425,6 @@
     <Compile Include="Mapper\Common\UrlCodeMapper.cs" />
     <Compile Include="Mapper\Common\PictureMapper.cs" />
     <Compile Include="Mapper\Common\VideoMapper.cs" />
-    <Compile Include="Test\TestMapper.cs" />
-    <Compile Include="Test\TestUtils.cs" />
     <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
     <Compile Include="Utils\Extern\Baidu.cs" />
     <Compile Include="App.xaml.cs">
@@ -649,9 +647,7 @@
     <Content Include="Data\Sql\single_db_game.sql" />
     <Content Include="Data\Sql\single_db_picture.sql" />
     <Resource Include="Resources\Picture\plugin.png" />
-    <Content Include="Test\SqliteTest\main.py" />
     <None Include="Data\config.ini" />
-    <None Include="Test\FFmpeg\command.md" />
     <Resource Include="Resources\Picture\Empty.png" />
     <Content Include="Data\Sql\app_configs.sql" />
     <Content Include="Data\Sql\app_datas.sql" />
