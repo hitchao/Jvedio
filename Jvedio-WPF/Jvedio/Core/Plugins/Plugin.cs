@@ -42,6 +42,7 @@ namespace Jvedio.Core.Plugins
             {
                 throw new DllLoadFailedException(DllPath);
             }
+
             if (classType == null || instance == null) throw new DllLoadFailedException(DllPath);
             MethodInfo methodInfo = classType.GetMethod(MethodName);
             if (methodInfo == null) throw new DllLoadFailedException(DllPath);
@@ -63,6 +64,7 @@ namespace Jvedio.Core.Plugins
             {
                 if (type.IsPublic) return type;
             }
+
             return null;
         }
     }

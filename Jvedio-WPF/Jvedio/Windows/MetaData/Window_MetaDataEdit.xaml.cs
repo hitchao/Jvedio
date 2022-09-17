@@ -44,8 +44,8 @@ namespace Jvedio
 
         public void ReLoad()
         {
-            //actorTagPanel.TagList = vieModel.CurrentData.ActorNameList;
-            //actorTagPanel.Refresh();
+            // actorTagPanel.TagList = vieModel.CurrentData.ActorNameList;
+            // actorTagPanel.Refresh();
             genreTagPanel.TagList = vieModel.CurrentData.GenreList;
             genreTagPanel.Refresh();
             labelTagPanel.TagList = vieModel.CurrentData.LabelList;
@@ -54,14 +54,14 @@ namespace Jvedio
 
         private void UpdateMain(string oldID, string newID)
         {
-            //Main main = App.Current.Windows[0] as Main;
-            //Movie movie = SelectMovie(newID);
-            //addTag(ref movie);
-            //movie.smallimage = ImageHelper.GetBitmapImage(movie.id, "SmallPic");
-            //movie.bigimage = ImageHelper.GetBitmapImage(movie.id, "BigPic");
+            // Main main = App.Current.Windows[0] as Main;
+            // Movie movie = SelectMovie(newID);
+            // addTag(ref movie);
+            // movie.smallimage = ImageHelper.GetBitmapImage(movie.id, "SmallPic");
+            // movie.bigimage = ImageHelper.GetBitmapImage(movie.id, "BigPic");
 
-            //for (int i = 0; i < main.vieModel.CurrentMovieList.Count; i++)
-            //{
+            // for (int i = 0; i < main.vieModel.CurrentMovieList.Count; i++)
+            // {
             //    try
             //    {
             //        if (main.vieModel.CurrentMovieList[i]?.id.ToUpper() == oldID.ToUpper())
@@ -72,10 +72,10 @@ namespace Jvedio
             //        }
             //    }
             //    catch { }
-            //}
+            // }
 
-            //for (int i = 0; i < main.vieModel.MovieList.Count; i++)
-            //{
+            // for (int i = 0; i < main.vieModel.MovieList.Count; i++)
+            // {
             //    try
             //    {
             //        if (main.vieModel.MovieList[i]?.id.ToUpper() == oldID.ToUpper())
@@ -86,10 +86,10 @@ namespace Jvedio
             //        }
             //    }
             //    catch { }
-            //}
+            // }
 
-            //for (int i = 0; i < main.vieModel.FilterMovieList.Count; i++)
-            //{
+            // for (int i = 0; i < main.vieModel.FilterMovieList.Count; i++)
+            // {
             //    try
             //    {
             //        if (main.vieModel.FilterMovieList[i]?.id.ToUpper() == oldID.ToUpper())
@@ -100,7 +100,7 @@ namespace Jvedio
             //        }
             //    }
             //    catch { }
-            //}
+            // }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -110,6 +110,7 @@ namespace Jvedio
             {
                 vieModel.Reset();
                 ReLoad();
+
                 // todo 更新到主界面和详情界面
                 window_MetaDatas?.RefreshData(vieModel.CurrentData.DataID);
                 SuperControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
@@ -123,7 +124,7 @@ namespace Jvedio
         private void ChoseMovieBorder_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
-            e.Handled = true;//必须加
+            e.Handled = true; // 必须加
         }
 
         private void ChoseMovieBorder_Drop(object sender, DragEventArgs e)
@@ -138,20 +139,21 @@ namespace Jvedio
             }
             else
             {
-                //vieModel.CurrentData.Path = dragdropFiles[0];
-                //if (vieModel.CurrentData.SubSectionList == null)
+                // vieModel.CurrentData.Path = dragdropFiles[0];
+                // if (vieModel.CurrentData.SubSectionList == null)
                 //    vieModel.CurrentData.SubSectionList = new System.Collections.Generic.List<string>();
-                //foreach (var file in dragdropFiles)
-                //{
+                // foreach (var file in dragdropFiles)
+                // {
                 //    if (vieModel.CurrentData.SubSectionList.Contains(file)) continue;
                 //    if (FileHelper.IsFile(file) && ScanHelper.IsProperMovie(file))
                 //    {
                 //        vieModel.CurrentData.SubSectionList.Add(file);
                 //    }
-                //}
-                //vieModel.CurrentData.SubSection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.SubSectionList);
-                //ReLoad();
+                // }
+                // vieModel.CurrentData.SubSection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentData.SubSectionList);
+                // ReLoad();
             }
+
             calcSize();
         }
 
@@ -169,7 +171,8 @@ namespace Jvedio
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            DateTime date = DateTime.Now; ;
+            DateTime date = DateTime.Now;
+            ;
             bool success = DateTime.TryParse((sender as SearchBox).Text, out date);
             if (success)
             {
@@ -244,7 +247,7 @@ namespace Jvedio
                     Console.WriteLine(item);
                 }
 
-                //vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
+                // vieModel.CurrentData.Label = String.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
             }
         }
 
@@ -260,6 +263,7 @@ namespace Jvedio
             {
                 result = FileHelper.SelectPath(this, path);
             }
+
             if (!string.IsNullOrEmpty(result) && !result.Equals(path))
             {
                 vieModel.CurrentData.Path = result;
@@ -301,6 +305,7 @@ namespace Jvedio
                 if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
                     return filename;
             }
+
             return path;
         }
 
@@ -329,6 +334,7 @@ namespace Jvedio
                 long.TryParse(grid.Tag.ToString(), out long result);
                 return result;
             }
+
             return -1;
         }
 
@@ -373,7 +379,8 @@ namespace Jvedio
             if (File.Exists(imgPath))
             {
                 vieModel.CurrentImage = ReadImageFromFile(imgPath);
-                //vieModel.CurrentGame.BigImagePath = imgPath;
+
+                // vieModel.CurrentGame.BigImagePath = imgPath;
             }
         }
     }

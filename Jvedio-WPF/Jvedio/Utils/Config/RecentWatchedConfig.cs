@@ -34,7 +34,10 @@ namespace Jvedio
                     {
                         XmlDoc.Load(filepath);
                     }
-                    catch { CreateRoot = true; }
+                    catch
+                    {
+                        CreateRoot = true;
+                    }
                 }
                 else
                 {
@@ -48,21 +51,25 @@ namespace Jvedio
                         XmlNode header = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
                         XmlDoc.AppendChild(header);
                     }
-                    catch { }
+                    catch
+                    {
+                    }
 
-                    //生成根节点
+                    // 生成根节点
                     var xm = XmlDoc.CreateElement(Root);
                     XmlDoc.AppendChild(xm);
                 }
+
                 XmlElement rootElement = XmlDoc.DocumentElement;
                 XmlNode node = XmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{Date}']");
                 if (node == null)
                 {
-                    //不存在该节点
+                    // 不存在该节点
                     XmlElement XE = XmlDoc.CreateElement("Date");
                     XE.SetAttribute("Name", Date);
                     rootElement.AppendChild(XE);
                 }
+
                 XmlDoc.Save(filepath);
                 return true;
             }
@@ -93,6 +100,7 @@ namespace Jvedio
                 xe.InnerText = path;
                 pathNodes.AppendChild(xe);
             }
+
             XmlDoc.Save(filepath);
         }
 
@@ -107,7 +115,11 @@ namespace Jvedio
                 root.RemoveAll();
                 XmlDoc.Save(filepath);
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -132,7 +144,11 @@ namespace Jvedio
                             DateTime dateTime;
                             bool success = DateTime.TryParse(date, out dateTime);
                             List<string> id = new List<string>();
-                            foreach (XmlNode item in IDNodes) { if (!id.Contains(item.InnerText)) id.Add(item.InnerText); }
+                            foreach (XmlNode item in IDNodes)
+                            {
+                                if (!id.Contains(item.InnerText)) id.Add(item.InnerText);
+                            }
+
                             if (success)
                             {
                                 if (!result.ContainsKey(dateTime)) result.Add(dateTime, id);
@@ -141,6 +157,7 @@ namespace Jvedio
                     }
                 }
             }
+
             return result;
         }
 

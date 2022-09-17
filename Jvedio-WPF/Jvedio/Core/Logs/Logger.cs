@@ -26,7 +26,11 @@ namespace Jvedio.Core.Logs
             Console.WriteLine(e.StackTrace);
             Console.WriteLine(e.Message);
             string path = AppDomain.CurrentDomain.BaseDirectory + "Log";
-            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string filepath = Path.Combine(path, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
 
             string content;
@@ -38,7 +42,13 @@ namespace Jvedio.Core.Logs
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(content); } catch { }
+                    try
+                    {
+                        sr.Write(content);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
@@ -48,7 +58,11 @@ namespace Jvedio.Core.Logs
             Console.WriteLine(e.StackTrace);
             Console.WriteLine(e.Message);
             string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\File";
-            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             string content;
             content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
@@ -59,7 +73,13 @@ namespace Jvedio.Core.Logs
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(content); } catch { }
+                    try
+                    {
+                        sr.Write(content);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
@@ -67,14 +87,24 @@ namespace Jvedio.Core.Logs
         public static void LogN(string NetWorkStatus)
         {
             string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\NetWork";
-            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             string content = Environment.NewLine + "【" + DateTime.Now.ToString() + $"】=>{NetWorkStatus}";
             lock (NetWorkLock)
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(content); } catch { }
+                    try
+                    {
+                        sr.Write(content);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
@@ -84,7 +114,11 @@ namespace Jvedio.Core.Logs
             Console.WriteLine(e.StackTrace);
             Console.WriteLine(e.Message);
             string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\DataBase";
-            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             string content;
             content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
@@ -94,7 +128,13 @@ namespace Jvedio.Core.Logs
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(content); } catch { }
+                    try
+                    {
+                        sr.Write(content);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
@@ -128,19 +168,30 @@ namespace Jvedio.Core.Logs
             {
                 Console.WriteLine(ex.Message);
             }
+
             return string.Empty;
         }
 
         public static void LogScanInfo(string content)
         {
             string path = AppDomain.CurrentDomain.BaseDirectory + "log/scanlog";
-            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             lock (ScanLogLock)
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(content + Environment.NewLine); } catch { }
+                    try
+                    {
+                        sr.Write(content + Environment.NewLine);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
@@ -165,7 +216,11 @@ namespace Jvedio.Core.Logs
             Console.WriteLine(e.StackTrace);
             Console.WriteLine(e.Message);
             string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\File";
-            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             string content;
             content = Environment.NewLine + "【" + DateTime.Now.ToString() + "】【Error】";
@@ -176,7 +231,13 @@ namespace Jvedio.Core.Logs
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
                 {
-                    try { sr.Write(content); } catch { }
+                    try
+                    {
+                        sr.Write(content);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
@@ -184,7 +245,11 @@ namespace Jvedio.Core.Logs
         private static void Log(LogType logType, string content)
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log");
-            if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string output = $"{DateHelper.Now()} => [{logType}] {content} {Environment.NewLine}";
             string filepath = Path.Combine(path, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
             lock (CommonLogLock)
@@ -200,12 +265,13 @@ namespace Jvedio.Core.Logs
                 {
                     Console.WriteLine(ex.Message);
                 }
+
                 Console.WriteLine(content);
             }
         }
 
-        //public static void Error(string str)
-        //{
+        // public static void Error(string str)
+        // {
         //    str += Environment.NewLine;
         //    Console.WriteLine(str);
         //    string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\Error";
@@ -218,6 +284,6 @@ namespace Jvedio.Core.Logs
         //            try { sr.Write(str); } catch { }
         //        }
         //    }
-        //}
+        // }
     }
 }

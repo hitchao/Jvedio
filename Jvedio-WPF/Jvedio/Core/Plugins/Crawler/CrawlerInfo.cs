@@ -64,16 +64,17 @@ namespace Jvedio.Core.Plugins
                 if (dict.ContainsKey(name))
                     propertyInfo.SetValue(result, dict[name]);
             }
+
             return result;
         }
 
         public override bool Equals(object obj)
         {
-            //if (obj == null) return false;
-            //PluginMetaData other = obj as PluginMetaData;
-            //if (other == null) return false;
-            //if (other.ServerName == null || other.Name == null) return false;
-            //return other.ServerName.Equals(ServerName) && other.Name.Equals(Name);
+            // if (obj == null) return false;
+            // PluginMetaData other = obj as PluginMetaData;
+            // if (other == null) return false;
+            // if (other.ServerName == null || other.Name == null) return false;
+            // return other.ServerName.Equals(ServerName) && other.Name.Equals(Name);
             return true;
         }
 

@@ -193,7 +193,7 @@ namespace Jvedio.ViewModel
 
         public void Load(long dataID)
         {
-            //释放图片内存
+            // 释放图片内存
             if (CurrentVideo != null)
             {
                 CurrentVideo.SmallImage = null;
@@ -203,6 +203,7 @@ namespace Jvedio.ViewModel
                     CurrentVideo.PreviewImageList[i] = null;
                 }
             }
+
             if (CurrentActorList != null)
             {
                 for (int i = 0; i < CurrentActorList.Count; i++)
@@ -216,15 +217,17 @@ namespace Jvedio.ViewModel
             windowDetails.DataID = dataID;
 
             // todo 事务下导致阻塞
-            metaDataMapper.IncreaseFieldById("ViewCount", dataID); //访问次数+1
+            metaDataMapper.IncreaseFieldById("ViewCount", dataID); // 访问次数+1
             Video video = videoMapper.SelectVideoByID(dataID);
-            Video.setTagStamps(ref video);// 设置标签戳
+            Video.setTagStamps(ref video); // 设置标签戳
             Video.handleEmpty(ref video);
+
             // 设置关联
             HashSet<long> set = associationMapper.getAssociationDatas(video.DataID);
             video.HasAssociation = set.Count > 0;
             video.AssociationList = set.ToList();
             CurrentVideo = video;
+
             // 磁力
             List<Magnet> magnets = magnetsMapper.SelectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
             if (magnets?.Count > 0)
@@ -233,9 +236,13 @@ namespace Jvedio.ViewModel
                 {
                     CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size)
                         .ThenByDescending(arg => arg.Releasedate)
-                        .ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList(); ;
+                        .ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList();
+                    ;
                 }
-                catch (Exception ex) { Logger.Error(ex); }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
             }
 
             BitmapImage image = BitmapImageFromFile(CurrentVideo.getBigImage());
@@ -273,8 +280,8 @@ namespace Jvedio.ViewModel
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
-                Video.setTagStamps(ref video);// 设置标签戳
-                Video.handleEmpty(ref video);// 设置标题和发行日期
+                Video.setTagStamps(ref video); // 设置标签戳
+                Video.handleEmpty(ref video); // 设置标题和发行日期
                 App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
             }
 
@@ -322,6 +329,7 @@ namespace Jvedio.ViewModel
             {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
             }
+
             loadingLabel = false;
         }
 

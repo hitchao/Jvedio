@@ -74,7 +74,7 @@ namespace Jvedio.Core.Net
 
         public string Title { get; set; }
 
-        public bool OverrideInfo { get; set; }//强制下载覆盖信息
+        public bool OverrideInfo { get; set; }// 强制下载覆盖信息
 
         public override void doWrok()
         {
@@ -92,8 +92,10 @@ namespace Jvedio.Core.Net
                         FinalizeWithCancel();
                         return;
                     }
+
                     VideoDownLoader downLoader = new VideoDownLoader(video, token);
                     RequestHeader header = null;
+
                     // 判断是否需要下载，自动跳过已下载的信息
                     if (video.toDownload() || OverrideInfo)
                     {
@@ -127,6 +129,7 @@ namespace Jvedio.Core.Net
 
                             Status = TaskStatus.Canceled;
                         }
+
                         // 等待了很久都没成功
 
                         await Task.Delay(Delay.INFO);
@@ -136,7 +139,7 @@ namespace Jvedio.Core.Net
                         logger.Info("跳过信息刮削，准备下载图片");
                     }
 
-                    bool success = true;// 是否刮削到信息（包括db的部分信息）
+                    bool success = true; // 是否刮削到信息（包括db的部分信息）
                     Progress = 33f;
                     if ((dict != null && dict.ContainsKey("Error")))
                     {
@@ -146,25 +149,31 @@ namespace Jvedio.Core.Net
                             Message = error;
                             logger.Error(error);
                         }
+
                         success = dict.ContainsKey("Title") && !string.IsNullOrEmpty(dict["Title"].ToString());
                     }
+
                     if (!success)
                     {
                         dict = null;
+
                         // 发生了错误，停止下载
                         FinalizeWithCancel();
+
                         // 但是已经请求了网址，所以视为完成，并加入到长时间等待队列
                         Status = TaskStatus.RanToCompletion;
                         return;
                     }
 
-                    bool downloadInfo = video.parseDictInfo(dict);// 是否从网络上刮削了信息
+                    bool downloadInfo = video.parseDictInfo(dict); // 是否从网络上刮削了信息
                     if (downloadInfo)
                     {
                         logger.Info($"保存入库");
+
                         // 并发锁
                         videoMapper.UpdateById(video);
                         metaDataMapper.UpdateById(video.toMetaData());
+
                         // 保存 dataCode
                         if (dict.ContainsKey("DataCode") && dict.ContainsKey("WebType"))
                         {
@@ -175,6 +184,7 @@ namespace Jvedio.Core.Net
                             urlCode.WebType = dict["WebType"].ToString();
                             urlCodeMapper.Insert(urlCode, InsertMode.Replace);
                         }
+
                         // 保存 nfo
                         video.SaveNfo();
 
@@ -196,12 +206,13 @@ namespace Jvedio.Core.Net
                     {
                         header = new RequestHeader();
                         header.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
-                        header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000;// 转为 ms
+                        header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
                     }
 
                     object o = getInfoFromExist("BigImageUrl", video, dict);
                     string imageUrl = o != null ? o.ToString() : string.Empty;
                     StatusText = "下载大图";
+
                     // 1. 大图
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
@@ -235,6 +246,7 @@ namespace Jvedio.Core.Net
                     StatusText = "下载小图";
                     o = getInfoFromExist("SmallImageUrl", video, dict);
                     imageUrl = o != null ? o.ToString() : string.Empty;
+
                     // 2. 小图
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
@@ -268,6 +280,7 @@ namespace Jvedio.Core.Net
 
                     object names = getInfoFromExist("ActorNames", video, dict);
                     object urls = getInfoFromExist("ActressImageUrl", video, dict);
+
                     // 3. 演员信息和头像
                     if (names != null && urls != null && names is List<string> ActorNames && urls is List<string> ActressImageUrl)
                     {
@@ -285,9 +298,11 @@ namespace Jvedio.Core.Net
                                     actorInfo.ImageUrl = url;
                                     actorMapper.Insert(actorInfo);
                                 }
+
                                 // 保存信息
                                 string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
                                 metaDataMapper.ExecuteNonQuery(sql);
+
                                 // 下载图片
                                 string saveFileName = actorInfo.getImagePath(video.Path, Path.GetExtension(url), false);
                                 if (!File.Exists(saveFileName))
@@ -307,6 +322,7 @@ namespace Jvedio.Core.Net
                             }
                         }
                     }
+
                     Progress = 88f;
                     if (Canceld)
                     {
@@ -366,6 +382,7 @@ namespace Jvedio.Core.Net
                     Success = true;
                     Status = TaskStatus.RanToCompletion;
                 }
+
                 Console.WriteLine("下载完成！");
                 Running = false;
                 Progress = 100.00f;
@@ -386,8 +403,10 @@ namespace Jvedio.Core.Net
                         Newtonsoft.Json.Linq.JArray jArray = Newtonsoft.Json.Linq.JArray.Parse(dict[type].ToString());
                         return jArray.Select(x => x.ToString()).ToList();
                     }
+
                     return dict[type];
                 }
+
                 return null;
             }
             else if (video != null)
@@ -397,9 +416,10 @@ namespace Jvedio.Core.Net
                 {
                     Dictionary<string, object> dic = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(imageUrls);
                     if (dic == null) return null;
-                    return getInfoFromExist(type, null, dic);// 递归调用
+                    return getInfoFromExist(type, null, dic); // 递归调用
                 }
             }
+
             return null;
         }
     }

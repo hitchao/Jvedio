@@ -21,11 +21,11 @@ namespace Jvedio
 {
     public class ScanHelper
     {
-        public static double MinFileSize { get; set; }          //最小文件大小吗，单位 B
+        public static double MinFileSize { get; set; }          // 最小文件大小吗，单位 B
 
         public static string SubSectionFeature { get; set; }
 
-        public static List<string> FilePattern { get; set; }    //文件格式
+        public static List<string> FilePattern { get; set; }    // 文件格式
 
         private const int DEFAULT_MIN_FILESIZE = 1 * 1024 * 1024;
 
@@ -38,7 +38,7 @@ namespace Jvedio
 
         public static void InitSearchPattern()
         {
-            //视频后缀来自 Everything (位置：搜索-管理筛选器-视频-编辑)
+            // 视频后缀来自 Everything (位置：搜索-管理筛选器-视频-编辑)
             FilePattern = ScanTask.VIDEO_EXTENSIONS_LIST;
         }
 
@@ -99,7 +99,7 @@ namespace Jvedio
                             import.Add(video);
                         }
                         else
-                            failNFO.Add(item);// 未从 nfo 中识别出有效的信息
+                            failNFO.Add(item); // 未从 nfo 中识别出有效的信息
                     }
                 }
 
@@ -115,6 +115,7 @@ namespace Jvedio
                                 notImport.Add(key, list[key]);
                             }
                         });
+
                         // 检查是否大于给定大小的影片
                         foreach (var item in videos.Where(arg => arg.Size < minFileSize).Select(arg => arg.Path))
                         {
@@ -166,7 +167,7 @@ namespace Jvedio
                 Logger.LogE(e);
             }
 
-            //扫描根目录
+            // 扫描根目录
             StringCollection stringCollection = new StringCollection();
             foreach (var item in Environment.GetLogicalDrives())
             {
@@ -180,11 +181,12 @@ namespace Jvedio
                     continue;
                 }
             }
+
             result.AddRange(ScanTopPaths(stringCollection));
             return FirstFilter(result);
         }
 
-        //根据 视频后缀文件大小筛选
+        // 根据 视频后缀文件大小筛选
         public List<string> FirstFilter(List<string> FilePathList, string ID = "")
         {
             if (FilePathList == null || FilePathList.Count == 0) return new List<string>();
@@ -202,7 +204,12 @@ namespace Jvedio
                     return FilePathList
                         .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
                         .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize)
-                        .Where(s => { try { return Identify.GetVID(new FileInfo(s).Name).ToUpper() == ID.ToUpper(); } catch { Logger.LogScanInfo($"错误路径：{s}"); return false; } })
+                        .Where(s => { try
+{
+    return Identify.GetVID(new FileInfo(s).Name).ToUpper() == ID.ToUpper();
+}
+catch { Logger.LogScanInfo($"错误路径：{s}");
+                                return false; } })
                         .OrderBy(s => s).ToList();
                 }
             }
@@ -210,6 +217,7 @@ namespace Jvedio
             {
                 Logger.LogF(ex);
             }
+
             return new List<string>();
         }
 
@@ -223,8 +231,12 @@ namespace Jvedio
                 {
                     foreach (var path in Directory.GetFiles(item, "*.*", SearchOption.TopDirectoryOnly)) result.Add(path);
                 }
-                catch { continue; }
+                catch
+                {
+                    continue;
+                }
             }
+
             return result;
         }
 
@@ -239,6 +251,7 @@ namespace Jvedio
                     if (!result.Contains(item)) result.Add(item);
                 }
             }
+
             return result;
         }
 
@@ -259,7 +272,7 @@ namespace Jvedio
 
             if (!sameFatherPath)
             {
-                //并不是所有父目录都相同，提取出父目录最多的文件
+                // 并不是所有父目录都相同，提取出父目录最多的文件
                 Dictionary<string, int> fatherPathDic = new Dictionary<string, int>();
                 FilePathList.ForEach(path =>
                 {
@@ -284,11 +297,12 @@ namespace Jvedio
                     {
                         Logger.Error(e);
                     }
+
                     FilePathList = FilePathList.Where(arg => maxValueKey.Equals(FileHelper.TryGetFullName(arg))).ToList();
                 }
             }
 
-            //目录都相同，判断是否分段视频的特征
+            // 目录都相同，判断是否分段视频的特征
 
             // -1  cd1  _1   fhd1
             StringBuilder builder = new StringBuilder();
@@ -312,9 +326,10 @@ namespace Jvedio
             if (!IsSubSection)
             {
                 IsSubSection = true;
-                //数字后面存在 A,B,C……
-                //XXX-000-A
-                //XXX-000-B
+
+                // 数字后面存在 A,B,C……
+                // XXX-000-A
+                // XXX-000-B
                 builder.Clear();
                 foreach (var item in GetSubSectionFeature())
                     builder.Append(item + "|");
@@ -353,11 +368,15 @@ namespace Jvedio
                 {
                     string[] filesInCurrent = System.IO.Directory.GetFiles(currentFolder, pattern == string.Empty ? "*.*" : pattern, System.IO.SearchOption.TopDirectoryOnly);
                     files.AddRange(filesInCurrent);
-                    foreach (var file in filesInCurrent) { callBack?.Invoke(file); }
+                    foreach (var file in filesInCurrent)
+                    {
+                        callBack?.Invoke(file);
+                    }
                 }
                 catch
                 {
                 }
+
                 try
                 {
                     string[] foldersInCurrent = System.IO.Directory.GetDirectories(currentFolder, pattern == string.Empty ? "*.*" : pattern, System.IO.SearchOption.TopDirectoryOnly);
@@ -371,6 +390,7 @@ namespace Jvedio
                 {
                 }
             }
+
             return files;
         }
 
@@ -390,7 +410,8 @@ namespace Jvedio
             string sep = SuperUtils.Values.ConstValues.SeparatorString;
 
             List<string> noVIDList = new List<string>();
-            //检查无识别码的视频
+
+            // 检查无识别码的视频
             foreach (string path in VideoPaths)
             {
                 if (!File.Exists(path)) continue;
@@ -405,7 +426,7 @@ namespace Jvedio
                 else
                 {
                     // 有识别码
-                    //检查 重复或分段的视频
+                    // 检查 重复或分段的视频
                     if (!VIDDict.ContainsKey(VID))
                     {
                         List<string> pathlist = new List<string> { path };
@@ -413,7 +434,7 @@ namespace Jvedio
                     }
                     else
                     {
-                        VIDDict[VID].Add(path);//每个 VID 对应一组视频路径，视频路径 >=2 的可能为分段视频
+                        VIDDict[VID].Add(path); // 每个 VID 对应一组视频路径，视频路径 >=2 的可能为分段视频
                     }
                 }
             }
@@ -432,7 +453,7 @@ namespace Jvedio
                 else
                 {
                     // 一个 VID 对应多个路径
-                    //路径个数大于1 才为分段视频
+                    // 路径个数大于1 才为分段视频
                     (bool isSubSection, List<string> subSectionList, List<string> notSubSection) = (false, new List<string>(), new List<string>());
                     try
                     {
@@ -446,7 +467,7 @@ namespace Jvedio
 
                     if (isSubSection)
                     {
-                        //文件大小视为所有文件之和
+                        // 文件大小视为所有文件之和
                         long size = subSectionList.Sum(arg => FileHelper.TryGetFileLength(arg));
                         string subsection = string.Join(sep, subSectionList);
                         string firstPath = subSectionList[0];
@@ -477,11 +498,13 @@ namespace Jvedio
                             if (i == maxIndex) continue;
                             list.Add(path, NotImportReason.RepetitiveVID);
                         }
+
                         if (notSubSection.Count > 0)
                             result.Add(ParseVideo(VID, notSubSection[maxIndex]));
                         sameVideoCallBack?.Invoke(list);
                     }
                 }
+
                 ct.ThrowIfCancellationRequested();
             }
 
@@ -489,12 +512,13 @@ namespace Jvedio
             {
                 result.Add(ParseVideo(string.Empty, path, calcHash: true));
             }
+
             return result;
         }
 
         private Video ParseVideo(string VID, string path, string subsection = "", long size = -1, bool calcHash = false)
         {
-            FileInfo fileInfo = new FileInfo(path);// 原生的速度最快
+            FileInfo fileInfo = new FileInfo(path); // 原生的速度最快
             Video video = new Video()
             {
                 Path = path,

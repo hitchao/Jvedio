@@ -69,6 +69,7 @@ namespace Jvedio
                 };
                 details.Add(detail);
             }
+
             foreach (var key in ScanResult.NotImport.Keys)
             {
                 ScanDetail detail = new ScanDetail()
@@ -80,6 +81,7 @@ namespace Jvedio
                 };
                 details.Add(detail);
             }
+
             foreach (var key in ScanResult.Update.Keys)
             {
                 ScanDetail detail = new ScanDetail()
@@ -91,6 +93,7 @@ namespace Jvedio
                 };
                 details.Add(detail);
             }
+
             foreach (var item in ScanResult.Import)
             {
                 ScanDetail detail = new ScanDetail()
@@ -102,6 +105,7 @@ namespace Jvedio
                 };
                 details.Add(detail);
             }
+
             dataGrid.ItemsSource = details;
 
             total.Text = ScanResult.TotalCount.ToString();
@@ -168,8 +172,10 @@ namespace Jvedio
                         builder.Append(text + " ");
                     }
                 }
+
                 builder.Append(Environment.NewLine);
             }
+
             builder.Append("详情：");
             builder.Append(Environment.NewLine);
             for (int i = 0; i < dataGrid.Items.Count; i++)
@@ -178,6 +184,7 @@ namespace Jvedio
                 builder.Append(detail.ToString());
                 builder.Append(Environment.NewLine);
             }
+
             return builder.ToString();
         }
 

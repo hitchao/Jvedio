@@ -98,6 +98,7 @@ namespace Jvedio.Upgrade
             {
                 Logger.Error(ex);
             }
+
             if (dict == null || dict.Count <= 0) return;
 
             foreach (DateTime key in dict.Keys)
@@ -145,6 +146,7 @@ namespace Jvedio.Upgrade
                 });
                 setProgress((100 * (float)i + 1) / (float)files.Length, $"迁移数据：{Path.GetFileName(file)}");
             }
+
             window_Progress.Close();
             return result;
         }
@@ -174,6 +176,7 @@ namespace Jvedio.Upgrade
                     Logger.Error(ex);
                     return false;
                 }
+
                 if (oldSqlite == null) return false;
 
                 // 1. 迁移 Code
@@ -190,6 +193,7 @@ namespace Jvedio.Upgrade
                     {
                         Logger.Error(ex);
                     }
+
                     if (db != null)
                     {
                         List<UrlCode> urlCodes = new List<UrlCode>();
@@ -213,8 +217,10 @@ namespace Jvedio.Upgrade
                                 continue;
                             }
                         }
+
                         urlCodeMapper.InsertBatch(urlCodes);
                     }
+
                     db?.Close();
                 }
 
@@ -253,8 +259,10 @@ namespace Jvedio.Upgrade
                                 continue;
                             }
                         }
+
                         urlCodeMapper.InsertBatch(urlCodes);
                     }
+
                     library?.Close();
                 }
 
@@ -286,11 +294,16 @@ namespace Jvedio.Upgrade
                                 actress.birthday = actressReader["birthday"].ToString();
                                 actress.id = actressReader["id"].ToString();
                                 actress.name = actressReader["name"].ToString();
-                                int.TryParse(actressReader["age"].ToString(), out int age); actress.age = age;
-                                int.TryParse(actressReader["height"].ToString(), out int height); actress.height = height;
-                                int.TryParse(actressReader["chest"].ToString(), out int chest); actress.chest = chest;
-                                int.TryParse(actressReader["waist"].ToString(), out int waist); actress.waist = waist;
-                                int.TryParse(actressReader["hipline"].ToString(), out int hipline); actress.hipline = hipline;
+                                int.TryParse(actressReader["age"].ToString(), out int age);
+                                actress.age = age;
+                                int.TryParse(actressReader["height"].ToString(), out int height);
+                                actress.height = height;
+                                int.TryParse(actressReader["chest"].ToString(), out int chest);
+                                actress.chest = chest;
+                                int.TryParse(actressReader["waist"].ToString(), out int waist);
+                                actress.waist = waist;
+                                int.TryParse(actressReader["hipline"].ToString(), out int hipline);
+                                actress.hipline = hipline;
 
                                 actress.cup = actressReader["cup"].ToString();
                                 actress.birthplace = actressReader["birthplace"].ToString();
@@ -307,8 +320,10 @@ namespace Jvedio.Upgrade
                                 continue;
                             }
                         }
+
                         actorMapper.InsertBatch(actressList);
                     }
+
                     actressReader?.Close();
                 }
 
@@ -338,6 +353,7 @@ namespace Jvedio.Upgrade
                         Logger.Error(e);
                         return false;
                     }
+
                     System.Data.SQLite.SQLiteDataReader sr = null;
                     try
                     {
@@ -380,7 +396,7 @@ namespace Jvedio.Upgrade
                                     bigimageurl = sr["bigimageurl"].ToString(),
                                     extraimageurl = sr["extraimageurl"].ToString(),
                                     sourceurl = sr["sourceurl"].ToString(),
-                                    source = sr["source"].ToString()
+                                    source = sr["source"].ToString(),
                                 };
 
                                 detailMovie.DBId = appDatabase.DBId;
@@ -409,8 +425,14 @@ namespace Jvedio.Upgrade
                                 continue;
                             }
                         }
+
                         long before = 0;
-                        try { before = metaDataMapper.SelectCount(); } catch (Exception ex) { Logger.Error(ex); return false; }
+                        try
+                        {
+                            before = metaDataMapper.SelectCount();
+                        }
+                        catch (Exception ex) { Logger.Error(ex);
+                            return false; }
 
                         try
                         {
@@ -467,8 +489,10 @@ namespace Jvedio.Upgrade
                         Logger.Info($"handleActor 用时：{watch.ElapsedMilliseconds} ms");
                         watch.Restart();
                     }
+
                     sr?.Close();
                 }
+
                 oldSqlite.CloseDB();
 
                 watch.Stop();
@@ -478,10 +502,12 @@ namespace Jvedio.Upgrade
                     // 高清
                     if (video.IsHDV())
                         list.Add($"({video.DataID},1)");
+
                     // 中文
                     if (video.IsCHS())
                         list.Add($"({video.DataID},2)");
                 }
+
                 if (list.Count > 0)
                 {
                     string sql = $"insert into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
@@ -538,6 +564,7 @@ namespace Jvedio.Upgrade
                     dataId_to_LabelID.Add($"({dataID},'{label}')");
                 }
             }
+
             if (dataId_to_LabelID.Count > 0)
             {
                 string insert_sql =
@@ -550,7 +577,7 @@ namespace Jvedio.Upgrade
         {
             // 新增不存在的
             List<ActorInfo> actorInfos = actorMapper.SelectList();
-            HashSet<string> names = list.Select(x => x.ActorNames).ToHashSet();// 演员名字
+            HashSet<string> names = list.Select(x => x.ActorNames).ToHashSet(); // 演员名字
             HashSet<string> to_insert = new HashSet<string>();
             foreach (string name in names)
             {
@@ -564,8 +591,10 @@ namespace Jvedio.Upgrade
                 string sql = $"insert into actor_info(WebType,Gender,ActorName) values ('bus',1,'{string.Join("'),('bus',1,'", to_insert)}')";
                 actorMapper.ExecuteNonQuery(sql);
             }
+
             actorInfos = actorMapper.SelectList();
-            //Dictionary<string, long> dict = actorInfos.ToDictionary(x => x.ActorName, x => x.ActorID);
+
+            // Dictionary<string, long> dict = actorInfos.ToDictionary(x => x.ActorName, x => x.ActorID);
             Dictionary<string, long> dict = actorInfos.ToLookup(x => x.ActorName, y => y.ActorID).ToDictionary(x => x.Key, x => x.First());
             List<UrlCode> urlCodes = new List<UrlCode>();
 
@@ -593,6 +622,7 @@ namespace Jvedio.Upgrade
                         urlCodes.Add(urlCode);
                     }
                 }
+
                 for (int j = 0; j < actorNames.Length; j++)
                 {
                     string actorName = actorNames[j];
@@ -600,6 +630,7 @@ namespace Jvedio.Upgrade
                     insert_list.Add($"({dict[actorName]},{list[i].DataID})");
                 }
             }
+
             urlCodeMapper.InsertBatch(urlCodes, InsertMode.Ignore);
 
             if (insert_list.Count > 0)
@@ -625,6 +656,7 @@ namespace Jvedio.Upgrade
             {
                 Logger.Error(ex);
             }
+
             if (oldSqlite == null || sr == null) return;
             List<AIFaceInfo> list = new List<AIFaceInfo>();
             while (sr.Read())
@@ -660,6 +692,7 @@ namespace Jvedio.Upgrade
                     continue;
                 }
             }
+
             try
             {
                 aIFaceMapper.InsertBatch(list);
@@ -689,6 +722,7 @@ namespace Jvedio.Upgrade
             {
                 Logger.Error(ex);
             }
+
             if (oldSqlite == null || sr == null) return;
 
             List<Magnet> magnets = new List<Magnet>();
@@ -716,6 +750,7 @@ namespace Jvedio.Upgrade
                     continue;
                 }
             }
+
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Select("VID", "DataID").In("VID", set);
             List<Video> videos = null;
@@ -744,6 +779,7 @@ namespace Jvedio.Upgrade
                 string vid = magnets[i].VID;
                 if (dict.ContainsKey(vid)) magnets[i].DataID = dict[vid];
             }
+
             try
             {
                 magnetsMapper.InsertBatch(magnets);
@@ -759,11 +795,11 @@ namespace Jvedio.Upgrade
 
         public static void MoveSearchHistory()
         {
-            //string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SearchHistory");
-            //if (!File.Exists(origin)) return;
-            //string data = FileHelper.TryReadFile(origin);
-            //if (!string.IsNullOrEmpty(data))
-            //{
+            // string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SearchHistory");
+            // if (!File.Exists(origin)) return;
+            // string data = FileHelper.TryReadFile(origin);
+            // if (!string.IsNullOrEmpty(data))
+            // {
             //    List<SearchHistory> histories = new List<SearchHistory>();
             //    List<string> VID_list = data.Split(new char[] { '\'' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             //    foreach (string VID in VID_list)
@@ -779,7 +815,7 @@ namespace Jvedio.Upgrade
             //    {
             //        Logger.Error(ex);
             //    }
-            //}
+            // }
         }
 
         public static void MoveMyList()
@@ -796,6 +832,7 @@ namespace Jvedio.Upgrade
             {
                 Logger.Error(ex);
             }
+
             if (oldSqlite == null) return;
 
             List<string> tables = oldSqlite.GetAllTable();
@@ -815,8 +852,10 @@ namespace Jvedio.Upgrade
                         {
                             list.Add(sr.GetString(0));
                         }
-                        catch (Exception ex) { Logger.Error(ex); continue; }
+                        catch (Exception ex) { Logger.Error(ex);
+                            continue; }
                     }
+
                     datas.Add(table, list);
                 }
                 catch (Exception ex)
@@ -830,6 +869,7 @@ namespace Jvedio.Upgrade
                     sr = null;
                 }
             }
+
             oldSqlite.CloseDB();
 
             HashSet<string> set = new HashSet<string>();
@@ -867,6 +907,7 @@ namespace Jvedio.Upgrade
                         if (dataID <= 0) continue;
                         values.Add($"('{SqlStringFormat.Format(labelName)}',{SqlStringFormat.Format(dataID)})");
                     }
+
                     string sql = "insert or replace into metadata_to_label(LabelName,DataID) " +
                              $"values {string.Join(",", values)}";
                     metaDataMapper.ExecuteNonQuery(sql);
@@ -890,6 +931,7 @@ namespace Jvedio.Upgrade
             {
                 Logger.Error(ex);
             }
+
             if (oldSqlite == null || sr == null) return;
 
             // 先获得当前 transaltion 表的最大 id
@@ -943,6 +985,7 @@ namespace Jvedio.Upgrade
                     continue;
                 }
             }
+
             l += 1;     // 在原基础上 +1
             try
             {
@@ -982,6 +1025,7 @@ namespace Jvedio.Upgrade
                     metaDataMapper.ExecuteNonQuery(sql);
                 }
             }
+
             sr.Close();
             oldSqlite.CloseDB();
         }

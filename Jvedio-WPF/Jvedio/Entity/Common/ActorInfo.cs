@@ -83,7 +83,16 @@ namespace Jvedio.Entity
         private BitmapSource _smallimage;
 
         [TableField(exist: false)]
-        public BitmapSource SmallImage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
+        public BitmapSource SmallImage
+        {
+            get { return _smallimage; }
+
+            set
+            {
+                _smallimage = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -112,7 +121,7 @@ namespace Jvedio.Entity
 
         public static void SetImage(ref ActorInfo actorInfo)
         {
-            //加载图片
+            // 加载图片
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             BitmapImage smallimage = null;
             if (pathType != PathType.RelativeToData)
@@ -121,6 +130,7 @@ namespace Jvedio.Entity
                 string smallImagePath = actorInfo.getImagePath();
                 smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
             }
+
             if (smallimage == null) smallimage = MetaData.DefaultActorImage;
             actorInfo.SmallImage = smallimage;
         }
@@ -136,6 +146,7 @@ namespace Jvedio.Entity
                     basePicPath = System.IO.Path.Combine(PathManager.CurrentUserFolder, basePicPath);
                 string saveDir = System.IO.Path.Combine(basePicPath, "Actresses");
                 if (!Directory.Exists(saveDir)) FileHelper.TryCreateDir(saveDir);
+
                 // 优先使用 1_name.jpg 的方式
                 result = System.IO.Path.Combine(saveDir, $"{ActorID}_{ActorName}{ext}");
                 if (!File.Exists(result))
@@ -149,6 +160,7 @@ namespace Jvedio.Entity
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
                 result = parseRelativeImageFileName(smallPath);
             }
+
             // 替换成其他扩展名
             if (searchExt && !File.Exists(result))
                 result = FileHelper.FindWithExt(result, ScanTask.PICTURE_EXTENSIONS_LIST);
@@ -167,6 +179,7 @@ namespace Jvedio.Entity
                 if (System.IO.Path.GetFileNameWithoutExtension(item).ToLower().IndexOf(fileName) >= 0)
                     return item;
             }
+
             return path;
         }
     }

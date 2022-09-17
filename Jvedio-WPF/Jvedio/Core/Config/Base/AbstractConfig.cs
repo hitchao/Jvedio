@@ -48,7 +48,10 @@ namespace Jvedio.Core.Config.Base
                 {
                     prop.SetValue(this, value, null);
                 }
-                catch { continue; }
+                catch
+                {
+                    continue;
+                }
             }
         }
 

@@ -36,7 +36,7 @@ namespace Jvedio.Core.Media
                 Top = metadata.GetQueryOrDefault("/imgdesc/Top", 0),
                 Width = metadata.GetQueryOrDefault("/imgdesc/Width", frame.PixelWidth),
                 Height = metadata.GetQueryOrDefault("/imgdesc/Height", frame.PixelHeight),
-                Delay = delay
+                Delay = delay,
             };
             return frameMetadata;
         }
@@ -64,6 +64,7 @@ namespace Jvedio.Core.Media
                 var rect = new Rect(metadata.Left, metadata.Top, metadata.Width, metadata.Height);
                 context.DrawImage(rawFrame, rect);
             }
+
             var bitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Default);
             bitmap.Render(visual);
 
@@ -86,6 +87,7 @@ namespace Jvedio.Core.Media
                     totalDuration += metadata.Delay;
                 }
             }
+
             return totalDuration;
         }
 
@@ -115,6 +117,7 @@ namespace Jvedio.Core.Media
                     index++;
                 }
             }
+
             return (bitmapSources, spans);
         }
 
@@ -130,6 +133,7 @@ namespace Jvedio.Core.Media
                 int height = decoder.Metadata.GetQueryOrDefault("/logscrdesc/Height", 0);
                 result = MakeFrame(width, height, frame, metadata, frame);
             }
+
             return result;
         }
 

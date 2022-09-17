@@ -202,7 +202,8 @@ namespace Jvedio.ViewModel
                 CurrentGame = MapperManager.gameMapper.SelectByID(DataID);
                 oldLabels = CurrentGame.LabelList?.Select(arg => arg).ToList();
                 CurrentData = CurrentGame.toMetaData();
-                //if (File.Exists(CurrentGame.BigImagePath))
+
+                // if (File.Exists(CurrentGame.BigImagePath))
                 //    CurrentImage = ImageHelper.ReadImageFromFile(CurrentGame.BigImagePath);
             }
             else if (dataType == Core.Enums.DataType.Comics)
@@ -213,6 +214,7 @@ namespace Jvedio.ViewModel
                 oldLabels = CurrentComic.LabelList?.Select(arg => arg).ToList();
                 CurrentData = CurrentComic.toMetaData();
             }
+
             getLabels();
         }
 
@@ -240,11 +242,13 @@ namespace Jvedio.ViewModel
                 long.TryParse(item["Count"].ToString(), out long count);
                 labels.Add($"{LabelName}({count})");
             }
+
             CurrentLabelList = new ObservableCollection<string>();
             for (int i = 0; i < labels.Count; i++)
             {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
             }
+
             loadingLabel = false;
         }
 
@@ -256,7 +260,7 @@ namespace Jvedio.ViewModel
         {
             if (CurrentData == null) return false;
             int update1 = metaDataMapper.UpdateById(CurrentData);
-            metaDataMapper.SaveLabel(CurrentData, oldLabels);// 标签
+            metaDataMapper.SaveLabel(CurrentData, oldLabels); // 标签
             int update2 = 0;
             Core.Enums.DataType dataType = Main.CurrentDataType;
             if (dataType == Core.Enums.DataType.Picture)
@@ -274,6 +278,7 @@ namespace Jvedio.ViewModel
                 if (CurrentComic == null) return false;
                 update2 = comicMapper.UpdateById(CurrentComic);
             }
+
             return update1 > 0 & update2 > 0;
         }
     }

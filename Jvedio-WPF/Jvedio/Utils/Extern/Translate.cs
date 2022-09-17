@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SuperUtils.External
 {
-    //https://ai.youdao.com/DOCSIRMA/html/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%BF%BB%E8%AF%91/API%E6%96%87%E6%A1%A3/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1-API%E6%96%87%E6%A1%A3.html
+    // https://ai.youdao.com/DOCSIRMA/html/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%BF%BB%E8%AF%91/API%E6%96%87%E6%A1%A3/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1-API%E6%96%87%E6%A1%A3.html
     public static class Translate
     {
         public static string Youdao_appKey;
@@ -24,7 +24,7 @@ namespace SuperUtils.External
             Youdao_appSecret = Jvedio.Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
         }
 
-        //TODO 国际化
+        // TODO 国际化
         public static Task<string> Youdao(string q)
         {
             string from = "auto";
@@ -44,6 +44,7 @@ namespace SuperUtils.External
                 default:
                     break;
             }
+
             return Task.Run(() =>
             {
                 InitYoudao();
@@ -58,7 +59,8 @@ namespace SuperUtils.External
                 long millis = (long)ts.TotalMilliseconds;
                 string curtime = Convert.ToString(millis / 1000);
                 dic.Add("curtime", curtime);
-                string signStr = Youdao_appKey + Truncate(q) + salt + curtime + Youdao_appSecret; ;
+                string signStr = Youdao_appKey + Truncate(q) + salt + curtime + Youdao_appSecret;
+                ;
                 string sign = ComputeHash(signStr, new SHA256CryptoServiceProvider());
                 dic.Add("q", System.Web.HttpUtility.UrlEncode(q));
                 dic.Add("appKey", Youdao_appKey);
@@ -110,6 +112,7 @@ namespace SuperUtils.External
                     builder.AppendFormat("{0}={1}", item.Key, item.Value);
                     i++;
                 }
+
                 byte[] data = Encoding.UTF8.GetBytes(builder.ToString());
                 req.ContentLength = data.Length;
                 using (Stream reqStream = req.GetRequestStream())
@@ -117,6 +120,7 @@ namespace SuperUtils.External
                     reqStream.Write(data, 0, data.Length);
                     reqStream.Close();
                 }
+
                 HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
                 if (resp.ContentType.ToLower().Equals("audio/mp3"))
                 {
@@ -129,6 +133,7 @@ namespace SuperUtils.External
                     {
                         result = reader.ReadToEnd();
                     }
+
                     return result;
                 }
             }
@@ -136,6 +141,7 @@ namespace SuperUtils.External
             {
                 Logger.LogN(ex.Message);
             }
+
             return string.Empty;
         }
 
@@ -175,6 +181,7 @@ namespace SuperUtils.External
             {
                 Value = false;
             }
+
             return Value;
         }
 
@@ -182,11 +189,12 @@ namespace SuperUtils.External
         {
             if (content.IndexOf("dst") < 0) return string.Empty;
             var lst = new List<string>();
-            //dynamic json = JsonConvert.DeserializeObject(content);
-            //foreach (var item in json.trans_result)
-            //{
+
+            // dynamic json = JsonConvert.DeserializeObject(content);
+            // foreach (var item in json.trans_result)
+            // {
             //    lst.Add(item.dst.ToString());
-            //}
+            // }
             return string.Join(";", lst);
         }
 
@@ -205,8 +213,8 @@ namespace SuperUtils.External
 
         public static string GenerateSign(string query, string appid, string pwd, string salt)
         {
-            //http://api.fanyi.baidu.com/doc/21
-            //appid+q+salt+密钥
+            // http://api.fanyi.baidu.com/doc/21
+            // appid+q+salt+密钥
             string r = appid + query + salt + pwd;
             return Encrypt.CalculateMD5Hash(r);
         }

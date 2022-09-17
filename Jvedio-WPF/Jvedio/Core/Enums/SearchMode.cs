@@ -5,6 +5,6 @@
         Video,
         Actor,
         Label,
-        Classify
+        Classify,
     }
 }

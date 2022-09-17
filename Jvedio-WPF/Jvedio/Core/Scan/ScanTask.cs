@@ -87,7 +87,7 @@ namespace Jvedio.Core.Scan
 
             if (ScanPaths == null) ScanPaths = new List<string>();
             if (FilePaths == null) FilePaths = new List<string>();
-            if (FileExt == null) FileExt = VIDEO_EXTENSIONS_LIST;// 默认导入视频
+            if (FileExt == null) FileExt = VIDEO_EXTENSIONS_LIST; // 默认导入视频
             ScanResult = new ScanResult();
         }
 
@@ -115,7 +115,10 @@ namespace Jvedio.Core.Scan
                    FilePaths.AddRange(paths);
                }
 
-               try { CheckStatus(); }
+               try
+                {
+                    CheckStatus();
+                }
                catch (TaskCanceledException ex)
                {
                    logger.Error(ex.Message);
@@ -135,7 +138,10 @@ namespace Jvedio.Core.Scan
                     });
 
                    ScanResult.TotalCount = parseResult.import.Count + parseResult.notImport.Count + parseResult.failNFO.Count;
-                   try { CheckStatus(); }
+                   try
+                    {
+                        CheckStatus();
+                    }
                    catch (TaskCanceledException ex)
                    {
                        logger.Error(ex.Message);
@@ -178,11 +184,13 @@ namespace Jvedio.Core.Scan
         private void HandleImport(List<Video> import)
         {
             logger.Info("开始处理导入");
+
             // 分为 2 部分，有识别码和无识别码
             List<Video> noVidList = import.Where(arg => string.IsNullOrEmpty(arg.VID)).ToList();
             List<Video> vidList = import.Where(arg => !string.IsNullOrEmpty(arg.VID)).ToList();
 
             existVideos = GetExistVideos();
+
             // 1. 处理有识别码的
             // 1.1 不需要导入
             // 存在同路径、相同大小的影片
@@ -190,6 +198,7 @@ namespace Jvedio.Core.Scan
             {
                 ScanResult.NotImport.Add(item.Path, "同路径、相同大小的影片");
             }
+
             vidList.RemoveAll(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.Path.Equals(t.Path)).Any());
 
             // 存在不同路径、相同大小、相同 VID、且原路径也存在的影片
@@ -197,12 +206,15 @@ namespace Jvedio.Core.Scan
             {
                 ScanResult.NotImport.Add(item.Path, "不同路径、相同大小、相同 VID、且原路径也存在的影片");
             }
+
             vidList.RemoveAll(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path)).Any());
+
             // 存在不同路径，相同 VID，不同大小，且原路径存在（可能是剪辑的视频）
             foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path)).Any()))
             {
                 ScanResult.NotImport.Add(item.Path, "不同路径、相同大小、相同 VID、且原路径也存在的影片");
             }
+
             vidList.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path)).Any());
 
             // 1.2 需要 update 路径
@@ -214,13 +226,15 @@ namespace Jvedio.Core.Scan
                 if (existVideo != null)
                 {
                     video.DataID = existVideo.DataID;
-                    video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
+                    video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
                     ScanResult.Update.Add(video.Path, string.Empty);
                 }
             }
+
             vidList.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID)).Any());
+
             // 1.3 需要 insert
             List<Video> toInsert = vidList;
 
@@ -240,21 +254,23 @@ namespace Jvedio.Core.Scan
                 if (existVideo != null)
                 {
                     video.DataID = existVideo.DataID;
-                    video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
+                    video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
                     ScanResult.Update.Add(video.Path, "HASH 相同，原路径不同");
                 }
             }
+
             // 剩余的导入
             noVidList.RemoveAll(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && !arg.Path.Equals(t.Path)).Any());
             toInsert.AddRange(noVidList);
 
             // 1.更新
-            videoMapper.UpdateBatch(toUpdate, "SubSection");// 分段视频
+            videoMapper.UpdateBatch(toUpdate, "SubSection"); // 分段视频
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
             metaDataMapper.UpdateBatch(toUpdateData, "Path", "LastScanDate");
             AddTags(toUpdate);
+
             // 2.导入
             InsertData(toInsert);
         }
@@ -374,7 +390,7 @@ namespace Jvedio.Core.Scan
                 if (existVideo != null)
                 {
                     video.DataID = existVideo.DataID;
-                    video.MVID = existVideo.MVID;//下面使用 videoMapper 更新的时候会使用到
+                    video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     ScanResult.Update.Add(video.Path, "NFO 信息更新");
                     video.Path = null;
                     video.LastScanDate = DateHelper.Now();
@@ -382,11 +398,13 @@ namespace Jvedio.Core.Scan
                     HandleActor(video);
                 }
             }
+
             import.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID)).Any());
 
             videoMapper.UpdateBatch(toUpdate, NFOUpdateVideoProps);
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
             metaDataMapper.UpdateBatch(toUpdateData, NFOUpdateMetaProps);
+
             // 2. 剩下的都是需要导入的
             InsertData(import);
         }
@@ -416,6 +434,7 @@ namespace Jvedio.Core.Scan
                         actorInfo.ImageUrl = url;
                         actorMapper.UpdateFieldById("ImageUrl", url, actorInfo.ActorID);
                     }
+
                     // 保存信息
                     string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
                     metaDataMapper.ExecuteNonQuery(sql);
@@ -440,7 +459,7 @@ namespace Jvedio.Core.Scan
 
             try
             {
-                metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 metaDataMapper.InsertBatch(toInsertData);
                 SqlManager.DataBaseBusy = true;
             }
@@ -464,7 +483,7 @@ namespace Jvedio.Core.Scan
 
             try
             {
-                videoMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                videoMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 SqlManager.DataBaseBusy = true;
                 videoMapper.InsertBatch(toInsert);
             }
@@ -496,10 +515,12 @@ namespace Jvedio.Core.Scan
                 // 高清
                 if (video.IsHDV())
                     list.Add($"({video.DataID},1)");
+
                 // 中文
                 if (video.IsCHS())
                     list.Add($"({video.DataID},2)");
             }
+
             if (list.Count > 0)
             {
                 string sql = $"insert or ignore into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";

@@ -57,6 +57,7 @@ namespace Jvedio.VisualTools
             {
                 if (window.GetType().Name == name) return window;
             }
+
             return null;
         }
     }

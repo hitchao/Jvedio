@@ -13,7 +13,7 @@ using static Jvedio.Core.Global.UrlManager;
 
 namespace Jvedio
 {
-    //https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.inotifypropertychanged?view=net-5.0
+    // https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.inotifypropertychanged?view=net-5.0
     public partial class Dialog_Upgrade : SuperControls.Style.BaseDialog, System.ComponentModel.INotifyPropertyChanged
     {
         private static string UpgradeProgram = "Jvedio.Update.exe";
@@ -138,7 +138,7 @@ namespace Jvedio
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            //取消更新操作
+            // 取消更新操作
             UpgradeHelper.Cancel();
             IsUpgrading = false;
             IsChecking = false;
@@ -161,11 +161,11 @@ namespace Jvedio
 
                     // 调用 Jvedio.Update.exe
                     ////执行命令
-                    //string arg = $"xcopy /y/e \"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp")}\" \"{AppDomain.CurrentDomain.BaseDirectory}\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\"";
-                    //if (!Properties.Settings.Default.Debug) arg += " &exit";
+                    // string arg = $"xcopy /y/e \"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp")}\" \"{AppDomain.CurrentDomain.BaseDirectory}\"&TIMEOUT /T 1&start \"\" \"jvedio.exe\"";
+                    // if (!Properties.Settings.Default.Debug) arg += " &exit";
 
-                    //StreamHelper.TryWrite("upgrade.bat", arg);
-                    //FileHelper.TryOpenFile("upgrade.bat");
+                    // StreamHelper.TryWrite("upgrade.bat", arg);
+                    // FileHelper.TryOpenFile("upgrade.bat");
                     if (!File.Exists(UpgradeProgram))
                     {
                         MessageCard.Error($"不存在 {UpgradeProgram} 更新取消");
@@ -189,6 +189,7 @@ namespace Jvedio
                 {
                     string msg = (ev as MessageCallBackEventArgs).Message;
                     MessageCard.Error(msg);
+
                     // 发生错误后立即取消，防止升级错误
                     SetFailUpgradeStatus(button);
                 };

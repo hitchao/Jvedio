@@ -62,7 +62,7 @@ namespace Jvedio
 
         public static string SupportVideoFormat { get; set; }
 
-        public static string SupportPictureFormat { get; set; }        //bmp,gif,ico,jpe,jpeg,jpg,png
+        public static string SupportPictureFormat { get; set; }        // bmp,gif,ico,jpe,jpeg,jpg,png
 
         #region "热键"
         [DllImport("user32.dll")]
@@ -88,7 +88,7 @@ namespace Jvedio
             Alt = 0x0001,
             Control = 0x0002,
             Shift = 0x0004,
-            Win = 0x0008
+            Win = 0x0008,
         }
 
         public static bool IsProperFuncKey(List<Key> keyList)
@@ -104,6 +104,7 @@ namespace Jvedio
                     break;
                 }
             }
+
             return result;
         }
 
@@ -129,7 +130,7 @@ namespace Jvedio
                 ReleaseYear = 2020,
                 Duration = 126,
 
-                Country = Jvedio.Language.Resources.SampleMovie_Country
+                Country = Jvedio.Language.Resources.SampleMovie_Country,
             };
 
             SupportVideoFormat = $"{Jvedio.Language.Resources.NormalVedio}(*.avi, *.mp4, *.mkv, *.mpg, *.rmvb)| *.avi; *.mp4; *.mkv; *.mpg; *.rmvb|{Jvedio.Language.Resources.OtherVedio}((*.rm, *.mov, *.mpeg, *.flv, *.wmv, *.m4v)| *.rm; *.mov; *.mpeg; *.flv; *.wmv; *.m4v|{Jvedio.Language.Resources.AllFile} (*.*)|*.*";
@@ -145,7 +146,7 @@ namespace Jvedio
             vieModel = new VieModel_Settings();
             this.DataContext = vieModel;
 
-            //绑定事件
+            // 绑定事件
             foreach (var item in CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList())
             {
                 item.Click += AddToRename;
@@ -170,7 +171,7 @@ namespace Jvedio
             }
             else
             {
-                //Console.WriteLine("不支持");
+                // Console.WriteLine("不支持");
             }
 
             string singleKey = key.ToString();
@@ -234,7 +235,7 @@ namespace Jvedio
             }
             else
             {
-                //注册热键
+                // 注册热键
                 if (_key != Key.None & IsProperFuncKey(_funcKeys))
                 {
                     uint fsModifiers = (uint)Modifiers.None;
@@ -244,13 +245,18 @@ namespace Jvedio
                         if (key == Key.LeftAlt) fsModifiers = fsModifiers | (uint)Modifiers.Alt;
                         if (key == Key.LeftShift) fsModifiers = fsModifiers | (uint)Modifiers.Shift;
                     }
+
                     VK = (uint)KeyInterop.VirtualKeyFromKey(_key);
 
-                    UnregisterHotKey(_windowHandle, HOTKEY_ID);//取消之前的热键
+                    UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消之前的热键
                     bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, fsModifiers, VK);
-                    if (!success) { MessageBox.Show("热键冲突！", "热键冲突"); }
+                    if (!success)
                     {
-                        //保存设置
+                        MessageBox.Show("热键冲突！", "热键冲突");
+                    }
+
+                    {
+                        // 保存设置
                         Properties.Settings.Default.HotKey_Modifiers = fsModifiers;
                         Properties.Settings.Default.HotKey_VK = VK;
                         Properties.Settings.Default.HotKey_Enable = true;
@@ -301,7 +307,8 @@ namespace Jvedio
                     imageAwesome.Foreground = new SolidColorBrush(Color.FromRgb(32, 183, 89));
                     string clientId = Properties.Settings.Default.Baidu_API_KEY.Replace(" ", string.Empty);
                     string clientSecret = Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", string.Empty);
-                    //SaveKeyValue(clientId, clientSecret, "BaiduAI.key");
+
+                    // SaveKeyValue(clientId, clientSecret, "BaiduAI.key");
                 }
                 else
                 {
@@ -350,7 +357,7 @@ namespace Jvedio
                     string Youdao_appKey = Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
                     string Youdao_appSecret = Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
 
-                    //成功，保存在本地
+                    // 成功，保存在本地
                     SaveKeyValue(Youdao_appKey, Youdao_appSecret, "youdao.key");
                 }
                 else
@@ -364,18 +371,18 @@ namespace Jvedio
 
         public void SaveKeyValue(string key, string value, string filename)
         {
-            //string v = Encrypt.AesEncrypt(key + " " + value, EncryptKeys[0]);
-            //try
-            //{
+            // string v = Encrypt.AesEncrypt(key + " " + value, EncryptKeys[0]);
+            // try
+            // {
             //    using (StreamWriter sw = new StreamWriter(filename, append: false))
             //    {
             //        sw.Write(v);
             //    }
-            //}
-            //catch (Exception ex)
-            //{
+            // }
+            // catch (Exception ex)
+            // {
             //    Logger.Error(ex);
-            //}
+            // }
         }
 
         public void DelPath(object sender, RoutedEventArgs e)
@@ -400,7 +407,7 @@ namespace Jvedio
             if (checkBox?.IsVisible == false) return;
             if ((bool)checkBox.IsChecked)
             {
-                //测试是否能监听
+                // 测试是否能监听
                 if (!TestListen())
                     checkBox.IsChecked = false;
                 else
@@ -419,7 +426,11 @@ namespace Jvedio
             {
                 try
                 {
-                    if (drives[i] == @"C:\") { continue; }
+                    if (drives[i] == @"C:\")
+                    {
+                        continue;
+                    }
+
                     FileSystemWatcher watcher = new FileSystemWatcher();
                     watcher.Path = drives[i];
                     watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
@@ -434,6 +445,7 @@ namespace Jvedio
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -453,9 +465,9 @@ namespace Jvedio
 
         private void SaveSettings(object sender, RoutedEventArgs e)
         {
-            //if (Properties.Settings.Default.Opacity_Main >= 0.5)
+            // if (Properties.Settings.Default.Opacity_Main >= 0.5)
             //    App.Current.Windows[0].Opacity = Properties.Settings.Default.Opacity_Main;
-            //else
+            // else
             //    App.Current.Windows[0].Opacity = 1;
 
             // 保存扫描库
@@ -544,7 +556,7 @@ namespace Jvedio
 
         public void SetLanguage()
         {
-            //https://blog.csdn.net/fenglailea/article/details/45888799
+            // https://blog.csdn.net/fenglailea/article/details/45888799
 
             long language = vieModel.SelectedLanguage;
             string hint = string.Empty;
@@ -560,7 +572,7 @@ namespace Jvedio
 
         private void SetLanguageDictionary()
         {
-            //设置语言
+            // 设置语言
             long language = ConfigManager.Settings.SelectedLanguage;
             switch (language)
             {
@@ -578,6 +590,7 @@ namespace Jvedio
                     Jvedio.Language.Resources.Culture = new System.Globalization.CultureInfo("en-US");
                     break;
             }
+
             Jvedio.Language.Resources.Culture.ClearCachedData();
             Properties.Settings.Default.SelectedLanguage = vieModel.SelectedLanguage;
             Properties.Settings.Default.Save();
@@ -610,17 +623,17 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            //初次启动后不给设置默认打开上一次库，否则会提示无此数据库
+            // 初次启动后不给设置默认打开上一次库，否则会提示无此数据库
             if (ConfigManager.Settings.DefaultDBID <= 0)
                 openDefaultCheckBox.IsEnabled = false;
 
             // 设置 crawlerIndex
             serverListBox.SelectedIndex = (int)ConfigManager.Settings.CrawlerSelectedIndex;
 
-            //设置当前数据库
+            // 设置当前数据库
             SetScanDatabases();
 
-            //if (vieModel.DataBases?.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
+            // if (vieModel.DataBases?.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
 
             ShowViewRename(ConfigManager.RenameConfig.FormatString);
 
@@ -633,6 +646,7 @@ namespace Jvedio
                     break;
                 }
             }
+
             if (OutComboBox.SelectedIndex < 0) OutComboBox.SelectedIndex = 0;
 
             foreach (ComboBoxItem item in InComboBox.Items)
@@ -643,10 +657,11 @@ namespace Jvedio
                     break;
                 }
             }
+
             if (InComboBox.SelectedIndex < 0) OutComboBox.SelectedIndex = 0;
 
-            //if (!findTheme)
-            //{
+            // if (!findTheme)
+            // {
             //    for (int i = 0; i < ThemesDataGrid.Items.Count; i++)
             //    {
             //        DataGridRow row = (DataGridRow)ThemesDataGrid.ItemContainerGenerator.ContainerFromItem(ThemesDataGrid.Items[i]);
@@ -659,12 +674,12 @@ namespace Jvedio
             //            {
             //                rb.IsChecked = true;
 
-            //                break;
+            // break;
             //            }
             //        }
 
-            //    }
-            //}
+            // }
+            // }
 
             // 设置代理选中
             List<RadioButton> proxies = proxyStackPanel.Children.OfType<RadioButton>().ToList();
@@ -677,6 +692,7 @@ namespace Jvedio
                     ConfigManager.ProxyConfig.ProxyMode = idx;
                 };
             }
+
             List<RadioButton> proxyTypes = proxyTypesStackPanel.Children.OfType<RadioButton>().ToList();
             for (int i = 0; i < proxyTypes.Count; i++)
             {
@@ -687,6 +703,7 @@ namespace Jvedio
                     ConfigManager.ProxyConfig.ProxyType = idx;
                 };
             }
+
             // 设置代理密码
             passwordBox.Password = vieModel.ProxyPwd;
 
@@ -743,6 +760,7 @@ namespace Jvedio
                         {
                             Logger.Error(ex);
                         }
+
                         if (datas == null || datas.Count <= 0) continue;
                         foreach (Dictionary<string, string> item in datas)
                         {
@@ -766,12 +784,14 @@ namespace Jvedio
                                 metaData.SetPluginID(PluginType.Theme, item["PluginID"].ToString());
                                 metaData.PluginType = PluginType.Theme;
                             }
+
                             metaData.SetRemoteUrl();
                             if (item.ContainsKey("ImageUrl") && item["ImageUrl"] != null)
                                 metaData.ImageUrl = item["ImageUrl"].ToString();
                             result.Add(metaData);
                         }
                     }
+
                     return result;
                 }
             }
@@ -779,6 +799,7 @@ namespace Jvedio
             {
                 Logger.Error(ex);
             }
+
             return null;
         }
 
@@ -832,10 +853,12 @@ namespace Jvedio
                     {
                         vieModel.PluginSortDesc = !vieModel.PluginSortDesc;
                     }
+
                     vieModel.PluginSortIndex = i;
                 }
                 else item.IsChecked = false;
             }
+
             vieModel.RenderPlugins();
         }
 
@@ -864,7 +887,7 @@ namespace Jvedio
         private void PathListBox_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
-            e.Handled = true;//必须加
+            e.Handled = true; // 必须加
         }
 
         // 检视
@@ -886,7 +909,7 @@ namespace Jvedio
 
         private void SelectNfoPath(object sender, RoutedEventArgs e)
         {
-            //选择NFO存放位置
+            // 选择NFO存放位置
             var path = FileHelper.SelectPath(this);
             if (Directory.Exists(path))
             {
@@ -910,7 +933,7 @@ namespace Jvedio
                 Url = DEFAULT_TEST_URL,
                 Cookies = string.Empty,
                 Available = 0,
-                LastRefreshDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                LastRefreshDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
             };
             ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[pluginID];
             if (list == null) list = new ObservableCollection<CrawlerServer>();
@@ -973,7 +996,11 @@ namespace Jvedio
                 dgr = visParent as DataGridRow;
                 visParent = VisualTreeHelper.GetParent(visParent);
             }
-            if (dgr == null) { return; }
+
+            if (dgr == null)
+            {
+                return;
+            }
 
             CurrentRowIndex = dgr.GetIndex();
         }
@@ -993,6 +1020,7 @@ namespace Jvedio
                 {
                     server.Available = 1;
                 }
+
                 await Dispatcher.BeginInvoke((Action)delegate
                 {
                     ServersDataGrid.Items.Refresh();
@@ -1047,22 +1075,22 @@ namespace Jvedio
 
         private void SetServerEnable(object sender, MouseButtonEventArgs e)
         {
-            //bool enable = !(bool)((CheckBox)sender).IsChecked;
-            //vieModel.Servers[CurrentRowIndex].IsEnable = enable;
-            //ServerConfig.Instance.SaveServer(vieModel.Servers[CurrentRowIndex]);
-            //InitVariable();
-            //ServersDataGrid.Items.Refresh();
+            // bool enable = !(bool)((CheckBox)sender).IsChecked;
+            // vieModel.Servers[CurrentRowIndex].IsEnable = enable;
+            // ServerConfig.Instance.SaveServer(vieModel.Servers[CurrentRowIndex]);
+            // InitVariable();
+            // ServersDataGrid.Items.Refresh();
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            //注册热键
+            // 注册热键
             uint modifier = Properties.Settings.Default.HotKey_Modifiers;
             uint vk = Properties.Settings.Default.HotKey_VK;
 
             if (modifier != 0 && vk != 0)
             {
-                UnregisterHotKey(_windowHandle, HOTKEY_ID);//取消之前的热键
+                UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消之前的热键
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success)
                 {
@@ -1074,7 +1102,7 @@ namespace Jvedio
 
         private void Unregister_HotKey(object sender, RoutedEventArgs e)
         {
-            UnregisterHotKey(_windowHandle, HOTKEY_ID);//取消之前的热键
+            UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消之前的热键
         }
 
         private void ReplaceWithValue(string property)
@@ -1108,8 +1136,10 @@ namespace Jvedio
                             else if (v == 3)
                                 value = Jvedio.Language.Resources.Europe;
                         }
+
                         vieModel.ViewRenameFormat = vieModel.ViewRenameFormat.Replace("{" + property + "}", value);
                     }
+
                     break;
                 }
             }
@@ -1129,6 +1159,7 @@ namespace Jvedio
                 {
                     formatNames.Add($"{{{Video.ToSqlField(name)}}}");
                 }
+
                 vieModel.FormatString = string.Join(sep, formatNames);
             }
             else
@@ -1165,6 +1196,7 @@ namespace Jvedio
                 vieModel.ViewRenameFormat = string.Empty;
                 return;
             }
+
             MatchCollection matches = Regex.Matches(txt, "\\{[a-zA-Z]+\\}");
             if (matches != null && matches.Count > 0)
             {
@@ -1299,9 +1331,10 @@ namespace Jvedio
             {
                 Logger.LogF(ex);
             }
-            //if (v != "")
+
+            // if (v != "")
             //    return Encrypt.AesDecrypt(v, EncryptKeys[0]);
-            //else
+            // else
             //    return "";
             return string.Empty;
         }
@@ -1326,6 +1359,7 @@ namespace Jvedio
                 dgr = visParent as DataGridRow;
                 visParent = VisualTreeHelper.GetParent(visParent);
             }
+
             if (dgr == null)
                 return -1;
             else
@@ -1378,6 +1412,7 @@ namespace Jvedio
                 contextMenu.Placement = PlacementMode.Bottom;
                 contextMenu.IsOpen = true;
             }
+
             e.Handled = true;
         }
 
@@ -1436,6 +1471,7 @@ namespace Jvedio
                     plugin.Enabled = enabled;
                 ConfigManager.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
             }
+
             ConfigManager.Settings.PluginEnabledJson = JsonConvert.SerializeObject(ConfigManager.Settings.PluginEnabled);
             vieModel.SetServers();
         }
@@ -1470,6 +1506,7 @@ namespace Jvedio
                         {
                             builder.Append($"{key}: {dict[key]}{Environment.NewLine}");
                         }
+
                         inputTextbox.Text = builder.ToString();
                     }
                 }
@@ -1524,15 +1561,15 @@ namespace Jvedio
                 if (!data.ContainsKey(key)) data.Add(key, value);
             }
 
-            //if (vieModel.AutoHandleHeader)
-            //{
+            // if (vieModel.AutoHandleHeader)
+            // {
             data.Remove("content-encoding");
             data.Remove("accept-encoding");
             data.Remove("host");
 
             data = data.Where(arg => arg.Key.IndexOf(" ") < 0).ToDictionary(x => x.Key, y => y.Value);
 
-            //}
+            // }
 
             string json = JsonConvert.SerializeObject(data);
             if (json.Equals("{}"))
@@ -1556,16 +1593,17 @@ namespace Jvedio
             Button button = sender as Button;
             button.IsEnabled = false;
             string url = textProxyUrl.Text;
-            //url = "https://www.baidu.com";
-            //string url = "https://www.google.com";
 
-            //WebProxy proxy = null;
+            // url = "https://www.baidu.com";
+            // string url = "https://www.google.com";
+
+            // WebProxy proxy = null;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             RequestHeader header = new RequestHeader();
             IWebProxy proxy = ConfigManager.ProxyConfig.GetWebProxy();
-            header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000;// 转为 ms
+            header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
             header.WebProxy = proxy;
 
             HttpResult httpResult = await HttpClient.Get(url, header);
@@ -1599,7 +1637,7 @@ namespace Jvedio
 
         private void ShowScanReHelp(object sender, MouseButtonEventArgs e)
         {
-            //MessageCard.Info("在扫描时，对于视频 VID 的识别，例如填写正则为 .*钢铁侠.* 则只要文件名含有钢铁侠，");
+            // MessageCard.Info("在扫描时，对于视频 VID 的识别，例如填写正则为 .*钢铁侠.* 则只要文件名含有钢铁侠，");
         }
 
         private void ShowRenameHelp(object sender, MouseButtonEventArgs e)
@@ -1642,13 +1680,16 @@ namespace Jvedio
             {
                 pluginMetaData = vieModel.CurrentFreshPlugins.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
             }
+
             pluginMetaData.Installing = Installing;
+
             // 加入到下载列表中
             if (PluginManager.DownloadingList.Any(arg => arg.Equals(pluginMetaData.PluginID)))
             {
                 MessageCard.Warning($"【{pluginMetaData.PluginName}】下载中或已下载");
                 return;
             }
+
             PluginManager.DownloadingList.Add(pluginMetaData.PluginID);
             PluginManager.DownloadPlugin(pluginMetaData);
         }
@@ -1676,7 +1717,8 @@ namespace Jvedio
                           indexCreatingProgressBar.Value = Math.Round(((double)i + 1) / total * 100, 2);
                       });
                   }
-                  string sql = $"begin;update metadata set PathExist=1;{builder};commit;";// 因为大多数资源都是存在的，默认先设为1
+
+                  string sql = $"begin;update metadata set PathExist=1;{builder};commit;"; // 因为大多数资源都是存在的，默认先设为1
                   MapperManager.videoMapper.ExecuteNonQuery(sql);
                   return true;
               });
@@ -1712,8 +1754,10 @@ namespace Jvedio
                 for (int i = 0; i < total; i++)
                 {
                     Video video = videos[i];
+
                     // 小图
                     list.Add($"({video.DataID},{pathType},0,{(File.Exists(video.getSmallImage()) ? 1 : 0)})");
+
                     // 大图
                     list.Add($"({video.DataID},{pathType},1,{(File.Exists(video.getBigImage()) ? 1 : 0)})");
                     if (IndexCanceled) return false;
@@ -1722,6 +1766,7 @@ namespace Jvedio
                         indexCreatingProgressBar.Value = Math.Round(((double)i + 1) / total * 100, 2);
                     });
                 }
+
                 string insertSql = $"begin;insert or replace into common_picture_exist(DataID,PathType,ImageType,Exist) values {string.Join(",", list)};commit;";
                 MapperManager.videoMapper.ExecuteNonQuery(insertSql);
                 return true;
@@ -1764,6 +1809,7 @@ namespace Jvedio
             {
                 vieModel.SortEnabledIndex = idx;
             }
+
             vieModel.RefreshCurrentPlugins();
         }
 
@@ -1778,6 +1824,7 @@ namespace Jvedio
             {
                 vieModel.SortPluginType = (PluginType)idx;
             }
+
             vieModel.RefreshCurrentPlugins();
         }
 
@@ -1789,6 +1836,7 @@ namespace Jvedio
             {
                 item.IsChecked = false;
             }
+
             menuItem.IsChecked = isChecked;
             return (isChecked, parent.Items.IndexOf(menuItem));
         }
@@ -1813,11 +1861,13 @@ namespace Jvedio
             {
                 enabled = false;
             }
+
             foreach (PluginMetaData plugin in PluginManager.PluginList)
             {
                 plugin.Enabled = enabled;
                 ConfigManager.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
             }
+
             ConfigManager.Settings.PluginEnabledJson = JsonConvert.SerializeObject(ConfigManager.Settings.PluginEnabled);
             vieModel.SetServers();
             vieModel.RefreshCurrentPlugins();

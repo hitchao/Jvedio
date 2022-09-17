@@ -15,11 +15,17 @@ namespace Jvedio
     {
         public SolidColorBrush _BackgroundBrush = Brushes.Red;
 
-        public SolidColorBrush BackgroundBrush { get { return _BackgroundBrush; } set { _BackgroundBrush = value; } }
+        public SolidColorBrush BackgroundBrush
+        {
+            get { return _BackgroundBrush; } set { _BackgroundBrush = value; }
+        }
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
 
-        public SolidColorBrush ForegroundBrush { get { return _ForegroundBrush; } set { _ForegroundBrush = value; } }
+        public SolidColorBrush ForegroundBrush
+        {
+            get { return _ForegroundBrush; } set { _ForegroundBrush = value; }
+        }
 
         public string TagName { get; set; }
 
@@ -46,7 +52,7 @@ namespace Jvedio
         private void PathListBox_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
-            e.Handled = true;//必须加
+            e.Handled = true; // 必须加
         }
 
         // 检视
@@ -63,6 +69,7 @@ namespace Jvedio
                         MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
                 }
             }
+
             OnListChange();
         }
 
@@ -76,6 +83,7 @@ namespace Jvedio
                 else
                     MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
             }
+
             OnListChange();
         }
 
@@ -88,6 +96,7 @@ namespace Jvedio
                     Folders.Remove(PathListBox.SelectedItems[i].ToString());
                 }
             }
+
             OnListChange();
         }
 

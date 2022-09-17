@@ -16,6 +16,7 @@ namespace Jvedio.Mapper
         {
             Associations = SelectList();
             AdjacencyList = new Dictionary<long, ListNode<long>>();
+
             // 构造邻接表
             // 邻接表适合存储稀疏图（顶点较多、边较少）
             if (Associations != null && Associations.Count > 0)
@@ -48,9 +49,10 @@ namespace Jvedio.Mapper
                         AdjacencyList.Add(dataId, node);
                     }
                 }
+
                 // 打印邻接矩阵
-                //foreach (long key in AdjacencyList.Keys)
-                //{
+                // foreach (long key in AdjacencyList.Keys)
+                // {
                 //    StringBuilder builder = new StringBuilder();
                 //    builder.Append($"{key}->");
                 //    ListNode<long> head = AdjacencyList[key].Head;
@@ -62,9 +64,10 @@ namespace Jvedio.Mapper
                 //        if (node == null) builder.Remove(builder.Length - 2, 2);
                 //    }
                 //    Console.WriteLine(builder);
-                //}
+                // }
             }
-            //Console.WriteLine();
+
+            // Console.WriteLine();
         }
 
         public HashSet<long> getAssociationDatas(long dataID)
@@ -77,6 +80,7 @@ namespace Jvedio.Mapper
             {
                 FindAssoData(ref set, dict, dataID, ref foundList);
             }
+
             set.Remove(dataID);
             return set;
         }
@@ -114,6 +118,7 @@ namespace Jvedio.Mapper
                             node = node.Next;
                         }
                     }
+
                     if (found)
                     {
                         set.Add(key);
@@ -126,7 +131,9 @@ namespace Jvedio.Mapper
                     }
                 }
             }
+
             foundList.Add(target);
+
             // bfs
             foreach (long item in set.ToArray())
             {

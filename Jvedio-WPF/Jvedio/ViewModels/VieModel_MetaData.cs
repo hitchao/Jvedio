@@ -64,7 +64,7 @@ namespace Jvedio.ViewModel
 
         public string ClickFilterType = string.Empty;
 
-        //public bool canRender = false;
+        // public bool canRender = false;
 
         Window_MetaDatas metaDatas = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
 
@@ -100,13 +100,13 @@ namespace Jvedio.ViewModel
 
             refreshVideoRenderToken();
 
-            //获得所有数据库
-            //LoadDataBaseList();
-            //LoadSearchHistory();
+            // 获得所有数据库
+            // LoadDataBaseList();
+            // LoadSearchHistory();
 
-            //CurrentMovieList.AllowEdit = true;
-            //CurrentMovieList.AllowNew = true;
-            //CurrentMovieList.AllowRemove = true;
+            // CurrentMovieList.AllowEdit = true;
+            // CurrentMovieList.AllowNew = true;
+            // CurrentMovieList.AllowRemove = true;
         }
 
         public void refreshVideoRenderToken()
@@ -901,7 +901,8 @@ namespace Jvedio.ViewModel
             set
             {
                 _CurrentPage = value;
-                //FlowNum = 0;
+
+                // FlowNum = 0;
                 RaisePropertyChanged();
             }
         }
@@ -1088,7 +1089,8 @@ namespace Jvedio.ViewModel
             {
                 _SearchText = value;
                 RaisePropertyChanged();
-                //BeginSearch();
+
+                // BeginSearch();
             }
         }
 
@@ -1204,6 +1206,7 @@ namespace Jvedio.ViewModel
             List<Dictionary<string, object>> list = tagStampMapper.Select(sql);
             List<TagStamp> tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
             TagStamps = new ObservableCollection<TagStamp>();
+
             // 先增加默认的：高清、中文
             foreach (TagStamp item in Main.TagStamps)
             {
@@ -1222,67 +1225,67 @@ namespace Jvedio.ViewModel
         public async Task<bool> InitLettersNavigation()
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
-            //LettersNavigation = new ObservableCollection<char>();
-            //List<char> _temp = new List<char>();
-            //var movies = DataBase.SelectAllID();
-            //if (movies == null || movies.Count == 0) return false;
-            //foreach (var item in movies)
-            //{
+            // LettersNavigation = new ObservableCollection<char>();
+            // List<char> _temp = new List<char>();
+            // var movies = DataBase.SelectAllID();
+            // if (movies == null || movies.Count == 0) return false;
+            // foreach (var item in movies)
+            // {
 
-            //    if (item.Length >= 1)
+            // if (item.Length >= 1)
             //    {
             //        char firstchar = item.ToUpper()[0];
             //        if (!_temp.Contains(firstchar)) _temp.Add(firstchar);
             //    }
-            //}
+            // }
 
-            //foreach (var item in _temp.OrderBy(arg => arg))
-            //{
+            // foreach (var item in _temp.OrderBy(arg => arg))
+            // {
             //    LettersNavigation.Add(item);
-            //}
+            // }
             return true;
         }
 
         public async void BeginSearch()
         {
-            //GetSearchCandidate(Search.ToProperSql());
+            // GetSearchCandidate(Search.ToProperSql());
             await Query();
             FlipOver();
         }
 
         public void LoadDataBaseList()
         {
-            //DataBases = new ObservableCollection<string>();
-            //string scanDir = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString());
-            //List<string> files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly).ToList();
-            //files.ForEach(arg => DataBases.Add(Path.GetFileNameWithoutExtension(arg).ToLower()));
+            // DataBases = new ObservableCollection<string>();
+            // string scanDir = Path.Combine(GlobalVariable.DataPath, GlobalVariable.CurrentInfoType.ToString());
+            // List<string> files = FileHelper.TryScanDIr(scanDir, "*.sqlite", SearchOption.TopDirectoryOnly).ToList();
+            // files.ForEach(arg => DataBases.Add(Path.GetFileNameWithoutExtension(arg).ToLower()));
         }
 
         private void AddSingleMovie()
         {
-            //Dialog_NewMovie dialog_NewMovie = new Dialog_NewMovie((Main)GetWindowByName("Main"));
-            //var b = (bool)dialog_NewMovie.ShowDialog();
-            //JvedioDialogResult result = dialog_NewMovie.Result;
+            // Dialog_NewMovie dialog_NewMovie = new Dialog_NewMovie((Main)GetWindowByName("Main"));
+            // var b = (bool)dialog_NewMovie.ShowDialog();
+            // JvedioDialogResult result = dialog_NewMovie.Result;
 
-            //if (b && !string.IsNullOrEmpty(result.Text))
-            //{
+            // if (b && !string.IsNullOrEmpty(result.Text))
+            // {
             //    List<string> IDList = GetIDListFromString(result.Text, result.VideoType);
             //    foreach (var item in IDList)
             //    {
             //        InsertID(item, result.VideoType);
             //    }
-            //}
+            // }
         }
 
         private void InsertID(string id, VideoType vedioType)
         {
-            //Movie movie = DataBase.SelectMovieByID(id);
-            //if (movie != null)
-            //{
+            // Movie movie = DataBase.SelectMovieByID(id);
+            // if (movie != null)
+            // {
             //    HandyControl.Controls.Growl.Info($"{id} {Jvedio.Language.Resources.Message_AlreadyExist}", "Main");
-            //}
-            //else
-            //{
+            // }
+            // else
+            // {
             //    Movie movie1 = new Movie()
             //    {
             //        id = id,
@@ -1294,33 +1297,34 @@ namespace Jvedio.ViewModel
             //    MovieList.Insert(0, movie1);
             //    CurrentMovieList.Insert(0, movie1);
             //    FilterMovieList.Insert(0, movie1);
-            //}
+            // }
         }
 
         public List<string> GetIDListFromString(string str, VideoType vedioType)
         {
             List<string> result = new List<string>();
-            //foreach (var item in str.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None))
-            //{
+
+            // foreach (var item in str.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None))
+            // {
             //    string id = item;
             //    if (AutoAddPrefix && Prefix != "")
             //        id = Prefix + id;
 
-            //    if (vedioType == VideoType.Europe)
+            // if (vedioType == VideoType.Europe)
             //        id = id.Replace(" ", "");
             //    else
             //        id = id.ToUpper().Replace(" ", "");
 
-            //    if (!string.IsNullOrEmpty(id) && !result.Contains(id)) result.Add(id);
-            //}
+            // if (!string.IsNullOrEmpty(id) && !result.Contains(id)) result.Add(id);
+            // }
             return result;
         }
 
-        //private delegate void LoadSearchDelegate(string str);
-        //private void LoadSearch(string str)
-        //{
+        // private delegate void LoadSearchDelegate(string str);
+        // private void LoadSearch(string str)
+        // {
         //    if (!CurrentSearchCandidate.Contains(str)) CurrentSearchCandidate.Add(str);
-        //}
+        // }
 
         public async Task<List<string>> GetSearchCandidate()
         {
@@ -1332,7 +1336,7 @@ namespace Jvedio.ViewModel
                 List<string> result = new List<string>();
                 if (string.IsNullOrEmpty(SearchText)) return result;
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-                setSortOrder(wrapper);//按照当前排序
+                setSortOrder(wrapper); // 按照当前排序
                 wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0);
                 SelectWrapper<Video> selectWrapper = getWrapper(searchType);
                 if (selectWrapper != null) wrapper.Join(selectWrapper);
@@ -1362,6 +1366,7 @@ namespace Jvedio.ViewModel
                         result.Add(value);
                     }
                 }
+
                 return result;
             });
         }
@@ -1373,7 +1378,8 @@ namespace Jvedio.ViewModel
                 if (SearchHistory.Count <= 0)
                 {
                     File.Delete("SearchHistory");
-                    //main.SearchHistoryStackPanel.Visibility = Visibility.Collapsed;
+
+                    // main.SearchHistoryStackPanel.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -1381,7 +1387,8 @@ namespace Jvedio.ViewModel
                     {
                         sw.Write(string.Join("'", SearchHistory));
                     }
-                    //main.SearchHistoryStackPanel.Visibility = Visibility.Visible;
+
+                    // main.SearchHistoryStackPanel.Visibility = Visibility.Visible;
                 }
             }
             catch (Exception ex)
@@ -1425,20 +1432,20 @@ namespace Jvedio.ViewModel
         /// </summary>
         public void Flow()
         {
-            //if (FilterMovieList == null) return;
-            //App.Current.Dispatcher.Invoke((Action)delegate
-            //{
+            // if (FilterMovieList == null) return;
+            // App.Current.Dispatcher.Invoke((Action)delegate
+            // {
             //    main.SetLoadingStatus(true);
-            //});
+            // });
 
-            //CurrentMovieListHideOrChanged?.Invoke(this, EventArgs.Empty); //停止下载
-            //int DisPlayNum = Properties.Settings.Default.DisplayNumber;//每页展示数目
-            //int SetFlowNum = Properties.Settings.Default.DisplayNumber;//流动数目
-            //Movies = new List<Movie>();
-            //int min = (CurrentPage - 1) * DisPlayNum + FlowNum * SetFlowNum;
-            //int max = (CurrentPage - 1) * DisPlayNum + (FlowNum + 1) * SetFlowNum;
-            //for (int i = min; i < max; i++)
-            //{
+            // CurrentMovieListHideOrChanged?.Invoke(this, EventArgs.Empty); //停止下载
+            // int DisPlayNum = Properties.Settings.Default.DisplayNumber;//每页展示数目
+            // int SetFlowNum = Properties.Settings.Default.DisplayNumber;//流动数目
+            // Movies = new List<Movie>();
+            // int min = (CurrentPage - 1) * DisPlayNum + FlowNum * SetFlowNum;
+            // int max = (CurrentPage - 1) * DisPlayNum + (FlowNum + 1) * SetFlowNum;
+            // for (int i = min; i < max; i++)
+            // {
             //    if (CurrentMovieList.Count + Movies.Count < DisPlayNum)
             //    {
             //        if (i <= FilterMovieList.Count - 1)
@@ -1447,7 +1454,7 @@ namespace Jvedio.ViewModel
             //            //添加标签戳
             //            FileProcess.addTag(ref movie);
 
-            //            if (!string.IsNullOrEmpty(movie.id)) Movies.Add(movie);
+            // if (!string.IsNullOrEmpty(movie.id)) Movies.Add(movie);
             //        }
             //        else { break; }
             //    }
@@ -1456,50 +1463,50 @@ namespace Jvedio.ViewModel
             //        FlowNum = 0;
             //    }
 
-            //}
+            // }
 
-            //foreach (Movie item in Movies)
-            //{
+            // foreach (Movie item in Movies)
+            // {
             //    Movie movie = item;
             //    if (!Properties.Settings.Default.EasyMode) SetImage(ref movie);
             //    App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadItemDelegate(LoadMovie), movie);
-            //}
+            // }
 
-            //App.Current.Dispatcher.Invoke((Action)delegate
-            //{
+            // App.Current.Dispatcher.Invoke((Action)delegate
+            // {
             //    if (GetWindowByName("Main") is Main main)
             //    {
             //        MovieFlipOverCompleted?.Invoke(this, EventArgs.Empty);
             //    }
 
-            //});
+            // });
         }
 
 #pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         public async Task<bool> ClearCurrentMovieList()
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
-            //if (CurrentMovieList == null) CurrentMovieList = new BindingList<Movie>();
+            // if (CurrentMovieList == null) CurrentMovieList = new BindingList<Movie>();
 
-            //await Task.Run(() => {
+            // await Task.Run(() => {
             //    App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate {
             //        Main main = (Main)GetWindowByName("Main");
             //        //main.MovieItemsControl.ItemsSource = null;
             //    });
-            //});
+            // });
 
-            //await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
-            //{
+            // await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
+            // {
             //    //CurrentMovieList.RaiseListChangedEvents = false;
             //    for (int i = CurrentMovieList.Count - 1; i >= 0; i--)
             //    {
             //        CurrentMovieList[i].bigimage = null;
             //        CurrentMovieList[i].smallimage = null;
             //    }
-            //});
+            // });
 
-            //await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
-            //{
+            // await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
+            // {
             //    CurrentMovieList.Clear();
             //    CurrentMovieList = new ObservableCollection<Movie>();
             //    GC.Collect();
@@ -1515,7 +1522,7 @@ namespace Jvedio.ViewModel
             //    //    main.SimpleMovieItemsControl.ItemsSource = CurrentMovieList;
             //    //else
             //    main.MovieItemsControl.ItemsSource = CurrentMovieList;
-            //});
+            // });
 
             return true;
         }
@@ -1543,15 +1550,15 @@ namespace Jvedio.ViewModel
             // if (page <= 0 && FilterMovieList.Count < number) CurrentPage = 1;                // FilterMovieList 如果改变了，则回到第一页
             // if (page > 0) CurrentPage = page;
             // Task.Run(async () =>
-            //{
+            // {
 
-            //    await ClearCurrentMovieList();//动态清除当前影片
+            // await ClearCurrentMovieList();//动态清除当前影片
 
-            //    TotalPage = (int)Math.Ceiling((double)FilterMovieList.Count / Properties.Settings.Default.DisplayNumber);
+            // TotalPage = (int)Math.Ceiling((double)FilterMovieList.Count / Properties.Settings.Default.DisplayNumber);
             //    int DisPlayNum = Properties.Settings.Default.DisplayNumber;
             //    int FlowNum = Properties.Settings.Default.DisplayNumber;
 
-            //    Movies = new List<Movie>();
+            // Movies = new List<Movie>();
             //    //从 FilterMovieList 中添加影片到 临时 Movies 中
             //    for (int i = (CurrentPage - 1) * DisPlayNum; i < (CurrentPage - 1) * DisPlayNum + FlowNum; i++)
             //    {
@@ -1563,9 +1570,9 @@ namespace Jvedio.ViewModel
             //        else { break; }
             //        if (Movies.Count == FlowNum) { break; }
 
-            //    }
+            // }
 
-            //    //添加标签戳
+            // //添加标签戳
             //    for (int i = 0; i < Movies.Count; i++)
             //    {
             //        if (Identify.IsHDV(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_HD) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_HD) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_HD) >= 0) Movies[i].tagstamps += Jvedio.Language.Resources.HD;
@@ -1573,30 +1580,31 @@ namespace Jvedio.ViewModel
             //        if (Identify.IsFlowOut(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_FlowOut) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_FlowOut) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_FlowOut) >= 0) Movies[i].tagstamps += Jvedio.Language.Resources.FlowOut;
             //    }
 
-            //    //根据标签戳筛选
+            // //根据标签戳筛选
             //    if (ShowStampType >= 1)
             //        Movies = Movies.Where(arg => arg.tagstamps.IndexOf(ShowStampType.ToString().ToTagString()) >= 0).ToList();
 
-            //    foreach (Movie item in Movies)
+            // foreach (Movie item in Movies)
             //    {
             //        Movie movie = item;
             //        if (!Properties.Settings.Default.EasyMode) SetImage(ref movie);
             //        await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadItemDelegate(LoadMovie), movie);
             //    }
 
-            //    await App.Current.Dispatcher.BeginInvoke((Action)delegate
+            // await App.Current.Dispatcher.BeginInvoke((Action)delegate
             //     {
             //         MovieFlipOverCompleted?.Invoke(this, EventArgs.Empty);
             //     });
 
-            //});
+            // });
             return true;
         }
 
         public void SetClassifyLoadingStatus(bool loading)
         {
             IsLoadingClassify = loading;
-            //IsLoadingMovie = loading;
+
+            // IsLoadingMovie = loading;
         }
 
         private delegate void LoadDataDelegate(MetaData data, int idx);
@@ -1621,22 +1629,23 @@ namespace Jvedio.ViewModel
                 CurrentDataList[idx] = null;
                 CurrentDataList[idx] = data;
             }
-            //CurrentCount = CurrentDataList.Count;
-            //Console.WriteLine($"渲染第 {CurrentPage} 页的数据");
+
+            // CurrentCount = CurrentDataList.Count;
+            // Console.WriteLine($"渲染第 {CurrentPage} 页的数据");
         }
 
-        //private delegate void LoadLabelDelegate(string str);
+        // private delegate void LoadLabelDelegate(string str);
 
-        //private void LoadLabel(string str) => LabelList.Add(str);
-        //private void LoadTag(string str) => TagList.Add(str);
-        //private void LoadStudio(string str) => StudioList.Add(str);
-        //private void LoadDirector(string str) => DirectorList.Add(str);
+        // private void LoadLabel(string str) => LabelList.Add(str);
+        // private void LoadTag(string str) => TagList.Add(str);
+        // private void LoadStudio(string str) => StudioList.Add(str);
+        // private void LoadDirector(string str) => DirectorList.Add(str);
 
         private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
 
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
 
-        //获得标签
+        // 获得标签
         public async void GetLabelList()
         {
             List<string> labels = new List<string>();
@@ -1650,6 +1659,7 @@ namespace Jvedio.ViewModel
                 long.TryParse(item["Count"].ToString(), out long count);
                 labels.Add($"{LabelName}({count})");
             }
+
             LabelList = new ObservableCollection<string>();
             for (int i = 0; i < labels.Count; i++)
             {
@@ -1713,6 +1723,7 @@ namespace Jvedio.ViewModel
                 {
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), SeriesList, list[i]);
                 }
+
                 SetClassifyLoadingStatus(false);
             }
             else if (ClassifySelectedIndex == 2)
@@ -1725,6 +1736,7 @@ namespace Jvedio.ViewModel
                 {
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), StudioList, list[i]);
                 }
+
                 SetClassifyLoadingStatus(false);
             }
             else if (ClassifySelectedIndex == 3)
@@ -1737,6 +1749,7 @@ namespace Jvedio.ViewModel
                 {
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), DirectorList, list[i]);
                 }
+
                 SetClassifyLoadingStatus(false);
             }
         }
@@ -1755,6 +1768,7 @@ namespace Jvedio.ViewModel
                 long.TryParse(item["Count"].ToString(), out long count);
                 result.Add($"{name}({count})");
             }
+
             return result;
         }
 
@@ -1791,21 +1805,22 @@ namespace Jvedio.ViewModel
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
             // todo
-            //extraWrapper = getWrapper(searchType);
+            // extraWrapper = getWrapper(searchType);
             Select();
-            //else if (AllSearchType == MySearchType.演员)
-            //{
+
+            // else if (AllSearchType == MySearchType.演员)
+            // {
             //    TextType = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.Actor + " " + searchContent;
             //    if (SearchInCurrent)
             //        MovieList = oldMovieList.Where(arg => arg.actor.IndexOf(searchContent) >= 0).ToList();
             //    else
             //        MovieList = DataBase.SelectPartialInfo($"SELECT * FROM movie where actor like '%{searchContent}%'");
-            //}
-            //if (!SearchHistory.Contains(searchContent) && !SearchFirstLetter)
-            //{
+            // }
+            // if (!SearchHistory.Contains(searchContent) && !SearchFirstLetter)
+            // {
             //    SearchHistory.Add(searchContent);
             //    SaveSearchHistory();
-            //}
+            // }
             return true;
         }
 
@@ -1912,6 +1927,7 @@ namespace Jvedio.ViewModel
         public void GenerateSelect(object o = null)
         {
             extraWrapper = new SelectWrapper<MetaData>();
+
             // 侧边栏参数
             if (o != null && !string.IsNullOrEmpty(o.ToString()))
             {
@@ -1926,6 +1942,7 @@ namespace Jvedio.ViewModel
                     default: break;
                 }
             }
+
             metaDatas.pagination.CurrentPage = 1;
             ClickFilterType = string.Empty;
             Select();
@@ -1936,6 +1953,7 @@ namespace Jvedio.ViewModel
             Console.WriteLine("Select");
 
             TabSelectedIndex = 0; // 影片
+
             // 判断当前获取的队列
             while (pageQueue.Count > 1)
             {
@@ -1946,15 +1964,15 @@ namespace Jvedio.ViewModel
             // 当前有视频在渲染的时候，打断渲染，等待结束
             while (rendering)
             {
-                //if (rendering && !renderDataCTS.IsCancellationRequested)
-                renderDataCTS?.Cancel();// 取消加载
+                // if (rendering && !renderDataCTS.IsCancellationRequested)
+                renderDataCTS?.Cancel(); // 取消加载
                 await Task.Delay(100);
             }
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                //main.SetLoadingStatus(true);//正在加载影片
-                metaDatas.MovieScrollViewer.ScrollToTop();//滚到顶部
+                // main.SetLoadingStatus(true);//正在加载影片
+                metaDatas.MovieScrollViewer.ScrollToTop(); // 滚到顶部
             });
 
             DataType dataType = Main.CurrentDataType;
@@ -1970,9 +1988,10 @@ namespace Jvedio.ViewModel
 
             // 标记
             // todo 标记全排除
-            //bool allFalse = TagStamps.All(item => item.Selected == false);
+            // bool allFalse = TagStamps.All(item => item.Selected == false);
             bool falseAndTrue = TagStamps.Any(item => item.Selected == false) && TagStamps.Any(item => item.Selected == false);
-            //if (!allFalse && falseAndTrue)
+
+            // if (!allFalse && falseAndTrue)
             if (falseAndTrue)
             {
                 wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
@@ -1989,6 +2008,7 @@ namespace Jvedio.ViewModel
             RenderSqlChanged?.Invoke(null, arg);
 
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
+
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { metaDatas.pagination.Total = TotalCount; });
             RenderCurrentData(sql);
@@ -1998,7 +2018,7 @@ namespace Jvedio.ViewModel
 
         public void RenderCurrentData(string sql)
         {
-            //if (rendering) return;
+            // if (rendering) return;
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             List<MetaData> datas = metaDataMapper.ToEntity<MetaData>(list, typeof(MetaData).GetProperties(), false);
             if (Main.CurrentDataType == DataType.Picture)
@@ -2033,6 +2053,7 @@ namespace Jvedio.ViewModel
                         data.AttachedVideos = picture.VideoPaths.Split(SuperUtils.Values.ConstValues.Separator).ToList();
                         data.HasVideo = true;
                     }
+
                     data.Count = picture.PicCount;
                 }
             }
@@ -2051,11 +2072,12 @@ namespace Jvedio.ViewModel
                 Game game = GameList.Where(arg => arg.DataID == dataID).FirstOrDefault();
                 if (game != null)
                 {
-                    //MetaData.SetImage(ref data, game.BigImagePath);
+                    // MetaData.SetImage(ref data, game.BigImagePath);
                 }
             }
-            MetaData.setTagStamps(ref data);// 设置标签戳
-            MetaData.handleEmpty(ref data);// 设置标题和发行日期
+
+            MetaData.setTagStamps(ref data); // 设置标签戳
+            MetaData.handleEmpty(ref data); // 设置标题和发行日期
         }
 
         public async void render()
@@ -2065,8 +2087,12 @@ namespace Jvedio.ViewModel
             for (int i = 0; i < DataList.Count; i++)
             {
 #pragma warning disable CS0168 // 声明了变量“ex”，但从未使用过
-                try { renderDataCT.ThrowIfCancellationRequested(); }
-                catch (OperationCanceledException ex) { renderDataCTS?.Dispose(); break; }
+                try
+                {
+                    renderDataCT.ThrowIfCancellationRequested();
+                }
+                catch (OperationCanceledException ex) { renderDataCTS?.Dispose();
+                    break; }
 #pragma warning restore CS0168 // 声明了变量“ex”，但从未使用过
                 rendering = true;
                 MetaData data = DataList[i];
@@ -2082,7 +2108,8 @@ namespace Jvedio.ViewModel
 
             if (renderDataCT.IsCancellationRequested) refreshVideoRenderToken();
             rendering = false;
-            //if (pageQueue.Count > 0) pageQueue.Dequeue();
+
+            // if (pageQueue.Count > 0) pageQueue.Dequeue();
             PageChangedCompleted?.Invoke(this, null);
         }
 
@@ -2115,7 +2142,7 @@ namespace Jvedio.ViewModel
 
         public void LoadFilePathClassfication()
         {
-            //加载路经筛选
+            // 加载路经筛选
             FilePathClassification = new ObservableCollection<string>();
             foreach (Movie movie in MovieList)
             {
@@ -2135,6 +2162,7 @@ namespace Jvedio.ViewModel
                 result += paths[i] + "\\";
                 if (i >= depth - 1) break;
             }
+
             return result;
         }
     }

@@ -88,7 +88,7 @@ namespace Jvedio
             vieModel.QueryCompleted += async delegate
             {
                 SetStatus(true);    // 设置状态
-                await LoadImage(vieModel.ShowScreenShot);//加载图片
+                await LoadImage(vieModel.ShowScreenShot); // 加载图片
                 renderMagnets();    // 显示磁力
                 ShowActor();
                 SetLabel();
@@ -129,6 +129,7 @@ namespace Jvedio
         public async void ShowActor()
         {
             vieModel.CurrentActorList = new ObservableCollection<ActorInfo>();
+
             // 加载演员
             if (vieModel.CurrentVideo.ActorInfos != null)
             {
@@ -136,28 +137,30 @@ namespace Jvedio
                 {
                     if (cancelLoadImage) break;
                     ActorInfo actorInfo = vieModel.CurrentVideo.ActorInfos[i];
-                    //加载图片
+
+                    // 加载图片
                     string imagePath = actorInfo.getImagePath(vieModel.CurrentVideo.Path);
                     BitmapImage smallimage = ReadImageFromFile(imagePath);
                     if (smallimage == null)
                     {
                         smallimage = MetaData.DefaultActorImage;
                         //// 根据地址下载图片
-                        //if (!string.IsNullOrEmpty(actorInfo.ImageUrl))
-                        //{
+                        // if (!string.IsNullOrEmpty(actorInfo.ImageUrl))
+                        // {
                         //    string url = actorInfo.ImageUrl;
                         //    string ext = Path.GetExtension(url);
                         //    string dir = Path.GetDirectoryName(imagePath);
                         //    string name = Path.GetFileNameWithoutExtension(imagePath);
                         //    string saveFileName = Path.Combine(dir, name + ext);
 
-                        //    Task.Run(() =>
+                        // Task.Run(() =>
                         //    {
                         //        StartDownLoadActorImage();
                         //    });
 
-                        //}
+                        // }
                     }
+
                     actorInfo.SmallImage = smallimage;
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo);
                 }
@@ -166,7 +169,7 @@ namespace Jvedio
 
         private async void StartDownLoadActorImage()
         {
-            //await HttpHelper.AsyncDownLoadFile(actorInfo.ImageUrl, CrawlerHeader.Default);
+            // await HttpHelper.AsyncDownLoadFile(actorInfo.ImageUrl, CrawlerHeader.Default);
         }
 
         public void InitDataIDs()
@@ -205,14 +208,14 @@ namespace Jvedio
             if (ConfigManager.Settings.DetailShowBg)
                 BgImage.Source = StyleManager.BackgroundImage;
             ////设置字体
-            //if (GlobalFont != null) this.FontFamily = GlobalFont;
+            // if (GlobalFont != null) this.FontFamily = GlobalFont;
         }
 
         public void DownLoad(object sender, RoutedEventArgs e)
         {
             Video video = vieModel.CurrentVideo;
             if (video == null || video.DataID <= 0) return;
-            DownLoadTask task = new DownLoadTask(video, true, ConfigManager.Settings.OverrideInfo);// 详情页面下载预览图
+            DownLoadTask task = new DownLoadTask(video, true, ConfigManager.Settings.OverrideInfo); // 详情页面下载预览图
             long dataid = video.DataID;
             task.onDownloadSuccess += (s, ev) =>
             {
@@ -221,6 +224,7 @@ namespace Jvedio
                 {
                     if (dataid.Equals(vieModel.CurrentVideo.DataID))
                         vieModel.Load(dataid);
+
                     // 通知主界面刷新
                     windowMain?.RefreshData(dataid);
                 });
@@ -250,7 +254,7 @@ namespace Jvedio
         public void GetScreenGif(object sender, RoutedEventArgs e)
         {
             Video video = vieModel.CurrentVideo;
-            ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo, true);// 详情页面下载预览图
+            ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo, true); // 详情页面下载预览图
 
             if (!Global.FFmpegManager.Dispatcher.Working)
                 Global.FFmpegManager.Dispatcher.BeginWork();
@@ -260,7 +264,7 @@ namespace Jvedio
         public void GetScreenShot(object sender, RoutedEventArgs e)
         {
             Video video = vieModel.CurrentVideo;
-            ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo);// 详情页面下载预览图
+            ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo); // 详情页面下载预览图
             long dataid = video.DataID;
             task.onCompleted += (s, ev) =>
             {
@@ -284,13 +288,13 @@ namespace Jvedio
 
         public void CloseWindow(object sender, RoutedEventArgs e) => this.Close();
 
-        //显示类别
+        // 显示类别
         public void ShowSameGenre(object sender, MouseButtonEventArgs e)
         {
             ShowSameString(sender, "Genre");
         }
 
-        //显示演员
+        // 显示演员
         public void ShowSameActor(object sender, MouseButtonEventArgs e)
         {
             Grid grid = sender as Grid;
@@ -301,7 +305,7 @@ namespace Jvedio
             this.Close();
         }
 
-        //显示标签
+        // 显示标签
         public void ShowSameLabel(object sender, MouseButtonEventArgs e)
         {
             string label = ((TextBlock)sender).Text;
@@ -310,7 +314,7 @@ namespace Jvedio
             this.Close();
         }
 
-        //显示导演
+        // 显示导演
         public void ShowSameDirector(object sender, MouseButtonEventArgs e)
         {
             ShowSameString(sender, "Director");
@@ -321,13 +325,13 @@ namespace Jvedio
             ShowSameString(sender, "Series");
         }
 
-        //显示发行商
+        // 显示发行商
         public void ShowSameStudio(object sender, MouseButtonEventArgs e)
         {
             ShowSameString(sender, "Studio");
         }
 
-        //显示系列
+        // 显示系列
         public void ShowSameString(object sender, string clickFilterType)
         {
             Border border = sender as Border;
@@ -374,6 +378,7 @@ namespace Jvedio
                     break;
                 }
             }
+
             if (nextID > 0)
             {
                 vieModel.CleanUp();
@@ -401,6 +406,7 @@ namespace Jvedio
                     break;
                 }
             }
+
             if (nextID > 0)
             {
                 cancelLoadImage = false;
@@ -441,11 +447,12 @@ namespace Jvedio
                 bool deleteBigImage = vieModel.CurrentVideo.PreviewImageList[0] == vieModel.CurrentVideo.BigImage;
                 vieModel.CurrentVideo.PreviewImagePathList.RemoveAt(idx);
                 vieModel.CurrentVideo.PreviewImageList.RemoveAt(idx);
+
                 // todo 更新数据库 路径
 
                 if (deleteBigImage && idx == 0)
                 {
-                    await Task.Delay(300);// todo 等待删除完成
+                    await Task.Delay(300); // todo 等待删除完成
                     Refresh();
                     windowMain?.RefreshImage(vieModel.CurrentVideo);
                 }
@@ -463,6 +470,7 @@ namespace Jvedio
                 string path = vieModel.CurrentVideo.PreviewImagePathList[i];
                 FileHelper.TryMoveToRecycleBin(path, 0);
             }
+
             vieModel.CurrentVideo.PreviewImageList.Clear();
             vieModel.CurrentVideo.PreviewImagePathList.Clear();
             if (vieModel.ShowScreenShot)
@@ -477,22 +485,22 @@ namespace Jvedio
         // todo
         private void SetToSmallPic(object sender, RoutedEventArgs e)
         {
-            //string path = getExtraImagePath(sender as FrameworkElement, 1);
-            //videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
-            //windowMain?.RefreshImage(vieModel.CurrentVideo);
-            //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            // string path = getExtraImagePath(sender as FrameworkElement, 1);
+            // videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
+            // windowMain?.RefreshImage(vieModel.CurrentVideo);
+            // SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
         }
 
         // todo
         private void SetToBigAndSmallPic(object sender, RoutedEventArgs e)
         {
-            //string path = getExtraImagePath(sender as FrameworkElement, 1);
+            // string path = getExtraImagePath(sender as FrameworkElement, 1);
             //// todo 绝对地址
-            //videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
-            //videoMapper.UpdateFieldById("BigImagePath", path, DataID);
-            //Refresh();
-            //windowMain?.RefreshImage(vieModel.CurrentVideo);
-            //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            // videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
+            // videoMapper.UpdateFieldById("BigImagePath", path, DataID);
+            // Refresh();
+            // windowMain?.RefreshImage(vieModel.CurrentVideo);
+            // SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
         }
 
         private void SetToBigPic(object sender, RoutedEventArgs e)
@@ -525,7 +533,7 @@ namespace Jvedio
             Video video = vieModel.CurrentVideo;
             if (video.SubSectionList?.Count > 0)
             {
-                //分段视频
+                // 分段视频
                 foreach (var path in video.SubSectionList)
                 {
                     if (File.Exists(path))
@@ -535,7 +543,10 @@ namespace Jvedio
                             FileSystem.DeleteFile(path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
                             num++;
                         }
-                        catch (Exception ex) { Logger.LogF(ex); }
+                        catch (Exception ex)
+                        {
+                            Logger.LogF(ex);
+                        }
                     }
                 }
             }
@@ -548,9 +559,13 @@ namespace Jvedio
                         FileSystem.DeleteFile(video.Path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
                         num++;
                     }
-                    catch (Exception ex) { Logger.LogF(ex); }
+                    catch (Exception ex)
+                    {
+                        Logger.LogF(ex);
+                    }
                 }
             }
+
             DeleteID(null, null);
         }
 
@@ -583,31 +598,31 @@ namespace Jvedio
 
         public async void TranslateMovie(object sender, RoutedEventArgs e)
         {
-            //if (IsTranslating) return;
+            // if (IsTranslating) return;
 
-            //if (!Properties.Settings.Default.Enable_TL_BAIDU & !Properties.Settings.Default.Enable_TL_YOUDAO) { SuperControls.Style.MessageCard.Warning("请设置【有道翻译】并测试"); IsTranslating = false; return; }
-            //string result = "";
-            //MySqlite dataBase = new MySqlite("Translate");
+            // if (!Properties.Settings.Default.Enable_TL_BAIDU & !Properties.Settings.Default.Enable_TL_YOUDAO) { SuperControls.Style.MessageCard.Warning("请设置【有道翻译】并测试"); IsTranslating = false; return; }
+            // string result = "";
+            // MySqlite dataBase = new MySqlite("Translate");
 
-            //CurrentVideo movie = vieModel.CurrentVideo;
-            //IsTranslating = true;
+            // CurrentVideo movie = vieModel.CurrentVideo;
+            // IsTranslating = true;
             ////检查是否已经翻译过，如有提示
-            //if (!string.IsNullOrEmpty(dataBase.SelectByField("translate_title", "youdao", movie.id)))
-            //{
+            // if (!string.IsNullOrEmpty(dataBase.SelectByField("translate_title", "youdao", movie.id)))
+            // {
             //    if (new Msgbox(this, Jvedio.Language.Resources.AlreadyTranslate).ShowDialog() == false)
             //    {
             //        IsTranslating = false;
             //        return;
             //    }
 
-            //}
+            // }
 
-            //string title = DataBase.SelectInfoByID("title", "movie", movie.id);
+            // string title = DataBase.SelectInfoByID("title", "movie", movie.id);
 
-            //if (title != "")
-            //{
+            // if (title != "")
+            // {
 
-            //    if (Properties.Settings.Default.Enable_TL_YOUDAO) result = await Translate.Youdao(title);
+            // if (Properties.Settings.Default.Enable_TL_YOUDAO) result = await Translate.Youdao(title);
             //    //保存
             //    if (result != "")
             //    {
@@ -620,10 +635,10 @@ namespace Jvedio
             //        SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
             //    }
 
-            //}
-            //string plot = DataBase.SelectInfoByID("plot", "movie", movie.id);
-            //if (plot != "")
-            //{
+            // }
+            // string plot = DataBase.SelectInfoByID("plot", "movie", movie.id);
+            // if (plot != "")
+            // {
             //    if (Properties.Settings.Default.Enable_TL_YOUDAO) result = await Translate.Youdao(plot);
             //    //保存
             //    if (result != "")
@@ -638,9 +653,9 @@ namespace Jvedio
             //        SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
             //    }
 
-            //}
-            //dataBase.CloseDB();
-            //IsTranslating = false;
+            // }
+            // dataBase.CloseDB();
+            // IsTranslating = false;
         }
 
         private void Grid_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -664,7 +679,7 @@ namespace Jvedio
             if (cancelLoadImage) return;
             if (vieModel.CurrentVideo.PreviewImageList.Count == 0)
             {
-                //设置为默认图片
+                // 设置为默认图片
                 BigImage.Source = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_B.png", UriKind.Relative));
             }
             else
@@ -672,7 +687,7 @@ namespace Jvedio
                 if (idx < vieModel.CurrentVideo.PreviewImageList?.Count)
                     BigImage.Source = vieModel.CurrentVideo.PreviewImageList[idx];
 
-                //设置遮罩
+                // 设置遮罩
                 for (int i = 0; i < imageItemsControl.Items.Count; i++)
                 {
                     ContentPresenter c = (ContentPresenter)imageItemsControl.ItemContainerGenerator.ContainerFromItem(imageItemsControl.Items[i]);
@@ -712,7 +727,7 @@ namespace Jvedio
         private void BigImage_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
-            e.Handled = true;//必须加
+            e.Handled = true; // 必须加
         }
 
         private void BigImage_Drop(object sender, DragEventArgs e)
@@ -721,70 +736,70 @@ namespace Jvedio
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             string file = dragdropFiles[0];
 
-            //if (!IsFile(file)) return;
-            //FileInfo fileInfo = new FileInfo(file);
-            //FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"BigPic\\{vieModel.CurrentVideo.id}.jpg", true);
-            //CurrentVideo CurrentVideo = vieModel.CurrentVideo;
-            //CurrentVideo.bigimage = null;
-            //CurrentVideo.bigimage = BitmapImageFromFile(fileInfo.FullName);
+            // if (!IsFile(file)) return;
+            // FileInfo fileInfo = new FileInfo(file);
+            // FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"BigPic\\{vieModel.CurrentVideo.id}.jpg", true);
+            // CurrentVideo CurrentVideo = vieModel.CurrentVideo;
+            // CurrentVideo.bigimage = null;
+            // CurrentVideo.bigimage = BitmapImageFromFile(fileInfo.FullName);
 
-            //if (vieModel.CurrentVideo.extraimagelist.Count > 0)
-            //{
+            // if (vieModel.CurrentVideo.extraimagelist.Count > 0)
+            // {
             //    CurrentVideo.extraimagelist[0] = CurrentVideo.bigimage;
             //    CurrentVideo.extraimagePath[0] = fileInfo.FullName;
 
-            //}
-            //else
-            //{
+            // }
+            // else
+            // {
             //    CurrentVideo.extraimagelist.Add(CurrentVideo.bigimage);
             //    CurrentVideo.extraimagePath.Add(fileInfo.FullName);
-            //}
+            // }
 
-            //vieModel.CurrentVideo = null;
-            //vieModel.CurrentVideo = CurrentVideo;
-            //RefreshUI("", fileInfo.FullName);
-            //SetImage(0);
+            // vieModel.CurrentVideo = null;
+            // vieModel.CurrentVideo = CurrentVideo;
+            // RefreshUI("", fileInfo.FullName);
+            // SetImage(0);
         }
 
         private void Border_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
-            e.Handled = true;//必须加
+            e.Handled = true; // 必须加
         }
 
         private void Border_Drop(object sender, DragEventArgs e)
         {
-            //分为文件夹和文件
-            //string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            //List<string> files = new List<string>();
-            //StringCollection stringCollection = new StringCollection();
-            //foreach (var item in dragdropFiles)
-            //{
+            // 分为文件夹和文件
+            // string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            // List<string> files = new List<string>();
+            // StringCollection stringCollection = new StringCollection();
+            // foreach (var item in dragdropFiles)
+            // {
             //    if (IsFile(item))
             //        files.Add(item);
             //    else
             //        stringCollection.Add(item);
-            //}
-            //List<string> filepaths = new List<string>();
+            // }
+            // List<string> filepaths = new List<string>();
             ////扫描导入
-            //foreach (var item in stringCollection)
-            //{
+            // foreach (var item in stringCollection)
+            // {
             //    try { filepaths.AddRange(Directory.GetFiles(item, "*.jpg").ToList<string>()); }
             //    catch (Exception ex) { Console.WriteLine(ex.Message); continue; }
-            //}
-            //if (files.Count > 0) filepaths.AddRange(files);
+            // }
+            // if (files.Count > 0) filepaths.AddRange(files);
 
             ////复制文件
-            //string path;
-            //if ((bool)ExtraImageRadioButton.IsChecked)
+            // string path;
+            // if ((bool)ExtraImageRadioButton.IsChecked)
             //    path = BasePicPath + $"ExtraPic\\{vieModel.CurrentVideo.id}\\";
-            //else
+            // else
             //    path = BasePicPath + $"ScreenShot\\{vieModel.CurrentVideo.id}\\";
 
-            //if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
-            //bool success = false;
-            //foreach (var item in filepaths)
-            //{
+            // if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+            // bool success = false;
+            // foreach (var item in filepaths)
+            // {
             //    try
             //    {
             //        File.Copy(item, path + item.Split('\\').Last());
@@ -796,18 +811,18 @@ namespace Jvedio
             //        continue;
             //    }
 
-            //}
-            //if (success)
-            //{
+            // }
+            // if (success)
+            // {
             //    //更新UI
             //    if ((bool)ExtraImageRadioButton.IsChecked)
             //        ExtraImageRadioButton_Click(sender, new RoutedEventArgs());
             //    else
             //        ScreenShotRadioButton_Click(sender, new RoutedEventArgs());
 
-            //    SuperControls.Style.MessageCard.Success($"{Jvedio.Language.Resources.ImportNumber} {filepaths.Count}");
+            // SuperControls.Style.MessageCard.Success($"{Jvedio.Language.Resources.ImportNumber} {filepaths.Count}");
 
-            //}
+            // }
         }
 
         private void Rate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
@@ -815,7 +830,8 @@ namespace Jvedio
             if (vieModel.CurrentVideo != null)
             {
                 vieModel.SaveLove();
-                //更新主界面
+
+                // 更新主界面
                 windowMain?.RefreshGrade(vieModel.CurrentVideo);
             }
         }
@@ -850,8 +866,10 @@ namespace Jvedio
             {
                 vieModel.SelectImageIndex = imageItemsControl.Items.Count - 1;
             }
+
             SetImage(vieModel.SelectImageIndex);
-            //滚动到指定的
+
+            // 滚动到指定的
             ContentPresenter presenter = (ContentPresenter)imageItemsControl.ItemContainerGenerator
                 .ContainerFromItem(imageItemsControl.Items[vieModel.SelectImageIndex]);
             presenter?.BringIntoView();
@@ -884,6 +902,7 @@ namespace Jvedio
                     return item;
                 }
             }
+
             return null;
         }
 
@@ -920,6 +939,7 @@ namespace Jvedio
                 MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_CopyFile);
                 if (menuItem != null) CopyFile(menuItem, new RoutedEventArgs());
             }
+
             contextMenu.IsOpen = false;
         }
 
@@ -960,6 +980,7 @@ namespace Jvedio
                     vieModel.CurrentVideo.PreviewImageList[i] = null;
                 }
             }
+
             GC.Collect();
             cancelLoadImage = false;
         }
@@ -967,7 +988,8 @@ namespace Jvedio
         private async Task<bool> LoadImage(bool isScreenShot = false)
         {
             scrollViewer.ScrollToHorizontalOffset(0);
-            //加载大图到预览图
+
+            // 加载大图到预览图
             DisposeImage();
 
             Video video = vieModel.CurrentVideo;
@@ -1013,7 +1035,7 @@ namespace Jvedio
                 });
             });
 
-            //扫描预览图目录
+            // 扫描预览图目录
             List<string> imagePathList = new List<string>();
             string imagePath = video.getExtraImage();
             if (isScreenShot) imagePath = video.getScreenShot();
@@ -1028,13 +1050,14 @@ namespace Jvedio
                 }
             });
 
-            //加载预览图/截图
+            // 加载预览图/截图
             foreach (var path in imagePathList)
             {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraImageDelegate(LoadExtraImage), BitmapImageFromFile(path));
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraPathDelegate(LoadExtraPath), path);
                 if (cancelLoadImage) break;
             }
+
             SetImage(0);
             return true;
         }
@@ -1056,14 +1079,14 @@ namespace Jvedio
 
         private async void ExtraImageRadioButton_Click(object sender, RoutedEventArgs e)
         {
-            //切换为预览图
+            // 切换为预览图
             await LoadImage();
             scrollViewer.ScrollToHorizontalOffset(0);
         }
 
         private async void ScreenShotRadioButton_Click(object sender, RoutedEventArgs e)
         {
-            //切换为截图
+            // 切换为截图
             await LoadImage(true);
             scrollViewer.ScrollToHorizontalOffset(0);
         }
@@ -1107,8 +1130,8 @@ namespace Jvedio
 
         private void GetPlot(object sender, RoutedEventArgs e)
         {
-            //if (JvedioServers.DMM.Url.IsProperUrl())
-            //{
+            // if (JvedioServers.DMM.Url.IsProperUrl())
+            // {
             //    Task.Run(async () =>
             //    {
             //        HttpResult httpResult = await new FANZACrawler(vieModel.CurrentVideo.id, true).Crawl();
@@ -1121,7 +1144,7 @@ namespace Jvedio
             //        }
             //    });
 
-            //}
+            // }
         }
 
         private void DownLoadMagnets(object sender, RoutedEventArgs e)
@@ -1135,12 +1158,13 @@ namespace Jvedio
             contextMenu.Items.Clear();
             for (int i = 0; i < vieModel.CurrentVideo.SubSectionList?.Count; i++)
             {
-                string filepath = vieModel.CurrentVideo.SubSectionList[i];//这样可以，放在  PlayVideoWithPlayer 就超出索引
+                string filepath = vieModel.CurrentVideo.SubSectionList[i]; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
                 MenuItem menuItem = new MenuItem();
                 menuItem.Header = i + 1;
                 menuItem.Click += (s, _) => windowMain?.PlayVideoWithPlayer(filepath, DataID);
                 contextMenu.Items.Add(menuItem);
             }
+
             contextMenu.IsOpen = true;
         }
 
@@ -1240,12 +1264,13 @@ namespace Jvedio
             {
                 for (int i = 0; i < video.SubSectionList?.Count; i++)
                 {
-                    string filepath = video.SubSectionList[i];//这样可以，放在  PlayVideoWithPlayer 就超出索引
+                    string filepath = video.SubSectionList[i]; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
                     MenuItem menuItem = new MenuItem();
                     menuItem.Header = i + 1;
                     menuItem.Click += (s, _) => windowMain?.PlayVideoWithPlayer(filepath, dataID);
                     contextMenu.Items.Add(menuItem);
                 }
+
                 contextMenu.IsOpen = true;
             }
         }
@@ -1263,6 +1288,7 @@ namespace Jvedio
                 MessageCard.Error("无法播放该视频！");
                 return;
             }
+
             windowMain?.PlayVideoWithPlayer(video.Path, DataID);
         }
 
@@ -1330,6 +1356,7 @@ namespace Jvedio
                 long.TryParse(grid.Tag.ToString(), out long result);
                 return result;
             }
+
             return -1;
         }
 
@@ -1358,9 +1385,11 @@ namespace Jvedio
                         else if (element is TextBox textBox)
                             builder.Append(textBox.Text);
                     }
+
                     builder.Append(Environment.NewLine);
                 }
             }
+
             if (builder.Length > 0)
                 ClipBoard.TrySetDataObject(builder.ToString());
             else

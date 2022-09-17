@@ -51,11 +51,13 @@ namespace Jvedio.Mapper
             {
                 MapperManager.gameMapper.ExecuteNonQuery(builder.ToString());
             }
+
             if (c1 == c2 && idList.Count == c1) return c1;
             else
             {
                 // todo 日志
             }
+
             return 0;
         }
 
@@ -65,13 +67,14 @@ namespace Jvedio.Mapper
             if (oldLabels == null) oldLabels = new List<string>();
             if (newLabels == null) newLabels = new List<string>();
             if (newLabels.SequenceEqual(oldLabels)) return;
+
             // 删除，新增
             oldLabels = oldLabels.OrderBy(arg => arg).ToList();
             newLabels = newLabels.OrderBy(arg => arg).ToList();
             List<string> to_delete = oldLabels.Except(newLabels).ToList();
             List<string> to_create = newLabels.Except(oldLabels).ToList();
 
-            //删除
+            // 删除
             if (to_delete.Count > 0)
             {
                 // ('1','2','3')

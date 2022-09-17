@@ -31,6 +31,7 @@ namespace Jvedio
         public static void Init()
         {
             if (Inited) return;
+
             // todo 泛型似乎无法使用多态进行反射加载
 
             // 初始化数据库连接
@@ -66,6 +67,7 @@ namespace Jvedio
             {
                 actorMapper.CreateTable(key, Sqlite.Actor.TABLES[key]);
             }
+
             foreach (string key in Sqlite.Data.TABLES.Keys)
             {
                 metaDataMapper.CreateTable(key, Sqlite.Data.TABLES[key]);
@@ -74,8 +76,14 @@ namespace Jvedio
             // 新增列
             foreach (string sql in Sqlite.SQL.SqlCommands)
             {
-                try { metaDataMapper.ExecuteNonQuery(sql); }
-                catch (Exception ex) { Logger.Error(ex); }
+                try
+                {
+                    metaDataMapper.ExecuteNonQuery(sql);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
             }
 
             Inited = true;

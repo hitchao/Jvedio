@@ -39,6 +39,7 @@ namespace Jvedio.Core.Scan
             foreach (string path in pathDict.Keys)
             {
                 List<string> list = pathDict[path];
+
                 // 过滤后缀
                 List<string> videoPaths = list.Where(arg => VIDEO_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
                 List<string> imgPaths = list.Where(arg => FileExt.Contains(Path.GetExtension(arg).ToLower())).ToList();
@@ -55,7 +56,9 @@ namespace Jvedio.Core.Scan
                 {
                     totalSize += new FileInfo(imgPath).Length;
                 }
+
                 picture.Size = totalSize;
+
                 // 计算哈希
                 imgPaths.AddRange(videoPaths);
                 notImport.AddRange(list.Except(imgPaths));
@@ -78,15 +81,23 @@ namespace Jvedio.Core.Scan
                         pathDict.Add(path, list);
                 }
 
-                try { CheckStatus(); }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message); return; }
+                try
+                {
+                    CheckStatus();
+                }
+                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
+                    return; }
 
                 ScanHelper scanHelper = new ScanHelper();
 
                 (List<Picture> import, List<string> notImport) = parsePicture();
 
-                try { CheckStatus(); }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message); return; }
+                try
+                {
+                    CheckStatus();
+                }
+                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
+                    return; }
 
                 handleImport(import);
                 handleNotImport(notImport);
@@ -104,13 +115,16 @@ namespace Jvedio.Core.Scan
             sql = "select metadata.DataID,Hash,Size,Path,PID " + sql;
             List<Dictionary<string, object>> list = pictureMapper.Select(sql);
             List<Picture> existPictures = pictureMapper.ToEntity<Picture>(list, typeof(Picture).GetProperties(), false);
+
             // 1.1 不需要导入
             // 存在同路径、同哈希的图片路径
             foreach (var item in import.Where(arg => existPictures.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any()))
             {
                 ScanResult.NotImport.Add(item.Path, "同路径、同哈希");
             }
+
             import.RemoveAll(arg => existPictures.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any());
+
             // 1.2 需要 update
             // 哈希相同，路径不同
             List<Picture> toUpdate = new List<Picture>();
@@ -126,7 +140,9 @@ namespace Jvedio.Core.Scan
                     ScanResult.Update.Add(data.Path, "哈希相同，路径不同");
                 }
             }
+
             import.RemoveAll(arg => existPictures.Where(t => arg.Hash.Equals(t.Hash) && !arg.Path.Equals(t.Path)).Any());
+
             // 1.3 需要 update
             // 哈希不同，路径相同
             foreach (Picture data in import)
@@ -141,10 +157,12 @@ namespace Jvedio.Core.Scan
                     ScanResult.Update.Add(data.Path, "哈希不同，路径相同");
                 }
             }
+
             import.RemoveAll(arg => existPictures.Where(t => arg.Path.Equals(t.Path) && !arg.Hash.Equals(t.Hash)).Any());
 
             // 1.3 需要 insert
             List<Picture> toInsert = import;
+
             // 1.更新
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
 
@@ -153,6 +171,7 @@ namespace Jvedio.Core.Scan
                 pictureMapper.UpdateBatch(toUpdate, "PicCount", "PicPaths", "VideoPaths");
             else if (dataType == DataType.Comics)
                 comicMapper.UpdateBatch(toUpdate.Select(arg => arg.toSimpleComic()).ToList(), "PicCount", "PicPaths");
+
             // 2.导入
             foreach (Picture data in toInsert)
             {
@@ -168,7 +187,7 @@ namespace Jvedio.Core.Scan
             toInsertData.RemoveAt(0);
             try
             {
-                metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 metaDataMapper.InsertBatch(toInsertData);
             }
             catch (Exception ex)
@@ -187,16 +206,17 @@ namespace Jvedio.Core.Scan
                 data.DataID = before;
                 before++;
             }
+
             try
             {
                 if (dataType == DataType.Picture)
                 {
-                    pictureMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                    pictureMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                     pictureMapper.InsertBatch(toInsert);
                 }
                 else if (dataType == DataType.Comics)
                 {
-                    comicMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                    comicMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                     comicMapper.InsertBatch(toInsert.Select(arg => arg.toSimpleComic()).ToList());
                 }
             }

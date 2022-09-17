@@ -64,6 +64,7 @@ namespace Jvedio.Core.FFmpeg
                     logger.Error($"未找到 DataID={DataID} 的资源");
                     return;
                 }
+
                 ScreenShot shot = new ScreenShot(video, token);
                 shot.onProgress += (s, e) =>
                 {
@@ -99,6 +100,7 @@ namespace Jvedio.Core.FFmpeg
                     logger.Error(ex.Message);
                     FinalizeWithCancel();
                 }
+
                 OnCompleted(null);
             });
         }

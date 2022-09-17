@@ -61,7 +61,7 @@ namespace Jvedio
                 FileHelper.TryDeleteDir("Temp");
             }
 
-            //FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers", "temp"));
+            // FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers", "temp"));
             FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
         }
 
@@ -81,15 +81,18 @@ namespace Jvedio
                 MessageBox.Show($"数据库初始化失败：{ex.Message}");
                 App.Current.Shutdown();
             }
+
             ConfigManager.InitConfig();
             ConfigManager.EnsurePicPaths();
 
             await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
-            //if (GlobalFont != null)
+
+            // if (GlobalFont != null)
             //    this.FontFamily = GlobalFont;
             InitAppData();      // 初始化应用数据
             DeleteLogs();       // 清理日志
-            //GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
+
+            // GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
 
             await BackupData(); // 备份文件
             await MovePlugins();
@@ -105,6 +108,7 @@ namespace Jvedio
                 if (i == vieModel_StartUp.CurrentSideIdx) radioButtons[i].IsChecked = true;
                 else radioButtons[i].IsChecked = false;
             }
+
             Main.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
 
             if (!Main.ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault)
@@ -191,7 +195,8 @@ namespace Jvedio
                 Jvedio4ToJvedio5.MoveMagnets();
                 Jvedio4ToJvedio5.MoveTranslate();
                 Jvedio4ToJvedio5.MoveMyList();      // 清单和 Label 合并，统一为 Label
-                //Jvedio4ToJvedio5.MoveSearchHistory();
+
+                // Jvedio4ToJvedio5.MoveSearchHistory();
                 Jvedio4ToJvedio5.MoveScanPathConfig(files);
                 ConfigManager.Settings.OpenDataBaseDefault = false;
             }
@@ -199,11 +204,11 @@ namespace Jvedio
             // 移动文件
             string targetDir = Path.Combine(AllOldDataPath, "DataBase");
             if (Directory.Exists(targetDir)) DirHelper.TryDelete(targetDir);
-            DirHelper.TryMoveDir(oldDataPath, targetDir);// 移动 DataBase
+            DirHelper.TryMoveDir(oldDataPath, targetDir); // 移动 DataBase
             string[] moveFiles =
             {
                 "SearchHistory", "ServersConfig", "RecentWatch",
-                "AI.sqlite", "Magnets.sqlite", "Translate.sqlite", "mylist.sqlite"
+                "AI.sqlite", "Magnets.sqlite", "Translate.sqlite", "mylist.sqlite",
             };
 
             foreach (string filename in moveFiles)
@@ -211,6 +216,7 @@ namespace Jvedio
                 string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
                 if (File.Exists(origin)) FileHelper.TryMoveFile(origin, Path.Combine(AllOldDataPath, filename));
             }
+
             return true;
         }
 
@@ -219,6 +225,7 @@ namespace Jvedio
             try
             {
                 ScanHelper.InitSearchPattern();
+
                 // 读取配置文件，设置 debug
                 ReadConfig();
             }
@@ -309,18 +316,18 @@ namespace Jvedio
 
             try
             {
-                //TODO
-                //if (!Enum.IsDefined(typeof(Skin), Properties.Settings.Default.Themes))
-                //{
+                // TODO
+                // if (!Enum.IsDefined(typeof(Skin), Properties.Settings.Default.Themes))
+                // {
                 //    Properties.Settings.Default.Themes = Skin.黑色.ToString();
                 //    Properties.Settings.Default.Save();
-                //}
+                // }
 
-                //if (!Enum.IsDefined(typeof(MyLanguage), Properties.Settings.Default.Language))
-                //{
+                // if (!Enum.IsDefined(typeof(MyLanguage), Properties.Settings.Default.Language))
+                // {
                 //    Properties.Settings.Default.Language = MyLanguage.中文.ToString();
                 //    Properties.Settings.Default.Save();
-                //}
+                // }
             }
             catch (Exception ex)
             {
@@ -334,6 +341,7 @@ namespace Jvedio
             {
                 FileHelper.TryCreateDir(item);
             }
+
             foreach (var item in PicPaths)
             {
                 FileHelper.TryCreateDir(Path.Combine(PicPath, item));
@@ -356,6 +364,7 @@ namespace Jvedio
                 MessageCard.Error("内部错误");
                 return;
             }
+
             AppDatabase database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             Msgbox msgbox = new Msgbox(this, $"确认删除 {database.Name} 及其 {database.Count} 条数据、标签、翻译、标记等信息？");
             if (msgbox.ShowDialog() == true)
@@ -389,6 +398,7 @@ namespace Jvedio
             if (targetName == originName) return;
             info.Name = targetName;
             appDatabaseMapper.UpdateById(info);
+
             // 仅更新重命名的
             vieModel_StartUp.refreshItem();
         }
@@ -408,6 +418,7 @@ namespace Jvedio
                 contextMenu.Placement = PlacementMode.Top;
                 contextMenu.IsOpen = true;
             }
+
             e.Handled = true;
         }
 
@@ -421,6 +432,7 @@ namespace Jvedio
                 contextMenu.Placement = PlacementMode.Bottom;
                 contextMenu.IsOpen = true;
             }
+
             e.Handled = true;
         }
 
@@ -453,6 +465,7 @@ namespace Jvedio
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
             if (string.IsNullOrEmpty(targetName)) return;
+
             // 创建新数据库
             AppDatabase appDatabase = new AppDatabase();
             appDatabase.Name = targetName;
@@ -495,7 +508,8 @@ namespace Jvedio
             }
 
             List<AppDatabase> appDatabases = appDatabaseMapper.SelectList();
-            //加载数据库
+
+            // 加载数据库
             long id = ConfigManager.Main.CurrentDBId;
             AppDatabase database = null;
             if (Main.ClickGoBackToStartUp || !ConfigManager.Settings.OpenDataBaseDefault)
@@ -534,6 +548,7 @@ namespace Jvedio
             else
             {
                 vieModel_StartUp.Loading = false;
+
                 // 次数+1
                 appDatabaseMapper.IncreaseFieldById("ViewCount", id);
 
@@ -572,6 +587,7 @@ namespace Jvedio
                             Logger.LogF(ex);
                             MessageBox.Show(ex.Message);
                         }
+
                         this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                     }
                     else
@@ -581,7 +597,7 @@ namespace Jvedio
                 }
             }
 
-            //启动主窗口
+            // 启动主窗口
             if (Main.CurrentDataType == DataType.Video)
             {
                 Main main = GetWindowByName("Main") as Main;
@@ -595,6 +611,7 @@ namespace Jvedio
                     main.setDataBases();
                     main.setComboboxID();
                 }
+
                 main.Show();
                 if (scanTask != null)
                 {
@@ -617,6 +634,7 @@ namespace Jvedio
                     metaData.setDataBases();
                     metaData.setComboboxID();
                 }
+
                 metaData.Show();
             }
 
@@ -632,6 +650,7 @@ namespace Jvedio
                 MessageCard.Error("内部错误");
                 return;
             }
+
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
 
             System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
@@ -680,6 +699,7 @@ namespace Jvedio
                 MessageCard.Error("内部错误");
                 return;
             }
+
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             if (info == null) return;
             info.Hide = info.Hide == 0 ? 1 : 0;
@@ -701,8 +721,9 @@ namespace Jvedio
             if (main != null && !main.IsActive && !EnteringDataBase)
             {
                 Application.Current.Shutdown();
+
                 // todo 关闭 main
-                //main.Close();
+                // main.Close();
             }
         }
 
@@ -740,6 +761,7 @@ namespace Jvedio
             {
                 Button button = sender as Button;
                 button.IsEnabled = false;
+
                 // todo 多数据库
                 MapperManager.Dispose();
                 await Task.Delay(1000);
@@ -758,8 +780,10 @@ namespace Jvedio
                         MessageBox.Show($"数据库初始化失败：{ex.Message}");
                         App.Current.Shutdown();
                     }
+
                     MessageCard.Success($"初始化成功！");
                 }
+
                 button.IsEnabled = true;
             }
         }

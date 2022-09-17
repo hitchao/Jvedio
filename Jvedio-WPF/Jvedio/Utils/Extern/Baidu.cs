@@ -14,7 +14,7 @@ namespace SuperUtils.External
     public static class AccessToken
 
     {
-        private static string clientId;// 百度云中开通对应服务应用的 API Key 建议开通应用的时候多选服务
+        private static string clientId; // 百度云中开通对应服务应用的 API Key 建议开通应用的时候多选服务
         private static string clientSecret; // 百度云中开通对应服务应用的 Secret Key
 
         public static void Init()
@@ -34,13 +34,14 @@ namespace SuperUtils.External
             paraList.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
             HttpResponseMessage response = client.PostAsync(authHost, new FormUrlEncodedContent(paraList)).Result;
             string result = response.Content.ReadAsStringAsync().Result;
-            //Console.WriteLine(result);
+
+            // Console.WriteLine(result);
             return GetValue(result, "access_token").Replace("\"", string.Empty);
         }
 
         public static string GetValue(string json, string key)
         {
-            string result = string.Empty; //解析失败的默认返回值
+            string result = string.Empty; // 解析失败的默认返回值
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             try
             {
@@ -50,7 +51,9 @@ namespace SuperUtils.External
                     result = serializer.Serialize(obj_json[key]);
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
 
             return result;
         }
@@ -61,7 +64,7 @@ namespace SuperUtils.External
         // 人脸检测与属性分析    https://cloud.baidu.com/doc/FACE/s/yk37c1u4t
         public static string faceDetect(string token, Bitmap bitmap, string imagepath = "")
         {
-            //string token = "[调用鉴权接口获取的token]";
+            // string token = "[调用鉴权接口获取的token]";
             string host = "https://aip.baidubce.com/rest/2.0/face/v3/detect?access_token=" + token;
             Encoding encoding = Encoding.Default;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(host);
@@ -69,7 +72,8 @@ namespace SuperUtils.External
             request.KeepAlive = true;
             string base64Str = ImageHelper.ImageToBase64(bitmap);
             if (base64Str == null) return string.Empty;
-            //Console.WriteLine(base64Str);
+
+            // Console.WriteLine(base64Str);
             string str = "{\"image\":\"" + base64Str + "\",\"image_type\":\"BASE64\",\"face_field\":\"age,beauty,expression,face_shape,gender,glasses,landmark,landmark150,race,quality,eye_status,emotion,face_type,mask,spoofing\",\"max_face_num\":1,\"face_type\":\"LIVE\",\"liveness_control\":\"NONE\"}";
             byte[] buffer = encoding.GetBytes(str);
             request.ContentLength = buffer.Length;
@@ -77,20 +81,21 @@ namespace SuperUtils.External
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.Default);
             string result = reader.ReadToEnd();
-            //Console.WriteLine("人脸检测与属性分析:");
-            //Console.WriteLine(result);
+
+            // Console.WriteLine("人脸检测与属性分析:");
+            // Console.WriteLine(result);
             return result;
         }
 
-        //public static Task<Int32Rect> GetAIResult(Movie movie, string path)
-        //{
+        // public static Task<Int32Rect> GetAIResult(Movie movie, string path)
+        // {
         //    return Task.Run(() =>
         //    {
         //        System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(path);
         //        string token = AccessToken.getAccessToken();
         //        string FaceJson = FaceDetect.faceDetect(token, bitmap);
 
-        //        Dictionary<string, string> result;
+        // Dictionary<string, string> result;
         //        Int32Rect int32Rect;
         //        (result, int32Rect) = FaceParse.Parse(FaceJson);
         //        if (result != null && int32Rect != Int32Rect.Empty)
@@ -104,7 +109,7 @@ namespace SuperUtils.External
         //            return Int32Rect.Empty;
         //    });
 
-        //}
+        // }
     }
 
     public static class FaceParse
@@ -122,7 +127,14 @@ namespace SuperUtils.External
             if (dict.ContainsKey("result"))
             {
                 Dictionary<string, object> result = dict["result"] as Dictionary<string, object>;
-                try { if ((bool)result?.ContainsKey("face_num")) facenum = uint.Parse(result["face_num"].ToString()); } catch { }
+                try
+                {
+                    if ((bool)result?.ContainsKey("face_num")) facenum = uint.Parse(result["face_num"].ToString());
+                }
+                catch
+                {
+                }
+
                 if (facenum > 0)
                 {
                     object[] face_list_object = result["face_list"] as object[];
@@ -149,11 +161,13 @@ namespace SuperUtils.External
                         dicresult.Add("emotion", emotion["type"].ToString());
                         dicresult.Add("mask", mask["type"].ToString());
 
-                        int32Rect = new Int32Rect((int)float.Parse(location["left"].ToString()), (int)float.Parse(location["top"].ToString()), (int)float.Parse(location["width"].ToString()), (int)float.Parse(location["height"].ToString())); ;
+                        int32Rect = new Int32Rect((int)float.Parse(location["left"].ToString()), (int)float.Parse(location["top"].ToString()), (int)float.Parse(location["width"].ToString()), (int)float.Parse(location["height"].ToString()));
+                        ;
                         return (dicresult, int32Rect);
                     }
                 }
             }
+
             return (dicresult, int32Rect);
         }
 

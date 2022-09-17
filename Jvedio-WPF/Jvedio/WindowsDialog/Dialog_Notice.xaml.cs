@@ -28,7 +28,8 @@ namespace Jvedio
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string configName = "Notice";
-            //获取本地的公告
+
+            // 获取本地的公告
             string notices = string.Empty;
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", configName);

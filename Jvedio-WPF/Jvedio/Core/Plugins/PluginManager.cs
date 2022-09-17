@@ -103,6 +103,7 @@ namespace Jvedio.Core.Plugins
                            pluginMeta.ReleaseNotes.MarkDown = http.SourceCode;
                        }
                    }
+
                    pluginMeta.PluginID = data.PluginID;
                    pluginMeta.SetRemoteUrl();
                    fetchState.Downloading = false;
@@ -145,12 +146,14 @@ namespace Jvedio.Core.Plugins
 
                         FileHelper.ByteArrayToFile(result.FileByte, savePath);
                     }
+
                     result = await HttpClient.Get(url_readme, Header, CommonNet.Enums.HttpMode.String);
                     if (result.StatusCode == HttpStatusCode.OK && result.SourceCode != null)
                     {
                         string savePath = System.IO.Path.Combine(base_path, "readme.md");
                         FileHelper.TryWriteToFile(savePath, result.SourceCode);
                     }
+
                     result = await HttpClient.Get(url_plugin_image, Header, CommonNet.Enums.HttpMode.Stream);
                     if (result.StatusCode == HttpStatusCode.OK && result.FileByte != null)
                     {
@@ -158,6 +161,7 @@ namespace Jvedio.Core.Plugins
                         DirHelper.TryCreateDirectory(savePath);
                         FileHelper.ByteArrayToFile(result.FileByte, System.IO.Path.Combine(savePath, "plugin.png"));
                     }
+
                     // 根据 main.json，下载文件
                     string json = httpResult.SourceCode;
                     List<string> list = PluginMetaData.GetFileListByJson(json);
@@ -176,6 +180,7 @@ namespace Jvedio.Core.Plugins
                             }
                         }
                     }
+
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         MessageCard.Info($"插件【{data.PluginName}】下载完成！重启后生效");

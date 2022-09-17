@@ -29,6 +29,7 @@ namespace Jvedio
             {
                 videoTypeWrapPanel.Visibility = Visibility.Visible;
             }
+
             autoPrefix.IsChecked = ConfigManager.Settings.AutoAddPrefix;
             PrefixTextBox.Text = ConfigManager.Settings.Prefix;
 
@@ -44,12 +45,12 @@ namespace Jvedio
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //WindowTools windowTools = (WindowTools)FileProcess.GetWindowByName("WindowTools");
-            //if (windowTools == null) windowTools = new WindowTools();
-            //windowTools.Show();
-            //windowTools.Activate();
-            //windowTools.TabControl.SelectedIndex = 0;
-            //this.Close();
+            // WindowTools windowTools = (WindowTools)FileProcess.GetWindowByName("WindowTools");
+            // if (windowTools == null) windowTools = new WindowTools();
+            // windowTools.Show();
+            // windowTools.Activate();
+            // windowTools.TabControl.SelectedIndex = 0;
+            // this.Close();
         }
 
         private void BaseDialog_ContentRendered(object sender, EventArgs e)

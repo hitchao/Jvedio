@@ -68,7 +68,9 @@ namespace Jvedio.Entity
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
         }
 
-        public Movie() : this(string.Empty) { }
+        public Movie() : this(string.Empty)
+        {
+        }
 
         public virtual void Dispose()
         {
@@ -99,7 +101,12 @@ namespace Jvedio.Entity
 
         private string _title;
 
-        public string title { get { return _title; } set { _title = value; OnPropertyChanged(); } }
+        public string title
+        {
+            get { return _title; } 
+set { _title = value;
+                OnPropertyChanged(); }
+        }
 
         public double filesize { get; set; }
 
@@ -137,6 +144,7 @@ namespace Jvedio.Entity
                         if (!string.IsNullOrEmpty(item)) subsectionlist.Add(item);
                     }
                 }
+
                 OnPropertyChanged();
             }
         }
@@ -229,11 +237,21 @@ namespace Jvedio.Entity
 
         private BitmapSource _smallimage;
 
-        public BitmapSource smallimage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
+        public BitmapSource smallimage
+        {
+            get { return _smallimage; } 
+set { _smallimage = value;
+                OnPropertyChanged(); }
+        }
 
         private BitmapSource _bigimage;
 
-        public BitmapSource bigimage { get { return _bigimage; } set { _bigimage = value; OnPropertyChanged(); } }
+        public BitmapSource bigimage
+        {
+            get { return _bigimage; } 
+set { _bigimage = value;
+                OnPropertyChanged(); }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -256,6 +274,7 @@ namespace Jvedio.Entity
             {
                 throw ex;
             }
+
             if (rootNode == null || rootNode.ChildNodes == null || rootNode.ChildNodes.Count == 0) return null;
             Movie movie = new Movie();
             foreach (XmlNode node in rootNode.ChildNodes)
@@ -295,7 +314,8 @@ namespace Jvedio.Entity
 
             if (!string.IsNullOrEmpty(movie.id))
                 movie.vediotype = Identify.GetVideoType(movie.id);
-            //扫描视频获得文件大小
+
+            // 扫描视频获得文件大小
             if (File.Exists(path))
             {
                 string fatherpath = new FileInfo(path).DirectoryName;
@@ -306,9 +326,9 @@ namespace Jvedio.Entity
                     if (list != null || list.Count != 0)
                     {
                         if (list.Count == 1)
-                            movie.filepath = list[0];// 默认取第一个
+                            movie.filepath = list[0]; // 默认取第一个
                         else
-                            movie.subsection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, list); //分段视频
+                            movie.subsection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, list); // 分段视频
                     }
                     else
                     {
@@ -321,7 +341,7 @@ namespace Jvedio.Entity
 
             string sep = SuperUtils.Values.ConstValues.SeparatorString;
 
-            //tag
+            // tag
             XmlNodeList tagNodes = TrySelectNode(doc, "/movie/tag");
             List<string> tags = new List<string>();
             if (tagNodes != null && tagNodes.Count > 0)
@@ -331,13 +351,14 @@ namespace Jvedio.Entity
                     if (!string.IsNullOrEmpty(item.InnerText))
                         tags.Add(item.InnerText.Replace(" ", string.Empty));
                 }
+
                 if (movie.id.IndexOf("FC2") >= 0)
                     movie.genre = string.Join(sep, tags);
                 else
                     movie.tag = string.Join(sep, tags);
             }
 
-            //genre
+            // genre
             XmlNodeList genreNodes = TrySelectNode(doc, "/movie/genre");
             List<string> genres = new List<string>();
             if (genreNodes != null && genreNodes.Count > 0)
@@ -347,10 +368,11 @@ namespace Jvedio.Entity
                     if (!string.IsNullOrEmpty(item.InnerText))
                         genres.Add(item.InnerText);
                 }
+
                 movie.genre = string.Join(sep, genres);
             }
 
-            //actor
+            // actor
             XmlNodeList actorNodes = TrySelectNode(doc, "/movie/actor/name");
             List<string> actors = new List<string>();
             if (actorNodes != null && actorNodes.Count > 0)
@@ -360,6 +382,7 @@ namespace Jvedio.Entity
                     if (!string.IsNullOrEmpty(item.InnerText))
                         actors.Add(item.InnerText);
                 }
+
                 movie.actor = string.Join(sep, actors);
             }
 
@@ -375,10 +398,11 @@ namespace Jvedio.Entity
                     else
                         thumbs.Add(RenameConfig.DEFAULT_NULL_STRING);
                 }
+
                 movie.actressimageurl = string.Join(sep, thumbs);
             }
 
-            //fanart
+            // fanart
             XmlNodeList fanartNodes = TrySelectNode(doc, "/movie/fanart/thumb");
             List<string> extraimageurls = new List<string>();
             if (fanartNodes != null && fanartNodes.Count > 0)
@@ -388,6 +412,7 @@ namespace Jvedio.Entity
                     if (!string.IsNullOrEmpty(item.InnerText))
                         extraimageurls.Add(item.InnerText);
                 }
+
                 movie.extraimageurl = string.Join(sep, extraimageurls);
             }
 
@@ -454,7 +479,8 @@ namespace Jvedio.Entity
             video.SubSection = subsection.Replace(';', SuperUtils.Values.ConstValues.Separator);
             video.WebType = source.Replace("jav", string.Empty).Replace("fc2adult", "fc2");
             video.WebUrl = sourceurl;
-            //video.ImageUrls = json;   // 让 ImageUrls 为空，这样子导入旧的数据库后就会自动同步新信息
+
+            // video.ImageUrls = json;   // 让 ImageUrls 为空，这样子导入旧的数据库后就会自动同步新信息
             video.ActorNames = actor;   // 演员
             video.ActorThumbs = string.IsNullOrEmpty(actressimageurl) ? new List<string>()
                 : actressimageurl.Split(SuperUtils.Values.ConstValues.Separator).ToList();

@@ -60,7 +60,7 @@ namespace Jvedio.Mapper
             "Plot",
             "Outline",
             "PicPaths",
-            "VideoPaths"
+            "VideoPaths",
         };
 
         public static Dictionary<int, string> SortDict = new Dictionary<int, string>()
@@ -89,6 +89,7 @@ namespace Jvedio.Mapper
             {
                 return pictures[0];
             }
+
             return null;
         }
     }

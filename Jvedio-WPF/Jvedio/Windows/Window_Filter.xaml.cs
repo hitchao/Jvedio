@@ -104,6 +104,7 @@ namespace Jvedio
                 $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
 
             List<Dictionary<string, object>> list = MapperManager.metaDataMapper.Select(sql);
+
             // 2020-02-10
             List<string> dates = list.Select(x => x["ReleaseDate"].ToString())
                 .Where(arg => !string.IsNullOrEmpty(arg) && arg.LastIndexOf('-') > 5).ToList();
@@ -115,6 +116,7 @@ namespace Jvedio
             yearStackPanel.Children.Clear();
             foreach (string year in years)
                 yearStackPanel.Children.Add(buildToggleButton(year));
+
             // 月份
             monthStackPanel.Children.Clear();
             foreach (string month in months)
@@ -126,11 +128,11 @@ namespace Jvedio
             foreach (string item in new string[] { "<30min", "30min-1h", "1h-2h", ">2h" })
                 durationWrapPanel.Children.Add(buildToggleButton(item));
 
-            LoadSingleDataFromMetaData(genreWrapPanel, "Genre");// 类别
-            LoadSingleData(seriesWrapPanel, "Series");// 系列
+            LoadSingleDataFromMetaData(genreWrapPanel, "Genre"); // 类别
+            LoadSingleData(seriesWrapPanel, "Series"); // 系列
             LoadSingleData(directorWrapPanel, "Director"); // 导演
             LoadSingleData(studioWrapPanel, "Studio"); // 制作商
-            LoadSingleData(publisherWrapPanel, "Publisher");// 发行商
+            LoadSingleData(publisherWrapPanel, "Publisher"); // 发行商
         }
 
         private void LoadSingleData(WrapPanel wrapPanel, string field)

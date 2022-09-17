@@ -147,7 +147,12 @@ namespace Jvedio.Entity
         private BitmapSource _ViewImage;
 
         [TableField(exist: false)]
-        public BitmapSource ViewImage { get { return _ViewImage; } set { _ViewImage = value; OnPropertyChanged(); } }
+        public BitmapSource ViewImage
+        {
+            get { return _ViewImage; } 
+set { _ViewImage = value;
+                OnPropertyChanged(); }
+        }
 
         [TableField(exist: false)]
         public string TagIDs { get; set; }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Core.FFmpeg
 {
-    //TODO 线程池
+    // TODO 线程池
     public class ScreenShot
     {
         private const int MAX_THREAD_NUM = 10;
@@ -62,10 +62,10 @@ namespace Jvedio.Core.FFmpeg
             string originPath = CurrentVideo.Path;
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
-            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); //获得需要截图的视频进度
+            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); // 获得需要截图的视频进度
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
-            int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum;// 截图线程
+            int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum; // 截图线程
             if (threadNum > MAX_THREAD_NUM || threadNum <= 0) threadNum = DEFAULT_THREAD_NUM;
 
             string outputDir = CurrentVideo.getScreenShot();
@@ -117,6 +117,7 @@ namespace Jvedio.Core.FFmpeg
                 Console.WriteLine("等待截图完成");
                 if (Token.IsCancellationRequested) break;
             }
+
             return outputs.ToString();
         }
 
@@ -134,9 +135,9 @@ namespace Jvedio.Core.FFmpeg
                     RedirectStandardOutput = true,
                     StandardErrorEncoding = Encoding.UTF8,
                     StandardOutputEncoding = Encoding.UTF8,
-                    RedirectStandardError = true
+                    RedirectStandardError = true,
                 },
-                EnableRaisingEvents = true
+                EnableRaisingEvents = true,
             };
             try
             {
@@ -147,6 +148,7 @@ namespace Jvedio.Core.FFmpeg
                     currentOutput.Append(processOutput);
                     currentOutput.AppendLine();
                 }
+
                 if (Token.IsCancellationRequested)
                     throw new TaskCanceledException();
             }
@@ -177,7 +179,7 @@ namespace Jvedio.Core.FFmpeg
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
 
-            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); //获得需要截图的视频进度
+            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); // 获得需要截图的视频进度
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
 
@@ -230,6 +232,7 @@ namespace Jvedio.Core.FFmpeg
                 Console.WriteLine("等待 gif 生成");
                 if (Token.IsCancellationRequested) break;
             }
+
             return outputs.ToString();
         }
     }

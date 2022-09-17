@@ -3,6 +3,6 @@
     public enum RelevanceType
     {
         Segmented,
-        SameActor
+        SameActor,
     }
 }

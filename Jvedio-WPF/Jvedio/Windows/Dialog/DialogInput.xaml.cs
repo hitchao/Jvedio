@@ -9,7 +9,7 @@ namespace Jvedio
         public DialogInput(Window window, string title, string defaultContent = "")
         {
             InitializeComponent();
-            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont;//设置字体
+            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont; // 设置字体
             TitleTextBlock.Text = title;
             searchBox.Text = defaultContent;
             this.Owner = window;

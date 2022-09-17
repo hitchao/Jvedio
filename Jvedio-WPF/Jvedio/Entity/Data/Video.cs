@@ -30,7 +30,9 @@ namespace Jvedio.Entity
     public class Video : MetaData
 #pragma warning restore CS0659 // “Video”重写 Object.Equals(object o) 但不重写 Object.GetHashCode()
     {
-        public Video() : this(true) { }
+        public Video() : this(true)
+        {
+        }
 
         public Video(bool _initDefaultImage = true)
         {
@@ -151,17 +153,32 @@ namespace Jvedio.Entity
         private BitmapSource _smallimage;
 
         [TableField(exist: false)]
-        public BitmapSource SmallImage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
+        public BitmapSource SmallImage
+        {
+            get { return _smallimage; } 
+set { _smallimage = value;
+                OnPropertyChanged(); }
+        }
 
         private BitmapSource _bigimage;
 
         [TableField(exist: false)]
-        public BitmapSource BigImage { get { return _bigimage; } set { _bigimage = value; OnPropertyChanged(); } }
+        public BitmapSource BigImage
+        {
+            get { return _bigimage; } 
+set { _bigimage = value;
+                OnPropertyChanged(); }
+        }
 
         private Uri _GifUri;
 
         [TableField(exist: false)]
-        public Uri GifUri { get { return _GifUri; } set { _GifUri = value; OnPropertyChanged(); } }
+        public Uri GifUri
+        {
+            get { return _GifUri; } 
+set { _GifUri = value;
+                OnPropertyChanged(); }
+        }
 
         [TableField(exist: false)]
 #pragma warning disable CS0108 // “Video.TagStamp”隐藏继承的成员“MetaData.TagStamp”。如果是有意隐藏，请使用关键字 new。
@@ -214,6 +231,7 @@ namespace Jvedio.Entity
                     ActorNames = string.Join(SuperUtils.Values.ConstValues.SeparatorString,
                         value.Select(arg => arg.ActorName).ToList());
                 }
+
                 OnPropertyChanged();
             }
         }
@@ -271,6 +289,7 @@ namespace Jvedio.Entity
             else
             {
             }
+
             if (!string.IsNullOrEmpty(result))
                 return System.IO.Path.GetFullPath(result);
             return string.Empty;
@@ -302,6 +321,7 @@ namespace Jvedio.Entity
                     dict.Add(info.Name, value.ToString());
                 }
             }
+
             return dict;
         }
 
@@ -324,6 +344,7 @@ namespace Jvedio.Entity
                 if (System.IO.Path.GetFileNameWithoutExtension(item).ToLower().IndexOf(fileName) >= 0)
                     return item;
             }
+
             return FileHelper.TryGetFullPath(path);
         }
 
@@ -337,6 +358,7 @@ namespace Jvedio.Entity
                 if (System.IO.Path.GetFileName(item).ToLower().IndexOf(dirName.ToLower()) >= 0)
                     return item;
             }
+
             return FileHelper.TryGetFullPath(path);
         }
 
@@ -352,6 +374,7 @@ namespace Jvedio.Entity
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
                 smallImagePath = parseRelativeImageFileName(smallPath);
             }
+
             // 替换成其他扩展名
             if (searchExt && !File.Exists(smallImagePath))
                 smallImagePath = FileHelper.FindWithExt(smallImagePath, ScanTask.PICTURE_EXTENSIONS_LIST);
@@ -371,6 +394,7 @@ namespace Jvedio.Entity
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(bigPath))) bigPath += ext;
                 bigImagePath = parseRelativeImageFileName(bigPath);
             }
+
             // 替换成其他扩展名
             if (searchExt && !File.Exists(bigImagePath))
                 bigImagePath = FileHelper.FindWithExt(bigImagePath, ScanTask.PICTURE_EXTENSIONS_LIST);
@@ -389,6 +413,7 @@ namespace Jvedio.Entity
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["PreviewImagePath"]));
                 imagePath = parseRelativePath(path);
             }
+
             return FileHelper.TryGetFullPath(imagePath);
         }
 
@@ -404,6 +429,7 @@ namespace Jvedio.Entity
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["ScreenShotPath"]));
                 imagePath = parseRelativePath(path);
             }
+
             return imagePath;
         }
 
@@ -419,6 +445,7 @@ namespace Jvedio.Entity
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["Gif"]));
                 imagePath = parseRelativePath(path);
             }
+
             return FileHelper.TryGetFullPath(imagePath);
         }
 
@@ -450,6 +477,7 @@ namespace Jvedio.Entity
                     }
                 }
             }
+
             // 图片地址
             ImageUrls = parseImageUrlFromDict(dict);
             return true;
@@ -472,7 +500,8 @@ namespace Jvedio.Entity
         {
             if (!ConfigManager.Settings.SaveInfoToNFO) return;
             string dir = ConfigManager.Settings.NFOSavePath;
-            bool overrideInfo = ConfigManager.Settings.OverrideInfo; ;
+            bool overrideInfo = ConfigManager.Settings.OverrideInfo;
+            ;
 
             string saveName = $"{VID.ToProperFileName()}.nfo";
             if (string.IsNullOrEmpty(VID)) saveName = $"{System.IO.Path.GetFileNameWithoutExtension(Path)}.nfo";
@@ -482,7 +511,7 @@ namespace Jvedio.Entity
             if (Directory.Exists(dir))
                 saveFileName = System.IO.Path.Combine(dir, saveName);
 
-            //与视频同路径，视频存在才行
+            // 与视频同路径，视频存在才行
             if (!Directory.Exists(dir) && File.Exists(Path))
                 saveFileName = System.IO.Path.Combine(new FileInfo(Path).DirectoryName, saveName);
 
@@ -501,10 +530,11 @@ namespace Jvedio.Entity
             {
                 return "Title";
             }
-            //else if (content == Jvedio.Language.Resources.TranslatedTitle)
-            //{
+
+            // else if (content == Jvedio.Language.Resources.TranslatedTitle)
+            // {
             //    return "chinesetitle";
-            //}
+            // }
             else if (content == Jvedio.Language.Resources.VideoType)
             {
                 return "VideoType";
@@ -589,11 +619,12 @@ namespace Jvedio.Entity
                 }
             }
 
-            //替换掉特殊字符
+            // 替换掉特殊字符
             foreach (char item in FileHelper.BANFILECHAR)
             {
                 newName = newName.Replace(item.ToString(), string.Empty);
             }
+
             if (ConfigManager.RenameConfig.RemoveTitleSpace) newName = newName.Trim();
 
             if (HasSubSection)
@@ -606,6 +637,7 @@ namespace Jvedio.Entity
                     else
                         result[i] = System.IO.Path.Combine(dir, $"{newName}-{i + 1}{ext}");
                 }
+
                 return result;
             }
             else
@@ -644,14 +676,16 @@ namespace Jvedio.Entity
                             else if (v == 3)
                                 value = Jvedio.Language.Resources.Europe;
                         }
+
                         if (string.IsNullOrEmpty(value))
                         {
-                            //如果值为空，则删掉前面的分隔符
+                            // 如果值为空，则删掉前面的分隔符
                             int idx = result.IndexOf("{" + property + "}");
                             if (idx >= 1)
                             {
                                 result = result.Remove(idx - 1, 1);
                             }
+
                             result = result.Replace("{" + property + "}", string.Empty);
                         }
                         else
@@ -664,8 +698,10 @@ namespace Jvedio.Entity
                         {
                             result = result.Remove(idx - 1);
                         }
+
                         result = result.Replace("{" + property + "}", string.Empty);
                     }
+
                     break;
                 }
             }
@@ -702,8 +738,8 @@ namespace Jvedio.Entity
             }
             else if (imageMode == 2)
             {
-                //string gifpath = Video.parseImagePath(video.GifImagePath);
-                //if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
+                // string gifpath = Video.parseImagePath(video.GifImagePath);
+                // if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
             }
         }
 
@@ -722,12 +758,14 @@ namespace Jvedio.Entity
                 {
                     MI = new MediaInfo();
                     MI.Open(videoPath);
-                    //全局
+
+                    // 全局
                     string format = MI.Get(StreamKind.General, 0, "Format");
                     string bitrate = MI.Get(StreamKind.General, 0, "BitRate/String");
                     string duration = MI.Get(StreamKind.General, 0, "Duration/String1");
                     string fileSize = MI.Get(StreamKind.General, 0, "FileSize/String");
-                    //视频
+
+                    // 视频
                     string vid = MI.Get(StreamKind.Video, 0, "ID");
                     string video = MI.Get(StreamKind.Video, 0, "Format");
                     string vBitRate = MI.Get(StreamKind.Video, 0, "BitRate/String");
@@ -744,7 +782,7 @@ namespace Jvedio.Entity
                     string codecProfile = MI.Get(StreamKind.Video, 0, "Codec_Profile");
                     string frameCount = MI.Get(StreamKind.Video, 0, "FrameCount");
 
-                    //音频
+                    // 音频
                     string aid = MI.Get(StreamKind.Audio, 0, "ID");
                     string audio = MI.Get(StreamKind.Audio, 0, "Format");
                     string aBitRate = MI.Get(StreamKind.Audio, 0, "BitRate/String");
@@ -773,7 +811,7 @@ namespace Jvedio.Entity
                         AudioFormat = audio,
                         AudioBitRate = aBitRate,
                         AudioSamplingRate = samplingRate,
-                        Channel = channel
+                        Channel = channel,
                     };
                 }
                 catch (Exception ex)
@@ -785,14 +823,17 @@ namespace Jvedio.Entity
                     MI?.Close();
                 }
             }
+
             if (!string.IsNullOrEmpty(videoInfo.Width) && !string.IsNullOrEmpty(videoInfo.Height)) videoInfo.Resolution = videoInfo.Width + "x" + videoInfo.Height;
             if (!string.IsNullOrEmpty(videoPath))
             {
                 videoInfo.Extension = System.IO.Path.GetExtension(videoPath)?.ToUpper().Replace(".", string.Empty);
                 videoInfo.FileName = System.IO.Path.GetFileNameWithoutExtension(videoPath);
             }
+
             return videoInfo;
         }
+
         /// <summary>
         /// 保存信息到 NFO 文件
         /// </summary>
@@ -806,7 +847,8 @@ namespace Jvedio.Entity
             nfo.SetNodeText("director", video.Director);
             nfo.SetNodeText("rating", video.Rating.ToString());
             nfo.SetNodeText("year", video.ReleaseYear.ToString());
-            //nfo.SetNodeText("countrycode", video.Country.ToString());
+
+            // nfo.SetNodeText("countrycode", video.Country.ToString());
             nfo.SetNodeText("release", video.ReleaseDate);
             nfo.SetNodeText("premiered", video.ReleaseDate);
             nfo.SetNodeText("runtime", video.Duration.ToString());
@@ -820,6 +862,7 @@ namespace Jvedio.Entity
             {
                 if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("genre", item);
             }
+
             // 系列
             foreach (var item in video.Series?.Split(SuperUtils.Values.ConstValues.Separator))
             {

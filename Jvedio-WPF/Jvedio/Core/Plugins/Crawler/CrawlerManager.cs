@@ -44,18 +44,21 @@ namespace Jvedio.Core.Plugins.Crawler
                 CrawlerInfo info = new CrawlerInfo();
                 info.Path = dllPath;
                 PluginMetaDatas.Add(data);
+
                 // 校验并复制
                 bool copy = NeedToCopy(dllPath);
                 string target = Path.Combine(BaseDir, Path.GetFileName(dllPath));
                 if (copy) FileHelper.TryCopyFile(dllPath, target, true);
             }
-            ConfigManager.ServerConfig.Read();// 必须在加载所有爬虫插件后在初始化
+
+            ConfigManager.ServerConfig.Read(); // 必须在加载所有爬虫插件后在初始化
         }
 
         public static bool NeedToCopy(string dllPath)
         {
             string target = Path.Combine(BaseDir, Path.GetFileName(dllPath));
             if (!File.Exists(target)) return true;
+
             // 检查 Md5
             string m1 = JvedioLib.Security.Encrypt.GetFileMD5(dllPath);
             string m2 = JvedioLib.Security.Encrypt.GetFileMD5(target);
@@ -93,6 +96,7 @@ namespace Jvedio.Core.Plugins.Crawler
             {
                 if (type.IsPublic) return type;
             }
+
             return null;
         }
 
@@ -123,6 +127,7 @@ namespace Jvedio.Core.Plugins.Crawler
             {
                 Logger.Warning("DLL 无 Infos 字段");
             }
+
             return null;
         }
     }

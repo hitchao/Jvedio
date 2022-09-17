@@ -17,7 +17,7 @@ namespace Jvedio.Core.Net
 {
     public static class UpgradeHelper
     {
-        //public static string list_url = "https://hitchao.github.io/jvedioupdate/list";// 4.6 前的版本
+        // public static string list_url = "https://hitchao.github.io/jvedioupdate/list";// 4.6 前的版本
         public const string LIST_URL = "https://hitchao.github.io/jvedioupdate/list.json";
         public static string file_url = "https://hitchao.github.io/jvedioupdate/File/";
 
@@ -99,15 +99,15 @@ namespace Jvedio.Core.Net
                         string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
                         if (File.Exists(localPath))
                         {
-                            //校验
+                            // 校验
                             if (!Encrypt.GetFileMD5(localPath).Equals(fileHash))
                             {
-                                toDownload.Add(fileName);//md5 不一致 ，下载
+                                toDownload.Add(fileName); // md5 不一致 ，下载
                             }
                         }
                         else
                         {
-                            toDownload.Add(fileName); //不存在 =>下载
+                            toDownload.Add(fileName); // 不存在 =>下载
                         }
                     }
                 }
@@ -117,6 +117,7 @@ namespace Jvedio.Core.Net
                 onError?.Invoke(null, new MessageCallBackEventArgs(ex.Message));
                 Logger.Error(ex.Message);
             }
+
             return toDownload;
         }
 
@@ -159,12 +160,13 @@ namespace Jvedio.Core.Net
                     return await DownLoadFiles(list);
                 }
             }
+
             return false;
         }
 
         private static async Task<bool> DownLoadFiles(List<string> list)
         {
-            //新建临时文件夹
+            // 新建临时文件夹
             string temppath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
 
             DirHelper.TryCreateDirectory(temppath, (ex) =>
@@ -185,7 +187,8 @@ namespace Jvedio.Core.Net
                     try
                     {
                         HttpResult streamResult = await HttpHelper.AsyncDownLoadFile(file_url + item, CrawlerHeader.GitHub);
-                        //写入本地
+
+                        // 写入本地
                         if (streamResult.FileByte != null) WriteFile(streamResult.FileByte, filepath);
                     }
                     catch (Exception ex)
@@ -196,12 +199,14 @@ namespace Jvedio.Core.Net
                         break;
                     }
                 }
+
                 count++;
-                double progress = Math.Round(count / total * 100, 4); ;
+                double progress = Math.Round(count / total * 100, 4);
+                ;
                 if (!Canceld) onDownloading?.Invoke(null, new MessageCallBackEventArgs(progress.ToString()));
             }
 
-            //复制文件并覆盖 执行 cmd 命令
+            // 复制文件并覆盖 执行 cmd 命令
             if (success && !Canceld) onCompleted?.Invoke(null, null);
             return true;
         }

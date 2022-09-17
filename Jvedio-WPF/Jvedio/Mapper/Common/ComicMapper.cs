@@ -89,6 +89,7 @@ namespace Jvedio.Mapper
             {
                 return comics[0];
             }
+
             return null;
         }
     }

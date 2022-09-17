@@ -75,6 +75,7 @@ namespace Jvedio.Mapper
                 video.ActorInfos = actorInfos;
                 return video;
             }
+
             return null;
         }
 
@@ -84,13 +85,14 @@ namespace Jvedio.Mapper
             if (oldActorInfos == null) oldActorInfos = new List<ActorInfo>();
             if (newActorInfos == null) newActorInfos = new List<ActorInfo>();
             if (newActorInfos.SequenceEqual(oldActorInfos)) return;
+
             // 删除，新增
             oldActorInfos = oldActorInfos.OrderBy(arg => arg.ActorID).ToList();
             newActorInfos = newActorInfos.OrderBy(arg => arg.ActorID).ToList();
             List<ActorInfo> to_delete = oldActorInfos.Except(newActorInfos).ToList();
             List<ActorInfo> to_create = newActorInfos.Except(oldActorInfos).ToList();
 
-            //删除
+            // 删除
             if (to_delete.Count > 0)
             {
                 // ('1','2','3')

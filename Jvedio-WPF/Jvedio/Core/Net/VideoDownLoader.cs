@@ -27,7 +27,7 @@ namespace Jvedio.Core.Net
 
         public RequestHeader Header { get; set; }
 
-        public List<CrawlerServer> CrawlerServers { get; set; } //该资源支持的爬虫刮削器
+        public List<CrawlerServer> CrawlerServers { get; set; } // 该资源支持的爬虫刮削器
 
         public VideoDownLoader(Video video, CancellationToken token)
         {
@@ -46,7 +46,7 @@ namespace Jvedio.Core.Net
 
         public async Task<Dictionary<string, object>> GetInfo(Action<RequestHeader> callBack)
         {
-            //下载信息
+            // 下载信息
             State = DownLoadState.DownLoading;
             Dictionary<string, object> result = new Dictionary<string, object>();
             (CrawlerServer crawler, PluginMetaData PluginMetaData) = getCrawlerServer();
@@ -59,14 +59,17 @@ namespace Jvedio.Core.Net
             else
                 dataInfo["DataCode"] = code;
             dataInfo["url"] = url;
+
             // 路径就是 pluginID 组合
             Plugin plugin = new Plugin(PluginMetaData.GetFilePath(), "GetInfo", new object[] { false, Header, dataInfo });
+
             // 等待很久
             object o = await plugin.InvokeAsyncMethod();
             if (o is Dictionary<string, object> d)
             {
                 return d;
             }
+
             return result;
         }
 
@@ -78,25 +81,26 @@ namespace Jvedio.Core.Net
             string url = baseUrl;
             string code = string.Empty;
             string vid = CurrentVideo.VID;
-            //if ("BUS".Equals(serverName))
-            //{
+
+            // if ("BUS".Equals(serverName))
+            // {
             //    url = $"{baseUrl}{vid}";
             //    code = vid;
-            //}
-            //else if ("DB".Equals(serverName))
-            //{
+            // }
+            // else if ("DB".Equals(serverName))
+            // {
             //    url = baseUrl;
             //    IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>()
             //        .Eq("WebType", "db").Eq("ValueType", "video").Eq("LocalValue", vid);
             //    UrlCode urlCode = GlobalMapper.urlCodeMapper.selectOne(wrapper);
             //    if (urlCode != null)
             //        code = urlCode.RemoteValue;
-            //}
-            //else if ("FC".Equals(serverName))
-            //{
+            // }
+            // else if ("FC".Equals(serverName))
+            // {
             //    // 后面必须要有 /
             //    url = $"{baseUrl}article/{vid.Replace("FC2-", "")}/";
-            //}
+            // }
             return (url, code);
         }
 
@@ -123,8 +127,10 @@ namespace Jvedio.Core.Net
 
                 if (crawlers != null && crawlers.Count > 0) break;
             }
+
             if (crawlers == null || crawlers.Count == 0)
                 throw new CrawlerNotFoundException();
+
             // todo 爬虫调度器
             crawlers = crawlers.OrderBy(arg => arg.PluginID).ToList();
             CrawlerServer crawler = crawlers[0];        // 如果有多个可用的网址，默认取第一个
@@ -142,6 +148,7 @@ namespace Jvedio.Core.Net
             {
                 onError?.Invoke(ex.Message);
             }
+
             return null;
         }
 

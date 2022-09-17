@@ -30,7 +30,7 @@ namespace Jvedio.ViewModel
 
         public void LoadScanPath(AppDatabase db)
         {
-            //读取配置文件
+            // 读取配置文件
             ScanPath = new ObservableCollection<string>();
 
             List<string> list = JsonUtils.TryDeserializeObject<List<string>>(db.ScanPath);
@@ -49,12 +49,12 @@ namespace Jvedio.ViewModel
 
             RefreshCurrentPlugins();
 
-            //if (AllFreshPlugins != null)
-            //{
+            // if (AllFreshPlugins != null)
+            // {
             //    CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
             //    foreach (var item in getSortResult(AllFreshPlugins))
             //        CurrentFreshPlugins.Add(item);
-            //}
+            // }
         }
 
         public void RefreshCurrentPlugins()
@@ -114,6 +114,7 @@ namespace Jvedio.ViewModel
                 else
                     list = list.OrderBy(arg => arg.ReleaseNotes.Date);
             }
+
             return list.ToList();
         }
 
@@ -142,6 +143,7 @@ namespace Jvedio.ViewModel
                         CrawlerServers.Add(pluginID, crawlers);
                 }
             }
+
             DisplayCrawlerServers = new ObservableCollection<string>();
             foreach (string key in CrawlerServers.Keys)
             {
@@ -165,10 +167,12 @@ namespace Jvedio.ViewModel
                         callback?.Invoke($"【{key}】 刮削器处地址为 {server.Url} 的 Headers 不合理，格式必须为：{format}");
                         return false;
                     }
+
                     if (server.Headers == null) server.Headers = string.Empty;
                     list.Add(server);
                 }
             }
+
             ConfigManager.ServerConfig.CrawlerServers = list;
             ConfigManager.ServerConfig.Save();
             return true;
@@ -406,6 +410,7 @@ namespace Jvedio.ViewModel
                     if (type != PathType.RelativeToData)
                         PicPaths[type.ToString()] = value;
                 }
+
                 RaisePropertyChanged();
             }
         }

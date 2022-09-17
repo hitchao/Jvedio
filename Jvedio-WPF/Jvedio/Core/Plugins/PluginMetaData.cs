@@ -15,7 +15,7 @@ namespace Jvedio.Core.Plugins
     {
         Crawler,
         Theme,
-        None
+        None,
     }
 
     public class AuthorInfo
@@ -119,6 +119,7 @@ namespace Jvedio.Core.Plugins
             {
                 Logger.Warning(ex.Message);
             }
+
             return metaData;
         }
 
@@ -151,11 +152,13 @@ namespace Jvedio.Core.Plugins
                             list.Add(d[item].ToString());
                     }
                 }
+
                 if (ob.ContainsKey("Font") && ob["Font"] != null)
                 {
                     list.Add(ob["Font"].ToString());
                 }
             }
+
             return list;
         }
 
@@ -167,6 +170,7 @@ namespace Jvedio.Core.Plugins
             {
                 return arr[0];
             }
+
             return null;
         }
 
@@ -190,6 +194,7 @@ namespace Jvedio.Core.Plugins
                 path = FileHelper.FindWithExt(item, ScanTask.PICTURE_EXTENSIONS_LIST);
                 if (File.Exists(path)) break;
             }
+
             if (File.Exists(path)) data.ImagePath = path;
         }
 
@@ -200,6 +205,7 @@ namespace Jvedio.Core.Plugins
             {
                 return null;
             }
+
             string pluginType = dict["PluginType"].ToString();
             bool parsed = int.TryParse(pluginType, out int type);
             if (!parsed) return null;
@@ -228,8 +234,10 @@ namespace Jvedio.Core.Plugins
                             authorInfo.Infos.Add(name, value);
                         }
                     }
+
                     metaData.Authors.Add(authorInfo);
                 }
+
                 metaData.AuthorNames = string.Join("/", metaData.Authors.Select(arg => arg.Name));
             }
 

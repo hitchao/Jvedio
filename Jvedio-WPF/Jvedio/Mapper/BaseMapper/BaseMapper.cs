@@ -45,6 +45,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 Logger.Error(ex);
             }
+
             return -1;
         }
 
@@ -75,6 +76,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.IsTableExists(tableName);
             }
+
             return false;
         }
 
@@ -93,6 +95,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.SelectById(wrapper);
             }
+
             return default(T);
         }
 
@@ -106,6 +109,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.SelectCount(wrapper);
             }
+
             return 0;
         }
 
@@ -119,6 +123,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.SelectCount(sql);
             }
+
             return 0;
         }
 
@@ -132,6 +137,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.SelectLastInsertRowId();
             }
+
             return null;
         }
 
@@ -152,6 +158,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 Logger.Error(ex);
             }
+
             return null;
         }
 
@@ -165,6 +172,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.SelectOne(wrapper);
             }
+
             return default(T);
         }
 
@@ -178,6 +186,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.Select(wrapper);
             }
+
             return null;
         }
 
@@ -191,6 +200,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.Select(sql);
             }
+
             return null;
         }
 
@@ -204,6 +214,7 @@ namespace Jvedio.Mapper.BaseMapper
             {
                 return MySQLMapper.InsertAndGetID(entity);
             }
+
             return null;
         }
 

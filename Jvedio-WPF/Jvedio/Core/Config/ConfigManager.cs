@@ -41,13 +41,14 @@ namespace Jvedio
                     Logger.Error(new Exception("无法识别的 AbstractConfig"));
                     continue;
                 }
+
                 config.Read();
             }
         }
 
         public static void Init()
         {
-            //配置 ffmpeg 路径
+            // 配置 ffmpeg 路径
             if (!File.Exists(ConfigManager.FFmpegConfig.Path) && File.Exists("ffmpeg.exe"))
             {
                 ConfigManager.FFmpegConfig.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");

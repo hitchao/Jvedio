@@ -4,6 +4,6 @@
     {
         Unknown,
         Girl,
-        Boy
+        Boy,
     }
 }

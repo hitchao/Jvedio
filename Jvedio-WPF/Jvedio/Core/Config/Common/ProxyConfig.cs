@@ -112,6 +112,7 @@ namespace Jvedio.Core.Config
                     }
                 }
             }
+
             return proxy;
         }
 
@@ -128,6 +129,7 @@ namespace Jvedio.Core.Config
                     Logger.LogF(ex);
                 }
             }
+
             return string.Empty;
         }
     }

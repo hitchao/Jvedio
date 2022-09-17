@@ -22,11 +22,15 @@ namespace Jvedio.Entity
         private bool isEnable = false;
         private string url = string.Empty;
         private string cookie = string.Empty;
-        private int available = 0;//指示测试是否通过
+        private int available = 0; // 指示测试是否通过
         private string name = string.Empty;
         private string lastRefreshDate = string.Empty;
 
-        public bool IsEnable { get => isEnable; set { isEnable = value; OnPropertyChanged(); } }
+        public bool IsEnable
+        {
+            get => isEnable; set { isEnable = value;
+                OnPropertyChanged(); }
+        }
 
         public string Url
         {
@@ -37,7 +41,11 @@ namespace Jvedio.Entity
             }
         }
 
-        public string Cookie { get => cookie; set { cookie = value; OnPropertyChanged(); } }
+        public string Cookie
+        {
+            get => cookie; set { cookie = value;
+                OnPropertyChanged(); }
+        }
 
         public int Available
         {
@@ -48,9 +56,17 @@ namespace Jvedio.Entity
             }
         }
 
-        public string Name { get => name; set { name = value; OnPropertyChanged(); } }
+        public string Name
+        {
+            get => name; set { name = value;
+                OnPropertyChanged(); }
+        }
 
-        public string LastRefreshDate { get => lastRefreshDate; set { lastRefreshDate = value; OnPropertyChanged(); } }
+        public string LastRefreshDate
+        {
+            get => lastRefreshDate; set { lastRefreshDate = value;
+                OnPropertyChanged(); }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

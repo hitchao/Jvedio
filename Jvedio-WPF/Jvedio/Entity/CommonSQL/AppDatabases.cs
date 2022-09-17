@@ -28,7 +28,16 @@ namespace Jvedio.Entity
 
         public string _Name;
 
-        public string Name { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
+        public string Name
+        {
+            get { return _Name; }
+
+            set
+            {
+                _Name = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string _ImagePath = string.Empty;
 
@@ -67,7 +76,16 @@ namespace Jvedio.Entity
 
         public string _CreateDate;
 
-        public string CreateDate { get { return _CreateDate; } set { _CreateDate = value; OnPropertyChanged(); } }
+        public string CreateDate
+        {
+            get { return _CreateDate; }
+
+            set
+            {
+                _CreateDate = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string UpdateDate { get; set; }
 

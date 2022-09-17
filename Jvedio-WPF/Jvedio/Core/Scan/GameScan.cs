@@ -39,7 +39,7 @@ namespace Jvedio.Core.Scan
                 game.Title = Path.GetFileName(path);
                 game.Path = getRealExe(list);
                 game.Size = DirHelper.getDirSize(new DirectoryInfo(path));
-                game.Hash = Encrypt.GetFileMD5(game.Path);// 计算哈希
+                game.Hash = Encrypt.GetFileMD5(game.Path); // 计算哈希
                 import.Add(game);
             }
 
@@ -63,15 +63,23 @@ namespace Jvedio.Core.Scan
                         pathDict.Add(path, list);
                 }
 
-                try { CheckStatus(); }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message); return; }
+                try
+                {
+                    CheckStatus();
+                }
+                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
+                    return; }
 
                 ScanHelper scanHelper = new ScanHelper();
 
                 (List<Game> import, List<string> notImport) = parseGame();
 
-                try { CheckStatus(); }
-                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message); return; }
+                try
+                {
+                    CheckStatus();
+                }
+                catch (TaskCanceledException ex) { Console.WriteLine(ex.Message);
+                    return; }
 
                 handleImport(import);
                 handleNotImport(notImport);
@@ -89,13 +97,16 @@ namespace Jvedio.Core.Scan
             sql = "select metadata.DataID,Hash,Path,GID " + sql;
             List<Dictionary<string, object>> list = gameMapper.Select(sql);
             List<Game> existDatas = gameMapper.ToEntity<Game>(list, typeof(Game).GetProperties(), false);
+
             // 1.1 不需要导入
             // 存在同路径、同哈希的 exe
             foreach (var item in import.Where(arg => existDatas.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any()))
             {
                 ScanResult.NotImport.Add(item.Path, "同路径、同哈希");
             }
+
             import.RemoveAll(arg => existDatas.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any());
+
             // 1.2 需要 update
             // 哈希相同，路径不同
             List<Game> toUpdate = new List<Game>();
@@ -111,7 +122,9 @@ namespace Jvedio.Core.Scan
                     ScanResult.Update.Add(game.Path, "哈希相同，路径不同");
                 }
             }
+
             import.RemoveAll(arg => existDatas.Where(t => arg.Hash.Equals(t.Hash) && !arg.Path.Equals(t.Path)).Any());
+
             // 1.3 需要 update
             // 哈希不同，路径相同
             foreach (Game data in import)
@@ -126,10 +139,12 @@ namespace Jvedio.Core.Scan
                     ScanResult.Update.Add(data.Path, " 哈希不同，路径相同");
                 }
             }
+
             import.RemoveAll(arg => existDatas.Where(t => arg.Path.Equals(t.Path) && !arg.Hash.Equals(t.Hash)).Any());
 
             // 1.3 需要 insert
             List<Game> toInsert = import;
+
             // 1.更新
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
             metaDataMapper.UpdateBatch(toUpdateData, "Title", "Size", "Hash", "Path", "LastScanDate");
@@ -149,7 +164,7 @@ namespace Jvedio.Core.Scan
             toInsertData.RemoveAt(0);
             try
             {
-                //开启事务，这样子其他线程就不能更新
+                // 开启事务，这样子其他线程就不能更新
                 metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;");
                 metaDataMapper.InsertBatch(toInsertData);
             }
@@ -169,9 +184,10 @@ namespace Jvedio.Core.Scan
                 data.DataID = before;
                 before++;
             }
+
             try
             {
-                gameMapper.ExecuteNonQuery("BEGIN TRANSACTION;");//开启事务，这样子其他线程就不能更新
+                gameMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 gameMapper.InsertBatch(toInsert);
             }
             catch (Exception ex)

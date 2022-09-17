@@ -10,7 +10,7 @@ namespace Jvedio.Entity
     /// </summary>
     public class NFO
     {
-        //NFO 标准：https://kodi.wiki/view/NFO_files/Movies
+        // NFO 标准：https://kodi.wiki/view/NFO_files/Movies
 
         private XmlDocument XmlDoc = new XmlDocument();
         private string FilePath = string.Empty;

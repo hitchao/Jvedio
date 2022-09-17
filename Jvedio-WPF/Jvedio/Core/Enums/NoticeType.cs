@@ -5,6 +5,6 @@
         Hint,
         Warning,
         Error,
-        MarkDown
+        MarkDown,
     }
 }

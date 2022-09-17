@@ -15,7 +15,7 @@ namespace Jvedio
         public Msgbox(Window window, string text)
         {
             InitializeComponent();
-            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont;//设置字体
+            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont; // 设置字体
             Text = text;
 
             TextBlock.Text = text;
@@ -43,6 +43,7 @@ namespace Jvedio
                 this.Height = window.Height;
                 this.Width = window.Width;
             }
+
             if (window.WindowState == WindowState.Minimized) window.WindowState = WindowState.Normal;
             window.Activate();
             window.Focus();

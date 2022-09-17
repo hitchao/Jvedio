@@ -289,6 +289,7 @@ namespace Jvedio.ViewModel
             {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
             }
+
             loadingLabel = false;
         }
 
@@ -338,16 +339,18 @@ namespace Jvedio.ViewModel
                 CurrentActorList[idx] = null;
                 CurrentActorList[idx] = actor;
             }
+
             CurrentActorCount = CurrentActorList.Count;
         }
 
         public async void SelectActor()
         {
             string search = SearchText.ToProperSql().Trim();
-            //if (!string.IsNullOrEmpty(search))
+
+            // if (!string.IsNullOrEmpty(search))
             //    like_sql = $" and ActorName like '%{search}%' ";
 
-            //string count_sql = "SELECT count(*) as Count " +
+            // string count_sql = "SELECT count(*) as Count " +
             //             "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
             //             "on metadata_to_actor.ActorID=actor_info.ActorID " +
             //             "join metadata " +
@@ -372,7 +375,8 @@ namespace Jvedio.ViewModel
 
             ActorTotalCount = actorMapper.SelectCount(count_sql);
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
-            //string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
+
+            // string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
             //    $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
             //    $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
             //    $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
@@ -405,7 +409,8 @@ namespace Jvedio.ViewModel
             for (int i = 0; i < ActorList.Count; i++)
             {
                 ActorInfo actorInfo = ActorList[i];
-                //加载图片
+
+                // 加载图片
                 PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
                 BitmapImage smallimage = null;
                 if (pathType != PathType.RelativeToData)
@@ -414,6 +419,7 @@ namespace Jvedio.ViewModel
                     string smallImagePath = actorInfo.getImagePath();
                     smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
                 }
+
                 if (smallimage == null) smallimage = MetaData.DefaultActorImage;
                 actorInfo.SmallImage = smallimage;
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);

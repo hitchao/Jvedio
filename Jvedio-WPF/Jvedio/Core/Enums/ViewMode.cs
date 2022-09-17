@@ -5,6 +5,6 @@
         Thumbnail,
         Poster,
         GIF,
-        TextList
+        TextList,
     }
 }

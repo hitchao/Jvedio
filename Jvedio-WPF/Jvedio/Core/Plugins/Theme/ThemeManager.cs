@@ -44,6 +44,7 @@ namespace Jvedio.Core
         {
             // 获得当前的支持的颜色
             Themes = new List<Theme>();
+
             // 添加默认皮肤
             Theme black = new Theme();
             black.Colors = Theme.DEFAULT_BALCK_COLORS;
@@ -64,12 +65,14 @@ namespace Jvedio.Core
                     Logger.Warning($"解析皮肤资源失败 => 不存在 {jsonPath}");
                     continue;
                 }
+
                 (Theme theme, PluginMetaData data) = ParseJson(jsonPath);
                 if (theme == null || data == null)
                 {
                     Logger.Warning($"解析皮肤资源失败 => {jsonPath}");
                     continue;
                 }
+
                 string ID = Path.GetFileName(path);
                 theme.ID = ID;
                 theme.ViewImage = theme.GetViewImage();
@@ -99,6 +102,7 @@ namespace Jvedio.Core
             {
                 Logger.Warning(ex.Message);
             }
+
             return (theme, data);
         }
     }

@@ -4,6 +4,6 @@
     {
         SQLite,
         MySQL,
-        PostgreSql
+        PostgreSql,
     }
 }

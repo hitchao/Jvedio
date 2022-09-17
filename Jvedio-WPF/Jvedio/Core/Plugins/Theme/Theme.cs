@@ -279,6 +279,7 @@ namespace Jvedio.Entity
             {
                 hexColor = Colors[ViewBrushKey];
             }
+
             return VisualHelper.HexStringToBrush(hexColor);
         }
 
@@ -290,6 +291,7 @@ namespace Jvedio.Entity
             {
                 return ImageHelper.BitmapImageFromFile(path);
             }
+
             return null;
         }
 
@@ -320,6 +322,7 @@ namespace Jvedio.Entity
             {
                 theme.BgColorOpacity = opacity;
             }
+
             if (dict["Colors"] is JObject d)
             {
                 theme.Colors = new Dictionary<string, string>();
@@ -334,8 +337,10 @@ namespace Jvedio.Entity
                         theme.Colors.Add(key, DEFAULT_BALCK_COLORS[key]);
                     }
                 }
+
                 theme.ViewBrush = VisualHelper.HexStringToBrush(theme.Colors[ViewBrushKey]);
             }
+
             return theme;
         }
 

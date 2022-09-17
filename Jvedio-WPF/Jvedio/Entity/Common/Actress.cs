@@ -13,13 +13,15 @@ namespace Jvedio.Entity
     {
         public static DateTime DEFAULT_DATETIME = new DateTime(1970, 01, 01);
 
-        public Actress() : this(string.Empty) { }
+        public Actress() : this(string.Empty)
+        {
+        }
 
         public Actress(string name = "")
         {
             id = string.Empty;
             this.name = name;
-            sex = 1;//女演员
+            sex = 1; // 女演员
             actressimageurl = string.Empty;
             smallimage = MetaData.DefaultActorImage;
             bigimage = null;
@@ -44,7 +46,7 @@ namespace Jvedio.Entity
             bigimage = null;
         }
 
-        public int num { get; set; }//仅仅用于计数
+        public int num { get; set; }// 仅仅用于计数
 
         public string id { get; set; }
 
@@ -56,7 +58,16 @@ namespace Jvedio.Entity
 
         private BitmapSource _smallimage;
 
-        public BitmapSource smallimage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
+        public BitmapSource smallimage
+        {
+            get { return _smallimage; }
+
+            set
+            {
+                _smallimage = value;
+                OnPropertyChanged();
+            }
+        }
 
         public BitmapSource bigimage { get; set; }
 
@@ -68,7 +79,7 @@ namespace Jvedio.Entity
 
             set
             {
-                //验证数据
+                // 验证数据
                 DateTime dateTime = DEFAULT_DATETIME;
                 if (DateTime.TryParse(value, out dateTime))
                     _birthday = dateTime.ToString("yyyy-MM-dd");

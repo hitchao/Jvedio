@@ -30,7 +30,7 @@ namespace Jvedio.Core.Extensions
 
         private static void OnGroupNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //Add an entry to the group name collection
+            // Add an entry to the group name collection
             var menuItem = d as MenuItem;
 
             if (menuItem != null)
@@ -39,19 +39,20 @@ namespace Jvedio.Core.Extensions
                 String oldGroupName = e.OldValue.ToString();
                 if (String.IsNullOrEmpty(newGroupName))
                 {
-                    //Removing the toggle button from grouping
+                    // Removing the toggle button from grouping
                     RemoveCheckboxFromGrouping(menuItem);
                 }
                 else
                 {
-                    //Switching to a new group
+                    // Switching to a new group
                     if (newGroupName != oldGroupName)
                     {
                         if (!String.IsNullOrEmpty(oldGroupName))
                         {
-                            //Remove the old group mapping
+                            // Remove the old group mapping
                             RemoveCheckboxFromGrouping(menuItem);
                         }
+
                         ElementToGroupNames.Add(menuItem, e.NewValue.ToString());
                         menuItem.Checked += MenuItemChecked;
                     }

@@ -24,7 +24,7 @@ namespace Jvedio.Core.Media
         private static string[] ValidImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
         private string strImagePath = string.Empty;
         private int CurrentSourceIndex, CurrentCtrlIndex, IntervalTimer = 2;
-        private int MaxViewNum = 10;//最多展示的图片数量
+        private int MaxViewNum = 10; // 最多展示的图片数量
         private bool stop = false;
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Jvedio.Core.Media
         {
             strImagePath = imagepath;
             ImageControls = new[] { image1, image2 };
-            LoadImageFolder(strImagePath, 1);//仅随机载入一张
+            LoadImageFolder(strImagePath, 1); // 仅随机载入一张
             image1.Source = Images[0];
             timerImageChange = new DispatcherTimer();
             timerImageChange.Interval = new TimeSpan(0, 0, 0);
@@ -75,6 +75,7 @@ namespace Jvedio.Core.Media
                               select CreateImageSource(file.FullName, true);
                 Images.AddRange(sources);
             }
+
             if (Images.Count == 0) Images.Add(MetaData.DefaultBigImage);
         }
 
@@ -146,7 +147,10 @@ namespace Jvedio.Core.Media
                     GC.Collect();
                 }
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -79,6 +79,7 @@ namespace Jvedio
                     result.Add(item.Replace(" ", string.Empty));
                 }
             }
+
             return result;
         }
 

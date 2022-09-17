@@ -140,11 +140,13 @@ namespace Jvedio.ViewModel
                 CurrentDatabases = new ObservableCollection<AppDatabase>();
                 return;
             }
+
             if (string.IsNullOrEmpty(CurrentSearch))
             {
                 CurrentSearch = string.Empty;
                 CurrentDatabases = Databases;
             }
+
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             if (!ShowHideItem)
             {
@@ -158,6 +160,7 @@ namespace Jvedio.ViewModel
                     item.Name.IndexOf(CurrentSearch) >= 0).ToList().ForEach
                 (item => temp.Add(item));
             }
+
             CurrentDatabases = temp;
             SortDataBase();
         }
@@ -169,6 +172,7 @@ namespace Jvedio.ViewModel
                 CurrentDatabases = new ObservableCollection<AppDatabase>();
                 return;
             }
+
             if (CurrentDatabases == null) CurrentDatabases = Databases;
             List<AppDatabase> infos = CurrentDatabases.ToList();
             CurrentDatabases = null;
@@ -191,6 +195,7 @@ namespace Jvedio.ViewModel
                 default:
                     break;
             }
+
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
             if (Sort) infos.Reverse();
             infos.ForEach(item => temp.Add(item));

@@ -15,11 +15,17 @@ namespace Jvedio
     {
         public SolidColorBrush _BackgroundBrush = Brushes.Red;
 
-        public SolidColorBrush BackgroundBrush { get { return _BackgroundBrush; } set { _BackgroundBrush = value; } }
+        public SolidColorBrush BackgroundBrush
+        {
+            get { return _BackgroundBrush; } set { _BackgroundBrush = value; }
+        }
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
 
-        public SolidColorBrush ForegroundBrush { get { return _ForegroundBrush; } set { _ForegroundBrush = value; } }
+        public SolidColorBrush ForegroundBrush
+        {
+            get { return _ForegroundBrush; } set { _ForegroundBrush = value; }
+        }
 
         public string TagName { get; set; }
 

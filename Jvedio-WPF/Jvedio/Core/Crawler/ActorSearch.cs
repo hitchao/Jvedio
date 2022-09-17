@@ -24,6 +24,8 @@ namespace Jvedio.Core.Crawler
             Tag = string.Empty;
         }
 
-        public ActorSearch() : this(string.Empty) { }
+        public ActorSearch() : this(string.Empty)
+        {
+        }
     }
 }

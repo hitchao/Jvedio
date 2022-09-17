@@ -4,6 +4,6 @@
     {
         Chinese,
         English,
-        Japanese
+        Japanese,
     }
 }

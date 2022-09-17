@@ -96,6 +96,7 @@ namespace Jvedio.Core.CustomTask
                 while (true && !Cancel)
                 {
                     Console.WriteLine("调度器工作中...");
+
                     // 检查工作队列中的任务是否完成
                     for (int i = WorkingList.Count - 1; i >= 0; i--)
                     {
@@ -129,14 +130,14 @@ namespace Jvedio.Core.CustomTask
                         if (WorkingList.Count != 0 && TaskDelay > 0) await Task.Delay(NumberHelper.GenerateRandomMS(TaskDelay, 1));
                     }
 
-                    onLongDelay?.Invoke(this, new MessageCallBackEventArgs("0"));// 隐藏提示
+                    onLongDelay?.Invoke(this, new MessageCallBackEventArgs("0")); // 隐藏提示
 
                     // 扫描一遍 doneList 和 cancelList，把标记为重新开始的任务添加到工作队列
                     for (int i = DoneList.Count - 1; i >= 0; i--)
                     {
                         if (DoneList[i].Status == TaskStatus.WaitingToRun)
                         {
-                            WaitingQueue.Enqueue(DoneList[i], MAX_PRIORITY);// 重新开始的任务优先值最高
+                            WaitingQueue.Enqueue(DoneList[i], MAX_PRIORITY); // 重新开始的任务优先值最高
                             DoneList.RemoveAt(i);
                         }
                     }
@@ -145,7 +146,7 @@ namespace Jvedio.Core.CustomTask
                     {
                         if (CanceldList[i].Status == TaskStatus.WaitingToRun)
                         {
-                            WaitingQueue.Enqueue(CanceldList[i], MAX_PRIORITY);// 重新开始的任务优先值最高
+                            WaitingQueue.Enqueue(CanceldList[i], MAX_PRIORITY); // 重新开始的任务优先值最高
                             CanceldList.RemoveAt(i);
                         }
                     }

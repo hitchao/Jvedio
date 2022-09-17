@@ -55,6 +55,7 @@ namespace Jvedio
                 MessageCard.Error("演员名称不可为空！");
                 return;
             }
+
             if (ActorID > 0)
             {
                 int update = actorMapper.UpdateById(CurrentActorInfo);
@@ -76,6 +77,7 @@ namespace Jvedio
                 {
                     insert = (bool)new Msgbox(this, $"数据库中已有和 {actorInfo.ActorName} 同名的演员，是否继续添加？").ShowDialog();
                 }
+
                 if (insert)
                 {
                     actorMapper.Insert(CurrentActorInfo);
@@ -103,6 +105,7 @@ namespace Jvedio
                 if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
                     imageFileName = filename;
             }
+
             bool copyed = false;
             string targetFileName = CurrentActorInfo.getImagePath(searchExt: false);
             if (File.Exists(targetFileName))
@@ -121,6 +124,7 @@ namespace Jvedio
                 FileHelper.TryCopyFile(imageFileName, targetFileName);
                 copyed = true;
             }
+
             if (copyed)
             {
                 // 设置图片

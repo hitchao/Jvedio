@@ -41,7 +41,7 @@ namespace Jvedio
         {
             main = GetWindowByName("Main") as Main;
             windowDetails = GetWindowByName("Window_Details") as Window_Details;
-            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont;//设置字体
+            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont; // 设置字体
         }
 
         public void ReLoad()
@@ -61,6 +61,7 @@ namespace Jvedio
             {
                 vieModel.Reset();
                 ReLoad();
+
                 // 更新到主界面和详情界面
                 main?.RefreshGrade(vieModel.CurrentVideo);
                 windowDetails?.Refresh();
@@ -75,7 +76,7 @@ namespace Jvedio
         private void ChoseMovieBorder_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
-            e.Handled = true;//必须加
+            e.Handled = true; // 必须加
         }
 
         private void ChoseMovieBorder_Drop(object sender, DragEventArgs e)
@@ -101,15 +102,18 @@ namespace Jvedio
                         vieModel.CurrentVideo.SubSectionList.Add(file);
                     }
                 }
+
                 vieModel.CurrentVideo.SubSection = String.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
                 ReLoad();
             }
+
             calcSize();
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            DateTime date = DateTime.Now; ;
+            DateTime date = DateTime.Now;
+            ;
             bool success = DateTime.TryParse((sender as SearchBox).Text, out date);
             if (success)
             {
@@ -217,6 +221,7 @@ namespace Jvedio
             {
                 total = File.Exists(vieModel.CurrentVideo.Path) ? new FileInfo(vieModel.CurrentVideo.Path).Length : 0;
             }
+
             vieModel.CurrentVideo.Size = total;
             vieModel.CurrentVideo.LastScanDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
@@ -235,6 +240,7 @@ namespace Jvedio
                 if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
                     return filename;
             }
+
             return path;
         }
 
@@ -287,6 +293,7 @@ namespace Jvedio
                 long.TryParse(grid.Tag.ToString(), out long result);
                 return result;
             }
+
             return -1;
         }
 

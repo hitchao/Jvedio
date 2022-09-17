@@ -7,6 +7,6 @@
         Preview,
         ScreenShot,
         Gif,
-        Actor
+        Actor,
     }
 }

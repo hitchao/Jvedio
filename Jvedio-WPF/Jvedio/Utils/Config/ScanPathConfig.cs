@@ -44,6 +44,7 @@ namespace Jvedio
                 xe.InnerText = path;
                 pathNodes.AppendChild(xe);
             }
+
             XmlDoc.Save(filepath);
         }
 
@@ -61,7 +62,10 @@ namespace Jvedio
                     {
                         XmlDoc.Load(filepath);
                     }
-                    catch { CreateRoot = true; }
+                    catch
+                    {
+                        CreateRoot = true;
+                    }
                 }
                 else
                 {
@@ -75,21 +79,25 @@ namespace Jvedio
                         XmlNode header = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
                         XmlDoc.AppendChild(header);
                     }
-                    catch { }
+                    catch
+                    {
+                    }
 
-                    //生成根节点
+                    // 生成根节点
                     var xm = XmlDoc.CreateElement(Root);
                     XmlDoc.AppendChild(xm);
                 }
+
                 XmlElement rootElement = XmlDoc.DocumentElement;
                 XmlNode node = XmlDoc.SelectSingleNode($"/ScanPaths/DataBase[@Name='{DataBase}']");
                 if (node == null)
                 {
-                    //不存在该节点
+                    // 不存在该节点
                     XmlElement XE = XmlDoc.CreateElement("DataBase");
                     XE.SetAttribute("Name", DataBase);
                     rootElement.AppendChild(XE);
                 }
+
                 XmlDoc.Save(filepath);
                 return true;
             }
@@ -114,6 +122,7 @@ namespace Jvedio
                     if (!result.Contains(xmlNode.InnerText)) result.Add(xmlNode.InnerText);
                 }
             }
+
             return result;
         }
     }

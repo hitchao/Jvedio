@@ -5,6 +5,6 @@
         DownLoading,
         Completed,
         Pause,
-        Fail
+        Fail,
     }
 }

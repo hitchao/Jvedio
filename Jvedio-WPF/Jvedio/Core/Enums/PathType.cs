@@ -11,6 +11,6 @@
         Absolute,
         RelativeToApp,
         RelativeToData,
-        AbsoluteUrl
+        AbsoluteUrl,
     }
 }

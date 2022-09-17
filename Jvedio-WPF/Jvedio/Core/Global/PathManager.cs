@@ -77,9 +77,9 @@ namespace Jvedio.Core.Global
             UserConfigPath = Path.Combine(CurrentUserFolder, "user-config.xml");
             BasePluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
 
-            //初始化文件夹
+            // 初始化文件夹
             InitDirs = new[] { BackupPath, LogPath, PicPath, ProjectImagePath, AllOldDataPath, Path.Combine(BasePluginsPath, "themes"), Path.Combine(BasePluginsPath, "crawlers") };
-            oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase");// Jvedio 5.0 之前的
+            oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase"); // Jvedio 5.0 之前的
             BasePicPath = string.Empty;
             PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
         }

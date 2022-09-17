@@ -4,6 +4,6 @@
     {
         youdao,
         baidu,
-        google
+        google,
     }
 }

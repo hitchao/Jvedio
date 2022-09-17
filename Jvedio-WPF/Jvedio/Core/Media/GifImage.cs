@@ -40,20 +40,20 @@ namespace Jvedio.Core.Media
         /// <summary>
         /// Defines whether the animation starts on it's own
         /// </summary>
-        //public bool AutoStart
-        //{
+        // public bool AutoStart
+        // {
         //    get { return (bool)GetValue(AutoStartProperty); }
         //    set { SetValue(AutoStartProperty, value); }
-        //}
+        // }
 
-        //public static readonly DependencyProperty AutoStartProperty =
+        // public static readonly DependencyProperty AutoStartProperty =
         //    DependencyProperty.Register("AutoStart", typeof(bool), typeof(GifImage), new UIPropertyMetadata(false, AutoStartPropertyChanged));
 
-        //private static void AutoStartPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        //{
+        // private static void AutoStartPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        // {
         //    if ((bool)e.NewValue)
         //        (sender as GifImage).StartAnimation();
-        //}
+        // }
 
         public string GifSource
         {
@@ -99,7 +99,7 @@ namespace Jvedio.Core.Media
             None,
             SmallImage,
             BigImage,
-            Gif
+            Gif,
         }
 
         public static readonly DependencyProperty SourceTypeProperty =
@@ -133,7 +133,7 @@ namespace Jvedio.Core.Media
 
         private void Initialize()
         {
-            this.Source = null;// 移除之前绑定的 Image
+            this.Source = null; // 移除之前绑定的 Image
             if (SourceType == ViewSourceType.SmallImage)
             {
                 Source = SmallImageSource;
@@ -169,12 +169,17 @@ namespace Jvedio.Core.Media
                 if (bitmapImages == null) bitmapImages = gif.GetAllFrame().BitmapSources;
                 if (bitmapImages != null && bitmapImages.Count > 0) this.StartAnimation();
             }
+
             base.OnMouseEnter(e);
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
-            if (ShowGif && gif != null) { stop(); }
+            if (ShowGif && gif != null)
+            {
+                stop();
+            }
+
             base.OnMouseLeave(e);
         }
 

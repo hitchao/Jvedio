@@ -117,12 +117,12 @@ namespace Jvedio.ViewModel
             refreshActorRenderToken();
 
             // 注册
-            //GenreList.CollectionChanged += (sender, eventArgs) =>
-            //{
+            // GenreList.CollectionChanged += (sender, eventArgs) =>
+            // {
             //    if (eventArgs..Cast<string>().Any(a => a.Equals("0005"))) resetEvent.Set();
 
-            //};
-            //resetEvent.WaitOne();
+            // };
+            // resetEvent.WaitOne();
 
             // 初始化皮肤
             InitThemes();
@@ -179,28 +179,28 @@ namespace Jvedio.ViewModel
             }
         }
 
-        //private Visibility _GoToTopCanvas = Visibility.Collapsed;
+        // private Visibility _GoToTopCanvas = Visibility.Collapsed;
 
-        //public Visibility GoToTopCanvas
-        //{
+        // public Visibility GoToTopCanvas
+        // {
         //    get { return _GoToTopCanvas; }
         //    set
         //    {
         //        _GoToTopCanvas = value;
         //        RaisePropertyChanged();
         //    }
-        //}
-        //private Visibility _GoToBottomCanvas = Visibility.Visible;
+        // }
+        // private Visibility _GoToBottomCanvas = Visibility.Visible;
 
-        //public Visibility GoToBottomCanvas
-        //{
+        // public Visibility GoToBottomCanvas
+        // {
         //    get { return _GoToBottomCanvas; }
         //    set
         //    {
         //        _GoToBottomCanvas = value;
         //        RaisePropertyChanged();
         //    }
-        //}
+        // }
 
         private Visibility _ActorProgressBarVisibility = Visibility.Collapsed;
 
@@ -792,7 +792,8 @@ namespace Jvedio.ViewModel
             set
             {
                 _CurrentPage = value;
-                //FlowNum = 0;
+
+                // FlowNum = 0;
                 RaisePropertyChanged();
             }
         }
@@ -912,7 +913,8 @@ namespace Jvedio.ViewModel
             {
                 _SearchText = value;
                 RaisePropertyChanged();
-                //BeginSearch();
+
+                // BeginSearch();
             }
         }
 
@@ -1209,6 +1211,7 @@ namespace Jvedio.ViewModel
             if (list?.Count > 0)
                 tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
             TagStamps = new ObservableCollection<TagStamp>();
+
             // 先增加默认的：高清、中文
             foreach (TagStamp item in Main.TagStamps)
             {
@@ -1259,6 +1262,7 @@ namespace Jvedio.ViewModel
                         metaDataMapper.Insert(metaData);
                         videoMapper.Insert(video);
                     }
+
                     Statistic();
                 }
             }
@@ -1278,6 +1282,7 @@ namespace Jvedio.ViewModel
                 if (!string.IsNullOrEmpty(vid) && !result.Contains(vid))
                     result.Add(vid);
             }
+
             return result;
         }
 
@@ -1291,7 +1296,7 @@ namespace Jvedio.ViewModel
                 List<string> result = new List<string>();
                 if (string.IsNullOrEmpty(SearchText)) return result;
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-                setSortOrder(wrapper);//按照当前排序
+                setSortOrder(wrapper); // 按照当前排序
                 wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0);
                 SelectWrapper<Video> selectWrapper = getWrapper(searchType);
                 if (selectWrapper != null) wrapper.Join(selectWrapper);
@@ -1330,6 +1335,7 @@ namespace Jvedio.ViewModel
                         }
                     }
                 }
+
                 return result;
             });
         }
@@ -1353,6 +1359,7 @@ namespace Jvedio.ViewModel
                     }
                 }
             }
+
             result = set.Where(arg => arg.ToLower().IndexOf(search) >= 0).ToList()
                 .Take(Properties.Settings.Default.SearchCandidateMaxCount).ToList();
         }
@@ -1379,6 +1386,7 @@ namespace Jvedio.ViewModel
                 CurrentActorList[idx] = null;
                 CurrentActorList[idx] = actor;
             }
+
             CurrentActorCount = CurrentActorList.Count;
         }
 
@@ -1445,7 +1453,7 @@ namespace Jvedio.ViewModel
 
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
 
-        //获得标签
+        // 获得标签
         public async void GetLabelList()
         {
             string like_sql = string.Empty;
@@ -1525,7 +1533,9 @@ namespace Jvedio.ViewModel
                     ordered = genreDict.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
                 }
                 catch (Exception ex)
-                { Logger.Error(ex); }
+                {
+                    Logger.Error(ex);
+                }
 
                 SetClassifyLoadingStatus(true);
                 GenreList = new ObservableCollection<string>();
@@ -1552,6 +1562,7 @@ namespace Jvedio.ViewModel
                 {
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), SeriesList, list[i]);
                 }
+
                 SetClassifyLoadingStatus(false);
             }
             else if (ClassifySelectedIndex == 2)
@@ -1564,6 +1575,7 @@ namespace Jvedio.ViewModel
                 {
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), StudioList, list[i]);
                 }
+
                 SetClassifyLoadingStatus(false);
             }
             else if (ClassifySelectedIndex == 3)
@@ -1576,6 +1588,7 @@ namespace Jvedio.ViewModel
                 {
                     await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), DirectorList, list[i]);
                 }
+
                 SetClassifyLoadingStatus(false);
             }
         }
@@ -1608,7 +1621,7 @@ namespace Jvedio.ViewModel
             return result;
         }
 
-        //获得演员，信息照片都获取
+        // 获得演员，信息照片都获取
 
         #region "演员"
 
@@ -1633,7 +1646,7 @@ namespace Jvedio.ViewModel
             "Waist",
             "Hipline",
             "actor_info.Grade",
-            "Age"
+            "Age",
         };
 
         public static Dictionary<int, string> ActorSortDict { get; set; }
@@ -1688,6 +1701,7 @@ namespace Jvedio.ViewModel
         public async void SelectActor()
         {
             TabSelectedIndex = 1; // 演员
+
             // 判断当前获取的队列
             while (ActorPageQueue.Count > 1)
             {
@@ -1697,13 +1711,13 @@ namespace Jvedio.ViewModel
             // 当前有视频在渲染的时候，打断渲染，等待结束
             while (renderingActor)
             {
-                renderActorCTS?.Cancel();// 取消加载
+                renderActorCTS?.Cancel(); // 取消加载
                 await Task.Delay(100);
             }
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                main.ActorScrollViewer.ScrollToTop();//滚到顶部
+                main.ActorScrollViewer.ScrollToTop(); // 滚到顶部
             });
 
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
@@ -1739,6 +1753,7 @@ namespace Jvedio.ViewModel
                 "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
                 $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
                 wrapper.toOrder() + ActorToLimit();
+
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { main.actorPagination.Total = ActorTotalCount; });
             RenderCurrentActors(sql);
@@ -1760,8 +1775,13 @@ namespace Jvedio.ViewModel
 
             for (int i = 0; i < ActorList.Count; i++)
             {
-                try { renderActorCT.ThrowIfCancellationRequested(); }
-                catch (OperationCanceledException) { renderVideoCTS?.Dispose(); break; }
+                try
+                {
+                    renderActorCT.ThrowIfCancellationRequested();
+                }
+                catch (OperationCanceledException) { renderVideoCTS?.Dispose();
+                    break; }
+
                 renderingActor = true;
                 ActorInfo actorInfo = ActorList[i];
                 ActorInfo.SetImage(ref actorInfo);
@@ -1777,7 +1797,8 @@ namespace Jvedio.ViewModel
 
             if (renderActorCT.IsCancellationRequested) refreshActorRenderToken();
             renderingActor = false;
-            //if (pageQueue.Count > 0) pageQueue.Dequeue();
+
+            // if (pageQueue.Count > 0) pageQueue.Dequeue();
             ActorPageChangedCompleted?.Invoke(this, null);
         }
 
@@ -1800,9 +1821,10 @@ namespace Jvedio.ViewModel
                     else searchContent = vid;
                     wrapper.Like("VID", searchContent);
                     break;
-                //case SearchType.Title:
+
+                // case SearchType.Title:
                 //    wrapper.Like("Title", searchContent).LeftBacket().Or().Like("Path", searchContent).RightBacket();
-                //break;
+                // break;
                 default:
                     wrapper.Like(searchType.ToString(), searchContent);
                     break;
@@ -1893,6 +1915,7 @@ namespace Jvedio.ViewModel
         public void GenerateSelect(object o = null)
         {
             extraWrapper = new SelectWrapper<Video>();
+
             // 侧边栏参数
             if (o != null && !string.IsNullOrEmpty(o.ToString()))
             {
@@ -1909,6 +1932,7 @@ namespace Jvedio.ViewModel
                     default: break;
                 }
             }
+
             main.pagination.CurrentPage = 1;
             ClickFilterType = string.Empty;
             ShowActorGrid = Visibility.Collapsed;
@@ -1918,6 +1942,7 @@ namespace Jvedio.ViewModel
         public async void Select(bool random = false)
         {
             TabSelectedIndex = 0; // 影片
+
             // 判断当前获取的队列
             while (pageQueue.Count > 1)
             {
@@ -1928,14 +1953,14 @@ namespace Jvedio.ViewModel
             // 当前有视频在渲染的时候，打断渲染，等待结束
             while (rendering)
             {
-                renderVideoCTS?.Cancel();// 取消加载
+                renderVideoCTS?.Cancel(); // 取消加载
                 await Task.Delay(100);
             }
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 ScrollViewer scrollViewer = main.FindVisualChild<ScrollViewer>(main.MovieItemsControl);
-                scrollViewer.ScrollToTop();//滚到顶部
+                scrollViewer.ScrollToTop(); // 滚到顶部
             });
 
             SelectWrapper<Video> wrapper = Video.InitWrapper();
@@ -2037,6 +2062,7 @@ namespace Jvedio.ViewModel
                 if (imageType > 1) imageType = 0;
                 wrapper.Eq("common_picture_exist.PathType", pathType).Eq("common_picture_exist.ImageType", imageType).Eq("common_picture_exist.Exist", PictureTypeIndex - 1);
             }
+
             // 是否可播放
             if (ConfigManager.Settings.PlayableIndexCreated && DataExistIndex > 0)
                 wrapper.Eq("metadata.PathExist", DataExistIndex - 1);
@@ -2050,6 +2076,7 @@ namespace Jvedio.ViewModel
             RenderSqlChanged?.Invoke(null, arg);
 
             sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
+
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { main.pagination.Total = TotalCount; });
             RenderCurrentVideo(sql);
@@ -2073,14 +2100,20 @@ namespace Jvedio.ViewModel
             int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageMode);
             for (int i = 0; i < VideoList.Count; i++)
             {
-                try { renderVideoCT.ThrowIfCancellationRequested(); }
-                catch (OperationCanceledException) { renderVideoCTS?.Dispose(); break; }
+                try
+                {
+                    renderVideoCT.ThrowIfCancellationRequested();
+                }
+                catch (OperationCanceledException) { renderVideoCTS?.Dispose();
+                    break; }
+
                 rendering = true;
                 Video video = VideoList[i];
                 if (video == null) continue;
                 Video.SetImage(ref video, imageMode);
-                Video.setTagStamps(ref video);// 设置标签戳
-                Video.handleEmpty(ref video);// 设置标题和发行日期
+                Video.setTagStamps(ref video); // 设置标签戳
+                Video.handleEmpty(ref video); // 设置标题和发行日期
+
                 // 设置关联
                 HashSet<long> set = associationMapper.getAssociationDatas(video.DataID);
                 if (set != null)
@@ -2100,7 +2133,8 @@ namespace Jvedio.ViewModel
 
             if (renderVideoCT.IsCancellationRequested) refreshVideoRenderToken();
             rendering = false;
-            //if (pageQueue.Count > 0) pageQueue.Dequeue();
+
+            // if (pageQueue.Count > 0) pageQueue.Dequeue();
             PageChangedCompleted?.Invoke(this, null);
         }
 
@@ -2174,8 +2208,8 @@ namespace Jvedio.ViewModel
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
-                Video.setTagStamps(ref video);// 设置标签戳
-                Video.handleEmpty(ref video);// 设置标题和发行日期
+                Video.setTagStamps(ref video); // 设置标签戳
+                Video.handleEmpty(ref video); // 设置标题和发行日期
 
                 if (ConfigManager.Settings.AutoGenScreenShot)
                 {
@@ -2245,7 +2279,7 @@ namespace Jvedio.ViewModel
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
-                Video.handleEmpty(ref video);// 设置标题和发行日期
+                Video.handleEmpty(ref video); // 设置标题和发行日期
                 App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadAssoVideoDelegate(LoadAssoVideo), video, i);
             }
 
@@ -2254,6 +2288,7 @@ namespace Jvedio.ViewModel
             {
                 AssociationDatas.RemoveAt(i);
             }
+
             LoadAssoMetaDataCompleted?.Invoke(null, null);
         }
 
@@ -2268,6 +2303,7 @@ namespace Jvedio.ViewModel
         {
             ExistAssociationDatas = new ObservableCollection<Video>();
             CurrentExistAssoData = new List<Video>();
+
             // 遍历邻接表，找到所有关联的 id
             HashSet<long> set = associationMapper.getAssociationDatas(dataID);
             if (set?.Count > 0)
@@ -2288,7 +2324,7 @@ namespace Jvedio.ViewModel
         public List<long> SaveAssociation(long dataID)
         {
             List<Association> toInsert = new List<Association>();
-            List<long> toDelete = new List<long>();// 删除比较特殊，要删除所有该 id 的
+            List<long> toDelete = new List<long>(); // 删除比较特殊，要删除所有该 id 的
             List<long> dataList = new List<long>();
             if (ExistAssociationDatas != null && ExistAssociationDatas.Count > 0)
             {

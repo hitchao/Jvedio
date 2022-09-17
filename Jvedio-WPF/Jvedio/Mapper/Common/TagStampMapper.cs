@@ -6,7 +6,7 @@ namespace Jvedio.Mapper
 {
     public class TagStampMapper : BaseMapper<TagStamp>
     {
-        //public static string AllTagSql = "SELECT common_tagstamp.*,count(common_tagstamp.TagID) as Count from metadata_to_tagstamp " +
+        // public static string AllTagSql = "SELECT common_tagstamp.*,count(common_tagstamp.TagID) as Count from metadata_to_tagstamp " +
         //        "join common_tagstamp " +
         //        "on metadata_to_tagstamp.TagID=common_tagstamp.TagID " +
         //        "join metadata " +

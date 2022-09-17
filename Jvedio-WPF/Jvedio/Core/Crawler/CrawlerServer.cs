@@ -136,9 +136,10 @@ namespace Jvedio.Core.Crawler
             if (server == null) return CrawlerHeader.Default;
             RequestHeader result = new RequestHeader();
             result.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
-            result.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000;// 转为 ms
+            result.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
             string header = server.Headers;
-            if (string.IsNullOrEmpty(header)) return CrawlerHeader.Default; ;
+            if (string.IsNullOrEmpty(header)) return CrawlerHeader.Default;
+            ;
             Dictionary<string, string> dict = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(header);
             if (dict != null && dict.Count > 0)
             {
@@ -146,6 +147,7 @@ namespace Jvedio.Core.Crawler
                     dict.Add("cookie", server.Cookies);
                 result.Headers = dict;
             }
+
             return result;
         }
 
@@ -158,6 +160,7 @@ namespace Jvedio.Core.Crawler
                 if (!dict.ContainsKey(item.Name)) return false;
                 if (dict[item.Name] == null) return false;
             }
+
             return true;
         }
     }
