@@ -1,28 +1,11 @@
-﻿using DynamicData.Annotations;
-using SuperUtils;
-using SuperUtils.Common;
+﻿using Jvedio.Core.CustomEventArgs;
+using Jvedio.Core.CustomTask;
+using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Jvedio.Mapper.BaseMapper;
-using Jvedio.Mapper;
 using static Jvedio.MapperManager;
-using Jvedio.Core.Scan;
-using Jvedio.Core.Enums;
-using Jvedio.Core.Exceptions;
-using Jvedio.CommonNet.Crawler;
-using Newtonsoft.Json;
-using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.CustomTask;
-using Jvedio.CommonNet.Entity;
 
 namespace Jvedio.Core.FFmpeg
 {
@@ -45,6 +28,7 @@ namespace Jvedio.Core.FFmpeg
         }
 
         public long DataID { get; set; }
+
         public bool Gif { get; set; }
 
         public ScreenShotTask(MetaData data) : base()
@@ -71,6 +55,7 @@ namespace Jvedio.Core.FFmpeg
 
 
         public DataType DataType { get; set; }
+
         public string Title { get; set; }
 
 

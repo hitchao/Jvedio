@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Jvedio.Core.DataBase.Tables
 {
@@ -27,14 +23,17 @@ namespace Jvedio.Core.DataBase.Tables
         public static class AppConfig
         {
             public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+
             static AppConfig()
             {
                 TABLES.Add("app_configs", "BEGIN; create table app_configs ( ConfigId INTEGER PRIMARY KEY autoincrement, ConfigName VARCHAR(100), ConfigValue TEXT DEFAULT '', CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), unique(ConfigName) ); CREATE INDEX app_configs_idx_ConfigName ON app_configs (ConfigName); COMMIT;");
             }
         }
+
         public static class AppData
         {
             public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+
             static AppData()
             {
                 TABLES.Add("app_databases", "BEGIN; create table app_databases ( DBId INTEGER PRIMARY KEY autoincrement, Name VARCHAR(500), Count INTEGER DEFAULT 0, DataType INT DEFAULT 0, ImagePath TEXT DEFAULT '', ViewCount INT DEFAULT 0, Hide INT DEFAULT 0, ScanPath TEXT, ExtraInfo TEXT, CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')) ); CREATE INDEX name_idx ON app_databases (Name); CREATE INDEX type_idx ON app_databases (DataType); COMMIT;");
@@ -54,6 +53,7 @@ namespace Jvedio.Core.DataBase.Tables
         public static class Actor
         {
             public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+
             static Actor()
             {
                 TABLES.Add("actor_info", "BEGIN; create table actor_info( ActorID INTEGER PRIMARY KEY autoincrement, ActorName VARCHAR(500), Country VARCHAR(500), Nation VARCHAR(500), BirthPlace VARCHAR(500), Birthday VARCHAR(100), Age INT, BloodType VARCHAR(100), Height INT, Weight INT, Gender INT DEFAULT 0, Hobby VARCHAR(500), Cup VARCHAR(1) DEFAULT 'Z', Chest INT, Waist INT, Hipline INT, WebType  VARCHAR(100), WebUrl  VARCHAR(2000), Grade FLOAT DEFAULT 0.0, ExtraInfo TEXT, CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')) ); CREATE INDEX actor_info_idx_ActorName ON actor_info (ActorName); COMMIT;");
@@ -63,6 +63,7 @@ namespace Jvedio.Core.DataBase.Tables
         public static class Data
         {
             public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+
             static Data()
             {
                 TABLES.Add("metadata", "BEGIN; create table if not exists metadata ( DataID INTEGER PRIMARY KEY autoincrement, DBId INTEGER, Title TEXT, Size  INTEGER DEFAULT 0, Path TEXT, Hash VARCHAR(32), Country VARCHAR(50), ReleaseDate VARCHAR(30), ReleaseYear INT DEFAULT 1900, ViewCount INT DEFAULT 0, DataType INT DEFAULT 0, Rating FLOAT DEFAULT 0.0, RatingCount INT DEFAULT 0, FavoriteCount INT DEFAULT 0, Genre TEXT, Grade FLOAT DEFAULT 0.0, ViewDate VARCHAR(30), FirstScanDate VARCHAR(30), LastScanDate VARCHAR(30), CreateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')), UpdateDate VARCHAR(30) DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%S', 'NOW', 'localtime')) ); CREATE INDEX metadata_idx_DataID ON metadata (DataID); CREATE INDEX metadata_idx_DBId_DataID ON metadata (DBId,DataType); CREATE INDEX metadata_idx_Hash ON metadata (Hash); CREATE INDEX metadata_idx_DBId_Hash ON metadata (DBId,Hash); CREATE INDEX metadata_idx_DBId_DataType_Hash ON metadata (DBId,DataType,Hash); CREATE INDEX metadata_idx_DBId_DataType_ReleaseDate ON metadata (DBId,DataType,ReleaseDate); CREATE INDEX metadata_idx_DBId_DataType_FirstScanDate ON metadata (DBId,DataType,FirstScanDate); CREATE INDEX metadata_idx_DBId_DataType_LastScanDate ON metadata (DBId,DataType,LastScanDate); CREATE INDEX metadata_idx_DBId_DataType_Grade ON metadata (DBId,DataType,Grade); CREATE INDEX metadata_idx_DBId_DataType_Size ON metadata (DBId,DataType,Size); CREATE INDEX metadata_idx_DBId_DataType_ViewDate ON metadata (DBId,DataType,ViewDate); COMMIT;");

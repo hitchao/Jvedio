@@ -1,9 +1,4 @@
 ﻿using Jvedio.Core.Config.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Jvedio.Core.WindowConfig
@@ -27,18 +22,27 @@ namespace Jvedio.Core.WindowConfig
 
             return _instance;
         }
+
         public double X { get; set; }
+
         public double Y { get; set; }
+
         public double Width { get; set; }
+
         public double Height { get; set; }
+
         public long WindowState { get; set; }
+
         public long CurrentDBId { get; set; }
+
         public long SearchSelectedIndex { get; set; }
+
         public long ClassifySelectedIndex { get; set; }
 
         public double SideGridWidth { get; set; }
 
         public bool FirstRun { get; set; }
+
         public bool ShowSearchHistory { get; set; }
 
     }

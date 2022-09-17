@@ -1,21 +1,10 @@
 ﻿using SuperControls.Style;
-using SuperUtils.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using SuperUtils;
-using System.IO;
 using SuperUtils.Common;
+using SuperUtils.IO;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Jvedio
 {
@@ -26,11 +15,14 @@ namespace Jvedio
     {
 
         public SolidColorBrush _BackgroundBrush = Brushes.Red;
+
         public SolidColorBrush BackgroundBrush { get { return _BackgroundBrush; } set { _BackgroundBrush = value; } }
 
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
+
         public SolidColorBrush ForegroundBrush { get { return _ForegroundBrush; } set { _ForegroundBrush = value; } }
+
         public string TagName { get; set; }
 
         private int idx = 0;

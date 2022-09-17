@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
-using SuperUtils;
+using SuperUtils.Framework.ORM.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,9 +9,7 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-
 using static Jvedio.VisualTools.WindowHelper;
-using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio.ViewModel
 {
@@ -26,39 +24,46 @@ namespace Jvedio.ViewModel
         public MetaData CurrentData
         {
             get { return _CurrentData; }
+
             set
             {
                 _CurrentData = value;
                 RaisePropertyChanged();
             }
         }
+
         public Picture _CurrentPicture;
 
         public Picture CurrentPicture
         {
             get { return _CurrentPicture; }
+
             set
             {
                 _CurrentPicture = value;
                 RaisePropertyChanged();
             }
         }
+
         public Comic _CurrentComic;
 
         public Comic CurrentComic
         {
             get { return _CurrentComic; }
+
             set
             {
                 _CurrentComic = value;
                 RaisePropertyChanged();
             }
         }
+
         public Game _CurrentGame;
 
         public Game CurrentGame
         {
             get { return _CurrentGame; }
+
             set
             {
                 _CurrentGame = value;
@@ -72,6 +77,7 @@ namespace Jvedio.ViewModel
         public bool MoreExpanded
         {
             get { return _MoreExpanded; }
+
             set
             {
                 _MoreExpanded = value;
@@ -85,6 +91,7 @@ namespace Jvedio.ViewModel
         public long DataID
         {
             get { return _DataID; }
+
             set
             {
                 _DataID = value;
@@ -94,9 +101,11 @@ namespace Jvedio.ViewModel
 
 
         private BitmapSource _CurrentImage;
+
         public BitmapSource CurrentImage
         {
             get { return _CurrentImage; }
+
             set
             {
                 _CurrentImage = value;
@@ -106,9 +115,11 @@ namespace Jvedio.ViewModel
 
 
         private List<ActorInfo> actorlist;
+
         public List<ActorInfo> ActorList
         {
             get { return actorlist; }
+
             set
             {
                 actorlist = value;
@@ -123,6 +134,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<ActorInfo> CurrentActorList
         {
             get { return _CurrentActorList; }
+
             set
             {
                 _CurrentActorList = value;
@@ -137,6 +149,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<string> CurrentLabelList
         {
             get { return _CurrentLabelList; }
+
             set
             {
                 _CurrentLabelList = value;
@@ -148,9 +161,11 @@ namespace Jvedio.ViewModel
 
 
         private int _TabControlSelectedIndex = 0;
+
         public int TabControlSelectedIndex
         {
             get { return _TabControlSelectedIndex; }
+
             set
             {
                 _TabControlSelectedIndex = value;
@@ -163,9 +178,11 @@ namespace Jvedio.ViewModel
 
 
         private string _LabelText = String.Empty;
+
         public string LabelText
         {
             get { return _LabelText; }
+
             set
             {
                 _LabelText = value;
@@ -227,6 +244,7 @@ namespace Jvedio.ViewModel
 
 
         private bool loadingLabel = false;
+
         public async void getLabels()
         {
             if (loadingLabel) return;
@@ -259,6 +277,7 @@ namespace Jvedio.ViewModel
         }
 
         private delegate void LoadLabelDelegate(string str);
+
         private void LoadLabel(string str) => CurrentLabelList.Add(str);
 
         public bool Save()

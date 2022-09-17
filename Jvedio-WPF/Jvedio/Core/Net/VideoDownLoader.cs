@@ -1,27 +1,18 @@
-﻿using DynamicData.Annotations;
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
-
-using SuperUtils;
-using Jvedio.Entity;
-using Jvedio.Core.Enums;
-using Jvedio.Core.Scan;
+﻿
+using Jvedio.CommonNet;
+using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
+using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Core.Plugins;
-using Jvedio.CommonNet.Entity;
-using Jvedio.CommonNet.Crawler;
-using Jvedio.CommonNet;
-using Jvedio.Mapper.BaseMapper;
-using System.Net;
 using Jvedio.Core.Plugins.Crawler;
+using Jvedio.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Jvedio.Core.Net
 {
@@ -31,12 +22,15 @@ namespace Jvedio.Core.Net
 
 
         private bool Canceld { get; set; }
+
         private CancellationToken cancellationToken { get; set; }
 
         public Video CurrentVideo { get; set; }
+
         public RequestHeader Header { get; set; }
 
         public List<CrawlerServer> CrawlerServers { get; set; } //该资源支持的爬虫刮削器
+
         public VideoDownLoader(Video video, CancellationToken token)
         {
             CurrentVideo = video;

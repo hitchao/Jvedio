@@ -1,16 +1,13 @@
-﻿using Jvedio.Core.Plugins.Crawler;
+﻿using Jvedio.Core.Logs;
+using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
-using Jvedio.Core.Logs;
+using Newtonsoft.Json.Linq;
 using SuperUtils.Common;
 using SuperUtils.IO;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 namespace Jvedio.Core.Plugins
 {
@@ -26,6 +23,7 @@ namespace Jvedio.Core.Plugins
     public class AuthorInfo
     {
         public string Name { get; set; }
+
         public Dictionary<string, string> Infos { get; set; }
 
         public AuthorInfo()
@@ -38,20 +36,30 @@ namespace Jvedio.Core.Plugins
     public class ReleaseNotes
     {
         public string Version { get; set; }
+
         public string Date { get; set; }
+
         public string Desc { get; set; }
+
         public string MarkDown { get; set; }
+
         public Dictionary<string, string> KeyWords { get; set; }
     }
 
     public class PluginMetaData
     {
         public string PluginID { get; set; }
+
         public string PluginName { get; set; }
+
         public PluginType PluginType { get; set; }
+
         public List<AuthorInfo> Authors { get; set; }
+
         public ReleaseNotes ReleaseNotes { get; set; }
+
         public Dictionary<string, object> Data { get; set; }
+
         public string ImagePath { get; set; }
 
         public PluginMetaData()
@@ -61,13 +69,21 @@ namespace Jvedio.Core.Plugins
 
         // 其它的字段
         public string AuthorNames { get; set; }
+
         public bool Enabled { get; set; }
+
         public bool HasNewVersion { get; set; }
+
         public bool Installed { get; set; }
+
         public bool Installing { get; set; }
+
         public string NewVersion { get; set; }
+
         public string FileHash { get; set; }
+
         public string FileName { get; set; }
+
         public string ImageUrl { get; set; }
 
 

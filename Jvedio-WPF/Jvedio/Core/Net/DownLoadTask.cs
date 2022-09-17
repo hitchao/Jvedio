@@ -5,9 +5,9 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
 using SuperUtils.Common;
-using SuperUtils.IO;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +22,9 @@ namespace Jvedio.Core.Net
     public class DownLoadTask : AbstractTask
     {
         public bool DownloadPreview { get; set; }   // 是否下载预览图
+
         public event EventHandler onDownloadSuccess;
+
         public event EventHandler onDownloadPreview;
 
 
@@ -72,8 +74,11 @@ namespace Jvedio.Core.Net
 
 
         public long DataID { get; set; }
+
         public DataType DataType { get; set; }
+
         public string Title { get; set; }
+
         public bool OverrideInfo { get; set; }//强制下载覆盖信息
 
 

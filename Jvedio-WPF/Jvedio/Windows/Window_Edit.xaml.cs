@@ -1,9 +1,9 @@
-﻿using SuperControls.Style;
-using Jvedio.Core.Enums;
-using Jvedio.Mapper.BaseMapper;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
-using SuperUtils.IO;
 using Jvedio.ViewModel;
+using SuperControls.Style;
+using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.IO;
 using System;
 using System.IO;
 using System.Linq;
@@ -11,9 +11,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static SuperUtils.WPF.VisualTools.VisualHelper;
 using static Jvedio.VisualTools.WindowHelper;
-using SuperUtils.Framework.ORM.Wrapper;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
 
 namespace Jvedio
 {
@@ -24,6 +23,7 @@ namespace Jvedio
     {
 
         private Main main { get; set; }
+
         private Window_Details windowDetails { get; set; }
 
         VieModel_Edit vieModel { get; set; }

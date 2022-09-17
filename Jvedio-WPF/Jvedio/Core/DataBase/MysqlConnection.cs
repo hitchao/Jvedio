@@ -1,9 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.DataBase
 {
@@ -14,14 +10,19 @@ namespace Jvedio.Core.DataBase
         }
 
         public string Server { get; set; }
+
         public int Port { get; set; }
+
         public string DatabaseName { get; set; }
+
         public string UserName { get; set; }
+
         public string Password { get; set; }
 
         public MySqlConnection Connection { get; set; }
 
         private static DBConnection _instance = null;
+
         public static DBConnection Instance()
         {
             if (_instance == null)

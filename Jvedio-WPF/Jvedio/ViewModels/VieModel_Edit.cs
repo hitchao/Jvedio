@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
-using static Jvedio.MapperManager;
-
-using SuperUtils.Media;
-using System.Collections.ObjectModel;
-using System.Windows.Media.Imaging;
-using System.IO;
-using Jvedio.Entity;
-using Jvedio.Mapper.BaseMapper;
-using System.Windows;
-using System.Windows.Threading;
+﻿using GalaSoft.MvvmLight;
 using Jvedio.Core.Enums;
-using static Jvedio.VisualTools.WindowHelper;
-using SuperControls.Style;
-using SuperUtils.Framework.ORM.Wrapper;
+using Jvedio.Entity;
 using SuperUtils.Framework.ORM.Utils;
+using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Media;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using static Jvedio.MapperManager;
+using static Jvedio.VisualTools.WindowHelper;
 
 namespace Jvedio.ViewModel
 {
@@ -27,7 +19,9 @@ namespace Jvedio.ViewModel
     {
 
         private Window_Edit windowEdit { get; set; }
+
         private List<string> oldLabels { get; set; }
+
         private bool loadingLabel { get; set; }
 
         public VieModel_Edit(long dataid)
@@ -43,6 +37,7 @@ namespace Jvedio.ViewModel
         public Video CurrentVideo
         {
             get { return _CurrentVideo; }
+
             set
             {
                 _CurrentVideo = value;
@@ -56,6 +51,7 @@ namespace Jvedio.ViewModel
         public bool MoreExpanded
         {
             get { return _MoreExpanded; }
+
             set
             {
                 _MoreExpanded = value;
@@ -69,6 +65,7 @@ namespace Jvedio.ViewModel
         public long DataID
         {
             get { return _DataID; }
+
             set
             {
                 _DataID = value;
@@ -80,9 +77,11 @@ namespace Jvedio.ViewModel
 
 
         private List<ActorInfo> actorlist;
+
         public List<ActorInfo> ActorList
         {
             get { return actorlist; }
+
             set
             {
                 actorlist = value;
@@ -97,6 +96,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<ActorInfo> CurrentActorList
         {
             get { return _CurrentActorList; }
+
             set
             {
                 _CurrentActorList = value;
@@ -111,6 +111,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<string> CurrentLabelList
         {
             get { return _CurrentLabelList; }
+
             set
             {
                 _CurrentLabelList = value;
@@ -131,6 +132,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<ActorInfo> ViewActors
         {
             get { return _ViewActors; }
+
             set
             {
                 _ViewActors = value;
@@ -139,9 +141,11 @@ namespace Jvedio.ViewModel
         }
 
         private int _ActorPageSize = 10;
+
         public int ActorPageSize
         {
             get { return _ActorPageSize; }
+
             set
             {
                 _ActorPageSize = value;
@@ -150,9 +154,11 @@ namespace Jvedio.ViewModel
         }
 
         public int _CurrentActorCount = 0;
+
         public int CurrentActorCount
         {
             get { return _CurrentActorCount; }
+
             set
             {
                 _CurrentActorCount = value;
@@ -163,9 +169,11 @@ namespace Jvedio.ViewModel
 
 
         private long _ActorTotalCount = 0;
+
         public long ActorTotalCount
         {
             get { return _ActorTotalCount; }
+
             set
             {
                 _ActorTotalCount = value;
@@ -175,9 +183,11 @@ namespace Jvedio.ViewModel
         }
 
         private int currentactorpage = 1;
+
         public int CurrentActorPage
         {
             get { return currentactorpage; }
+
             set
             {
                 currentactorpage = value;
@@ -187,9 +197,11 @@ namespace Jvedio.ViewModel
 
 
         private string _SearchText = String.Empty;
+
         public string SearchText
         {
             get { return _SearchText; }
+
             set
             {
                 _SearchText = value;
@@ -199,9 +211,11 @@ namespace Jvedio.ViewModel
         }
 
         private string _LabelText = String.Empty;
+
         public string LabelText
         {
             get { return _LabelText; }
+
             set
             {
                 _LabelText = value;
@@ -211,9 +225,11 @@ namespace Jvedio.ViewModel
         }
 
         private string _ActorName = String.Empty;
+
         public string ActorName
         {
             get { return _ActorName; }
+
             set
             {
                 _ActorName = value;
@@ -222,9 +238,11 @@ namespace Jvedio.ViewModel
         }
 
         private long _ActorID;
+
         public long ActorID
         {
             get { return _ActorID; }
+
             set
             {
                 _ActorID = value;
@@ -234,9 +252,11 @@ namespace Jvedio.ViewModel
 
 
         private BitmapSource _CurrentImage;
+
         public BitmapSource CurrentImage
         {
             get { return _CurrentImage; }
+
             set
             {
                 _CurrentImage = value;
@@ -305,6 +325,7 @@ namespace Jvedio.ViewModel
         }
 
         private delegate void LoadLabelDelegate(string str);
+
         private void LoadLabel(string str) => CurrentLabelList.Add(str);
 
         // todo 演员
@@ -332,6 +353,7 @@ namespace Jvedio.ViewModel
         }
 
         private delegate void LoadActorDelegate(ActorInfo actor, int idx);
+
         private void LoadActor(ActorInfo actor, int idx)
         {
             if (CurrentActorList.Count < ActorPageSize)

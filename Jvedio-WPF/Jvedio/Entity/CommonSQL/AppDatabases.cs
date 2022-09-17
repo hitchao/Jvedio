@@ -1,8 +1,8 @@
 ﻿using DynamicData.Annotations;
-using SuperUtils.Framework.ORM.Attributes;
-using SuperUtils.Framework.ORM.Mapper;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
+using Jvedio.Core.Global;
+using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Media;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Media.Imaging;
-using Jvedio.Core.Global;
 
 namespace Jvedio.Entity
 {
@@ -28,13 +27,17 @@ namespace Jvedio.Entity
         // 默认 IdType.AUTO
         [TableId(IdType.AUTO)]
         public long DBId { get; set; }
+
         public string _Name;
+
         public string Name { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
 
         public string _ImagePath = "";
+
         public string ImagePath
         {
             get { return _ImagePath; }
+
             set
             {
                 _ImagePath = value;
@@ -50,6 +53,7 @@ namespace Jvedio.Entity
         public BitmapSource Image
         {
             get { return _image; }
+
             set
             {
                 _image = value;
@@ -58,14 +62,21 @@ namespace Jvedio.Entity
         }
 
         public long? Count { get; set; }
+
         public DataType DataType { get; set; }
 
         public int? ViewCount { get; set; }
+
         public string _CreateDate;
+
         public string CreateDate { get { return _CreateDate; } set { _CreateDate = value; OnPropertyChanged(); } }
+
         public string UpdateDate { get; set; }
+
         public int Hide { get; set; }
+
         public string ScanPath { get; set; }
+
         public string ExtraInfo { get; set; }
 
 

@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Media;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using DynamicData.Annotations;
-using System.Runtime.CompilerServices;
-using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using DynamicData.Annotations;
 using Jvedio.Core;
-using System.Windows.Media.Imaging;
+using Newtonsoft.Json.Linq;
 using SuperUtils.Media;
 using SuperUtils.WPF.VisualTools;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
 {
@@ -20,8 +17,11 @@ namespace Jvedio.Entity
     public class ThemeImage
     {
         public string Background { get; set; }
+
         public string Big { get; set; }
+
         public string Small { get; set; }
+
         public string Normal { get; set; }
     }
 
@@ -30,14 +30,21 @@ namespace Jvedio.Entity
     public class Theme : INotifyPropertyChanged
     {
         public string ID { get; set; }
+
         public ThemeImage Images { get; set; }
+
         public string FontName { get; set; }
+
         public string FontPath { get; set; }
+
         public string Desc { get; set; }
+
         private float _BgColorOpacity = 1;
+
         public float BgColorOpacity
         {
             get { return _BgColorOpacity; }
+
             set
             {
                 if (value < 0)
@@ -48,22 +55,28 @@ namespace Jvedio.Entity
                     _BgColorOpacity = value;
             }
         }
+
         public Dictionary<string, string> Colors { get; set; }
 
         public Brush _ViewBrush;
+
         public Brush ViewBrush
         {
             get { return _ViewBrush; }
+
             set
             {
                 _ViewBrush = value;
                 OnPropertyChanged();
             }
         }
+
         public BitmapImage _ViewImage;
+
         public BitmapImage ViewImage
         {
             get { return _ViewImage; }
+
             set
             {
                 _ViewImage = value;
@@ -163,6 +176,7 @@ namespace Jvedio.Entity
     {"TextBox.PlaceHolder.Foreground","#808080"},
 
 };
+
         public static Dictionary<string, string> DEFAULT_WHITE_COLORS = new Dictionary<string, string>(){
     {"Window.Background","#FFFFFF"},
     {"Window.Foreground","#242424"},
@@ -271,6 +285,7 @@ namespace Jvedio.Entity
             }
             return VisualHelper.HexStringToBrush(hexColor);
         }
+
         public BitmapImage GetViewImage()
         {
             if (Images == null || string.IsNullOrEmpty(Images.Small)) return null;

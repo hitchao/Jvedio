@@ -1,8 +1,8 @@
-﻿using SuperControls.Style;
-using Jvedio.Core.Enums;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
-using SuperUtils.IO;
 using Jvedio.ViewModel;
+using SuperControls.Style;
+using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,9 +11,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static SuperUtils.WPF.VisualTools.VisualHelper;
 using static Jvedio.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
+
 namespace Jvedio
 {
     /// <summary>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SuperControls.Style.MessageCard;
+﻿using static SuperControls.Style.MessageCard;
 
 namespace Jvedio.Entity
 {
@@ -18,6 +13,7 @@ namespace Jvedio.Entity
 
 
         public MessageCardType Type { get; set; }
+
         public string Text { get; set; }
 
     }

@@ -1,26 +1,18 @@
-﻿using SuperUtils;
-using SuperUtils.Common;
+﻿using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Packaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 namespace Jvedio.Core.Media
 {
     // todo 检视
     public class Gif
     {
         private string GifPath = "";
+
         public Gif(string path)
         {
             this.GifPath = path;
@@ -151,9 +143,13 @@ namespace Jvedio.Core.Media
     public class FrameMetadata
     {
         public int Left { get; set; }
+
         public int Top { get; set; }
+
         public int Width { get; set; }
+
         public int Height { get; set; }
+
         public TimeSpan Delay { get; set; }
     }
 

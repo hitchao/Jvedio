@@ -13,14 +13,18 @@ namespace Jvedio.Entity.CommonSQL
     {
         [TableId(IdType.AUTO)]
         public long TagID { get; set; }
+
         public string TagName { get; set; }
+
         public string _Foreground;
+
         public string Foreground
         {
             get
             {
                 return _Foreground;
             }
+
             set
             {
                 _Foreground = value;
@@ -32,12 +36,14 @@ namespace Jvedio.Entity.CommonSQL
 
 
         public string _Background;
+
         public string Background
         {
             get
             {
                 return _Background;
             }
+
             set
             {
                 _Background = value;
@@ -60,6 +66,7 @@ namespace Jvedio.Entity.CommonSQL
             {
                 return _Selected;
             }
+
             set
             {
                 _Selected = value;
@@ -69,10 +76,14 @@ namespace Jvedio.Entity.CommonSQL
 
         [TableField(exist: false)]
         public SolidColorBrush ForegroundBrush { get; set; }
+
         [TableField(exist: false)]
         public SolidColorBrush BackgroundBrush { get; set; }
+
         public string ExtraInfo { get; set; }
+
         public string CreateDate { get; set; }
+
         public string UpdateDate { get; set; }
 
 

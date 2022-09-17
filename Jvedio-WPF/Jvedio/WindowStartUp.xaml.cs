@@ -1,37 +1,33 @@
-﻿using SuperControls.Style;
-using Jvedio.Core;
+﻿using Jvedio.Core;
 using Jvedio.Core.CustomEventArgs;
+using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
+using Jvedio.Core.Global;
+using Jvedio.Core.Logs;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
-using Jvedio.Core.Logs;
 using Jvedio.Upgrade;
+using Jvedio.ViewModel;
+using SuperControls.Style;
 using SuperUtils.Common;
 using SuperUtils.IO;
-using Jvedio.ViewModel;
-using JvedioLib.Security;
-using Newtonsoft.Json;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using static Jvedio.MapperManager;
-
-using static Jvedio.VisualTools.WindowHelper;
-using SuperUtils.Time;
-using Jvedio.Core.Global;
 using static Jvedio.Core.Global.PathManager;
-using Jvedio.Core.DataBase;
+using static Jvedio.MapperManager;
+using static Jvedio.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
@@ -42,11 +38,15 @@ namespace Jvedio
         private CancellationTokenSource cts;
         private CancellationToken ct;
         private VieModel_StartUp vieModel_StartUp;
+
         private ScanTask scanTask { get; set; }
+
         private bool EnteringDataBase { get; set; }
+
         private bool CancelScanTask { get; set; }
 
         private const int DEFAULT_TITLE_HEIGHT = 30;
+
         public WindowStartUp()
         {
 
@@ -90,14 +90,8 @@ namespace Jvedio
             ConfigManager.EnsurePicPaths();
 
             await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
-
-
-
             //if (GlobalFont != null) 
             //    this.FontFamily = GlobalFont;
-
-
-
             InitAppData();      // 初始化应用数据
             DeleteLogs();       // 清理日志
             //GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
@@ -132,6 +126,7 @@ namespace Jvedio
 
 
         }
+
         private async Task<bool> MovePlugins()
         {
             await Task.Delay(1);
@@ -153,18 +148,18 @@ namespace Jvedio
                 string[] arr = DirHelper.TryGetDirList(PathManager.BackupPath);
                 if (arr != null && arr.Length > 0)
                 {
-                    for (int i = arr.Length - 1; i >= 0; i--)
+                    string dirname = arr[arr.Length - 1];
+                    if (Directory.Exists(dirname))
                     {
-                        if (string.IsNullOrEmpty(arr[i])) continue;
-                        string dirName = Path.GetFileName(arr[i]);
+                        string dirName = Path.GetFileName(dirname);
                         DateTime before = DateTime.Now.AddDays(1);
                         DateTime now = DateTime.Now;
                         DateTime.TryParse(dirName, out before);
                         if (now.CompareTo(before) < 0 || (now - before).TotalDays > period)
                         {
                             backup = true;
-                            break;
                         }
+
                     }
                 }
                 else

@@ -1,10 +1,4 @@
 ﻿using Jvedio.Core.Config.Base;
-using Jvedio.Core.WindowConfig;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Config
 {
@@ -12,10 +6,12 @@ namespace Jvedio.Core.Config
     {
 
         public static string DEFAULT_NULL_STRING { get; set; }
+
         static RenameConfig()
         {
             DEFAULT_NULL_STRING = "NULL";
         }
+
         private RenameConfig() : base("RenameConfig")
         {
             OutSplit = "[null]";
@@ -34,6 +30,7 @@ namespace Jvedio.Core.Config
 
 
         public bool RemoveTitleSpace { get; set; }
+
         public bool AddRenameTag { get; set; }
 
         public string OutSplit { get; set; }

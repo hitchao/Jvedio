@@ -1,13 +1,9 @@
 ﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.CustomTask;
-using SuperUtils.Common;
 using Priority_Queue;
+using SuperUtils.Maths;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using SuperUtils.Maths;
 
 namespace Jvedio.Core.CustomTask
 {
@@ -27,19 +23,28 @@ namespace Jvedio.Core.CustomTask
         private long beforeTaskCount = 0;           // 上一次长暂停的 DoneList 数目，避免重复长暂停
 
         public bool Working { get; set; }               // 调度器是否在工作中
+
         public bool Cancel { get; set; }                // 调度器是否被取消了
+
         public double Progress { get; set; }            // 总的工作进度
+
         private int TaskDelay { get; set; }             // 每一批次任务完成后暂停的时间
+
         private int LongTaskDelay { get; set; }         // 每一批次任务完成后暂停的时间
+
         private bool EnableLongTaskDelay { get; set; }  // 每一批次任务完成后暂停的时间
 
         public event EventHandler onWorking;
+
         public event EventHandler onLongDelay;
 
         /* 具有优先级的队列，懒加载 */
         protected static SimplePriorityQueue<T> WaitingQueue { get; set; }
+
         protected static List<T> WorkingList { get; set; }
+
         protected static List<T> DoneList { get; set; }
+
         protected static List<T> CanceldList { get; set; }
 
         private static TaskDispatcher<T> instance = null;

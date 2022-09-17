@@ -1,11 +1,6 @@
-﻿using Jvedio.Mapper.BaseMapper;
-using Jvedio.Entity;
-using Jvedio.Entity.CommonSQL;
-using System;
+﻿using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper.BaseMapper;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Mapper
 {

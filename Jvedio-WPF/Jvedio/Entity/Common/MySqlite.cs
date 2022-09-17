@@ -1,20 +1,5 @@
-﻿using DynamicData.Annotations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.OleDb;
+﻿using SuperUtils.Sql;
 using System.Data.SQLite;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-using SuperUtils;
-using SuperUtils.Sql;
-using Jvedio.Entity;
-using Jvedio.Core.Logs;
 
 namespace Jvedio.Entity
 {

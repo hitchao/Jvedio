@@ -1,13 +1,15 @@
 ﻿using Jvedio.Core.Enums;
+using Jvedio.Core.Global;
+using Jvedio.Core.Logs;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using SuperUtils.Common;
 using Jvedio.Windows;
 using Newtonsoft.Json;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,10 +19,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.MapperManager;
-
-using SuperUtils.Framework.ORM.Utils;
-using SuperUtils.Time;
-using Jvedio.Core.Global;
 
 namespace Jvedio.Upgrade
 {
@@ -140,6 +138,7 @@ namespace Jvedio.Upgrade
 
 
         private static Window_Progress window_Progress;
+
         public static async Task<bool> MoveDatabases(string[] files)
         {
             if (files == null || files.Length == 0) return true;
@@ -799,6 +798,7 @@ namespace Jvedio.Upgrade
             oldSqlite.CloseDB();
 
         }
+
         public static void MoveSearchHistory()
         {
             //string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SearchHistory");
@@ -920,6 +920,7 @@ namespace Jvedio.Upgrade
 
 
         }
+
         public static void MoveTranslate()
         {
             string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translate.sqlite");

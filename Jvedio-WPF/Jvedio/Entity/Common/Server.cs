@@ -1,7 +1,5 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.CommonNet;
-using Jvedio.CommonNet.Crawler;
-using SuperUtils;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -43,6 +41,7 @@ namespace Jvedio.Entity
                 OnPropertyChanged();
             }
         }
+
         public string Cookie { get => cookie; set { cookie = value; OnPropertyChanged(); } }
 
         public int Available
@@ -53,7 +52,9 @@ namespace Jvedio.Entity
                 OnPropertyChanged();
             }
         }
+
         public string Name { get => name; set { name = value; OnPropertyChanged(); } }
+
         public string LastRefreshDate { get => lastRefreshDate; set { lastRefreshDate = value; OnPropertyChanged(); } }
 
 

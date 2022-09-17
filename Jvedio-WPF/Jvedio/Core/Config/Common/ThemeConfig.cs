@@ -1,15 +1,4 @@
-﻿using Jvedio.CommonNet;
-using Jvedio.CommonNet.Entity;
-using Jvedio.Core.Config.Base;
-using Jvedio.Core.Crawler;
-using Jvedio.Core.WindowConfig;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-
-using System.Text;
-using System.Threading.Tasks;
+﻿using Jvedio.Core.Config.Base;
 
 namespace Jvedio.Core.Config
 {
@@ -32,6 +21,7 @@ namespace Jvedio.Core.Config
         }
 
         public string ThemeID { get; set; }
+
         public int ThemeIndex { get; set; }
     }
 }

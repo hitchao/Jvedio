@@ -1,5 +1,5 @@
-﻿using SuperControls.Style;
-using Jvedio.Core.Enums;
+﻿using Jvedio.Core.Enums;
+using SuperControls.Style;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,8 +15,11 @@ namespace Jvedio
 
 
         public bool AutoAddPrefix { get; set; }
+
         public string Prefix { get; set; }
+
         public VideoType VideoType { get; set; }
+
         public Dialog_NewMovie(Window owner) : base(owner)
         {
             InitializeComponent();
@@ -93,7 +96,9 @@ namespace Jvedio
     public class NewVideoDialogResult
     {
         public string Text { get; set; }
+
         public string Prefix { get; set; }
+
         public VideoType VideoType { get; set; }
 
 

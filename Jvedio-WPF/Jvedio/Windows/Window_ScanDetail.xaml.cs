@@ -1,27 +1,17 @@
-﻿using SuperControls.Style;
+﻿using Jvedio.Core.Logs;
 using Jvedio.Core.Scan;
-using Jvedio.Core.Logs;
-using SuperUtils;
-using SuperUtils.Common;
+using SuperControls.Style;
 using SuperUtils.IO;
+using SuperUtils.Reflections;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using SuperUtils.Time;
-using SuperUtils.Reflections;
 
 namespace Jvedio
 {
@@ -41,8 +31,11 @@ namespace Jvedio
         public class ScanDetail
         {
             public string Handle { get; set; }
+
             public string Extension { get; set; }
+
             public string Reason { get; set; }
+
             public string FilePath { get; set; }
 
             public override string ToString()

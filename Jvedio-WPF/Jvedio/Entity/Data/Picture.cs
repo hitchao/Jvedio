@@ -1,10 +1,5 @@
-﻿using SuperUtils.Framework.ORM.Attributes;
-using Jvedio.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Jvedio.Core.Enums;
+using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity.Data
 {
@@ -14,17 +9,27 @@ namespace Jvedio.Entity.Data
     {
         [TableId(IdType.AUTO)]
         public long PID { get; set; }
+
 #pragma warning disable CS0108 // “Picture.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
         public long DataID { get; set; }
+
 #pragma warning restore CS0108 // “Picture.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
         public string Director { get; set; }
+
         public string Studio { get; set; }
+
         public string Publisher { get; set; }
+
         public string Plot { get; set; }
+
         public string Outline { get; set; }
+
         public int PicCount { get; set; }
+
         public string PicPaths { get; set; }
+
         public string VideoPaths { get; set; }
+
         public string ExtraInfo { get; set; }
 
         public MetaData toMetaData()

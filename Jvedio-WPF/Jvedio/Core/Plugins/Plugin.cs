@@ -3,9 +3,7 @@ using SuperUtils.Reflections;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Jvedio.Core.Plugins
@@ -13,7 +11,9 @@ namespace Jvedio.Core.Plugins
     public class Plugin
     {
         public string DllPath { get; set; }
+
         public string MethodName { get; set; }
+
         public object[] Params { get; set; }
 
         public Plugin(string dllPath, string methodName, object[] @params)

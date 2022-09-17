@@ -1,18 +1,15 @@
 ﻿using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
+using Jvedio.Core.Global;
 using Jvedio.Core.Plugins.Crawler;
+using SuperControls.Style;
 using SuperUtils.Common;
 using SuperUtils.IO;
-using Newtonsoft.Json.Linq;
-using SuperControls.Style;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using Jvedio.Core.Global;
 
 namespace Jvedio.Core.Plugins
 {
@@ -24,14 +21,18 @@ namespace Jvedio.Core.Plugins
     public class FetchState
     {
         public string PluginID { get; set; }
+
         public bool Downloading { get; set; }
+
         public PluginMetaData MetaData { get; set; }
     }
+
     public class PluginManager
     {
         public static List<PluginMetaData> PluginList = new List<PluginMetaData>();
 
         public static List<FetchState> FetchingList { get; set; }
+
         public static List<string> DownloadingList { get; set; }
 
         private static void MergeAllPlugin()
@@ -48,6 +49,7 @@ namespace Jvedio.Core.Plugins
             FetchingList = new List<FetchState>();
             DownloadingList = new List<string>();
         }
+
         private static void SetPluginEnabled()
         {
             if (PluginList?.Count > 0

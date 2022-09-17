@@ -1,14 +1,9 @@
 ﻿using Jvedio.Core.Config.Base;
-using Jvedio.Core.WindowConfig;
 using Jvedio.Core.Logs;
 using JvedioLib.Security;
 using MihaZupan;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Config
 {
@@ -41,19 +36,25 @@ namespace Jvedio.Core.Config
 
         // 自定义代理配置
         public long ProxyType { get; set; }  // 0-HTTP 1-SOCKS
+
         public string Server { get; set; }
+
         public long Port { get; set; }
+
         public string UserName { get; set; }
+
         public string Password { get; set; }
 
 
         private long _HttpTimeout = DEFAULT_TIMEOUT;
+
         public long HttpTimeout
         {
             get
             {
                 return _HttpTimeout;
             }
+
             set
             {
                 if (value <= 0)

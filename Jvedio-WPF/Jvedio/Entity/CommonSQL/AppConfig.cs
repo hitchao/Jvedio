@@ -1,5 +1,4 @@
 ﻿using SuperUtils.Framework.ORM.Attributes;
-using SuperUtils.Framework.ORM.Mapper;
 
 namespace Jvedio.Entity.CommonSQL
 {
@@ -10,9 +9,13 @@ namespace Jvedio.Entity.CommonSQL
 
         [TableId(IdType.AUTO)]
         public long ConfigId { get; set; }
+
         public string ConfigName { get; set; }
+
         public string ConfigValue { get; set; }
+
         public string CreateDate { get; set; }
+
         public string UpdateDate { get; set; }
     }
 }

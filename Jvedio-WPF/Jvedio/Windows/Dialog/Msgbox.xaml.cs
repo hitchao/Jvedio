@@ -10,6 +10,7 @@ namespace Jvedio
     public partial class Msgbox : Window
     {
         public string Text;
+
         public event EventHandler CancelTask;
 
         public Msgbox(Window window, string text)

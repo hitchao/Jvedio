@@ -1,30 +1,19 @@
-﻿using DynamicData.Annotations;
-using SuperUtils;
-using SuperUtils.Common;
+﻿using Jvedio.Core.CustomEventArgs;
+using Jvedio.Core.CustomTask;
+using Jvedio.Core.DataBase;
+using Jvedio.Core.Enums;
+using Jvedio.Core.Logs;
 using Jvedio.Entity;
+using Jvedio.Mapper;
+using JvedioLib.Security;
+using SuperUtils.IO;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Jvedio.Mapper.BaseMapper;
-using Jvedio.Mapper;
 using static Jvedio.MapperManager;
-using Jvedio.Core.Net;
-using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.CustomTask;
-using SuperUtils.IO;
-using Jvedio.Core.Logs;
-using Newtonsoft.Json;
-using Jvedio.Core.Enums;
-using JvedioLib.Security;
-using SuperUtils.Time;
-using Jvedio.Core.DataBase;
 
 namespace Jvedio.Core.Scan
 {
@@ -32,8 +21,11 @@ namespace Jvedio.Core.Scan
     {
 
         public static string VIDEO_EXTENSIONS { get; set; }
+
         public static string PICTURE_EXTENSIONS { get; set; }
+
         public static List<string> VIDEO_EXTENSIONS_LIST { get; set; }
+
         public static List<string> PICTURE_EXTENSIONS_LIST { get; set; }
 
 
@@ -79,6 +71,7 @@ namespace Jvedio.Core.Scan
 
 
         public List<string> ScanPaths { get; set; }
+
         public List<string> FilePaths { get; set; }
 
         public List<string> FileExt { get; set; }
@@ -113,6 +106,7 @@ namespace Jvedio.Core.Scan
 
 
         private List<Video> existVideos { get; set; }
+
         private List<ActorInfo> existActors { get; set; }
 
         public override void doWrok()
@@ -311,6 +305,7 @@ namespace Jvedio.Core.Scan
             }
 
         }
+
         private void HandleFailNFO(List<string> failNFO)
         {
             foreach (string path in failNFO)

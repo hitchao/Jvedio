@@ -1,5 +1,4 @@
-﻿using SuperControls.Style;
-using DynamicData;
+﻿using DynamicData;
 using HandyControl.Data;
 using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
@@ -9,21 +8,25 @@ using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
+using Jvedio.Core.Global;
+using Jvedio.Core.Logs;
 using Jvedio.Core.Media;
 using Jvedio.Core.Net;
-using Jvedio.Core.Plugins.Theme;
 using Jvedio.Core.Scan;
-using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Core.Logs;
-using SuperUtils;
-using SuperUtils.Common;
-using SuperUtils.IO;
-using SuperUtils.Media;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
+using SuperControls.Style;
+using SuperUtils.Common;
+using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Utils;
+using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.IO;
+using SuperUtils.Media;
+using SuperUtils.Time;
+using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,20 +47,12 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using static Jvedio.MapperManager;
-
-using static Jvedio.Main.Msg;
-using static SuperUtils.Media.ImageHelper;
-using static SuperUtils.WPF.VisualTools.VisualHelper;
-using static Jvedio.VisualTools.WindowHelper;
-using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.Framework.ORM.Attributes;
-using SuperUtils.Time;
-using SuperUtils.Framework.ORM.Utils;
-using SuperUtils.WPF.VisualTools;
 using static Jvedio.Core.Global.UrlManager;
-using Jvedio.Core.Global;
+using static Jvedio.Main.Msg;
+using static Jvedio.MapperManager;
+using static Jvedio.VisualTools.WindowHelper;
 using static Jvedio.Window_Settings;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
 
 namespace Jvedio
 {
@@ -70,19 +65,33 @@ namespace Jvedio
         public static Msg msgCard = new Msg();
 
         private bool Resizing { get; set; }
+
         private DispatcherTimer ResizingTimer { get; set; }
+
         private DispatcherTimer NoticeTimer { get; set; }
+
         private List<Actress> SelectedActress { get; set; }
+
         private bool CanRateChange { get; set; }
+
         private bool IsToUpdate { get; set; }
+
         private Window_Edit windowEdit { get; set; }
+
         private Window_Filter windowFilter { get; set; }
+
         private Window_Details windowDetails { get; set; }
+
         public VieModel_Main vieModel { get; set; }
+
         public SelectWrapper<Video> CurrentWrapper { get; set; }
+
         public string CurrentSQL { get; set; }
+
         private static bool CheckingScanStatus { get; set; }
+
         private static bool CheckingDownloadStatus { get; set; }
+
         Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager taskbarInstance { get; set; }
 
 
@@ -96,8 +105,11 @@ namespace Jvedio
 
 
         private CancellationTokenSource LoadSearchCTS { get; set; }
+
         private CancellationToken LoadSearchCT { get; set; }
+
         private CancellationTokenSource scan_cts { get; set; }
+
         private CancellationToken scan_ct { get; set; }
 
 
@@ -114,9 +126,13 @@ namespace Jvedio
 
         //如果包含以下文本，则显示对应的标签戳
         public static string[] TagStrings_HD { get; set; }
+
         public static string[] TagStrings_Translated { get; set; }
+
         public static TimeSpan FadeInterval { get; set; }
+
         public static DataBaseType CurrentDataBaseType { get; set; }
+
         public static bool ClickGoBackToStartUp { get; set; }//是否是点击了返回去到 Startup
 
         public static DataType CurrentDataType { get; set; }
@@ -260,6 +276,7 @@ namespace Jvedio
                 {
                     this.Message = message;
                 }
+
                 public Message Message { get; set; }
             }
 
@@ -270,18 +287,21 @@ namespace Jvedio
                 MsgShown?.Invoke(this, new MessageEventArg(message));
 
             }
+
             public void Error(string msg)
             {
                 MessageCard.Error(msg);
                 Message message = new Message(MessageCard.MessageCardType.Succes, msg);
                 MsgShown?.Invoke(this, new MessageEventArg(message));
             }
+
             public void Warning(string msg)
             {
                 MessageCard.Warning(msg);
                 Message message = new Message(MessageCard.MessageCardType.Warning, msg);
                 MsgShown?.Invoke(this, new MessageEventArg(message));
             }
+
             public void Info(string msg)
             {
                 MessageCard.Info(msg);
@@ -289,6 +309,7 @@ namespace Jvedio
                 MsgShown?.Invoke(this, new MessageEventArg(message));
             }
         }
+
         private void initTagStamp()
         {
             Main.TagStamps = tagStampMapper.getAllTagStamp();
@@ -859,6 +880,7 @@ namespace Jvedio
 
         // todo 监听文件变动
         public FileSystemWatcher[] fileSystemWatcher { get; set; }
+
         public string failwatcherMessage { get; set; }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -1444,6 +1466,7 @@ namespace Jvedio
         {
             downloadStatusPopup.IsOpen = true;
         }
+
         public void ShowScreenShotPopup(object sender, MouseButtonEventArgs e)
         {
             screenShotStatusPopup.IsOpen = true;
@@ -1593,6 +1616,7 @@ namespace Jvedio
         }
 
         ScrollViewer dataScrollViewer { get; set; }
+
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //流动模式
@@ -1647,6 +1671,7 @@ namespace Jvedio
             PlayVideoWithPlayer(video.Path, dataid);
 
         }
+
         public void PlayAssoVideo(object sender, MouseButtonEventArgs e)
         {
             AssoDataPopup.IsOpen = false;
@@ -1850,6 +1875,7 @@ namespace Jvedio
         {
             GenerateScreenShot(sender);
         }
+
         public void GenerateAllScreenShot(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(ConfigManager.FFmpegConfig.Path))
@@ -1870,6 +1896,7 @@ namespace Jvedio
             if (!Global.FFmpegManager.Dispatcher.Working)
                 Global.FFmpegManager.Dispatcher.BeginWork();
         }
+
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
         {
             MessageCard.Info("全库爬取可能会导致你的IP被封，请谨慎使用，尽量同步仅需要的资源");
@@ -2617,6 +2644,7 @@ namespace Jvedio
             addToDownload(task);
 
         }
+
         public void screenShotVideo(Video video, bool gif = false)
         {
             ScreenShotTask task = new ScreenShotTask(video, gif);
@@ -2627,6 +2655,7 @@ namespace Jvedio
             addToScreenShot(task);
 
         }
+
         public void screenShotVideo(MetaData metaData)
         {
             ScreenShotTask task = new ScreenShotTask(metaData);
@@ -2650,6 +2679,7 @@ namespace Jvedio
                 MessageCard.Info("任务已存在！");
             }
         }
+
         public void addToScreenShot(ScreenShotTask task)
         {
             if (!vieModel.ScreenShotTasks.Contains(task))
@@ -2875,6 +2905,7 @@ namespace Jvedio
             if (video != null && video.DataID > 0) return video;
             return null;
         }
+
         private Video getAssoVideo(long dataID)
         {
             if (dataID <= 0 || vieModel?.ViewAssociationDatas?.Count <= 0) return null;
@@ -3288,6 +3319,7 @@ namespace Jvedio
             vieModel.SelectedVideo.Clear();
             SetSelected();
         }
+
         private void SetActorSelectMode(object sender, RoutedEventArgs e)
         {
             vieModel.SelectedActors.Clear();
@@ -4010,6 +4042,7 @@ namespace Jvedio
                 }
             }
         }
+
         public void RefreshImage(Video newVideo)
         {
             if (newVideo == null || newVideo.DataID <= 0 || vieModel.CurrentVideoList?.Count <= 0) return;
@@ -4031,6 +4064,7 @@ namespace Jvedio
 
             }
         }
+
         public void RefreshData(long dataID)
         {
             if (vieModel.CurrentVideoList?.Count <= 0) return;
@@ -4300,12 +4334,14 @@ namespace Jvedio
             ScanTask scanTask = vieModel.ScanTasks.Where(arg => arg.CreateTime.Equals(createTime)).FirstOrDefault();
             scanTask?.Cancel();
         }
+
         private void CancelDownloadTask(object sender, RoutedEventArgs e)
         {
             string dataID = (sender as Button).Tag.ToString();
             DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
             task?.Cancel();
         }
+
         private void CancelScreenShotTask(object sender, RoutedEventArgs e)
         {
             string dataID = (sender as Button).Tag.ToString();
@@ -4320,6 +4356,7 @@ namespace Jvedio
                 task.Cancel();
             }
         }
+
         private void CancelScreenShotTasks(object sender, RoutedEventArgs e)
         {
             foreach (ScreenShotTask task in vieModel.ScreenShotTasks)
@@ -4327,6 +4364,7 @@ namespace Jvedio
                 task.Cancel();
             }
         }
+
         private void PauseDownloadTask(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -4362,6 +4400,7 @@ namespace Jvedio
             if (task == null) return;
             new Dialog_Logs(this, string.Join(Environment.NewLine, task.Logs)).ShowDialog();
         }
+
         private void ShowScreenShotDetail(object sender, RoutedEventArgs e)
         {
             string dataID = (sender as Button).Tag.ToString();
@@ -4386,6 +4425,7 @@ namespace Jvedio
         {
             downloadStatusPopup.IsOpen = false;
         }
+
         private void HideScreenShotPopup(object sender, MouseButtonEventArgs e)
         {
             screenShotStatusPopup.IsOpen = false;
@@ -4423,6 +4463,7 @@ namespace Jvedio
             if (vieModel.DownLoadTasks.Count == 0)
                 vieModel.DownLoadVisibility = Visibility.Collapsed;
         }
+
         private void RemoveCompleteScreenShot(object sender, RoutedEventArgs e)
         {
             for (int i = vieModel.ScreenShotTasks.Count - 1; i >= 0; i--)
@@ -5022,6 +5063,7 @@ namespace Jvedio
             }
 
         }
+
         private void RemoveExistAssociation(object sender, RoutedEventArgs e)
         {
             Grid grid = (sender as Button).Parent as Grid;

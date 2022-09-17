@@ -1,23 +1,10 @@
-﻿using Jvedio.ViewModel;
-using System;
+﻿using Jvedio.Core.Crawler;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Xml;
-
-
-using System.Windows.Documents;
 using System.Windows.Media;
-using Jvedio.Core.Crawler;
 
 namespace Jvedio
 {

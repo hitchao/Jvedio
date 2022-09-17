@@ -16,7 +16,9 @@ namespace Jvedio.Core.CustomTask
     public class AbstractTask : ITask, INotifyPropertyChanged
     {
         public Stopwatch stopwatch { get; set; }
+
         public bool Success { get; set; }
+
         public bool Canceld { get; set; }
 
         protected CancellationTokenSource tokenCTS;
@@ -24,12 +26,15 @@ namespace Jvedio.Core.CustomTask
 
 
         public event EventHandler onError;
+
         public event EventHandler onCanceled;
+
         public event EventHandler onCompleted;
 
 
 
         public List<string> Logs { get; set; }
+
         protected TaskLogger logger { get; set; }
 
 
@@ -71,6 +76,7 @@ namespace Jvedio.Core.CustomTask
 
 
         public TaskStatus _Status;
+
         public TaskStatus Status
         {
 
@@ -78,6 +84,7 @@ namespace Jvedio.Core.CustomTask
             {
                 return _Status;
             }
+
             set
             {
                 _Status = value;
@@ -87,7 +94,9 @@ namespace Jvedio.Core.CustomTask
                 OnPropertyChanged();
             }
         }
+
         public string _Message;
+
         public string Message
         {
 
@@ -95,6 +104,7 @@ namespace Jvedio.Core.CustomTask
             {
                 return _Message;
             }
+
             set
             {
                 _Message = value;
@@ -107,6 +117,7 @@ namespace Jvedio.Core.CustomTask
 
 
         public string _StatusText;
+
         public string StatusText
         {
 
@@ -114,6 +125,7 @@ namespace Jvedio.Core.CustomTask
             {
                 return _StatusText;
             }
+
             set
             {
                 _StatusText = value;
@@ -124,6 +136,7 @@ namespace Jvedio.Core.CustomTask
 
 
         public long _ElapsedMilliseconds;
+
         public long ElapsedMilliseconds
         {
 
@@ -131,13 +144,16 @@ namespace Jvedio.Core.CustomTask
             {
                 return _ElapsedMilliseconds;
             }
+
             set
             {
                 _ElapsedMilliseconds = value;
                 OnPropertyChanged();
             }
         }
+
         public float _Progress;
+
         public float Progress
         {
 
@@ -145,6 +161,7 @@ namespace Jvedio.Core.CustomTask
             {
                 return _Progress;
             }
+
             set
             {
                 _Progress = value;
@@ -159,6 +176,7 @@ namespace Jvedio.Core.CustomTask
         /// 用于指示下载任务是否进行中
         /// </summary>
         public bool _Running;
+
         public bool Running
         {
 
@@ -166,6 +184,7 @@ namespace Jvedio.Core.CustomTask
             {
                 return _Running;
             }
+
             set
             {
                 _Running = value;
@@ -175,6 +194,7 @@ namespace Jvedio.Core.CustomTask
 
 
         public string _CreateTime;
+
         public string CreateTime
         {
 
@@ -182,6 +202,7 @@ namespace Jvedio.Core.CustomTask
             {
                 return _CreateTime;
             }
+
             set
             {
                 _CreateTime = value;
@@ -204,6 +225,7 @@ namespace Jvedio.Core.CustomTask
             EventHandler eventHandler = onCanceled;
             eventHandler?.Invoke(this, e);
         }
+
         protected virtual void OnCompleted(EventArgs e)
         {
             EventHandler eventHandler = onCompleted;

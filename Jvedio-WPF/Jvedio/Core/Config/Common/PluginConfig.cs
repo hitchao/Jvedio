@@ -25,6 +25,7 @@ namespace Jvedio.Core.Config
 
             return _instance;
         }
+
         public string PluginList { get; set; }
 
 

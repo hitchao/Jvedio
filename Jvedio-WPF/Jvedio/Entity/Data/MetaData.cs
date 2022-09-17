@@ -1,10 +1,10 @@
 ﻿using DynamicData.Annotations;
-using SuperUtils.Framework.ORM.Attributes;
 using Jvedio.Core.Enums;
-using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity.CommonSQL;
-using SuperUtils.Common;
+using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Media;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,8 +12,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
-using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.Time;
 
 namespace Jvedio.Entity
 {
@@ -26,22 +24,30 @@ namespace Jvedio.Entity
 
         [TableId(IdType.AUTO)]
         public long DataID { get; set; }
+
         public long DBId { get; set; }
+
         public string Title { get; set; }
+
         private long _Size;
+
         public long Size
         {
             get { return _Size; }
+
             set
             {
                 _Size = value;
                 OnPropertyChanged();
             }
         }
+
         private string _Path;
+
         public string Path
         {
             get { return _Path; }
+
             set
             {
                 _Path = value;
@@ -49,19 +55,31 @@ namespace Jvedio.Entity
                 OnPropertyChanged();
             }
         }
+
         public string Hash { get; set; }
+
         public string Country { get; set; }
+
         public string ReleaseDate { get; set; }
+
         public int ReleaseYear { get; set; }
+
         public int ViewCount { get; set; }
+
         public DataType DataType { get; set; }
+
         public float Rating { get; set; }
+
         public int RatingCount { get; set; }
+
         public int FavoriteCount { get; set; }
+
         private string _Genre;
+
         public string Genre
         {
             get { return _Genre; }
+
             set
             {
                 _Genre = value;
@@ -79,10 +97,12 @@ namespace Jvedio.Entity
         public float Grade { get; set; }
 
         private string _Label;
+
         [TableField(exist: false)]
         public string Label
         {
             get { return _Label; }
+
             set
             {
                 _Label = value;
@@ -97,10 +117,13 @@ namespace Jvedio.Entity
         public List<string> LabelList { get; set; }
 
         public string ViewDate { get; set; }
+
         public string _FirstScanDate;
+
         public string FirstScanDate
         {
             get { return _FirstScanDate; }
+
             set
             {
                 _FirstScanDate = value;
@@ -110,37 +133,48 @@ namespace Jvedio.Entity
 
 
         private string _LastScanDate;
+
         public string LastScanDate
         {
             get { return _LastScanDate; }
+
             set
             {
                 _LastScanDate = value;
                 OnPropertyChanged();
             }
         }
+
         public string CreateDate { get; set; }
+
         public string UpdateDate { get; set; }
 
         private BitmapSource _ViewImage;
+
         [TableField(exist: false)]
         public BitmapSource ViewImage { get { return _ViewImage; } set { _ViewImage = value; OnPropertyChanged(); } }
 
         [TableField(exist: false)]
         public string TagIDs { get; set; }
+
         [TableField(exist: false)]
         public bool HasVideo { get; set; }
+
         [TableField(exist: false)]
         public List<string> AttachedVideos { get; set; }
+
         [TableField(exist: false)]
         public ObservableCollection<TagStamp> TagStamp { get; set; }
+
         [TableField(exist: false)]
         public long Count { get; set; }
 
 
 
         public static BitmapImage DefaultSmallImage { get; set; }
+
         public static BitmapImage DefaultBigImage { get; set; }
+
         public static BitmapImage DefaultActorImage { get; set; }
 
         static MetaData()
@@ -186,6 +220,7 @@ namespace Jvedio.Entity
             if (image == null) image = MetaData.DefaultBigImage;
             data.ViewImage = image;
         }
+
         public static void SetImage(ref Video video, string imgPath)
         {
             if (video == null) return;
@@ -193,6 +228,7 @@ namespace Jvedio.Entity
             if (image == null) image = MetaData.DefaultBigImage;
             video.ViewImage = image;
         }
+
         public static void handleEmpty(ref MetaData data)
         {
             if (data == null) return;

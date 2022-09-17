@@ -84,37 +84,49 @@ namespace Jvedio.Entity
 
         [TableId(IdType.AUTO)]
         public long MVID { get; set; }
+
 #pragma warning disable CS0108 // “Video.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
         public long DataID { get; set; }
+
 #pragma warning restore CS0108 // “Video.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
         public string VID { get; set; }
 
         public string Series { get; set; }
+
         private VideoType _VideoType;
 
         public VideoType VideoType
         {
             get { return _VideoType; }
+
             set
             {
                 _VideoType = value;
                 OnPropertyChanged();
             }
         }
+
         public string Director { get; set; }
+
         public string Studio { get; set; }
+
         public string Publisher { get; set; }
+
         public string Plot { get; set; }
+
         public string Outline { get; set; }
+
         public int Duration { get; set; }
 
         [TableField(exist: false)]
         public List<string> SubSectionList { get; set; }
 
         private string _SubSection = "";
+
         public string SubSection
         {
             get { return _SubSection; }
+
             set
             {
                 _SubSection = value;
@@ -123,6 +135,7 @@ namespace Jvedio.Entity
                 OnPropertyChanged();
             }
         }
+
         [TableField(exist: false)]
         public bool HasSubSection { get; set; }
 
@@ -132,10 +145,13 @@ namespace Jvedio.Entity
 
         [TableField(exist: false)]
         public ObservableCollection<BitmapSource> PreviewImageList { get; set; }
+
         public string ImageUrls { get; set; }
 
         public string WebType { get; set; }
+
         public string WebUrl { get; set; }
+
         public string ExtraInfo { get; set; }
 
 
@@ -145,8 +161,10 @@ namespace Jvedio.Entity
         public BitmapSource SmallImage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
 
         private BitmapSource _bigimage;
+
         [TableField(exist: false)]
         public BitmapSource BigImage { get { return _bigimage; } set { _bigimage = value; OnPropertyChanged(); } }
+
         private Uri _GifUri;
 
         [TableField(exist: false)]
@@ -156,6 +174,7 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
 #pragma warning disable CS0108 // “Video.TagStamp”隐藏继承的成员“MetaData.TagStamp”。如果是有意隐藏，请使用关键字 new。
         public ObservableCollection<TagStamp> TagStamp { get; set; }
+
 #pragma warning restore CS0108 // “Video.TagStamp”隐藏继承的成员“MetaData.TagStamp”。如果是有意隐藏，请使用关键字 new。
         [TableField(exist: false)]
 #pragma warning disable CS0108 // “Video.TagIDs”隐藏继承的成员“MetaData.TagIDs”。如果是有意隐藏，请使用关键字 new。
@@ -170,6 +189,7 @@ namespace Jvedio.Entity
         public string ActorNames
         {
             get { return _ActorNames; }
+
             set
             {
                 _ActorNames = value;
@@ -196,6 +216,7 @@ namespace Jvedio.Entity
         public List<ActorInfo> ActorInfos
         {
             get { return _ActorInfos; }
+
             set
             {
                 _ActorInfos = value;
@@ -208,6 +229,7 @@ namespace Jvedio.Entity
                 OnPropertyChanged();
             }
         }
+
         [TableField(exist: false)]
         public List<Magnet> Magnets { get; set; }
 
@@ -411,6 +433,7 @@ namespace Jvedio.Entity
             }
             return imagePath;
         }
+
         public string getGifPath()
         {
             string imagePath = getImagePath(ImageType.Gif, ".gif");

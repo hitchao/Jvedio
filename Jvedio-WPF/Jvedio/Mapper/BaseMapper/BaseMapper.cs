@@ -1,11 +1,10 @@
-﻿using Jvedio.Core.Logs;
-using Jvedio.Mapper.BaseMapper;
+﻿using Jvedio.Core.DataBase;
+using Jvedio.Core.Enums;
+using Jvedio.Core.Logs;
 using SuperUtils.Framework.ORM.Mapper;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
-using Jvedio.Core.Enums;
-using Jvedio.Core.DataBase;
 
 namespace Jvedio.Mapper.BaseMapper
 {
@@ -13,6 +12,7 @@ namespace Jvedio.Mapper.BaseMapper
     {
 
         static SqliteMapper<T> SqliteMapper { get; set; }
+
         static MySQLMapper<T> MySQLMapper { get; set; }
 
 

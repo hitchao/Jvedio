@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 
 /* 命名空间不能修改 */
@@ -45,6 +42,7 @@ namespace JvedioLib.Security
             object result = InvokeMethod(new object[] { str, key });
             return result == null ? "" : result.ToString();
         }
+
         public static string AesDecrypt(string str, string key)
         {
             object result = InvokeMethod(new object[] { str, key });

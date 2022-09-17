@@ -1,12 +1,7 @@
 ﻿using DynamicData.Annotations;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
@@ -19,6 +14,7 @@ namespace Jvedio.Entity
     {
 
         public static DateTime DEFAULT_DATETIME = new DateTime(1970, 01, 01);
+
         public Actress() : this("") { }
 
         public Actress(string name = "")
@@ -44,6 +40,7 @@ namespace Jvedio.Entity
             like = 0;
 
         }
+
         public void Dispose()
         {
             smallimage = null;
@@ -51,19 +48,28 @@ namespace Jvedio.Entity
         }
 
         public int num { get; set; }//仅仅用于计数
+
         public string id { get; set; }
+
         public string name { get; set; }
+
         public int sex { get; set; }
+
         public string actressimageurl { get; set; }
+
         private BitmapSource _smallimage;
+
         public BitmapSource smallimage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
+
         public BitmapSource bigimage { get; set; }
 
 
         private string _birthday;
+
         public string birthday
         {
             get { return _birthday; }
+
             set
             {
                 //验证数据
@@ -76,9 +82,11 @@ namespace Jvedio.Entity
         }
 
         private int _age;
+
         public int age
         {
             get { return _age; }
+
             set
             {
                 int.TryParse(value.ToString(), out int a);
@@ -89,9 +97,11 @@ namespace Jvedio.Entity
         }
 
         private int _height;
+
         public int height
         {
             get { return _height; }
+
             set
             {
                 int.TryParse(value.ToString(), out int a);
@@ -102,9 +112,11 @@ namespace Jvedio.Entity
         }
 
         private string _cup;
+
         public string cup
         {
             get { return _cup; }
+
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -117,9 +129,11 @@ namespace Jvedio.Entity
 
 
         private int _hipline;
+
         public int hipline
         {
             get { return _hipline; }
+
             set
             {
                 int.TryParse(value.ToString(), out int a);
@@ -131,9 +145,11 @@ namespace Jvedio.Entity
 
 
         private int _waist;
+
         public int waist
         {
             get { return _waist; }
+
             set
             {
                 int.TryParse(value.ToString(), out int a);
@@ -145,9 +161,11 @@ namespace Jvedio.Entity
 
 
         private int _chest;
+
         public int chest
         {
             get { return _chest; }
+
             set
             {
                 int.TryParse(value.ToString(), out int a);
@@ -157,10 +175,13 @@ namespace Jvedio.Entity
         }
 
         public string birthplace { get; set; }
+
         public string hobby { get; set; }
 
         public string sourceurl { get; set; }
+
         public string source { get; set; }
+
         public string imageurl { get; set; }
 
         public int like { get; set; }

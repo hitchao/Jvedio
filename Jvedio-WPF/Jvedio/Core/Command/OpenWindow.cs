@@ -1,11 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using SuperUtils.Reflections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.VisualTools.WindowHelper;
 
@@ -14,8 +7,11 @@ namespace Jvedio.Core.Command
     public class OpenWindow
     {
         public static RelayCommand Settings { get; set; }
+
         public static RelayCommand<Window> About { get; set; }
+
         public static RelayCommand<Window> Upgrade { get; set; }
+
         public static RelayCommand<Window> Thanks { get; set; }
 
         static OpenWindow()

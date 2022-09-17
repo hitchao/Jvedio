@@ -2,8 +2,6 @@
 using Jvedio.Core.Logs;
 using Jvedio.Entity;
 using Jvedio.Mapper;
-using SuperUtils;
-using SuperUtils.Media;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
@@ -12,19 +10,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
 using static Jvedio.MapperManager;
-using static SuperUtils.Media.ImageHelper;
 using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.Media.ImageHelper;
 
 namespace Jvedio.ViewModel
 {
     public class VieModel_Details : ViewModelBase
     {
         private Window_Details windowDetails { get; set; }
+
         public event EventHandler QueryCompleted;
 
         private bool loadingLabel { get; set; }
+
         public VieModel_Details()
         {
             windowDetails = GetWindowByName("Window_Details") as Window_Details;
@@ -35,28 +34,33 @@ namespace Jvedio.ViewModel
         public bool TeenMode
         {
             get { return _TeenMode; }
+
             set
             {
                 _TeenMode = value;
                 RaisePropertyChanged();
             }
         }
+
         private int _SelectImageIndex = 0;
 
         public int SelectImageIndex
         {
             get { return _SelectImageIndex; }
+
             set
             {
                 _SelectImageIndex = value;
                 RaisePropertyChanged();
             }
         }
+
         private int _InfoSelectedIndex = (int)ConfigManager.Detail.InfoSelectedIndex;
 
         public int InfoSelectedIndex
         {
             get { return _InfoSelectedIndex; }
+
             set
             {
                 _InfoSelectedIndex = value;
@@ -71,6 +75,7 @@ namespace Jvedio.ViewModel
         public bool ShowScreenShot
         {
             get { return _ShowScreenShot; }
+
             set
             {
                 _ShowScreenShot = value;
@@ -86,6 +91,7 @@ namespace Jvedio.ViewModel
         public Video CurrentVideo
         {
             get { return _CurrentVideo; }
+
             set
             {
                 _CurrentVideo = value;
@@ -99,6 +105,7 @@ namespace Jvedio.ViewModel
         public VideoInfo VideoInfo
         {
             get { return _VideoInfo; }
+
             set
             {
                 _VideoInfo = value;
@@ -108,9 +115,11 @@ namespace Jvedio.ViewModel
 
 
         private ObservableCollection<string> labellist;
+
         public ObservableCollection<string> LabelList
         {
             get { return labellist; }
+
             set
             {
                 labellist = value;
@@ -126,6 +135,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<ActorInfo> CurrentActorList
         {
             get { return _CurrentActorList; }
+
             set
             {
                 _CurrentActorList = value;
@@ -135,9 +145,11 @@ namespace Jvedio.ViewModel
 
 
         public ObservableCollection<Video> _ViewAssociationDatas;
+
         public ObservableCollection<Video> ViewAssociationDatas
         {
             get { return _ViewAssociationDatas; }
+
             set
             {
                 _ViewAssociationDatas = value;
@@ -151,6 +163,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<string> CurrentLabelList
         {
             get { return _CurrentLabelList; }
+
             set
             {
                 _CurrentLabelList = value;
@@ -160,9 +173,11 @@ namespace Jvedio.ViewModel
 
 
         private string _LabelText = String.Empty;
+
         public string LabelText
         {
             get { return _LabelText; }
+
             set
             {
                 _LabelText = value;
@@ -291,6 +306,7 @@ namespace Jvedio.ViewModel
         }
 
         private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
+
         private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
 
@@ -335,6 +351,7 @@ namespace Jvedio.ViewModel
         }
 
         private delegate void LoadLabelDelegate(string str);
+
         private void LoadLabel(string str) => CurrentLabelList.Add(str);
 
 

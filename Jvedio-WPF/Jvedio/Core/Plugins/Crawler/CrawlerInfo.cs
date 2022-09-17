@@ -1,38 +1,44 @@
-﻿using Jvedio.Core.Enums;
-using JvedioLib.Security;
-using System;
+﻿using JvedioLib.Security;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Plugins
 {
     public class CrawlerInfo
     {
         public string ServerName { get; set; }
+
         public string InfoType { get; set; }
+
         public string Name { get; set; }
+
         public string Version { get; set; }
+
         public string Categories { get; set; }
+
         public string Image { get; set; }
 
 
         // 不在 dll 内的字段
         public bool Enabled { get; set; }
+
         public bool HasNewVersion { get; set; }
+
         public bool Installed { get; set; }
+
         public string NewVersion { get; set; }
+
         public string FileHash { get; set; }
+
         public string FileName { get; set; }
+
         public string ImageUrl { get; set; }
 
         public PluginType Type { get; set; }
 
 
         public string _Path;
+
         public string Path
         {
             get { return _Path; }

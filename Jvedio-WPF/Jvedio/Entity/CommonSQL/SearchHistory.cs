@@ -1,11 +1,5 @@
-﻿using SuperUtils.Framework.ORM.Attributes;
-using Jvedio.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SuperUtils.Framework.ORM.Mapper;
+﻿using Jvedio.Core.Enums;
+using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity.CommonSQL
 {
@@ -16,14 +10,23 @@ namespace Jvedio.Entity.CommonSQL
 
         [TableId(IdType.AUTO)]
         public long ID { get; set; }
+
         public SearchMode SearchMode { get; set; }
+
         public SearchField SearchField { get; set; }
+
         public string SearchValue { get; set; }
+
         public int CreateYear { get; set; }
+
         public int CreateMonth { get; set; }
+
         public int CreateDay { get; set; }
+
         public string ExtraInfo { get; set; }
+
         public string CreateDate { get; set; }
+
         public string UpdateDate { get; set; }
     }
 }

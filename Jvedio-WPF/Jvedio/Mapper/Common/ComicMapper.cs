@@ -1,12 +1,7 @@
-﻿using Jvedio.Mapper.BaseMapper;
-using Jvedio.Entity;
-using Jvedio.Entity.Data;
+﻿using Jvedio.Entity.Data;
+using Jvedio.Mapper.BaseMapper;
 using SuperUtils.Framework.ORM.Wrapper;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Mapper
 {

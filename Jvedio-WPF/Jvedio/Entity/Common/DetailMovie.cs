@@ -1,12 +1,6 @@
-﻿using Jvedio.Core.Enums;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
@@ -39,15 +33,18 @@ namespace Jvedio.Entity
 
 
         public List<string> genrelist { get; set; }
+
         public List<Actress> actorlist { get; set; }
 
         private List<string> _labellist;
+
         public List<string> labellist
         {
             get
             {
                 return _labellist;
             }
+
             set
             {
                 _labellist = value;
@@ -56,6 +53,7 @@ namespace Jvedio.Entity
         }
 
         public ObservableCollection<BitmapSource> extraimagelist { get; set; }
+
         public ObservableCollection<string> extraimagePath { get; set; }
 
 

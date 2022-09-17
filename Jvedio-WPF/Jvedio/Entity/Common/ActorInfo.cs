@@ -1,19 +1,17 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.Core.Enums;
+using Jvedio.Core.Global;
 using Jvedio.Core.Scan;
-using SuperUtils.Common;
+using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.IO;
 using SuperUtils.Media;
-using SuperUtils.Framework.ORM.Attributes;
-using SuperUtils.Framework.ORM.Mapper;
+using SuperUtils.Reflections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
-using SuperUtils.Reflections;
-using Jvedio.Core.Global;
 
 namespace Jvedio.Entity
 {
@@ -22,27 +20,49 @@ namespace Jvedio.Entity
     {
         [TableId(IdType.AUTO)]
         public long ActorID { get; set; }
+
         public string ActorName { get; set; }
+
         public string Country { get; set; }
+
         public string Nation { get; set; }
+
         public string BirthPlace { get; set; }
+
         public string Birthday { get; set; }
+
         public int Age { get; set; }
+
         public string BloodType { get; set; }
+
         public int Height { get; set; }
+
         public int Weight { get; set; }
+
         public Gender Gender { get; set; }
+
         public string Hobby { get; set; }
+
         public char Cup { get; set; }
+
         public int Chest { get; set; }
+
         public int Waist { get; set; }
+
         public int Hipline { get; set; }
+
         public string WebType { get; set; }
+
         public string WebUrl { get; set; }
+
         public float Grade { get; set; }
+
         public string ExtraInfo { get; set; }
+
         public string CreateDate { get; set; }
+
         public string UpdateDate { get; set; }
+
         public string ImageUrl { get; set; }
 
         public ActorInfo()

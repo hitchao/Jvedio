@@ -1,20 +1,10 @@
-﻿using DynamicData.Annotations;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
-using Jvedio.Core.Enums;
-using Jvedio.Mapper.BaseMapper;
+﻿using GalaSoft.MvvmLight;
 using Jvedio.Entity;
-using Jvedio.Mapper;
-using SuperUtils;
 using SuperUtils.Framework.ORM.Wrapper;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Media.Imaging;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel
@@ -41,6 +31,7 @@ namespace Jvedio.ViewModel
         public bool Tile
         {
             get { return _Tile; }
+
             set
             {
                 _Tile = value;
@@ -49,9 +40,11 @@ namespace Jvedio.ViewModel
         }
 
         private bool _Loading = true;
+
         public bool Loading
         {
             get { return _Loading; }
+
             set
             {
                 _Loading = value;
@@ -72,6 +65,7 @@ namespace Jvedio.ViewModel
         public bool ShowHideItem
         {
             get { return _ShowHideItem; }
+
             set
             {
                 _ShowHideItem = value;
@@ -83,29 +77,37 @@ namespace Jvedio.ViewModel
 
 
         private ObservableCollection<AppDatabase> _Databases;
+
         public ObservableCollection<AppDatabase> Databases
         {
             get { return _Databases; }
+
             set
             {
                 _Databases = value;
                 RaisePropertyChanged();
             }
         }
+
         private ObservableCollection<AppDatabase> _CurrentDatabases;
+
         public ObservableCollection<AppDatabase> CurrentDatabases
         {
             get { return _CurrentDatabases; }
+
             set
             {
                 _CurrentDatabases = value;
                 RaisePropertyChanged();
             }
         }
+
         private string _LoadingText;
+
         public string LoadingText
         {
             get { return _LoadingText; }
+
             set
             {
                 _LoadingText = value;

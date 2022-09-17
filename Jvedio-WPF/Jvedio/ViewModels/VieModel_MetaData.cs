@@ -2,17 +2,16 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
+using Jvedio.Core.Logs;
 using Jvedio.Core.Scan;
-using Jvedio.Mapper.BaseMapper;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Entity.Data;
-using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using SuperUtils;
-using SuperUtils.Common;
 using JvedioLib.Security;
+using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,10 +24,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-
 using static Jvedio.VisualTools.WindowHelper;
-using SuperUtils.Time;
-using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio.ViewModel
 {
@@ -36,20 +32,27 @@ namespace Jvedio.ViewModel
     {
 #pragma warning disable CS0067 // 从不使用事件“VieModel_MetaData.CurrentMovieListHideOrChanged”
         public event EventHandler CurrentMovieListHideOrChanged;
+
 #pragma warning restore CS0067 // 从不使用事件“VieModel_MetaData.CurrentMovieListHideOrChanged”
         public event EventHandler CurrentActorListHideOrChanged;
+
 #pragma warning disable CS0067 // 从不使用事件“VieModel_MetaData.MovieFlipOverCompleted”
         public event EventHandler MovieFlipOverCompleted;
+
 #pragma warning restore CS0067 // 从不使用事件“VieModel_MetaData.MovieFlipOverCompleted”
 #pragma warning disable CS0067 // 从不使用事件“VieModel_MetaData.ActorFlipOverCompleted”
         public event EventHandler ActorFlipOverCompleted;
+
 #pragma warning restore CS0067 // 从不使用事件“VieModel_MetaData.ActorFlipOverCompleted”
 #pragma warning disable CS0067 // 从不使用事件“VieModel_MetaData.OnCurrentMovieListRemove”
         public event EventHandler OnCurrentMovieListRemove;
+
 #pragma warning restore CS0067 // 从不使用事件“VieModel_MetaData.OnCurrentMovieListRemove”
         public event EventHandler PageChangedCompleted;
+
 #pragma warning disable CS0067 // 从不使用事件“VieModel_MetaData.ActorPageChangedCompleted”
         public event EventHandler ActorPageChangedCompleted;
+
 #pragma warning restore CS0067 // 从不使用事件“VieModel_MetaData.ActorPageChangedCompleted”
         public event EventHandler RenderSqlChanged;
 
@@ -81,8 +84,11 @@ namespace Jvedio.ViewModel
 
         #region "RelayCommand"
         public RelayCommand<object> SelectCommand { get; set; }
+
         public RelayCommand<object> ShowActorsCommand { get; set; }
+
         public RelayCommand<object> ShowLabelsCommand { get; set; }
+
         public RelayCommand<object> ShowClassifyCommand { get; set; }
 
         public RelayCommand AddNewMovie { get; set; }
@@ -130,6 +136,7 @@ namespace Jvedio.ViewModel
         public SolidColorBrush WebStatusBackground
         {
             get { return _WebStatusBackground; }
+
             set
             {
                 _WebStatusBackground = value;
@@ -143,6 +150,7 @@ namespace Jvedio.ViewModel
         public Visibility ShowFirstRun
         {
             get { return _ShowFirstRun; }
+
             set
             {
                 _ShowFirstRun = value;
@@ -156,6 +164,7 @@ namespace Jvedio.ViewModel
         public Visibility ShowActorGrid
         {
             get { return _ShowActorGrid; }
+
             set
             {
                 _ShowActorGrid = value;
@@ -168,6 +177,7 @@ namespace Jvedio.ViewModel
         public Visibility GoToTopCanvas
         {
             get { return _GoToTopCanvas; }
+
             set
             {
                 _GoToTopCanvas = value;
@@ -180,6 +190,7 @@ namespace Jvedio.ViewModel
         public Visibility ProgressBarVisibility
         {
             get { return _ProgressBarVisibility; }
+
             set
             {
                 _ProgressBarVisibility = value;
@@ -192,6 +203,7 @@ namespace Jvedio.ViewModel
         public Visibility ActorProgressBarVisibility
         {
             get { return _ActorProgressBarVisibility; }
+
             set
             {
                 _ActorProgressBarVisibility = value;
@@ -204,6 +216,7 @@ namespace Jvedio.ViewModel
         public Visibility CmdVisibility
         {
             get { return _CmdVisibility; }
+
             set
             {
                 _CmdVisibility = value;
@@ -216,6 +229,7 @@ namespace Jvedio.ViewModel
         public string CmdText
         {
             get { return _CmdText; }
+
             set
             {
                 _CmdText = value;
@@ -228,6 +242,7 @@ namespace Jvedio.ViewModel
         public int ActorProgressBarValue
         {
             get { return _ActorProgressBarValue; }
+
             set
             {
                 _ActorProgressBarValue = value;
@@ -241,6 +256,7 @@ namespace Jvedio.ViewModel
         public int ProgressBarValue
         {
             get { return _ProgressBarValue; }
+
             set
             {
                 _ProgressBarValue = value;
@@ -253,17 +269,20 @@ namespace Jvedio.ViewModel
         public int SearchSelectedIndex
         {
             get { return _SearchSelectedIndex; }
+
             set
             {
                 _SearchSelectedIndex = value;
                 RaisePropertyChanged();
             }
         }
+
         private int _ClassifySelectedIndex = (int)ConfigManager.Main.ClassifySelectedIndex;
 
         public int ClassifySelectedIndex
         {
             get { return _ClassifySelectedIndex; }
+
             set
             {
                 _ClassifySelectedIndex = value;
@@ -276,6 +295,7 @@ namespace Jvedio.ViewModel
         public double SideGridWidth
         {
             get { return _SideGridWidth; }
+
             set
             {
                 _SideGridWidth = value;
@@ -291,6 +311,7 @@ namespace Jvedio.ViewModel
         public bool ShowMoreListBtn
         {
             get { return _ShowMoreListBtn; }
+
             set
             {
                 _ShowMoreListBtn = value;
@@ -303,6 +324,7 @@ namespace Jvedio.ViewModel
         public bool ShowActorTools
         {
             get { return _ShowActorTools; }
+
             set
             {
                 _ShowActorTools = value;
@@ -316,6 +338,7 @@ namespace Jvedio.ViewModel
         public BitmapSource BackgroundImage
         {
             get { return _BackgroundImage; }
+
             set
             {
                 _BackgroundImage = value;
@@ -328,6 +351,7 @@ namespace Jvedio.ViewModel
         public int TabSelectedIndex
         {
             get { return _TabSelectedIndex; }
+
             set
             {
                 _TabSelectedIndex = value;
@@ -342,6 +366,7 @@ namespace Jvedio.ViewModel
         public bool IsLoadingFilter
         {
             get { return _IsLoadingFilter; }
+
             set
             {
                 _IsLoadingFilter = value;
@@ -355,6 +380,7 @@ namespace Jvedio.ViewModel
         public bool IsLoadingMovie
         {
             get { return _IsLoadingMovie; }
+
             set
             {
                 _IsLoadingMovie = value;
@@ -368,6 +394,7 @@ namespace Jvedio.ViewModel
         public bool IsLoadingClassify
         {
             get { return _IsLoadingClassify; }
+
             set
             {
                 _IsLoadingClassify = value;
@@ -380,6 +407,7 @@ namespace Jvedio.ViewModel
         public bool HideToIcon
         {
             get { return _HideToIcon; }
+
             set
             {
                 _HideToIcon = value;
@@ -393,6 +421,7 @@ namespace Jvedio.ViewModel
         public Thickness MainGridThickness
         {
             get { return _MainGridThickness; }
+
             set
             {
                 _MainGridThickness = value;
@@ -409,9 +438,11 @@ namespace Jvedio.ViewModel
 
         #region "enum"
         private VideoType _ClassifyVedioType = 0;
+
         public VideoType ClassifyVedioType
         {
             get { return _ClassifyVedioType; }
+
             set
             {
                 _ClassifyVedioType = value;
@@ -439,9 +470,11 @@ namespace Jvedio.ViewModel
 
 
         private ObservableCollection<ScanTask> _ScanTasks = new ObservableCollection<ScanTask>();
+
         public ObservableCollection<ScanTask> ScanTasks
         {
             get { return _ScanTasks; }
+
             set
             {
                 _ScanTasks = value;
@@ -453,9 +486,11 @@ namespace Jvedio.ViewModel
 
 
         private ObservableCollection<Message> _Message = new ObservableCollection<Message>();
+
         public ObservableCollection<Message> Message
         {
             get { return _Message; }
+
             set
             {
                 _Message = value;
@@ -465,9 +500,11 @@ namespace Jvedio.ViewModel
 
 
         private ObservableCollection<char> _LettersNavigation;
+
         public ObservableCollection<char> LettersNavigation
         {
             get { return _LettersNavigation; }
+
             set
             {
                 _LettersNavigation = value;
@@ -481,6 +518,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<AppDatabase> DataBases
         {
             get { return _DataBases; }
+
             set
             {
                 _DataBases = value;
@@ -489,49 +527,63 @@ namespace Jvedio.ViewModel
         }
 
         private List<MetaData> _DataList;
+
         public List<MetaData> DataList
         {
             get { return _DataList; }
+
             set
             {
                 _DataList = value;
                 RaisePropertyChanged();
             }
         }
+
         private List<Picture> _PictureList;
+
         public List<Picture> PictureList
         {
             get { return _PictureList; }
+
             set
             {
                 _PictureList = value;
                 RaisePropertyChanged();
             }
         }
+
         private List<Comic> _ComicList;
+
         public List<Comic> ComicList
         {
             get { return _ComicList; }
+
             set
             {
                 _ComicList = value;
                 RaisePropertyChanged();
             }
         }
+
         private List<Game> _GameList;
+
         public List<Game> GameList
         {
             get { return _GameList; }
+
             set
             {
                 _GameList = value;
                 RaisePropertyChanged();
             }
         }
+
         private ObservableCollection<MetaData> _CurrentDataList;
+
         public ObservableCollection<MetaData> CurrentDataList
         {
             get { return _CurrentDataList; }
+
             set
             {
                 _CurrentDataList = value;
@@ -547,6 +599,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<Movie> DetailsDataList
         {
             get { return _DetailsDataList; }
+
             set
             {
                 _DetailsDataList = value;
@@ -562,6 +615,7 @@ namespace Jvedio.ViewModel
         public List<MetaData> SelectedData
         {
             get { return _SelectedData; }
+
             set
             {
                 _SelectedData = value;
@@ -575,6 +629,7 @@ namespace Jvedio.ViewModel
         public List<ActorInfo> SelectedActors
         {
             get { return _SelectedActors; }
+
             set
             {
                 _SelectedActors = value;
@@ -587,6 +642,7 @@ namespace Jvedio.ViewModel
         public bool EditMode
         {
             get { return _EditMode; }
+
             set
             {
                 _EditMode = value;
@@ -600,6 +656,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<TagStamp> TagStamps
         {
             get { return _TagStamps; }
+
             set
             {
                 _TagStamps = value;
@@ -613,9 +670,11 @@ namespace Jvedio.ViewModel
         public List<Movie> FilterMovieList;
 
         private ObservableCollection<string> _GenreList;
+
         public ObservableCollection<string> GenreList
         {
             get { return _GenreList; }
+
             set
             {
                 _GenreList = value;
@@ -626,9 +685,11 @@ namespace Jvedio.ViewModel
 
 
         private List<ActorInfo> actorlist;
+
         public List<ActorInfo> ActorList
         {
             get { return actorlist; }
+
             set
             {
                 actorlist = value;
@@ -643,6 +704,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<ActorInfo> CurrentActorList
         {
             get { return _CurrentActorList; }
+
             set
             {
                 _CurrentActorList = value;
@@ -652,9 +714,11 @@ namespace Jvedio.ViewModel
         }
 
         private ObservableCollection<string> labellist;
+
         public ObservableCollection<string> LabelList
         {
             get { return labellist; }
+
             set
             {
                 labellist = value;
@@ -663,9 +727,11 @@ namespace Jvedio.ViewModel
         }
 
         private ObservableCollection<string> _SeriesList;
+
         public ObservableCollection<string> SeriesList
         {
             get { return _SeriesList; }
+
             set
             {
                 _SeriesList = value;
@@ -674,9 +740,11 @@ namespace Jvedio.ViewModel
         }
 
         private ObservableCollection<string> studiollist;
+
         public ObservableCollection<string> StudioList
         {
             get { return studiollist; }
+
             set
             {
                 studiollist = value;
@@ -686,10 +754,12 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<string> directorList
 ;
+
         public ObservableCollection<string> DirectorList
 
         {
             get { return directorList; }
+
             set
             {
                 directorList = value;
@@ -703,6 +773,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<string> AllSearchCandidate
         {
             get { return _AllSearchCandidate; }
+
             set
             {
                 _AllSearchCandidate = value;
@@ -710,12 +781,14 @@ namespace Jvedio.ViewModel
 
             }
         }
+
         private bool _Searching = false;
 
 
         public bool Searching
         {
             get { return _Searching; }
+
             set
             {
                 _Searching = value;
@@ -733,6 +806,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<string> FilePathClassification
         {
             get { return _FilePathClassification; }
+
             set
             {
                 _FilePathClassification = value;
@@ -747,6 +821,7 @@ namespace Jvedio.ViewModel
         public ObservableCollection<string> SearchHistory
         {
             get { return _SearchHistory; }
+
             set
             {
                 _SearchHistory = value;
@@ -772,6 +847,7 @@ namespace Jvedio.ViewModel
         public string ScanStatus
         {
             get { return _ScanStatus; }
+
             set
             {
                 _ScanStatus = value;
@@ -790,6 +866,7 @@ namespace Jvedio.ViewModel
         public List<string> CurrentMovieLabelList
         {
             get { return _CurrentMovieLabelList; }
+
             set
             {
                 _CurrentMovieLabelList = value;
@@ -804,6 +881,7 @@ namespace Jvedio.ViewModel
         public int ShowStampType
         {
             get { return _ShowStampType; }
+
             set
             {
                 _ShowStampType = value;
@@ -815,9 +893,11 @@ namespace Jvedio.ViewModel
 
 
         private double _RecentWatchedCount = 0;
+
         public double RecentWatchedCount
         {
             get { return _RecentWatchedCount; }
+
             set
             {
                 _RecentWatchedCount = value;
@@ -827,9 +907,11 @@ namespace Jvedio.ViewModel
 
 
         private long _AllDataCount = 0;
+
         public long AllDataCount
         {
             get { return _AllDataCount; }
+
             set
             {
                 _AllDataCount = value;
@@ -838,9 +920,11 @@ namespace Jvedio.ViewModel
         }
 
         private long _FavoriteCount = 0;
+
         public long FavoriteCount
         {
             get { return _FavoriteCount; }
+
             set
             {
                 _FavoriteCount = value;
@@ -849,9 +933,11 @@ namespace Jvedio.ViewModel
         }
 
         private long _RecentViewCount = 0;
+
         public long RecentViewCount
         {
             get { return _RecentViewCount; }
+
             set
             {
                 _RecentViewCount = value;
@@ -861,9 +947,11 @@ namespace Jvedio.ViewModel
 
 
         private long _AllLabelCount = 0;
+
         public long AllLabelCount
         {
             get { return _AllLabelCount; }
+
             set
             {
                 _AllLabelCount = value;
@@ -873,9 +961,11 @@ namespace Jvedio.ViewModel
 
 
         public bool _IsScanning = false;
+
         public bool IsScanning
         {
             get { return _IsScanning; }
+
             set
             {
                 _IsScanning = value;
@@ -889,6 +979,7 @@ namespace Jvedio.ViewModel
         public bool EnableEditActress
         {
             get { return _EnableEditActress; }
+
             set
             {
                 _EnableEditActress = value;
@@ -901,9 +992,11 @@ namespace Jvedio.ViewModel
 
 
         private int _CurrentPage = 1;
+
         public int CurrentPage
         {
             get { return _CurrentPage; }
+
             set
             {
                 _CurrentPage = value;
@@ -914,9 +1007,11 @@ namespace Jvedio.ViewModel
 
 
         private int _PageSize = ConfigManager.MetaData.PageSize == 0 ? 40 : (int)ConfigManager.MetaData.PageSize;
+
         public int PageSize
         {
             get { return _PageSize; }
+
             set
             {
                 _PageSize = value;
@@ -926,9 +1021,11 @@ namespace Jvedio.ViewModel
 
 
         public int _CurrentCount = 0;
+
         public int CurrentCount
         {
             get { return _CurrentCount; }
+
             set
             {
                 _CurrentCount = value;
@@ -938,9 +1035,11 @@ namespace Jvedio.ViewModel
         }
 
         public int _CurrentActorCount = 0;
+
         public int CurrentActorCount
         {
             get { return _CurrentActorCount; }
+
             set
             {
                 _CurrentActorCount = value;
@@ -951,9 +1050,11 @@ namespace Jvedio.ViewModel
 
 
         public long _TotalCount = 0;
+
         public long TotalCount
         {
             get { return _TotalCount; }
+
             set
             {
                 _TotalCount = value;
@@ -963,9 +1064,11 @@ namespace Jvedio.ViewModel
         }
 
         public int totalpage = 1;
+
         public int TotalPage
         {
             get { return totalpage; }
+
             set
             {
                 totalpage = value;
@@ -976,9 +1079,11 @@ namespace Jvedio.ViewModel
 
 
         private int _ActorPageSize = 10;
+
         public int ActorPageSize
         {
             get { return _ActorPageSize; }
+
             set
             {
                 _ActorPageSize = value;
@@ -987,9 +1092,11 @@ namespace Jvedio.ViewModel
         }
 
         private long _ActorCurrentCount = 0;
+
         public long ActorCurrentCount
         {
             get { return _ActorCurrentCount; }
+
             set
             {
                 _ActorCurrentCount = value;
@@ -1000,9 +1107,11 @@ namespace Jvedio.ViewModel
 
 
         private long _ActorTotalCount = 0;
+
         public long ActorTotalCount
         {
             get { return _ActorTotalCount; }
+
             set
             {
                 _ActorTotalCount = value;
@@ -1013,9 +1122,11 @@ namespace Jvedio.ViewModel
 
 
         private int currentactorpage = 1;
+
         public int CurrentActorPage
         {
             get { return currentactorpage; }
+
             set
             {
                 currentactorpage = value;
@@ -1026,9 +1137,11 @@ namespace Jvedio.ViewModel
 
 
         private long totalactorpage = 1;
+
         public long TotalActorPage
         {
             get { return totalactorpage; }
+
             set
             {
                 totalactorpage = value;
@@ -1042,9 +1155,11 @@ namespace Jvedio.ViewModel
 
 
         private int _FlowNum = 0;
+
         public int FlowNum
         {
             get { return _FlowNum; }
+
             set
             {
                 _FlowNum = value;
@@ -1064,6 +1179,7 @@ namespace Jvedio.ViewModel
         public string TextType
         {
             get { return textType; }
+
             set
             {
                 textType = value;
@@ -1079,6 +1195,7 @@ namespace Jvedio.ViewModel
         public bool SearchFirstLetter
         {
             get { return _SearchFirstLetter; }
+
             set
             {
                 _SearchFirstLetter = value;
@@ -1092,6 +1209,7 @@ namespace Jvedio.ViewModel
         public string SearchText
         {
             get { return _SearchText; }
+
             set
             {
                 _SearchText = value;
@@ -1106,6 +1224,7 @@ namespace Jvedio.ViewModel
         public string SearchHint
         {
             get { return _SearchHint; }
+
             set
             {
                 _SearchHint = value;
@@ -1115,9 +1234,11 @@ namespace Jvedio.ViewModel
 
 
         private ActorInfo _CurrentActorInfo;
+
         public ActorInfo CurrentActorInfo
         {
             get { return _CurrentActorInfo; }
+
             set
             {
                 _CurrentActorInfo = value;
@@ -1130,6 +1251,7 @@ namespace Jvedio.ViewModel
         public bool ShowSideBar
         {
             get { return showSideBar; }
+
             set
             {
                 showSideBar = value;
@@ -1144,6 +1266,7 @@ namespace Jvedio.ViewModel
         public bool CheckingUrl
         {
             get { return Checkingurl; }
+
             set
             {
                 Checkingurl = value;
@@ -1156,6 +1279,7 @@ namespace Jvedio.ViewModel
         public bool SearchAll
         {
             get { return searchAll; }
+
             set
             {
                 searchAll = value;
@@ -1168,6 +1292,7 @@ namespace Jvedio.ViewModel
         public bool SearchInCurrent
         {
             get { return searchInCurrent; }
+
             set
             {
                 searchInCurrent = value;
@@ -1656,6 +1781,7 @@ namespace Jvedio.ViewModel
 
 
         private delegate void LoadDataDelegate(MetaData data, int idx);
+
         private void LoadData(MetaData data, int idx)
         {
             if (renderDataCT.IsCancellationRequested) return;
@@ -1693,6 +1819,7 @@ namespace Jvedio.ViewModel
 
 
         private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
+
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
 
         //获得标签

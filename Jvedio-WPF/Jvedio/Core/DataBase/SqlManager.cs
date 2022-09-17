@@ -1,11 +1,5 @@
-﻿using Jvedio.Core.Enums;
-using Jvedio.Core.Global;
-using System;
-using System.Collections.Generic;
+﻿using Jvedio.Core.Global;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.DataBase
 {
@@ -23,8 +17,11 @@ namespace Jvedio.Core.DataBase
          * DB_TABLENAME_JVEDIO_DATA ,对于 SQLITE 来说是文件名，对于 Mysql 来说是库名
          */
         public static string DB_TABLENAME_APP_CONFIG { get; set; }
+
         public static string DB_TABLENAME_APP_DATAS { get; set; }
+
         public static string DEFAULT_SQLITE_PATH { get; set; }
+
         public static string DEFAULT_SQLITE_CONFIG_PATH { get; set; }
 
 

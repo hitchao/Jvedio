@@ -2,18 +2,14 @@
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Exceptions;
 using Jvedio.Core.Logs;
+using JvedioLib.Security;
+using Newtonsoft.Json.Linq;
 using SuperUtils.Common;
 using SuperUtils.IO;
-using JvedioLib.Security;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Jvedio.Core.Global.UrlManager;
 
@@ -31,7 +27,9 @@ namespace Jvedio.Core.Net
         public static string file_url = "https://hitchao.github.io/jvedioupdate/File/";
 
         public static event EventHandler onCompleted;
+
         public static event EventHandler onDownloading;
+
         public static event EventHandler onError;
 
         public static bool Canceld = true;

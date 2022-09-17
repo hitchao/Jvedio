@@ -1,9 +1,5 @@
 ﻿using Jvedio.Core.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Scan
 {
@@ -40,10 +36,12 @@ namespace Jvedio.Core.Scan
         {
             return new ScanTask(scanPaths, filePaths, fileExt);
         }
+
         private static ScanTask CreateComicScanner(List<string> scanPaths, List<string> filePaths, IEnumerable<string> fileExt = null)
         {
             return new ComicScan(scanPaths, filePaths, fileExt);
         }
+
         private static ScanTask CreateGameScanner(List<string> scanPaths, List<string> filePaths, IEnumerable<string> fileExt = null)
         {
             return new GameScan(scanPaths, fileExt);

@@ -3,23 +3,22 @@ using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
+using Jvedio.Core.Logs;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
-using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using SuperUtils;
-using SuperUtils.Common;
-using SuperUtils.External;
-using SuperUtils.IO;
-using SuperUtils.Media;
 using Jvedio.ViewModel;
 using JvedioLib.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SuperControls.Style;
+using SuperUtils.Common;
+using SuperUtils.External;
 using SuperUtils.Framework.MarkDown;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.IO;
+using SuperUtils.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -37,13 +37,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-using static Jvedio.VisualTools.WindowHelper;
 using static Jvedio.Core.Global.UrlManager;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
+using static Jvedio.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
@@ -56,6 +54,7 @@ namespace Jvedio
         public static string AIBaseImage64 { get; set; }
 
         public VieModel_Settings vieModel { get; set; }
+
         private Main windowMain { get; set; }
 
 
@@ -64,6 +63,7 @@ namespace Jvedio
         public static string DEFAULT_TEST_URL = "https://www.baidu.com/";
 
         public static string SupportVideoFormat { get; set; }
+
         public static string SupportPictureFormat { get; set; }        //bmp,gif,ico,jpe,jpeg,jpg,png
 
 
@@ -73,6 +73,7 @@ namespace Jvedio
 
         [DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
         public const int HOTKEY_ID = 2415;
         public static uint VK;
         public static IntPtr _windowHandle;
@@ -1005,6 +1006,7 @@ namespace Jvedio
 
 
         private int CurrentRowIndex = 0;
+
         private void TestServer(object sender, RoutedEventArgs e)
         {
 
@@ -1575,6 +1577,7 @@ namespace Jvedio
         }
 
         CrawlerServer currentCrawlerServer;
+
         private void url_PreviewMouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
         {
             setHeaderPopup.IsOpen = true;

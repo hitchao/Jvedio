@@ -1,14 +1,9 @@
 ﻿
-using SuperControls.Style;
-using Jvedio.CommonNet;
-using Jvedio.CommonNet.Crawler;
-using Jvedio.CommonNet.Entity;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Net;
+using SuperControls.Style;
 using SuperUtils.IO;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -27,6 +22,7 @@ namespace Jvedio
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -36,6 +32,7 @@ namespace Jvedio
 
 
         private bool _IsUpgrading = false;
+
         public bool IsUpgrading
         {
             get => _IsUpgrading;
@@ -60,6 +57,7 @@ namespace Jvedio
             }
 
         }
+
         private string _LatestVersion = "";
 
         public string LatestVersion
@@ -73,6 +71,7 @@ namespace Jvedio
             }
 
         }
+
         private string _ReleaseDate = "";
 
         public string ReleaseDate
@@ -85,6 +84,7 @@ namespace Jvedio
             }
 
         }
+
         private string _ReleaseNote = "";
 
         public string ReleaseNote
@@ -97,6 +97,7 @@ namespace Jvedio
             }
 
         }
+
         private string _LocalVersion = "";
 
         public string LocalVersion
@@ -109,6 +110,7 @@ namespace Jvedio
             }
 
         }
+
         private bool _CanUpgrade = false;
 
         public bool CanUpgrade
@@ -121,6 +123,7 @@ namespace Jvedio
             }
 
         }
+
         private double _UpgradeProgress = 0;
 
         public double UpgradeProgress
@@ -144,6 +147,7 @@ namespace Jvedio
             this.DataContext = this;
 
         }
+
         public Dialog_Upgrade(Window owner) : this(owner, false, "", "", "")
         {
         }

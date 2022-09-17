@@ -53,6 +53,7 @@ namespace Jvedio
 
         public int firstidx = -1;
         public int secondidx = -1;
+
         public Window_MetaDatas()
         {
             InitializeComponent();
@@ -68,6 +69,7 @@ namespace Jvedio
             vieModel.Select();
             vieModel.Statistic();
         }
+
         public void BindingEvents()
         {
             //设置排序类型
@@ -529,6 +531,7 @@ namespace Jvedio
         }
 
         private bool canShowDetails = false;
+
         private void CanShowDetails(object sender, MouseButtonEventArgs e)
         {
             canShowDetails = true;

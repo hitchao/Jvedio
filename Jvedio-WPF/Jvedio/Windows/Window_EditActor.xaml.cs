@@ -1,16 +1,13 @@
-﻿using SuperControls.Style;
-using Jvedio.Mapper.BaseMapper;
-using Jvedio.Entity;
-using SuperUtils;
+﻿using Jvedio.Entity;
+using SuperControls.Style;
+using SuperUtils.Framework.ORM.Utils;
+using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
-using System;
 using System.IO;
 using System.Windows;
 using static Jvedio.MapperManager;
 using static Jvedio.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
-using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.Framework.ORM.Utils;
 
 namespace Jvedio
 {
@@ -22,6 +19,7 @@ namespace Jvedio
 
 
         private Main main { get; set; }
+
         private Window_EditActor()
         {
             InitializeComponent();
@@ -29,6 +27,7 @@ namespace Jvedio
         }
 
         public long ActorID { get; set; }
+
         public ActorInfo CurrentActorInfo { get; set; }
 
         public Window_EditActor(long actorID) : this()

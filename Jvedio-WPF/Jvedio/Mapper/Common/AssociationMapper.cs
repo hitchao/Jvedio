@@ -1,12 +1,8 @@
-﻿using Jvedio.Mapper.BaseMapper;
-using Jvedio.Entity;
-using Jvedio.Entity.Base;
+﻿using Jvedio.Entity.Base;
 using Jvedio.Entity.CommonSQL;
-using System;
+using Jvedio.Mapper.BaseMapper;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Mapper
 {
@@ -16,6 +12,7 @@ namespace Jvedio.Mapper
         public List<Association> Associations { get; set; }
 
         public Dictionary<long, ListNode<long>> AdjacencyList { get; set; }
+
         public void InitAdjacencyList()
         {
             Associations = SelectList();

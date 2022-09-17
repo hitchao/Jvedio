@@ -1,9 +1,5 @@
 ﻿using Jvedio.CommonNet.Entity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Crawler
 {
@@ -17,7 +13,9 @@ namespace Jvedio.Core.Crawler
 
 
         public static RequestHeader GitHub { get; set; }
+
         public static RequestHeader Default { get; set; }
+
         static CrawlerHeader()
         {
             GitHub = new RequestHeader();

@@ -1,23 +1,18 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
-using Jvedio.Mapper.BaseMapper;
+using Jvedio.Core.Logs;
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
-using Jvedio.Core.Logs;
 using Jvedio.Mapper;
-using SuperUtils;
-using SuperUtils.Common;
-using SuperUtils.IO;
 using JvedioLib.Security;
+using SuperUtils.IO;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using static Jvedio.MapperManager;
-using SuperUtils.Time;
 
 namespace Jvedio.Core.Scan
 {

@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static Jvedio.VisualTools.WindowHelper;
+
 namespace Jvedio
 {
     /// <summary>
@@ -103,6 +104,7 @@ namespace Jvedio
             foreach (string item in imageList)
                 imageWrapPanel.Children.Add(buildToggleButton(item));
         }
+
 #pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         private async void LoadData()
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
@@ -163,6 +165,7 @@ namespace Jvedio
             foreach (string item in set)
                 wrapPanel.Children.Add(buildToggleButton(item));
         }
+
         private void LoadSingleDataFromMetaData(WrapPanel wrapPanel, string field)
         {
             string sql = $"SELECT DISTINCT {field} FROM metadata " +

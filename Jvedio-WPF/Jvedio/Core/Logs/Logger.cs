@@ -1,13 +1,9 @@
 ﻿using Jvedio.Core.Enums;
-using SuperUtils.Common;
 using SuperUtils.Time;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Logs
 {
@@ -163,10 +159,12 @@ namespace Jvedio.Core.Logs
         {
             Log(LogType.Info, content);
         }
+
         public static void Error(string content)
         {
             Log(LogType.Error, content);
         }
+
         public static void Warning(string content)
         {
             Log(LogType.Warning, content);

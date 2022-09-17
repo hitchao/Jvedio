@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Jvedio.Core.Global
@@ -14,25 +10,37 @@ namespace Jvedio.Core.Global
         {
             Init();
         }
+
         // *************** 目录 ***************
         public static string CurrentUserFolder { get; set; }
+
         public static string oldDataPath { get; set; }
+
         public static string AllOldDataPath { get; set; }
 
 
         public static string BackupPath { get; set; }
+
         public static string LogPath { get; set; }
+
         public static string PicPath { get; set; }
+
         public static string BasePicPath { get; set; }
+
         public static string ProjectImagePath { get; set; }
+
         public static string TranslateDataBasePath { get; set; }
+
         public static string BasePluginsPath { get; set; }
+
         public static string ScanConfigPath { get; set; }
+
         public static string ServersConfigPath { get; set; }
 
         public static string UserConfigPath { get; set; }
 
         public static string[] PicPaths { get; set; }
+
         public static string[] InitDirs { get; set; }
 
         // *************** 目录 ***************

@@ -1,30 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using QueryEngine;
-using System.Collections.Specialized;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Security.Permissions;
-using Jvedio.Core.Enums;
-using System.Text;
-using Jvedio.Entity;
-using SuperUtils.Common;
-using Jvedio.Core.Scan;
-using JvedioLib;
-using JvedioLib.Security;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Logs;
+using Jvedio.Core.Scan;
+using Jvedio.Entity;
+using JvedioLib.Security;
+using QueryEngine;
+using SuperUtils.Common;
 using SuperUtils.IO;
 using SuperUtils.Time;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Security.Permissions;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Jvedio
 {
     public class ScanHelper
     {
         public static double MinFileSize { get; set; }          //最小文件大小吗，单位 B
+
         public static string SubSectionFeature { get; set; }
+
         public static List<string> FilePattern { get; set; }    //文件格式
 
 

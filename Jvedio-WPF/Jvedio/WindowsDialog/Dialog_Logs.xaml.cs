@@ -1,7 +1,4 @@
-﻿
-using System;
-using System.Windows;
-using System.Windows.Documents;
+﻿using System.Windows;
 
 namespace Jvedio
 {

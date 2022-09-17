@@ -1,13 +1,8 @@
 ﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.DataBase.Tables;
-using Jvedio.Entity.CommonSQL;
 using Jvedio.Core.Logs;
 using Jvedio.Mapper;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio
 {
@@ -31,8 +26,11 @@ namespace Jvedio
         public static UrlCodeMapper urlCodeMapper = new UrlCodeMapper();
         public static AssociationMapper associationMapper = new AssociationMapper();
 
+        private static bool Inited = false;
+
         public static void Init()
         {
+            if (Inited) return;
             // todo 泛型似乎无法使用多态进行反射加载
 
             // 初始化数据库连接
@@ -87,7 +85,7 @@ namespace Jvedio
             }
 
 
-
+            Inited = true;
         }
 
 

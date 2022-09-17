@@ -1,19 +1,6 @@
 ﻿using DynamicData.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Jvedio.Windows
 {
@@ -33,6 +20,7 @@ namespace Jvedio.Windows
 
 
         private string _MainText = "";
+
         public string MainText
         {
             get => _MainText;
@@ -44,6 +32,7 @@ namespace Jvedio.Windows
         }
 
         private string _SubText = "";
+
         public string SubText
         {
             get => _SubText;
@@ -55,6 +44,7 @@ namespace Jvedio.Windows
         }
 
         private float _MainProgress = 50;
+
         public float MainProgress
         {
             get => _MainProgress;
@@ -64,7 +54,9 @@ namespace Jvedio.Windows
                 OnPropertyChanged();
             }
         }
+
         private float _SubProgress = 50;
+
         public float SubProgress
         {
             get => _SubProgress;
@@ -76,6 +68,7 @@ namespace Jvedio.Windows
         }
 
         private string _LogText = "";
+
         public string LogText
         {
             get => _LogText;
@@ -87,6 +80,7 @@ namespace Jvedio.Windows
         }
 
         private bool _HideSub = false;
+
         public bool HideSub
         {
             get => _HideSub;

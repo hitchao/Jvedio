@@ -1,6 +1,5 @@
 ﻿using Jvedio.Core.Enums;
 using SuperUtils.Framework.ORM.Attributes;
-using SuperUtils.Framework.ORM.Attributes;
 
 namespace Jvedio.Entity.CommonSQL
 {
@@ -10,10 +9,15 @@ namespace Jvedio.Entity.CommonSQL
     {
         [TableId(IdType.AUTO)]
         public long AID { get; set; }
+
         public long MainDataID { get; set; }
+
         public long SubDataID { get; set; }
+
         public AssociationType AssociationType { get; set; }
+
         public string CreateDate { get; set; }
+
         public string UpdateDate { get; set; }
 
 

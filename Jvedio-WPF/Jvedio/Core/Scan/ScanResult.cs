@@ -1,11 +1,5 @@
-﻿using Jvedio.Core.Enums;
-using SuperUtils.Common;
-using SuperUtils.Time;
-using System;
+﻿using SuperUtils.Time;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Scan
 {
@@ -25,17 +19,22 @@ namespace Jvedio.Core.Scan
 
 
         public Dictionary<string, string> Update { get; set; }
+
         public List<string> Logs { get; set; }
+
         public List<string> Import { get; set; }
 
         /// <summary>
         /// （路径，原因）
         /// </summary>
         public Dictionary<string, string> NotImport { get; set; }
+
         public List<string> FailNFO { get; set; }
 
         public string ScanDate { get; set; }
+
         public long ElapsedMilliseconds { get; set; }
+
         public long TotalCount { get; set; }
 
 

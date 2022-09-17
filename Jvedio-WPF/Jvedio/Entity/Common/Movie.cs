@@ -1,12 +1,12 @@
 ﻿using DynamicData.Annotations;
+using Jvedio.Core.Config;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Exceptions;
-using Jvedio.Core.Scan;
 using Jvedio.Core.Logs;
-using SuperUtils.Common;
-using SuperUtils.IO;
+using Jvedio.Core.Scan;
 using JvedioLib.Security;
 using Newtonsoft.Json;
+using SuperUtils.Common;
+using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +15,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Xml;
-using Jvedio.Core.Config;
 
 namespace Jvedio.Entity
 {
@@ -29,6 +28,7 @@ namespace Jvedio.Entity
     {
 
         private const int DEFAULT_RELEASE_YEAR = 1970;
+
         public Movie(string id)
         {
             this.id = id;
@@ -71,6 +71,7 @@ namespace Jvedio.Entity
             bigimage = MetaData.DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
         }
+
         public Movie() : this("") { }
 
         public virtual void Dispose()
@@ -98,13 +99,19 @@ namespace Jvedio.Entity
 
 
         public string id { get; set; }
+
         public long DBId { get; set; }
+
         public long MVID { get; set; }
+
         private string _title;
+
         public string title { get { return _title; } set { _title = value; OnPropertyChanged(); } }
+
         public double filesize { get; set; }
 
         private string _filepath;
+
         public string filepath
         {
             get { return _filepath; }
@@ -115,12 +122,15 @@ namespace Jvedio.Entity
                 OnPropertyChanged();
             }
         }
+
         public bool hassubsection { get; set; }
 
         private string _subsection;
+
         public string subsection
         {
             get { return _subsection; }
+
             set
             {
                 _subsection = value;
@@ -143,13 +153,16 @@ namespace Jvedio.Entity
         public string tagstamps { get; set; }
 
         public int vediotype { get; set; }
+
         public string scandate { get; set; }
 
 
         private string _releasedate;
+
         public string releasedate
         {
             get { return _releasedate; }
+
             set
             {
                 DateTime dateTime = new DateTime(1970, 01, 01);
@@ -157,32 +170,54 @@ namespace Jvedio.Entity
                 _releasedate = dateTime.ToString("yyyy-MM-dd");
             }
         }
+
         public int visits { get; set; }
+
         public string director { get; set; }
+
         public string genre { get; set; }
+
         public string tag { get; set; }
 
 
         public string actor { get; set; }
+
         public string actorid { get; set; }
+
         public string studio { get; set; }
+
         public float rating { get; set; }
+
         public string chinesetitle { get; set; }
+
         public int favorites { get; set; }
+
         public string label { get; set; }
+
         public string plot { get; set; }
+
         public string outline { get; set; }
+
         public int year { get; set; }
+
         public int runtime { get; set; }
+
         public string country { get; set; }
+
         public int countrycode { get; set; }
+
         public string otherinfo { get; set; }
+
         public string sourceurl { get; set; }
+
         public string source { get; set; }
 
         public string actressimageurl { get; set; }
+
         public string smallimageurl { get; set; }
+
         public string bigimageurl { get; set; }
+
         public string extraimageurl { get; set; }
 
 
@@ -204,9 +239,11 @@ namespace Jvedio.Entity
         }
 
         private BitmapSource _smallimage;
+
         public BitmapSource smallimage { get { return _smallimage; } set { _smallimage = value; OnPropertyChanged(); } }
 
         private BitmapSource _bigimage;
+
         public BitmapSource bigimage { get { return _bigimage; } set { _bigimage = value; OnPropertyChanged(); } }
 
 
@@ -414,6 +451,7 @@ namespace Jvedio.Entity
                 return null;
             }
         }
+
         public Video toVideo()
         {
             MetaData data = toMetaData();

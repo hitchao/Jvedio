@@ -1,10 +1,4 @@
 ﻿using Jvedio.Core.Config.Base;
-using Jvedio.Core.WindowConfig;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Config
 {
@@ -12,6 +6,7 @@ namespace Jvedio.Core.Config
     {
 
         private const double DEFAULT_MINFILESIZE = 1;       // 1 MB
+
         private ScanConfig() : base("ScanConfig")
         {
             CopyNFOPicture = true;
@@ -30,12 +25,14 @@ namespace Jvedio.Core.Config
 
 
         public double _MinFileSize = DEFAULT_MINFILESIZE;
+
         public double MinFileSize
         {
             get
             {
                 return _MinFileSize;
             }
+
             set
             {
                 if (value < 0)
@@ -44,8 +41,11 @@ namespace Jvedio.Core.Config
                     _MinFileSize = value;
             }
         }
+
         public bool ScanOnStartUp { get; set; }
+
         public bool CopyNFOPicture { get; set; }
+
         public bool FetchVID { get; set; }
 
 

@@ -36,7 +36,9 @@ namespace Jvedio.Core.FFmpeg
 
 
         public int TotalTaskCount { get; set; }
+
         public int CurrentTaskCount { get; set; }
+
         private object TaskCountLock = new object();
 
         private StringBuilder outputs = new StringBuilder();
@@ -51,7 +53,9 @@ namespace Jvedio.Core.FFmpeg
 
 
         public event EventHandler onProgress;
+
         public event EventHandler onError;
+
         private object ErrorLock = new object();
 
 

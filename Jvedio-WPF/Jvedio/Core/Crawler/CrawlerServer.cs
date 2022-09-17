@@ -1,10 +1,8 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Interfaces;
-using Jvedio.Core.Plugins;
-using SuperUtils;
-using SuperUtils.Common;
 using Newtonsoft.Json;
+using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,8 +21,11 @@ namespace Jvedio.Core.Crawler
         {
             PluginID = "";
         }
+
         public string PluginID { get; set; }
+
         private string _Url;
+
         public string Url
         {
             get
@@ -41,6 +42,7 @@ namespace Jvedio.Core.Crawler
 
 
         private bool _Enabled;
+
         public bool Enabled
         {
             get
@@ -61,6 +63,7 @@ namespace Jvedio.Core.Crawler
         /// -1 不可用，1-可用，2-测试中
         /// </summary>
         private int _Available;
+
         public int Available
         {
             get
@@ -74,9 +77,11 @@ namespace Jvedio.Core.Crawler
                 OnPropertyChanged();
             }
         }
+
         public string LastRefreshDate { get; set; }
 
         private string _Cookies;
+
         public string Cookies
         {
             get
@@ -90,7 +95,9 @@ namespace Jvedio.Core.Crawler
                 OnPropertyChanged();
             }
         }
+
         private string _Headers { get; set; }
+
         public string Headers
         {
             get

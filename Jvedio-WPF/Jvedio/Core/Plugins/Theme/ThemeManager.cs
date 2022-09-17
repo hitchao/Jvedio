@@ -1,20 +1,11 @@
-﻿using ExCSS;
+﻿using Jvedio.Core.Logs;
 using Jvedio.Core.Plugins;
 using Jvedio.Entity;
-using Jvedio.Core.Logs;
-using SuperUtils;
 using SuperUtils.Common;
 using SuperUtils.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Media;
 
 namespace Jvedio.Core
 {
@@ -43,6 +34,7 @@ namespace Jvedio.Core
 
 
         public static List<PluginMetaData> PluginMetaDatas { get; set; }
+
         public static List<Theme> Themes { get; set; }
 
         public static readonly string ThemePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins\\Themes");

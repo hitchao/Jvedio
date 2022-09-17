@@ -1,9 +1,4 @@
 ﻿using Jvedio.Core.Config.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.WindowConfig
 {
@@ -26,11 +21,15 @@ namespace Jvedio.Core.WindowConfig
 
             return _instance;
         }
+
         public bool Tile { get; set; }
+
         public bool ShowHideItem { get; set; }
+
         public long SideIdx { get; set; }
 
         public string SortType { get; set; }
+
         public bool Sort { get; set; }
     }
 }

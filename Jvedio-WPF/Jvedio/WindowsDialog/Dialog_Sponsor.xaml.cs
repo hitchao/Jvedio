@@ -1,21 +1,12 @@
-﻿
-using SuperControls.Style;
-using Jvedio.CommonNet;
-using Jvedio.CommonNet.Crawler;
+﻿using Jvedio.CommonNet;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Crawler;
-using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Net;
-using SuperUtils.IO;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -30,6 +21,7 @@ namespace Jvedio
         public static string Wechat = "https://hitchao.github.io/jvedioupdate/wechat.txt";
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -98,6 +90,7 @@ namespace Jvedio
 
 
         private bool _Loading = false;
+
         public bool Loading
         {
             get => _Loading;

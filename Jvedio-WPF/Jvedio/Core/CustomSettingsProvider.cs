@@ -1,13 +1,10 @@
 ﻿using Jvedio.Core.Global;
 using Jvedio.Core.Logs;
-using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Jvedio.Core
@@ -53,6 +50,7 @@ namespace Jvedio.Core
             {
                 return System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.Name;
             }
+
             set
             {
                 //do nothing
