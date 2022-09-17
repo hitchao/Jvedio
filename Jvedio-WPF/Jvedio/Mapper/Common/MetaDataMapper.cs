@@ -17,20 +17,20 @@ namespace Jvedio.Mapper
         public int deleteDataByIds(List<string> idList)
         {
             if (idList == null || idList.Count == 0) return 0;
-            int c1 = GlobalMapper.metaDataMapper.DeleteByIds(idList);
+            int c1 = MapperManager.metaDataMapper.DeleteByIds(idList);
             int c2 = 0;
             DataType dataType = GlobalVariable.CurrentDataType;
             if (dataType == DataType.Picture)
             {
-                c2 = GlobalMapper.pictureMapper.DeleteByIds(idList);
+                c2 = MapperManager.pictureMapper.DeleteByIds(idList);
             }
             else if (dataType == DataType.Comics)
             {
-                c2 = GlobalMapper.comicMapper.DeleteByIds(idList);
+                c2 = MapperManager.comicMapper.DeleteByIds(idList);
             }
             else if (dataType == DataType.Game)
             {
-                c2 = GlobalMapper.gameMapper.DeleteByIds(idList);
+                c2 = MapperManager.gameMapper.DeleteByIds(idList);
             }
 
 
@@ -48,15 +48,15 @@ namespace Jvedio.Mapper
 
             if (dataType == DataType.Picture)
             {
-                GlobalMapper.pictureMapper.ExecuteNonQuery(builder.ToString());
+                MapperManager.pictureMapper.ExecuteNonQuery(builder.ToString());
             }
             else if (dataType == DataType.Comics)
             {
-                GlobalMapper.comicMapper.ExecuteNonQuery(builder.ToString());
+                MapperManager.comicMapper.ExecuteNonQuery(builder.ToString());
             }
             else if (dataType == DataType.Game)
             {
-                GlobalMapper.gameMapper.ExecuteNonQuery(builder.ToString());
+                MapperManager.gameMapper.ExecuteNonQuery(builder.ToString());
             }
             if (c1 == c2 && idList.Count == c1) return c1;
             else

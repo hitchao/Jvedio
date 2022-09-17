@@ -33,7 +33,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.Main;
 using static Jvedio.Main.Msg;
 using static Jvedio.Utils.Visual.VisualHelper;
@@ -85,7 +85,7 @@ namespace Jvedio
             {
                 MenuItems[i].Click += SortMenu_Click;
                 MenuItems[i].IsCheckable = true;
-                if (i == GlobalConfig.MetaData.SortIndex) MenuItems[i].IsChecked = true;
+                if (i == ConfigManager.MetaData.SortIndex) MenuItems[i].IsChecked = true;
             }
 
             vieModel.PageChangedCompleted += (s, ev) =>
@@ -124,11 +124,11 @@ namespace Jvedio
                 if (item == menuItem)
                 {
                     item.IsChecked = true;
-                    if (i == GlobalConfig.MetaData.SortIndex)
+                    if (i == ConfigManager.MetaData.SortIndex)
                     {
-                        GlobalConfig.MetaData.SortDescending = !GlobalConfig.MetaData.SortDescending;
+                        ConfigManager.MetaData.SortDescending = !ConfigManager.MetaData.SortDescending;
                     }
-                    GlobalConfig.MetaData.SortIndex = i;
+                    ConfigManager.MetaData.SortIndex = i;
 
                 }
                 else item.IsChecked = false;
@@ -168,7 +168,7 @@ namespace Jvedio
 
         public void setComboboxID()
         {
-            int idx = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == GlobalConfig.Main.CurrentDBId);
+            int idx = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == ConfigManager.Main.CurrentDBId);
             if (idx < 0 || idx > DatabaseComboBox.Items.Count) idx = 0;
             DatabaseComboBox.SelectedIndex = idx;
         }
@@ -184,8 +184,8 @@ namespace Jvedio
             searchBox.TextChanged += RefreshCandiadte;
             searchTabControl.SelectionChanged += (s, e) =>
             {
-                if (GlobalConfig.Main.SearchSelectedIndex == searchTabControl.SelectedIndex) return;
-                GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+                if (ConfigManager.Main.SearchSelectedIndex == searchTabControl.SelectedIndex) return;
+                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
                 RefreshCandiadte(null, null);
             };
 
@@ -197,7 +197,7 @@ namespace Jvedio
             if (e.AddedItems.Count == 0) return;
             //AppDatabase database = 
             vieModel.CurrentAppDataBase = (AppDatabase)e.AddedItems[0];
-            GlobalConfig.Main.CurrentDBId = vieModel.CurrentAppDataBase.DBId;
+            ConfigManager.Main.CurrentDBId = vieModel.CurrentAppDataBase.DBId;
             //切换数据库
 
             vieModel.Statistic();
@@ -215,7 +215,7 @@ namespace Jvedio
         private async void RefreshCandiadte(object sender, TextChangedEventArgs e)
         {
             List<string> list = await vieModel.GetSearchCandidate();
-            int idx = (int)GlobalConfig.Main.SearchSelectedIndex;
+            int idx = (int)ConfigManager.Main.SearchSelectedIndex;
             TabItem tabItem = searchTabControl.Items[idx] as TabItem;
             addOrRefreshItem(tabItem, list);
         }
@@ -487,8 +487,8 @@ namespace Jvedio
 
         private void BaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            GlobalConfig.MetaData.PageSize = vieModel.PageSize;
-            GlobalConfig.MetaData.Save();
+            ConfigManager.MetaData.PageSize = vieModel.PageSize;
+            ConfigManager.MetaData.Save();
         }
 
         private void Rate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)

@@ -46,7 +46,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Main.Msg;
 using static Jvedio.Utils.Media.ImageHelper;
@@ -175,12 +175,12 @@ namespace Jvedio
 
         private int GetThemeIndex()
         {
-            int idx = GlobalConfig.ThemeConfig.ThemeIndex;
-            if (!string.IsNullOrEmpty(GlobalConfig.ThemeConfig.ThemeID))
+            int idx = ConfigManager.ThemeConfig.ThemeIndex;
+            if (!string.IsNullOrEmpty(ConfigManager.ThemeConfig.ThemeID))
             {
                 for (int i = 0; i < ThemeManager.Themes.Count; i++)
                 {
-                    if (ThemeManager.Themes[i].ID.Equals(GlobalConfig.ThemeConfig.ThemeID))
+                    if (ThemeManager.Themes[i].ID.Equals(ConfigManager.ThemeConfig.ThemeID))
                     {
                         idx = i;
                         break;
@@ -192,7 +192,7 @@ namespace Jvedio
 
         private void OpenListen()
         {
-            if (GlobalConfig.Settings.ListenEnabled)
+            if (ConfigManager.Settings.ListenEnabled)
             {
                 // 开启端口监听
 
@@ -265,8 +265,8 @@ namespace Jvedio
             searchBox.TextChanged += RefreshCandiadte;
             searchTabControl.SelectionChanged += (s, e) =>
             {
-                if (GlobalConfig.Main.SearchSelectedIndex == searchTabControl.SelectedIndex) return;
-                GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+                if (ConfigManager.Main.SearchSelectedIndex == searchTabControl.SelectedIndex) return;
+                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
                 RefreshCandiadte(null, null);
             };
 
@@ -275,9 +275,9 @@ namespace Jvedio
                 SetAssoSelected();
             };
 
-            Global.Download.Dispatcher.onWorking += (s, e) =>
+            Global.DownloadManager.Dispatcher.onWorking += (s, e) =>
             {
-                double progress = Global.Download.Dispatcher.Progress;
+                double progress = Global.DownloadManager.Dispatcher.Progress;
                 if (progress is double.NaN) progress = 0;
                 vieModel.DownLoadProgress = progress;
                 if (progress < 100)
@@ -305,9 +305,9 @@ namespace Jvedio
 
             };
 
-            Global.FFmpeg.Dispatcher.onWorking += (s, e) =>
+            Global.FFmpegManager.Dispatcher.onWorking += (s, e) =>
             {
-                vieModel.ScreenShotProgress = Global.FFmpeg.Dispatcher.Progress;
+                vieModel.ScreenShotProgress = Global.FFmpegManager.Dispatcher.Progress;
                 vieModel.ScreenShotVisibility = Visibility.Visible;
             };
 
@@ -323,7 +323,7 @@ namespace Jvedio
             {
                 item.Click += (s, e) =>
                 {
-                    if (!GlobalConfig.Settings.PictureIndexCreated)
+                    if (!ConfigManager.Settings.PictureIndexCreated)
                     {
                         MessageCard.Error("请在【选项-库】中建立图片索引！");
                         return;
@@ -342,7 +342,7 @@ namespace Jvedio
             {
                 menuItem.Click += (s, e) =>
                 {
-                    if (!GlobalConfig.Settings.PlayableIndexCreated)
+                    if (!ConfigManager.Settings.PlayableIndexCreated)
                     {
                         MessageCard.Error("请在【选项-库】中建立播放索引！");
                         return;
@@ -357,7 +357,7 @@ namespace Jvedio
             }
 
             // 长时间暂停
-            Global.Download.Dispatcher.onLongDelay += (s, e) =>
+            Global.DownloadManager.Dispatcher.onLongDelay += (s, e) =>
             {
                 string message = (e as MessageCallBackEventArgs).Message;
                 int.TryParse(message, out int value);
@@ -368,7 +368,7 @@ namespace Jvedio
 
         public void setComboboxID()
         {
-            int idx = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == GlobalConfig.Main.CurrentDBId);
+            int idx = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == ConfigManager.Main.CurrentDBId);
             if (idx < 0 || idx > DatabaseComboBox.Items.Count) idx = 0;
             DatabaseComboBox.SelectedIndex = idx;
         }
@@ -376,7 +376,7 @@ namespace Jvedio
         private async void RefreshCandiadte(object sender, TextChangedEventArgs e)
         {
             List<string> list = await vieModel.GetSearchCandidate();
-            int idx = (int)GlobalConfig.Main.SearchSelectedIndex;
+            int idx = (int)ConfigManager.Main.SearchSelectedIndex;
             TabItem tabItem = searchTabControl.Items[idx] as TabItem;
             addOrRefreshItem(tabItem, list);
         }
@@ -414,7 +414,7 @@ namespace Jvedio
             vieModel.DataBases = temp;
             if (temp.Count > 0)
             {
-                vieModel.CurrentAppDataBase = appDatabases.Where(arg => arg.DBId == GlobalConfig.Main.CurrentDBId).FirstOrDefault();
+                vieModel.CurrentAppDataBase = appDatabases.Where(arg => arg.DBId == ConfigManager.Main.CurrentDBId).FirstOrDefault();
                 if (vieModel.CurrentAppDataBase == null) vieModel.CurrentAppDataBase = temp[0];
             }
 
@@ -596,7 +596,7 @@ namespace Jvedio
             vieModel.PageChangedCompleted += (s, ev) =>
             {
                 if (Properties.Settings.Default.EditMode) SetSelected();
-                if (GlobalConfig.Settings.AutoGenScreenShot) AutoGenScreenShot();
+                if (ConfigManager.Settings.AutoGenScreenShot) AutoGenScreenShot();
             };
 
             vieModel.ActorPageChangedCompleted += (s, ev) =>
@@ -899,14 +899,14 @@ namespace Jvedio
         public void AdjustWindow()
         {
 
-            if (GlobalConfig.Main.FirstRun)
+            if (ConfigManager.Main.FirstRun)
             {
                 this.Width = SystemParameters.WorkArea.Width * 0.8;
                 this.Height = SystemParameters.WorkArea.Height * 0.8;
             }
             else
             {
-                if (GlobalConfig.Main.Height == SystemParameters.WorkArea.Height && GlobalConfig.Main.Width < SystemParameters.WorkArea.Width)
+                if (ConfigManager.Main.Height == SystemParameters.WorkArea.Height && ConfigManager.Main.Width < SystemParameters.WorkArea.Width)
                 {
                     baseWindowState = 0;
                     this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -914,14 +914,14 @@ namespace Jvedio
                 }
                 else
                 {
-                    this.Left = GlobalConfig.Main.X;
-                    this.Top = GlobalConfig.Main.Y;
-                    this.Width = GlobalConfig.Main.Width;
-                    this.Height = GlobalConfig.Main.Height;
+                    this.Left = ConfigManager.Main.X;
+                    this.Top = ConfigManager.Main.Y;
+                    this.Width = ConfigManager.Main.Width;
+                    this.Height = ConfigManager.Main.Height;
                 }
 
 
-                baseWindowState = (BaseWindowState)GlobalConfig.Main.WindowState;
+                baseWindowState = (BaseWindowState)ConfigManager.Main.WindowState;
                 if (baseWindowState == BaseWindowState.FullScreen)
                 {
                     this.WindowState = System.Windows.WindowState.Maximized;
@@ -988,7 +988,7 @@ namespace Jvedio
 
         public override void CloseWindow(object sender, RoutedEventArgs e)
         {
-            if (!IsToUpdate && GlobalConfig.Settings.CloseToTaskBar && this.IsVisible == true)
+            if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
             {
                 SetWindowVisualStatus(false);
             }
@@ -1804,14 +1804,14 @@ namespace Jvedio
         }
         public void GenerateAllScreenShot(object sender, RoutedEventArgs e)
         {
-            if (!File.Exists(GlobalConfig.FFmpegConfig.Path))
+            if (!File.Exists(ConfigManager.FFmpegConfig.Path))
             {
                 MessageCard.Error(Jvedio.Language.Resources.Message_SetFFmpeg);
                 return;
             }
 
             SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
+            wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
             List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
             if (metaDatas == null || metaDatas.Count <= 0) return;
 
@@ -1819,29 +1819,29 @@ namespace Jvedio
             {
                 screenShotVideo(metaData);
             }
-            if (!Global.FFmpeg.Dispatcher.Working)
-                Global.FFmpeg.Dispatcher.BeginWork();
+            if (!Global.FFmpegManager.Dispatcher.Working)
+                Global.FFmpegManager.Dispatcher.BeginWork();
         }
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
         {
             MessageCard.Info("全库爬取可能会导致你的IP被封，请谨慎使用，尽量同步仅需要的资源");
             vieModel.DownloadStatus = "Downloading";
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
+            wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
             List<Video> videos = videoMapper.SelectList();
             foreach (Video video in videos)
             {
                 downloadVideo(video);
             }
-            if (!Global.Download.Dispatcher.Working)
-                Global.Download.Dispatcher.BeginWork();
+            if (!Global.DownloadManager.Dispatcher.Working)
+                Global.DownloadManager.Dispatcher.BeginWork();
             setDownloadStatus();
         }
 
 
         public void GenerateScreenShot(object sender, bool gif = false)
         {
-            if (!File.Exists(GlobalConfig.FFmpegConfig.Path))
+            if (!File.Exists(ConfigManager.FFmpegConfig.Path))
             {
                 MessageCard.Error(Jvedio.Language.Resources.Message_SetFFmpeg);
                 return;
@@ -1851,8 +1851,8 @@ namespace Jvedio
             {
                 screenShotVideo(video, gif);
             }
-            if (!Global.FFmpeg.Dispatcher.Working)
-                Global.FFmpeg.Dispatcher.BeginWork();
+            if (!Global.FFmpegManager.Dispatcher.Working)
+                Global.FFmpegManager.Dispatcher.BeginWork();
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
@@ -1942,7 +1942,7 @@ namespace Jvedio
 
         public void RenameFile(object sender, RoutedEventArgs e)
         {
-            if (GlobalConfig.RenameConfig.FormatString.IndexOf("{") < 0)
+            if (ConfigManager.RenameConfig.FormatString.IndexOf("{") < 0)
             {
                 msgCard.Error(Jvedio.Language.Resources.Message_SetRenameRule);
                 return;
@@ -2554,7 +2554,7 @@ namespace Jvedio
 
         public void downloadVideo(Video video)
         {
-            DownLoadTask task = new DownLoadTask(video, GlobalConfig.Settings.DownloadPreviewImage, GlobalConfig.Settings.OverrideInfo);
+            DownLoadTask task = new DownLoadTask(video, ConfigManager.Settings.DownloadPreviewImage, ConfigManager.Settings.OverrideInfo);
             long vid = video.DataID;
             task.onError += (s, ev) =>
             {
@@ -2597,7 +2597,7 @@ namespace Jvedio
         {
             if (!vieModel.DownLoadTasks.Contains(task))
             {
-                Global.Download.Dispatcher.Enqueue(task);
+                Global.DownloadManager.Dispatcher.Enqueue(task);
                 vieModel.DownLoadTasks.Add(task);
             }
             else
@@ -2609,7 +2609,7 @@ namespace Jvedio
         {
             if (!vieModel.ScreenShotTasks.Contains(task))
             {
-                Global.FFmpeg.Dispatcher.Enqueue(task);
+                Global.FFmpegManager.Dispatcher.Enqueue(task);
                 vieModel.ScreenShotTasks.Add(task);
             }
             else
@@ -2627,8 +2627,8 @@ namespace Jvedio
             {
                 downloadVideo(video);
             }
-            if (!Global.Download.Dispatcher.Working)
-                Global.Download.Dispatcher.BeginWork();
+            if (!Global.DownloadManager.Dispatcher.Working)
+                Global.DownloadManager.Dispatcher.BeginWork();
             setDownloadStatus();
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
@@ -2710,16 +2710,16 @@ namespace Jvedio
 
         private void SetConfigValue()
         {
-            GlobalConfig.Main.X = this.Left;
-            GlobalConfig.Main.Y = this.Top;
-            GlobalConfig.Main.Width = this.Width;
-            GlobalConfig.Main.Height = this.Height;
-            GlobalConfig.Main.WindowState = (long)baseWindowState;
-            GlobalConfig.Main.SearchSelectedIndex = vieModel.SearchSelectedIndex;
-            GlobalConfig.Main.ClassifySelectedIndex = vieModel.ClassifySelectedIndex;
-            GlobalConfig.Main.SideGridWidth = SideGridColumn.ActualWidth;
+            ConfigManager.Main.X = this.Left;
+            ConfigManager.Main.Y = this.Top;
+            ConfigManager.Main.Width = this.Width;
+            ConfigManager.Main.Height = this.Height;
+            ConfigManager.Main.WindowState = (long)baseWindowState;
+            ConfigManager.Main.SearchSelectedIndex = vieModel.SearchSelectedIndex;
+            ConfigManager.Main.ClassifySelectedIndex = vieModel.ClassifySelectedIndex;
+            ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
 
-            GlobalConfig.Main.Save();
+            ConfigManager.Main.Save();
         }
 
 
@@ -2736,11 +2736,11 @@ namespace Jvedio
             Properties.Settings.Default.EditMode = false;
             Properties.Settings.Default.ActorEditMode = false;
             Properties.Settings.Default.Save();
-            GlobalConfig.Main?.Save();
-            GlobalConfig.Settings?.Save();
+            ConfigManager.Main?.Save();
+            ConfigManager.Settings?.Save();
 
 
-            if (!IsToUpdate && GlobalConfig.Settings.CloseToTaskBar && this.IsVisible == true)
+            if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
             {
                 SetWindowVisualStatus(false);
                 e.Cancel = true;
@@ -3016,17 +3016,17 @@ namespace Jvedio
         private void ClearRecentWatched(object sender, RoutedEventArgs e)
         {
             SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", "0");
+            wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
             metaDataMapper.UpdateField("ViewDate", "", wrapper);
             vieModel.Statistic();
         }
 
         private void ConfigFirstRun()
         {
-            if (GlobalConfig.Main.FirstRun)
+            if (ConfigManager.Main.FirstRun)
             {
                 vieModel.ShowFirstRun = Visibility.Visible;
-                GlobalConfig.Main.FirstRun = false;
+                ConfigManager.Main.FirstRun = false;
             }
         }
 
@@ -3201,8 +3201,8 @@ namespace Jvedio
             if (e.AddedItems.Count == 0) return;
             //AppDatabase database = 
             vieModel.CurrentAppDataBase = (AppDatabase)e.AddedItems[0];
-            GlobalConfig.Main.CurrentDBId = vieModel.CurrentAppDataBase.DBId;
-            GlobalConfig.Settings.DefaultDBID = vieModel.CurrentAppDataBase.DBId;
+            ConfigManager.Main.CurrentDBId = vieModel.CurrentAppDataBase.DBId;
+            ConfigManager.Settings.DefaultDBID = vieModel.CurrentAppDataBase.DBId;
 
             //切换数据库
 
@@ -4019,7 +4019,7 @@ namespace Jvedio
                     vieModel.CurrentVideoList[i].BigImage = video.BigImage;
 
 
-                    if (GlobalConfig.Settings.AutoGenScreenShot)
+                    if (ConfigManager.Settings.AutoGenScreenShot)
                     {
                         if (vieModel.CurrentVideoList[i].BigImage == GlobalVariable.DefaultBigImage)
                         {
@@ -4083,7 +4083,7 @@ namespace Jvedio
             if (vieModel.TabSelectedIndex == 0)
             {
                 vieModel.Searching = true;
-                GlobalConfig.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
                 await vieModel.Query((SearchField)searchTabControl.SelectedIndex);
                 SaveSearchHistory(mode,
                 (SearchField)searchTabControl.SelectedIndex);
@@ -4135,7 +4135,7 @@ namespace Jvedio
         {
             if (e.Key == Key.Tab)
             {
-                (searchTabControl.Items[(int)GlobalConfig.Main.SearchSelectedIndex] as TabItem).Focus();
+                (searchTabControl.Items[(int)ConfigManager.Main.SearchSelectedIndex] as TabItem).Focus();
             }
         }
 
@@ -4360,7 +4360,7 @@ namespace Jvedio
                     vieModel.DownLoadTasks.RemoveAt(i);
                 }
             }
-            Global.Download.Dispatcher.ClearDoneList();
+            Global.DownloadManager.Dispatcher.ClearDoneList();
             if (vieModel.DownLoadTasks.Count == 0)
                 vieModel.DownLoadVisibility = Visibility.Collapsed;
         }
@@ -4374,7 +4374,7 @@ namespace Jvedio
                     vieModel.DownLoadTasks.RemoveAt(i);
                 }
             }
-            Global.Download.Dispatcher.ClearDoneList();
+            Global.DownloadManager.Dispatcher.ClearDoneList();
             if (vieModel.DownLoadTasks.Count == 0)
                 vieModel.DownLoadVisibility = Visibility.Collapsed;
         }
@@ -4387,7 +4387,7 @@ namespace Jvedio
                     vieModel.ScreenShotTasks.RemoveAt(i);
                 }
             }
-            Global.Download.Dispatcher.ClearDoneList();
+            Global.DownloadManager.Dispatcher.ClearDoneList();
             if (vieModel.ScreenShotTasks.Count == 0)
                 vieModel.ScreenShotVisibility = Visibility.Collapsed;
         }
@@ -4401,7 +4401,7 @@ namespace Jvedio
                     vieModel.ScreenShotTasks.RemoveAt(i);
                 }
             }
-            Global.Download.Dispatcher.ClearDoneList();
+            Global.DownloadManager.Dispatcher.ClearDoneList();
             if (vieModel.ScreenShotTasks.Count == 0)
                 vieModel.ScreenShotVisibility = Visibility.Collapsed;
         }
@@ -4537,9 +4537,9 @@ namespace Jvedio
 
         private void OpenImageSavePath(object sender, RoutedEventArgs e)
         {
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
-            if (!GlobalConfig.Settings.PicPaths.ContainsKey(pathType.ToString())) return;
-            string basePicPath = GlobalConfig.Settings.PicPaths[pathType.ToString()].ToString();
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
+            if (!ConfigManager.Settings.PicPaths.ContainsKey(pathType.ToString())) return;
+            string basePicPath = ConfigManager.Settings.PicPaths[pathType.ToString()].ToString();
             if (pathType == PathType.RelativeToApp)
                 basePicPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, basePicPath);
             basePicPath = Path.GetFullPath(basePicPath);
@@ -4573,7 +4573,7 @@ namespace Jvedio
 
         private void ShowActorNotice(object sender, RoutedEventArgs e)
         {
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType.Equals(PathType.RelativeToData))
                 msgCard.Info("由于当前图片资源文相对于影片，因此该页面不显示头像");
         }
@@ -4662,7 +4662,7 @@ namespace Jvedio
             {
                 List<string> toDelete = new List<string>();
                 SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-                wrapper.Select("DataID", "Path").Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", 0);
+                wrapper.Select("DataID", "Path").Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", 0);
                 List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
                 if (metaDatas?.Count <= 0)
                 {
@@ -4723,7 +4723,7 @@ namespace Jvedio
             {
                 List<string> toDelete = new List<string>();
                 SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-                wrapper.Select("DataID", "Path").Eq("DBId", GlobalConfig.Main.CurrentDBId).Eq("DataType", 0);
+                wrapper.Select("DataID", "Path").Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", 0);
                 List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
                 if (metaDatas?.Count <= 0)
                 {
@@ -5026,21 +5026,21 @@ namespace Jvedio
             if (string.IsNullOrEmpty(dataID)) return;
             DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
             task?.Restart();
-            if (!Global.Download.Dispatcher.Working)
-                Global.Download.Dispatcher.BeginWork();
+            if (!Global.DownloadManager.Dispatcher.Working)
+                Global.DownloadManager.Dispatcher.BeginWork();
         }
 
         private void ShowSponsor(object sender, RoutedEventArgs e)
         {
             // 检测
             string message = "请设置一个刮削网址后在尝试";
-            if (GlobalConfig.ServerConfig.CrawlerServers != null &&
-                GlobalConfig.ServerConfig.CrawlerServers.Count > 0
+            if (ConfigManager.ServerConfig.CrawlerServers != null &&
+                ConfigManager.ServerConfig.CrawlerServers.Count > 0
                 )
             {
                 bool found = false;
 
-                foreach (var item in GlobalConfig.ServerConfig.CrawlerServers)
+                foreach (var item in ConfigManager.ServerConfig.CrawlerServers)
                 {
                     if (!string.IsNullOrEmpty(item.Url))
                     {
@@ -5146,9 +5146,9 @@ namespace Jvedio
                 if (element == null) return;
                 if ((bool)element.IsChecked)
                 {
-                    GlobalConfig.ThemeConfig.ThemeIndex = i;
-                    GlobalConfig.ThemeConfig.ThemeID = element.Tag.ToString();
-                    GlobalConfig.ThemeConfig.Save();
+                    ConfigManager.ThemeConfig.ThemeIndex = i;
+                    ConfigManager.ThemeConfig.ThemeID = element.Tag.ToString();
+                    ConfigManager.ThemeConfig.Save();
                     break;
                 }
             }
@@ -5168,6 +5168,24 @@ namespace Jvedio
             ChangeTheme(null, null);
             button.IsEnabled = true;
 
+        }
+
+        private void DeleteDownloadInfo(object sender, RoutedEventArgs e)
+        {
+            handleMenuSelected(sender);
+            if (Properties.Settings.Default.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToDelete).ShowDialog() == false)
+                return;
+            CleanDataInfo(vieModel.SelectedVideo);
+            if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+        }
+
+        private void CleanDataInfo(IList<Video> videos)
+        {
+            //for (int i = 0; i < videos.Count(); i++)
+            //{
+            //    videos[i].getSmallImage
+            //    videoMapper.UpdateBatch();
+            //}
         }
     }
 

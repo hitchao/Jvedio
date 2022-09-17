@@ -23,15 +23,15 @@ namespace Jvedio
             VideoType = VideoType.Censored;
             autoPrefix.IsChecked = AutoAddPrefix;
             PrefixTextBox.Text = Prefix;
-            if (!GlobalConfig.Settings.TeenMode)
+            if (!ConfigManager.Settings.TeenMode)
             {
                 videoTypeWrapPanel.Visibility = Visibility.Visible;
             }
-            autoPrefix.IsChecked = GlobalConfig.Settings.AutoAddPrefix;
-            PrefixTextBox.Text = GlobalConfig.Settings.Prefix;
+            autoPrefix.IsChecked = ConfigManager.Settings.AutoAddPrefix;
+            PrefixTextBox.Text = ConfigManager.Settings.Prefix;
 
-            AutoAddPrefix = GlobalConfig.Settings.AutoAddPrefix;
-            Prefix = GlobalConfig.Settings.Prefix;
+            AutoAddPrefix = ConfigManager.Settings.AutoAddPrefix;
+            Prefix = ConfigManager.Settings.Prefix;
 
 
         }
@@ -82,9 +82,9 @@ namespace Jvedio
 
         private void BaseDialog_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            GlobalConfig.Settings.AutoAddPrefix = AutoAddPrefix;
-            GlobalConfig.Settings.Prefix = Prefix;
-            GlobalConfig.Settings.Save();
+            ConfigManager.Settings.AutoAddPrefix = AutoAddPrefix;
+            ConfigManager.Settings.Prefix = Prefix;
+            ConfigManager.Settings.Save();
         }
     }
 

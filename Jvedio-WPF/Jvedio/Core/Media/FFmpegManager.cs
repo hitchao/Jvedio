@@ -9,15 +9,13 @@ using System.Threading.Tasks;
 
 namespace Jvedio.Global
 {
-    public static class FFmpeg
+    public static class FFmpegManager
     {
         public static TaskDispatcher<ScreenShotTask> Dispatcher { get; set; }
 
-        static FFmpeg()
+        static FFmpegManager()
         {
             Dispatcher = TaskDispatcher<ScreenShotTask>.createInstance(0);
         }
-
-
     }
 }

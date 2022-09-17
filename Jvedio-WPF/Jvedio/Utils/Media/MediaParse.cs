@@ -45,7 +45,7 @@ namespace Jvedio.Utils.Media
         /// <returns></returns>
         public static string[] GetCutOffArray(string path)
         {
-            int num = (int)GlobalConfig.FFmpegConfig.ScreenShotNum;
+            int num = (int)ConfigManager.FFmpegConfig.ScreenShotNum;
             if (num <= 0 || num > 30) num = 10;
             string[] result = new string[num];
             string Duration = GetVideoDuration(path);
@@ -72,10 +72,10 @@ namespace Jvedio.Utils.Media
             else
             {
                 // 按照秒 n 等分
-                uint splitLength = (uint)(Second / GlobalConfig.FFmpegConfig.ScreenShotNum);
+                uint splitLength = (uint)(Second / ConfigManager.FFmpegConfig.ScreenShotNum);
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = SecondToDuration(GlobalConfig.FFmpegConfig.ScreenShotIgnoreStart * 60 + splitLength * i);//加上跳过开头的部分
+                    result[i] = SecondToDuration(ConfigManager.FFmpegConfig.ScreenShotIgnoreStart * 60 + splitLength * i);//加上跳过开头的部分
                 }
                 return result;
             }
@@ -91,13 +91,13 @@ namespace Jvedio.Utils.Media
         public static double GetProperSecond(double second)
         {
             double Second = second;
-            if (GlobalConfig.FFmpegConfig.ScreenShotIgnoreStart > 0)
+            if (ConfigManager.FFmpegConfig.ScreenShotIgnoreStart > 0)
             {
-                Second -= GlobalConfig.FFmpegConfig.ScreenShotIgnoreStart * 60;
+                Second -= ConfigManager.FFmpegConfig.ScreenShotIgnoreStart * 60;
             }
-            if (GlobalConfig.FFmpegConfig.ScreenShotIgnoreEnd > 0)
+            if (ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd > 0)
             {
-                Second -= GlobalConfig.FFmpegConfig.ScreenShotIgnoreEnd * 60;
+                Second -= ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd * 60;
             }
             return Second;
         }

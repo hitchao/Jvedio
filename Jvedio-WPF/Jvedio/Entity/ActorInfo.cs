@@ -96,7 +96,7 @@ namespace Jvedio.Entity
 
 
             //加载图片
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             BitmapImage smallimage = null;
             if (pathType != PathType.RelativeToData)
             {
@@ -111,8 +111,8 @@ namespace Jvedio.Entity
         public string getImagePath(string dataPath = "", string ext = ".jpg", bool searchExt = true)
         {
             string result = "";
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
-            string basePicPath = GlobalConfig.Settings.PicPaths[pathType.ToString()].ToString();
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
+            string basePicPath = ConfigManager.Settings.PicPaths[pathType.ToString()].ToString();
             if (pathType != PathType.RelativeToData)
             {
                 if (pathType == PathType.RelativeToApp)
@@ -127,7 +127,7 @@ namespace Jvedio.Entity
             else if (!string.IsNullOrEmpty(dataPath))
             {
                 string basePath = System.IO.Path.GetDirectoryName(dataPath);
-                Dictionary<string, string> dict = (Dictionary<string, string>)GlobalConfig.Settings.PicPaths[pathType.ToString()];
+                Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string smallPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePath, dict["ActorImagePath"]));
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
                 result = parseRelativeImageFileName(smallPath);

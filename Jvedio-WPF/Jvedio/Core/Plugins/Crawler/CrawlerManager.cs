@@ -56,7 +56,7 @@ namespace Jvedio.Core.Plugins.Crawler
                 string target = Path.Combine(BaseDir, Path.GetFileName(dllPath));
                 if (copy) FileHelper.TryCopyFile(dllPath, target, true);
             }
-            GlobalConfig.ServerConfig.Read();// 必须在加载所有爬虫插件后在初始化
+            ConfigManager.ServerConfig.Read();// 必须在加载所有爬虫插件后在初始化
         }
 
 

@@ -27,10 +27,10 @@ namespace Jvedio.Core.FFmpeg
 
         private Video CurrentVideo { get; set; }
 
-        private int TotalCount = (int)GlobalConfig.FFmpegConfig.ScreenShotNum;
-        private int TimeOut = (int)GlobalConfig.FFmpegConfig.TimeOut;
-        private string FFmpegPath = GlobalConfig.FFmpegConfig.Path;
-        private bool SkipExistScreenShot = GlobalConfig.FFmpegConfig.SkipExistScreenShot;
+        private int TotalCount = (int)ConfigManager.FFmpegConfig.ScreenShotNum;
+        private int TimeOut = (int)ConfigManager.FFmpegConfig.TimeOut;
+        private string FFmpegPath = ConfigManager.FFmpegConfig.Path;
+        private bool SkipExistScreenShot = ConfigManager.FFmpegConfig.SkipExistScreenShot;
 
         private List<string> saveFileNames = new List<string>();
 
@@ -66,7 +66,7 @@ namespace Jvedio.Core.FFmpeg
             string[] cutoffArray = MediaParse.GetCutOffArray(originPath); //获得需要截图的视频进度
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
-            int threadNum = (int)GlobalConfig.FFmpegConfig.ThreadNum;// 截图线程
+            int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum;// 截图线程
             if (threadNum > MAX_THREAD_NUM || threadNum <= 0) threadNum = DEFAULT_THREAD_NUM;
 
             string outputDir = CurrentVideo.getScreenShot();
@@ -194,7 +194,7 @@ namespace Jvedio.Core.FFmpeg
             if (string.IsNullOrEmpty(saveFileName))
                 throw new NotFoundException(saveFileName);
 
-            if (GlobalConfig.FFmpegConfig.SkipExistGif && File.Exists(saveFileName))
+            if (ConfigManager.FFmpegConfig.SkipExistGif && File.Exists(saveFileName))
             {
                 outputs.Append($"跳过已截取的 GIF： {saveFileName}");
                 return outputs.ToString();
@@ -210,13 +210,13 @@ namespace Jvedio.Core.FFmpeg
             if (string.IsNullOrEmpty(cutofftime))
                 throw new MediaCutOutOfRangeException();
 
-            int duration = (int)GlobalConfig.FFmpegConfig.GifDuration;
-            int width = (int)GlobalConfig.FFmpegConfig.GifWidth;
-            int height = (int)GlobalConfig.FFmpegConfig.GifHeight;
+            int duration = (int)ConfigManager.FFmpegConfig.GifDuration;
+            int width = (int)ConfigManager.FFmpegConfig.GifWidth;
+            int height = (int)ConfigManager.FFmpegConfig.GifHeight;
             if (width <= 0) width = DEFAULT_GIF_WIDTH;
 
 
-            if (GlobalConfig.FFmpegConfig.GifAutoHeight)
+            if (ConfigManager.FFmpegConfig.GifAutoHeight)
             {
                 (double w, double h) = MediaParse.GetWidthHeight(originPath);
                 if (w != 0) height = (int)(h / w * (double)width);

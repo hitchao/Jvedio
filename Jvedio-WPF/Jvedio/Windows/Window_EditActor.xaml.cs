@@ -6,7 +6,7 @@ using Jvedio.Utils.IO;
 using System;
 using System.IO;
 using System.Windows;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.Utils.Visual.VisualHelper;
 using static Jvedio.Utils.Media.ImageHelper;
 using SuperUtils.Framework.ORM.Wrapper;

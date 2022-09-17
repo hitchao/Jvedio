@@ -453,7 +453,7 @@ namespace Jvedio
                 List<string> list = new List<string>();
                 if (vieModel.ScanPath != null) list = vieModel.ScanPath.ToList();
                 db.ScanPath = JsonConvert.SerializeObject(list);
-                GlobalMapper.appDatabaseMapper.UpdateById(db);
+                MapperManager.appDatabaseMapper.UpdateById(db);
                 int idx = DatabaseComboBox.SelectedIndex;
 
                 List<AppDatabase> appDatabases = windowMain?.vieModel.DataBases.ToList();
@@ -486,7 +486,7 @@ namespace Jvedio
 
         private void SetListenStatus()
         {
-            if (GlobalConfig.Settings.ListenEnabled)
+            if (ConfigManager.Settings.ListenEnabled)
             {
                 // 开启端口监听
             }
@@ -501,7 +501,7 @@ namespace Jvedio
             dict["ScreenShotPath"] = vieModel.ScreenShotPath;
             dict["ActorImagePath"] = vieModel.ActorImagePath;
             vieModel.PicPaths[PathType.RelativeToData.ToString()] = dict;
-            GlobalConfig.Settings.PicPathJson = JsonConvert.SerializeObject(vieModel.PicPaths);
+            ConfigManager.Settings.PicPathJson = JsonConvert.SerializeObject(vieModel.PicPaths);
 
         }
 
@@ -562,7 +562,7 @@ namespace Jvedio
         private void SetLanguageDictionary()
         {
             //设置语言
-            long language = GlobalConfig.Settings.SelectedLanguage;
+            long language = ConfigManager.Settings.SelectedLanguage;
             switch (language)
             {
 
@@ -618,23 +618,23 @@ namespace Jvedio
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             //初次启动后不给设置默认打开上一次库，否则会提示无此数据库
-            if (GlobalConfig.Settings.DefaultDBID <= 0)
+            if (ConfigManager.Settings.DefaultDBID <= 0)
                 openDefaultCheckBox.IsEnabled = false;
 
             // 设置 crawlerIndex
-            serverListBox.SelectedIndex = (int)GlobalConfig.Settings.CrawlerSelectedIndex;
+            serverListBox.SelectedIndex = (int)ConfigManager.Settings.CrawlerSelectedIndex;
 
             //设置当前数据库
             SetScanDatabases();
 
             //if (vieModel.DataBases?.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
 
-            ShowViewRename(GlobalConfig.RenameConfig.FormatString);
+            ShowViewRename(ConfigManager.RenameConfig.FormatString);
 
             SetCheckedBoxChecked();
             foreach (ComboBoxItem item in OutComboBox.Items)
             {
-                if (item.Content.ToString().Equals(GlobalConfig.RenameConfig.OutSplit))
+                if (item.Content.ToString().Equals(ConfigManager.RenameConfig.OutSplit))
                 {
                     OutComboBox.SelectedIndex = OutComboBox.Items.IndexOf(item);
                     break;
@@ -644,7 +644,7 @@ namespace Jvedio
 
             foreach (ComboBoxItem item in InComboBox.Items)
             {
-                if (item.Content.ToString().Equals(GlobalConfig.RenameConfig.InSplit))
+                if (item.Content.ToString().Equals(ConfigManager.RenameConfig.InSplit))
                 {
                     InComboBox.SelectedIndex = InComboBox.Items.IndexOf(item);
                     break;
@@ -677,21 +677,21 @@ namespace Jvedio
             List<RadioButton> proxies = proxyStackPanel.Children.OfType<RadioButton>().ToList();
             for (int i = 0; i < proxies.Count; i++)
             {
-                if (i == GlobalConfig.ProxyConfig.ProxyMode) proxies[i].IsChecked = true;
+                if (i == ConfigManager.ProxyConfig.ProxyMode) proxies[i].IsChecked = true;
                 int idx = i;
                 proxies[i].Click += (s, ev) =>
                 {
-                    GlobalConfig.ProxyConfig.ProxyMode = idx;
+                    ConfigManager.ProxyConfig.ProxyMode = idx;
                 };
             }
             List<RadioButton> proxyTypes = proxyTypesStackPanel.Children.OfType<RadioButton>().ToList();
             for (int i = 0; i < proxyTypes.Count; i++)
             {
-                if (i == GlobalConfig.ProxyConfig.ProxyType) proxyTypes[i].IsChecked = true;
+                if (i == ConfigManager.ProxyConfig.ProxyType) proxyTypes[i].IsChecked = true;
                 int idx = i;
                 proxyTypes[i].Click += (s, ev) =>
                 {
-                    GlobalConfig.ProxyConfig.ProxyType = idx;
+                    ConfigManager.ProxyConfig.ProxyType = idx;
                 };
             }
             // 设置代理密码
@@ -714,7 +714,7 @@ namespace Jvedio
             }
 
             // 同步远程插件
-            GlobalConfig.PluginConfig.FetchPluginMetaData(() =>
+            ConfigManager.PluginConfig.FetchPluginMetaData(() =>
             {
                 // 更新插件状态
                 Dispatcher.Invoke(() => { SetRemotePluginMetaData(); });
@@ -797,7 +797,7 @@ namespace Jvedio
         {
             // 未安装创建
             vieModel.AllFreshPlugins = new List<PluginMetaData>();
-            string pluginList = GlobalConfig.PluginConfig.PluginList;
+            string pluginList = ConfigManager.PluginConfig.PluginList;
             if (!string.IsNullOrEmpty(pluginList))
             {
                 List<PluginMetaData> PluginMetaDatas = ParsePluginMetaDataFromJson(pluginList);
@@ -864,7 +864,7 @@ namespace Jvedio
         {
             foreach (ToggleButton item in CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList())
             {
-                if (GlobalConfig.RenameConfig.FormatString.IndexOf(Video.ToSqlField(item.Content.ToString())) >= 0)
+                if (ConfigManager.RenameConfig.FormatString.IndexOf(Video.ToSqlField(item.Content.ToString())) >= 0)
                 {
                     item.IsChecked = true;
                 }
@@ -1125,7 +1125,7 @@ namespace Jvedio
 
         private void ReplaceWithValue(string property)
         {
-            string inSplit = GlobalConfig.RenameConfig.InSplit.Equals("[null]") ? "" : GlobalConfig.RenameConfig.InSplit;
+            string inSplit = ConfigManager.RenameConfig.InSplit.Equals("[null]") ? "" : ConfigManager.RenameConfig.InSplit;
             PropertyInfo[] PropertyList = SampleVideo.GetType().GetProperties();
             foreach (PropertyInfo item in PropertyList)
             {
@@ -1171,7 +1171,7 @@ namespace Jvedio
             if (names.Count > 0)
             {
                 StringBuilder builder = new StringBuilder();
-                string sep = GlobalConfig.RenameConfig.OutSplit.Equals("[null]") ? "" : GlobalConfig.RenameConfig.OutSplit;
+                string sep = ConfigManager.RenameConfig.OutSplit.Equals("[null]") ? "" : ConfigManager.RenameConfig.OutSplit;
                 List<string> formatNames = new List<string>();
                 foreach (string name in names)
                 {
@@ -1233,14 +1233,14 @@ namespace Jvedio
         private void OutComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            GlobalConfig.RenameConfig.OutSplit = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
+            ConfigManager.RenameConfig.OutSplit = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
             SetRenameFormat();
         }
 
         private void InComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            GlobalConfig.RenameConfig.InSplit = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
+            ConfigManager.RenameConfig.InSplit = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
             SetRenameFormat();
             ShowViewRename(vieModel.FormatString);
         }
@@ -1249,11 +1249,11 @@ namespace Jvedio
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             SaveSettings();
-            GlobalConfig.Settings.Save();
-            GlobalConfig.ProxyConfig.Save();
-            GlobalConfig.ScanConfig.Save();
-            GlobalConfig.FFmpegConfig.Save();
-            GlobalConfig.RenameConfig.Save();
+            ConfigManager.Settings.Save();
+            ConfigManager.ProxyConfig.Save();
+            ConfigManager.ScanConfig.Save();
+            ConfigManager.FFmpegConfig.Save();
+            ConfigManager.RenameConfig.Save();
         }
 
 
@@ -1261,69 +1261,69 @@ namespace Jvedio
         private void SaveSettings()
         {
 
-            GlobalConfig.Main.ShowSearchHistory = vieModel.ShowSearchHistory;
+            ConfigManager.Main.ShowSearchHistory = vieModel.ShowSearchHistory;
 
 
-            GlobalConfig.Settings.TabControlSelectedIndex = vieModel.TabControlSelectedIndex;
-            GlobalConfig.Settings.OpenDataBaseDefault = vieModel.OpenDataBaseDefault;
-            GlobalConfig.Settings.AutoGenScreenShot = vieModel.AutoGenScreenShot;
-            GlobalConfig.Settings.TeenMode = vieModel.TeenMode;
-            GlobalConfig.Settings.CloseToTaskBar = vieModel.CloseToTaskBar;
-            GlobalConfig.Settings.DetailShowBg = vieModel.DetailShowBg;
-            GlobalConfig.Settings.SelectedLanguage = vieModel.SelectedLanguage;
-            GlobalConfig.Settings.SaveInfoToNFO = vieModel.SaveInfoToNFO;
-            GlobalConfig.Settings.NFOSavePath = vieModel.NFOSavePath;
-            GlobalConfig.Settings.OverriteNFO = vieModel.OverriteNFO;
-            GlobalConfig.Settings.AutoHandleHeader = vieModel.AutoHandleHeader;
-            GlobalConfig.Settings.AutoCreatePlayableIndex = vieModel.AutoCreatePlayableIndex;
+            ConfigManager.Settings.TabControlSelectedIndex = vieModel.TabControlSelectedIndex;
+            ConfigManager.Settings.OpenDataBaseDefault = vieModel.OpenDataBaseDefault;
+            ConfigManager.Settings.AutoGenScreenShot = vieModel.AutoGenScreenShot;
+            ConfigManager.Settings.TeenMode = vieModel.TeenMode;
+            ConfigManager.Settings.CloseToTaskBar = vieModel.CloseToTaskBar;
+            ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
+            ConfigManager.Settings.SelectedLanguage = vieModel.SelectedLanguage;
+            ConfigManager.Settings.SaveInfoToNFO = vieModel.SaveInfoToNFO;
+            ConfigManager.Settings.NFOSavePath = vieModel.NFOSavePath;
+            ConfigManager.Settings.OverriteNFO = vieModel.OverriteNFO;
+            ConfigManager.Settings.AutoHandleHeader = vieModel.AutoHandleHeader;
+            ConfigManager.Settings.AutoCreatePlayableIndex = vieModel.AutoCreatePlayableIndex;
 
-            GlobalConfig.Settings.PicPathMode = vieModel.PicPathMode;
-            GlobalConfig.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
-            GlobalConfig.Settings.SkipExistImage = vieModel.SkipExistImage;
-            GlobalConfig.Settings.OverrideInfo = vieModel.OverrideInfo;
-            GlobalConfig.Settings.IgnoreCertVal = vieModel.IgnoreCertVal;
-            GlobalConfig.Settings.AutoBackup = vieModel.AutoBackup;
-            GlobalConfig.Settings.AutoBackupPeriodIndex = vieModel.AutoBackupPeriodIndex;
+            ConfigManager.Settings.PicPathMode = vieModel.PicPathMode;
+            ConfigManager.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
+            ConfigManager.Settings.SkipExistImage = vieModel.SkipExistImage;
+            ConfigManager.Settings.OverrideInfo = vieModel.OverrideInfo;
+            ConfigManager.Settings.IgnoreCertVal = vieModel.IgnoreCertVal;
+            ConfigManager.Settings.AutoBackup = vieModel.AutoBackup;
+            ConfigManager.Settings.AutoBackupPeriodIndex = vieModel.AutoBackupPeriodIndex;
 
             // 代理
-            GlobalConfig.ProxyConfig.Server = vieModel.ProxyServer;
-            GlobalConfig.ProxyConfig.Port = vieModel.ProxyPort;
-            GlobalConfig.ProxyConfig.UserName = vieModel.ProxyUserName;
-            GlobalConfig.ProxyConfig.Password = vieModel.ProxyPwd;
-            GlobalConfig.ProxyConfig.HttpTimeout = vieModel.HttpTimeout;
+            ConfigManager.ProxyConfig.Server = vieModel.ProxyServer;
+            ConfigManager.ProxyConfig.Port = vieModel.ProxyPort;
+            ConfigManager.ProxyConfig.UserName = vieModel.ProxyUserName;
+            ConfigManager.ProxyConfig.Password = vieModel.ProxyPwd;
+            ConfigManager.ProxyConfig.HttpTimeout = vieModel.HttpTimeout;
 
 
 
             // 扫描
-            GlobalConfig.ScanConfig.MinFileSize = vieModel.MinFileSize;
-            GlobalConfig.ScanConfig.FetchVID = vieModel.FetchVID;
-            GlobalConfig.ScanConfig.ScanOnStartUp = vieModel.ScanOnStartUp;
-            GlobalConfig.ScanConfig.CopyNFOPicture = vieModel.CopyNFOPicture;
+            ConfigManager.ScanConfig.MinFileSize = vieModel.MinFileSize;
+            ConfigManager.ScanConfig.FetchVID = vieModel.FetchVID;
+            ConfigManager.ScanConfig.ScanOnStartUp = vieModel.ScanOnStartUp;
+            ConfigManager.ScanConfig.CopyNFOPicture = vieModel.CopyNFOPicture;
 
             // ffmpeg
-            GlobalConfig.FFmpegConfig.Path = vieModel.FFMPEG_Path;
-            GlobalConfig.FFmpegConfig.ThreadNum = vieModel.ScreenShot_ThreadNum;
-            GlobalConfig.FFmpegConfig.TimeOut = vieModel.ScreenShot_TimeOut;
-            GlobalConfig.FFmpegConfig.ScreenShotNum = vieModel.ScreenShotNum;
-            GlobalConfig.FFmpegConfig.ScreenShotIgnoreStart = vieModel.ScreenShotIgnoreStart;
-            GlobalConfig.FFmpegConfig.ScreenShotIgnoreEnd = vieModel.ScreenShotIgnoreEnd;
-            GlobalConfig.FFmpegConfig.SkipExistGif = vieModel.SkipExistGif;
-            GlobalConfig.FFmpegConfig.SkipExistScreenShot = vieModel.SkipExistScreenShot;
-            GlobalConfig.FFmpegConfig.GifAutoHeight = vieModel.GifAutoHeight;
-            GlobalConfig.FFmpegConfig.GifWidth = vieModel.GifWidth;
-            GlobalConfig.FFmpegConfig.GifHeight = vieModel.GifHeight;
-            GlobalConfig.FFmpegConfig.GifDuration = vieModel.GifDuration;
+            ConfigManager.FFmpegConfig.Path = vieModel.FFMPEG_Path;
+            ConfigManager.FFmpegConfig.ThreadNum = vieModel.ScreenShot_ThreadNum;
+            ConfigManager.FFmpegConfig.TimeOut = vieModel.ScreenShot_TimeOut;
+            ConfigManager.FFmpegConfig.ScreenShotNum = vieModel.ScreenShotNum;
+            ConfigManager.FFmpegConfig.ScreenShotIgnoreStart = vieModel.ScreenShotIgnoreStart;
+            ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd = vieModel.ScreenShotIgnoreEnd;
+            ConfigManager.FFmpegConfig.SkipExistGif = vieModel.SkipExistGif;
+            ConfigManager.FFmpegConfig.SkipExistScreenShot = vieModel.SkipExistScreenShot;
+            ConfigManager.FFmpegConfig.GifAutoHeight = vieModel.GifAutoHeight;
+            ConfigManager.FFmpegConfig.GifWidth = vieModel.GifWidth;
+            ConfigManager.FFmpegConfig.GifHeight = vieModel.GifHeight;
+            ConfigManager.FFmpegConfig.GifDuration = vieModel.GifDuration;
 
             // 重命名
 
-            GlobalConfig.RenameConfig.AddRenameTag = vieModel.AddRenameTag;
-            GlobalConfig.RenameConfig.RemoveTitleSpace = vieModel.RemoveTitleSpace;
-            GlobalConfig.RenameConfig.FormatString = vieModel.FormatString;
+            ConfigManager.RenameConfig.AddRenameTag = vieModel.AddRenameTag;
+            ConfigManager.RenameConfig.RemoveTitleSpace = vieModel.RemoveTitleSpace;
+            ConfigManager.RenameConfig.FormatString = vieModel.FormatString;
 
 
             // 监听
-            GlobalConfig.Settings.ListenEnabled = vieModel.ListenEnabled;
-            GlobalConfig.Settings.ListenPort = vieModel.ListenPort;
+            ConfigManager.Settings.ListenEnabled = vieModel.ListenEnabled;
+            ConfigManager.Settings.ListenPort = vieModel.ListenPort;
 
         }
 
@@ -1424,7 +1424,7 @@ namespace Jvedio
                 else vieModel.PluginEnabled = false;
                 ServersDataGrid.ItemsSource = null;
                 ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
-                GlobalConfig.Settings.CrawlerSelectedIndex = idx;
+                ConfigManager.Settings.CrawlerSelectedIndex = idx;
 
             }
         }
@@ -1499,15 +1499,15 @@ namespace Jvedio
 
         private void SavePluginEnabled(object sender, RoutedEventArgs e)
         {
-            GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
+            ConfigManager.Settings.PluginEnabled = new Dictionary<string, bool>();
             bool enabled = (bool)(sender as SuperControls.Style.Switch).IsChecked;
             foreach (PluginMetaData plugin in PluginManager.PluginList)
             {
                 if (plugin.PluginID.Equals(vieModel.CurrentPlugin.PluginID))
                     plugin.Enabled = enabled;
-                GlobalConfig.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
+                ConfigManager.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
             }
-            GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
+            ConfigManager.Settings.PluginEnabledJson = JsonConvert.SerializeObject(ConfigManager.Settings.PluginEnabled);
             vieModel.SetServers();
         }
 
@@ -1645,8 +1645,8 @@ namespace Jvedio
             stopwatch.Start();
 
             RequestHeader header = new RequestHeader();
-            IWebProxy proxy = GlobalConfig.ProxyConfig.GetWebProxy();
-            header.TimeOut = GlobalConfig.ProxyConfig.HttpTimeout * 1000;// 转为 ms
+            IWebProxy proxy = ConfigManager.ProxyConfig.GetWebProxy();
+            header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000;// 转为 ms
             header.WebProxy = proxy;
 
             HttpResult httpResult = await HttpClient.Get(url, header);
@@ -1750,7 +1750,7 @@ namespace Jvedio
             long total = 0;
             bool result = await Task.Run(() =>
               {
-                  List<MetaData> metaDatas = GlobalMapper.metaDataMapper.SelectList();
+                  List<MetaData> metaDatas = MapperManager.metaDataMapper.SelectList();
                   total = metaDatas.Count;
                   if (total <= 0) return false;
                   StringBuilder builder = new StringBuilder();
@@ -1767,10 +1767,10 @@ namespace Jvedio
                       });
                   }
                   string sql = $"begin;update metadata set PathExist=1;{builder};commit;";// 因为大多数资源都是存在的，默认先设为1
-                  GlobalMapper.videoMapper.ExecuteNonQuery(sql);
+                  MapperManager.videoMapper.ExecuteNonQuery(sql);
                   return true;
               });
-            GlobalConfig.Settings.PlayableIndexCreated = true;
+            ConfigManager.Settings.PlayableIndexCreated = true;
             vieModel.IndexCreating = false;
             if (result)
                 MessageCard.Success($"成功建立 {total} 个资源的索引");
@@ -1778,7 +1778,7 @@ namespace Jvedio
 
         private async void CreatePictureIndex(object sender, RoutedEventArgs e)
         {
-            if (new Msgbox(this, $"当前图片模式为：{((PathType)GlobalConfig.Settings.PicPathMode).ToString()}，仅对当前图片模式生效，是否继续？")
+            if (new Msgbox(this, $"当前图片模式为：{((PathType)ConfigManager.Settings.PicPathMode).ToString()}，仅对当前图片模式生效，是否继续？")
                 .ShowDialog() == false)
             {
                 return;
@@ -1794,12 +1794,12 @@ namespace Jvedio
                 IWrapper<Video> wrapper = new SelectWrapper<Video>();
                 wrapper.Select("metadata.DataID", "Path", "VID", "Hash");
                 sql = wrapper.toSelect(false) + sql;
-                List<Dictionary<string, object>> temp = GlobalMapper.metaDataMapper.Select(sql);
-                List<Video> videos = GlobalMapper.metaDataMapper.ToEntity<Video>(temp, typeof(Video).GetProperties(), true);
+                List<Dictionary<string, object>> temp = MapperManager.metaDataMapper.Select(sql);
+                List<Video> videos = MapperManager.metaDataMapper.ToEntity<Video>(temp, typeof(Video).GetProperties(), true);
                 total = videos.Count;
                 if (total <= 0) return false;
                 List<string> list = new List<string>();
-                long pathType = GlobalConfig.Settings.PicPathMode;
+                long pathType = ConfigManager.Settings.PicPathMode;
                 for (int i = 0; i < total; i++)
                 {
                     Video video = videos[i];
@@ -1814,12 +1814,12 @@ namespace Jvedio
                     });
                 }
                 string insertSql = $"begin;insert or replace into common_picture_exist(DataID,PathType,ImageType,Exist) values {string.Join(",", list)};commit;";
-                GlobalMapper.videoMapper.ExecuteNonQuery(insertSql);
+                MapperManager.videoMapper.ExecuteNonQuery(insertSql);
                 return true;
             });
             if (result)
                 MessageCard.Success($"成功建立 {total} 个资源的索引");
-            GlobalConfig.Settings.PictureIndexCreated = true;
+            ConfigManager.Settings.PictureIndexCreated = true;
             vieModel.IndexCreating = false;
 
 
@@ -1902,7 +1902,7 @@ namespace Jvedio
 
         private void PluginHandle(int idx)
         {
-            GlobalConfig.Settings.PluginEnabled = new Dictionary<string, bool>();
+            ConfigManager.Settings.PluginEnabled = new Dictionary<string, bool>();
             bool enabled = false;
             if (idx == 0)
             {
@@ -1918,9 +1918,9 @@ namespace Jvedio
             foreach (PluginMetaData plugin in PluginManager.PluginList)
             {
                 plugin.Enabled = enabled;
-                GlobalConfig.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
+                ConfigManager.Settings.PluginEnabled.Add(plugin.PluginID, plugin.Enabled);
             }
-            GlobalConfig.Settings.PluginEnabledJson = JsonConvert.SerializeObject(GlobalConfig.Settings.PluginEnabled);
+            ConfigManager.Settings.PluginEnabledJson = JsonConvert.SerializeObject(ConfigManager.Settings.PluginEnabled);
             vieModel.SetServers();
             vieModel.RefreshCurrentPlugins();
 
@@ -1928,7 +1928,7 @@ namespace Jvedio
 
         private void SetDetailBg(object sender, RoutedEventArgs e)
         {
-            GlobalConfig.Settings.DetailShowBg = vieModel.DetailShowBg;
+            ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
 
             windowMain?.SetSkin();
         }
@@ -1964,6 +1964,20 @@ namespace Jvedio
         private void ShowUploadHelp(object sender, RoutedEventArgs e)
         {
             FileHelper.TryOpenUrl(GlobalVariable.PLUGIN_UPLOAD_HELP);
+        }
+
+        private void DeletePlugin(object sender, RoutedEventArgs e)
+        {
+            PluginMetaData metaData = vieModel.CurrentPlugin;
+            if (metaData != null)
+            {
+                string name = metaData.PluginName;
+                Msgbox msgbox = new Msgbox(this, $"确定删除插件 {name} ？");
+                if (msgbox.ShowDialog() == false) return;
+
+
+                MessageCard.Success("该插件已添加到移除列表，重启后生效！");
+            }
         }
     }
 }

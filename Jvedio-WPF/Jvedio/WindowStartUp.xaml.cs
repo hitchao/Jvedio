@@ -25,7 +25,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Visual.VisualHelper;
 
@@ -73,18 +73,18 @@ namespace Jvedio
             EnsureFileExists();         // 判断文件是否存在
             InitProperties();           // 初始化全局变量
             EnsureDirExists();          // 创建文件夹
-            GlobalConfig.Init();        // 初始化全局配置
+            ConfigManager.Init();        // 初始化全局配置
             try
             {
-                GlobalMapper.Init();    // 初始化数据库连接
+                MapperManager.Init();    // 初始化数据库连接
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"数据库初始化失败：{ex.Message}");
                 App.Current.Shutdown();
             }
-            GlobalConfig.InitConfig();
-            GlobalConfig.EnsurePicPaths();
+            ConfigManager.InitConfig();
+            ConfigManager.EnsurePicPaths();
 
             await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
 
@@ -113,9 +113,9 @@ namespace Jvedio
                 if (i == vieModel_StartUp.CurrentSideIdx) radioButtons[i].IsChecked = true;
                 else radioButtons[i].IsChecked = false;
             }
-            GlobalVariable.CurrentDataType = (DataType)GlobalConfig.StartUp.SideIdx;
+            GlobalVariable.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
 
-            if (!ClickGoBackToStartUp && GlobalConfig.Settings.OpenDataBaseDefault)
+            if (!ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault)
             {
                 tabControl.SelectedIndex = 0;
                 LoadDataBase();
@@ -143,9 +143,9 @@ namespace Jvedio
 
         private async Task<bool> BackupData()
         {
-            if (GlobalConfig.Settings.AutoBackup)
+            if (ConfigManager.Settings.AutoBackup)
             {
-                int period = Jvedio.Core.WindowConfig.Settings.BackUpPeriods[(int)GlobalConfig.Settings.AutoBackupPeriodIndex];
+                int period = Jvedio.Core.WindowConfig.Settings.BackUpPeriods[(int)ConfigManager.Settings.AutoBackupPeriodIndex];
                 bool backup = false;
                 string[] arr = DirHelper.TryGetDirList(GlobalVariable.BackupPath);
                 if (arr != null && arr.Length > 0)
@@ -209,7 +209,7 @@ namespace Jvedio
                 Jvedio4ToJvedio5.MoveMyList();      // 清单和 Label 合并，统一为 Label
                 //Jvedio4ToJvedio5.MoveSearchHistory();
                 Jvedio4ToJvedio5.MoveScanPathConfig(files);
-                GlobalConfig.Settings.OpenDataBaseDefault = false;
+                ConfigManager.Settings.OpenDataBaseDefault = false;
             }
 
             // 移动文件
@@ -524,7 +524,7 @@ namespace Jvedio
             int idx = stackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
             vieModel_StartUp.CurrentSideIdx = idx;
             GlobalVariable.CurrentDataType = (DataType)idx;
-            GlobalConfig.StartUp.SideIdx = idx;
+            ConfigManager.StartUp.SideIdx = idx;
             vieModel_StartUp.ReadFromDataBase();
         }
 
@@ -532,7 +532,7 @@ namespace Jvedio
         {
             if (vieModel_StartUp.CurrentDatabases == null || vieModel_StartUp.CurrentDatabases.Count <= 0)
             {
-                GlobalConfig.Settings.OpenDataBaseDefault = false;
+                ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
                 this.TitleHeight = DEFAULT_TITLE_HEIGHT;
@@ -545,15 +545,15 @@ namespace Jvedio
 
             List<AppDatabase> appDatabases = appDatabaseMapper.SelectList();
             //加载数据库
-            long id = GlobalConfig.Main.CurrentDBId;
+            long id = ConfigManager.Main.CurrentDBId;
             AppDatabase database = null;
-            if (ClickGoBackToStartUp || !GlobalConfig.Settings.OpenDataBaseDefault)
+            if (ClickGoBackToStartUp || !ConfigManager.Settings.OpenDataBaseDefault)
             {
                 if (listBox.SelectedIndex >= 0 && listBox.SelectedIndex < vieModel_StartUp.CurrentDatabases.Count)
                 {
                     database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
                     id = database.DBId;
-                    GlobalConfig.Settings.DefaultDBID = id;
+                    ConfigManager.Settings.DefaultDBID = id;
                 }
                 else
                 {
@@ -564,7 +564,7 @@ namespace Jvedio
             else
             {
                 // 默认打开上一次的库
-                id = GlobalConfig.Settings.DefaultDBID;
+                id = ConfigManager.Settings.DefaultDBID;
 
                 if (appDatabases != null || appDatabases.Count > 0)
                     database = appDatabases.Where(arg => arg.DBId == id).FirstOrDefault();
@@ -575,7 +575,7 @@ namespace Jvedio
             if (database == null)
             {
                 MessageCard.Error("默认打开的数据库被删除了，取消启动时默认打开");
-                GlobalConfig.Settings.OpenDataBaseDefault = false;
+                ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
                 this.TitleHeight = DEFAULT_TITLE_HEIGHT;
@@ -587,11 +587,11 @@ namespace Jvedio
                 // 次数+1
                 appDatabaseMapper.IncreaseFieldById("ViewCount", id);
 
-                GlobalConfig.Main.CurrentDBId = id;
+                ConfigManager.Main.CurrentDBId = id;
 
                 // 是否需要扫描
 
-                if (GlobalConfig.ScanConfig.ScanOnStartUp)
+                if (ConfigManager.ScanConfig.ScanOnStartUp)
                 {
                     if (!string.IsNullOrEmpty(database.ScanPath))
                     {
@@ -744,13 +744,13 @@ namespace Jvedio
 
         private void Window_StartUp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            GlobalConfig.StartUp.Tile = vieModel_StartUp.Tile;
-            GlobalConfig.StartUp.ShowHideItem = vieModel_StartUp.ShowHideItem;
-            GlobalConfig.StartUp.SideIdx = vieModel_StartUp.CurrentSideIdx;
+            ConfigManager.StartUp.Tile = vieModel_StartUp.Tile;
+            ConfigManager.StartUp.ShowHideItem = vieModel_StartUp.ShowHideItem;
+            ConfigManager.StartUp.SideIdx = vieModel_StartUp.CurrentSideIdx;
 
-            GlobalConfig.StartUp.Sort = vieModel_StartUp.Sort;
-            GlobalConfig.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? "名称" : vieModel_StartUp.SortType;
-            GlobalConfig.StartUp.Save();
+            ConfigManager.StartUp.Sort = vieModel_StartUp.Sort;
+            ConfigManager.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? "名称" : vieModel_StartUp.SortType;
+            ConfigManager.StartUp.Save();
 
             Main main = GetWindowByName("Main") as Main;
             if (main != null && !main.IsActive && !EnteringDataBase)
@@ -800,7 +800,7 @@ namespace Jvedio
                 Button button = sender as Button;
                 button.IsEnabled = false;
                 // todo 多数据库
-                GlobalMapper.Dispose();
+                MapperManager.Dispose();
                 await Task.Delay(1000);
                 bool success = FileHelper.TryDeleteFile(DEFAULT_SQLITE_PATH, (error) =>
                 {
@@ -810,7 +810,7 @@ namespace Jvedio
                 {
                     try
                     {
-                        GlobalMapper.Init();    // 初始化数据库连接
+                        MapperManager.Init();    // 初始化数据库连接
                     }
                     catch (Exception ex)
                     {

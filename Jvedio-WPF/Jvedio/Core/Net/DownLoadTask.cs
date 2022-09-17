@@ -1,31 +1,19 @@
-﻿using DynamicData.Annotations;
-using Jvedio.Utils;
-using Jvedio.Utils.Common;
-using Jvedio.Entity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Jvedio.Mapper.BaseMapper;
-using Jvedio.Mapper;
-using static Jvedio.GlobalMapper;
-using Jvedio.Core.Scan;
-using Jvedio.Core.Enums;
-using Jvedio.Core.Exceptions;
-using Jvedio.CommonNet.Crawler;
-using Newtonsoft.Json;
+﻿using Jvedio.CommonNet.Entity;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
-using Jvedio.CommonNet.Entity;
+using Jvedio.Core.Enums;
+using Jvedio.Core.Exceptions;
+using Jvedio.Entity;
+using Jvedio.Utils.Common;
 using Jvedio.Utils.IO;
-using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Wrapper;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.Net
 {
@@ -216,8 +204,8 @@ namespace Jvedio.Core.Net
                     if (header == null)
                     {
                         header = new RequestHeader();
-                        header.WebProxy = GlobalConfig.ProxyConfig.GetWebProxy();
-                        header.TimeOut = GlobalConfig.ProxyConfig.HttpTimeout * 1000;// 转为 ms
+                        header.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
+                        header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000;// 转为 ms
                     }
 
 

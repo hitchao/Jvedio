@@ -1366,6 +1366,13 @@
                                             Text="{Binding CurrentPlugin.NewVersion, StringFormat=v{0}}" />
                                     </Border>
                                 </StackPanel>
+                                <Button
+                                    Margin="5,10"
+                                    HorizontalAlignment="Left"
+                                    Click="DeletePlugin"
+                                    Content="删除"
+                                    Style="{StaticResource ButtonDanger}"
+                                    Visibility="{Binding CurrentPlugin.Installed, Converter={StaticResource bool2VisibilityConverter}}" />
 
                             </StackPanel>
                         </Grid>

@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Mapper;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using Jvedio.Core.Net;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
@@ -194,7 +194,7 @@ namespace Jvedio.Core.Scan
         private List<Video> GetExistVideos()
         {
             string sql = VideoMapper.BASE_SQL;
-            sql = "select metadata.DataID,VID,Hash,Size,Path,MVID " + sql + $" and metadata.DBId={GlobalConfig.Main.CurrentDBId}";
+            sql = "select metadata.DataID,VID,Hash,Size,Path,MVID " + sql + $" and metadata.DBId={ConfigManager.Main.CurrentDBId}";
             List<Dictionary<string, object>> list = videoMapper.Select(sql);
             return videoMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
         }
@@ -343,9 +343,9 @@ namespace Jvedio.Core.Scan
             existActors = actorMapper.SelectList();
 
             // 复制图片
-            if (GlobalConfig.ScanConfig.CopyNFOPicture)
+            if (ConfigManager.ScanConfig.CopyNFOPicture)
             {
-                Dictionary<string, object> PicPaths = GlobalConfig.Settings.PicPaths;
+                Dictionary<string, object> PicPaths = ConfigManager.Settings.PicPaths;
                 if (PicPaths != null && PicPaths.ContainsKey(PathType.RelativeToData.ToString()))
                 {
                     Dictionary<string, string> dict = null;
@@ -469,7 +469,7 @@ namespace Jvedio.Core.Scan
 
             foreach (Video video in toInsert)
             {
-                video.DBId = GlobalConfig.Main.CurrentDBId;
+                video.DBId = ConfigManager.Main.CurrentDBId;
                 video.FirstScanDate = DateHelper.Now();
                 video.LastScanDate = DateHelper.Now();
                 ScanResult.Import.Add(video.Path);

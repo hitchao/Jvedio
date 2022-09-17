@@ -269,7 +269,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Core\Config\ThemeConfig.cs" />
+    <Compile Include="Core\Config\Base\AbstractConfig.cs" />
+    <Compile Include="Core\Config\Base\IConfig.cs" />
+    <Compile Include="Core\Config\Common\ThemeConfig.cs" />
     <Compile Include="Core\Enums\NotImportReason.cs" />
     <Compile Include="Core\Enums\SearchMode.cs" />
     <Compile Include="Core\Enums\ThemeSingleColor.cs" />
@@ -279,12 +281,12 @@
     <Compile Include="Core\Exceptions\DirCreateFailedException.cs" />
     <Compile Include="Core\Command\File.cs" />
     <Compile Include="Core\Command\OpenWindow.cs" />
-    <Compile Include="Core\Config\ProxyConfig.cs" />
-    <Compile Include="Core\Config\FFmpegConfig.cs" />
-    <Compile Include="Core\Config\RenameConfig.cs" />
-    <Compile Include="Core\Config\PluginConfig.cs" />
-    <Compile Include="Core\Config\ScanConfig.cs" />
-    <Compile Include="Core\Config\ServerConfig.cs" />
+    <Compile Include="Core\Config\Common\ProxyConfig.cs" />
+    <Compile Include="Core\Config\Common\FFmpegConfig.cs" />
+    <Compile Include="Core\Config\Common\RenameConfig.cs" />
+    <Compile Include="Core\Config\Common\PluginConfig.cs" />
+    <Compile Include="Core\Config\Common\ScanConfig.cs" />
+    <Compile Include="Core\Config\Common\ServerConfig.cs" />
     <Compile Include="Core\Config\WindowConfig\Filter.cs" />
     <Compile Include="Core\Config\WindowConfig\Settings.cs" />
     <Compile Include="Core\Crawler\ActorSearch.cs" />
@@ -302,7 +304,6 @@
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
-    <Compile Include="Core\Global\GlobalEvent.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
     <Compile Include="Core\Net\UpgradeHelper.cs" />
@@ -324,7 +325,7 @@
     <Compile Include="Core\CustomEventArgs\WrapperEventArg.cs" />
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
-    <Compile Include="Core\Global\GlobalMapper.cs" />
+    <Compile Include="Mapper\MapperManager.cs" />
     <Compile Include="Core\Global\GlobalStyle.cs" />
     <Compile Include="Core\Plugins\Plugin.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
@@ -339,9 +340,7 @@
     <Compile Include="Core\Scan\ScanResult.cs" />
     <Compile Include="Mapper\BaseMapper\BaseMapper.cs" />
     <Compile Include="Core\DataBase\Tables\Sqlite.cs" />
-    <Compile Include="Core\Config\Base\AbstractConfig.cs" />
-    <Compile Include="Core\Global\GlobalConfig.cs" />
-    <Compile Include="Core\Config\Base\IConfig.cs" />
+    <Compile Include="Core\Config\ConfigManager.cs" />
     <Compile Include="Core\Config\WindowConfig\Edit.cs" />
     <Compile Include="Core\Config\WindowConfig\Detail.cs" />
     <Compile Include="Core\Config\WindowConfig\MetaData.cs" />
@@ -408,24 +407,24 @@
       <DependentUpon>Dialog_About.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Extern\JvedioLib.cs" />
-    <Compile Include="Global\FFmpeg.cs" />
-    <Compile Include="Global\Download.cs" />
-    <Compile Include="Mapper\AssociationMapper.cs" />
-    <Compile Include="Mapper\ActorMapper.cs" />
-    <Compile Include="Mapper\AIFaceMapper.cs" />
-    <Compile Include="Mapper\AppConfigMapper.cs" />
-    <Compile Include="Mapper\AppDatabaseMapper.cs" />
-    <Compile Include="Mapper\GameMapper.cs" />
-    <Compile Include="Mapper\ComicMapper.cs" />
-    <Compile Include="Mapper\TagStampMapper.cs" />
-    <Compile Include="Mapper\SearchHistoryMapper.cs" />
-    <Compile Include="Mapper\ComImagesMapper.cs" />
-    <Compile Include="Mapper\MagnetsMapper.cs" />
-    <Compile Include="Mapper\MetaDataMapper.cs" />
-    <Compile Include="Mapper\TranslationMapper.cs" />
-    <Compile Include="Mapper\UrlCodeMapper.cs" />
-    <Compile Include="Mapper\PictureMapper.cs" />
-    <Compile Include="Mapper\VideoMapper.cs" />
+    <Compile Include="Core\Media\FFmpegManager.cs" />
+    <Compile Include="Core\Net\DownloadManager.cs" />
+    <Compile Include="Mapper\Common\AssociationMapper.cs" />
+    <Compile Include="Mapper\Common\ActorMapper.cs" />
+    <Compile Include="Mapper\Common\AIFaceMapper.cs" />
+    <Compile Include="Mapper\Common\AppConfigMapper.cs" />
+    <Compile Include="Mapper\Common\AppDatabaseMapper.cs" />
+    <Compile Include="Mapper\Common\GameMapper.cs" />
+    <Compile Include="Mapper\Common\ComicMapper.cs" />
+    <Compile Include="Mapper\Common\TagStampMapper.cs" />
+    <Compile Include="Mapper\Common\SearchHistoryMapper.cs" />
+    <Compile Include="Mapper\Common\ComImagesMapper.cs" />
+    <Compile Include="Mapper\Common\MagnetsMapper.cs" />
+    <Compile Include="Mapper\Common\MetaDataMapper.cs" />
+    <Compile Include="Mapper\Common\TranslationMapper.cs" />
+    <Compile Include="Mapper\Common\UrlCodeMapper.cs" />
+    <Compile Include="Mapper\Common\PictureMapper.cs" />
+    <Compile Include="Mapper\Common\VideoMapper.cs" />
     <Compile Include="Test\TestMapper.cs" />
     <Compile Include="Test\TestUtils.cs" />
     <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />

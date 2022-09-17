@@ -50,10 +50,10 @@ namespace Jvedio.Core.Plugins
         private static void SetPluginEnabled()
         {
             if (PluginList?.Count > 0
-                && !string.IsNullOrEmpty(GlobalConfig.Settings.PluginEnabledJson))
+                && !string.IsNullOrEmpty(ConfigManager.Settings.PluginEnabledJson))
             {
 
-                string json = GlobalConfig.Settings.PluginEnabledJson;
+                string json = ConfigManager.Settings.PluginEnabledJson;
                 if (string.IsNullOrEmpty(json)) return;
                 Dictionary<string, bool> dict = JsonUtils.TryDeserializeObject<Dictionary<string, bool>>(json);
                 if (dict == null || dict.Count <= 0) return;

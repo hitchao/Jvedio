@@ -132,7 +132,7 @@ namespace Jvedio.Mapper
             builder.Append($"delete from metadata_to_actor where DataID in ({ids});");
             builder.Append($"delete from metadata_to_label where DataID in ({ids});");
             builder.Append("commit;");
-            GlobalMapper.videoMapper.ExecuteNonQuery(builder.ToString());
+            MapperManager.videoMapper.ExecuteNonQuery(builder.ToString());
         }
 
 

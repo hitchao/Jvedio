@@ -134,8 +134,8 @@ namespace Jvedio.Core.Crawler
         {
             if (server == null) return CrawlerHeader.Default;
             RequestHeader result = new RequestHeader();
-            result.WebProxy = GlobalConfig.ProxyConfig.GetWebProxy();
-            result.TimeOut = GlobalConfig.ProxyConfig.HttpTimeout * 1000;// 转为 ms
+            result.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
+            result.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000;// 转为 ms
             string header = server.Headers;
             if (string.IsNullOrEmpty(header)) return CrawlerHeader.Default; ;
             Dictionary<string, string> dict = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(header);

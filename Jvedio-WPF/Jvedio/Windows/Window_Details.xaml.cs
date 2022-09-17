@@ -27,7 +27,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils.Media;
 using static Jvedio.Utils.Visual.VisualHelper;
@@ -215,7 +215,7 @@ namespace Jvedio
         public void SetSkin()
         {
             BgImage.Source = null;
-            if (GlobalConfig.Settings.DetailShowBg)
+            if (ConfigManager.Settings.DetailShowBg)
                 BgImage.Source = GlobalVariable.BackgroundImage;
             ////设置字体
             //if (GlobalFont != null) this.FontFamily = GlobalFont;
@@ -225,7 +225,7 @@ namespace Jvedio
         {
             Video video = vieModel.CurrentVideo;
             if (video == null || video.DataID <= 0) return;
-            DownLoadTask task = new DownLoadTask(video, true, GlobalConfig.Settings.OverrideInfo);// 详情页面下载预览图
+            DownLoadTask task = new DownLoadTask(video, true, ConfigManager.Settings.OverrideInfo);// 详情页面下载预览图
             long dataid = video.DataID;
             task.onDownloadSuccess += (s, ev) =>
             {
@@ -254,8 +254,8 @@ namespace Jvedio
                     }
                 });
             };
-            if (!Global.Download.Dispatcher.Working)
-                Global.Download.Dispatcher.BeginWork();
+            if (!Global.DownloadManager.Dispatcher.Working)
+                Global.DownloadManager.Dispatcher.BeginWork();
             windowMain?.addToDownload(task);
             windowMain?.setDownloadStatus();
         }
@@ -265,8 +265,8 @@ namespace Jvedio
             Video video = vieModel.CurrentVideo;
             ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo, true);// 详情页面下载预览图
 
-            if (!Global.FFmpeg.Dispatcher.Working)
-                Global.FFmpeg.Dispatcher.BeginWork();
+            if (!Global.FFmpegManager.Dispatcher.Working)
+                Global.FFmpegManager.Dispatcher.BeginWork();
             windowMain?.addToScreenShot(task);
         }
 
@@ -290,8 +290,8 @@ namespace Jvedio
                    }
                });
             };
-            if (!Global.FFmpeg.Dispatcher.Working)
-                Global.FFmpeg.Dispatcher.BeginWork();
+            if (!Global.FFmpegManager.Dispatcher.Working)
+                Global.FFmpegManager.Dispatcher.BeginWork();
             windowMain?.addToScreenShot(task);
         }
 
@@ -763,9 +763,9 @@ namespace Jvedio
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
-            GlobalConfig.Detail.ShowScreenShot = vieModel.ShowScreenShot;
-            GlobalConfig.Detail.InfoSelectedIndex = vieModel.InfoSelectedIndex;
-            GlobalConfig.Detail.Save();
+            ConfigManager.Detail.ShowScreenShot = vieModel.ShowScreenShot;
+            ConfigManager.Detail.InfoSelectedIndex = vieModel.InfoSelectedIndex;
+            ConfigManager.Detail.Save();
         }
 
 
@@ -1480,7 +1480,7 @@ namespace Jvedio
             if (e != null && e.List != null)
             {
                 vieModel.CurrentVideo.Label = string.Join(GlobalVariable.Separator.ToString(), e.List);
-                GlobalMapper.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
+                MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
             }
 
         }
@@ -1495,7 +1495,7 @@ namespace Jvedio
             labelTagPanel.TagList = null;
             labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
             labelTagPanel.Refresh();
-            GlobalMapper.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
+            MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
         }
 
         private void AddToLabel(object sender, RoutedEventArgs e)

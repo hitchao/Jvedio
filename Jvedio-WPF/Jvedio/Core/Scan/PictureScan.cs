@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.Scan
 {
@@ -170,7 +170,7 @@ namespace Jvedio.Core.Scan
             // 2.导入
             foreach (Picture data in toInsert)
             {
-                data.DBId = GlobalConfig.Main.CurrentDBId;
+                data.DBId = ConfigManager.Main.CurrentDBId;
                 data.FirstScanDate = DateHelper.Now();
                 data.LastScanDate = DateHelper.Now();
                 ScanResult.Import.Add(data.Path);

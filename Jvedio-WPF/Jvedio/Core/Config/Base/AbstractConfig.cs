@@ -40,7 +40,7 @@ namespace Jvedio.Core.Config.Base
         {
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", ConfigName);
-            AppConfig appConfig = GlobalMapper.appConfigMapper.SelectOne(wrapper);
+            AppConfig appConfig = MapperManager.appConfigMapper.SelectOne(wrapper);
             if (appConfig == null || appConfig.ConfigId == 0) return;
             Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(appConfig.ConfigValue);
             if (dict == null) return;
@@ -68,7 +68,7 @@ namespace Jvedio.Core.Config.Base
             AppConfig appConfig = new AppConfig();
             appConfig.ConfigName = ConfigName;
             appConfig.ConfigValue = JsonConvert.SerializeObject(dictionary);        // 不为 null
-            GlobalMapper.appConfigMapper.Insert(appConfig, InsertMode.Replace);
+            MapperManager.appConfigMapper.Insert(appConfig, InsertMode.Replace);
         }
     }
 }

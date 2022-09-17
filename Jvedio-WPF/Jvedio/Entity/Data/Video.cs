@@ -51,7 +51,7 @@ namespace Jvedio.Entity
         public static SelectWrapper<Video> InitWrapper()
         {
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            wrapper.Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId)
+            wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId)
                 .Eq("metadata.DataType", 0);
             return wrapper;
         }
@@ -236,8 +236,8 @@ namespace Jvedio.Entity
         private string getImagePath(ImageType imageType, string ext = null)
         {
             string result = "";
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
-            string basePicPath = GlobalConfig.Settings.PicPaths[pathType.ToString()].ToString();
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
+            string basePicPath = ConfigManager.Settings.PicPaths[pathType.ToString()].ToString();
             if (pathType != PathType.RelativeToData)
             {
                 if (pathType == PathType.RelativeToApp)
@@ -343,12 +343,12 @@ namespace Jvedio.Entity
         public string getSmallImage(string ext = ".jpg", bool searchExt = true)
         {
             string smallImagePath = getImagePath(ImageType.Small, ext);
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
 
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
-                Dictionary<string, string> dict = (Dictionary<string, string>)GlobalConfig.Settings.PicPaths[pathType.ToString()];
+                Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string smallPath = System.IO.Path.Combine(basePicPath, dict["SmallImagePath"]);
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
                 smallImagePath = parseRelativeImageFileName(smallPath);
@@ -364,12 +364,12 @@ namespace Jvedio.Entity
         {
             string bigImagePath = getImagePath(ImageType.Big, ext);
 
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
 
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
-                Dictionary<string, string> dict = (Dictionary<string, string>)GlobalConfig.Settings.PicPaths[pathType.ToString()];
+                Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string bigPath = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["BigImagePath"]));
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(bigPath))) bigPath += ext;
                 bigImagePath = parseRelativeImageFileName(bigPath);
@@ -384,11 +384,11 @@ namespace Jvedio.Entity
         {
             string imagePath = getImagePath(ImageType.Preview);
 
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
-                Dictionary<string, string> dict = (Dictionary<string, string>)GlobalConfig.Settings.PicPaths[pathType.ToString()];
+                Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["PreviewImagePath"]));
                 imagePath = parseRelativePath(path);
             }
@@ -399,11 +399,11 @@ namespace Jvedio.Entity
         {
             string imagePath = getImagePath(ImageType.ScreenShot);
 
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
-                Dictionary<string, string> dict = (Dictionary<string, string>)GlobalConfig.Settings.PicPaths[pathType.ToString()];
+                Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["ScreenShotPath"]));
                 imagePath = parseRelativePath(path);
             }
@@ -413,11 +413,11 @@ namespace Jvedio.Entity
         {
             string imagePath = getImagePath(ImageType.Gif, ".gif");
 
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
-                Dictionary<string, string> dict = (Dictionary<string, string>)GlobalConfig.Settings.PicPaths[pathType.ToString()];
+                Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["Gif"]));
                 imagePath = parseRelativePath(path);
             }
@@ -475,9 +475,9 @@ namespace Jvedio.Entity
 
         public void SaveNfo()
         {
-            if (!GlobalConfig.Settings.SaveInfoToNFO) return;
-            string dir = GlobalConfig.Settings.NFOSavePath;
-            bool overrideInfo = GlobalConfig.Settings.OverrideInfo; ;
+            if (!ConfigManager.Settings.SaveInfoToNFO) return;
+            string dir = ConfigManager.Settings.NFOSavePath;
+            bool overrideInfo = ConfigManager.Settings.OverrideInfo; ;
 
             string saveName = $"{VID.ToProperFileName()}.nfo";
             if (string.IsNullOrEmpty(VID)) saveName = $"{System.IO.Path.GetFileNameWithoutExtension(Path)}.nfo";
@@ -570,8 +570,8 @@ namespace Jvedio.Entity
 
         public string[] ToFileName()
         {
-            bool addTag = GlobalConfig.RenameConfig.AddRenameTag;
-            string formatString = GlobalConfig.RenameConfig.FormatString;
+            bool addTag = ConfigManager.RenameConfig.AddRenameTag;
+            string formatString = ConfigManager.RenameConfig.FormatString;
             FileInfo fileInfo = new FileInfo(Path);
             string name = System.IO.Path.GetFileNameWithoutExtension(Path);
             string dir = fileInfo.Directory.FullName;
@@ -603,7 +603,7 @@ namespace Jvedio.Entity
             {
                 newName = newName.Replace(item.ToString(), "");
             }
-            if (GlobalConfig.RenameConfig.RemoveTitleSpace) newName = newName.Trim();
+            if (ConfigManager.RenameConfig.RemoveTitleSpace) newName = newName.Trim();
 
             if (HasSubSection)
             {
@@ -632,7 +632,7 @@ namespace Jvedio.Entity
 
         private void ReplaceWithValue(ref string result, string property, PropertyInfo[] PropertyList)
         {
-            string inSplit = GlobalConfig.RenameConfig.InSplit.Equals("[null]") ? "" : GlobalConfig.RenameConfig.InSplit;
+            string inSplit = ConfigManager.RenameConfig.InSplit.Equals("[null]") ? "" : ConfigManager.RenameConfig.InSplit;
             foreach (PropertyInfo item in PropertyList)
             {
                 string name = item.Name;
@@ -699,6 +699,11 @@ namespace Jvedio.Entity
         {
             return Identify.IsCHS(Path) || Genre?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0 ||
                      Series?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0 || Label?.IndexOfAnyString(GlobalVariable.TagStrings_Translated) >= 0;
+        }
+
+        public void CleanInfo()
+        {
+
         }
 
     }

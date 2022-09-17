@@ -42,10 +42,10 @@ namespace Jvedio.Core.Config
                 {
                     // 更新插件
                     string json = httpResult.SourceCode;
-                    if (!json.Equals(GlobalConfig.PluginConfig.PluginList))
+                    if (!json.Equals(ConfigManager.PluginConfig.PluginList))
                     {
-                        GlobalConfig.PluginConfig.PluginList = json;
-                        GlobalConfig.PluginConfig.Save();
+                        ConfigManager.PluginConfig.PluginList = json;
+                        ConfigManager.PluginConfig.Save();
                         onRefresh?.Invoke();
                     }
                 }

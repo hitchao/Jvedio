@@ -32,31 +32,31 @@ namespace Jvedio
         private void initSize()
         {
 
-            if (GlobalConfig.Filter.Width > 0)
-                this.Width = GlobalConfig.Filter.Width;
-            if (GlobalConfig.Filter.Height > 0)
-                this.Height = GlobalConfig.Filter.Height;
+            if (ConfigManager.Filter.Width > 0)
+                this.Width = ConfigManager.Filter.Width;
+            if (ConfigManager.Filter.Height > 0)
+                this.Height = ConfigManager.Filter.Height;
 
 
-            if (GlobalConfig.Filter.X > 0)
-                this.Left = GlobalConfig.Filter.X;
+            if (ConfigManager.Filter.X > 0)
+                this.Left = ConfigManager.Filter.X;
             else
                 this.Left = (SystemParameters.PrimaryScreenWidth - this.Width) / 2;
 
 
-            if (GlobalConfig.Filter.Y > 0)
-                this.Top = GlobalConfig.Filter.Y;
+            if (ConfigManager.Filter.Y > 0)
+                this.Top = ConfigManager.Filter.Y;
             else
                 this.Top = (SystemParameters.PrimaryScreenHeight - this.Height) / 2;
         }
 
         private void SaveConfig()
         {
-            GlobalConfig.Filter.X = this.Left;
-            GlobalConfig.Filter.Y = this.Top;
-            GlobalConfig.Filter.Width = this.Width;
-            GlobalConfig.Filter.Height = this.Height;
-            GlobalConfig.Filter.Save();
+            ConfigManager.Filter.X = this.Left;
+            ConfigManager.Filter.Y = this.Top;
+            ConfigManager.Filter.Width = this.Width;
+            ConfigManager.Filter.Height = this.Height;
+            ConfigManager.Filter.Save();
         }
 
         private static List<string> FilterList = new List<string>()
@@ -108,9 +108,9 @@ namespace Jvedio
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
             string sql = $"SELECT DISTINCT ReleaseDate FROM metadata " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}";
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
 
-            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.Select(sql);
+            List<Dictionary<string, object>> list = MapperManager.metaDataMapper.Select(sql);
             // 2020-02-10
             List<string> dates = list.Select(x => x["ReleaseDate"].ToString())
                 .Where(arg => !string.IsNullOrEmpty(arg) && arg.LastIndexOf('-') > 5).ToList();
@@ -149,9 +149,9 @@ namespace Jvedio
 
 
             string sql = $"SELECT DISTINCT {field} FROM metadata_video join metadata on metadata.DataID=metadata_video.DataID " +
-                    $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}";
+                    $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
 
-            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.Select(sql);
+            List<Dictionary<string, object>> list = MapperManager.metaDataMapper.Select(sql);
             List<string> dataList = list.Select(x => x[field].ToString())
                  .Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             HashSet<string> set = new HashSet<string>();
@@ -166,9 +166,9 @@ namespace Jvedio
         private void LoadSingleDataFromMetaData(WrapPanel wrapPanel, string field)
         {
             string sql = $"SELECT DISTINCT {field} FROM metadata " +
-                    $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}";
+                    $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
 
-            List<Dictionary<string, object>> list = GlobalMapper.metaDataMapper.Select(sql);
+            List<Dictionary<string, object>> list = MapperManager.metaDataMapper.Select(sql);
             List<string> dataList = list.Select(x => x[field].ToString())
                  .Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             HashSet<string> set = new HashSet<string>();

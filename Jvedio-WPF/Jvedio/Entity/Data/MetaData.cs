@@ -158,7 +158,7 @@ namespace Jvedio.Entity
         public static SelectWrapper<MetaData> InitWrapper(DataType dataType)
         {
             SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId)
+            wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId)
                 .Eq("metadata.DataType", (int)dataType);
             return wrapper;
         }

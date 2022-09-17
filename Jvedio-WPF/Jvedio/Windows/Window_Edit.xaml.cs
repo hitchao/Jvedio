@@ -132,8 +132,8 @@ namespace Jvedio
 
         private void BaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            GlobalConfig.Edit.MoreExpanded = vieModel.MoreExpanded;
-            GlobalConfig.Edit.Save();
+            ConfigManager.Edit.MoreExpanded = vieModel.MoreExpanded;
+            ConfigManager.Edit.Save();
         }
 
 
@@ -283,7 +283,7 @@ namespace Jvedio
                 vieModel.CurrentVideo.ActorNameList = new System.Collections.Generic.List<string>();
             if (vieModel.CurrentVideo.ActorInfos == null)
                 vieModel.CurrentVideo.ActorInfos = new System.Collections.Generic.List<ActorInfo>();
-            ActorInfo actorInfo = GlobalMapper.actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
+            ActorInfo actorInfo = MapperManager.actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
             if (actorInfo != null && !vieModel.ViewActors.Contains(actorInfo))
                 vieModel.ViewActors.Add(actorInfo);
         }
@@ -352,7 +352,7 @@ namespace Jvedio
         {
             searchActorPopup.IsOpen = true;
             vieModel.SelectActor();
-            PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType.Equals(PathType.RelativeToData))
                 MessageCard.Info("由于当前图片资源文相对于影片，因此该页面不显示头像");
         }

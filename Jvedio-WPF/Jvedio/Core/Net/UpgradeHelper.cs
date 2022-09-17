@@ -67,9 +67,9 @@ namespace Jvedio.Core.Net
                         if (dict.ContainsKey("ReleaseNote") && dict["ReleaseNote"] != null)
                         {
                             Dictionary<string, string> d = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(dict["ReleaseNote"].ToString());
-                            if (d != null && d.Count == TotalLanguages && GlobalConfig.Settings.SelectedLanguage < languageDict.Count)
+                            if (d != null && d.Count == TotalLanguages && ConfigManager.Settings.SelectedLanguage < languageDict.Count)
                             {
-                                string lang = languageDict[(int)GlobalConfig.Settings.SelectedLanguage];
+                                string lang = languageDict[(int)ConfigManager.Settings.SelectedLanguage];
                                 ReleaseNote = d.ContainsKey(lang) ? d[lang] : "";
                             }
 

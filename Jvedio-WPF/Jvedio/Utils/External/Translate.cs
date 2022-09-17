@@ -34,7 +34,7 @@ namespace Jvedio.Utils.External
         {
             string from = "auto";
             string to = "zh-CHS";
-            long language = GlobalConfig.Settings.SelectedLanguage;
+            long language = ConfigManager.Settings.SelectedLanguage;
             switch (language)
             {
 

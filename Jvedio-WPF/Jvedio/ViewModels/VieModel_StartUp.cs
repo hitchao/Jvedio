@@ -15,7 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel
 {
@@ -23,17 +23,17 @@ namespace Jvedio.ViewModel
     {
 
 
-        public bool Sort = GlobalConfig.StartUp.Sort;
-        public string SortType = GlobalConfig.StartUp.SortType;
+        public bool Sort = ConfigManager.StartUp.Sort;
+        public string SortType = ConfigManager.StartUp.SortType;
         public string CurrentSearch = "";
-        public long CurrentSideIdx = GlobalConfig.StartUp.SideIdx;
+        public long CurrentSideIdx = ConfigManager.StartUp.SideIdx;
 
 
         #region "属性"
 
 
 
-        private bool _Tile = GlobalConfig.StartUp.Tile;
+        private bool _Tile = ConfigManager.StartUp.Tile;
 
         /// <summary>
         /// 是否平铺
@@ -64,7 +64,7 @@ namespace Jvedio.ViewModel
             base.RaisePropertyChanged(propertyName);
         }
 
-        private bool _ShowHideItem = GlobalConfig.StartUp.ShowHideItem;
+        private bool _ShowHideItem = ConfigManager.StartUp.ShowHideItem;
 
         /// <summary>
         /// 是否平铺
@@ -127,7 +127,7 @@ namespace Jvedio.ViewModel
             CurrentDatabases = new ObservableCollection<AppDatabase>();
             List<AppDatabase> appDatabases = new List<AppDatabase>();
             SelectWrapper<AppDatabase> wrapper = new SelectWrapper<AppDatabase>();
-            wrapper.Eq("DataType", GlobalConfig.StartUp.SideIdx);
+            wrapper.Eq("DataType", ConfigManager.StartUp.SideIdx);
             appDatabases = appDatabaseMapper.SelectList(wrapper);
             if (appDatabases == null) return;
             appDatabases.ForEach(item => Databases.Add(item));

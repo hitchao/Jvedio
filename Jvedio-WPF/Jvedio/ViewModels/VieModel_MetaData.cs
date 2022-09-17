@@ -24,7 +24,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Visual.VisualHelper;
 
@@ -246,7 +246,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int _SearchSelectedIndex = (int)GlobalConfig.Main.SearchSelectedIndex;
+        private int _SearchSelectedIndex = (int)ConfigManager.Main.SearchSelectedIndex;
 
         public int SearchSelectedIndex
         {
@@ -257,7 +257,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ClassifySelectedIndex = (int)GlobalConfig.Main.ClassifySelectedIndex;
+        private int _ClassifySelectedIndex = (int)ConfigManager.Main.ClassifySelectedIndex;
 
         public int ClassifySelectedIndex
         {
@@ -269,7 +269,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private double _SideGridWidth = GlobalConfig.Main.SideGridWidth;
+        private double _SideGridWidth = ConfigManager.Main.SideGridWidth;
 
         public double SideGridWidth
         {
@@ -911,7 +911,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private int _PageSize = GlobalConfig.MetaData.PageSize == 0 ? 40 : (int)GlobalConfig.MetaData.PageSize;
+        private int _PageSize = ConfigManager.MetaData.PageSize == 0 ? 40 : (int)ConfigManager.MetaData.PageSize;
         public int PageSize
         {
             get { return _PageSize; }
@@ -1210,7 +1210,7 @@ namespace Jvedio.ViewModel
                 "on metadata_to_tagstamp.TagID=common_tagstamp.TagID " +
                 "join metadata " +
                 "on metadata.DataID=metadata_to_tagstamp.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                 "GROUP BY common_tagstamp.TagID;";
 
             List<Dictionary<string, object>> list = tagStampMapper.Select(sql);
@@ -1356,14 +1356,14 @@ namespace Jvedio.ViewModel
         {
             return await Task.Run(() =>
             {
-                SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
+                SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
                 string field = searchType.ToString();
 
                 List<string> result = new List<string>();
                 if (string.IsNullOrEmpty(SearchText)) return result;
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
                 setSortOrder(wrapper);//按照当前排序
-                wrapper.Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0);
+                wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0);
                 SelectWrapper<Video> selectWrapper = getWrapper(searchType);
                 if (selectWrapper != null) wrapper.Join(selectWrapper);
 
@@ -1699,7 +1699,7 @@ namespace Jvedio.ViewModel
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} GROUP BY LabelName ORDER BY Count DESC";
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)
             {
@@ -1735,7 +1735,7 @@ namespace Jvedio.ViewModel
 
                 Dictionary<string, long> genreDict = new Dictionary<string, long>();
                 string sql = $"SELECT Genre from metadata " +
-                    $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND Genre !='' ";
+                    $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} AND Genre !='' ";
 
                 List<Dictionary<string, object>> lists = metaDataMapper.Select(sql);
                 foreach (Dictionary<string, object> item in lists)
@@ -1813,7 +1813,7 @@ namespace Jvedio.ViewModel
             List<string> result = new List<string>();
             string sql = $"SELECT {field},Count({field}) as Count from metadata " +
                 "JOIN metadata_video on metadata.DataID=metadata_video.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
                 $"GROUP BY {field} ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)
@@ -1927,8 +1927,8 @@ namespace Jvedio.ViewModel
         {
             if (wrapper == null) return;
 
-            string sortField = getSortField((int)GlobalConfig.MetaData.SortIndex);
-            if (GlobalConfig.MetaData.SortDescending) wrapper.Desc(sortField);
+            string sortField = getSortField((int)ConfigManager.MetaData.SortIndex);
+            if (ConfigManager.MetaData.SortDescending) wrapper.Desc(sortField);
             else wrapper.Asc(sortField);
         }
 
@@ -1973,7 +1973,7 @@ namespace Jvedio.ViewModel
             }
 
             // todo 如果搜索框选中了标签，搜索出来的结果不一致
-            SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
+            SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
             if (Searching)
             {
                 if (searchType == SearchField.ActorName)
@@ -2234,7 +2234,7 @@ namespace Jvedio.ViewModel
         {
             Task.Run(() =>
             {
-                long dbid = GlobalConfig.Main.CurrentDBId;
+                long dbid = ConfigManager.Main.CurrentDBId;
                 int dataType = (int)GlobalVariable.CurrentDataType;
                 AllDataCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", dataType));
                 appDatabaseMapper.UpdateFieldById("Count", AllDataCount.ToString(), dbid);

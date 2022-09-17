@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Jvedio.Mapper.BaseMapper;
 using Jvedio.Mapper;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using Jvedio.Core.Scan;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;

@@ -145,7 +145,7 @@ namespace Jvedio.ViewModel
                 string pluginID = plugin.PluginID;
                 if (string.IsNullOrEmpty(pluginID)) continue;
                 string name = plugin.PluginName;
-                CrawlerServer crawlerServer = GlobalConfig.ServerConfig.CrawlerServers
+                CrawlerServer crawlerServer = ConfigManager.ServerConfig.CrawlerServers
                     .Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
                 if (crawlerServer == null)
                 {
@@ -156,7 +156,7 @@ namespace Jvedio.ViewModel
                 else
                 {
                     ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
-                    GlobalConfig.ServerConfig.CrawlerServers.Where(arg => arg.PluginID.Equals(pluginID)).
+                    ConfigManager.ServerConfig.CrawlerServers.Where(arg => arg.PluginID.Equals(pluginID)).
                         ToList().ForEach(t => crawlers.Add(t));
                     if (!CrawlerServers.ContainsKey(pluginID))
                         CrawlerServers.Add(pluginID, crawlers);
@@ -191,8 +191,8 @@ namespace Jvedio.ViewModel
 
                 }
             }
-            GlobalConfig.ServerConfig.CrawlerServers = list;
-            GlobalConfig.ServerConfig.Save();
+            ConfigManager.ServerConfig.CrawlerServers = list;
+            ConfigManager.ServerConfig.Save();
             return true;
         }
 
@@ -202,7 +202,7 @@ namespace Jvedio.ViewModel
         public void setBasePicPaths()
         {
 
-            PicPaths = GlobalConfig.Settings.PicPaths;
+            PicPaths = ConfigManager.Settings.PicPaths;
 
             PathType type = (PathType)PicPathMode;
             BasePicPath = PicPaths[type.ToString()].ToString();
@@ -217,7 +217,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private int _TabControlSelectedIndex = (int)GlobalConfig.Settings.TabControlSelectedIndex;
+        private int _TabControlSelectedIndex = (int)ConfigManager.Settings.TabControlSelectedIndex;
 
         public int TabControlSelectedIndex
         {
@@ -239,7 +239,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _AutoHandleHeader = GlobalConfig.Settings.AutoHandleHeader;
+        private bool _AutoHandleHeader = ConfigManager.Settings.AutoHandleHeader;
 
         public bool AutoHandleHeader
         {
@@ -250,7 +250,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _ShowSearchHistory = GlobalConfig.Main.ShowSearchHistory;
+        private bool _ShowSearchHistory = ConfigManager.Main.ShowSearchHistory;
 
         public bool ShowSearchHistory
         {
@@ -390,7 +390,7 @@ namespace Jvedio.ViewModel
 
 
 
-        private int _PicPathMode = (int)GlobalConfig.Settings.PicPathMode;
+        private int _PicPathMode = (int)ConfigManager.Settings.PicPathMode;
 
         public int PicPathMode
         {
@@ -483,7 +483,7 @@ namespace Jvedio.ViewModel
 
 
 
-        private bool _DownloadPreviewImage = GlobalConfig.Settings.DownloadPreviewImage;
+        private bool _DownloadPreviewImage = ConfigManager.Settings.DownloadPreviewImage;
 
         public bool DownloadPreviewImage
         {
@@ -496,7 +496,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private bool _SkipExistImage = GlobalConfig.Settings.SkipExistImage;
+        private bool _SkipExistImage = ConfigManager.Settings.SkipExistImage;
 
         public bool SkipExistImage
         {
@@ -508,7 +508,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _OverrideInfo = GlobalConfig.Settings.OverrideInfo;
+        private bool _OverrideInfo = ConfigManager.Settings.OverrideInfo;
 
         public bool OverrideInfo
         {
@@ -519,7 +519,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _IgnoreCertVal = GlobalConfig.Settings.IgnoreCertVal;
+        private bool _IgnoreCertVal = ConfigManager.Settings.IgnoreCertVal;
 
         public bool IgnoreCertVal
         {
@@ -556,7 +556,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _ProxyServer = GlobalConfig.ProxyConfig.Server;
+        private string _ProxyServer = ConfigManager.ProxyConfig.Server;
 
         public string ProxyServer
         {
@@ -567,7 +567,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ProxyPort = (int)GlobalConfig.ProxyConfig.Port;
+        private int _ProxyPort = (int)ConfigManager.ProxyConfig.Port;
 
         public int ProxyPort
         {
@@ -578,7 +578,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private string _ProxyUserName = GlobalConfig.ProxyConfig.UserName;
+        private string _ProxyUserName = ConfigManager.ProxyConfig.UserName;
 
         public string ProxyUserName
         {
@@ -589,7 +589,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private string _ProxyPwd = GlobalConfig.ProxyConfig.Password;
+        private string _ProxyPwd = ConfigManager.ProxyConfig.Password;
 
         public string ProxyPwd
         {
@@ -616,7 +616,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _HttpTimeout = (int)GlobalConfig.ProxyConfig.HttpTimeout;
+        private int _HttpTimeout = (int)ConfigManager.ProxyConfig.HttpTimeout;
 
         public int HttpTimeout
         {
@@ -632,7 +632,7 @@ namespace Jvedio.ViewModel
 
         #region "扫描"
 
-        private bool _CopyNFOPicture = GlobalConfig.ScanConfig.CopyNFOPicture;
+        private bool _CopyNFOPicture = ConfigManager.ScanConfig.CopyNFOPicture;
 
         public bool CopyNFOPicture
         {
@@ -643,7 +643,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private double _MinFileSize = GlobalConfig.ScanConfig.MinFileSize;
+        private double _MinFileSize = ConfigManager.ScanConfig.MinFileSize;
 
         public double MinFileSize
         {
@@ -654,7 +654,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _ScanOnStartUp = GlobalConfig.ScanConfig.ScanOnStartUp;
+        private bool _ScanOnStartUp = ConfigManager.ScanConfig.ScanOnStartUp;
 
         public bool ScanOnStartUp
         {
@@ -666,7 +666,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _FetchVID = GlobalConfig.ScanConfig.FetchVID;
+        private bool _FetchVID = ConfigManager.ScanConfig.FetchVID;
 
         public bool FetchVID
         {
@@ -683,7 +683,7 @@ namespace Jvedio.ViewModel
 
         #region "常规设置"
 
-        private bool _AutoGenScreenShot = GlobalConfig.Settings.AutoGenScreenShot;
+        private bool _AutoGenScreenShot = ConfigManager.Settings.AutoGenScreenShot;
 
         public bool AutoGenScreenShot
         {
@@ -694,7 +694,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _OpenDataBaseDefault = GlobalConfig.Settings.OpenDataBaseDefault;
+        private bool _OpenDataBaseDefault = ConfigManager.Settings.OpenDataBaseDefault;
 
         public bool OpenDataBaseDefault
         {
@@ -705,7 +705,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _TeenMode = GlobalConfig.Settings.TeenMode;
+        private bool _TeenMode = ConfigManager.Settings.TeenMode;
 
         public bool TeenMode
         {
@@ -716,7 +716,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _CloseToTaskBar = GlobalConfig.Settings.CloseToTaskBar;
+        private bool _CloseToTaskBar = ConfigManager.Settings.CloseToTaskBar;
 
         public bool CloseToTaskBar
         {
@@ -738,7 +738,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _SelectedLanguage = (int)GlobalConfig.Settings.SelectedLanguage;
+        private int _SelectedLanguage = (int)ConfigManager.Settings.SelectedLanguage;
 
         public int SelectedLanguage
         {
@@ -752,7 +752,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private bool _DetailShowBg = GlobalConfig.Settings.DetailShowBg;
+        private bool _DetailShowBg = ConfigManager.Settings.DetailShowBg;
 
         public bool DetailShowBg
         {
@@ -770,7 +770,7 @@ namespace Jvedio.ViewModel
 
 
         #region "nfo"
-        private bool _SaveInfoToNFO = GlobalConfig.Settings.SaveInfoToNFO;
+        private bool _SaveInfoToNFO = ConfigManager.Settings.SaveInfoToNFO;
 
         public bool SaveInfoToNFO
         {
@@ -781,7 +781,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _OverriteNFO = GlobalConfig.Settings.OverriteNFO;
+        private bool _OverriteNFO = ConfigManager.Settings.OverriteNFO;
 
         public bool OverriteNFO
         {
@@ -792,7 +792,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private string _NFOSavePath = GlobalConfig.Settings.NFOSavePath;
+        private string _NFOSavePath = ConfigManager.Settings.NFOSavePath;
 
         public string NFOSavePath
         {
@@ -811,7 +811,7 @@ namespace Jvedio.ViewModel
         #endregion
 
         #region "ffmpeg"
-        private string _FFMPEG_Path = GlobalConfig.FFmpegConfig.Path;
+        private string _FFMPEG_Path = ConfigManager.FFmpegConfig.Path;
 
         public string FFMPEG_Path
         {
@@ -822,7 +822,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ScreenShot_ThreadNum = (int)GlobalConfig.FFmpegConfig.ThreadNum;
+        private int _ScreenShot_ThreadNum = (int)ConfigManager.FFmpegConfig.ThreadNum;
 
         public int ScreenShot_ThreadNum
         {
@@ -833,7 +833,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ScreenShot_TimeOut = (int)GlobalConfig.FFmpegConfig.TimeOut;
+        private int _ScreenShot_TimeOut = (int)ConfigManager.FFmpegConfig.TimeOut;
 
         public int ScreenShot_TimeOut
         {
@@ -844,7 +844,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ScreenShotNum = (int)GlobalConfig.FFmpegConfig.ScreenShotNum;
+        private int _ScreenShotNum = (int)ConfigManager.FFmpegConfig.ScreenShotNum;
 
         public int ScreenShotNum
         {
@@ -857,7 +857,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ScreenShotIgnoreStart = (int)GlobalConfig.FFmpegConfig.ScreenShotIgnoreStart;
+        private int _ScreenShotIgnoreStart = (int)ConfigManager.FFmpegConfig.ScreenShotIgnoreStart;
 
         public int ScreenShotIgnoreStart
         {
@@ -868,7 +868,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ScreenShotIgnoreEnd = (int)GlobalConfig.FFmpegConfig.ScreenShotIgnoreEnd;
+        private int _ScreenShotIgnoreEnd = (int)ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd;
 
         public int ScreenShotIgnoreEnd
         {
@@ -879,7 +879,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _SkipExistGif = GlobalConfig.FFmpegConfig.SkipExistGif;
+        private bool _SkipExistGif = ConfigManager.FFmpegConfig.SkipExistGif;
 
         public bool SkipExistGif
         {
@@ -890,7 +890,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _SkipExistScreenShot = GlobalConfig.FFmpegConfig.SkipExistScreenShot;
+        private bool _SkipExistScreenShot = ConfigManager.FFmpegConfig.SkipExistScreenShot;
 
         public bool SkipExistScreenShot
         {
@@ -901,7 +901,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _GifAutoHeight = GlobalConfig.FFmpegConfig.GifAutoHeight;
+        private bool _GifAutoHeight = ConfigManager.FFmpegConfig.GifAutoHeight;
 
         public bool GifAutoHeight
         {
@@ -913,7 +913,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int _GifWidth = (int)GlobalConfig.FFmpegConfig.GifWidth;
+        private int _GifWidth = (int)ConfigManager.FFmpegConfig.GifWidth;
 
         public int GifWidth
         {
@@ -924,7 +924,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _GifHeight = (int)GlobalConfig.FFmpegConfig.GifHeight;
+        private int _GifHeight = (int)ConfigManager.FFmpegConfig.GifHeight;
 
         public int GifHeight
         {
@@ -935,7 +935,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _GifDuration = (int)GlobalConfig.FFmpegConfig.GifDuration;
+        private int _GifDuration = (int)ConfigManager.FFmpegConfig.GifDuration;
 
         public int GifDuration
         {
@@ -955,7 +955,7 @@ namespace Jvedio.ViewModel
 
         #region "重命名"
 
-        private bool _RemoveTitleSpace = GlobalConfig.RenameConfig.RemoveTitleSpace;
+        private bool _RemoveTitleSpace = ConfigManager.RenameConfig.RemoveTitleSpace;
 
         public bool RemoveTitleSpace
         {
@@ -966,7 +966,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _AddRenameTag = GlobalConfig.RenameConfig.AddRenameTag;
+        private bool _AddRenameTag = ConfigManager.RenameConfig.AddRenameTag;
 
         public bool AddRenameTag
         {
@@ -977,7 +977,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private string _FormatString = GlobalConfig.RenameConfig.FormatString;
+        private string _FormatString = ConfigManager.RenameConfig.FormatString;
 
         public string FormatString
         {
@@ -995,7 +995,7 @@ namespace Jvedio.ViewModel
 
 
         #region "库"
-        private bool _AutoBackup = GlobalConfig.Settings.AutoBackup;
+        private bool _AutoBackup = ConfigManager.Settings.AutoBackup;
 
         public bool AutoBackup
         {
@@ -1006,7 +1006,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _AutoBackupPeriodIndex = (int)GlobalConfig.Settings.AutoBackupPeriodIndex;
+        private int _AutoBackupPeriodIndex = (int)ConfigManager.Settings.AutoBackupPeriodIndex;
 
         public int AutoBackupPeriodIndex
         {
@@ -1017,7 +1017,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _AutoCreatePlayableIndex = GlobalConfig.Settings.AutoCreatePlayableIndex;
+        private bool _AutoCreatePlayableIndex = ConfigManager.Settings.AutoCreatePlayableIndex;
 
         public bool AutoCreatePlayableIndex
         {
@@ -1048,7 +1048,7 @@ namespace Jvedio.ViewModel
         #region "端口"
 
 
-        private bool _ListenEnabled = GlobalConfig.Settings.ListenEnabled;
+        private bool _ListenEnabled = ConfigManager.Settings.ListenEnabled;
 
         public bool ListenEnabled
         {
@@ -1060,7 +1060,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _ListenPort = GlobalConfig.Settings.ListenPort;
+        private string _ListenPort = ConfigManager.Settings.ListenPort;
 
         public string ListenPort
         {

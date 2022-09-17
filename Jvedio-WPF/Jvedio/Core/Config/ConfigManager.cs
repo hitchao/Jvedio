@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Jvedio
 {
-    public static class GlobalConfig
+    public static class ConfigManager
     {
         public static StartUp StartUp = StartUp.createInstance();
         public static Core.WindowConfig.Main Main = Core.WindowConfig.Main.createInstance();
@@ -36,7 +36,7 @@ namespace Jvedio
 
         public static void InitConfig()
         {
-            System.Reflection.FieldInfo[] fieldInfos = typeof(GlobalConfig).GetFields();
+            System.Reflection.FieldInfo[] fieldInfos = typeof(ConfigManager).GetFields();
 
             foreach (var item in fieldInfos)
             {
@@ -53,9 +53,9 @@ namespace Jvedio
         public static void Init()
         {
             //配置 ffmpeg 路径
-            if (!File.Exists(GlobalConfig.FFmpegConfig.Path) && File.Exists("ffmpeg.exe"))
+            if (!File.Exists(ConfigManager.FFmpegConfig.Path) && File.Exists("ffmpeg.exe"))
             {
-                GlobalConfig.FFmpegConfig.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");
+                ConfigManager.FFmpegConfig.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");
             }
         }
 

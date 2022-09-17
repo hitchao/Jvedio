@@ -33,7 +33,7 @@ namespace Jvedio
             string notices = "";
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", configName);
-            AppConfig appConfig = GlobalMapper.appConfigMapper.SelectOne(wrapper);
+            AppConfig appConfig = MapperManager.appConfigMapper.SelectOne(wrapper);
             if (appConfig != null && !string.IsNullOrEmpty(appConfig.ConfigValue))
                 notices = appConfig.ConfigValue.Replace(GlobalVariable.Separator, '\n');
             this.Message = notices;

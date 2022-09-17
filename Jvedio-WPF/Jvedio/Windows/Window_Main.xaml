@@ -3070,6 +3070,10 @@
                                                                                         Click="ReMoveZero"
                                                                                         Header="{x:Static lang:Resources.Menu_RemoveZero}"
                                                                                         Visibility="Collapsed" />
+                                                                                    <MenuItem
+                                                                                        Click="DeleteDownloadInfo"
+                                                                                        Header="清除已下载的信息"
+                                                                                        Visibility="Collapsed" />
 
                                                                                 </MenuItem>
 

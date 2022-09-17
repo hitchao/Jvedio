@@ -30,7 +30,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.Media.ImageHelper;
 using static Jvedio.Utils.Visual.VisualHelper;
@@ -230,7 +230,7 @@ namespace Jvedio.ViewModel
 
 
 
-        private int _SearchSelectedIndex = (int)GlobalConfig.Main.SearchSelectedIndex;
+        private int _SearchSelectedIndex = (int)ConfigManager.Main.SearchSelectedIndex;
 
         public int SearchSelectedIndex
         {
@@ -241,7 +241,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _ClassifySelectedIndex = (int)GlobalConfig.Main.ClassifySelectedIndex;
+        private int _ClassifySelectedIndex = (int)ConfigManager.Main.ClassifySelectedIndex;
 
         public int ClassifySelectedIndex
         {
@@ -253,7 +253,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private double _SideGridWidth = GlobalConfig.Main.SideGridWidth;
+        private double _SideGridWidth = ConfigManager.Main.SideGridWidth;
 
         public double SideGridWidth
         {
@@ -963,7 +963,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _TeenMode = GlobalConfig.Settings.TeenMode;
+        private bool _TeenMode = ConfigManager.Settings.TeenMode;
 
         public bool TeenMode
         {
@@ -1220,7 +1220,7 @@ namespace Jvedio.ViewModel
 
                     string sql = VideoMapper.BASE_SQL;
                     IWrapper<Video> wrapper = new SelectWrapper<Video>();
-                    wrapper.Select("VID").Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0).In("VID", vidList);
+                    wrapper.Select("VID").Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0).In("VID", vidList);
                     sql = wrapper.toSelect() + sql + wrapper.toWhere(false);
                     List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
                     List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), true);
@@ -1234,7 +1234,7 @@ namespace Jvedio.ViewModel
                         Video video = new Video()
                         {
                             VID = vid,
-                            DBId = GlobalConfig.Main.CurrentDBId,
+                            DBId = ConfigManager.Main.CurrentDBId,
                             VideoType = result.VideoType,
                             FirstScanDate = DateHelper.Now(),
                             LastScanDate = DateHelper.Now(),
@@ -1281,14 +1281,14 @@ namespace Jvedio.ViewModel
         {
             return await Task.Run(() =>
             {
-                SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
+                SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
                 string field = searchType.ToString();
 
                 List<string> result = new List<string>();
                 if (string.IsNullOrEmpty(SearchText)) return result;
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
                 setSortOrder(wrapper);//按照当前排序
-                wrapper.Eq("metadata.DBId", GlobalConfig.Main.CurrentDBId).Eq("metadata.DataType", 0);
+                wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0);
                 SelectWrapper<Video> selectWrapper = getWrapper(searchType);
                 if (selectWrapper != null) wrapper.Join(selectWrapper);
 
@@ -1462,7 +1462,7 @@ namespace Jvedio.ViewModel
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                 $"{(!string.IsNullOrEmpty(like_sql) ? like_sql : "")}" +
                 $"GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
@@ -1506,7 +1506,7 @@ namespace Jvedio.ViewModel
 
                 Dictionary<string, long> genreDict = new Dictionary<string, long>();
                 string sql = $"SELECT Genre from metadata " +
-                    $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND Genre !=''";
+                    $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} AND Genre !=''";
 
                 List<Dictionary<string, object>> lists = metaDataMapper.Select(sql);
                 if (lists != null)
@@ -1608,7 +1608,7 @@ namespace Jvedio.ViewModel
             List<string> result = new List<string>();
             string sql = $"SELECT {field},Count({field}) as Count from metadata " +
                 "JOIN metadata_video on metadata.DataID=metadata_video.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} AND {field} !='' " +
                 $"{(!string.IsNullOrEmpty(like_sql) ? like_sql : "")}" +
                 $"GROUP BY {field} ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
@@ -1739,7 +1739,7 @@ namespace Jvedio.ViewModel
                          "on metadata_to_actor.ActorID=actor_info.ActorID " +
                          "join metadata " +
                          "on metadata_to_actor.DataID=metadata.DataID " +
-                         $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                          $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : "")} " +
                          "GROUP BY actor_info.ActorID " +
                          "UNION " +
@@ -1754,7 +1754,7 @@ namespace Jvedio.ViewModel
             string sql = $"{wrapper.Select(ActorSelectedField).toSelect(false)} FROM actor_info " +
                 $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                 $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
-                $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                 $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : "")} " +
                 $"GROUP BY actor_info.ActorID " +
                 "UNION " +
@@ -1997,7 +1997,7 @@ namespace Jvedio.ViewModel
 
 
             // todo 如果搜索框选中了标签，搜索出来的结果不一致
-            SearchField searchType = (SearchField)GlobalConfig.Main.SearchSelectedIndex;
+            SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
             if (Searching)
             {
                 if (searchType == SearchField.ActorName)
@@ -2084,16 +2084,16 @@ namespace Jvedio.ViewModel
 
 
             // 图片显示模式
-            if (GlobalConfig.Settings.PictureIndexCreated && PictureTypeIndex > 0)
+            if (ConfigManager.Settings.PictureIndexCreated && PictureTypeIndex > 0)
             {
                 sql += VideoMapper.COMMON_PICTURE_EXIST_JOIN_SQL;
-                long pathType = GlobalConfig.Settings.PicPathMode;
+                long pathType = ConfigManager.Settings.PicPathMode;
                 int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageType);
                 if (imageType > 1) imageType = 0;
                 wrapper.Eq("common_picture_exist.PathType", pathType).Eq("common_picture_exist.ImageType", imageType).Eq("common_picture_exist.Exist", PictureTypeIndex - 1);
             }
             // 是否可播放
-            if (GlobalConfig.Settings.PlayableIndexCreated && DataExistIndex > 0)
+            if (ConfigManager.Settings.PlayableIndexCreated && DataExistIndex > 0)
                 wrapper.Eq("metadata.PathExist", DataExistIndex - 1);
 
 
@@ -2197,7 +2197,7 @@ namespace Jvedio.ViewModel
         {
             Task.Run(() =>
             {
-                long dbid = GlobalConfig.Main.CurrentDBId;
+                long dbid = ConfigManager.Main.CurrentDBId;
                 AllVideoCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
                 appDatabaseMapper.UpdateFieldById("Count", AllVideoCount.ToString(), dbid);
 
@@ -2269,7 +2269,7 @@ namespace Jvedio.ViewModel
                 Video.handleEmpty(ref video);// 设置标题和发行日期
 
 
-                if (GlobalConfig.Settings.AutoGenScreenShot)
+                if (ConfigManager.Settings.AutoGenScreenShot)
                 {
                     string path = video.getScreenShot();
                     if (Directory.Exists(path))

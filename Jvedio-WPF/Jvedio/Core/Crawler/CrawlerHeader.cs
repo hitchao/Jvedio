@@ -22,7 +22,7 @@ namespace Jvedio.Core.Crawler
         {
             GitHub = new RequestHeader();
             GitHub.Method = System.Net.Http.HttpMethod.Get;
-            GitHub.WebProxy = GlobalConfig.ProxyConfig.GetWebProxy();
+            GitHub.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
             GitHub.Headers = DEFAULT_HEADERS;
             Default = GitHub;
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using static Jvedio.GlobalVariable;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.Utils.Media.ImageHelper;
 
 using System.Collections.ObjectModel;
@@ -38,7 +38,7 @@ namespace Jvedio.ViewModel
             windowDetails = GetWindowByName("Window_Details") as Window_Details;
         }
 
-        private bool _TeenMode = GlobalConfig.Settings.TeenMode;
+        private bool _TeenMode = ConfigManager.Settings.TeenMode;
 
         public bool TeenMode
         {
@@ -60,7 +60,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private int _InfoSelectedIndex = (int)GlobalConfig.Detail.InfoSelectedIndex;
+        private int _InfoSelectedIndex = (int)ConfigManager.Detail.InfoSelectedIndex;
 
         public int InfoSelectedIndex
         {
@@ -74,7 +74,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _ShowScreenShot = GlobalConfig.Detail.ShowScreenShot;
+        private bool _ShowScreenShot = ConfigManager.Detail.ShowScreenShot;
 
         public bool ShowScreenShot
         {
@@ -319,7 +319,7 @@ namespace Jvedio.ViewModel
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             if (list != null)

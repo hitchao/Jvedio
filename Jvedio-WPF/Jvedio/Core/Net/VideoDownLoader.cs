@@ -116,7 +116,7 @@ namespace Jvedio.Core.Net
         {
             // 获取信息类型，并设置爬虫类型
 
-            if (GlobalConfig.ServerConfig.CrawlerServers.Count == 0 || CrawlerManager.PluginMetaDatas?.Count == 0)
+            if (ConfigManager.ServerConfig.CrawlerServers.Count == 0 || CrawlerManager.PluginMetaDatas?.Count == 0)
                 throw new CrawlerNotFoundException();
             List<PluginMetaData> PluginMetaDatas = CrawlerManager.PluginMetaDatas.Where(arg => arg.Enabled).ToList();
             if (PluginMetaDatas.Count == 0)
@@ -128,7 +128,7 @@ namespace Jvedio.Core.Net
             {
                 // 一组支持刮削的网址列表
                 PluginMetaData = PluginMetaDatas[i];
-                crawlers = GlobalConfig.ServerConfig.CrawlerServers
+                crawlers = ConfigManager.ServerConfig.CrawlerServers
                     .Where(arg => arg.Enabled && !string.IsNullOrEmpty(arg.PluginID) &&
                     arg.PluginID.ToLower().Equals(PluginMetaData.PluginID.ToLower())
                     && arg.Available == 1 && !string.IsNullOrEmpty(arg.Url)).ToList();

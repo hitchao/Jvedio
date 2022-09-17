@@ -53,7 +53,7 @@ namespace Jvedio
             List<string> nfoPaths = new List<string>();
             List<string> videoPaths = new List<string>();
 
-            minFileSize = (long)GlobalConfig.ScanConfig.MinFileSize * 1024 * 1024;
+            minFileSize = (long)ConfigManager.ScanConfig.MinFileSize * 1024 * 1024;
             if (minFileSize < 0) minFileSize = DEFAULT_MIN_FILESIZE;
 
             if (filepaths != null || filepaths.Count > 0)
@@ -418,7 +418,7 @@ namespace Jvedio
             {
                 if (!File.Exists(path)) continue;
                 string VID = "";
-                if (GlobalConfig.ScanConfig.FetchVID)
+                if (ConfigManager.ScanConfig.FetchVID)
                     VID = Identify.GetVID(Path.GetFileNameWithoutExtension(path));
                 if (string.IsNullOrEmpty(VID))
                 {

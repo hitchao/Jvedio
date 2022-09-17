@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 
 using Jvedio.Utils.Media;
@@ -52,7 +52,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        public bool _MoreExpanded = GlobalConfig.Edit.MoreExpanded;
+        public bool _MoreExpanded = ConfigManager.Edit.MoreExpanded;
 
         public bool MoreExpanded
         {
@@ -257,7 +257,7 @@ namespace Jvedio.ViewModel
         public void Reset()
         {
             CurrentVideo = null;
-            CurrentVideo = GlobalMapper.videoMapper.SelectVideoByID(DataID);
+            CurrentVideo = MapperManager.videoMapper.SelectVideoByID(DataID);
             oldLabels = CurrentVideo.LabelList?.Select(arg => arg).ToList();
             ViewActors = new ObservableCollection<ActorInfo>();
             foreach (ActorInfo info in CurrentVideo.ActorInfos)
@@ -282,7 +282,7 @@ namespace Jvedio.ViewModel
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             if (list != null)
@@ -317,14 +317,14 @@ namespace Jvedio.ViewModel
                 return false;
 
             data.DataID = DataID;
-            int update1 = GlobalMapper.metaDataMapper.UpdateById(data);
-            int update2 = GlobalMapper.videoMapper.UpdateById(CurrentVideo);
+            int update1 = MapperManager.metaDataMapper.UpdateById(data);
+            int update2 = MapperManager.videoMapper.UpdateById(CurrentVideo);
 
             // 标签
-            GlobalMapper.metaDataMapper.SaveLabel(data, oldLabels);
+            MapperManager.metaDataMapper.SaveLabel(data, oldLabels);
 
             // 演员
-            GlobalMapper.videoMapper.SaveActor(CurrentVideo, ViewActors.ToList());
+            MapperManager.videoMapper.SaveActor(CurrentVideo, ViewActors.ToList());
 
 
 
@@ -376,7 +376,7 @@ namespace Jvedio.ViewModel
                          "on metadata_to_actor.ActorID=actor_info.ActorID " +
                          "join metadata " +
                          "on metadata_to_actor.DataID=metadata.DataID " +
-                         $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                          $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
                          "GROUP BY actor_info.ActorID " +
                          "UNION " +
@@ -399,7 +399,7 @@ namespace Jvedio.ViewModel
             string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
                         $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                         $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
-                        $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                        $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                        $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : "")} " +
                         $"GROUP BY actor_info.ActorID " +
                         "UNION " +
@@ -423,7 +423,7 @@ namespace Jvedio.ViewModel
             {
                 ActorInfo actorInfo = ActorList[i];
                 //加载图片
-                PathType pathType = (PathType)GlobalConfig.Settings.PicPathMode;
+                PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
                 BitmapImage smallimage = null;
                 if (pathType != PathType.RelativeToData)
                 {

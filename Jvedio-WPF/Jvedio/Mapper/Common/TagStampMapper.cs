@@ -26,7 +26,7 @@ namespace Jvedio.Mapper
                 "on metadata_to_tagstamp.TagID=common_tagstamp.TagID " +
                 "join metadata " +
                 "on metadata.DataID=metadata_to_tagstamp.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                 "GROUP BY common_tagstamp.TagID;";
         }
 
@@ -34,7 +34,7 @@ namespace Jvedio.Mapper
 
         public List<TagStamp> getAllTagStamp()
         {
-            return GlobalMapper.tagStampMapper.SelectList();
+            return MapperManager.tagStampMapper.SelectList();
 
         }
     }

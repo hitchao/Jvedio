@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Jvedio
 {
-    public static class GlobalMapper
+    public static class MapperManager
     {
         public static AppConfigMapper appConfigMapper = new AppConfigMapper();
 

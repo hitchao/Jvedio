@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.GlobalMapper;
+using static Jvedio.MapperManager;
 using static Jvedio.GlobalVariable;
 using static Jvedio.Utils.CustomExtension;
 using static Jvedio.Utils.Visual.VisualHelper;
@@ -66,7 +66,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        public bool _MoreExpanded = GlobalConfig.Edit.MoreExpanded;
+        public bool _MoreExpanded = ConfigManager.Edit.MoreExpanded;
 
         public bool MoreExpanded
         {
@@ -198,7 +198,7 @@ namespace Jvedio.ViewModel
             {
                 TabControlSelectedIndex = 0;
                 CurrentPicture = null;
-                CurrentPicture = GlobalMapper.pictureMapper.SelectByID(DataID);
+                CurrentPicture = MapperManager.pictureMapper.SelectByID(DataID);
                 oldLabels = CurrentPicture.LabelList?.Select(arg => arg).ToList();
                 CurrentData = CurrentPicture.toMetaData();
             }
@@ -206,7 +206,7 @@ namespace Jvedio.ViewModel
             {
                 TabControlSelectedIndex = 1;
                 CurrentGame = null;
-                CurrentGame = GlobalMapper.gameMapper.SelectByID(DataID);
+                CurrentGame = MapperManager.gameMapper.SelectByID(DataID);
                 oldLabels = CurrentGame.LabelList?.Select(arg => arg).ToList();
                 CurrentData = CurrentGame.toMetaData();
                 //if (File.Exists(CurrentGame.BigImagePath))
@@ -216,7 +216,7 @@ namespace Jvedio.ViewModel
             {
                 TabControlSelectedIndex = 2;
                 CurrentComic = null;
-                CurrentComic = GlobalMapper.comicMapper.SelectByID(DataID);
+                CurrentComic = MapperManager.comicMapper.SelectByID(DataID);
                 oldLabels = CurrentComic.LabelList?.Select(arg => arg).ToList();
                 CurrentData = CurrentComic.toMetaData();
             }
@@ -239,7 +239,7 @@ namespace Jvedio.ViewModel
             List<string> labels = new List<string>();
             string sql = "SELECT LabelName,Count(LabelName) as Count  from metadata_to_label " +
                 "JOIN metadata on metadata.DataID=metadata_to_label.DataID " +
-                $"where metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             foreach (Dictionary<string, object> item in list)

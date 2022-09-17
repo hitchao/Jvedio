@@ -196,8 +196,8 @@ namespace Jvedio
 
         private void BaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            GlobalConfig.Edit.MoreExpanded = vieModel.MoreExpanded;
-            GlobalConfig.Edit.Save();
+            ConfigManager.Edit.MoreExpanded = vieModel.MoreExpanded;
+            ConfigManager.Edit.Save();
         }
 
 
