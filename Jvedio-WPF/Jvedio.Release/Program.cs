@@ -18,7 +18,7 @@ namespace Jvedio.Release
         public static void CopyAndRemoveFile()
         {
 
-            string origin = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../Jvedio/bin/Debug");
+            string origin = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../Jvedio/bin/Release");
             origin = Path.GetFullPath(origin);
             string target = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../Release/public/File");
             target = Path.GetFullPath(target);

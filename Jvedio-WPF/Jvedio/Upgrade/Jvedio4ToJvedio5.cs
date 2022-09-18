@@ -1018,12 +1018,13 @@ namespace Jvedio.Upgrade
                 Logger.Error(ex);
             }
 
-            if (dict.Count > 0)
+            if (dict != null && dict.Count > 0)
             {
                 for (int i = 0; i < translations.Count; i++)
                 {
                     long dataID = -1;
-                    if (dict.ContainsKey(translation.VID)) dataID = dict[translation.VID];
+                    Translation trans = translations[i];
+                    if (!string.IsNullOrEmpty(trans.VID) && dict.ContainsKey(trans.VID)) dataID = dict[trans.VID];
                     if (dataID <= 0) continue;
                     string fieldType = i % 2 == 0 ? "Title" : "Plot";
                     string sql = "insert or replace into metadata_to_translation(DataID,FieldType,TransaltionID) " +

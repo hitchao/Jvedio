@@ -305,8 +305,8 @@
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
-    <Compile Include="Core\Global\PathManager.cs" />
-    <Compile Include="Core\Global\UrlManager.cs" />
+    <Compile Include="Core\Config\PathManager.cs" />
+    <Compile Include="Core\Net\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
     <Compile Include="Core\Net\UpgradeHelper.cs" />
@@ -329,7 +329,7 @@
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
-    <Compile Include="Core\Global\StyleManager.cs" />
+    <Compile Include="CustomStyle\StyleManager.cs" />
     <Compile Include="Core\Plugins\Plugin.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
     <Compile Include="Core\Plugins\PluginManager.cs" />
@@ -972,6 +972,13 @@ XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug"    /E /Y
 XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
 XCOPY  "$(ProjectDir)Reference\WpfAnimatedGif.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
 
+XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\MediaInfoNET.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\ChaoControls.Style.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\WpfAnimatedGif.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
+
 </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
@@ -980,6 +987,13 @@ XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i
 mkdir "$(ProjectDir)bin\Debug\plugins\crawlers"
 XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
 XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
+
+XCOPY  "$(ProjectDir)bin\Release"  "$(SolutionDir)Release\public\File"    /E /Y /i
+XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Release"   /Y /i
+mkdir "$(ProjectDir)bin\Release\plugins\crawlers"
+XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i
+
 </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
