@@ -9,6 +9,14 @@ namespace Jvedio.Core.Config
         private ScanConfig() : base("ScanConfig")
         {
             CopyNFOPicture = true;
+            CopyNFOPreview = true;
+            CopyNFOActorPicture = true;
+            CopyNFOScreenShot = true;
+
+            CopyNFOActorPath = ".actor";
+            CopyNFOPreviewPath = ".preview";
+            CopyNFOScreenShotPath = ".screenshot";
+
             FetchVID = true;
         }
 
@@ -41,7 +49,14 @@ namespace Jvedio.Core.Config
 
         public bool ScanOnStartUp { get; set; }
 
+        public bool CopyNFOOverriteImage { get; set; }
         public bool CopyNFOPicture { get; set; }
+        public bool CopyNFOActorPicture { get; set; }
+        public bool CopyNFOPreview { get; set; }
+        public bool CopyNFOScreenShot { get; set; }
+        public string CopyNFOActorPath { get; set; }
+        public string CopyNFOScreenShotPath { get; set; }
+        public string CopyNFOPreviewPath { get; set; }
 
         public bool FetchVID { get; set; }
     }

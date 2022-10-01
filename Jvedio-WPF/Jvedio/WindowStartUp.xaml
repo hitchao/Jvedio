@@ -2,12 +2,12 @@
     x:Class="Jvedio.WindowStartUp"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Name="Window_StartUp"
     Title="欢迎使用 Jvedio"
     Width="800"
@@ -357,49 +357,34 @@
                                 Text="5.0.0.0" />
                             <RadioButton
                                 Margin="0,20,0,0"
-                                HorizontalContentAlignment="Center"
-                                Background="Transparent"
+                                HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
                                 Content="视频"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                Style="{StaticResource SideRadioButton}"
-                                Tag="5" />
+                                Style="{StaticResource SideRadioButton}" />
 
 
                             <RadioButton
                                 Margin="0"
-                                HorizontalContentAlignment="Center"
-                                Background="Transparent"
+                                HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
                                 Content="图片"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
-                                Tag="5"
                                 Visibility="Collapsed" />
 
 
                             <RadioButton
                                 Margin="0"
-                                HorizontalContentAlignment="Center"
-                                Background="Transparent"
+                                HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
                                 Content="游戏"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
-                                Tag="5"
                                 Visibility="Collapsed" />
                             <RadioButton
                                 Margin="0"
-                                HorizontalContentAlignment="Center"
-                                Background="Transparent"
+                                HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
                                 Content="漫画"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                IsEnabled="False"
                                 Style="{StaticResource SideRadioButton}"
-                                Tag="5"
                                 Visibility="Collapsed" />
                         </StackPanel>
                         <Grid Grid.Column="1">

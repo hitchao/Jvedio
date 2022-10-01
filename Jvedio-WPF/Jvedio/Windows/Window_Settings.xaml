@@ -667,12 +667,72 @@
                         Content="{x:Static lang:Resources.ImportNFOWhenScan}"
                         IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
-                    <CheckBox
-                        Margin="25,5"
-                        HorizontalAlignment="Left"
-                        Content="{x:Static lang:Resources.CopyNFOImage}"
-                        IsChecked="{Binding CopyNFOPicture}"
-                        Visibility="{Binding ScanNfo, Converter={StaticResource bool2VisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                    <StackPanel
+                        Margin="20,0"
+                        Orientation="Vertical"
+                        Visibility="{Binding ScanNfo, Converter={StaticResource bool2VisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+                        <CheckBox
+                            Margin="25,5"
+                            HorizontalAlignment="Left"
+                            Content="覆盖原有图片"
+                            IsChecked="{Binding CopyNFOOverriteImage}" />
+                        <CheckBox
+                            Margin="25,5"
+                            HorizontalAlignment="Left"
+                            Content="复制海报/缩略图"
+                            IsChecked="{Binding CopyNFOPicture}" />
+
+
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                MinWidth="150"
+                                Margin="25,5"
+                                HorizontalAlignment="Left"
+                                Content="复制演员头像"
+                                IsChecked="{Binding CopyNFOActorPicture}" />
+
+                            <super:SearchBox
+                                MinWidth="400"
+                                PlaceHolder="演员头像目录"
+                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                Style="{StaticResource BaseSearchTextBox}"
+                                Text="{Binding CopyNFOActorPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                MinWidth="150"
+                                Margin="25,5"
+                                HorizontalAlignment="Left"
+                                Content="复制预览图"
+                                IsChecked="{Binding CopyNFOPreview}" />
+
+                            <super:SearchBox
+                                MinWidth="400"
+                                PlaceHolder="预览图目录"
+                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                Style="{StaticResource BaseSearchTextBox}"
+                                Text="{Binding CopyNFOPreviewPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                MinWidth="150"
+                                Margin="25,5"
+                                HorizontalAlignment="Left"
+                                Content="复制影片截图"
+                                IsChecked="{Binding CopyNFOScreenShot}" />
+
+                            <super:SearchBox
+                                MinWidth="400"
+                                PlaceHolder="影片截图目录"
+                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                Style="{StaticResource BaseSearchTextBox}"
+                                Text="{Binding CopyNFOScreenShotPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        </StackPanel>
+                    </StackPanel>
 
 
                     <StackPanel

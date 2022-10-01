@@ -55,7 +55,7 @@
   <ItemGroup>
     <None Include="FFmpeg\command.md" />
     <None Include="Files\Files.7z" />
-    <None Include="Files\NFO.7z" />
+    <None Include="Files\NFO.zip" />
     <None Include="packages.config" />
     <None Include="测试用例.xlsx" />
   </ItemGroup>

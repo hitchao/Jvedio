@@ -116,9 +116,9 @@ namespace Jvedio.Core.Scan
                }
 
                try
-                {
-                    CheckStatus();
-                }
+               {
+                   CheckStatus();
+               }
                catch (TaskCanceledException ex)
                {
                    logger.Error(ex.Message);
@@ -139,9 +139,9 @@ namespace Jvedio.Core.Scan
 
                    ScanResult.TotalCount = parseResult.import.Count + parseResult.notImport.Count + parseResult.failNFO.Count;
                    try
-                    {
-                        CheckStatus();
-                    }
+                   {
+                       CheckStatus();
+                   }
                    catch (TaskCanceledException ex)
                    {
                        logger.Error(ex.Message);
@@ -320,6 +320,123 @@ namespace Jvedio.Core.Scan
             "Outline",
         };
 
+
+
+
+
+        private void CopyNfoImage(Dictionary<string, string> dict, List<Video> import, ImageType imageType)
+        {
+            if (dict == null) return;
+
+            switch (imageType)
+            {
+                case ImageType.Big:
+                    if (dict.ContainsKey("BigImagePath") && !string.IsNullOrEmpty(dict["BigImagePath"]))
+                    {
+                        string path = dict["BigImagePath"];
+                        string dirname = Path.GetFileNameWithoutExtension(path).ToLower();
+                        CopyImage(import, dirname, imageType);
+                    }
+                    break;
+                case ImageType.Small:
+                    if (dict.ContainsKey("SmallImagePath") && !string.IsNullOrEmpty(dict["SmallImagePath"]))
+                    {
+                        string path = dict["SmallImagePath"];
+                        string dirname = Path.GetFileNameWithoutExtension(path).ToLower();
+                        CopyImage(import, dirname, imageType);
+                    }
+                    break;
+                case ImageType.Actor:
+                case ImageType.Preview:
+                case ImageType.ScreenShot:
+                    CopyImages(import, imageType);
+                    break;
+                default:
+
+                    break;
+            }
+        }
+
+
+        private string GetImagePathByType(Video video, ImageType type)
+        {
+            switch (type)
+            {
+                case ImageType.Big:
+                    return video.getBigImage();
+                case ImageType.Small:
+                    return video.getSmallImage();
+                case ImageType.ScreenShot:
+                    return video.getScreenShot();
+                case ImageType.Preview:
+                    return video.getExtraImage();
+                case ImageType.Actor:
+                    return video.getBigImage();
+            }
+            return "";
+        }
+
+        private void CopyImage(List<Video> import, string dirName, ImageType imageType)
+        {
+            if (string.IsNullOrEmpty(dirName)) return;
+
+            foreach (Video item in import)
+            {
+                if (string.IsNullOrEmpty(item.Path)) continue;
+                string dir = Path.GetDirectoryName(item.Path);
+                if (!Directory.Exists(dir)) continue;
+                List<string> list = FileHelper.TryGetAllFiles(dir, "*.*").ToList();
+                if (list?.Count <= 0) continue;
+                list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
+                string originPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(dirName) >= 0).FirstOrDefault();
+                if (File.Exists(originPath))
+                {
+                    string targetImagePath = GetImagePathByType(item, imageType);
+                    if (!File.Exists(targetImagePath))
+                    {
+                        targetImagePath = Path.Combine(Path.GetDirectoryName(targetImagePath), Path.GetFileNameWithoutExtension(targetImagePath)
+                            + Path.GetExtension(originPath));
+                        FileHelper.TryCopyFile(originPath, targetImagePath, true);
+                    }
+                    else if (ConfigManager.ScanConfig.CopyNFOOverriteImage)
+                    {
+                        FileHelper.TryCopyFile(originPath, targetImagePath, true);
+                    }
+
+                }
+            }
+        }
+
+        private void CopyImages(List<Video> import, ImageType type)
+        {
+            foreach (Video item in import)
+            {
+                if (string.IsNullOrEmpty(item.Path)) continue;
+                string dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(item.Path), ConfigManager.ScanConfig.CopyNFOPreviewPath));
+                if (type == ImageType.ScreenShot)
+                    dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(item.Path), ConfigManager.ScanConfig.CopyNFOScreenShotPath));
+                else if (type == ImageType.Actor)
+                    dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(item.Path), ConfigManager.ScanConfig.CopyNFOActorPath));
+                if (!Directory.Exists(dir)) continue;
+                List<string> list = FileHelper.TryGetAllFiles(dir, "*.*").ToList();
+                if (list?.Count <= 0) continue;
+                list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
+                // 预览图目录
+                string targetPath = item.getExtraImage();
+                if (type == ImageType.ScreenShot)
+                    targetPath = item.getScreenShot();
+                else if (type == ImageType.Actor)
+                    targetPath = item.getActorPath();
+                DirHelper.TryCreateDirectory(targetPath);
+                foreach (var path in list)
+                {
+                    string targetFilePath = Path.Combine(targetPath, Path.GetFileName(path));
+                    FileHelper.TryCopyFile(path, targetFilePath, ConfigManager.ScanConfig.CopyNFOOverriteImage);
+                }
+
+            }
+        }
+
         private void HandleImportNFO(List<Video> import)
         {
             if (import?.Count <= 0) return;
@@ -327,60 +444,42 @@ namespace Jvedio.Core.Scan
             existVideos = GetExistVideos();
             existActors = actorMapper.SelectList();
 
-            // 复制图片
-            if (ConfigManager.ScanConfig.CopyNFOPicture)
+            // 解析图片路径
+
+            Dictionary<string, object> picPaths = ConfigManager.Settings.PicPaths;
+            if (picPaths != null && picPaths.ContainsKey(PathType.RelativeToData.ToString()))
             {
-                Dictionary<string, object> picPaths = ConfigManager.Settings.PicPaths;
-                if (picPaths != null && picPaths.ContainsKey(PathType.RelativeToData.ToString()))
+                Dictionary<string, string> dict = null;
+                try
                 {
-                    Dictionary<string, string> dict = null;
-                    try
-                    {
-                        dict = (Dictionary<string, string>)picPaths[PathType.RelativeToData.ToString()];
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error(ex.Message);
-                    }
-
-                    if (dict != null && dict.ContainsKey("BigImagePath") && dict.ContainsKey("SmallImagePath")
-                        && !string.IsNullOrEmpty(dict["BigImagePath"]) && !string.IsNullOrEmpty(dict["SmallImagePath"]))
-                    {
-                        string BigImagePath = dict["BigImagePath"];
-                        string SmallImagePath = dict["SmallImagePath"];
-
-                        string name1 = Path.GetFileNameWithoutExtension(BigImagePath).ToLower();
-                        string name2 = Path.GetFileNameWithoutExtension(SmallImagePath).ToLower();
-
-                        foreach (var item in import)
-                        {
-                            if (string.IsNullOrEmpty(name1) || string.IsNullOrEmpty(name2) || string.IsNullOrEmpty(item.Path)) continue;
-                            string dir = Path.GetDirectoryName(item.Path);
-                            if (!Directory.Exists(dir)) continue;
-                            List<string> list = FileHelper.TryGetAllFiles(dir, "*.*").ToList();
-                            if (list?.Count <= 0) continue;
-                            list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
-                            string bigPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(name1) >= 0).FirstOrDefault();
-                            string smallPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(name2) >= 0).FirstOrDefault();
-                            if (File.Exists(bigPath))
-                            {
-                                string bigImagePath = item.getBigImage();
-                                if (!File.Exists(bigImagePath))
-                                    bigImagePath = Path.Combine(Path.GetDirectoryName(bigImagePath), Path.GetFileNameWithoutExtension(bigImagePath) + Path.GetExtension(bigPath));
-                                FileHelper.TryCopyFile(bigPath, bigImagePath, true);
-                            }
-
-                            if (File.Exists(smallPath))
-                            {
-                                string smallImagePath = item.getSmallImage();
-                                if (!File.Exists(smallImagePath))
-                                    smallImagePath = Path.Combine(Path.GetDirectoryName(smallImagePath), Path.GetFileNameWithoutExtension(smallImagePath) + Path.GetExtension(smallPath));
-                                FileHelper.TryCopyFile(smallPath, smallImagePath, true);
-                            }
-                        }
-                    }
+                    dict = (Dictionary<string, string>)picPaths[PathType.RelativeToData.ToString()];
                 }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                }
+
+                // 复制图片
+                if (ConfigManager.ScanConfig.CopyNFOPicture)
+                {
+                    CopyNfoImage(dict, import, ImageType.Big);
+                    CopyNfoImage(dict, import, ImageType.Small);
+                }
+
+                if (ConfigManager.ScanConfig.CopyNFOActorPicture)
+                    CopyNfoImage(dict, import, ImageType.Actor);
+
+                if (ConfigManager.ScanConfig.CopyNFOPreview)
+                    CopyNfoImage(dict, import, ImageType.Preview);
+
+                if (ConfigManager.ScanConfig.CopyNFOScreenShot)
+                    CopyNfoImage(dict, import, ImageType.ScreenShot);
             }
+
+
+
+
+
 
             // 1. 需要更新的
             List<Video> toUpdate = new List<Video>();

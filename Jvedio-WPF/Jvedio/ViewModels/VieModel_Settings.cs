@@ -641,6 +641,18 @@ namespace Jvedio.ViewModel
 
         #region "扫描"
 
+        private bool _CopyNFOOverriteImage = ConfigManager.ScanConfig.CopyNFOOverriteImage;
+
+        public bool CopyNFOOverriteImage
+        {
+            get { return _CopyNFOOverriteImage; }
+
+            set
+            {
+                _CopyNFOOverriteImage = value;
+                RaisePropertyChanged();
+            }
+        }
         private bool _CopyNFOPicture = ConfigManager.ScanConfig.CopyNFOPicture;
 
         public bool CopyNFOPicture
@@ -650,6 +662,81 @@ namespace Jvedio.ViewModel
             set
             {
                 _CopyNFOPicture = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _CopyNFOActorPicture = ConfigManager.ScanConfig.CopyNFOActorPicture;
+
+        public bool CopyNFOActorPicture
+        {
+            get { return _CopyNFOActorPicture; }
+
+            set
+            {
+                _CopyNFOActorPicture = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _CopyNFOScreenShot = ConfigManager.ScanConfig.CopyNFOScreenShot;
+
+        public bool CopyNFOScreenShot
+        {
+            get { return _CopyNFOScreenShot; }
+
+            set
+            {
+                _CopyNFOScreenShot = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _CopyNFOPreview = ConfigManager.ScanConfig.CopyNFOPreview;
+
+        public bool CopyNFOPreview
+        {
+            get { return _CopyNFOPreview; }
+
+            set
+            {
+                _CopyNFOPreview = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
+        private string _CopyNFOActorPath = ConfigManager.ScanConfig.CopyNFOActorPath;
+
+        public string CopyNFOActorPath
+        {
+            get { return _CopyNFOActorPath; }
+
+            set
+            {
+                _CopyNFOActorPath = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _CopyNFOScreenShotPath = ConfigManager.ScanConfig.CopyNFOScreenShotPath;
+
+        public string CopyNFOScreenShotPath
+        {
+            get { return _CopyNFOScreenShotPath; }
+
+            set
+            {
+                _CopyNFOScreenShotPath = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _CopyNFOPreviewPath = ConfigManager.ScanConfig.CopyNFOPreviewPath;
+
+        public string CopyNFOPreviewPath
+        {
+            get { return _CopyNFOPreviewPath; }
+
+            set
+            {
+                _CopyNFOPreviewPath = value;
                 RaisePropertyChanged();
             }
         }

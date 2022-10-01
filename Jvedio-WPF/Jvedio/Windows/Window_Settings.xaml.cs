@@ -1271,7 +1271,14 @@ namespace Jvedio
             ConfigManager.ScanConfig.MinFileSize = vieModel.MinFileSize;
             ConfigManager.ScanConfig.FetchVID = vieModel.FetchVID;
             ConfigManager.ScanConfig.ScanOnStartUp = vieModel.ScanOnStartUp;
+            ConfigManager.ScanConfig.CopyNFOOverriteImage = vieModel.CopyNFOOverriteImage;
             ConfigManager.ScanConfig.CopyNFOPicture = vieModel.CopyNFOPicture;
+            ConfigManager.ScanConfig.CopyNFOActorPicture = vieModel.CopyNFOActorPicture;
+            ConfigManager.ScanConfig.CopyNFOPreview = vieModel.CopyNFOPreview;
+            ConfigManager.ScanConfig.CopyNFOScreenShot = vieModel.CopyNFOScreenShot;
+            ConfigManager.ScanConfig.CopyNFOActorPath = vieModel.CopyNFOActorPath;
+            ConfigManager.ScanConfig.CopyNFOPreviewPath = vieModel.CopyNFOPreviewPath;
+            ConfigManager.ScanConfig.CopyNFOScreenShotPath = vieModel.CopyNFOScreenShotPath;
 
             // ffmpeg
             ConfigManager.FFmpegConfig.Path = vieModel.FFMPEG_Path;

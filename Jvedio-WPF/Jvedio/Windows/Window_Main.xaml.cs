@@ -175,7 +175,9 @@ namespace Jvedio
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
+#if DEBUG
                     MessageCard.Error(ex.Message);
+#endif
                 });
             };
 

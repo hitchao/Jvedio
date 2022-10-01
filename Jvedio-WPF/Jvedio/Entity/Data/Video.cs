@@ -291,6 +291,11 @@ namespace Jvedio.Entity
                     saveDir = System.IO.Path.Combine(basePicPath, "ScreenShot");
                 else if (imageType == ImageType.Gif)
                     saveDir = System.IO.Path.Combine(basePicPath, "Gif");
+                else if (imageType == ImageType.Actor)
+                {
+                    saveDir = System.IO.Path.Combine(basePicPath, "Actresses");
+                    return System.IO.Path.GetFullPath(saveDir);
+                }
                 if (!Directory.Exists(saveDir)) FileHelper.TryCreateDir(saveDir);
                 if (!string.IsNullOrEmpty(VID))
                     result = System.IO.Path.Combine(saveDir, $"{VID}{(string.IsNullOrEmpty(ext) ? string.Empty : ext)}");
@@ -299,6 +304,7 @@ namespace Jvedio.Entity
             }
             else
             {
+                // todo
             }
 
             if (!string.IsNullOrEmpty(result))
@@ -422,6 +428,21 @@ namespace Jvedio.Entity
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["PreviewImagePath"]));
+                imagePath = parseRelativePath(path);
+            }
+
+            return FileHelper.TryGetFullPath(imagePath);
+        }
+        public string getActorPath()
+        {
+            string imagePath = getImagePath(ImageType.Actor);
+
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
+            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
+            {
+                string basePicPath = System.IO.Path.GetDirectoryName(Path);
+                Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
+                string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["ActorImagePath"]));
                 imagePath = parseRelativePath(path);
             }
 
