@@ -13,18 +13,20 @@ namespace Jvedio
     /// </summary>
     public partial class Window_TagStamp : BaseWindow
     {
-        public SolidColorBrush _BackgroundBrush = Brushes.Red;
+        public SolidColorBrush _BackgroundBrush = Brushes.Orange;
 
         public SolidColorBrush BackgroundBrush
         {
-            get { return _BackgroundBrush; } set { _BackgroundBrush = value; }
+            get { return _BackgroundBrush; }
+            set { _BackgroundBrush = value; }
         }
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
 
         public SolidColorBrush ForegroundBrush
         {
-            get { return _ForegroundBrush; } set { _ForegroundBrush = value; }
+            get { return _ForegroundBrush; }
+            set { _ForegroundBrush = value; }
         }
 
         public string TagName { get; set; }

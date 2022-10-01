@@ -195,7 +195,7 @@ namespace Jvedio
             //// todo 设置图片类型
             // await vieModel.InitLettersNavigation(); // todo
             BindingEventAfterRender(); // render 后才绑定的事件
-            initTagStamp();
+            InitTagStamp();
             AllRadioButton.IsChecked = true;
 
             vieModel.Reset();           // 加载数据
@@ -288,7 +288,7 @@ namespace Jvedio
             }
         }
 
-        private void initTagStamp()
+        private void InitTagStamp()
         {
             Main.TagStamps = tagStampMapper.getAllTagStamp();
             vieModel.InitCurrentTagStamps();
@@ -3422,7 +3422,7 @@ namespace Jvedio
                 tagStampMapper.ExecuteNonQuery(sql);
             }
 
-            initTagStamp();
+            InitTagStamp();
 
             // 更新主界面
             ObservableCollection<Video> datas = vieModel.CurrentVideoList;
@@ -3654,9 +3654,27 @@ namespace Jvedio
                     Background = VisualHelper.SerilizeBrush(backgroundBrush),
                 };
                 tagStampMapper.Insert(tagStamp);
-                initTagStamp();
+                InitTagStamp();
+
             }
         }
+
+        private void RefreshTagStamps(long tagID)
+        {
+            List<long> toRefreshData = new List<long>();
+            foreach (var video in vieModel.CurrentVideoList)
+            {
+                string tagIDs = video.TagIDs;
+                List<string> list = tagIDs.Split(',').ToList();
+                if (!list.Contains(tagID.ToString())) continue;
+                toRefreshData.Add(video.DataID);
+            }
+            foreach (var item in toRefreshData)
+            {
+                RefreshData(item);
+            }
+        }
+
 
         private void EditTagStamp(object sender, RoutedEventArgs e)
         {
@@ -3679,7 +3697,8 @@ namespace Jvedio
                 tagStamp.Background = VisualHelper.SerilizeBrush(backgroundBrush);
                 tagStamp.Foreground = VisualHelper.SerilizeBrush(ForegroundBrush);
                 tagStampMapper.UpdateById(tagStamp);
-                initTagStamp();
+                InitTagStamp();
+                RefreshTagStamps(id);// 刷新标记
             }
         }
 
@@ -3704,7 +3723,7 @@ namespace Jvedio
                 // 删除
                 string sql = $"delete from metadata_to_tagstamp where TagID={tagStamp.TagID};";
                 tagStampMapper.ExecuteNonQuery(sql);
-                initTagStamp();
+                InitTagStamp();
 
                 // 更新主窗体
                 if (vieModel.CurrentVideoList != null)

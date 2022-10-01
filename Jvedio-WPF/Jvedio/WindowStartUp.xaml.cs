@@ -371,6 +371,13 @@ namespace Jvedio
                 {
                     database.deleteByID(database.DBId);
                     RefreshDatabase();
+                    Main main = GetWindowByName("Main") as Main;
+                    if (main != null)
+                    {
+                        // 重置当前
+                        main.vieModel.Select();
+                        main.vieModel.Statistic();
+                    }
                 }
                 catch (SqlException ex)
                 {
@@ -532,6 +539,7 @@ namespace Jvedio
                     database = appDatabases.Where(arg => arg.DBId == id).FirstOrDefault();
             }
 
+            Main main = GetWindowByName("Main") as Main;
             // 检测该 id 是否在数据库中存在
             if (database == null)
             {
@@ -552,8 +560,9 @@ namespace Jvedio
                 ConfigManager.Main.CurrentDBId = id;
 
                 // 是否需要扫描
-                if (ConfigManager.ScanConfig.ScanOnStartUp)
+                if (main == null && ConfigManager.ScanConfig.ScanOnStartUp)
                 {
+                    // 未打开过 main 的时候才会扫描
                     if (!string.IsNullOrEmpty(database.ScanPath))
                     {
                         tabControl.SelectedIndex = 0;
@@ -596,7 +605,7 @@ namespace Jvedio
             // 启动主窗口
             if (Main.CurrentDataType == DataType.Video)
             {
-                Main main = GetWindowByName("Main") as Main;
+
                 if (main == null)
                 {
                     main = new Main();
