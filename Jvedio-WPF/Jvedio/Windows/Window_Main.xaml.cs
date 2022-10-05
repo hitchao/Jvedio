@@ -201,7 +201,7 @@ namespace Jvedio
             vieModel.Reset();           // 加载数据
             OpenListen();
 
-            // OpenWindowByName("Window_Settings");
+            OpenWindowByName("Window_Plugin");
             // new Msgbox(this, "demo").ShowDialog();
         }
 

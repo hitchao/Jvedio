@@ -2,11 +2,11 @@
     x:Class="Jvedio.Dialog_NewMovie"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{x:Static lang:Resources.Add}"
     Width="600"
     Background="{DynamicResource Window.InnerDialog.Background}"
@@ -68,7 +68,7 @@
                 Grid.Row="1"
                 Visibility="Collapsed">
                 <Label
-                    Margin="20,10"
+                    Margin="10"
                     Background="Transparent"
                     Content="{x:Static lang:Resources.VideoType}"
                     Foreground="{DynamicResource Window.Foreground}"
@@ -87,15 +87,7 @@
                     <ComboBoxItem Content="{x:Static lang:Resources.Europe}" />
                 </ComboBox>
 
-                <Label
-                    Margin="20,10"
-                    Background="Transparent"
-                    Content="{x:Static lang:Resources.Or}"
-                    Style="{StaticResource LabelPrimary}" />
-                <Button
-                    Click="Button_Click"
-                    Content="{x:Static lang:Resources.Scan}"
-                    Style="{StaticResource ButtonStyleFill}" />
+
 
             </WrapPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal">

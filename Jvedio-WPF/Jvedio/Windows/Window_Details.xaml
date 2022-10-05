@@ -703,7 +703,8 @@
                                     <ContextMenu
                                         Width="100"
                                         HorizontalOffset="-50"
-                                        VerticalOffset="10" />
+                                        VerticalOffset="10"
+                                        Visibility="Collapsed" />
                                 </Canvas.ContextMenu>
                                 <Ellipse
                                     Canvas.Left="3"

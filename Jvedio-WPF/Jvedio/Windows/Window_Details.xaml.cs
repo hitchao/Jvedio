@@ -418,11 +418,11 @@ namespace Jvedio
 
         public void OpenExtraImagePath(object sender, RoutedEventArgs e)
         {
-            string path = getExtraImagePath(sender as FrameworkElement);
+            string path = GetExtraImagePath(sender as FrameworkElement);
             FileHelper.TryOpenSelectPath(path);
         }
 
-        private string getExtraImagePath(FrameworkElement element, int depth = 0)
+        private string GetExtraImagePath(FrameworkElement element, int depth = 0)
         {
             if (element == null || depth < 0) return string.Empty;
             MenuItem menuItem = element as MenuItem;
@@ -437,8 +437,8 @@ namespace Jvedio
 
         public async void DeleteImage(object sender, RoutedEventArgs e)
         {
-            string path = getExtraImagePath(sender as FrameworkElement);
-            if (!string.IsNullOrEmpty(path)) return;
+            string path = GetExtraImagePath(sender as FrameworkElement);
+            if (string.IsNullOrEmpty(path)) return;
             int idx = vieModel.CurrentVideo.PreviewImagePathList.IndexOf(path);
 
             if (idx >= 0)
@@ -472,10 +472,10 @@ namespace Jvedio
 
             vieModel.CurrentVideo.PreviewImageList.Clear();
             vieModel.CurrentVideo.PreviewImagePathList.Clear();
-            if (vieModel.ShowScreenShot)
-                videoMapper.UpdateFieldById("ScreenShotPath", string.Empty, vieModel.CurrentVideo.DataID);
-            else
-                videoMapper.UpdateFieldById("PreviewImagePath", string.Empty, vieModel.CurrentVideo.DataID);
+            //if (vieModel.ShowScreenShot)
+            //    videoMapper.UpdateFieldById("ScreenShotPath", "", vieModel.CurrentVideo.DataID);
+            //else
+            //    videoMapper.UpdateFieldById("PreviewImagePath", "", vieModel.CurrentVideo.DataID);
             await Task.Delay(300);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
@@ -504,7 +504,7 @@ namespace Jvedio
 
         private void SetToBigPic(object sender, RoutedEventArgs e)
         {
-            string path = getExtraImagePath(sender as FrameworkElement, 1);
+            string path = GetExtraImagePath(sender as FrameworkElement, 1);
             videoMapper.UpdateFieldById("BigImagePath", path, DataID);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
@@ -1165,6 +1165,7 @@ namespace Jvedio
             }
 
             contextMenu.IsOpen = true;
+            contextMenu.Visibility = Visibility.Visible;
         }
 
         private void PlayVedio(object sender, MouseButtonEventArgs e)

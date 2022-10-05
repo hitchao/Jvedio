@@ -88,7 +88,6 @@ namespace Jvedio.Core.WindowConfig
 
         public bool PictureIndexCreated { get; set; }
 
-        public bool AutoCreatePlayableIndex { get; set; }
 
         public bool DetailShowBg { get; set; }
 

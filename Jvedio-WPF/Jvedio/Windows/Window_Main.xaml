@@ -2141,6 +2141,7 @@
                                             HorizontalOffset="-45"
                                             VerticalOffset="-5">
                                             <MenuItem Command="cmd:OpenWindow.Settings" Header="{x:Static lang:Resources.Settings}" />
+                                            <MenuItem Command="cmd:OpenWindow.Plugin" Header="插件" />
                                             <MenuItem Header="{x:Static lang:Resources.Scan}">
                                                 <MenuItem Click="ImportVideoByPaths" Header="扫描多个文件夹" />
                                                 <MenuItem Click="ImportVideo" Header="扫描网络磁盘" />

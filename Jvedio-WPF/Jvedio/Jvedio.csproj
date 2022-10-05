@@ -351,6 +351,7 @@
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Core\CustomTask\TaskLogger.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
+    <Compile Include="ViewModels\VieModel_Plugin.cs" />
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
@@ -470,6 +471,9 @@
     <Compile Include="ViewModels\VieModel_Main.cs" />
     <Compile Include="ViewModels\VieModel_StartUp.cs" />
     <Compile Include="ViewModels\VieModel_Settings.cs" />
+    <Compile Include="Windows\Window_Plugin.xaml.cs">
+      <DependentUpon>Window_Plugin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Window_ScanDetail.xaml.cs">
       <DependentUpon>Window_ScanDetail.xaml</DependentUpon>
     </Compile>
@@ -557,6 +561,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\MetaData\Window_MetaDatas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Plugin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

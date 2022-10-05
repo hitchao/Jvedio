@@ -43,15 +43,7 @@ namespace Jvedio
             base.Confirm(sender, e);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            // WindowTools windowTools = (WindowTools)FileProcess.GetWindowByName("WindowTools");
-            // if (windowTools == null) windowTools = new WindowTools();
-            // windowTools.Show();
-            // windowTools.Activate();
-            // windowTools.TabControl.SelectedIndex = 0;
-            // this.Close();
-        }
+
 
         private void BaseDialog_ContentRendered(object sender, EventArgs e)
         {
