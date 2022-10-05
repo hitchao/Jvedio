@@ -58,6 +58,7 @@
     <None Include="Files\NFO.zip" />
     <None Include="packages.config" />
     <None Include="测试用例.xlsx" />
+    <None Include="测试记录\Jvedio5.0-测试用例.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Jvedio\Jvedio.csproj">

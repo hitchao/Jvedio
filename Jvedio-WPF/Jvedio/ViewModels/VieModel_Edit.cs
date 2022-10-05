@@ -414,7 +414,7 @@ namespace Jvedio.ViewModel
                 if (pathType != PathType.RelativeToData)
                 {
                     // 如果是相对于影片格式的，则不设置图片
-                    string smallImagePath = actorInfo.getImagePath();
+                    string smallImagePath = actorInfo.GetImagePath();
                     smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
                 }
 

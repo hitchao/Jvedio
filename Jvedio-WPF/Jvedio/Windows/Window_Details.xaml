@@ -636,9 +636,9 @@
                             Width="60"
                             Height="auto"
                             VerticalAlignment="Stretch"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
                             Click="CloseWindow"
-                            Style="{StaticResource FlatButton}"
-                            Tag="{DynamicResource Window.Title.Hover.Deep.Background}">
+                            Style="{StaticResource FlatButton}">
                             <Image
                                 Width="24"
                                 Height="24"
@@ -945,11 +945,6 @@
                             VerticalAlignment="Top"
                             CornerRadius="5">
 
-                            <Border.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Click="GetPlot" Header="{x:Static lang:Resources.GetPlot}" />
-                                </ContextMenu>
-                            </Border.ContextMenu>
                             <TabControl
                                 Margin="10,5"
                                 Background="Transparent"

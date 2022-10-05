@@ -302,7 +302,7 @@ namespace Jvedio.Core.Net
                                 metaDataMapper.ExecuteNonQuery(sql);
 
                                 // 下载图片
-                                string saveFileName = actorInfo.getImagePath(video.Path, Path.GetExtension(url), false);
+                                string saveFileName = actorInfo.GetImagePath(video.Path, Path.GetExtension(url), false);
                                 if (!File.Exists(saveFileName))
                                 {
                                     byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>

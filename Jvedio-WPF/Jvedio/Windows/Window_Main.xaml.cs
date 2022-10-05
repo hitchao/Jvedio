@@ -529,10 +529,25 @@ namespace Jvedio
         {
             if (visible)
             {
+                bool showMain = true;               // 如果是库选择界面，则不显示 Main 窗口
+                string nameMain = "Main";
+                string nameStartUp = "WindowStartUp";
+                foreach (Window window in App.Current.Windows)
+                {
+                    string name = window.GetType().Name;
+                    if (name.Equals(nameStartUp))
+                    {
+                        showMain = false;
+                        break;
+                    }
+                }
+
                 foreach (Window window in App.Current.Windows)
                 {
                     if (OpeningWindows.Contains(window.GetType().ToString()))
                     {
+                        string name = window.GetType().Name;
+                        if (name.Equals(nameMain) && !showMain) continue;
                         AnimateWindow(window);
                     }
                 }
@@ -2341,7 +2356,7 @@ namespace Jvedio
             });
             msgCard.Info($"{Jvedio.Language.Resources.Message_DeleteToRecycleBin} {num}/{totalCount}");
 
-            if (num > 0 && Properties.Settings.Default.DelInfoAfterDelFile)
+            if (Properties.Settings.Default.DelInfoAfterDelFile)
                 deleteIDs(vieModel.SelectedVideo, false);
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
@@ -3481,7 +3496,7 @@ namespace Jvedio
             ActorInfo info = vieModel.CurrentActorInfo;
             if (info != null)
             {
-                FileHelper.TryOpenSelectPath(info.getImagePath());
+                FileHelper.TryOpenSelectPath(info.GetImagePath());
             }
         }
 
@@ -4833,7 +4848,7 @@ namespace Jvedio
             long.TryParse(contextMenu.Tag.ToString(), out long actorID);
             if (actorID <= 0) return;
             ActorInfo actorInfo = actorMapper.SelectById(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
-            string path = Path.GetFullPath(actorInfo.getImagePath());
+            string path = Path.GetFullPath(actorInfo.GetImagePath());
             FileHelper.TryOpenSelectPath(path);
         }
 

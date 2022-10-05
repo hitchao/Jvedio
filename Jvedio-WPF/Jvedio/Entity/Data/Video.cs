@@ -271,7 +271,7 @@ namespace Jvedio.Entity
         /// <param name="imageType"></param>
         /// <param name="ext">ext 必须要带上 '.'</param>
         /// <returns></returns>
-        private string getImagePath(ImageType imageType, string ext = null)
+        private string GetImagePath(ImageType imageType, string ext = null)
         {
             string result = string.Empty;
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
@@ -381,7 +381,7 @@ namespace Jvedio.Entity
 
         public string getSmallImage(string ext = ".jpg", bool searchExt = true)
         {
-            string smallImagePath = getImagePath(ImageType.Small, ext);
+            string smallImagePath = GetImagePath(ImageType.Small, ext);
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
@@ -400,7 +400,7 @@ namespace Jvedio.Entity
 
         public string getBigImage(string ext = ".jpg", bool searchExt = true)
         {
-            string bigImagePath = getImagePath(ImageType.Big, ext);
+            string bigImagePath = GetImagePath(ImageType.Big, ext);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
@@ -420,7 +420,7 @@ namespace Jvedio.Entity
 
         public string getExtraImage()
         {
-            string imagePath = getImagePath(ImageType.Preview);
+            string imagePath = GetImagePath(ImageType.Preview);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
@@ -435,7 +435,7 @@ namespace Jvedio.Entity
         }
         public string getActorPath()
         {
-            string imagePath = getImagePath(ImageType.Actor);
+            string imagePath = GetImagePath(ImageType.Actor);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
@@ -451,7 +451,7 @@ namespace Jvedio.Entity
 
         public string getScreenShot()
         {
-            string imagePath = getImagePath(ImageType.ScreenShot);
+            string imagePath = GetImagePath(ImageType.ScreenShot);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
@@ -467,7 +467,7 @@ namespace Jvedio.Entity
 
         public string getGifPath()
         {
-            string imagePath = getImagePath(ImageType.Gif, ".gif");
+            string imagePath = GetImagePath(ImageType.Gif, ".gif");
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))

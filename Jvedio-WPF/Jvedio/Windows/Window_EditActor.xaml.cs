@@ -1,9 +1,13 @@
-﻿using Jvedio.Entity;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Core.Scan;
+using Jvedio.Entity;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
+using SuperUtils.Media;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using static Jvedio.MapperManager;
 using static Jvedio.VisualTools.WindowHelper;
@@ -50,6 +54,7 @@ namespace Jvedio
 
         private void SaveActor(object sender, RoutedEventArgs e)
         {
+            CurrentActorInfo.ActorName = CurrentActorInfo.ActorName.ToProperFileName();
             if (string.IsNullOrEmpty(CurrentActorInfo.ActorName))
             {
                 MessageCard.Error("演员名称不可为空！");
@@ -107,7 +112,7 @@ namespace Jvedio
             }
 
             bool copyed = false;
-            string targetFileName = CurrentActorInfo.getImagePath(searchExt: false);
+            string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
             if (File.Exists(targetFileName))
             {
                 if (new Msgbox(this, "该图片已存在，是否使用演员识别码命名？").ShowDialog() == true)
@@ -133,6 +138,55 @@ namespace Jvedio
 
                 main?.RefreshActor(CurrentActorInfo.ActorID);
             }
+        }
+
+        private void ActorImage_Drop(object sender, DragEventArgs e)
+        {
+            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
+            if (pathType == PathType.RelativeToData)
+            {
+                MessageBox.Show("演员头像相对于影片路径，暂不支持");
+                return;
+            }
+
+
+
+
+            if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName))
+            {
+                MessageBox.Show("未设置演员名称");
+                return;
+            }
+
+            string basePicPath = ConfigManager.Settings.PicPaths[pathType.ToString()].ToString();
+            string saveDir = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePicPath, "Actresses"));
+            string name = CurrentActorInfo.ActorName.ToProperFileName();
+            string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (dragdropFiles != null && dragdropFiles.Length > 0)
+            {
+                System.Collections.Generic.List<string> list = dragdropFiles.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
+                if (list.Count > 0)
+                {
+                    string originPath = list[0];
+                    if (FileHelper.IsFile(originPath))
+                    {
+                        // 设置演员头像
+                        string targetFileName = System.IO.Path.Combine(saveDir, $"{name}{System.IO.Path.GetExtension(originPath).ToLower()}");
+                        bool copy = true;
+                        if (File.Exists(targetFileName) && new Msgbox(this, "已存在，是否覆盖？").ShowDialog() != true)
+                        {
+                            copy = false;
+                        }
+                        if (copy)
+                        {
+                            FileHelper.TryCopyFile(originPath, targetFileName, true);
+                            CurrentActorInfo.SmallImage = ImageHelper.BitmapImageFromFile(targetFileName);
+                        }
+
+                    }
+                }
+            }
+
         }
     }
 }

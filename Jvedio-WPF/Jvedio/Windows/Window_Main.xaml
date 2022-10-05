@@ -5,11 +5,10 @@
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:ext="clr-namespace:Jvedio.Core.Extensions"
+    xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
-    xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
@@ -987,7 +986,8 @@
                                                     Width="auto"
                                                     HorizontalAlignment="Stretch"
                                                     Background="Transparent"
-                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                                    Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="auto" />
                                                         <ColumnDefinition Width="auto" />
@@ -1006,20 +1006,39 @@
                                                         Foreground="{DynamicResource Window.Foreground}"
                                                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                         Text="{Binding VID, Mode=OneWay}"
-                                                        TextAlignment="Left"
-                                                        Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                        TextAlignment="Left" />
                                                     <Border
                                                         Grid.Column="1"
+                                                        Margin="0"
                                                         MouseLeftButtonDown="CopyVID"
                                                         Tag="{Binding VID}">
                                                         <Border.Style>
                                                             <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
                                                                 <Setter Property="Visibility" Value="Hidden" />
-                                                                <Setter Property="Margin" Value="0" />
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true">
-                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                                            <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay, diag:PresentationTraceSources.TraceLevel=High}" Value="true" />
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <MultiDataTrigger.Setters>
+                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                        </MultiDataTrigger.Setters>
+                                                                    </MultiDataTrigger>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                                            <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false" />
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <MultiDataTrigger.Setters>
+                                                                            <Setter Property="Visibility" Value="Hidden" />
+                                                                        </MultiDataTrigger.Setters>
+                                                                    </MultiDataTrigger>
+
+                                                                    <DataTrigger Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
                                                                     </DataTrigger>
+
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Border.Style>
@@ -1188,7 +1207,7 @@
                                             </Style>
                                         </Border.Style>
                                     </Border>
-                                    <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
+                                    <Grid Margin="0" Tag="{Binding DataID, Mode=OneWay}">
 
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto" />
@@ -1216,7 +1235,10 @@
                                                 Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}">
                                                 <Image.ContextMenu>
                                                     <ContextMenu Opacity="0.9">
-                                                        <MenuItem Click="EditInfo" Header="{x:Static lang:Resources.Menu_EditInfo}" />
+                                                        <MenuItem
+                                                            Click="EditInfo"
+                                                            Header="{x:Static lang:Resources.Menu_EditInfo}"
+                                                            Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                                         <MenuItem Name="TagMenuItems" Header="添加标记" />
                                                         <MenuItem Header="{x:Static lang:Resources.OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                             <MenuItem
@@ -1275,7 +1297,7 @@
                                                 MouseLeftButtonUp="PlayAssoVideo"
                                                 Opacity="0.5"
                                                 Style="{StaticResource HoverCanvas}"
-                                                ToolTip="{Binding id, Mode=OneWay}">
+                                                ToolTip="{Binding DataID, Mode=OneWay}">
                                                 <Ellipse
                                                     Canvas.Left="3"
                                                     Canvas.Top="3"
@@ -1329,11 +1351,30 @@
                                                 <Border.Style>
                                                     <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
                                                         <Setter Property="Visibility" Value="Hidden" />
-                                                        <Setter Property="Margin" Value="0" />
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true">
-                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                                    <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay, diag:PresentationTraceSources.TraceLevel=High}" Value="true" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <MultiDataTrigger.Setters>
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </MultiDataTrigger.Setters>
+                                                            </MultiDataTrigger>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                                    <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <MultiDataTrigger.Setters>
+                                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                                </MultiDataTrigger.Setters>
+                                                            </MultiDataTrigger>
+
+                                                            <DataTrigger Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
                                                             </DataTrigger>
+
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Border.Style>
@@ -3008,7 +3049,8 @@
                                                                 MouseLeftButtonUp="ShowDetails"
                                                                 Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}}"
                                                                 Style="{StaticResource SimpleBorder}" />
-                                                            <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
+
+                                                            <Grid Margin="0" Tag="{Binding DataID, Mode=OneWay}">
 
                                                                 <Grid.RowDefinitions>
                                                                     <RowDefinition Height="auto" />
@@ -3047,11 +3089,17 @@
                                                                                     Visibility="Collapsed" />
 
 
-                                                                                <MenuItem Click="EditInfo" Header="{x:Static lang:Resources.Menu_EditInfo}" />
+                                                                                <MenuItem
+                                                                                    Click="EditInfo"
+                                                                                    Header="{x:Static lang:Resources.Menu_EditInfo}"
+                                                                                    Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                                                                 <MenuItem Click="AddToPlayerList" Header="添加到播放列表" />
                                                                                 <MenuItem Name="TagMenuItems" Header="添加标记" />
                                                                                 <MenuItem Header="{x:Static lang:Resources.Menu_Advance}">
-                                                                                    <MenuItem Click="AddDataAssociation" Header="影片关联" />
+                                                                                    <MenuItem
+                                                                                        Click="AddDataAssociation"
+                                                                                        Header="影片关联"
+                                                                                        Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                                                                     <MenuItem Click="GenerateScreenShot" Header="{x:Static lang:Resources.Menu_GenerateScreenShot}" />
                                                                                     <MenuItem Click="GenerateGif" Header="{x:Static lang:Resources.Menu_GenerateGif}" />
                                                                                     <MenuItem
@@ -3175,7 +3223,7 @@
                                                                         MouseLeftButtonUp="PlayVideo"
                                                                         Opacity="0.5"
                                                                         Style="{StaticResource HoverCanvas}"
-                                                                        ToolTip="{Binding id, Mode=OneWay}">
+                                                                        ToolTip="{Binding DataID, Mode=OneWay}">
                                                                         <Ellipse
                                                                             Canvas.Left="3"
                                                                             Canvas.Top="3"
@@ -3226,11 +3274,30 @@
                                                                         <Border.Style>
                                                                             <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
                                                                                 <Setter Property="Visibility" Value="Hidden" />
-                                                                                <Setter Property="Margin" Value="0" />
                                                                                 <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true">
-                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                                                            <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay, diag:PresentationTraceSources.TraceLevel=High}" Value="true" />
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <MultiDataTrigger.Setters>
+                                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                                        </MultiDataTrigger.Setters>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                                                            <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false" />
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <MultiDataTrigger.Setters>
+                                                                                            <Setter Property="Visibility" Value="Hidden" />
+                                                                                        </MultiDataTrigger.Setters>
+                                                                                    </MultiDataTrigger>
+
+                                                                                    <DataTrigger Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false">
+                                                                                        <Setter Property="Visibility" Value="Collapsed" />
                                                                                     </DataTrigger>
+
                                                                                 </Style.Triggers>
                                                                             </Style>
                                                                         </Border.Style>

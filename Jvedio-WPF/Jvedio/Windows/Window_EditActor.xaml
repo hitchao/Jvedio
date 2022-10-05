@@ -2,11 +2,11 @@
     x:Class="Jvedio.Window_EditActor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="编辑演员"
     Width="800"
     Height="400"
@@ -76,6 +76,7 @@
                     Margin="10"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
+                    Drop="ActorImage_Drop"
                     Style="{StaticResource DropBorderStyle}">
                     <Image
                         Width="125"
@@ -90,19 +91,30 @@
 
                 </Border>
 
-                <Border
-                    Margin="20"
-                    Background="{DynamicResource ListBoxItem.Background}"
-                    Style="{StaticResource RoundBorder}">
-                    <TextBox
-                        Height="30"
-                        Margin="0"
-                        HorizontalContentAlignment="Center"
-                        Background="Transparent"
-                        Foreground="{DynamicResource Window.Foreground}"
-                        Style="{StaticResource BaseTextBox}"
-                        Text="{Binding CurrentActorInfo.ActorName}" />
 
+                <super:SearchBox
+                    Width="200"
+                    Padding="10,0"
+                    Foreground="{DynamicResource Window.Foreground}"
+                    PlaceHolder="演员名"
+                    PlaceHolderForeground="{DynamicResource Window.Sub.Foreground}"
+                    Style="{StaticResource BaseSearchTextBox}"
+                    Text="{Binding CurrentActorInfo.ActorName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+
+
+                <Border
+                    Margin="10"
+                    HorizontalAlignment="Left"
+                    Background="{DynamicResource Window.Title.Background}"
+                    CornerRadius="5">
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="重复的演员名将共用相同图片"
+                        TextAlignment="Left"
+                        TextWrapping="Wrap" />
                 </Border>
 
             </StackPanel>

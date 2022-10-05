@@ -139,7 +139,7 @@ namespace Jvedio
                     ActorInfo actorInfo = vieModel.CurrentVideo.ActorInfos[i];
 
                     // 加载图片
-                    string imagePath = actorInfo.getImagePath(vieModel.CurrentVideo.Path);
+                    string imagePath = actorInfo.GetImagePath(vieModel.CurrentVideo.Path);
                     BitmapImage smallimage = ReadImageFromFile(imagePath);
                     if (smallimage == null)
                     {
@@ -964,6 +964,7 @@ namespace Jvedio
                 if (magnet.Tags.Count > 0) tag = "（" + string.Join(" ", magnet.Tags) + "）";
 
                 menuItem.Header = $"{magnet.Releasedate} {tag} {magnet.Size.ToProperFileSize()} {magnet.Title}";
+                menuItem.ToolTip = menuItem.Header;
                 menuItem.Click += (s, ev) => ClipBoard.TrySetDataObject(magnet.MagnetLink);
                 CopyMagnetsMenuItem.Items.Add(menuItem);
             }
