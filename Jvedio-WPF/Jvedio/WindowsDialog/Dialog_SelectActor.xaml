@@ -8,7 +8,7 @@
         xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
         x:Class="Jvedio.Dialog_SelectActor"
         mc:Ignorable="d"
-        Title="{x:Static lang:Resources.ChooseActor}" 
+        Title="{DynamicResource ChooseActor}" 
         Width="500"
         Height="500"
      MaxHeight="500"  
@@ -85,20 +85,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel x:Name="VedioTypeStackPanel" Grid.Row="0" Orientation="Horizontal">
-            <Label  Content="{x:Static lang:Resources.SearchVideoType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
-            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}" IsChecked="True" Click="SaveVedioType"    Content="{x:Static lang:Resources.Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
-            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}"   Click="SaveVedioType"      Content="{x:Static lang:Resources.Censored}"  Style="{StaticResource FlatRadioButton}"/>
-            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}"    Click="SaveVedioType"      Content="{x:Static lang:Resources.Europe}"  Style="{StaticResource FlatRadioButton}"/>
+            <Label  Content="{DynamicResource SearchVideoType}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}" IsChecked="True" Click="SaveVedioType"    Content="{DynamicResource Uncensored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}"   Click="SaveVedioType"      Content="{DynamicResource Censored}"  Style="{StaticResource FlatRadioButton}"/>
+            <RadioButton FontSize="15"  Foreground="{DynamicResource Window.Foreground}"    Click="SaveVedioType"      Content="{DynamicResource Europe}"  Style="{StaticResource FlatRadioButton}"/>
         </StackPanel>
 
         <DockPanel LastChildFill="True" Grid.Row="1" >
-            <Label  Content="{x:Static lang:Resources.StartPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+            <Label  Content="{DynamicResource StartPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
             <TextBlock  Width="30"   Style="{StaticResource BaseTextBlock}"   Text="{Binding Value, ElementName=Slider, Mode=OneWay,Converter={StaticResource IntConverter}}"  VerticalAlignment="Center" />
             <Slider Name="Slider" ValueChanged="Slider_ValueChanged"   Value="1" Minimum="1" Maximum="500" Margin="20 0" SmallChange="1" LargeChange="2" TickFrequency="1" Width="auto" VerticalAlignment="Center"    />
         </DockPanel>
 
         <DockPanel LastChildFill="True" Grid.Row="2" >
-            <Label  Content="{x:Static lang:Resources.EndPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
+            <Label  Content="{DynamicResource EndPage}"     Style="{StaticResource LabelPrimary}" Margin="20 10" />
             <TextBlock  Width="30"   Style="{StaticResource BaseTextBlock}"   Text="{Binding Value, ElementName=SliderEnd, Mode=OneWay,Converter={StaticResource IntConverter}}"  VerticalAlignment="Center" />
             <Slider Name="SliderEnd" ValueChanged="SliderEnd_ValueChanged"   Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Maximum,Mode=OneTime}" Minimum="1" Maximum="500"  Margin="20 0"  SmallChange="1" LargeChange="2" TickFrequency="1"   VerticalAlignment="Center"  />
         </DockPanel>

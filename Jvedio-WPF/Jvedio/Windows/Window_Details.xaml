@@ -493,7 +493,7 @@
                     CornerRadius="10"
                     Cursor="Hand"
                     MouseLeftButtonUp="PreviousMovie"
-                    ToolTip="{x:Static lang:Resources.Previous}">
+                    ToolTip="{DynamicResource Previous}">
                     <Border.Style>
                         <Style TargetType="Border">
                             <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
@@ -528,7 +528,7 @@
                         GroupName="ExtraImageView"
                         IsChecked="{Binding ShowScreenShot, Mode=TwoWay, Converter={StaticResource OppositeBooleanConverter}}"
                         Style="{StaticResource FlatRadioButton}"
-                        ToolTip="{x:Static lang:Resources.Poster}">
+                        ToolTip="{DynamicResource Poster}">
                         <Image
                             Width="22"
                             Height="22"
@@ -542,7 +542,7 @@
                         GroupName="ExtraImageView"
                         IsChecked="{Binding ShowScreenShot, Mode=TwoWay}"
                         Style="{StaticResource FlatRadioButton}"
-                        ToolTip="{x:Static lang:Resources.ScreenShot}">
+                        ToolTip="{DynamicResource ScreenShot}">
                         <Image
                             Width="22"
                             Height="22"
@@ -593,10 +593,10 @@
                             <ContextMenu>
                                 <MenuItem
                                     Click="TranslateMovie"
-                                    Header="{x:Static lang:Resources.Translate}"
+                                    Header="{DynamicResource Translate}"
                                     Visibility="Collapsed" />
-                                <MenuItem Command="ApplicationCommands.Copy" Header="{x:Static lang:Resources.Copy}" />
-                                <MenuItem Command="ApplicationCommands.SelectAll" Header="{x:Static lang:Resources.SelectAllText}" />
+                                <MenuItem Command="ApplicationCommands.Copy" Header="{DynamicResource Copy}" />
+                                <MenuItem Command="ApplicationCommands.SelectAll" Header="{DynamicResource SelectAllText}" />
                             </ContextMenu>
                         </TextBox.ContextMenu>
                     </TextBox>
@@ -627,7 +627,7 @@
                                 Grid.Column="1"
                                 MouseLeftButtonUp="EditInfo"
                                 Style="{StaticResource BaseTextBlock}"
-                                Text="{x:Static lang:Resources.Edit}" />
+                                Text="{DynamicResource Edit}" />
                         </Border>
 
 
@@ -740,44 +740,44 @@
                             PreviewMouseWheel="Grid_PreviewMouseWheel">
                             <Grid.ContextMenu>
                                 <ContextMenu Opacity="0.8" PreviewKeyUp="ContextMenu_PreviewKeyUp">
-                                    <MenuItem Click="DownLoad" Header="{x:Static lang:Resources.Menu_SyncInfo}" />
+                                    <MenuItem Click="DownLoad" Header="{DynamicResource Menu_SyncInfo}" />
                                     <MenuItem
-                                        Header="{x:Static lang:Resources.Menu_SyncExtra}"
+                                        Header="{DynamicResource Menu_SyncExtra}"
                                         IsEnabled="False"
                                         Visibility="{Binding ShowSecret, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource bool2VisibilityConverter}}">
-                                        <MenuItem Click="DownLoadMagnets" Header="{x:Static lang:Resources.SyncMagnets}" />
+                                        <MenuItem Click="DownLoadMagnets" Header="{DynamicResource SyncMagnets}" />
                                     </MenuItem>
-                                    <MenuItem Header="{x:Static lang:Resources.Menu_Advance}">
-                                        <MenuItem Click="GetScreenShot" Header="{x:Static lang:Resources.Menu_GenerateScreenShot}" />
+                                    <MenuItem Header="{DynamicResource Menu_Advance}">
+                                        <MenuItem Click="GetScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
                                         <MenuItem
                                             Click="GetScreenGif"
-                                            Header="{x:Static lang:Resources.Menu_GenerateGif}"
+                                            Header="{DynamicResource Menu_GenerateGif}"
                                             Visibility="Collapsed" />
 
                                         <MenuItem
                                             Click="TranslateMovie"
-                                            Header="{x:Static lang:Resources.Menu_Translate}"
+                                            Header="{DynamicResource Menu_Translate}"
                                             IsEnabled="False"
                                             Visibility="Collapsed" />
                                         <MenuItem
-                                            Header="{x:Static lang:Resources.Menu_GenerateThumbnail}"
+                                            Header="{DynamicResource Menu_GenerateThumbnail}"
                                             IsEnabled="False"
                                             Visibility="Collapsed" />
                                         <MenuItem
-                                            Header="{x:Static lang:Resources.Menu_GenerateActressImage}"
+                                            Header="{DynamicResource Menu_GenerateActressImage}"
                                             IsEnabled="False"
                                             Visibility="Collapsed" />
                                     </MenuItem>
-                                    <MenuItem Header="{x:Static lang:Resources.OpenPath}">
+                                    <MenuItem Header="{DynamicResource OpenPath}">
                                         <MenuItem
                                             Command="cmd:File.OpenSelectFile"
                                             CommandParameter="{Binding CurrentVideo.Path}"
-                                            Header="{x:Static lang:Resources.Movie}" />
-                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Poster}" />
-                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Thumbnail}" />
+                                            Header="{DynamicResource Movie}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource Poster}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource Thumbnail}" />
                                         <MenuItem Click="OpenPath" Header="Gif" />
-                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.Preview}" />
-                                        <MenuItem Click="OpenPath" Header="{x:Static lang:Resources.ScreenShot}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource Preview}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource ScreenShot}" />
                                     </MenuItem>
 
 
@@ -787,19 +787,19 @@
                                         Click="OpenWeb"
                                         Header="访问所在网址"
                                         Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
-                                    <MenuItem x:Name="OpenOtherUrlMenuItem" Header="{x:Static lang:Resources.OpenOtherUrl}" />
+                                    <MenuItem x:Name="OpenOtherUrlMenuItem" Header="{DynamicResource OpenOtherUrl}" />
 
                                     <MenuItem
                                         x:Name="CopyMagnetsMenuItem"
-                                        Header="{x:Static lang:Resources.CopyMagnets}"
+                                        Header="{DynamicResource CopyMagnets}"
                                         Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
 
-                                    <MenuItem Click="CopyFile" Header="{x:Static lang:Resources.Menu_CopyFile}" />
+                                    <MenuItem Click="CopyFile" Header="{DynamicResource Menu_CopyFile}" />
 
-                                    <MenuItem Click="DeleteID" Header="{x:Static lang:Resources.Menu_DeleteInfo}" />
+                                    <MenuItem Click="DeleteID" Header="{DynamicResource Menu_DeleteInfo}" />
                                     <MenuItem
                                         Click="DeleteFile"
-                                        Header="{x:Static lang:Resources.Menu_DeleteFile}"
+                                        Header="{DynamicResource Menu_DeleteFile}"
                                         Icon="pack://application:,,,/Resources/menuitem/clear.png" />
 
                                 </ContextMenu>
@@ -871,13 +871,13 @@
                                                             Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}">
                                                             <Border.ContextMenu>
                                                                 <ContextMenu>
-                                                                    <MenuItem Click="OpenExtraImagePath" Header="{x:Static lang:Resources.OpenPath}" />
-                                                                    <MenuItem Header="{x:Static lang:Resources.SetAs}" Visibility="Collapsed">
-                                                                        <MenuItem Click="SetToBigAndSmallPic" Header="{x:Static lang:Resources.ThumbnailAndPoster}" />
-                                                                        <MenuItem Click="SetToSmallPic" Header="{x:Static lang:Resources.Thumbnail}" />
-                                                                        <MenuItem Click="SetToBigPic" Header="{x:Static lang:Resources.Poster}" />
+                                                                    <MenuItem Click="OpenExtraImagePath" Header="{DynamicResource OpenPath}" />
+                                                                    <MenuItem Header="{DynamicResource SetAs}" Visibility="Collapsed">
+                                                                        <MenuItem Click="SetToBigAndSmallPic" Header="{DynamicResource ThumbnailAndPoster}" />
+                                                                        <MenuItem Click="SetToSmallPic" Header="{DynamicResource Thumbnail}" />
+                                                                        <MenuItem Click="SetToBigPic" Header="{DynamicResource Poster}" />
                                                                     </MenuItem>
-                                                                    <MenuItem Click="DeleteImage" Header="{x:Static lang:Resources.DeleteImage}" />
+                                                                    <MenuItem Click="DeleteImage" Header="{DynamicResource DeleteImage}" />
                                                                     <MenuItem Click="DeleteAllImage" Header="删除所有列表中的图片" />
                                                                 </ContextMenu>
                                                             </Border.ContextMenu>
@@ -954,7 +954,7 @@
                                 <TabItem
                                     Margin="5"
                                     Padding="5"
-                                    Header="{x:Static lang:Resources.MovieInfo}"
+                                    Header="{DynamicResource MovieInfo}"
                                     Style="{DynamicResource TopTabItemStyle}">
 
                                     <Grid Name="infoGrid">
@@ -1144,7 +1144,7 @@
 
 
                                                 <StackPanel Style="{StaticResource InfoStackPanel}" Tag="{Binding CurrentVideo.Director}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.Director}" />
+                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Director}" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <Border
                                                         MaxWidth="250"
@@ -1161,7 +1161,7 @@
 
 
                                                 <StackPanel Style="{StaticResource InfoStackPanel}" Tag="{Binding CurrentVideo.Series}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.Tag}" />
+                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Tag}" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <Border
                                                         MaxWidth="250"
@@ -1191,10 +1191,10 @@
                                                         SelectedIndex="{Binding CurrentVideo.VideoType, Converter={StaticResource VidioTypeToIntConverter}, Mode=TwoWay}"
                                                         SelectionChanged="ComboBox_SelectionChanged"
                                                         Style="{StaticResource BorderComboBox}">
-                                                        <ComboBoxItem Content="{x:Static lang:Resources.Normal}" />
+                                                        <ComboBoxItem Content="{DynamicResource Normal}" />
                                                         <ComboBoxItem Content="无修正" />
                                                         <ComboBoxItem Content="修正" />
-                                                        <ComboBoxItem Content="{x:Static lang:Resources.Europe}" />
+                                                        <ComboBoxItem Content="{DynamicResource Europe}" />
                                                     </ComboBox>
 
                                                 </StackPanel>
@@ -1203,7 +1203,7 @@
                                                     Margin="0,5,0,0"
                                                     Style="{StaticResource InfoStackPanel}"
                                                     Tag="{Binding CurrentVideo.Rating}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.Rating}" />
+                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Rating}" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <TextBox
                                                         Margin="0"
@@ -1243,7 +1243,7 @@
                                                         Margin="0,5,0,0"
                                                         VerticalAlignment="Top"
                                                         Style="{StaticResource BaseTextBlock}"
-                                                        Text="{x:Static lang:Resources.Genre}" />
+                                                        Text="{DynamicResource Genre}" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Margin="0,5,0,0"
@@ -1426,7 +1426,7 @@
                                                         Grid.Column="0"
                                                         VerticalAlignment="Top"
                                                         Style="{StaticResource BaseTextBlock}"
-                                                        Text="{x:Static lang:Resources.Plot}" />
+                                                        Text="{DynamicResource Plot}" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         VerticalAlignment="Top"
@@ -1440,7 +1440,7 @@
                                                             HorizontalAlignment="Left"
                                                             VerticalAlignment="Top"
                                                             Click="TranslateMovie"
-                                                            Content="{x:Static lang:Resources.Translate}"
+                                                            Content="{DynamicResource Translate}"
                                                             Cursor="Hand"
                                                             IsEnabled="False"
                                                             Style="{StaticResource ButtonPrimary}"
@@ -1464,7 +1464,7 @@
                                 <TabItem
                                     Margin="5"
                                     Padding="10,5"
-                                    Header="{x:Static lang:Resources.VideoInfo}"
+                                    Header="{DynamicResource VideoInfo}"
                                     Style="{DynamicResource TopTabItemStyle}">
                                     <StackPanel Name="infoStackPanel">
 
@@ -1487,7 +1487,7 @@
                                             <TextBlock
                                                 Width="auto"
                                                 Style="{StaticResource BaseTextBlock}"
-                                                Text="{x:Static lang:Resources.Format}" />
+                                                Text="{DynamicResource Format}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1496,7 +1496,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.Duration}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Duration}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1505,7 +1505,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.FrameRate}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FrameRate}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1514,7 +1514,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.BitRate}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource BitRate}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1527,7 +1527,7 @@
 
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.Resolution}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Resolution}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1536,7 +1536,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.DisplayAspectRatio}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource DisplayAspectRatio}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1547,7 +1547,7 @@
 
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.BitDepth}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource BitDepth}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1556,7 +1556,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.FrameCount}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FrameCount}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1571,7 +1571,7 @@
                                             Fill="{DynamicResource Window.Foreground}" />
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.AudioFormat}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioFormat}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1580,7 +1580,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.AudioBitRate}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioBitRate}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1589,7 +1589,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.AudioSamplingRate}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioSamplingRate}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1597,7 +1597,7 @@
                                                 Text="{Binding VideoInfo.AudioSamplingRate}" />
                                         </StackPanel>
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.Channel}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Channel}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1615,7 +1615,7 @@
 
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.FileExtension}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FileExtension}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1624,7 +1624,7 @@
                                         </StackPanel>
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.FileSize}" />
+                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FileSize}" />
                                             <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                             <TextBox
                                                 Margin="0"
@@ -1664,7 +1664,7 @@
                                 CornerRadius="10"
                                 Cursor="Hand"
                                 MouseLeftButtonUp="NextMovie"
-                                ToolTip="{x:Static lang:Resources.Next}">
+                                ToolTip="{DynamicResource Next}">
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />

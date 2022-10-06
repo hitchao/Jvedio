@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
-    Title="{x:Static lang:Resources.Edit}"
+    Title="{DynamicResource Edit}"
     Width="800"
     MinWidth="800"
     Closing="BaseWindow_Closing"
@@ -82,7 +82,7 @@
                         VerticalAlignment="Stretch">
 
                         <DockPanel>
-                            <Label Content="{x:Static lang:Resources.Title}" Style="{StaticResource BaseInfoLabel}" />
+                            <Label Content="{DynamicResource Title}" Style="{StaticResource BaseInfoLabel}" />
                             <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentData.Title, Mode=TwoWay}" />
                         </DockPanel>
                         <StackPanel Orientation="Horizontal">
@@ -110,7 +110,7 @@
                             <Label
                                 Margin="0,5"
                                 VerticalAlignment="Top"
-                                Content="{x:Static lang:Resources.Genre}"
+                                Content="{DynamicResource Genre}"
                                 Style="{StaticResource BaseInfoLabel}" />
                             <super:TagPanel
                                 Name="genreTagPanel"
@@ -228,7 +228,7 @@
                             </Grid.ColumnDefinitions>
                             <Label
                                 Grid.Column="0"
-                                Content="{x:Static lang:Resources.FilePath}"
+                                Content="{DynamicResource FilePath}"
                                 Style="{StaticResource BaseInfoLabel}" />
                             <super:SearchBox
                                 Grid.Column="1"
@@ -242,7 +242,7 @@
                                 Padding="3,2,5,5"
                                 MouseLeftButtonDown="ChooseFile"
                                 Style="{StaticResource ToolsBarBorderStyle}"
-                                ToolTip="{x:Static lang:Resources.Sorting}">
+                                ToolTip="{DynamicResource Sorting}">
                                 <Viewbox Width="auto" Height="18">
                                     <Path
                                         HorizontalAlignment="Center"
@@ -265,7 +265,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Foreground="{DynamicResource Window.Foreground}"
-                                    Text="{x:Static lang:Resources.DragFileIn}" />
+                                    Text="{DynamicResource DragFileIn}" />
 
                             </Border>
                         </Grid>
@@ -295,7 +295,7 @@
                         <super:TogglePanel
                             Padding="0,5"
                             FontSize="15"
-                            Header="{x:Static lang:Resources.ShowOtherOptions}"
+                            Header="{DynamicResource ShowOtherOptions}"
                             IsExpanded="{Binding MoreExpanded, Mode=TwoWay, FallbackValue=True}"
                             IsSelected="False"
                             LineWidth="0"
@@ -312,13 +312,13 @@
                                         <StackPanel Orientation="Vertical">
 
                                             <DockPanel>
-                                                <Label Content="{x:Static lang:Resources.Director}" Style="{StaticResource BaseInfoLabel}" />
+                                                <Label Content="{DynamicResource Director}" Style="{StaticResource BaseInfoLabel}" />
                                                 <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentPicture.Director, Mode=TwoWay}" />
                                             </DockPanel>
 
 
                                             <DockPanel>
-                                                <Label Content="{x:Static lang:Resources.Studio}" Style="{StaticResource BaseInfoLabel}" />
+                                                <Label Content="{DynamicResource Studio}" Style="{StaticResource BaseInfoLabel}" />
                                                 <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentPicture.Studio, Mode=TwoWay}" />
                                             </DockPanel>
 
@@ -343,7 +343,7 @@
                                                             HorizontalAlignment="Center"
                                                             MouseLeftButtonDown="ChooseImage"
                                                             Style="{StaticResource ToolsBarBorderStyle}"
-                                                            ToolTip="{x:Static lang:Resources.Sorting}">
+                                                            ToolTip="{DynamicResource Sorting}">
                                                             <Viewbox Width="auto" Height="18">
                                                                 <Path
                                                                     HorizontalAlignment="Center"
@@ -389,7 +389,7 @@
 
 
                                             <DockPanel>
-                                                <Label Content="{x:Static lang:Resources.Studio}" Style="{StaticResource BaseInfoLabel}" />
+                                                <Label Content="{DynamicResource Studio}" Style="{StaticResource BaseInfoLabel}" />
                                                 <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentGame.Studio, Mode=TwoWay}" />
                                             </DockPanel>
 
@@ -401,7 +401,7 @@
                                         <StackPanel Orientation="Vertical">
 
                                             <DockPanel>
-                                                <Label Content="{x:Static lang:Resources.Language}" Style="{StaticResource BaseInfoLabel}" />
+                                                <Label Content="{DynamicResource Language}" Style="{StaticResource BaseInfoLabel}" />
                                                 <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentComic.Language, Mode=TwoWay}" />
                                             </DockPanel>
                                             <DockPanel>
@@ -441,14 +441,14 @@
 
 
                                 <DockPanel>
-                                    <Label Content="{x:Static lang:Resources.ImportDate}" Style="{StaticResource BaseInfoLabel}" />
+                                    <Label Content="{DynamicResource ImportDate}" Style="{StaticResource BaseInfoLabel}" />
                                     <TextBox
                                         VerticalAlignment="Center"
                                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                         Text="{Binding CurrentData.LastScanDate}" />
                                 </DockPanel>
                                 <DockPanel>
-                                    <Label Content="{x:Static lang:Resources.CreatedDate}" Style="{StaticResource BaseInfoLabel}" />
+                                    <Label Content="{DynamicResource CreatedDate}" Style="{StaticResource BaseInfoLabel}" />
                                     <TextBox
                                         VerticalAlignment="Center"
                                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
@@ -457,11 +457,11 @@
 
 
                                 <DockPanel>
-                                    <Label Content="{x:Static lang:Resources.Rating}" Style="{StaticResource BaseInfoLabel}" />
+                                    <Label Content="{DynamicResource Rating}" Style="{StaticResource BaseInfoLabel}" />
                                     <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}" Text="{Binding CurrentData.Rating, Mode=TwoWay}" />
                                 </DockPanel>
                                 <DockPanel Panel.ZIndex="5">
-                                    <Label Content="{x:Static lang:Resources.ReleaseDate}" Style="{StaticResource BaseInfoLabel}" />
+                                    <Label Content="{DynamicResource ReleaseDate}" Style="{StaticResource BaseInfoLabel}" />
                                     <super:SearchBox
                                         LostFocus="TextBox_LostFocus"
                                         Style="{StaticResource BaseSearchTextBox}"
@@ -474,7 +474,7 @@
 
 
                                 <DockPanel>
-                                    <Label Content="{x:Static lang:Resources.Country}" Style="{StaticResource BaseInfoLabel}" />
+                                    <Label Content="{DynamicResource Country}" Style="{StaticResource BaseInfoLabel}" />
                                     <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentData.Country, Mode=TwoWay}" />
                                 </DockPanel>
 
@@ -484,7 +484,7 @@
                                     <Label
                                         Margin="0,5"
                                         VerticalAlignment="Top"
-                                        Content="{x:Static lang:Resources.Plot}"
+                                        Content="{DynamicResource Plot}"
                                         Style="{StaticResource BaseInfoLabel}" />
                                     <TextBox
                                         Height="80"
@@ -500,7 +500,7 @@
                                     <Label
                                         Margin="0,5"
                                         VerticalAlignment="Top"
-                                        Content="{x:Static lang:Resources.Outline}"
+                                        Content="{DynamicResource Outline}"
                                         Style="{StaticResource BaseInfoLabel}" />
                                     <TextBox
                                         Height="80"
@@ -535,7 +535,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Click="Button_Click"
-                Content="{x:Static lang:Resources.Save}"
+                Content="{DynamicResource Save}"
                 Style="{StaticResource ButtonSuccess}" />
 
 

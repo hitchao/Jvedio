@@ -9,7 +9,7 @@
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ShowInTaskbar="True"
-    Title="{x:Static lang:Resources.Upgrade}"
+    Title="{DynamicResource Upgrade}"
     Width="auto"
     Height="400"
     Background="{DynamicResource Window.InnerDialog.Background}"
@@ -53,12 +53,12 @@
                             FontSize="20"
                             FontWeight="Bold"
                             Foreground="{DynamicResource Window.Foreground}"
-                            Text="{x:Static lang:Resources.Upgrade}"
+                            Text="{DynamicResource Upgrade}"
                             TextAlignment="Center" />
 
                         <Button
                             Click="CheckUpgrade"
-                            Content="{x:Static lang:Resources.CheckUpgrade}"
+                            Content="{DynamicResource CheckUpgrade}"
                             Cursor="Hand"
                             IsEnabled="{Binding IsChecking, Converter={StaticResource OppositeBooleanConverter}, Mode=OneWay}"
                             Style="{StaticResource FillButton}" />
@@ -81,7 +81,7 @@
                             HorizontalAlignment="Left"
                             FontSize="14"
                             Foreground="{DynamicResource Window.Foreground}"
-                            Text="{x:Static lang:Resources.UpgradeSource}" />
+                            Text="{DynamicResource UpgradeSource}" />
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock
@@ -90,7 +90,7 @@
                                 FontSize="14"
                                 Foreground="{DynamicResource Window.Foreground}"
                                 Opacity="0.7"
-                                Text="{x:Static lang:Resources.ReleaseDate}" />
+                                Text="{DynamicResource ReleaseDate}" />
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
@@ -105,7 +105,7 @@
                                 FontSize="14"
                                 Foreground="{DynamicResource Window.Foreground}"
                                 Opacity="0.7"
-                                Text="{x:Static lang:Resources.CurrentVersion}" />
+                                Text="{DynamicResource CurrentVersion}" />
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
@@ -120,7 +120,7 @@
                                 Margin="10"
                                 FontSize="16"
                                 Foreground="{DynamicResource Window.Foreground}"
-                                Text="{x:Static lang:Resources.LatestVersion}" />
+                                Text="{DynamicResource LatestVersion}" />
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
@@ -140,7 +140,7 @@
                             MinWidth="120"
                             Margin="10"
                             Click="BeginUpgrade"
-                            Content="{x:Static lang:Resources.BeginUpgrade}"
+                            Content="{DynamicResource BeginUpgrade}"
                             FontSize="15"
                             IsEnabled="{Binding CanUpgrade}"
                              />
@@ -148,7 +148,7 @@
                             MinWidth="120"
                             Margin="10"
                             Click="GotoDownloadUrl"
-                            Content="{x:Static lang:Resources.DownLoadFromUrl}"
+                            Content="{DynamicResource DownLoadFromUrl}"
                             Cursor="Hand"
                             FontSize="15"
                             Style="{StaticResource ButtonPrimary}" />

@@ -283,20 +283,20 @@
                             <super:PathRadioButton
                                 Command="{Binding SelectCommand}"
                                 CommandParameter="Favorite"
-                                MainText="{x:Static lang:Resources.Favorites}"
+                                MainText="{DynamicResource Favorites}"
                                 Path="M335.008 916.629333c-35.914667 22.314667-82.88 10.773333-104.693333-25.557333a77.333333 77.333333 0 0 1-8.96-57.429333l46.485333-198.24a13.141333 13.141333 0 0 0-4.021333-12.864l-152.16-132.586667c-31.605333-27.52-35.253333-75.648-8.234667-107.733333a75.68 75.68 0 0 1 51.733333-26.752L354.848 339.2c4.352-0.362667 8.245333-3.232 10.026667-7.594667l76.938666-188.170666c16.032-39.2 60.618667-57.92 99.52-41.461334a76.309333 76.309333 0 0 1 40.832 41.461334l76.938667 188.16c1.781333 4.373333 5.674667 7.253333 10.026667 7.605333l199.712 16.277333c41.877333 3.413333 72.885333 40.458667 69.568 82.517334a76.938667 76.938667 0 0 1-26.08 51.978666l-152.16 132.586667c-3.541333 3.082667-5.141333 8.074667-4.021334 12.853333l46.485334 198.24c9.621333 41.013333-15.36 82.336-56.138667 92.224a75.285333 75.285333 0 0 1-57.525333-9.237333l-170.976-106.24a11.296 11.296 0 0 0-12.010667 0l-170.986667 106.24z"
                                 Style="{StaticResource BasePathRadioButton}"
                                 SubText="{Binding FavoriteCount}" />
                             <super:PathRadioButton
                                 Command="{Binding SelectCommand}"
                                 CommandParameter="RecentView"
-                                MainText="{x:Static lang:Resources.RecentView}"
+                                MainText="{DynamicResource RecentView}"
                                 Path="M514.941447 890.533617c75.021176-0.60418 145.170347-21.660501 204.945616-58.36123l65.26431 98.08286a509.889473 509.889473 0 0 1-270.209926 77.026541C235.59169 1007.281788 9.306945 783.413764 9.306945 507.791926 9.306945 232.170089 235.59169 8.302065 514.941447 8.302065c279.966793 0 506.868572 223.868024 506.868572 499.489861 0 7.828632 0 15.040229-0.617035 22.868861l-118.933503-1.20836c0.60418-7.211597 0.60418-13.831869 0.60418-21.056321 0-211.231661-173.823912-382.150366-387.922214-382.150365-214.085448 0-387.318034 171.522885-387.318034 382.150365s173.232586 382.137511 387.318034 382.137511z m444.046693-194.378891L820.528049 514.219374h276.303147L958.975285 696.154726zM696.09265 529.452427c-4.884861 9.641172-14.654582 19.860815-24.411449 29.489133l-176.883377 101.707941c-34.15546 19.256635-78.671967 9.628318-98.198555-24.077221-4.884861-9.628318-9.756867-24.064366-10.965226-33.692684V394.051801c1.20836-38.51327 30.491815-72.822989 75.008321-72.822989 14.654582 0 24.398594 4.820586 34.15546 9.641173l176.883377 101.695086c34.168315 19.256635 44.529362 63.194672 24.398594 96.887356z"
                                 Style="{StaticResource BasePathRadioButton}"
                                 SubText="{Binding RecentViewCount}">
                                 <super:PathRadioButton.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="{x:Static lang:Resources.Clear}" />
+                                        <MenuItem Header="{DynamicResource Clear}" />
                                     </ContextMenu>
                                 </super:PathRadioButton.ContextMenu>
                             </super:PathRadioButton>
@@ -321,7 +321,7 @@
                             Panel.ZIndex="6"
                             Style="{StaticResource RoundBorder}"
                             Tag="{DynamicResource Window.Title.Hover.Background}"
-                            ToolTip="{x:Static lang:Resources.Add}">
+                            ToolTip="{DynamicResource Add}">
 
                             <Viewbox Width="auto" Height="14">
                                 <Path
@@ -372,8 +372,8 @@
                                                     Tag="{Binding TagID}">
                                                     <super:PathCheckButton.ContextMenu>
                                                         <ContextMenu>
-                                                            <MenuItem Header="{x:Static lang:Resources.Edit}" />
-                                                            <MenuItem Header="{x:Static lang:Resources.Delete}" />
+                                                            <MenuItem Header="{DynamicResource Edit}" />
+                                                            <MenuItem Header="{DynamicResource Delete}" />
                                                         </ContextMenu>
                                                     </super:PathCheckButton.ContextMenu>
                                                 </super:PathCheckButton>
@@ -395,7 +395,7 @@
                             Panel.ZIndex="6"
                             Style="{StaticResource RoundBorder}"
                             Tag="{DynamicResource Window.Title.Hover.Background}"
-                            ToolTip="{x:Static lang:Resources.Add}">
+                            ToolTip="{DynamicResource Add}">
                             <Viewbox Width="auto" Height="14">
                                 <Path
                                     HorizontalAlignment="Center"
@@ -643,7 +643,7 @@
                                                             <StackPanel Margin="5">
                                                                 <RadioButton
                                                                     Click="SaveAllSearchType"
-                                                                    Content="{x:Static lang:Resources.ID}"
+                                                                    Content="{DynamicResource ID}"
                                                                     FocusVisualStyle="{x:Null}"
                                                                     GroupName="SearchTypeRadioButton"
                                                                     IsChecked="True"
@@ -651,21 +651,21 @@
                                                                     Template="{DynamicResource RadioButtonControlTemplate1}" />
                                                                 <RadioButton
                                                                     Click="SaveAllSearchType"
-                                                                    Content="{x:Static lang:Resources.Title}"
+                                                                    Content="{DynamicResource Title}"
                                                                     FocusVisualStyle="{x:Null}"
                                                                     GroupName="SearchTypeRadioButton"
                                                                     Style="{StaticResource RadioButtonStyle}"
                                                                     Template="{DynamicResource RadioButtonControlTemplate1}" />
                                                                 <RadioButton
                                                                     Click="SaveAllSearchType"
-                                                                    Content="{x:Static lang:Resources.Actor}"
+                                                                    Content="{DynamicResource Actor}"
                                                                     FocusVisualStyle="{x:Null}"
                                                                     GroupName="SearchTypeRadioButton"
                                                                     Style="{StaticResource RadioButtonStyle}"
                                                                     Template="{DynamicResource RadioButtonControlTemplate1}" />
                                                                 <CheckBox
                                                                     Margin="5,0"
-                                                                    Content="{x:Static lang:Resources.SearchCurrent}"
+                                                                    Content="{DynamicResource SearchCurrent}"
                                                                     IsChecked="{Binding SearchInCurrent, Mode=TwoWay}"
                                                                     Style="{StaticResource CheckBoxStyle1}" />
                                                             </StackPanel>
@@ -733,7 +733,7 @@
                                                                             VerticalAlignment="Center"
                                                                             FontSize="12"
                                                                             Style="{StaticResource BaseTextBlock}"
-                                                                            Text="{x:Static lang:Resources.SearchHistory}" />
+                                                                            Text="{DynamicResource SearchHistory}" />
                                                                         <Border
                                                                             Width="20"
                                                                             Height="20"
@@ -788,7 +788,7 @@
                                                                     HorizontalAlignment="Left"
                                                                     FontSize="12"
                                                                     Style="{StaticResource BaseTextBlock}"
-                                                                    Text="{x:Static lang:Resources.SearchResult}" />
+                                                                    Text="{DynamicResource SearchResult}" />
 
                                                                 <ItemsControl
                                                                     x:Name="SearchItemsControl"
@@ -846,7 +846,7 @@
                                         <TextBlock
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="{x:Static lang:Resources.MultiSelect}" />
+                                            Text="{DynamicResource MultiSelect}" />
 
 
 
@@ -866,7 +866,7 @@
                                                     Path="M934.4 107.52H89.6c-20.48 0-35.84 15.36-35.84 35.84V883.2c0 20.48 15.36 35.84 35.84 35.84h844.8c20.48 0 35.84-15.36 35.84-35.84V143.36c0-20.48-15.36-35.84-35.84-35.84z m-35.84 739.84H125.44V176.64h775.68v670.72h-2.56z m0 0 M335.36 440.32c38.4 0 71.68-30.72 71.68-71.68 0-38.4-30.72-71.68-71.68-71.68-38.4 0-71.68 30.72-71.68 71.68 2.56 40.96 33.28 71.68 71.68 71.68z m0 0M652.8 396.8L445.44 691.2 337.92 540.16 158.72 793.6h704L652.8 396.8z m0 0"
                                                     PathHeight="18"
                                                     Style="{StaticResource PathGroupRadioButton}"
-                                                    ToolTip="{x:Static lang:Resources.Poster}" />
+                                                    ToolTip="{DynamicResource Poster}" />
                                                 <super:PathRadioButton
                                                     CornerRadius="0"
                                                     Path="M1024 170.666667v682.666666H0V170.666667h1024zM85.333333 256v512h853.333334V256H85.333333z m354.133334 280.106667c0 82.730667-51.477333 133.333333-136.469334 133.333333-92.501333 0-148.117333-59.776-148.117333-158.72 0-97.706667 55.829333-158.144 146.026667-158.144 73.344 0 127.936 42.709333 135.424 106.24h-75.413334c-7.509333-26.453333-29.994667-42.474667-60.010666-42.474667-42.688 0-68.117333 34.986667-68.117334 93.525334 0 59.584 28.117333 95.850667 71.893334 95.850666 34.773333 0 58.944-20.416 60.8-50.837333l0.213333-5.013333h-54.997333v-52.48H439.466667v38.741333zM573.013333 661.333333h-76.48V360.704h76.458667V661.333333z m147.285334 0H643.84V360.704h204.586667v61.461333h-128.128v68.544h116.245333v58.538667h-116.266667V661.333333z"
@@ -886,18 +886,18 @@
                                             Name="SortBorder"
                                             MouseUp="ShowContextMenu"
                                             Style="{StaticResource ToolsBarBorderStyle}"
-                                            ToolTip="{x:Static lang:Resources.Sorting}">
+                                            ToolTip="{DynamicResource Sorting}">
                                             <Border.ContextMenu>
                                                 <ContextMenu HorizontalOffset="-50">
 
-                                                    <MenuItem Header="{x:Static lang:Resources.FileSize}" IsCheckable="True" />
-                                                    <MenuItem Header="{x:Static lang:Resources.CreatedDate}" IsCheckable="True" />
-                                                    <MenuItem Header="{x:Static lang:Resources.ImportDate}" IsCheckable="True" />
-                                                    <MenuItem Header="{x:Static lang:Resources.Favorites}" IsCheckable="True" />
-                                                    <MenuItem Header="{x:Static lang:Resources.Title}" IsCheckable="True" />
-                                                    <MenuItem Header="{x:Static lang:Resources.ViewNumber}" IsCheckable="True" />
-                                                    <MenuItem Header="{x:Static lang:Resources.ReleaseDate}" IsCheckable="True" />
-                                                    <MenuItem Header="{x:Static lang:Resources.Rating}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource FileSize}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource CreatedDate}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource ImportDate}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource Favorites}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource Title}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource ViewNumber}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource ReleaseDate}" IsCheckable="True" />
+                                                    <MenuItem Header="{DynamicResource Rating}" IsCheckable="True" />
 
                                                 </ContextMenu>
                                             </Border.ContextMenu>
@@ -947,17 +947,17 @@
                                     FocusVisualStyle="{x:Null}">
                                     <Grid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="{x:Static lang:Resources.Refresh}" IsEnabled="False" />
+                                            <MenuItem Header="{DynamicResource Refresh}" IsEnabled="False" />
                                             <MenuItem Header="选中/取消当前页" />
                                             <MenuItem
                                                 Command="{Binding FlipOverCommand}"
-                                                Header="{x:Static lang:Resources.ShowExists}"
+                                                Header="{DynamicResource ShowExists}"
                                                 IsCheckable="True"
                                                 IsChecked="{Binding OnlyShowPlay, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                                                 IsEnabled="False" />
                                             <MenuItem
                                                 Command="{Binding FlipOverCommand}"
-                                                Header="{x:Static lang:Resources.ShowSubSection}"
+                                                Header="{DynamicResource ShowSubSection}"
                                                 IsCheckable="True"
                                                 IsChecked="{Binding OnlyShowSubSection, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                                                 IsEnabled="False" />
@@ -1057,12 +1057,12 @@
                                                                             PreviewKeyUp="ContextMenu_PreviewKeyUp">
 
 
-                                                                            <MenuItem Click="EditInfo" Header="{x:Static lang:Resources.Menu_EditInfo}" />
+                                                                            <MenuItem Click="EditInfo" Header="{DynamicResource Menu_EditInfo}" />
 
 
 
 
-                                                                            <MenuItem Header="{x:Static lang:Resources.OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                                                                            <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                                                 <MenuItem
                                                                                     Command="cmd:File.OpenSelectFile"
                                                                                     CommandParameter="{Binding Path}"
@@ -1078,16 +1078,16 @@
                                                                                 Header="访问所在网址"
                                                                                 Icon="pack://application:,,,/Resources/menuitem/openwebsite.png"
                                                                                 IsEnabled="False" />
-                                                                            <MenuItem Click="CopyFile" Header="{x:Static lang:Resources.Menu_CopyFile}" />
+                                                                            <MenuItem Click="CopyFile" Header="{DynamicResource Menu_CopyFile}" />
                                                                             <MenuItem
                                                                                 Click="DeleteID"
-                                                                                Header="{x:Static lang:Resources.Menu_DeleteInfo}"
-                                                                                ToolTip="{x:Static lang:Resources.ToolTip_DeleteInfo}" />
+                                                                                Header="{DynamicResource Menu_DeleteInfo}"
+                                                                                ToolTip="{DynamicResource ToolTip_DeleteInfo}" />
                                                                             <MenuItem
                                                                                 Click="DeleteFile"
-                                                                                Header="{x:Static lang:Resources.Menu_DeleteFile}"
+                                                                                Header="{DynamicResource Menu_DeleteFile}"
                                                                                 Icon="pack://application:,,,/Resources/menuitem/clear.png"
-                                                                                ToolTip="{x:Static lang:Resources.ToolTip_DeleteFile}" />
+                                                                                ToolTip="{DynamicResource ToolTip_DeleteFile}" />
 
 
 
@@ -1144,7 +1144,7 @@
                                                                     MouseUp="ShowRunMenu"
                                                                     Opacity="0.9"
                                                                     Style="{StaticResource ToolsBarBorderStyle}"
-                                                                    ToolTip="{x:Static lang:Resources.Run}"
+                                                                    ToolTip="{DynamicResource Run}"
                                                                     Visibility="Hidden">
 
                                                                     <Border.ContextMenu>

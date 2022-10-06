@@ -16,8 +16,6 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_Settings : ViewModelBase
     {
-        Window_Settings settings = GetWindowByName("Window_Settings") as Window_Settings;
-
         public Dictionary<string, object> PicPaths { get; set; }
 
         public VieModel_Settings()
@@ -849,19 +847,19 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int _SelectedLanguage = (int)ConfigManager.Settings.SelectedLanguage;
+        private string _CurrentLanguage = ConfigManager.Settings.CurrentLanguage;
 
-        public int SelectedLanguage
+        public string CurrentLanguage
         {
-            get { return _SelectedLanguage; }
+            get { return _CurrentLanguage; }
 
             set
             {
-                _SelectedLanguage = value;
-                settings?.SetLanguage();
+                _CurrentLanguage = value;
                 RaisePropertyChanged();
             }
         }
+
 
         private bool _DetailShowBg = ConfigManager.Settings.DetailShowBg;
 

@@ -62,10 +62,8 @@ namespace Jvedio.Core.WindowConfig
 
         public long DefaultDBID { get; set; }
 
-        /// <summary>
-        /// 0-中文 1-English 2-日語
-        /// </summary>
-        public long SelectedLanguage { get; set; }
+
+        public string CurrentLanguage { get; set; }
 
         public bool SaveInfoToNFO { get; set; }
 

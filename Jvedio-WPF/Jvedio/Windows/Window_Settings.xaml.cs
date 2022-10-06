@@ -553,46 +553,8 @@ namespace Jvedio
             windowMain?.ActorSetSelected();
         }
 
-        public void SetLanguage()
-        {
-            // https://blog.csdn.net/fenglailea/article/details/45888799
-            long language = vieModel.SelectedLanguage;
-            string hint = string.Empty;
-            if (language == 1)
-                hint = "Take effect after restart";
-            else if (language == 2)
-                hint = "再起動後に有効になります";
-            else
-                hint = "重启后生效";
-            MessageCard.Success(hint);
-            SetLanguageDictionary();
-        }
 
-        private void SetLanguageDictionary()
-        {
-            // 设置语言
-            long language = ConfigManager.Settings.SelectedLanguage;
-            switch (language)
-            {
-                case 0:
-                    Jvedio.Language.Resources.Culture = new System.Globalization.CultureInfo("zh-CN");
-                    break;
-                case 1:
-                    Jvedio.Language.Resources.Culture = new System.Globalization.CultureInfo("en-US");
-                    break;
 
-                case 2:
-                    Jvedio.Language.Resources.Culture = new System.Globalization.CultureInfo("ja-JP");
-                    break;
-                default:
-                    Jvedio.Language.Resources.Culture = new System.Globalization.CultureInfo("en-US");
-                    break;
-            }
-
-            Jvedio.Language.Resources.Culture.ClearCachedData();
-            Properties.Settings.Default.SelectedLanguage = vieModel.SelectedLanguage;
-            Properties.Settings.Default.Save();
-        }
 
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -710,6 +672,31 @@ namespace Jvedio
                     vieModel.ProxyPwd = Encrypt.AesEncrypt(passwordBox.Password, 0);
             };
 
+            // 设置语言
+            int langIdx = 0;
+            if (!string.IsNullOrEmpty(ConfigManager.Settings.CurrentLanguage))
+            {
+                for (int i = 0; i < langComboBox.Items.Count; i++)
+                {
+                    ComboBoxItem item = langComboBox.Items[i] as ComboBoxItem;
+                    if (item.Tag.ToString().Equals(ConfigManager.Settings.CurrentLanguage))
+                    {
+                        langIdx = i;
+                        break;
+                    }
+                }
+            }
+            langComboBox.SelectedIndex = langIdx;
+            langComboBox.SelectionChanged += (s, ev) =>
+             {
+                 if (ev.AddedItems?.Count > 0)
+                 {
+                     ComboBoxItem comboBoxItem = ev.AddedItems[0] as ComboBoxItem;
+                     string lang = comboBoxItem.Tag.ToString();
+                     SuperControls.Style.LangManager.SetLang(lang);
+                     vieModel.CurrentLanguage = lang;
+                 }
+             };
         }
 
 
@@ -1099,7 +1086,7 @@ namespace Jvedio
             ConfigManager.Settings.TeenMode = vieModel.TeenMode;
             ConfigManager.Settings.CloseToTaskBar = vieModel.CloseToTaskBar;
             ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
-            ConfigManager.Settings.SelectedLanguage = vieModel.SelectedLanguage;
+            ConfigManager.Settings.CurrentLanguage = vieModel.CurrentLanguage;
             ConfigManager.Settings.SaveInfoToNFO = vieModel.SaveInfoToNFO;
             ConfigManager.Settings.NFOSavePath = vieModel.NFOSavePath;
             ConfigManager.Settings.OverriteNFO = vieModel.OverriteNFO;

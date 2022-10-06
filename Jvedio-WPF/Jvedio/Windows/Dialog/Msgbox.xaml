@@ -76,7 +76,7 @@
                             MinWidth="100"
                             Margin="10"
                             Click="Cancel"
-                            Content="{x:Static lang:Resources.Cancel}"
+                            Content="{DynamicResource Cancel}"
                             Cursor="Hand"
                             Style="{StaticResource ButtonDanger}" />
                         <Button
@@ -84,7 +84,7 @@
                             MinWidth="100"
                             Margin="10"
                             Click="Confirm"
-                            Content="{x:Static lang:Resources.Confirm}"
+                            Content="{DynamicResource Confirm}"
                             Cursor="Hand"
                             Style="{StaticResource ButtonPrimary}" />
                     </StackPanel>

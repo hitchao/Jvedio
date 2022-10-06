@@ -29,21 +29,21 @@ namespace SuperUtils.External
         {
             string from = "auto";
             string to = "zh-CHS";
-            long language = ConfigManager.Settings.SelectedLanguage;
-            switch (language)
-            {
-                case 0:
-                    to = "zh-CHS";
-                    break;
-                case 1:
-                    to = "en";
-                    break;
-                case 2:
-                    to = "ja";
-                    break;
-                default:
-                    break;
-            }
+            string language = ConfigManager.Settings.CurrentLanguage;
+            //switch (language)
+            //{
+            //    case 0:
+            //        to = "zh-CHS";
+            //        break;
+            //    case 1:
+            //        to = "en";
+            //        break;
+            //    case 2:
+            //        to = "ja";
+            //        break;
+            //    default:
+            //        break;
+            //}
 
             return Task.Run(() =>
             {

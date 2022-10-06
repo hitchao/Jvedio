@@ -8,7 +8,7 @@
     xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    Title="{x:Static lang:Resources.LoadFromNet}"
+    Title="{DynamicResource LoadFromNet}"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -23,7 +23,7 @@
             <StackPanel Orientation="Horizontal">
                 <Label
                     Margin="20,10"
-                    Content="{x:Static lang:Resources.Url}"
+                    Content="{DynamicResource Url}"
                     Style="{StaticResource LabelPrimary}" />
                 <TextBox
                     x:Name="tb"
@@ -31,7 +31,7 @@
                     Width="300"
                     Margin="20"
                     hc:InfoElement.Necessary="True"
-                    hc:InfoElement.Placeholder="{x:Static lang:Resources.FirstPageOfUrl}"
+                    hc:InfoElement.Placeholder="{DynamicResource FirstPageOfUrl}"
                     hc:InfoElement.Title=""
                     hc:InfoElement.TitleWidth="140"
                     Background="{DynamicResource Window.Title.Background}"
@@ -47,13 +47,13 @@
                 <Button
                     Margin="10"
                     Click="SaveWebSite"
-                    Content="{x:Static lang:Resources.Save}"
+                    Content="{DynamicResource Save}"
                     Style="{StaticResource ButtonSuccess}" />
 
                 <Button
                     Margin="5,10"
                     Click="DeleteWebSite"
-                    Content="{x:Static lang:Resources.Delete}"
+                    Content="{DynamicResource Delete}"
                     Style="{StaticResource ButtonDanger}" />
 
                 <ComboBox
@@ -73,24 +73,24 @@
             <StackPanel x:Name="VedioTypeStackPanel" Orientation="Horizontal">
                 <Label
                     Margin="20,10"
-                    Content="{x:Static lang:Resources.VideoType}"
+                    Content="{DynamicResource VideoType}"
                     Style="{StaticResource LabelPrimary}" />
                 <RadioButton
                     Click="SaveVedioType"
-                    Content="{x:Static lang:Resources.Uncensored}"
+                    Content="{DynamicResource Uncensored}"
                     FontSize="15"
                     Foreground="{DynamicResource Window.Foreground}"
                     IsChecked="True"
                     Style="{StaticResource FlatRadioButton}" />
                 <RadioButton
                     Click="SaveVedioType"
-                    Content="{x:Static lang:Resources.Censored}"
+                    Content="{DynamicResource Censored}"
                     FontSize="15"
                     Foreground="{DynamicResource Window.Foreground}"
                     Style="{StaticResource FlatRadioButton}" />
                 <RadioButton
                     Click="SaveVedioType"
-                    Content="{x:Static lang:Resources.Europe}"
+                    Content="{DynamicResource Europe}"
                     FontSize="15"
                     Foreground="{DynamicResource Window.Foreground}"
                     Style="{StaticResource FlatRadioButton}" />
@@ -99,7 +99,7 @@
             <DockPanel>
                 <Label
                     Margin="20,10"
-                    Content="{x:Static lang:Resources.StartPage}"
+                    Content="{DynamicResource StartPage}"
                     Style="{StaticResource LabelPrimary}" />
                 <TextBlock
                     Width="30"
@@ -123,7 +123,7 @@
             <DockPanel>
                 <Label
                     Margin="20,10"
-                    Content="{x:Static lang:Resources.EndPage}"
+                    Content="{DynamicResource EndPage}"
                     Style="{StaticResource LabelPrimary}" />
                 <TextBlock
                     Width="30"

@@ -12,7 +12,7 @@
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="{x:Static lang:Resources.Settings}"
+    Title="{DynamicResource Settings}"
     Width="1000"
     MinWidth="800"
     MinHeight="500"
@@ -159,19 +159,19 @@
             Style="{StaticResource FlatTabControl}"
             TabStripPlacement="Top">
 
-            <TabItem Header="{x:Static lang:Resources.Basic}">
+            <TabItem Header="{DynamicResource Basic}">
                 <StackPanel>
                     <WrapPanel Margin="5" Orientation="Vertical">
-                        <CheckBox Content="{x:Static lang:Resources.CloseToBar}" IsChecked="{Binding CloseToTaskBar, Mode=TwoWay}" />
-                        <CheckBox Content="{x:Static lang:Resources.TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay}" />
+                        <CheckBox Content="{DynamicResource CloseToBar}" IsChecked="{Binding CloseToTaskBar, Mode=TwoWay}" />
+                        <CheckBox Content="{DynamicResource TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay}" />
 
                         <CheckBox
                             x:Name="openDefaultCheckBox"
-                            Content="{x:Static lang:Resources.NotShowLibrary}"
+                            Content="{DynamicResource NotShowLibrary}"
                             IsChecked="{Binding OpenDataBaseDefault, Mode=TwoWay}" />
-                        <CheckBox Content="{x:Static lang:Resources.DetailViewAll}" IsChecked="{Binding DetialWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetialWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
-                        <CheckBox Content="{x:Static lang:Resources.DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                         <WrapPanel Orientation="Horizontal">
                             <CheckBox Content="显示搜索历史" IsChecked="{Binding ShowSearchHistory, Mode=TwoWay}" />
@@ -180,18 +180,18 @@
 
                     </WrapPanel>
                     <StackPanel Margin="15,5" Orientation="Horizontal">
-                        <Label Content="{x:Static lang:Resources.Language}" Style="{StaticResource InfoLabel}" />
+                        <Label Content="{DynamicResource Language}" Style="{StaticResource InfoLabel}" />
                         <ComboBox
+                            Name="langComboBox"
                             Grid.Column="1"
                             Height="30"
                             MinWidth="200"
                             Margin="5"
                             HorizontalAlignment="Stretch"
-                            SelectedIndex="{Binding SelectedLanguage}"
                             Style="{StaticResource BorderComboBox}">
-                            <ComboBoxItem Content="中文" />
-                            <ComboBoxItem Content="English" />
-                            <ComboBoxItem Content="日本語" />
+                            <ComboBoxItem Content="中文" Tag="zh-CN" />
+                            <ComboBoxItem Content="English" Tag="en-US" />
+                            <ComboBoxItem Content="日本語" Tag="ja-JP" />
                         </ComboBox>
                     </StackPanel>
 
@@ -205,7 +205,7 @@
                             MinWidth="95"
                             VerticalContentAlignment="Center"
                             Checked="CheckBox_Checked"
-                            Content="{x:Static lang:Resources.BossKey}"
+                            Content="{DynamicResource BossKey}"
                             IsChecked="{Binding HotKey_Enable, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                             Unchecked="Unregister_HotKey" />
                         <hc:TextBox
@@ -216,7 +216,7 @@
                             PreviewKeyUp="hotkeyTextBox_PreviewKeyUp"
                             Style="{StaticResource BaseHcTextBox}"
                             Text="{Binding HotKey_String, Mode=OneWay, Source={x:Static p:Settings.Default}}" />
-                        <Button Click="ApplyHotKey" Content="{x:Static lang:Resources.Apply}" />
+                        <Button Click="ApplyHotKey" Content="{DynamicResource Apply}" />
                     </StackPanel>
 
 
@@ -224,12 +224,12 @@
 
 
                     <StackPanel Margin="15,5" Orientation="Horizontal">
-                        <Label Content="{x:Static lang:Resources.SetPlayer}" Style="{StaticResource InfoLabel}" />
+                        <Label Content="{DynamicResource SetPlayer}" Style="{StaticResource InfoLabel}" />
                         <hc:TextBox
                             ShowClearButton="True"
                             Style="{StaticResource BaseHcTextBox}"
                             Text="{Binding VedioPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <Button Click="SetVideoPlayerPath" Content="{x:Static lang:Resources.Choose}" />
+                        <Button Click="SetVideoPlayerPath" Content="{DynamicResource Choose}" />
                     </StackPanel>
 
 
@@ -237,7 +237,7 @@
                         Padding="0,5"
                         HorizontalAlignment="Left"
                         FontSize="15"
-                        Header="{x:Static lang:Resources.ShowOtherOptions}"
+                        Header="{DynamicResource ShowOtherOptions}"
                         IsEnabled="False"
                         IsExpanded="False"
                         LineWidth="0"
@@ -261,7 +261,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.ShowRecentCreate}" />
+                                    Text="{DynamicResource ShowRecentCreate}" />
                             </StackPanel>
 
                             <StackPanel Margin="10,10" Orientation="Horizontal">
@@ -280,7 +280,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.ShowRecentPlay}" />
+                                    Text="{DynamicResource ShowRecentPlay}" />
                             </StackPanel>
 
                             <StackPanel Margin="10,10" Orientation="Horizontal">
@@ -299,7 +299,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.SearchCandidateNumber}" />
+                                    Text="{DynamicResource SearchCandidateNumber}" />
                             </StackPanel>
 
                             <StackPanel Margin="10,10" Orientation="Horizontal">
@@ -318,7 +318,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.DirClassificationNumber}" />
+                                    Text="{DynamicResource DirClassificationNumber}" />
                             </StackPanel>
 
                             <StackPanel Margin="10,10" Orientation="Horizontal">
@@ -337,7 +337,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.DirClassificationDepth}" />
+                                    Text="{DynamicResource DirClassificationDepth}" />
                             </StackPanel>
 
                         </StackPanel>
@@ -354,7 +354,7 @@
 
                 <StackPanel Margin="20,5">
                     <CheckBox Content="无封面时将已截取的图片作为封面" IsChecked="{Binding AutoGenScreenShot}" />
-                    <CheckBox Content="{x:Static lang:Resources.ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                    <CheckBox Content="{DynamicResource ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                     <Grid Margin="5">
                         <Grid.ColumnDefinitions>
@@ -405,7 +405,7 @@
                                     Grid.Column="2"
                                     Padding="3,2,5,5"
                                     MouseLeftButtonDown="SetBasePicPath"
-                                    ToolTip="{x:Static lang:Resources.Sorting}">
+                                    ToolTip="{DynamicResource Sorting}">
 
                                     <Border.Style>
                                         <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
@@ -627,7 +627,7 @@
                         Margin="20,5"
                         Orientation="Horizontal"
                         Visibility="Collapsed">
-                        <Label Content="{x:Static lang:Resources.SubsectionSpiltChar}" Style="{StaticResource InfoLabel}" />
+                        <Label Content="{DynamicResource SubsectionSpiltChar}" Style="{StaticResource InfoLabel}" />
                         <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding SubSectionFeature, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                     </StackPanel>
 
@@ -641,7 +641,7 @@
                     <CheckBox
                         Margin="25,5"
                         HorizontalAlignment="Left"
-                        Content="{x:Static lang:Resources.ImportNFOWhenScan}"
+                        Content="{DynamicResource ImportNFOWhenScan}"
                         IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                     <StackPanel
@@ -717,7 +717,7 @@
                         Orientation="Vertical"
                         Visibility="{Binding MainWindowVisiblie, Converter={StaticResource bool2VisibilityConverter}}">
                         <StackPanel Margin="10,0,10,10" Orientation="Horizontal">
-                            <CheckBox Content="{x:Static lang:Resources.ScanDirWhenStartUp}" IsChecked="{Binding ScanOnStartUp, Mode=TwoWay}" />
+                            <CheckBox Content="{DynamicResource ScanDirWhenStartUp}" IsChecked="{Binding ScanOnStartUp, Mode=TwoWay}" />
 
                             <TextBlock
                                 Margin="50,0,5,0"
@@ -848,7 +848,7 @@
 
             </TabItem>
 
-            <TabItem Header="{x:Static lang:Resources.SyncInfo}">
+            <TabItem Header="{DynamicResource SyncInfo}">
                 <StackPanel>
                     <Border
                         Margin="10"
@@ -860,7 +860,7 @@
 
                                 <CheckBox
                                     Margin="0"
-                                    Content="{x:Static lang:Resources.SaveToNFO}"
+                                    Content="{DynamicResource SaveToNFO}"
                                     IsChecked="{Binding SaveInfoToNFO, Mode=TwoWay}" />
 
 
@@ -874,7 +874,7 @@
                                         Margin="10,0"
                                         Background="{DynamicResource Window.Title.Background}"
                                         FontSize="15"
-                                        PlaceHolder="{x:Static lang:Resources.ToolTip_SameAsVedio}"
+                                        PlaceHolder="{DynamicResource ToolTip_SameAsVedio}"
                                         PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                                         Style="{StaticResource BaseSearchTextBox}"
                                         Text="{Binding NFOSavePath, Mode=TwoWay}" />
@@ -882,8 +882,8 @@
                                     <Button
                                         HorizontalAlignment="Left"
                                         Click="SelectNfoPath"
-                                        Content="{x:Static lang:Resources.ChooseDir}" />
-                                    <CheckBox Content="{x:Static lang:Resources.overwrite}" IsChecked="{Binding OverriteNFO, Mode=TwoWay}" />
+                                        Content="{DynamicResource ChooseDir}" />
+                                    <CheckBox Content="{DynamicResource overwrite}" IsChecked="{Binding OverriteNFO, Mode=TwoWay}" />
 
                                 </StackPanel>
 
@@ -1204,7 +1204,7 @@
                                                     Margin="10"
                                                     HorizontalAlignment="Left"
                                                     Click="NewServer"
-                                                    Content="{x:Static lang:Resources.Add}"
+                                                    Content="{DynamicResource Add}"
                                                     Style="{DynamicResource FillButton}" />
                                             </StackPanel>
 
@@ -1224,7 +1224,7 @@
 
 
                                                 <DataGrid.Columns>
-                                                    <DataGridTemplateColumn Width="60" Header="{x:Static lang:Resources.Enable}">
+                                                    <DataGridTemplateColumn Width="60" Header="{DynamicResource Enable}">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <CheckBox
@@ -1235,7 +1235,7 @@
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
 
-                                                    <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Options}">
+                                                    <DataGridTemplateColumn Width="auto" Header="{DynamicResource Options}">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <StackPanel
@@ -1248,7 +1248,7 @@
                                                                         Margin="5"
                                                                         Padding="0"
                                                                         Click="TestServer"
-                                                                        Content="{x:Static lang:Resources.Test}"
+                                                                        Content="{DynamicResource Test}"
                                                                         Cursor="Hand"
                                                                         Style="{StaticResource ButtonPrimary}"
                                                                         Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
@@ -1258,7 +1258,7 @@
                                                                         Margin="5"
                                                                         Padding="0"
                                                                         Click="DeleteServer"
-                                                                        Content="{x:Static lang:Resources.Delete}"
+                                                                        Content="{DynamicResource Delete}"
                                                                         Cursor="Hand"
                                                                         Style="{StaticResource ButtonDanger}" />
                                                                 </StackPanel>
@@ -1266,7 +1266,7 @@
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
 
-                                                    <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Status}">
+                                                    <DataGridTemplateColumn Width="auto" Header="{DynamicResource Status}">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <fa:ImageAwesome Height="20">
@@ -1300,7 +1300,7 @@
 
 
 
-                                                    <DataGridTemplateColumn Width="auto" Header="{x:Static lang:Resources.Url}">
+                                                    <DataGridTemplateColumn Width="auto" Header="{DynamicResource Url}">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <super:SearchBox
@@ -1365,7 +1365,7 @@
                                                         Width="auto"
                                                         Binding="{Binding LastRefreshDate, Mode=OneWay}"
                                                         Foreground="{DynamicResource Window.Foreground}"
-                                                        Header="{x:Static lang:Resources.LatestUpdateDate}"
+                                                        Header="{DynamicResource LatestUpdateDate}"
                                                         IsReadOnly="True" />
 
                                                 </DataGrid.Columns>
@@ -1526,7 +1526,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.TimeOut_CloseConnection}" />
+                                    Text="{DynamicResource TimeOut_CloseConnection}" />
                             </StackPanel>
 
                             <StackPanel Margin="10" Orientation="Horizontal">
@@ -1545,7 +1545,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.TimeOut_HTTP}" />
+                                    Text="{DynamicResource TimeOut_HTTP}" />
                             </StackPanel>
 
                             <StackPanel Margin="10" Orientation="Horizontal">
@@ -1564,7 +1564,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.TimeOut_TCP}" />
+                                    Text="{DynamicResource TimeOut_TCP}" />
                             </StackPanel>
 
                             <StackPanel Margin="10" Orientation="Horizontal">
@@ -1583,7 +1583,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.TimeOut_DownloadImage}" />
+                                    Text="{DynamicResource TimeOut_DownloadImage}" />
                             </StackPanel>
 
                             <StackPanel Margin="10" Orientation="Horizontal">
@@ -1602,7 +1602,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource TextBlockTitle}"
-                                    Text="{x:Static lang:Resources.TimeOut_ReadWrite}" />
+                                    Text="{DynamicResource TimeOut_ReadWrite}" />
                             </StackPanel>
 
 
@@ -1616,7 +1616,7 @@
 
             </TabItem>
 
-            <TabItem Header="{x:Static lang:Resources.Show}">
+            <TabItem Header="{DynamicResource Show}">
                 <StackPanel>
 
                     <StackPanel
@@ -1629,26 +1629,26 @@
                             <CheckBox Content="搜索栏" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                             <CheckBox Content="翻页调节栏" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                             <CheckBox Content="页码调节下拉菜单" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <CheckBox Content="{x:Static lang:Resources.StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <CheckBox Content="{x:Static lang:Resources.FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{DynamicResource StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                             <CheckBox
-                                Content="{x:Static lang:Resources.Navigation}"
+                                Content="{DynamicResource Navigation}"
                                 IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                                 Visibility="Collapsed" />
                         </WrapPanel>
                         <CheckBox
-                            Content="{x:Static lang:Resources.Filter}"
+                            Content="{DynamicResource Filter}"
                             IsChecked="{Binding ShowFilter, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                             IsEnabled="False" />
 
-                        <CheckBox Content="{x:Static lang:Resources.ShowFIlename}" IsChecked="{Binding ShowFileNameIfTitleEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource ShowFIlename}" IsChecked="{Binding ShowFileNameIfTitleEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox Content="发行日期为空显示创建日期" IsChecked="{Binding ShowCreateDateIfReleaseDateEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox
-                            Content="{x:Static lang:Resources.ShowTranslation}"
+                            Content="{DynamicResource ShowTranslation}"
                             IsChecked="{Binding TitleShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                             IsEnabled="False" />
                         <CheckBox
-                            Content="{x:Static lang:Resources.ShowTranslate2}"
+                            Content="{DynamicResource ShowTranslate2}"
                             IsChecked="{Binding PlotShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                             IsEnabled="False" />
                     </StackPanel>
@@ -1694,11 +1694,11 @@
                         Margin="10"
                         HorizontalAlignment="Left"
                         Style="{StaticResource TextBlockTitle}"
-                        Text="{x:Static lang:Resources.FormEffect}" />
+                        Text="{DynamicResource FormEffect}" />
                     <CheckBox
                         Margin="15,5"
                         HorizontalAlignment="Left"
-                        Content="{x:Static lang:Resources.FadeInOut}"
+                        Content="{DynamicResource FadeInOut}"
                         IsChecked="{Binding EnableWindowFade, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                         IsEnabled="False" />
 
@@ -1708,16 +1708,16 @@
                 <StackPanel />
             </TabItem>
 
-            <TabItem Header="{x:Static lang:Resources.Translate}">
+            <TabItem Header="{DynamicResource Translate}">
                 <StackPanel IsEnabled="False">
                     <StackPanel IsEnabled="True" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <CheckBox
                                 Margin="20,10"
-                                Content="{x:Static lang:Resources.Youdao}"
+                                Content="{DynamicResource Youdao}"
                                 IsChecked="{Binding Enable_TL_YOUDAO, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button Click="TestTranslate" Content="{x:Static lang:Resources.Test}" />
-                            <Button Click="LoadTranslate" Content="{x:Static lang:Resources.LoadLocalKey}" />
+                            <Button Click="TestTranslate" Content="{DynamicResource Test}" />
+                            <Button Click="LoadTranslate" Content="{DynamicResource LoadLocalKey}" />
                             <!--  TODO WIN7  -->
                             <fa:ImageAwesome
                                 Height="20"
@@ -1753,7 +1753,7 @@
                                 Margin="20,10"
                                 Content="百度翻译"
                                 IsChecked="{Binding Enable_TL_BAIDU, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button Click="TestTranslate" Content="{x:Static lang:Resources.Test}" />
+                            <Button Click="TestTranslate" Content="{DynamicResource Test}" />
                             <Image
                                 Width="32"
                                 Height="32"
@@ -1776,17 +1776,17 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{x:Static lang:Resources.AI}">
+            <TabItem Header="{DynamicResource AI}">
                 <StackPanel IsEnabled="False">
                     <StackPanel IsEnabled="True" Orientation="Vertical">
 
                         <StackPanel Orientation="Horizontal">
                             <CheckBox
                                 Margin="20,10"
-                                Content="{x:Static lang:Resources.BaiduFaceRecognition}"
+                                Content="{DynamicResource BaiduFaceRecognition}"
                                 IsChecked="{Binding Enable_BaiduAI, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button Click="TestAI" Content="{x:Static lang:Resources.Test}" />
-                            <Button Click="LoadAI" Content="{x:Static lang:Resources.LoadLocalKey}" />
+                            <Button Click="TestAI" Content="{DynamicResource Test}" />
+                            <Button Click="LoadAI" Content="{DynamicResource LoadLocalKey}" />
                             <fa:ImageAwesome
                                 Height="20"
                                 Margin="5,0"
@@ -1811,20 +1811,20 @@
                     </StackPanel>
                     <CheckBox
                         Margin="20,10"
-                        Content="{x:Static lang:Resources.HalfCutOff}"
+                        Content="{DynamicResource HalfCutOff}"
                         IsChecked="{Binding HalfCutOFf, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
 
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{x:Static lang:Resources.VedioProcessing}">
+            <TabItem Header="{DynamicResource VedioProcessing}">
                 <StackPanel>
                     <CheckBox
                         Margin="20,5"
                         HorizontalAlignment="Left"
                         VerticalContentAlignment="Center"
-                        Content="{x:Static lang:Resources.ScreenShotToPreviewDir}"
+                        Content="{DynamicResource ScreenShotToPreviewDir}"
                         IsChecked="{Binding ScreenShotToExtraPicPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                         Visibility="Collapsed" />
 
@@ -1840,7 +1840,7 @@
                                     MinWidth="150"
                                     Margin="2"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="{x:Static lang:Resources.FFmpegPath}"
+                                    Text="{DynamicResource FFmpegPath}"
                                     TextAlignment="Left" />
                                 <super:SearchBox
                                     MinWidth="400"
@@ -1851,7 +1851,7 @@
                                 <Button
                                     Margin="10,5"
                                     Click="SetFFMPEGPath"
-                                    Content="{x:Static lang:Resources.ChooseFile}" />
+                                    Content="{DynamicResource ChooseFile}" />
 
 
                                 <TextBlock
@@ -1956,7 +1956,7 @@
                         <super:TogglePanel
                             Padding="0,5"
                             FontSize="16"
-                            Header="{x:Static lang:Resources.ScreenShot}"
+                            Header="{DynamicResource ScreenShot}"
                             IsExpanded="True"
                             LineWidth="0"
                             Style="{StaticResource BaseTogglePanel}">
@@ -1982,7 +1982,7 @@
                                         Width="30"
                                         Style="{StaticResource BaseTextBlock}"
                                         Text="{Binding Value, ElementName=ScreenshotNumSlider, Mode=OneWay}" />
-                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.ScreenShotNumber}" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource ScreenShotNumber}" />
 
                                 </StackPanel>
                                 <StackPanel Margin="20,5" Orientation="Horizontal">
@@ -2001,7 +2001,7 @@
                                         Width="30"
                                         Style="{StaticResource BaseTextBlock}"
                                         Text="{Binding ElementName=ScreenShotIgnoreSlider1, Mode=OneWay, Path=Value}" />
-                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.SkipBegin}" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource SkipBegin}" />
                                 </StackPanel>
                                 <StackPanel Margin="20,5" Orientation="Horizontal">
 
@@ -2019,7 +2019,7 @@
                                         Width="30"
                                         Style="{StaticResource BaseTextBlock}"
                                         Text="{Binding ElementName=ScreenShotIgnoreSlider2, Mode=OneWay, Path=Value}" />
-                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{x:Static lang:Resources.SkipEnd}" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource SkipEnd}" />
                                 </StackPanel>
                             </StackPanel>
                         </super:TogglePanel>
@@ -2043,7 +2043,7 @@
                                 <CheckBox
                                     Margin="20,10"
                                     HorizontalAlignment="Left"
-                                    Content="{x:Static lang:Resources.SkipExistGif}"
+                                    Content="{DynamicResource SkipExistGif}"
                                     IsChecked="{Binding SkipExistGif, Mode=TwoWay}" />
 
 
@@ -2051,7 +2051,7 @@
                                     Margin="15,5"
                                     HorizontalAlignment="Left"
                                     Orientation="Horizontal">
-                                    <Label Content="{x:Static lang:Resources.Resolution}" Style="{StaticResource InfoLabel}" />
+                                    <Label Content="{DynamicResource Resolution}" Style="{StaticResource InfoLabel}" />
                                     <Slider
                                         x:Name="GifSlider1"
                                         Width="250"
@@ -2091,7 +2091,7 @@
                                         Text="{Binding Value, ElementName=GifSlider2, StringFormat={}{0} px}" />
                                     <CheckBox
                                         Margin="20,10"
-                                        Content="{x:Static lang:Resources.AutoHeight}"
+                                        Content="{DynamicResource AutoHeight}"
                                         IsChecked="{Binding GifAutoHeight, Mode=TwoWay}" />
 
 
@@ -2101,7 +2101,7 @@
                                     Margin="15,5"
                                     HorizontalAlignment="Left"
                                     Orientation="Horizontal">
-                                    <Label Content="{x:Static lang:Resources.Duration}" Style="{StaticResource InfoLabel}" />
+                                    <Label Content="{DynamicResource Duration}" Style="{StaticResource InfoLabel}" />
                                     <Slider
                                         x:Name="GifDurationSlider1"
                                         Width="300"
@@ -2129,24 +2129,24 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{x:Static lang:Resources.CustomAppearance}">
+            <TabItem Header="{DynamicResource CustomAppearance}">
                 <StackPanel>
                     <WrapPanel
                         Margin="15"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
-                        <CheckBox Content="{x:Static lang:Resources.ID}" IsChecked="{Binding DisplayID, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="{x:Static lang:Resources.Title}" IsChecked="{Binding DisplayTitle, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="{x:Static lang:Resources.Date}" IsChecked="{Binding DisplayDate, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="{x:Static lang:Resources.Stamp}" IsChecked="{Binding DisplayStamp, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="{x:Static lang:Resources.Favorites}" IsChecked="{Binding DisplayFavorites, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource ID}" IsChecked="{Binding DisplayID, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource Title}" IsChecked="{Binding DisplayTitle, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource Date}" IsChecked="{Binding DisplayDate, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource Stamp}" IsChecked="{Binding DisplayStamp, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource Favorites}" IsChecked="{Binding DisplayFavorites, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                     </WrapPanel>
 
                     <WrapPanel
                         Margin="20,5"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
-                        <Label Content="{x:Static lang:Resources.MovieOpacity}" Style="{StaticResource InfoLabel}" />
+                        <Label Content="{DynamicResource MovieOpacity}" Style="{StaticResource InfoLabel}" />
                         <Slider
                             Width="200"
                             Margin="5,0"
@@ -2175,7 +2175,7 @@
                 </StackPanel>
 
             </TabItem>
-            <TabItem Header="{x:Static lang:Resources.Rename}">
+            <TabItem Header="{DynamicResource Rename}">
                 <StackPanel>
 
                     <Border
@@ -2194,7 +2194,7 @@
                                 Margin="20,5"
                                 HorizontalAlignment="Left"
                                 Click="AddToRename"
-                                Content="{x:Static lang:Resources.AutoAddStamp}"
+                                Content="{DynamicResource AutoAddStamp}"
                                 IsChecked="{Binding Path=AddRenameTag, Mode=TwoWay}"
                                 IsEnabled="False" />
 
@@ -2261,88 +2261,88 @@
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.ID}"
+                            Content="{DynamicResource ID}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Title}"
-                            Style="{StaticResource FlatToggleButtonStyle}" />
-
-                        <ToggleButton
-                            Width="100"
-                            Margin="5"
-                            Padding="5"
-                            Content="{x:Static lang:Resources.VideoType}"
+                            Content="{DynamicResource Title}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
 
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Year}"
+                            Content="{DynamicResource VideoType}"
+                            Style="{StaticResource FlatToggleButtonStyle}" />
+
+                        <ToggleButton
+                            Width="100"
+                            Margin="5"
+                            Padding="5"
+                            Content="{DynamicResource Year}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Duration}"
+                            Content="{DynamicResource Duration}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Country}"
+                            Content="{DynamicResource Country}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Director}"
+                            Content="{DynamicResource Director}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Tag}"
+                            Content="{DynamicResource Tag}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Genre}"
+                            Content="{DynamicResource Genre}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Label}"
+                            Content="{DynamicResource Label}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Actor}"
+                            Content="{DynamicResource Actor}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Studio}"
+                            Content="{DynamicResource Studio}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
                         <ToggleButton
                             Width="100"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.Rating}"
+                            Content="{DynamicResource Rating}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
 
                         <ToggleButton
                             MinWidth="155"
                             Margin="5"
                             Padding="5"
-                            Content="{x:Static lang:Resources.ReleaseDate}"
+                            Content="{DynamicResource ReleaseDate}"
                             Style="{StaticResource FlatToggleButtonStyle}" />
 
                     </WrapPanel>
@@ -2365,7 +2365,7 @@
                                     Grid.Column="0"
                                     MinWidth="100"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="{x:Static lang:Resources.RenameRule}"
+                                    Text="{DynamicResource RenameRule}"
                                     TextAlignment="Left" />
 
                                 <TextBox
@@ -2426,7 +2426,7 @@
                                     Grid.Column="0"
                                     MinWidth="100"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="{x:Static lang:Resources.RenamePreview}"
+                                    Text="{DynamicResource RenamePreview}"
                                     TextAlignment="Left" />
                                 <TextBlock
                                     Grid.Column="1"
@@ -2580,7 +2580,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Stretch"
                 Click="SaveSettings"
-                Content="{x:Static lang:Resources.Save}" />
+                Content="{DynamicResource Save}" />
         </Grid>
 
     </Grid>

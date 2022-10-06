@@ -135,7 +135,7 @@
 
 
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Birthday}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Birthday}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Birthday, Mode=TwoWay}" />
                     </DockPanel>
 
@@ -143,46 +143,46 @@
 
 
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Age}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Age}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Age, Mode=TwoWay}" />
                     </DockPanel>
 
 
 
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Birthplace}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Birthplace}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.BirthPlace, Mode=TwoWay}" />
                     </DockPanel>
 
 
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Height}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Height}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
                     </DockPanel>
 
                     <DockPanel Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}">
-                        <Label Content="{x:Static lang:Resources.Actress_Cup}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Cup}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}" />
                     </DockPanel>
 
 
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Chest}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Chest}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Chest, Mode=TwoWay}" />
                     </DockPanel>
 
 
 
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Waist}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Waist}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Waist, Mode=TwoWay}" />
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Hipline}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Hipline}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Hipline, Mode=TwoWay}" />
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{x:Static lang:Resources.Actress_Hobby}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label Content="{DynamicResource Actress_Hobby}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}" />
                     </DockPanel>
 
@@ -200,7 +200,7 @@
                     Margin="10"
                     VerticalAlignment="Bottom"
                     Click="SaveActor"
-                    Content="{x:Static lang:Resources.Save}"
+                    Content="{DynamicResource Save}"
                     Style="{StaticResource ButtonSuccess}" />
             </StackPanel>
 

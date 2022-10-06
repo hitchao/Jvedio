@@ -151,7 +151,7 @@
                     <Border
                         MouseUp="ShowContextMenu"
                         Style="{StaticResource ToolsBarBorderStyle}"
-                        ToolTip="{x:Static lang:Resources.Sorting}">
+                        ToolTip="{DynamicResource Sorting}">
                         <Border.ContextMenu>
                             <ContextMenu HorizontalOffset="-50">
                                 <MenuItem Click="PluginHandle" Header="启用所有插件" />
@@ -169,7 +169,7 @@
                     <Border
                         MouseUp="ShowContextMenu"
                         Style="{StaticResource ToolsBarBorderStyle}"
-                        ToolTip="{x:Static lang:Resources.Sorting}">
+                        ToolTip="{DynamicResource Sorting}">
                         <Border.ContextMenu>
                             <ContextMenu HorizontalOffset="-50">
                                 <MenuItem Header="是否启用">
@@ -208,7 +208,7 @@
                     <Border
                         MouseUp="RefreshPluginList"
                         Style="{StaticResource ToolsBarBorderStyle}"
-                        ToolTip="{x:Static lang:Resources.Sorting}">
+                        ToolTip="{DynamicResource Sorting}">
 
                         <Viewbox Width="auto" Height="18">
                             <Path
@@ -222,11 +222,11 @@
                         Name="pluginSortBorder"
                         MouseUp="ShowContextMenu"
                         Style="{StaticResource ToolsBarBorderStyle}"
-                        ToolTip="{x:Static lang:Resources.Sorting}">
+                        ToolTip="{DynamicResource Sorting}">
                         <Border.ContextMenu>
                             <ContextMenu HorizontalOffset="-50">
-                                <MenuItem Header="{x:Static lang:Resources.Name}" IsCheckable="True" />
-                                <MenuItem Header="{x:Static lang:Resources.Author}" IsCheckable="True" />
+                                <MenuItem Header="{DynamicResource Name}" IsCheckable="True" />
+                                <MenuItem Header="{DynamicResource Author}" IsCheckable="True" />
                                 <MenuItem Header="发行日期" IsCheckable="True" />
 
                             </ContextMenu>
@@ -672,7 +672,7 @@
                                 MinWidth="50"
                                 HorizontalAlignment="Left"
                                 Click="DownloadPlugin"
-                                Content="{x:Static lang:Resources.Get}"
+                                Content="{DynamicResource Get}"
                                 Style="{StaticResource FillButton}" />
                             <Border
                                 Margin="10,0"

@@ -109,8 +109,16 @@ namespace Jvedio
                 else radioButtons[i].IsChecked = false;
             }
 
-            Main.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
+            // 设置语言
+            if (!string.IsNullOrEmpty(ConfigManager.Settings.CurrentLanguage)
+                && SuperControls.Style.LangManager.SupportLanguages.Contains(ConfigManager.Settings.CurrentLanguage))
+            {
+                SuperControls.Style.LangManager.SetLang(ConfigManager.Settings.CurrentLanguage);
+            }
 
+
+
+            Main.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
             if (!Main.ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault)
             {
                 tabControl.SelectedIndex = 0;

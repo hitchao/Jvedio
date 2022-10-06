@@ -7,7 +7,7 @@
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="{x:Static lang:Resources.Add}"
+    Title="{DynamicResource Add}"
     Width="600"
     Background="{DynamicResource Window.InnerDialog.Background}"
     Closing="BaseDialog_Closing"
@@ -70,7 +70,7 @@
                 <Label
                     Margin="10"
                     Background="Transparent"
-                    Content="{x:Static lang:Resources.VideoType}"
+                    Content="{DynamicResource VideoType}"
                     Foreground="{DynamicResource Window.Foreground}"
                     Style="{StaticResource LabelPrimary}" />
                 <ComboBox
@@ -81,10 +81,10 @@
                     SelectedIndex="2"
                     SelectionChanged="ComboBox_SelectionChanged"
                     Style="{StaticResource BorderComboBox}">
-                    <ComboBoxItem Content="{x:Static lang:Resources.Normal}" />
+                    <ComboBoxItem Content="{DynamicResource Normal}" />
                     <ComboBoxItem Content="无修正" />
                     <ComboBoxItem Content="修正" />
-                    <ComboBoxItem Content="{x:Static lang:Resources.Europe}" />
+                    <ComboBoxItem Content="{DynamicResource Europe}" />
                 </ComboBox>
 
 

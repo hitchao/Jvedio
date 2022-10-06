@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="{x:Static lang:Resources.About}"
+    Title="{DynamicResource About}"
     Width="500"
     Background="{DynamicResource Window.InnerDialog.Background}"
     ContentRendered="BaseDialog_ContentRendered"
@@ -51,19 +51,19 @@
                 Margin="10"
                 FontSize="20"
                 Style="{StaticResource BaseTextBlock}"
-                Text="{x:Static lang:Resources.About_Outline}" />
+                Text="{DynamicResource About_Outline}" />
 
             <TextBox
                 Margin="40,10"
                 Style="{StaticResource ReadOnlyTextBox}"
-                Text="{x:Static lang:Resources.About_Content}" />
+                Text="{DynamicResource About_Content}" />
             <TextBox
                 x:Name="VersionTextBlock"
                 Margin="10"
                 FontSize="20"
                 Foreground="{DynamicResource Window.Foreground}"
                 Style="{StaticResource ReadOnlyTextBox}"
-                Text="{x:Static lang:Resources.Version}" />
+                Text="{DynamicResource Version}" />
 
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <StackPanel Margin="20,0" Orientation="Horizontal">
@@ -84,7 +84,7 @@
                         FontSize="20"
                         Foreground="{DynamicResource Window.Foreground}"
                         TextAlignment="Center"><Hyperlink Click="OpenUrl" NavigateUri="https://hitchao.github.io/JvedioWebPage/">
-                            <Run Text="{x:Static lang:Resources.OfficialWebsite}" />
+                            <Run Text="{DynamicResource OfficialWebsite}" />
                         </Hyperlink></TextBlock>
                 </StackPanel>
 

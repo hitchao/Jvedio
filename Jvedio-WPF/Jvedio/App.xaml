@@ -20,6 +20,11 @@
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
 
+
+                <!--  Lang  -->
+                <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/Lang/zh-CN.xaml" />
+
+
                 <!--  ChaoControls  -->
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/XAML/Skin/DefaultColor.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/XAML/Skin/White.xaml" />-->

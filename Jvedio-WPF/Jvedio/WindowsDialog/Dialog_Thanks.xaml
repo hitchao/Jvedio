@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="{x:Static lang:Resources.Thanks}"
+    Title="{DynamicResource Thanks}"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -75,11 +75,11 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     Style="{StaticResource BaseTextBlock}"
-                    Text="{x:Static lang:Resources.Thanks_Content1}" />
+                    Text="{DynamicResource Thanks_Content1}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     Style="{StaticResource BaseTextBlock}"
-                    Text="{x:Static lang:Resources.Thanks_Content2}" />
+                    Text="{DynamicResource Thanks_Content2}" />
             </StackPanel>
         </StackPanel>
 

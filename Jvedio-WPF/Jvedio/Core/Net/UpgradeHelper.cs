@@ -29,8 +29,6 @@ namespace Jvedio.Core.Net
 
         public static bool Canceld = true;
 
-        private static int TotalLanguages = 3;
-        static List<string> languageDict = new List<string>() { "zh-CN", "en-US", "ja-JP", };
 
         public async static Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> getUpgardeInfo()
         {
@@ -59,9 +57,9 @@ namespace Jvedio.Core.Net
                         if (dict.ContainsKey("ReleaseNote") && dict["ReleaseNote"] != null)
                         {
                             Dictionary<string, string> d = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(dict["ReleaseNote"].ToString());
-                            if (d != null && d.Count == TotalLanguages && ConfigManager.Settings.SelectedLanguage < languageDict.Count)
+                            if (d != null && SuperControls.Style.LangManager.SupportLanguages.Contains(ConfigManager.Settings.CurrentLanguage))
                             {
-                                string lang = languageDict[(int)ConfigManager.Settings.SelectedLanguage];
+                                string lang = ConfigManager.Settings.CurrentLanguage;
                                 ReleaseNote = d.ContainsKey(lang) ? d[lang] : string.Empty;
                             }
                         }
