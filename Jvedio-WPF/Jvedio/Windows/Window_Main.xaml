@@ -8,7 +8,6 @@
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
@@ -179,8 +178,8 @@
                         Tag="{Binding ActorID}">
                         <Image.ContextMenu>
                             <ContextMenu Tag="{Binding ActorID}">
-                                <MenuItem Click="DeleteActors" Header="删除" />
-                                <MenuItem Click="OpenActorImagePath" Header="打开头像位置" />
+                                <MenuItem Click="DeleteActors" Header="{DynamicResource Delete}" />
+                                <MenuItem Click="OpenActorImagePath" Header="{DynamicResource OpenPath}" />
                                 <MenuItem
                                     Click="DownLoadSelectedActor"
                                     Header="{DynamicResource SyncInfo}"
@@ -354,12 +353,12 @@
                         <Button
                             MinWidth="100"
                             Click="EditActor"
-                            Content="编辑"
+                            Content="{DynamicResource Edit}"
                             Tag="{Binding ActorID, Mode=OneWay}" />
                         <Button
                             MinWidth="100"
                             Click="ShowSameActor"
-                            Content="查看"
+                            Content="{DynamicResource View}"
                             Tag="{Binding ActorID, Mode=OneWay}" />
                     </StackPanel>
 
@@ -418,8 +417,8 @@
                             Stretch="UniformToFill">
                             <Image.ContextMenu>
                                 <ContextMenu Tag="{Binding ActorID}">
-                                    <MenuItem Click="DeleteActors" Header="删除" />
-                                    <MenuItem Click="OpenActorImagePath" Header="打开头像位置" />
+                                    <MenuItem Click="DeleteActors" Header="{DynamicResource Delete}" />
+                                    <MenuItem Click="OpenActorImagePath" Header="{DynamicResource OpenPath}" />
                                     <MenuItem
                                         Click="DownLoadSelectedActor"
                                         Header="{DynamicResource SyncInfo}"
@@ -462,7 +461,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     FontWeight="Bold"
-                                    Text="编辑" />
+                                    Text="{DynamicResource Edit}" />
                             </Border>
                             <Border
                                 Grid.Column="1"
@@ -475,7 +474,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     FontWeight="Bold"
-                                    Text="查看" />
+                                    Text="{DynamicResource Edit}" />
                             </Border>
 
                         </Grid>
@@ -653,7 +652,7 @@
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="20"
-                        Text="进行中" />
+                        Text="{DynamicResource Running}" />
                 </StackPanel>
             </Border>
         </Grid>
@@ -723,7 +722,7 @@
                         BorderBrush="#326CF3"
                         BorderThickness="0"
                         Foreground="{DynamicResource Window.Foreground}"
-                        PlaceHolder="搜索标题/路径/识别码"
+                        PlaceHolder="{DynamicResource SearchTitlePathVID}"
                         PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                         Search="searchDataBox_Search"
                         SearchOnTextChanged="False"
@@ -747,7 +746,7 @@
                                         Width="150"
                                         Padding="0,5"
                                         FontSize="15"
-                                        Header="已关联"
+                                        Header="{DynamicResource Associated}"
                                         IsExpanded="True"
                                         LineWidth="0"
                                         Style="{StaticResource BaseTogglePanel}">
@@ -818,7 +817,7 @@
                                         Width="150"
                                         Padding="0,5"
                                         FontSize="15"
-                                        Header="待关联"
+                                        Header="{DynamicResource ToBeAssociated}"
                                         IsExpanded="True"
                                         LineWidth="0"
                                         Style="{StaticResource BaseTogglePanel}">
@@ -1091,13 +1090,13 @@
                                 MinWidth="80"
                                 HorizontalAlignment="Center"
                                 Click="associationCancel"
-                                Content="关闭"
+                                Content="{DynamicResource Close}"
                                 Style="{StaticResource ButtonDanger}" />
                             <Button
                                 MinWidth="80"
                                 HorizontalAlignment="Center"
                                 Click="associationConfirm"
-                                Content="保存"
+                                Content="{DynamicResource Save}"
                                 Style="{StaticResource ButtonSuccess}" />
                         </StackPanel>
 
@@ -1140,7 +1139,7 @@
                     Panel.ZIndex="10"
                     Opacity="0.8"
                     Orientation="Horizontal">
-                    <Button Click="HideAssoPopup" Content="关闭" />
+                    <Button Click="HideAssoPopup" Content="{DynamicResource Close}" />
                     <Border
                         Padding="10,5"
                         VerticalAlignment="Center"
@@ -1239,7 +1238,7 @@
                                                             Click="EditInfo"
                                                             Header="{DynamicResource Menu_EditInfo}"
                                                             Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                                        <MenuItem Name="TagMenuItems" Header="添加标记" />
+                                                        <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
                                                         <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                             <MenuItem
                                                                 Command="cmd:File.OpenSelectFile"
@@ -1415,7 +1414,7 @@
                                                             Tag="{Binding TagID}">
                                                             <Label.ContextMenu>
                                                                 <ContextMenu>
-                                                                    <MenuItem Click="DeleteVideoTagStamp" Header="删除该标记" />
+                                                                    <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
                                                                 </ContextMenu>
                                                             </Label.ContextMenu>
                                                         </Label>
@@ -1513,12 +1512,12 @@
                 PreviewMouseLeftButtonDown="TopBorder_MouseLeftButtonUp">
                 <Border.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Click="MinWindow" Header="最小化" />
+                        <MenuItem Click="MinWindow" Header="{DynamicResource Minimize}" />
                         <MenuItem
                             Name="MaxMenuItem"
                             Click="OnMaxWindow"
-                            Header="最大化" />
-                        <MenuItem Click="CloseWindow" Header="关闭" />
+                            Header="{DynamicResource Maximize}" />
+                        <MenuItem Click="CloseWindow" Header="{DynamicResource Close}" />
                     </ContextMenu>
                 </Border.ContextMenu>
                 <Grid Panel.ZIndex="50">
@@ -1685,8 +1684,8 @@
                                         Margin="5"
                                         HorizontalAlignment="Right"
                                         Orientation="Horizontal">
-                                        <Button Click="ReLoadTheme" Content="刷新" />
-                                        <Button Click="CloseThemePopup" Content="关闭" />
+                                        <Button Click="ReLoadTheme" Content="{DynamicResource Refresh}" />
+                                        <Button Click="CloseThemePopup" Content="{DynamicResource Close}" />
                                     </StackPanel>
 
 
@@ -1818,7 +1817,7 @@
                                     MouseLeftButtonDown="GoToStartUp"
                                     Style="{StaticResource RoundBorder}"
                                     Tag="{DynamicResource Window.Title.Hover.Background}"
-                                    ToolTip="返回">
+                                    ToolTip="{DynamicResource Return}">
                                     <Viewbox Width="auto" Height="14">
                                         <Path
                                             HorizontalAlignment="Center"
@@ -1860,7 +1859,7 @@
                                         Width="{Binding ElementName=SideBorder, Path=ActualWidth}"
                                         Padding="0,5"
                                         FontSize="15"
-                                        Header="默认"
+                                        Header="{DynamicResource Default}"
                                         IsExpanded="True"
                                         IsSelected="False"
                                         LineWidth="0"
@@ -1900,13 +1899,13 @@
                                             <super:PathRadioButton
                                                 Click="ShowActorNotice"
                                                 Command="{Binding ShowActorsCommand}"
-                                                MainText="影片演员"
+                                                MainText="{DynamicResource Actors}"
                                                 Path="M501.8624 532.992c120.2176 0 220.8768-97.8944 220.8768-215.2448 0-120.2176-97.8944-215.2448-220.8768-215.2448s-218.112 95.0272-218.112 215.2448 97.8944 215.2448 218.112 215.2448zM417.9968 572.1088C264.192 572.1088 149.504 675.6352 149.504 826.5728v16.7936c0 78.336 122.9824 78.336 279.552 78.336h164.9664c148.1728 0 279.552 0 279.552-78.336v-16.7936c0-150.9376-114.5856-254.464-268.3904-254.464H417.9968z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding AllActorCount}" />
                                             <super:PathRadioButton
                                                 Command="{Binding ShowLabelsCommand}"
-                                                MainText="我的标签"
+                                                MainText="{DynamicResource MyLabel}"
                                                 Path="M1009.37559 308.860541l-279.669985-271.075961a136.280853 136.280853 0 0 0-186.679716-1.544011L8.27357 534.460996a25.898606 25.898606 0 0 0-8.215305 20.043015v339.420313a129.900882 129.900882 0 0 0 129.75522 129.959147h351.189758a26.044267 26.044267 0 0 0 18.586401-7.807454l512.11653-523.390725a129.667824 129.667824 0 0 0-2.330584-183.824751zM279.932176 874.318293a116.529161 116.529161 0 1 1 116.529161-116.529161 116.529161 116.529161 0 0 1-116.529161 116.529161z"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding AllLabelCount}" />
@@ -1994,7 +1993,7 @@
                                             Height="auto"
                                             Padding="0,5"
                                             FontSize="15"
-                                            Header="标记"
+                                            Header="{DynamicResource TagStamp}"
                                             IsExpanded="True"
                                             IsSelected="False"
                                             LineWidth="0"
@@ -2072,7 +2071,7 @@
                                         <super:TogglePanel
                                             Padding="0,5"
                                             FontSize="15"
-                                            Header="快速访问"
+                                            Header="{DynamicResource FastAccess}"
                                             IsExpanded="True"
                                             IsSelected="False"
                                             LineWidth="0"
@@ -2141,10 +2140,10 @@
                                             HorizontalOffset="-45"
                                             VerticalOffset="-5">
                                             <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />
-                                            <MenuItem Command="cmd:OpenWindow.Plugin" Header="插件" />
+                                            <MenuItem Command="cmd:OpenWindow.Plugin" Header="{DynamicResource Plugin}" />
                                             <MenuItem Header="{DynamicResource Scan}">
-                                                <MenuItem Click="ImportVideoByPaths" Header="扫描多个文件夹" />
-                                                <MenuItem Click="ImportVideo" Header="扫描网络磁盘" />
+                                                <MenuItem Click="ImportVideoByPaths" Header="{DynamicResource ScanMultiDir}" />
+                                                <MenuItem Click="ImportVideo" Header="{DynamicResource ScanNas}" />
                                             </MenuItem>
                                             <MenuItem Header="{DynamicResource MovieManagement}">
                                                 <MenuItem Click="DeleteNotExistVideo" Header="{DynamicResource DeleteMovieNotExist}" />
@@ -2163,7 +2162,7 @@
 
                                             <MenuItem
                                                 Click="ShowSponsor"
-                                                Header="赞助我"
+                                                Header="{DynamicResource SponsorMe}"
                                                 Visibility="Collapsed" />
 
 
@@ -2253,7 +2252,7 @@
                                 BorderThickness="0"
                                 Foreground="{DynamicResource Window.Foreground}"
                                 HideClearButtonOnMouseLeave="False"
-                                PlaceHolder="搜索"
+                                PlaceHolder="{DynamicResource Search}"
                                 PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                 PreviewKeyDown="searchBox_PreviewKeyDown"
                                 PreviewKeyUp="SearchBar_PreviewKeyUp"
@@ -2298,15 +2297,15 @@
                                             ItemContainerStyle="{StaticResource FlatTabItem}"
                                             SelectedIndex="{Binding SearchSelectedIndex, Mode=TwoWay}"
                                             Style="{StaticResource FlatTabControl}">
-                                            <TabItem Header="识别码" />
+                                            <TabItem Header="{DynamicResource ID}" />
                                             <TabItem Header="{DynamicResource Title}" />
-                                            <TabItem Header="路径" />
-                                            <TabItem Header="演员" />
-                                            <TabItem Header="标签" />
-                                            <TabItem Header="类别" />
-                                            <TabItem Header="系列" />
-                                            <TabItem Header="发行商" />
-                                            <TabItem Header="导演" />
+                                            <TabItem Header="{DynamicResource Path}" />
+                                            <TabItem Header="{DynamicResource Actors}" />
+                                            <TabItem Header="{DynamicResource Label}" />
+                                            <TabItem Header="{DynamicResource Genre}" />
+                                            <TabItem Header="{DynamicResource Tag}" />
+                                            <TabItem Header="{DynamicResource Studio}" />
+                                            <TabItem Header="{DynamicResource Director}" />
                                         </TabControl>
                                         <Grid
                                             Grid.Row="1"
@@ -2373,13 +2372,13 @@
                                                             <Setter Property="Foreground" Value="{DynamicResource Window.Background}" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding NoticeType}" Value="Warning">
-                                                                    <Setter Property="Text" Value="警告" />
+                                                                    <Setter Property="Text" Value="{DynamicResource Warning}" />
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding NoticeType}" Value="Error">
-                                                                    <Setter Property="Text" Value="严重" />
+                                                                    <Setter Property="Text" Value="{DynamicResource Error}" />
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding NoticeType}" Value="Hint">
-                                                                    <Setter Property="Text" Value="提示" />
+                                                                    <Setter Property="Text" Value="{DynamicResource Hint}" />
                                                                     <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
@@ -2438,7 +2437,7 @@
                             ItemContainerStyle="{StaticResource FlatTabItem}"
                             SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}"
                             Style="{StaticResource HeaderHideTabControlStyle}">
-                            <TabItem Header="影片">
+                            <TabItem Header="{DynamicResource Movie}">
                                 <!--  影片  -->
                                 <Grid HorizontalAlignment="Stretch">
 
@@ -2496,7 +2495,7 @@
                                                             Height="13"
                                                             Margin="0,0,5,0"
                                                             Source="/Resources/Picture/导入.png" />
-                                                        <TextBlock Text="导入视频" />
+                                                        <TextBlock Text="{DynamicResource ImportVideo}" />
                                                     </StackPanel>
                                                 </Button>
                                                 <Button
@@ -2512,7 +2511,7 @@
                                                             Height="13"
                                                             Margin="0,0,5,0"
                                                             Source="/Resources/Picture/新增.png" />
-                                                        <TextBlock Text="识别码" />
+                                                        <TextBlock Text="{DynamicResource ID}" />
                                                     </StackPanel>
                                                 </Button>
 
@@ -2950,15 +2949,15 @@
                                                     <MenuItem
                                                         Click="SelectAll"
                                                         FontWeight="Bold"
-                                                        Header="选中/取消当前页" />
+                                                        Header="{DynamicResource SelectAll}" />
                                                     <Separator />
-                                                    <MenuItem Name="DataExistMenuItem" Header="是否存在">
+                                                    <MenuItem Name="DataExistMenuItem" Header="{DynamicResource IsExisted}">
                                                         <MenuItem
-                                                            Header="默认"
+                                                            Header="{DynamicResource Default}"
                                                             IsCheckable="True"
                                                             IsChecked="True" />
-                                                        <MenuItem Header="不存在" IsCheckable="True" />
-                                                        <MenuItem Header="存在" IsCheckable="True" />
+                                                        <MenuItem Header="{DynamicResource NotExists}" IsCheckable="True" />
+                                                        <MenuItem Header="{DynamicResource Existed}" IsCheckable="True" />
                                                     </MenuItem>
                                                     <MenuItem
                                                         Click="LoadData"
@@ -2968,20 +2967,20 @@
 
                                                     <MenuItem Name="VideoTypeMenuItem" Header="{DynamicResource VideoType}">
                                                         <MenuItem Header="{DynamicResource Normal}" IsCheckable="True" />
-                                                        <MenuItem Header="无修正" IsCheckable="True" />
-                                                        <MenuItem Header="修正" IsCheckable="True" />
+                                                        <MenuItem Header="{DynamicResource Uncensored}" IsCheckable="True" />
+                                                        <MenuItem Header="{DynamicResource 修正}" IsCheckable="True" />
                                                         <MenuItem Header="{DynamicResource Europe}" IsCheckable="True" />
                                                     </MenuItem>
-                                                    <MenuItem Name="PictureFilterType" Header="图片存在">
+                                                    <MenuItem Name="PictureFilterType" Header="{DynamicResource ImageExisted}">
                                                         <MenuItem
-                                                            Header="默认"
+                                                            Header="{DynamicResource Default}"
                                                             IsCheckable="True"
                                                             IsChecked="True" />
-                                                        <MenuItem Header="无图" IsCheckable="True" />
-                                                        <MenuItem Header="有图" IsCheckable="True" />
+                                                        <MenuItem Header="{DynamicResource NoImage}" IsCheckable="True" />
+                                                        <MenuItem Header="{DynamicResource WithImage}" IsCheckable="True" />
                                                     </MenuItem>
                                                     <Separator />
-                                                    <MenuItem Header="全部影片">
+                                                    <MenuItem Header="{DynamicResource AllData}">
                                                         <MenuItem Click="GenerateAllScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
                                                         <MenuItem Click="DownloadAllVideo" Header="{DynamicResource SyncInfo}" />
                                                     </MenuItem>
@@ -3082,7 +3081,7 @@
                                                                             <ContextMenu Opacity="0.9" PreviewKeyUp="ContextMenu_PreviewKeyUp">
 
 
-                                                                                <MenuItem Click="DownLoadSelectMovie" Header="同步信息" />
+                                                                                <MenuItem Click="DownLoadSelectMovie" Header="{DynamicResource SyncInfo}" />
 
                                                                                 <MenuItem
                                                                                     Click="DownLoadWithUrl"
@@ -3094,12 +3093,12 @@
                                                                                     Click="EditInfo"
                                                                                     Header="{DynamicResource Menu_EditInfo}"
                                                                                     Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                                                                <MenuItem Click="AddToPlayerList" Header="添加到播放列表" />
-                                                                                <MenuItem Name="TagMenuItems" Header="添加标记" />
+                                                                                <MenuItem Click="AddToPlayerList" Header="{DynamicResource AddToPlayList}" />
+                                                                                <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
                                                                                 <MenuItem Header="{DynamicResource Menu_Advance}">
                                                                                     <MenuItem
                                                                                         Click="AddDataAssociation"
-                                                                                        Header="影片关联"
+                                                                                        Header="{DynamicResource DataAsso}"
                                                                                         Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                                                                     <MenuItem Click="GenerateScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
                                                                                     <MenuItem Click="GenerateGif" Header="{DynamicResource Menu_GenerateGif}" />
@@ -3122,7 +3121,7 @@
                                                                                         Visibility="Collapsed" />
                                                                                     <MenuItem
                                                                                         Click="DeleteDownloadInfo"
-                                                                                        Header="清除已下载的信息"
+                                                                                        Header="{DynamicResource ClearDownloadInfo}"
                                                                                         Visibility="Collapsed" />
 
                                                                                 </MenuItem>
@@ -3131,7 +3130,7 @@
                                                                                 <Separator />
                                                                                 <MenuItem
                                                                                     Click="OpenWeb"
-                                                                                    Header="访问所在网址"
+                                                                                    Header="{DynamicResource ViewWebsite}"
                                                                                     Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
 
                                                                                 <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
@@ -3148,7 +3147,7 @@
                                                                                 </MenuItem>
 
                                                                                 <MenuItem Click="CopyFile" Header="{DynamicResource Menu_CopyFile}" />
-                                                                                <MenuItem Click="CutFile" Header="剪切(X)" />
+                                                                                <MenuItem Click="CutFile" Header="{DynamicResource CutX}" />
 
                                                                                 <Separator />
                                                                                 <MenuItem
@@ -3339,7 +3338,7 @@
                                                                                     Tag="{Binding TagID}">
                                                                                     <Label.ContextMenu>
                                                                                         <ContextMenu>
-                                                                                            <MenuItem Click="DeleteVideoTagStamp" Header="删除该标记" />
+                                                                                            <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
                                                                                         </ContextMenu>
                                                                                     </Label.ContextMenu>
                                                                                 </Label>
@@ -3437,7 +3436,7 @@
                                                     CornerRadius="5 5 0 0"
                                                     MouseLeftButtonUp="GotoTop"
                                                     Style="{StaticResource BgHoverBorder}"
-                                                    ToolTip="去到顶部">
+                                                    ToolTip="{DynamicResource GotoTop}">
 
                                                     <Viewbox
                                                         Width="15"
@@ -3463,7 +3462,7 @@
                                                     CornerRadius="0 0 5 5"
                                                     MouseLeftButtonUp="GotoBottom"
                                                     Style="{StaticResource BgHoverBorder}"
-                                                    ToolTip="去到顶部">
+                                                    ToolTip="{DynamicResource GotoTop}">
 
                                                     <Viewbox
                                                         Width="15"
@@ -3634,7 +3633,7 @@
                                 </Grid>
 
                             </TabItem>
-                            <TabItem Header="演员">
+                            <TabItem Header="{DynamicResource Actor}">
                                 <Grid>
 
                                     <Grid.RowDefinitions>
@@ -3666,7 +3665,7 @@
                                                 Margin="10,5"
                                                 HorizontalAlignment="Left"
                                                 Click="NewActor"
-                                                Content="新增演员"
+                                                Content="{DynamicResource NewActor}"
                                                 Style="{StaticResource ButtonPrimary}" />
 
                                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
@@ -3714,22 +3713,22 @@
                                                     ToolTip="{DynamicResource Sorting}">
                                                     <Border.ContextMenu>
                                                         <ContextMenu HorizontalOffset="-50">
-                                                            <MenuItem Header="我的评分" IsCheckable="True" />
+                                                            <MenuItem Header="{DynamicResource Rating}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Name}" IsCheckable="True" />
-                                                            <MenuItem Header="作品数量" IsCheckable="True" />
+                                                            <MenuItem Header="{DynamicResource WorkCount}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Country}" IsCheckable="True" />
-                                                            <MenuItem Header="民族" IsCheckable="True" />
+                                                            <MenuItem Header="{DynamicResource Nationality}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Actress_Birthday}" IsCheckable="True" />
-                                                            <MenuItem Header="血型" IsCheckable="True" />
+                                                            <MenuItem Header="{DynamicResource BloodType}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Height}" IsCheckable="True" />
-                                                            <MenuItem Header="体重" IsCheckable="True" />
-                                                            <MenuItem Header="性别" IsCheckable="True" />
+                                                            <MenuItem Header="{DynamicResource Weight}" IsCheckable="True" />
+                                                            <MenuItem Header="{DynamicResource Gender}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Actress_Hobby}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Actress_Cup}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Actress_Chest}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Actress_Waist}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Actress_Hipline}" IsCheckable="True" />
-                                                            <MenuItem Header="打分" IsCheckable="True" />
+                                                            <MenuItem Header="{DynamicResource Rating}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Actress_Age}" IsCheckable="True" />
 
                                                         </ContextMenu>
@@ -3847,7 +3846,7 @@
 
                             </TabItem>
 
-                            <TabItem Header="标签（清单）">
+                            <TabItem Header="{DynamicResource Label}">
                                 <Grid Margin="10" HorizontalAlignment="Stretch">
                                     <ItemsControl
                                         Name="LabelListItemsControl"
@@ -3877,7 +3876,7 @@
 
 
                             </TabItem>
-                            <TabItem Header="其他分类">
+                            <TabItem Header="{DynamicResource Other}">
                                 <Grid
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
@@ -4178,7 +4177,7 @@
                         VerticalContentAlignment="Center"
                         FontSize="12"
                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                        Text="就绪" />
+                        Text="{DynamicResource BeReady}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="2"
@@ -4230,23 +4229,23 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="截图任务" />
+                                            Text="{DynamicResource ScreenShotTask}" />
 
                                         <Button
                                             Grid.Column="1"
                                             BorderThickness="0"
                                             Click="ShowContextMenu"
-                                            Content="清除列表"
+                                            Content="{DynamicResource ClearList}"
                                             Style="{StaticResource FlatButton}">
                                             <Button.ContextMenu>
                                                 <ContextMenu HorizontalOffset="-70" VerticalOffset="5">
                                                     <MenuItem
                                                         Click="RemoveCompleteScreenShot"
-                                                        Header="已完成"
+                                                        Header="{DynamicResource Done}"
                                                         IsCheckable="False" />
                                                     <MenuItem
                                                         Click="RemoveCancelScreenShot"
-                                                        Header="已取消"
+                                                        Header="{DynamicResource Canceled}"
                                                         IsCheckable="False" />
                                                 </ContextMenu>
                                             </Button.ContextMenu>
@@ -4411,7 +4410,7 @@
                                                             </WrapPanel.Style>
                                                             <Button
                                                                 Click="CancelScreenShotTask"
-                                                                Content="取消"
+                                                                Content="{DynamicResource Cancel}"
                                                                 Tag="{Binding DataID}" />
                                                             <!--<Button
                                                                     Click="PauseDownloadTask"
@@ -4420,7 +4419,7 @@
                                                                     Tag="{Binding DataID}" />-->
                                                             <Button
                                                                 Click="ShowScreenShotDetail"
-                                                                Content="详情"
+                                                                Content="{DynamicResource Detail}"
                                                                 Tag="{Binding DataID}" />
                                                         </WrapPanel>
                                                     </Grid>
@@ -4461,7 +4460,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <Button
                                                 Click="CancelScreenShotTasks"
-                                                Content="取消所有"
+                                                Content="{DynamicResource CancelALl}"
                                                 Style="{StaticResource ButtonDanger}" />
                                         </StackPanel>
                                     </StackPanel>
@@ -4588,7 +4587,7 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="扫描任务" />
+                                            Text="{DynamicResource ScanTask}" />
 
                                         <Border
                                             Grid.Column="1"
@@ -4726,12 +4725,12 @@
                                                             </StackPanel.Style>
                                                             <Button
                                                                 Click="CancelScanTask"
-                                                                Content="取消"
+                                                                Content="{DynamicResource Cancel}"
                                                                 IsEnabled="{Binding Running}"
                                                                 Tag="{Binding CreateTime}" />
                                                             <Button
                                                                 Click="ShowScanDetail"
-                                                                Content="结果"
+                                                                Content="{DynamicResource Result}"
                                                                 IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
                                                                 Tag="{Binding CreateTime}" />
                                                         </StackPanel>
@@ -4800,23 +4799,23 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="下载任务" />
+                                            Text="{DynamicResource DownloadTask}" />
 
                                         <Button
                                             Grid.Column="1"
                                             BorderThickness="0"
                                             Click="ShowContextMenu"
-                                            Content="清除列表"
+                                            Content="{DynamicResource ClearList}"
                                             Style="{StaticResource FlatButton}">
                                             <Button.ContextMenu>
                                                 <ContextMenu HorizontalOffset="-70" VerticalOffset="5">
                                                     <MenuItem
                                                         Click="RemoveCompleteTask"
-                                                        Header="已完成"
+                                                        Header="{DynamicResource Done}"
                                                         IsCheckable="False" />
                                                     <MenuItem
                                                         Click="RemoveCancelTask"
-                                                        Header="已取消"
+                                                        Header="{DynamicResource Canceled}"
                                                         IsCheckable="False" />
                                                 </ContextMenu>
                                             </Button.ContextMenu>
@@ -4980,17 +4979,17 @@
                                                             </WrapPanel.Style>
                                                             <Button
                                                                 Click="CancelDownloadTask"
-                                                                Content="取消"
+                                                                Content="{DynamicResource Cancel}"
                                                                 IsEnabled="{Binding Running}"
                                                                 Tag="{Binding DataID}" />
                                                             <Button
                                                                 Click="RestartTask"
-                                                                Content="重启"
+                                                                Content="{DynamicResource Reboot}"
                                                                 IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
                                                                 Tag="{Binding DataID}" />
                                                             <Button
                                                                 Click="ShowDownloadDetail"
-                                                                Content="详情"
+                                                                Content="{DynamicResource Detail}"
                                                                 Tag="{Binding DataID}" />
                                                         </WrapPanel>
                                                     </Grid>
@@ -5028,11 +5027,11 @@
                                         <StackPanel Orientation="Horizontal">
                                             <Button
                                                 Click="CancelDownloadTasks"
-                                                Content="取消所有"
+                                                Content="{DynamicResource CancelALl}"
                                                 Style="{StaticResource ButtonDanger}" />
                                             <TextBlock
                                                 VerticalAlignment="Center"
-                                                Text="{Binding Path=DownloadLongTaskDelay, StringFormat=为避免服务器限制，开始长暂停 {0} s}"
+                                                Text="{Binding Path=DownloadLongTaskDelay, StringFormat=Wait {0} s}"
                                                 Visibility="{Binding DisplayDownloadLongTaskDelay}" />
                                         </StackPanel>
 
@@ -5090,7 +5089,7 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="最近消息" />
+                                            Text="{DynamicResource RecentMsg}" />
 
                                         <Border
                                             Grid.Column="1"
