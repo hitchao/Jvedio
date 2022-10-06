@@ -151,9 +151,9 @@ namespace Jvedio
             string text = button.Content.ToString();
 
             // 开始更新
-            if (text == Jvedio.Language.Resources.BeginUpgrade)
+            if (text == SuperControls.Style.LangManager.GetValueByKey("BeginUpgrade"))
             {
-                button.Content = Jvedio.Language.Resources.StopUpgrade;
+                button.Content = SuperControls.Style.LangManager.GetValueByKey("StopUpgrade");
 
                 UpgradeHelper.onCompleted += async (s, _) =>
                 {
@@ -213,7 +213,7 @@ namespace Jvedio
 
         private void SetFailUpgradeStatus(Button button)
         {
-            button.Content = Jvedio.Language.Resources.BeginUpgrade;
+            button.Content = SuperControls.Style.LangManager.GetValueByKey("BeginUpgrade");
             button.Style = (System.Windows.Style)App.Current.Resources["ButtonStyleFill"];
             UpgradeHelper.Cancel();
             IsUpgrading = false;
@@ -227,7 +227,7 @@ namespace Jvedio
 
         private void BaseDialog_ContentRendered(object sender, EventArgs e)
         {
-            UpgradeSourceTextBlock.Text = $"{Jvedio.Language.Resources.UpgradeSource}：{UpgradeSource}";
+            UpgradeSourceTextBlock.Text = $"{SuperControls.Style.LangManager.GetValueByKey("UpgradeSource")}：{UpgradeSource}";
             LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 

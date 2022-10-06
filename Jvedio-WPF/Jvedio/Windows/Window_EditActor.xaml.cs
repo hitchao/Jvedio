@@ -66,7 +66,7 @@ namespace Jvedio
                 int update = actorMapper.UpdateById(CurrentActorInfo);
                 if (update > 0)
                 {
-                    MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                    MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
                     main?.RefreshActor(CurrentActorInfo.ActorID);
                 }
             }
@@ -100,7 +100,7 @@ namespace Jvedio
         {
             string imageFileName = string.Empty;
             System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
+            openFileDialog1.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
             openFileDialog1.Filter = Window_Settings.SupportPictureFormat;
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.RestoreDirectory = true;

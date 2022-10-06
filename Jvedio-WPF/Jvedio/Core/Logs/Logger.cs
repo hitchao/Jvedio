@@ -46,9 +46,9 @@ namespace Jvedio.Core.Logs
                             continue;
                         string filename = frame.GetFileName();
                         filename = string.IsNullOrEmpty(filename) ? "NULL" : filename.Replace(@"D:\Jvedio\Jvedio", string.Empty);
-                        traceString.Append($"{Jvedio.Language.Resources.File}: {filename}");
-                        traceString.Append($" {Jvedio.Language.Resources.Method}: {frame.GetMethod().Name}");
-                        traceString.Append($" {Jvedio.Language.Resources.RowNumber}: {frame.GetFileLineNumber()}{Environment.NewLine}");
+                        traceString.Append($"{SuperControls.Style.LangManager.GetValueByKey("File")}: {filename}");
+                        traceString.Append($" {SuperControls.Style.LangManager.GetValueByKey("Method")}: {frame.GetMethod().Name}");
+                        traceString.Append($" {SuperControls.Style.LangManager.GetValueByKey("RowNumber")}: {frame.GetFileLineNumber()}{Environment.NewLine}");
                     }
                 }
 

@@ -27,7 +27,7 @@ namespace Jvedio
 
         private void BaseDialog_ContentRendered(object sender, EventArgs e)
         {
-            VersionTextBlock.Text = Jvedio.Language.Resources.Version + $" : {System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}";
+            VersionTextBlock.Text = SuperControls.Style.LangManager.GetValueByKey("Version") + $" : {System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}";
         }
     }
 }

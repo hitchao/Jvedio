@@ -5,7 +5,7 @@ namespace Jvedio.Core.Exceptions
     public class NotFoundException : Exception
     {
         public NotFoundException(string fileName)
-            : base($"{Jvedio.Language.Resources.NotFound} {fileName}")
+            : base($"{SuperControls.Style.LangManager.GetValueByKey("NotFound")} {fileName}")
         {
         }
     }

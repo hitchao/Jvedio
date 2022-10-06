@@ -487,7 +487,7 @@ namespace Jvedio
             // string path = getExtraImagePath(sender as FrameworkElement, 1);
             // videoMapper.UpdateFieldById("SmallImagePath", path, DataID);
             // windowMain?.RefreshImage(vieModel.CurrentVideo);
-            // SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            // SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
         }
 
         // todo
@@ -499,7 +499,7 @@ namespace Jvedio
             // videoMapper.UpdateFieldById("BigImagePath", path, DataID);
             // Refresh();
             // windowMain?.RefreshImage(vieModel.CurrentVideo);
-            // SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            // SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
         }
 
         private void SetToBigPic(object sender, RoutedEventArgs e)
@@ -508,7 +508,7 @@ namespace Jvedio
             videoMapper.UpdateFieldById("BigImagePath", path, DataID);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
-            SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.Message_Success);
+            SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
         }
 
         public void CopyFile(object sender, RoutedEventArgs e)
@@ -518,11 +518,11 @@ namespace Jvedio
             {
                 StringCollection paths = new StringCollection { filepath };
                 bool success = ClipBoard.TrySetFileDropList(paths, (error) => { MessageCard.Error(error); });
-                if (success) MessageCard.Success(Jvedio.Language.Resources.HasCopy);
+                if (success) MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("HasCopy"));
             }
             else
             {
-                SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_FileNotExist);
+                SuperControls.Style.MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_FileNotExist"));
             }
         }
 
@@ -608,7 +608,7 @@ namespace Jvedio
             ////检查是否已经翻译过，如有提示
             // if (!string.IsNullOrEmpty(dataBase.SelectByField("translate_title", "youdao", movie.id)))
             // {
-            //    if (new Msgbox(this, Jvedio.Language.Resources.AlreadyTranslate).ShowDialog() == false)
+            //    if (new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("AlreadyTranslate")).ShowDialog() == false)
             //    {
             //        IsTranslating = false;
             //        return;
@@ -631,7 +631,7 @@ namespace Jvedio
             //    }
             //    else
             //    {
-            //        SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
+            //        SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("TranslateFail"));
             //    }
 
             // }
@@ -645,11 +645,11 @@ namespace Jvedio
             //        dataBase.SaveYoudaoTranslateByID(movie.id, plot, result, "plot");
             //        movie.plot = result;
             //        UpdateInfo(movie);
-            //        //SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateSuccess);
+            //        //SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("TranslateSuccess"));
             //    }
             //    else
             //    {
-            //        SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.TranslateFail);
+            //        SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("TranslateFail"));
             //    }
 
             // }
@@ -819,7 +819,7 @@ namespace Jvedio
             //    else
             //        ScreenShotRadioButton_Click(sender, new RoutedEventArgs());
 
-            // SuperControls.Style.MessageCard.Success($"{Jvedio.Language.Resources.ImportNumber} {filepaths.Count}");
+            // SuperControls.Style.MessageCard.Success($"{SuperControls.Style.LangManager.GetValueByKey("ImportNumber")} {filepaths.Count}");
 
             // }
         }
@@ -910,32 +910,32 @@ namespace Jvedio
             ContextMenu contextMenu = sender as ContextMenu;
             if (e.Key == Key.D)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_DeleteInfo);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_DeleteInfo"));
                 if (menuItem != null) DeleteID(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.T)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_DeleteFile);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_DeleteFile"));
                 if (menuItem != null) DeleteFile(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.S)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_SyncInfo);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_SyncInfo"));
                 if (menuItem != null) DownLoad(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.E)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_EditInfo);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_EditInfo"));
                 if (menuItem != null) EditInfo(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.W)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_OpenWebSite);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_OpenWebSite"));
                 if (menuItem != null) OpenWeb(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.C)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_CopyFile);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_CopyFile"));
                 if (menuItem != null) CopyFile(menuItem, new RoutedEventArgs());
             }
 
@@ -1215,19 +1215,19 @@ namespace Jvedio
             MenuItem menu = sender as MenuItem;
             string header = menu.Header.ToString();
             Video video = vieModel.CurrentVideo;
-            if (header.Equals(Jvedio.Language.Resources.Poster))
+            if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Poster")))
             {
                 FileHelper.TryOpenSelectPath(video.getBigImage());
             }
-            else if (header.Equals(Jvedio.Language.Resources.Thumbnail))
+            else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail")))
             {
                 FileHelper.TryOpenSelectPath(video.getSmallImage());
             }
-            else if (header.Equals(Jvedio.Language.Resources.Preview))
+            else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview")))
             {
                 FileHelper.TryOpenSelectPath(video.getExtraImage());
             }
-            else if (header.Equals(Jvedio.Language.Resources.ScreenShot))
+            else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot")))
             {
                 FileHelper.TryOpenSelectPath(video.getScreenShot());
             }

@@ -181,10 +181,10 @@
       <HintPath>Lib\QueryEngine.dll</HintPath>
     </Reference>
     <Reference Include="SuperControls.Style">
-      <HintPath>..\..\..\..\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
+      <HintPath>..\Jvedio\Reference\SuperControls.Style.dll</HintPath>
     </Reference>
     <Reference Include="SuperUtils">
-      <HintPath>..\..\..\..\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll</HintPath>
+      <HintPath>..\Jvedio\Reference\SuperUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -945,8 +945,11 @@
     <Resource Include="Resources\Picture\delete.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Reference\MihaZupan.HttpToSocks5Proxy.dll" />
     <Content Include="Reference\PInvoke.dll" />
     <Content Include="Reference\QueryEngine.dll" />
+    <Content Include="Reference\SuperControls.Style.dll" />
+    <Content Include="Reference\SuperUtils.dll" />
     <Content Include="Reference\UsnOperation.dll" />
     <Content Include="Reference\WpfAnimatedGif.dll" />
     <Resource Include="Resources\Jvedio.ico">
@@ -958,10 +961,6 @@
     <Content Include="Reference\MediaInfoNET.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Jvedio.Language\Jvedio.Language.csproj">
-      <Project>{d7a06c53-5742-4894-820e-3697f81a3785}</Project>
-      <Name>Jvedio.Language</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Jvedio.Style\Jvedio.Style.csproj">
       <Project>{c398561c-9e61-4258-a9a0-1692832a6a95}</Project>
       <Name>Jvedio.Style</Name>
@@ -973,7 +972,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+    <PreBuildEvent>XCOPY  "D:\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll"  "D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\Reference"    /E /Y /i
+XCOPY  "D:\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll"  "D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\Reference"    /E /Y /i
+
+XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
 XCOPY  "$(ProjectDir)Reference\MediaInfoNET.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
 XCOPY  "$(ProjectDir)Reference\ChaoControls.Style.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
 XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i

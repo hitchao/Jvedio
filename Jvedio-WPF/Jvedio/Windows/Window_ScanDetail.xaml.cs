@@ -121,7 +121,7 @@ namespace Jvedio
         {
             ScanDetail detail = dataGrid.SelectedItem as ScanDetail;
             if (ClipBoard.TrySetDataObject(detail.FilePath))
-                MessageCard.Success(Jvedio.Language.Resources.HasCopy);
+                MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("HasCopy"));
         }
 
         private void OpenPath(object sender, RoutedEventArgs e)
@@ -146,7 +146,7 @@ namespace Jvedio
                     string path = saveFileDialog.FileName;
                     if (!path.ToLower().EndsWith(".txt")) path += ".txt";
                     File.WriteAllText(path, GenerateOutput());
-                    MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                    MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
                 }
                 catch (Exception ex)
                 {

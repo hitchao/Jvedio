@@ -5,7 +5,7 @@
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Name="Window_StartUp"

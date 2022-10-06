@@ -113,11 +113,11 @@ namespace Jvedio
 
                 // todo 更新到主界面和详情界面
                 window_MetaDatas?.RefreshData(vieModel.CurrentData.DataID);
-                SuperControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                SuperControls.Style.MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
             else
             {
-                SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
+                SuperControls.Style.MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_Fail"));
             }
         }
 
@@ -292,7 +292,7 @@ namespace Jvedio
         public string SelectData(string path, string filter)
         {
             System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
-            fileDialog.Title = Jvedio.Language.Resources.ChooseFile;
+            fileDialog.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
             fileDialog.FileName = Path.GetFileName(path);
             fileDialog.InitialDirectory = Path.GetDirectoryName(path);
             fileDialog.Filter = filter;

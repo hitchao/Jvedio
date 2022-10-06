@@ -1050,7 +1050,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public string textType = Jvedio.Language.Resources.AllVideo;
+        public string textType = SuperControls.Style.LangManager.GetValueByKey("AllVideo");
 
         public string TextType
         {
@@ -1093,7 +1093,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _SearchHint = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.ID;
+        private string _SearchHint = SuperControls.Style.LangManager.GetValueByKey("Search") + SuperControls.Style.LangManager.GetValueByKey("ID");
 
         public string SearchHint
         {
@@ -1281,7 +1281,7 @@ namespace Jvedio.ViewModel
             // Movie movie = DataBase.SelectMovieByID(id);
             // if (movie != null)
             // {
-            //    HandyControl.Controls.Growl.Info($"{id} {Jvedio.Language.Resources.Message_AlreadyExist}", "Main");
+            //    HandyControl.Controls.Growl.Info($"{id} {SuperControls.Style.LangManager.GetValueByKey("Message_AlreadyExist")}", "Main");
             // }
             // else
             // {
@@ -1572,9 +1572,9 @@ namespace Jvedio.ViewModel
             // //添加标签戳
             //    for (int i = 0; i < Movies.Count; i++)
             //    {
-            //        if (Identify.IsHDV(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_HD) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_HD) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_HD) >= 0) Movies[i].tagstamps += Jvedio.Language.Resources.HD;
-            //        if (Identify.IsCHS(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_Translated) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_Translated) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_Translated) >= 0) Movies[i].tagstamps += Jvedio.Language.Resources.Translated;
-            //        if (Identify.IsFlowOut(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_FlowOut) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_FlowOut) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_FlowOut) >= 0) Movies[i].tagstamps += Jvedio.Language.Resources.FlowOut;
+            //        if (Identify.IsHDV(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_HD) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_HD) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_HD) >= 0) Movies[i].tagstamps += SuperControls.Style.LangManager.GetValueByKey("HD");
+            //        if (Identify.IsCHS(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_Translated) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_Translated) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_Translated) >= 0) Movies[i].tagstamps += SuperControls.Style.LangManager.GetValueByKey("Translated");
+            //        if (Identify.IsFlowOut(Movies[i].filepath) || Movies[i].genre?.IndexOfAnyString(TagStrings_FlowOut) >= 0 || Movies[i].tag?.IndexOfAnyString(TagStrings_FlowOut) >= 0 || Movies[i].label?.IndexOfAnyString(TagStrings_FlowOut) >= 0) Movies[i].tagstamps += SuperControls.Style.LangManager.GetValueByKey("FlowOut");
             //    }
 
             // //根据标签戳筛选
@@ -1806,7 +1806,7 @@ namespace Jvedio.ViewModel
 
             // else if (AllSearchType == MySearchType.演员)
             // {
-            //    TextType = Jvedio.Language.Resources.Search + Jvedio.Language.Resources.Actor + " " + searchContent;
+            //    TextType = SuperControls.Style.LangManager.GetValueByKey("Search") + SuperControls.Style.LangManager.GetValueByKey("Actor") + " " + searchContent;
             //    if (SearchInCurrent)
             //        MovieList = oldMovieList.Where(arg => arg.actor.IndexOf(searchContent) >= 0).ToList();
             //    else

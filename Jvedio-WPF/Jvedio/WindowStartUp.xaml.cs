@@ -379,7 +379,7 @@ namespace Jvedio
         {
             if (!File.Exists(@"x64\SQLite.Interop.dll") || !File.Exists(@"x86\SQLite.Interop.dll"))
             {
-                MessageBox.Show($"{Jvedio.Language.Resources.Missing} SQLite.Interop.dll", "Jvedio");
+                MessageBox.Show($"{SuperControls.Style.LangManager.GetValueByKey("Missing")} SQLite.Interop.dll", "Jvedio");
                 this.Close();
             }
         }
@@ -425,7 +425,7 @@ namespace Jvedio
 
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             string originName = info.Name;
-            DialogInput input = new DialogInput(this, Jvedio.Language.Resources.Rename, originName);
+            DialogInput input = new DialogInput(this, SuperControls.Style.LangManager.GetValueByKey("Rename"), originName);
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
             if (string.IsNullOrEmpty(targetName)) return;
@@ -495,7 +495,7 @@ namespace Jvedio
             vieModel_StartUp.CurrentSearch = string.Empty;
             vieModel_StartUp.Sort = true;
             vieModel_StartUp.SortType = "创建时间";
-            DialogInput input = new DialogInput(this, Jvedio.Language.Resources.NewLibrary);
+            DialogInput input = new DialogInput(this, SuperControls.Style.LangManager.GetValueByKey("NewLibrary"));
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
             if (string.IsNullOrEmpty(targetName)) return;
@@ -688,7 +688,7 @@ namespace Jvedio
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
 
             System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
-            dialog.Title = Jvedio.Language.Resources.ChooseFile;
+            dialog.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
             dialog.Filter = "(jpg;jpeg;png)|*.jpg;*.jpeg;*.png";
             dialog.Multiselect = false;
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)

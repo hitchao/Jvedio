@@ -128,7 +128,7 @@ namespace Jvedio
                     }
                     catch (OperationCanceledException)
                     {
-                        callBack?.Invoke($"{Jvedio.Language.Resources.Cancel}");
+                        callBack?.Invoke($"{SuperControls.Style.LangManager.GetValueByKey("Cancel")}");
                     }
                     catch (Exception ex)
                     {

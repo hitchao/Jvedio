@@ -117,23 +117,23 @@ namespace Jvedio
             SampleVideo = new Video()
             {
                 VID = "IRONMAN-01",
-                Title = Jvedio.Language.Resources.SampleMovie_Title,
+                Title = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Title"),
                 VideoType = VideoType.Normal,
                 ReleaseDate = "2020-01-01",
-                Director = Jvedio.Language.Resources.SampleMovie_Director,
-                Genre = Jvedio.Language.Resources.SampleMovie_Genre,
-                Series = Jvedio.Language.Resources.SampleMovie_Tag,
-                ActorNames = Jvedio.Language.Resources.SampleMovie_Actor,
-                Studio = Jvedio.Language.Resources.SampleMovie_Studio,
+                Director = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Director"),
+                Genre = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Genre"),
+                Series = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Tag"),
+                ActorNames = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Actor"),
+                Studio = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Studio"),
                 Rating = 9.0f,
-                Label = Jvedio.Language.Resources.SampleMovie_Label,
+                Label = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Label"),
                 ReleaseYear = 2020,
                 Duration = 126,
 
-                Country = Jvedio.Language.Resources.SampleMovie_Country,
+                Country = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Country"),
             };
 
-            SupportVideoFormat = $"{Jvedio.Language.Resources.NormalVedio}(*.avi, *.mp4, *.mkv, *.mpg, *.rmvb)| *.avi; *.mp4; *.mkv; *.mpg; *.rmvb|{Jvedio.Language.Resources.OtherVedio}((*.rm, *.mov, *.mpeg, *.flv, *.wmv, *.m4v)| *.rm; *.mov; *.mpeg; *.flv; *.wmv; *.m4v|{Jvedio.Language.Resources.AllFile} (*.*)|*.*";
+            SupportVideoFormat = $"{SuperControls.Style.LangManager.GetValueByKey("NormalVedio")}(*.avi, *.mp4, *.mkv, *.mpg, *.rmvb)| *.avi; *.mp4; *.mkv; *.mpg; *.rmvb|{SuperControls.Style.LangManager.GetValueByKey("OtherVedio")}((*.rm, *.mov, *.mpeg, *.flv, *.wmv, *.m4v)| *.rm; *.mov; *.mpeg; *.flv; *.wmv; *.m4v|{SuperControls.Style.LangManager.GetValueByKey("AllFile")} (*.*)|*.*";
             SupportPictureFormat = $"图片(*.bmp, *.jpe, *.jpeg, *.jpg, *.png)|*.bmp;*.jpe;*.jpeg;*.jpg;*.png";
         }
 
@@ -280,7 +280,7 @@ namespace Jvedio
                 if (!vieModel.ScanPath.Contains(path) && !vieModel.ScanPath.IsIntersectWith(path))
                     vieModel.ScanPath.Add(path);
                 else
-                    MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
+                    MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("FilePathIntersection"));
             }
         }
 
@@ -293,7 +293,7 @@ namespace Jvedio
             imageAwesome.Icon = FontAwesomeIcon.Refresh;
             imageAwesome.Spin = true;
             imageAwesome.Foreground = (SolidColorBrush)Application.Current.Resources["Window.Foreground"];
-            if (checkBox.Content.ToString() == Jvedio.Language.Resources.BaiduFaceRecognition)
+            if (checkBox.Content.ToString() == SuperControls.Style.LangManager.GetValueByKey("BaiduFaceRecognition"))
             {
                 string base64 = AIBaseImage64;
                 System.Drawing.Bitmap bitmap = ImageHelper.Base64ToBitmap(base64);
@@ -345,7 +345,7 @@ namespace Jvedio
             if (checkBox.Content.ToString() == "百度翻译")
             {
             }
-            else if (checkBox.Content.ToString() == Jvedio.Language.Resources.Youdao)
+            else if (checkBox.Content.ToString() == SuperControls.Style.LangManager.GetValueByKey("Youdao"))
             {
                 string result = await Translate.Youdao("のマ○コに");
                 if (result != string.Empty)
@@ -411,7 +411,7 @@ namespace Jvedio
                 if (!TestListen())
                     checkBox.IsChecked = false;
                 else
-                    SuperControls.Style.MessageCard.Info(Jvedio.Language.Resources.RebootToTakeEffect);
+                    SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("RebootToTakeEffect"));
             }
         }
 
@@ -441,7 +441,7 @@ namespace Jvedio
                 }
                 catch
                 {
-                    SuperControls.Style.MessageCard.Error($"{Jvedio.Language.Resources.NoPermissionToListen} {drives[i]}");
+                    SuperControls.Style.MessageCard.Error($"{SuperControls.Style.LangManager.GetValueByKey("NoPermissionToListen")} {drives[i]}");
                     return false;
                 }
             }
@@ -452,7 +452,7 @@ namespace Jvedio
         private void SetVideoPlayerPath(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog1.Title = Jvedio.Language.Resources.Choose;
+            openFileDialog1.Title = SuperControls.Style.LangManager.GetValueByKey("Choose");
             openFileDialog1.Filter = "exe|*.exe";
             openFileDialog1.FilterIndex = 1;
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -497,7 +497,7 @@ namespace Jvedio
                 SavePath();
                 SaveSettings();
 
-                SuperControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                SuperControls.Style.MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
         }
 
@@ -524,7 +524,7 @@ namespace Jvedio
         private void SetFFMPEGPath(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog1.Title = Jvedio.Language.Resources.ChooseFFmpeg;
+            openFileDialog1.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFFmpeg");
             openFileDialog1.FileName = "ffmpeg.exe";
             openFileDialog1.Filter = "ffmpeg.exe|*.exe";
             openFileDialog1.FilterIndex = 1;
@@ -740,7 +740,7 @@ namespace Jvedio
                     if (!vieModel.ScanPath.Contains(item) && !vieModel.ScanPath.IsIntersectWith(item))
                         vieModel.ScanPath.Add(item);
                     else
-                        MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
+                        MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("FilePathIntersection"));
                 }
             }
         }
@@ -756,7 +756,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Error(Jvedio.Language.Resources.Message_CanNotBeNull);
+                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_CanNotBeNull"));
             }
         }
 
@@ -932,7 +932,7 @@ namespace Jvedio
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success)
                 {
-                    SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.BossKeyError);
+                    SuperControls.Style.MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("BossKeyError"));
                     Properties.Settings.Default.HotKey_Enable = false;
                 }
             }
@@ -968,11 +968,11 @@ namespace Jvedio
                             int v = 0;
                             int.TryParse(value, out v);
                             if (v == 1)
-                                value = Jvedio.Language.Resources.Uncensored;
+                                value = SuperControls.Style.LangManager.GetValueByKey("Uncensored");
                             else if (v == 2)
-                                value = Jvedio.Language.Resources.Censored;
+                                value = SuperControls.Style.LangManager.GetValueByKey("Censored");
                             else if (v == 3)
-                                value = Jvedio.Language.Resources.Europe;
+                                value = SuperControls.Style.LangManager.GetValueByKey("Europe");
                         }
 
                         vieModel.ViewRenameFormat = vieModel.ViewRenameFormat.Replace("{" + property + "}", value);
@@ -1431,7 +1431,7 @@ namespace Jvedio
 
         private void ShowRenameHelp(object sender, MouseButtonEventArgs e)
         {
-            MessageCard.Info(Jvedio.Language.Resources.Attention_Rename);
+            MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("Attention_Rename"));
         }
 
 

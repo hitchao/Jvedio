@@ -35,7 +35,7 @@ namespace Jvedio
     {
         public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value == null) return Jvedio.Language.Resources.Normal;
+            if (value == null) return SuperControls.Style.LangManager.GetValueByKey("Normal");
             Enum.TryParse(value.ToString(), out VideoType videoType);
             return (int)videoType;
         }

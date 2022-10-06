@@ -66,7 +66,7 @@ namespace Jvedio
                     if (!Folders.Contains(item) && !Folders.IsIntersectWith(item))
                         Folders.Add(item);
                     else
-                        MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
+                        MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("FilePathIntersection"));
                 }
             }
 
@@ -81,7 +81,7 @@ namespace Jvedio
                 if (!Folders.Contains(path) && !Folders.IsIntersectWith(path))
                     Folders.Add(path);
                 else
-                    MessageCard.Error(Jvedio.Language.Resources.FilePathIntersection);
+                    MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("FilePathIntersection"));
             }
 
             OnListChange();

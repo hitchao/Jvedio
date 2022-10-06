@@ -553,64 +553,64 @@ namespace Jvedio.Entity
 
         public static string ToSqlField(string content)
         {
-            if (content == Jvedio.Language.Resources.ID)
+            if (content == SuperControls.Style.LangManager.GetValueByKey("ID"))
             {
                 return "VID";
             }
-            else if (content == Jvedio.Language.Resources.Title)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Title"))
             {
                 return "Title";
             }
 
-            // else if (content == Jvedio.Language.Resources.TranslatedTitle)
+            // else if (content == SuperControls.Style.LangManager.GetValueByKey("TranslatedTitle"))
             // {
             //    return "chinesetitle";
             // }
-            else if (content == Jvedio.Language.Resources.VideoType)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("VideoType"))
             {
                 return "VideoType";
             }
-            else if (content == Jvedio.Language.Resources.Tag)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Tag"))
             {
                 return "Series";
             }
-            else if (content == Jvedio.Language.Resources.ReleaseDate)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("ReleaseDate"))
             {
                 return "ReleaseDate";
             }
-            else if (content == Jvedio.Language.Resources.Year)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Year"))
             {
                 return "ReleaseYear";
             }
-            else if (content == Jvedio.Language.Resources.Duration)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Duration"))
             {
                 return "Duration";
             }
-            else if (content == Jvedio.Language.Resources.Country)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Country"))
             {
                 return "Country";
             }
-            else if (content == Jvedio.Language.Resources.Director)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Director"))
             {
                 return "Director";
             }
-            else if (content == Jvedio.Language.Resources.Genre)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Genre"))
             {
                 return "Genre";
             }
-            else if (content == Jvedio.Language.Resources.Label)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Label"))
             {
                 return "Label";
             }
-            else if (content == Jvedio.Language.Resources.Actor)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Actor"))
             {
                 return "ActorNames";
             }
-            else if (content == Jvedio.Language.Resources.Studio)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Studio"))
             {
                 return "Studio";
             }
-            else if (content == Jvedio.Language.Resources.Rating)
+            else if (content == SuperControls.Style.LangManager.GetValueByKey("Rating"))
             {
                 return "Rating";
             }
@@ -663,7 +663,7 @@ namespace Jvedio.Entity
                 for (int i = 0; i < SubSectionList.Count; i++)
                 {
                     if (addTag && Identify.IsCHS(Path))
-                        result[i] = System.IO.Path.Combine(dir, $"{newName}-{i + 1}_{Jvedio.Language.Resources.Translated}{ext}");
+                        result[i] = System.IO.Path.Combine(dir, $"{newName}-{i + 1}_{SuperControls.Style.LangManager.GetValueByKey("Translated")}{ext}");
                     else
                         result[i] = System.IO.Path.Combine(dir, $"{newName}-{i + 1}{ext}");
                 }
@@ -673,7 +673,7 @@ namespace Jvedio.Entity
             else
             {
                 if (addTag && Identify.IsCHS(Path))
-                    return new string[] { System.IO.Path.Combine(dir, $"{newName}_{Jvedio.Language.Resources.Translated}{ext}") };
+                    return new string[] { System.IO.Path.Combine(dir, $"{newName}_{SuperControls.Style.LangManager.GetValueByKey("Translated")}{ext}") };
                 else
                     return new string[] { System.IO.Path.Combine(dir, $"{newName}{ext}") };
             }
@@ -700,11 +700,11 @@ namespace Jvedio.Entity
                             int v = 0;
                             int.TryParse(value, out v);
                             if (v == 1)
-                                value = Jvedio.Language.Resources.Uncensored;
+                                value = SuperControls.Style.LangManager.GetValueByKey("Uncensored");
                             else if (v == 2)
-                                value = Jvedio.Language.Resources.Censored;
+                                value = SuperControls.Style.LangManager.GetValueByKey("Censored");
                             else if (v == 3)
-                                value = Jvedio.Language.Resources.Europe;
+                                value = SuperControls.Style.LangManager.GetValueByKey("Europe");
                         }
 
                         if (string.IsNullOrEmpty(value))

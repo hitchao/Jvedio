@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:super="https://github.com/SuperStudio/SuperControls"
-        xmlns:lang="clr-namespace:Jvedio.Language;assembly=Jvedio.Language"
+        
         xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
         x:Class="Jvedio.Dialog_SelectActor"
         mc:Ignorable="d"

@@ -436,7 +436,7 @@ namespace Jvedio
             }
             else
             {
-                msgCard.Error(Jvedio.Language.Resources.Message_OpenFail + "：" + exePath);
+                msgCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_OpenFail") + "：" + exePath);
             }
         }
 
@@ -747,27 +747,27 @@ namespace Jvedio
             ContextMenu contextMenu = sender as ContextMenu;
             if (e.Key == Key.D)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_DeleteInfo);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_DeleteInfo"));
                 if (menuItem != null) DeleteID(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.T)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_DeleteFile);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_DeleteFile"));
                 if (menuItem != null) DeleteFile(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.E)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_EditInfo);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_EditInfo"));
                 if (menuItem != null) EditInfo(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.W)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_OpenWebSite);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_OpenWebSite"));
                 if (menuItem != null) OpenWeb(menuItem, new RoutedEventArgs());
             }
             else if (e.Key == Key.C)
             {
-                MenuItem menuItem = GetMenuItem(contextMenu, Jvedio.Language.Resources.Menu_CopyFile);
+                MenuItem menuItem = GetMenuItem(contextMenu, SuperControls.Style.LangManager.GetValueByKey("Menu_CopyFile"));
                 if (menuItem != null) CopyFile(menuItem, new RoutedEventArgs());
             }
 
@@ -824,7 +824,7 @@ namespace Jvedio
             bool success = ClipBoard.TrySetFileDropList(paths, (error) => { msgCard.Error(error); });
 
             if (success)
-                msgCard.Success($"{Jvedio.Language.Resources.Message_Copied} {paths.Count}/{vieModel.SelectedData.Count}");
+                msgCard.Success($"{SuperControls.Style.LangManager.GetValueByKey("Message_Copied")} {paths.Count}/{vieModel.SelectedData.Count}");
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedData.Clear();
         }
@@ -832,7 +832,7 @@ namespace Jvedio
         private void DeleteID(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (vieModel.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToDelete).ShowDialog() == false)
+            if (vieModel.EditMode && new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
             {
                 return;
             }
@@ -843,7 +843,7 @@ namespace Jvedio
         public void DeleteFile(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (vieModel.EditMode && new Msgbox(this, Jvedio.Language.Resources.IsToDelete).ShowDialog() == false)
+            if (vieModel.EditMode && new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
             {
                 return;
             }
@@ -952,7 +952,7 @@ namespace Jvedio
             //        }
             //    }
             // }
-            msgCard.Info($"{Jvedio.Language.Resources.SuccessDelete} {count}/{to_delete.Count} ");
+            msgCard.Info($"{SuperControls.Style.LangManager.GetValueByKey("SuccessDelete")} {count}/{to_delete.Count} ");
 
             // 修复数字显示
             vieModel.CurrentCount -= to_delete.Count;

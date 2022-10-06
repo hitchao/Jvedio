@@ -65,11 +65,11 @@ namespace Jvedio
                 // 更新到主界面和详情界面
                 main?.RefreshGrade(vieModel.CurrentVideo);
                 windowDetails?.Refresh();
-                SuperControls.Style.MessageCard.Success(Jvedio.Language.Resources.Message_Success);
+                SuperControls.Style.MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
             else
             {
-                SuperControls.Style.MessageCard.Error(Jvedio.Language.Resources.Message_Fail);
+                SuperControls.Style.MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_Fail"));
             }
         }
 
@@ -228,7 +228,7 @@ namespace Jvedio
         public string SelectVideo(string path)
         {
             System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog1.Title = Jvedio.Language.Resources.ChooseFile;
+            openFileDialog1.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
             openFileDialog1.FileName = path;
             openFileDialog1.Filter = Window_Settings.SupportVideoFormat;
             openFileDialog1.FilterIndex = 1;
