@@ -22,7 +22,7 @@
             x:Key="ViewTextBox"
             BasedOn="{StaticResource ReadOnlyTextBox}"
             TargetType="TextBox">
-            <!--  删除字体  -->
+            
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="Margin" Value="20,0" />
             <Setter Property="Width" Value="450" />

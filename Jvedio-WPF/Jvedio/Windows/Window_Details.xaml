@@ -5,7 +5,6 @@
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
@@ -50,7 +49,7 @@
 
 
         <Style x:Key="ExtraPic" TargetType="Image">
-            
+
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Width" Value="auto" />
             <Setter Property="Height" Value="{Binding ElementName=scrollViewer, Path=ActualHeight, Converter={StaticResource SmallerValueConverter}, ConverterParameter=20, Mode=OneWay}" />
@@ -63,7 +62,7 @@
         </Style>
 
         <Style x:Key="BigImage" TargetType="Image">
-            
+
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="10" />
@@ -81,9 +80,9 @@
             x:Key="ViewTextBox"
             BasedOn="{StaticResource ReadOnlyWrapTextBox}"
             TargetType="TextBox">
-            
+
             <Setter Property="FontSize" Value="16" />
-            <!--  删除字体  -->
+
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="ContextMenu" Value="{StaticResource CopyContextMenu}" />
             <Setter Property="Margin" Value="0,5" />
@@ -94,10 +93,10 @@
 
         <Style x:Key="BaseTextBlock" TargetType="TextBlock">
             <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-            
+
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontFamily" Value="微软雅黑" />
-            <!--  删除字体  -->
+
             <Setter Property="Foreground" Value="{DynamicResource Window.Sub.Foreground}" />
             <Setter Property="Margin" Value="0,0" />
             <Setter Property="Opacity" Value="0.9" />
@@ -112,7 +111,7 @@
 
         <!--  如果 tag 为空则不显示  -->
         <Style x:Key="InfoStackPanel" TargetType="StackPanel">
-            
+
             <Setter Property="Orientation" Value="Horizontal" />
             <Setter Property="Margin" Value="0,5,0,0" />
             <Style.Triggers>
@@ -165,7 +164,7 @@
                     Panel.ZIndex="10"
                     Opacity="0.8"
                     Orientation="Horizontal">
-                    <Button Click="HideAssoPopup" Content="关闭" />
+                    <Button Click="HideAssoPopup" Content="{DynamicResource Close}" />
                     <Border
                         Padding="10,5"
                         VerticalAlignment="Center"
@@ -390,7 +389,7 @@
                                                             Tag="{Binding TagID}">
                                                             <Label.ContextMenu>
                                                                 <ContextMenu>
-                                                                    <MenuItem Click="DeleteVideoTagStamp" Header="删除该标记" />
+                                                                    <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
                                                                 </ContextMenu>
                                                             </Label.ContextMenu>
                                                         </Label>
@@ -615,7 +614,7 @@
                             <TextBlock
                                 Grid.Column="1"
                                 Style="{StaticResource BaseTextBlock}"
-                                Text="同步信息" />
+                                Text="{DynamicResource SyncInfo}" />
                         </Border>
                         <Border
                             Margin="10,5"
@@ -785,7 +784,7 @@
 
                                     <MenuItem
                                         Click="OpenWeb"
-                                        Header="访问所在网址"
+                                        Header="{DynamicResource ViewWebsite}"
                                         Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
                                     <MenuItem x:Name="OpenOtherUrlMenuItem" Header="{DynamicResource OpenOtherUrl}" />
 
@@ -878,7 +877,7 @@
                                                                         <MenuItem Click="SetToBigPic" Header="{DynamicResource Poster}" />
                                                                     </MenuItem>
                                                                     <MenuItem Click="DeleteImage" Header="{DynamicResource DeleteImage}" />
-                                                                    <MenuItem Click="DeleteAllImage" Header="删除所有列表中的图片" />
+                                                                    <MenuItem Click="DeleteAllImage" Header="{DynamicResource DeleteAllImageInList}" />
                                                                 </ContextMenu>
                                                             </Border.ContextMenu>
                                                         </Border>
@@ -1181,7 +1180,7 @@
                                                     Style="{StaticResource InfoStackPanel}"
                                                     Tag="{Binding CurrentVideo.VideoType}"
                                                     Visibility="{Binding TeenMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=OneWay}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="修正" />
+                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Censored}" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <ComboBox
                                                         Height="30"
@@ -1192,8 +1191,8 @@
                                                         SelectionChanged="ComboBox_SelectionChanged"
                                                         Style="{StaticResource BorderComboBox}">
                                                         <ComboBoxItem Content="{DynamicResource Normal}" />
-                                                        <ComboBoxItem Content="无修正" />
-                                                        <ComboBoxItem Content="修正" />
+                                                        <ComboBoxItem Content="{DynamicResource Uncensored}" />
+                                                        <ComboBoxItem Content="{DynamicResource Censored}" />
                                                         <ComboBoxItem Content="{DynamicResource Europe}" />
                                                     </ComboBox>
 
@@ -1214,7 +1213,7 @@
 
 
                                                 <StackPanel Style="{StaticResource InfoStackPanel}" Tag="{Binding CurrentVideo.Studio}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="制作" />
+                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Made}" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <Border
                                                         MaxWidth="250"
@@ -1299,7 +1298,7 @@
                                                         Height="auto"
                                                         VerticalAlignment="Center"
                                                         Style="{StaticResource BaseTextBlock}"
-                                                        Text="标签" />
+                                                        Text="{DynamicResource Label}" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Height="auto"
@@ -1314,7 +1313,7 @@
                                                         Margin="0"
                                                         Padding="10,4"
                                                         Click="AddToLabel"
-                                                        Content="添加到"
+                                                        Content="{DynamicResource AddTo}"
                                                         Style="{StaticResource ButtonPrimary}" />
                                                     <super:TagPanel
                                                         Name="labelTagPanel"
@@ -1360,7 +1359,7 @@
                                                                     BorderBrush="#326CF3"
                                                                     BorderThickness="0"
                                                                     Foreground="{DynamicResource Window.Foreground}"
-                                                                    PlaceHolder="搜索"
+                                                                    PlaceHolder="{DynamicResource Search}"
                                                                     PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                     SearchOnTextChanged="False"
                                                                     ShowClearButton="True"

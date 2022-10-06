@@ -6,7 +6,7 @@
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="标记"
+    Title="{DynamicResource TagStamp}"
     Width="400"
     Height="260"
     Background="{DynamicResource Window.InnerDialog.Background}"
@@ -32,7 +32,7 @@
             <TextBlock
                 VerticalAlignment="Center"
                 FontSize="15"
-                Text="名称" />
+                Text="{DynamicResource Title}" />
             <super:SearchBox
                 Name="textBox"
                 Grid.Column="1"
@@ -55,7 +55,7 @@
             <TextBlock
                 VerticalAlignment="Center"
                 FontSize="15"
-                Text="背景色" />
+                Text="{DynamicResource Background}" />
             <Border
                 Name="border"
                 Grid.Column="1"
@@ -94,7 +94,7 @@
             <TextBlock
                 VerticalAlignment="Center"
                 FontSize="15"
-                Text="前景色" />
+                Text="{DynamicResource Foreground}" />
             <Border
                 Name="border2"
                 Grid.Column="1"
@@ -117,12 +117,12 @@
             <Button
                 MinWidth="50"
                 Click="Confirm"
-                Content="确认"
+                Content="{DynamicResource Confirm}"
                 Style="{StaticResource FillButton}" />
             <Button
                 MinWidth="50"
                 Click="Cancel"
-                Content="取消"
+                Content="{DynamicResource Cancel}"
                 Style="{StaticResource FillButton}" />
         </StackPanel>
     </Grid>

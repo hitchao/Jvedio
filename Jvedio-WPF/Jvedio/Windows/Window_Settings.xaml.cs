@@ -694,6 +694,7 @@ namespace Jvedio
                      ComboBoxItem comboBoxItem = ev.AddedItems[0] as ComboBoxItem;
                      string lang = comboBoxItem.Tag.ToString();
                      SuperControls.Style.LangManager.SetLang(lang);
+                     Jvedio.Core.Lang.LangManager.SetLang(lang);
                      vieModel.CurrentLanguage = lang;
                  }
              };

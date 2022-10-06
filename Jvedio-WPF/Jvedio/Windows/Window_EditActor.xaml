@@ -3,11 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="编辑演员"
+    Title="{DynamicResource EditActor}"
     Width="800"
     Height="400"
     Background="{DynamicResource Window.Background}"
@@ -18,13 +17,13 @@
     <super:BaseWindow.Resources>
 
         <Style x:Key="BaseInfoLabel" TargetType="Label">
-            
+
             <Setter Property="HorizontalContentAlignment" Value="Right" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="MinWidth" Value="80" />
             <Setter Property="Height" Value="auto" />
-            <!--  删除字体  -->
+
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="2" />
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
@@ -84,7 +83,7 @@
                         Source="{Binding CurrentActorInfo.SmallImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Click="SetActorImage" Header="设置头像" />
+                                <MenuItem Click="SetActorImage" Header="{DynamicResource SetActorImage}" />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -96,7 +95,7 @@
                     Width="200"
                     Padding="10,0"
                     Foreground="{DynamicResource Window.Foreground}"
-                    PlaceHolder="演员名"
+                    PlaceHolder="{DynamicResource ActorName}"
                     PlaceHolderForeground="{DynamicResource Window.Sub.Foreground}"
                     Style="{StaticResource BaseSearchTextBox}"
                     Text="{Binding CurrentActorInfo.ActorName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
@@ -112,7 +111,7 @@
                         FontSize="12"
                         Foreground="{DynamicResource Window.Sub.Foreground}"
                         Style="{StaticResource BaseTextBlock}"
-                        Text="重复的演员名将共用相同图片"
+                        Text="{DynamicResource UseSameImageWithSameActorName}"
                         TextAlignment="Left"
                         TextWrapping="Wrap" />
                 </Border>

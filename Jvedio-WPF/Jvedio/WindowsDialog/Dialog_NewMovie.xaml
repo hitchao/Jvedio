@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Add}"
@@ -49,7 +48,7 @@
                 Margin="10"
                 Padding="10"
                 VerticalContentAlignment="Top"
-                hc:InfoElement.Placeholder="输入视频识别码，回车分割"
+                hc:InfoElement.Placeholder="{DynamicResource EnterVID}"
                 hc:InfoElement.Title=""
                 AcceptsReturn="True"
                 Background="{DynamicResource Window.Side.Background}"
@@ -82,8 +81,8 @@
                     SelectionChanged="ComboBox_SelectionChanged"
                     Style="{StaticResource BorderComboBox}">
                     <ComboBoxItem Content="{DynamicResource Normal}" />
-                    <ComboBoxItem Content="无修正" />
-                    <ComboBoxItem Content="修正" />
+                    <ComboBoxItem Content="{DynamicResource Uncensored}" />
+                    <ComboBoxItem Content="{DynamicResource Censored}" />
                     <ComboBoxItem Content="{DynamicResource Europe}" />
                 </ComboBox>
 
@@ -96,12 +95,12 @@
                     Margin="20,5"
                     HorizontalAlignment="Left"
                     Click="SetChecked"
-                    Content="自动添加前缀" />
+                    Content="{DynamicResource AutoAddPrefix}" />
                 <super:SearchBox
                     x:Name="PrefixTextBox"
                     MinWidth="200"
                     LostFocus="PrefixTextBox_LostFocus"
-                    PlaceHolder="前缀"
+                    PlaceHolder="{DynamicResource Prefix}"
                     PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                     Style="{StaticResource BaseSearchTextBox}"
                     TextChanged="PrefixTextBox_TextChanged" />

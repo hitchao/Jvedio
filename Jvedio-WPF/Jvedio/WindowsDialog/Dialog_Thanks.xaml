@@ -2,10 +2,9 @@
     x:Class="Jvedio.Dialog_Thanks"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Thanks}"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
@@ -38,32 +37,19 @@
 
                 <TextBlock
                     Style="{StaticResource BaseTextBlock}"
-                    Text="软件开发：Chao"
-                    TextAlignment="Left" />
-                <TextBlock
-                    Margin="0,5"
-                    FontSize="15"
-                    Foreground="{DynamicResource Window.Foreground}"
-                    TextAlignment="Left">
-                    界面控件：<Hyperlink Click="OpenUrl" NavigateUri="https://github.com/HandyOrg/HandyControl">
-                        <Run Text="HandyControl" />
-                    </Hyperlink></TextBlock>
-
-                <TextBlock
-                    Style="{StaticResource BaseTextBlock}"
-                    Text="界面设计：青萍之末, Engine, Erdon, Erik"
+                    Text="Developer：Chao"
                     TextAlignment="Left" />
                 <TextBlock
                     Style="{StaticResource BaseTextBlock}"
-                    Text="技术支持：go, sdt "
+                    Text="UI：青萍之末, Engine, Erdon, Erik"
                     TextAlignment="Left" />
                 <TextBlock
                     Style="{StaticResource BaseTextBlock}"
-                    Text="软件调试：sheldon, SHAWN, dddsG, EEE, jion, 猫仔 等网友"
+                    Text="Debug：sheldon, SHAWN, dddsG, EEE, jion, 猫仔 等网友"
                     TextAlignment="Left" />
                 <TextBlock
                     Style="{StaticResource BaseTextBlock}"
-                    Text="赞助支持：小猪培根 等人"
+                    Text="Sponsor：小猪培根 等人"
                     TextAlignment="Left" />
                 <TextBlock
                     Margin="2,10"

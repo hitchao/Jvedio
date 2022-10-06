@@ -1,0 +1,22 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="About_Content">Jvedio 是本地视频管理软件，支持扫描本地视频并导入软件，建立视频库， 提取出视频的 唯一识别码，自动分类视频， 添加标签管理视频，使用人工智能识别演员，支持翻译信息， 基于 FFmpeg 截取视频图片，Window 桌面端流畅美观的应用软件</sys:String>
+    <sys:String x:Key="OfficialWebsite">官方网址</sys:String>
+    <sys:String x:Key="Thanks_Content1">感谢 众多网友对 Jvedio 的赞助与支持！</sys:String>
+    <sys:String x:Key="Thanks_Content2">预祝 Jvedio 发展越来越好！</sys:String>
+    <sys:String x:Key="CopyNFOImage">复制视频同文件下的 poster 与 fanart 到 Jvedio 的图片目录</sys:String>
+    <sys:String x:Key="OpenJvedio">打开 Jvedio</sys:String>
+    <sys:String x:Key="JvedioIsRunning">Jvedio已经在运行！</sys:String>
+    <sys:String x:Key="About_Outline">本地视频的管理</sys:String>
+    <sys:String x:Key="FlowOut">流出</sys:String>
+
+
+
+
+    <sys:String x:Key="ThanksUseJvedio">欢迎使用 Jvedio</sys:String>
+    <sys:String x:Key="EnterVID">输入视频识别码，回车分割</sys:String>
+    <sys:String x:Key="LikeAndSponsor">如果您喜欢Jvedio，可以使用以下方式赞助我~</sys:String>
+    <sys:String x:Key="UseScreenIfNoImage">无封面时将已截取的图片作为封面</sys:String>
+</ResourceDictionary>

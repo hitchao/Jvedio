@@ -2,10 +2,10 @@
     x:Class="Jvedio.Window_ScanDetail"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="导入详情"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
+    Title="{DynamicResource ImportDetail}"
     MinWidth="600"
     MinHeight="450"
     Background="{DynamicResource Window.Background}"
@@ -53,8 +53,8 @@
         </Style>
 
         <ContextMenu x:Key="contextMenu">
-            <MenuItem Click="CopyPath" Header="复制路径" />
-            <MenuItem Click="OpenPath" Header="打开所在位置" />
+            <MenuItem Click="CopyPath" Header="{DynamicResource Copy}" />
+            <MenuItem Click="OpenPath" Header="{DynamicResource OpenPath}" />
         </ContextMenu>
 
     </super:BaseWindow.Resources>
@@ -70,7 +70,7 @@
             <WrapPanel Name="wrapPanel" Orientation="Horizontal">
                 <Border Style="{StaticResource StatisticBorder}">
                     <Grid>
-                        <TextBlock Text="扫描时间" />
+                        <TextBlock Text="{DynamicResource ScanTime}" />
                         <TextBox
                             Name="scanDate"
                             Style="{StaticResource StatisticTextBox}"
@@ -79,7 +79,7 @@
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
                     <Grid>
-                        <TextBlock Text="耗时" />
+                        <TextBlock Text="{DynamicResource TimeSpan}" />
                         <TextBox
                             Name="cost"
                             Style="{StaticResource StatisticTextBox}"
@@ -88,7 +88,7 @@
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
                     <Grid>
-                        <TextBlock Text="总数" />
+                        <TextBlock Text="{DynamicResource Total}" />
                         <TextBox
                             Name="total"
                             Style="{StaticResource StatisticTextBox}"
@@ -97,7 +97,7 @@
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
                     <Grid>
-                        <TextBlock Text="导入" />
+                        <TextBlock Text="{DynamicResource Import}" />
                         <TextBox
                             Name="import"
                             Style="{StaticResource StatisticTextBox}"
@@ -106,7 +106,7 @@
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
                     <Grid>
-                        <TextBlock Text="未导入" />
+                        <TextBlock Text="{DynamicResource NotImport}" />
                         <TextBox
                             Name="notImport"
                             Style="{StaticResource StatisticTextBox}"
@@ -115,7 +115,7 @@
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
                     <Grid>
-                        <TextBlock Text="更新" />
+                        <TextBlock Text="{DynamicResource Update}" />
                         <TextBox
                             Name="update"
                             Style="{StaticResource StatisticTextBox}"
@@ -124,7 +124,7 @@
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
                     <Grid>
-                        <TextBlock Text="未导入 NFO" />
+                        <TextBlock Text="{DynamicResource NotImportNFO}" />
                         <TextBox
                             Name="failNfo"
                             Style="{StaticResource StatisticTextBox}"
@@ -132,73 +132,6 @@
                     </Grid>
                 </Border>
             </WrapPanel>
-            <!--<StackPanel
-                Name="wrapPanel"
-                Margin="20"
-                Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        FontWeight="Bold"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="扫描时间：" />
-                    <TextBlock Name="scanDate" Style="{StaticResource TextBlockStyle}" />
-
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-
-
-                    <TextBlock
-                        FontWeight="Bold"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="耗时：" />
-                    <TextBlock Name="cost" Style="{StaticResource TextBlockStyle}" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        FontWeight="Bold"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="总计导入数目：" />
-                    <TextBlock Name="import" Style="{StaticResource TextBlockStyle}" />
-
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        FontWeight="Bold"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="总计更新数目：" />
-                    <TextBlock
-                        Name="update"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="0" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        FontWeight="Bold"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="未导入数目：" />
-                    <TextBlock
-                        Name="notImport"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="0" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        FontWeight="Bold"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="未导入 NFO 数目：" />
-                    <TextBlock
-                        Name="failNfo"
-                        Style="{StaticResource TextBlockStyle}"
-                        Text="0" />
-                </StackPanel>
-
-
-
-            </StackPanel>-->
         </Grid>
         <DataGrid
             x:Name="dataGrid"
@@ -214,19 +147,19 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Binding="{Binding Handle}"
-                    Header="操作"
+                    Header="{DynamicResource Operate}"
                     IsReadOnly="True" />
 
                 <DataGridTextColumn
                     Binding="{Binding Reason}"
-                    Header="原因"
+                    Header="{DynamicResource Reason}"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     MinWidth="60"
                     Binding="{Binding Extension}"
-                    Header="后缀名"
+                    Header="{DynamicResource Extension}"
                     IsReadOnly="True" />
-                <DataGridTextColumn Binding="{Binding FilePath}" Header="路径" />
+                <DataGridTextColumn Binding="{Binding FilePath}" Header="{DynamicResource Path}" />
 
 
             </DataGrid.Columns>
@@ -242,12 +175,12 @@
             <Button
                 HorizontalAlignment="Right"
                 Click="ShowExceptions"
-                Content="查看异常"
+                Content="{DynamicResource ViewAbnormal}"
                 Style="{StaticResource ButtonDanger}" />
             <Button
                 HorizontalAlignment="Right"
                 Click="Save"
-                Content="保存当前"
+                Content="{DynamicResource Save}"
                 Style="{StaticResource ButtonSuccess}" />
         </StackPanel>
     </Grid>

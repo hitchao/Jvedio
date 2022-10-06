@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
@@ -81,7 +80,7 @@
             <Setter Property="TextAlignment" Value="Left" />
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="FontSize" Value="16" />
-            <!--  删除字体  -->
+
             <Setter Property="Margin" Value="20,5" />
         </Style>
 
@@ -89,7 +88,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Height" Value="auto" />
-            <!--  删除字体  -->
+
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Margin" Value="0,0" />
             <Setter Property="BorderThickness" Value="0" />
@@ -103,7 +102,7 @@
             x:Key="BaseHcTextBox"
             BasedOn="{StaticResource TextBoxBaseStyle}"
             TargetType="TextBox">
-            <!--  删除字体  -->
+
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
@@ -174,8 +173,8 @@
                         <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                         <WrapPanel Orientation="Horizontal">
-                            <CheckBox Content="显示搜索历史" IsChecked="{Binding ShowSearchHistory, Mode=TwoWay}" />
-                            <Button Click="ViewSearchHistory" Content="查看历史记录" />
+                            <CheckBox Content="{DynamicResource ShowHistory}" IsChecked="{Binding ShowSearchHistory, Mode=TwoWay}" />
+                            <Button Click="ViewSearchHistory" Content="{DynamicResource ViewHistory}" />
                         </WrapPanel>
 
                     </WrapPanel>
@@ -350,10 +349,10 @@
 
             </TabItem>
 
-            <TabItem Header="图像">
+            <TabItem Header="{DynamicResource Picture}">
 
                 <StackPanel Margin="20,5">
-                    <CheckBox Content="无封面时将已截取的图片作为封面" IsChecked="{Binding AutoGenScreenShot}" />
+                    <CheckBox Content="{DynamicResource UseScreenIfNoImage}" IsChecked="{Binding AutoGenScreenShot}" />
                     <CheckBox Content="{DynamicResource ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                     <Grid Margin="5">
@@ -366,7 +365,7 @@
                             Margin="0,10"
                             VerticalAlignment="Top"
                             VerticalContentAlignment="Top"
-                            Content="影视图片路径"
+                            Content="{DynamicResource VideoImagePath}"
                             Style="{StaticResource InfoLabel}" />
                         <StackPanel
                             Grid.Column="2"
@@ -381,9 +380,9 @@
                                 SelectedIndex="{Binding PicPathMode, Mode=TwoWay, FallbackValue=2}"
                                 SelectionChanged="ImageSelectComboBox_SelectionChanged"
                                 Style="{StaticResource BorderComboBox}">
-                                <ComboBoxItem Content="绝对路径" />
-                                <ComboBoxItem Content="相对于 Jvedio 的路径" />
-                                <ComboBoxItem Content="相对于影片路径" />
+                                <ComboBoxItem Content="{DynamicResource AbsolutePath}" />
+                                <ComboBoxItem Content="{DynamicResource RelativeToAppPath}" />
+                                <ComboBoxItem Content="{DynamicResource RelativeToVideoPath}" />
                             </ComboBox>
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Style>
@@ -433,7 +432,7 @@
                             <TextBox
                                 Margin="10"
                                 FontSize="15"
-                                Text="请输入相对路径（'./'表示当前目录， '../' 表示上一层目录）">
+                                Text="{DynamicResource EnterRelativePath}">
                                 <TextBox.Style>
                                     <Style BasedOn="{StaticResource ReadOnlyNoWrapTextBox}" TargetType="TextBox">
                                         <Setter Property="Visibility" Value="Visible" />
@@ -461,14 +460,14 @@
                                     Margin="16,5"
                                     HorizontalAlignment="Left"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="请输入文件名或文件夹名称（无需后缀名，自动识别）" />
+                                    Text="{DynamicResource EnterFileOrDirName}" />
                                 <StackPanel Orientation="Horizontal">
 
                                     <Label
                                         Margin="0,10"
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Top"
-                                        Content="海报"
+                                        Content="{DynamicResource Poster}"
                                         Style="{StaticResource InfoLabel}" />
                                     <super:SearchBox
                                         MinWidth="500"
@@ -481,7 +480,7 @@
                                         Margin="0,10"
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Top"
-                                        Content="缩略"
+                                        Content="{DynamicResource Thumbnail}"
                                         Style="{StaticResource InfoLabel}" />
                                     <super:SearchBox
                                         MinWidth="500"
@@ -494,7 +493,7 @@
                                         Margin="0,10"
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Top"
-                                        Content="预览图文件夹"
+                                        Content="{DynamicResource Preview}"
                                         Style="{StaticResource InfoLabel}" />
                                     <super:SearchBox
                                         MinWidth="500"
@@ -507,7 +506,7 @@
                                         Margin="0,10"
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Top"
-                                        Content="截图文件夹"
+                                        Content="{DynamicResource ScreenShot}"
                                         Style="{StaticResource InfoLabel}" />
                                     <super:SearchBox
                                         MinWidth="500"
@@ -520,7 +519,7 @@
                                         Margin="0,10"
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Top"
-                                        Content="演员头像"
+                                        Content="{DynamicResource ActressImage}"
                                         Style="{StaticResource InfoLabel}" />
                                     <super:SearchBox
                                         MinWidth="500"
@@ -538,7 +537,7 @@
                 </StackPanel>
 
             </TabItem>
-            <TabItem Background="Transparent" Header="扫描与导入">
+            <TabItem Background="Transparent" Header="{DynamicResource ScanAndImport}">
                 <StackPanel>
 
                     <StackPanel
@@ -551,11 +550,7 @@
                             Checked="ListenCheckBox_Checked"
                             Content="监听所有文件改动并更新数据库（不包括C盘）"
                             IsChecked="{Binding ListenAllDir, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox
-                            Margin="50,5,10,5"
-                            Content="删除文件时从数据库删除"
-                            IsChecked="{Binding DelFromDBIfDel, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
-                            IsEnabled="{Binding IsChecked, ElementName=ListenCheckBox}" />
+
                     </StackPanel>
 
 
@@ -569,7 +564,7 @@
                         <TextBlock
                             MinWidth="200"
                             Style="{StaticResource BaseTextBlock}"
-                            Text="扫描的文件大小"
+                            Text="{DynamicResource ScanMinFileSize}"
                             TextAlignment="Left"
                             ToolTip="[0-2000]" />
                         <super:SearchBox
@@ -585,7 +580,7 @@
                         Margin="20,5"
                         IsEnabled="False"
                         Orientation="Horizontal"
-                        Visibility="Visible">
+                        Visibility="Collapsed">
                         <TextBlock
                             MinWidth="200"
                             Style="{StaticResource BaseTextBlock}"
@@ -634,7 +629,7 @@
                     <CheckBox
                         Margin="25,5"
                         HorizontalAlignment="Left"
-                        Content="提取资源的识别码"
+                        Content="{DynamicResource FetchVID}"
                         IsChecked="{Binding FetchVID, Mode=TwoWay}" />
 
 
@@ -651,12 +646,12 @@
                         <CheckBox
                             Margin="25,5"
                             HorizontalAlignment="Left"
-                            Content="覆盖原有图片"
+                            Content="{DynamicResource OverriteImage}"
                             IsChecked="{Binding CopyNFOOverriteImage}" />
                         <CheckBox
                             Margin="25,5"
                             HorizontalAlignment="Left"
-                            Content="复制海报/缩略图"
+                            Content="{DynamicResource CopyPosterAndThumbnail}"
                             IsChecked="{Binding CopyNFOPicture}" />
 
 
@@ -665,12 +660,12 @@
                                 MinWidth="150"
                                 Margin="25,5"
                                 HorizontalAlignment="Left"
-                                Content="复制演员头像"
+                                Content="{DynamicResource CopyActorImage}"
                                 IsChecked="{Binding CopyNFOActorPicture}" />
 
                             <super:SearchBox
                                 MinWidth="400"
-                                PlaceHolder="演员头像目录"
+                                PlaceHolder="{DynamicResource ActressImage}"
                                 PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                                 Style="{StaticResource BaseSearchTextBox}"
                                 Text="{Binding CopyNFOActorPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -681,12 +676,12 @@
                                 MinWidth="150"
                                 Margin="25,5"
                                 HorizontalAlignment="Left"
-                                Content="复制预览图"
+                                Content="{DynamicResource CopyPreview}"
                                 IsChecked="{Binding CopyNFOPreview}" />
 
                             <super:SearchBox
                                 MinWidth="400"
-                                PlaceHolder="预览图目录"
+                                PlaceHolder="{DynamicResource Preview}"
                                 PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                                 Style="{StaticResource BaseSearchTextBox}"
                                 Text="{Binding CopyNFOPreviewPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -698,12 +693,12 @@
                                 MinWidth="150"
                                 Margin="25,5"
                                 HorizontalAlignment="Left"
-                                Content="复制影片截图"
+                                Content="{DynamicResource CopyScreenShot}"
                                 IsChecked="{Binding CopyNFOScreenShot}" />
 
                             <super:SearchBox
                                 MinWidth="400"
-                                PlaceHolder="影片截图目录"
+                                PlaceHolder="{DynamicResource ScreenShot}"
                                 PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                                 Style="{StaticResource BaseSearchTextBox}"
                                 Text="{Binding CopyNFOScreenShotPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -722,7 +717,7 @@
                             <TextBlock
                                 Margin="50,0,5,0"
                                 Style="{StaticResource BaseTextBlock}"
-                                Text="切换库" />
+                                Text="{DynamicResource SwitchLibrary}" />
 
 
                             <ComboBox
@@ -894,19 +889,19 @@
 
                             <CheckBox
                                 Margin="20,5"
-                                Content="主界面同步时同时下载预览图"
+                                Content="{DynamicResource DownloadPreviewInMainWindow}"
                                 IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
                             <CheckBox
                                 Margin="20,5"
-                                Content="跳过已下载的图片"
+                                Content="{DynamicResource SkipDownloadImage}"
                                 IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
                             <CheckBox
                                 Margin="20,5"
-                                Content="强制同步信息（不推荐）"
+                                Content="{DynamicResource ForcedFetchInfo}"
                                 IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
                             <CheckBox
                                 Margin="20,5"
-                                Content="忽略证书错误（不安全）"
+                                Content="{DynamicResource IgnoreCertError}"
                                 IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}"
                                 IsEnabled="False" />
 
@@ -919,7 +914,7 @@
                                 <TextBlock
                                     MinWidth="60"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="请求超时"
+                                    Text="{DynamicResource RequestTimedOut}"
                                     TextAlignment="Left"
                                     ToolTip="[0-2000]" />
                                 <super:SearchBox
@@ -948,7 +943,7 @@
                         <super:TogglePanel
                             Padding="0,5"
                             FontSize="15"
-                            Header="代理设置"
+                            Header="{DynamicResource ProxySetting}"
                             IsExpanded="True"
                             LineWidth="0"
                             Style="{StaticResource BaseTogglePanel}">
@@ -960,19 +955,19 @@
                                     Orientation="Horizontal">
                                     <RadioButton
                                         HorizontalAlignment="Left"
-                                        Content="不使用代理"
+                                        Content="{DynamicResource DisableProxy}"
                                         GroupName="enableProxy"
                                         Style="{StaticResource FlatRadioButton}" />
                                     <RadioButton
                                         HorizontalAlignment="Left"
-                                        Content="使用系统代理"
+                                        Content="{DynamicResource UseDefaultProxy}"
                                         GroupName="enableProxy"
                                         IsChecked="True"
                                         Style="{StaticResource FlatRadioButton}" />
                                     <RadioButton
                                         x:Name="customProxyRadioButton"
                                         HorizontalAlignment="Left"
-                                        Content="自定义代理"
+                                        Content="{DynamicResource CustomProxy}"
                                         GroupName="enableProxy"
                                         Style="{StaticResource FlatRadioButton}" />
 
@@ -986,7 +981,7 @@
                                         <TextBlock
                                             MinWidth="60"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="类型"
+                                            Text="{DynamicResource Type}"
                                             TextAlignment="Left"
                                             ToolTip="[0-2000]" />
                                         <RadioButton
@@ -1006,7 +1001,7 @@
                                         <TextBlock
                                             MinWidth="60"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="服务器*"
+                                            Text="{DynamicResource Server}"
                                             TextAlignment="Left" />
                                         <super:SearchBox
                                             MinWidth="400"
@@ -1017,7 +1012,7 @@
                                         <TextBlock
                                             MinWidth="60"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="端口*"
+                                            Text="{DynamicResource Port}"
                                             TextAlignment="Left" />
                                         <super:SearchBox
                                             MinWidth="200"
@@ -1032,7 +1027,7 @@
                                         <TextBlock
                                             MinWidth="60"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="用户名"
+                                            Text="{DynamicResource UserName}"
                                             TextAlignment="Left" />
                                         <super:SearchBox
                                             MinWidth="400"
@@ -1043,7 +1038,7 @@
                                         <TextBlock
                                             MinWidth="60"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="密码"
+                                            Text="{DynamicResource Password}"
                                             TextAlignment="Left" />
 
                                         <PasswordBox
@@ -1104,9 +1099,9 @@
                                         Margin="20,10"
                                         HorizontalAlignment="Left"
                                         Click="TestProxy"
-                                        Content="测试" />
+                                        Content="{DynamicResource Test}" />
 
-                                    <TextBlock VerticalAlignment="Center" Text="测试地址" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource TestUrl}" />
                                     <super:SearchBox
                                         Name="textProxyUrl"
                                         MinWidth="200"
@@ -1126,7 +1121,7 @@
                             Grid.Column="1"
                             Padding="0,5"
                             FontSize="16"
-                            Header="刮削器列表"
+                            Header="{DynamicResource CrawlerList}"
                             IsExpanded="True"
                             LineWidth="0"
                             Style="{StaticResource BaseTogglePanel}">
@@ -1172,7 +1167,7 @@
                                                 FontSize="20"
                                                 Foreground="Red"
                                                 Style="{StaticResource BaseTextBlock}"
-                                                Text="未启用" />
+                                                Text="{DynamicResource Disabled}" />
                                         </Grid>
                                         <StackPanel Orientation="Vertical">
 
@@ -1309,7 +1304,7 @@
                                                                     HorizontalAlignment="Stretch"
                                                                     Background="Transparent"
                                                                     Foreground="{DynamicResource Window.Foreground}"
-                                                                    PlaceHolder="网址"
+                                                                    PlaceHolder="{DynamicResource Url}"
                                                                     PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                     Style="{StaticResource BaseSearchTextBox}"
                                                                     Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -1405,12 +1400,12 @@
                                                             Grid.Row="0"
                                                             Margin="20,20,0,0"
                                                             Orientation="Horizontal">
-                                                            <TextBlock VerticalAlignment="Center" Text="请复制浏览器中的所有请求头到此" />
+                                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource CopyHeaderHere}" />
                                                             <Button
                                                                 Margin="20,0"
                                                                 VerticalAlignment="Center"
                                                                 Click="ShowHeaderHelp"
-                                                                Content="教程" />
+                                                                Content="{DynamicResource Tutorial}" />
                                                         </StackPanel>
 
                                                         <Grid Grid.Row="1">
@@ -1464,16 +1459,16 @@
                                                             Orientation="Horizontal">
                                                             <CheckBox
                                                                 Click="SetAutoHeader"
-                                                                Content="自动识别"
+                                                                Content="{DynamicResource AutoRecognize}"
                                                                 IsChecked="{Binding AutoHandleHeader, Mode=TwoWay}"
                                                                 Visibility="Collapsed" />
                                                             <Button
                                                                 Click="CancelHeader"
-                                                                Content="取消"
+                                                                Content="{DynamicResource Cancel}"
                                                                 Style="{StaticResource ButtonDanger}" />
                                                             <Button
                                                                 Click="ConfirmHeader"
-                                                                Content="确认"
+                                                                Content="{DynamicResource Confirm}"
                                                                 Style="{StaticResource ButtonPrimary}" />
                                                         </StackPanel>
                                                     </Grid>
@@ -1503,7 +1498,7 @@
                         Margin="10,0"
                         Padding="0,5"
                         FontSize="15"
-                        Header="其他"
+                        Header="{DynamicResource Other}"
                         IsExpanded="True"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}"
@@ -1626,9 +1621,9 @@
                         <WrapPanel Orientation="Horizontal">
 
 
-                            <CheckBox Content="搜索栏" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <CheckBox Content="翻页调节栏" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <CheckBox Content="页码调节下拉菜单" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{DynamicResource SearchBar}" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{DynamicResource PageAdjustBar}" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <CheckBox Content="{DynamicResource PageDropMenu}" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                             <CheckBox Content="{DynamicResource StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                             <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                             <CheckBox
@@ -1642,7 +1637,7 @@
                             IsEnabled="False" />
 
                         <CheckBox Content="{DynamicResource ShowFIlename}" IsChecked="{Binding ShowFileNameIfTitleEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox Content="发行日期为空显示创建日期" IsChecked="{Binding ShowCreateDateIfReleaseDateEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <CheckBox Content="{DynamicResource ShowCreateDate}" IsChecked="{Binding ShowCreateDateIfReleaseDateEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <CheckBox
                             Content="{DynamicResource ShowTranslation}"
                             IsChecked="{Binding TitleShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
@@ -1657,38 +1652,8 @@
 
 
 
-                    <TextBlock
-                        Style="{StaticResource TextBlockTitle}"
-                        Text="按标签戳显示"
-                        Visibility="Collapsed" />
-                    <WrapPanel
-                        Margin="40,5"
-                        Orientation="Horizontal"
-                        Visibility="Collapsed">
-                        <CheckBox
-                            Margin="10,5,10,5"
-                            VerticalContentAlignment="Center"
-                            Content="无标签戳"
-                            IsChecked="{Binding DisPlayNoStamp, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox
-                            Margin="10,5,10,5"
-                            VerticalContentAlignment="Center"
-                            Content="中字"
-                            IsChecked="{Binding DisPlayCHS, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox
-                            Margin="10,5,10,5"
-                            VerticalContentAlignment="Center"
-                            Content="流出"
-                            IsChecked="{Binding DisPlayOutFlow, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <CheckBox
-                            Margin="10,5,10,5"
-                            VerticalContentAlignment="Center"
-                            Content="高清"
-                            IsChecked="{Binding DisPlayHDV, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
 
-
-                    </WrapPanel>
 
                     <TextBlock
                         Margin="10"
@@ -1704,9 +1669,7 @@
 
                 </StackPanel>
             </TabItem>
-            <TabItem Header="代理" Visibility="Collapsed">
-                <StackPanel />
-            </TabItem>
+
 
             <TabItem Header="{DynamicResource Translate}">
                 <StackPanel IsEnabled="False">
@@ -1751,7 +1714,7 @@
                         <StackPanel Orientation="Horizontal">
                             <CheckBox
                                 Margin="20,10"
-                                Content="百度翻译"
+                                Content="{DynamicResource BaiduTranslation}"
                                 IsChecked="{Binding Enable_TL_BAIDU, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                             <Button Click="TestTranslate" Content="{DynamicResource Test}" />
                             <Image
@@ -1859,7 +1822,7 @@
                                     Foreground="{DynamicResource Common.HighLight.BorderBrush}"
                                     MouseLeftButtonUp="CopyFFmpegUrl"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="前往下载"
+                                    Text="{DynamicResource Download}"
                                     TextDecorations="Underline" />
 
 
@@ -1873,7 +1836,7 @@
                                     MinWidth="150"
                                     Margin="2"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="截图线程数"
+                                    Text="{DynamicResource ThreadNumber}"
                                     TextAlignment="Left" />
                                 <Slider
                                     x:Name="ThreadNumSlider"
@@ -1919,7 +1882,7 @@
                             MinWidth="150"
                             Margin="2"
                             Style="{StaticResource BaseTextBlock}"
-                            Text="任务超时"
+                            Text="{DynamicResource TaskTimeOut}"
                             TextAlignment="Left" />
                         <Slider
                             x:Name="ScreenShotTimeoutSlider"
@@ -1964,7 +1927,7 @@
                                 <CheckBox
                                     Margin="20,10"
                                     HorizontalAlignment="Left"
-                                    Content="若文件夹存在则跳过"
+                                    Content="{DynamicResource SkipIfDirExists}"
                                     IsChecked="{Binding SkipExistScreenShot, Mode=TwoWay}" />
 
                                 <StackPanel Margin="20,5" Orientation="Horizontal">
@@ -2168,7 +2131,7 @@
                         Margin="25,15"
                         HorizontalAlignment="Left"
                         Click="SetDetailBg"
-                        Content="将背景应用到详情页"
+                        Content="{DynamicResource ApplyBgToDetail}"
                         IsChecked="{Binding DetailShowBg, Mode=TwoWay}" />
 
 
@@ -2188,7 +2151,7 @@
                                 Margin="20,5"
                                 HorizontalAlignment="Left"
                                 Click="AddToRename"
-                                Content="去除标题两边的空格"
+                                Content="{DynamicResource TrimTitle}"
                                 IsChecked="{Binding Path=RemoveTitleSpace, Mode=TwoWay}" />
                             <CheckBox
                                 Margin="20,5"
@@ -2204,7 +2167,7 @@
                             <WrapPanel Margin="10,0">
                                 <!--{'\\','#','%', '&', '*', '|', ':', '"', ' <', '>', '?', '/','.' }-->
                                 <StackPanel Margin="10,5" Orientation="Horizontal">
-                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="信息分隔符" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource InfoSep}" />
                                     <ComboBox
                                         x:Name="OutComboBox"
                                         Height="30"
@@ -2227,7 +2190,7 @@
 
 
                                 <StackPanel Margin="10,5" Orientation="Horizontal">
-                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="标签/类别/演员等分隔符" />
+                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource GenreActorSep}" />
                                     <ComboBox
                                         x:Name="InComboBox"
                                         Height="30"
@@ -2451,7 +2414,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="库">
+            <TabItem Header="{DynamicResource Library}">
                 <StackPanel Orientation="Vertical">
                     <Border
                         Margin="10"
@@ -2462,12 +2425,12 @@
                             <StackPanel Orientation="Horizontal">
                                 <CheckBox
                                     HorizontalAlignment="Left"
-                                    Content="自动备份库"
+                                    Content="{DynamicResource AutoBackLibrary}"
                                     IsChecked="{Binding AutoBackup, Mode=TwoWay}" />
                                 <TextBlock
                                     Margin="20,0,0,0"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="备份周期（天）" />
+                                    Text="{DynamicResource BackUpPeriodDay}" />
                                 <ComboBox
                                     Grid.Column="1"
                                     Height="30"
@@ -2497,7 +2460,7 @@
                                 <TextBlock
                                     HorizontalAlignment="Left"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="索引" />
+                                    Text="{DynamicResource Index}" />
                                 <hc:LoadingCircle
                                     Height="20"
                                     DotDiameter="3"
@@ -2506,7 +2469,7 @@
                                 <Button
                                     Margin="5"
                                     Click="CancelCreateIndex"
-                                    Content="取消"
+                                    Content="{DynamicResource Cancel}"
                                     Style="{StaticResource ButtonDanger}"
                                     Visibility="{Binding IndexCreating, Converter={StaticResource bool2VisibilityConverter}}" />
 
@@ -2525,7 +2488,7 @@
                                 Margin="5"
                                 HorizontalAlignment="Left"
                                 Click="CreatePlayableIndex"
-                                Content="建立资源存在索引"
+                                Content="{DynamicResource CreateDataExistIndex}"
                                 IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}"
                                 Style="{StaticResource ButtonPrimary}" />
 
@@ -2540,7 +2503,7 @@
                                 Margin="5"
                                 HorizontalAlignment="Left"
                                 Click="CreatePictureIndex"
-                                Content="建立视频资源的图片索引"
+                                Content="{DynamicResource CreateImageExistIndex}"
                                 IsEnabled="{Binding IndexCreating, Converter={StaticResource OppositeBooleanConverter}}"
                                 Style="{StaticResource ButtonPrimary}" />
 
@@ -2550,11 +2513,11 @@
 
                 </StackPanel>
             </TabItem>
-            <TabItem Header="网络">
+            <TabItem Header="{DynamicResource NetWork}" Visibility="Collapsed">
                 <StackPanel Orientation="Vertical">
 
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox Content="开启端口监听（未来实现）" IsChecked="{Binding ListenEnabled, Mode=TwoWay}" />
+                        <CheckBox Content="开启端口监听" IsChecked="{Binding ListenEnabled, Mode=TwoWay}" />
 
                         <super:SearchBox
                             Width="100"

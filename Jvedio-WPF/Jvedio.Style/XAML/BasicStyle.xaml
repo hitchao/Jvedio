@@ -145,7 +145,7 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="TextAlignment" Value="Left" />
-        <!--  删除字体  -->
+        
         <Setter Property="FontSize" Value="15" />
         <!--<Setter Property="MinWidth" Value="100"/>-->
         <Setter Property="Margin" Value="10,5" />
@@ -400,7 +400,7 @@
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Cursor" Value="Hand" />
-        <!--  删除字体  -->
+        
         <Setter Property="Margin" Value="2" />
         <Setter Property="Template">
             <Setter.Value>

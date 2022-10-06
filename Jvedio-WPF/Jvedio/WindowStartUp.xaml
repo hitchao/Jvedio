@@ -5,11 +5,10 @@
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Name="Window_StartUp"
-    Title="欢迎使用 Jvedio"
+    Title="{DynamicResource ThanksUseJvedio}"
     Width="800"
     Height="400"
     MinWidth="500"
@@ -37,17 +36,13 @@
                 Cursor="Hand">
                 <Border.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Click="LoadDataBase" Header="打开" />
-                        <!--<MenuItem
-                            Command="cmd:File.OpenDir"
-                            CommandParameter="{Binding Path, Converter={StaticResource FilePathToDirConverter}}"
-                            Header="打开目录" />-->
-                        <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Click="LoadDataBase" Header="{DynamicResource Open}" />
+                        <MenuItem Click="RenameSqlite" Header="{DynamicResource Rename}" />
                         <MenuItem Click="HideDataBase" Header="{Binding Hide, Converter={StaticResource Hide2TextConverter}}" />
-                        <MenuItem Click="SetImage" Header="设置图片" />
+                        <MenuItem Click="SetImage" Header="{DynamicResource SetImage}" />
                         <MenuItem
                             Click="DelSqlite"
-                            Header="删除"
+                            Header="{DynamicResource Delete}"
                             Tag="#ff2e2e" />
                     </ContextMenu>
                 </Border.ContextMenu>
@@ -132,13 +127,13 @@
                 Cursor="Hand">
                 <Border.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Click="LoadDataBase" Header="打开" />
-                        <MenuItem Click="RenameSqlite" Header="重命名" />
+                        <MenuItem Click="LoadDataBase" Header="{DynamicResource Open}" />
+                        <MenuItem Click="RenameSqlite" Header="{DynamicResource Rename}" />
                         <MenuItem Click="HideDataBase" Header="{Binding Hide, Converter={StaticResource Hide2TextConverter}}" />
-                        <MenuItem Click="SetImage" Header="设置图片" />
+                        <MenuItem Click="SetImage" Header="{DynamicResource SetImage}" />
                         <MenuItem
                             Click="DelSqlite"
-                            Header="删除"
+                            Header="{DynamicResource Delete}"
                             Tag="#ff2e2e" />
                     </ContextMenu>
                 </Border.ContextMenu>
@@ -226,7 +221,7 @@
             ItemContainerStyle="{StaticResource FlatTabItem}"
             SelectedIndex="1"
             Style="{StaticResource HeaderHideTabControlStyle}">
-            <TabItem Header="加载中">
+            <TabItem Header="{DynamicResource Loading}">
                 <Border Panel.ZIndex="20" Background="{DynamicResource Window.Background}">
                     <StackPanel VerticalAlignment="Center">
                         <Image
@@ -249,13 +244,13 @@
                         <Button
                             Margin="20"
                             Click="CancelScan"
-                            Content="取消"
+                            Content="{DynamicResource Cancel}"
                             Style="{StaticResource ButtonDanger}" />
                     </StackPanel>
                 </Border>
             </TabItem>
 
-            <TabItem Header="选择库">
+            <TabItem Header="{DynamicResource ChooseDataBase}">
                 <Border
                     BorderBrush="Gray"
                     BorderThickness="0"
@@ -359,7 +354,7 @@
                                 Margin="0,20,0,0"
                                 HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
-                                Content="视频"
+                                Content="{DynamicResource Video}"
                                 Style="{StaticResource SideRadioButton}" />
 
 
@@ -367,7 +362,7 @@
                                 Margin="0"
                                 HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
-                                Content="图片"
+                                Content="{DynamicResource Picture}"
                                 Style="{StaticResource SideRadioButton}"
                                 Visibility="Collapsed" />
 
@@ -376,14 +371,14 @@
                                 Margin="0"
                                 HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
-                                Content="游戏"
+                                Content="{DynamicResource Game}"
                                 Style="{StaticResource SideRadioButton}"
                                 Visibility="Collapsed" />
                             <RadioButton
                                 Margin="0"
                                 HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
-                                Content="漫画"
+                                Content="{DynamicResource Comics}"
                                 Style="{StaticResource SideRadioButton}"
                                 Visibility="Collapsed" />
                         </StackPanel>
@@ -407,7 +402,7 @@
                                     Clear="SearchText_Changed"
                                     FontSize="15"
                                     Foreground="{DynamicResource Window.Foreground}"
-                                    PlaceHolder="检索"
+                                    PlaceHolder="{DynamicResource Search}"
                                     PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                     Search="SearchText_Changed"
                                     SearchOnTextChanged="True"
@@ -422,7 +417,7 @@
                                         Width="auto"
                                         MinWidth="100"
                                         Click="NewDatabase"
-                                        Content="新建" />
+                                        Content="{DynamicResource CreateNew}" />
                                 </StackPanel>
                             </Grid>
 
@@ -453,10 +448,10 @@
                                     Tag="{DynamicResource Window.Title.Hover.Background}">
                                     <Border.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Click="SortDatabases" Header="名称" />
-                                            <MenuItem Click="SortDatabases" Header="创建时间" />
-                                            <MenuItem Click="SortDatabases" Header="数据数目" />
-                                            <MenuItem Click="SortDatabases" Header="访问频率" />
+                                            <MenuItem Click="SortDatabases" Header="{DynamicResource Title}" />
+                                            <MenuItem Click="SortDatabases" Header="{DynamicResource CreatedDate}" />
+                                            <MenuItem Click="SortDatabases" Header="{DynamicResource Number}" />
+                                            <MenuItem Click="SortDatabases" Header="{DynamicResource ViewNumber}" />
                                         </ContextMenu>
                                     </Border.ContextMenu>
                                     <Viewbox
@@ -501,7 +496,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="平铺" />
+                                    Text="{DynamicResource Tile}" />
                                 <super:Switch
                                     Width="40"
                                     Height="30"
@@ -511,7 +506,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource BaseTextBlock}"
-                                    Text="显示隐藏库" />
+                                    Text="{DynamicResource ShowHideLibrary}" />
                             </StackPanel>
 
                             <ListBox
@@ -552,7 +547,7 @@
                                 Grid.Row="3"
                                 Margin="5"
                                 Orientation="Horizontal">
-                                <Button Click="RestoreDatabase" Content="将库恢复初始化" />
+                                <Button Click="RestoreDatabase" Content="{DynamicResource RestoreLibrary}" />
                             </StackPanel>
 
 
@@ -574,13 +569,13 @@
                                     <MenuItem
                                         Command="cmd:OpenWindow.About"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                                        Header="关于" />
-                                    <MenuItem Command="cmd:OpenWindow.Settings" Header="设置" />
+                                        Header="{DynamicResource About}" />
+                                    <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />
                                     <MenuItem
                                         Command="cmd:OpenWindow.Upgrade"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                                        Header="检查更新" />
-                                    <MenuItem Command="cmd:File.OpenBaseDir" Header="打开程序所在路径" />
+                                        Header="{DynamicResource CheckUpgrade}" />
+                                    <MenuItem Command="cmd:File.OpenBaseDir" Header="{DynamicResource OpenAppPath}" />
                                 </ContextMenu>
                             </Border.ContextMenu>
                             <Viewbox

@@ -34,7 +34,7 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="MinWidth" Value="80" />
             <Setter Property="Height" Value="auto" />
-            <!--  删除字体  -->
+            
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="2" />
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />

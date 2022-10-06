@@ -6,13 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="插件"
+    Title="{DynamicResource Plugin}"
     Width="1000"
     MinWidth="800"
     MinHeight="500"
@@ -79,7 +78,7 @@
             <Setter Property="TextAlignment" Value="Left" />
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="FontSize" Value="16" />
-            <!--  删除字体  -->
+
             <Setter Property="Margin" Value="20,5" />
         </Style>
 
@@ -87,7 +86,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Height" Value="auto" />
-            <!--  删除字体  -->
+
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Margin" Value="0,0" />
             <Setter Property="BorderThickness" Value="0" />
@@ -101,7 +100,7 @@
             x:Key="BaseHcTextBox"
             BasedOn="{StaticResource TextBoxBaseStyle}"
             TargetType="TextBox">
-            <!--  删除字体  -->
+
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
@@ -145,7 +144,7 @@
                     Margin="10,0"
                     HorizontalAlignment="Left"
                     Click="ShowUploadHelp"
-                    Content="上传"
+                    Content="{DynamicResource Upload}"
                     Style="{StaticResource FillButton}" />
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <Border
@@ -154,8 +153,8 @@
                         ToolTip="{DynamicResource Sorting}">
                         <Border.ContextMenu>
                             <ContextMenu HorizontalOffset="-50">
-                                <MenuItem Click="PluginHandle" Header="启用所有插件" />
-                                <MenuItem Click="PluginHandle" Header="禁用所有插件" />
+                                <MenuItem Click="PluginHandle" Header="{DynamicResource EnableAllPlugin}" />
+                                <MenuItem Click="PluginHandle" Header="{DynamicResource DisableAllPlugin}" />
                             </ContextMenu>
                         </Border.ContextMenu>
                         <Viewbox Width="auto" Height="18">
@@ -172,24 +171,24 @@
                         ToolTip="{DynamicResource Sorting}">
                         <Border.ContextMenu>
                             <ContextMenu HorizontalOffset="-50">
-                                <MenuItem Header="是否启用">
+                                <MenuItem Header="{DynamicResource IsEnabled}">
                                     <MenuItem
                                         Click="SetViewEnabled"
-                                        Header="启用"
+                                        Header="{DynamicResource Enable}"
                                         IsCheckable="True" />
                                     <MenuItem
                                         Click="SetViewEnabled"
-                                        Header="未启用"
+                                        Header="{DynamicResource Disabled}"
                                         IsCheckable="True" />
                                 </MenuItem>
-                                <MenuItem Header="类别">
+                                <MenuItem Header="{DynamicResource Genre}">
                                     <MenuItem
                                         Click="SetPluginType"
-                                        Header="刮削器"
+                                        Header="{DynamicResource Crawler}"
                                         IsCheckable="True" />
                                     <MenuItem
                                         Click="SetPluginType"
-                                        Header="皮肤"
+                                        Header="{DynamicResource Skin}"
                                         IsCheckable="True" />
 
                                 </MenuItem>
@@ -227,7 +226,7 @@
                             <ContextMenu HorizontalOffset="-50">
                                 <MenuItem Header="{DynamicResource Name}" IsCheckable="True" />
                                 <MenuItem Header="{DynamicResource Author}" IsCheckable="True" />
-                                <MenuItem Header="发行日期" IsCheckable="True" />
+                                <MenuItem Header="{DynamicResource ReleaseDate}" IsCheckable="True" />
 
                             </ContextMenu>
                         </Border.ContextMenu>
@@ -247,7 +246,7 @@
             <super:SearchBox
                 Grid.Row="1"
                 Clear="SearchPlugin"
-                PlaceHolder="搜索"
+                PlaceHolder="{DynamicResource Search}"
                 PlaceHolderForeground="{DynamicResource RadioButton.Disabled.Background}"
                 Search="SearchPlugin"
                 SearchOnTextChanged="True"
@@ -258,7 +257,7 @@
                 <StackPanel Orientation="Vertical">
                     <super:TogglePanel
                         Name="freshPlugin"
-                        Header="未安装"
+                        Header="{DynamicResource NotInstalled}"
                         Style="{StaticResource TogglePanelStyle}">
                         <ListBox
                             Name="freshViewListBox"
@@ -332,7 +331,7 @@
                     </super:TogglePanel>
                     <super:TogglePanel
                         Name="installedPlugin"
-                        Header="已安装"
+                        Header="{DynamicResource Installed}"
                         Style="{StaticResource TogglePanelStyle}">
 
                         <ListBox
@@ -381,7 +380,7 @@
                                             <TextBlock
                                                 FontSize="10"
                                                 Foreground="{DynamicResource Window.Background}"
-                                                Text="可升级" />
+                                                Text="{DynamicResource CanUpgrade}" />
                                         </Border>
                                         <Image
                                             Grid.Column="0"
@@ -421,26 +420,6 @@
                                                 Text="{Binding ReleaseNotes.Date}"
                                                 TextAlignment="Left" />
                                         </StackPanel>
-                                        <!--<Border
-                                                    Grid.Column="1"
-                                                    Margin="2"
-                                                    Padding="5,2"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Bottom"
-                                                    CornerRadius="5">
-                                                    <Border.Style>
-                                                        <Style TargetType="Border">
-                                                            <Setter Property="Visibility" Value="Hidden" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Enabled}" Value="false">
-                                                                    <Setter Property="Background" Value="Red" />
-                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-                                                    <TextBlock Text="未启用" />
-                                                </Border>-->
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -547,7 +526,7 @@
                                 Background="{DynamicResource Window.Title.Background}"
                                 Click="SavePluginEnabled"
                                 IsChecked="{Binding CurrentPlugin.Enabled, Mode=TwoWay}" />
-                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="启用" />
+                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Enable}" />
 
                         </StackPanel>
                         <TextBlock
@@ -561,7 +540,7 @@
                             Margin="5"
                             Padding="2"
                             Style="{StaticResource BaseTextBlock}"
-                            Text="作者："
+                            Text="{DynamicResource Author}"
                             TextAlignment="Left" />
 
                         <ItemsControl ItemsSource="{Binding CurrentPlugin.Authors}">
@@ -691,7 +670,7 @@
                             Margin="5,10"
                             HorizontalAlignment="Left"
                             Click="DeletePlugin"
-                            Content="删除"
+                            Content="{DynamicResource Delete}"
                             Style="{StaticResource ButtonDanger}"
                             Visibility="{Binding CurrentPlugin.Installed, Converter={StaticResource bool2VisibilityConverter}}" />
 
@@ -749,51 +728,6 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <!--<StackPanel
-                                Grid.Column="1"
-                                Margin="50,10"
-                                Orientation="Vertical">
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontWeight="Bold"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="网站类型" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="12"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.ServerName}" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontWeight="Bold"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="抓取的信息类型" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="12"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.InfoType}" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontWeight="Bold"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="类别" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="12"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.Categories}" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontWeight="Bold"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="发行日期" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="12"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding CurrentPlugin.PublishDate}" />
-                            </StackPanel>-->
                 </Grid>
             </Grid>
         </ScrollViewer>

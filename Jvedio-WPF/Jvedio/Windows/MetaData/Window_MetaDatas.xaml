@@ -531,7 +531,7 @@
                                     SelectedIndex="{Binding SearchSelectedIndex, Mode=TwoWay}"
                                     Style="{StaticResource FlatTabControl}">
                                     <TabItem Header="识别码" />
-                                    <TabItem Header="名称" />
+                                    <TabItem Header="{DynamicResource Title}" />
                                     <TabItem Header="演员" />
                                     <TabItem Header="标签" />
                                     <TabItem Header="类别" />

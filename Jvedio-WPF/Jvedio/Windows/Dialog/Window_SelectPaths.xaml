@@ -6,7 +6,7 @@
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="选择文件夹"
+    Title="{DynamicResource ChooseDir}"
     Width="600"
     Height="400"
     Background="{DynamicResource Window.InnerDialog.Background}"
@@ -27,9 +27,12 @@
             Height="auto"
             d:ItemsSource="{d:SampleData ItemCount=5}"
             AllowDrop="True"
+            Background="Transparent"
             DragOver="PathListBox_DragOver"
             Drop="PathListBox_Drop"
-            ItemsSource="{Binding ScanPath}">
+            Foreground="{DynamicResource Window.Foreground}"
+            ItemsSource="{Binding ScanPath}"
+            Style="{StaticResource FolderListBox}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Vertical" />
@@ -130,12 +133,12 @@
             <Button
                 MinWidth="50"
                 Click="Confirm"
-                Content="确认"
+                Content="{DynamicResource Confirm}"
                 Style="{StaticResource FillButton}" />
             <Button
                 MinWidth="50"
                 Click="Cancel"
-                Content="取消"
+                Content="{DynamicResource Cancel}"
                 Style="{StaticResource FillButton}" />
         </StackPanel>
     </Grid>

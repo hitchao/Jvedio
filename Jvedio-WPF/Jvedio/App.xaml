@@ -23,6 +23,7 @@
 
                 <!--  Lang  -->
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/Lang/zh-CN.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/Core/Lang/zh-CN.xaml" />
 
 
                 <!--  ChaoControls  -->

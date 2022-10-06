@@ -1,0 +1,14 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="About_Content">Jvedio is a local video management software, which supports scanning local videos and importing software, establishing video library, extracting unique video identification code, automatically classifying videos, adding labels to manage videos, using artificial intelligence to identify actors, supporting translation information, and capturing video pictures based on FFmpeg. It is a smooth and beautiful application software on Window desktop</sys:String>
+    <sys:String x:Key="Thanks_Content1">Thank you so much for your sponsorship and support!</sys:String>
+    <sys:String x:Key="Thanks_Content2">Wish Jvedio better and better development!</sys:String>
+    <sys:String x:Key="CopyNFOImage">Copy poster and fanart under the same file of the video to the picture directory of Jvedio</sys:String>
+    <sys:String x:Key="OpenJvedio">Open Jvedio</sys:String>
+    <sys:String x:Key="JvedioIsRunning">Jvedio is already running!</sys:String>
+
+    <sys:String x:Key="FlowOut">FlowOut</sys:String>
+    <sys:String x:Key="About_Outline">Local Video Management</sys:String>
+</ResourceDictionary>

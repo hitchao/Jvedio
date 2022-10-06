@@ -2,10 +2,9 @@
     x:Class="Jvedio.Dialog_Notice"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Notice}"
     MinWidth="300"
     MinHeight="300"
@@ -62,7 +61,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Click="Button_Click"
-            Content="刷新"
+            Content="{DynamicResource Refresh}"
             Visibility="Hidden" />
     </Grid>
 </super:BaseDialog>

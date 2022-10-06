@@ -306,6 +306,7 @@
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
     <Compile Include="Core\Config\PathManager.cs" />
+    <Compile Include="Core\Lang\LangManager.cs" />
     <Compile Include="Core\Net\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
@@ -504,6 +505,18 @@
     <Compile Include="Windows\Dialog\Window_TagStamp.xaml.cs">
       <DependentUpon>Window_TagStamp.xaml</DependentUpon>
     </Compile>
+    <Page Include="Core\Lang\en-US.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Core\Lang\ja-JP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Core\Lang\zh-CN.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CustomStyle\ChaoControls\Basic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
