@@ -596,31 +596,7 @@
                         </Border>
 
 
-                        <Grid Grid.Row="1" Visibility="Collapsed">
-                            <!--<Button
-                        x:Name="LoadButton"
-                        Margin="20,10"
-                        HorizontalAlignment="Center"
-                        Click="ImportDatabase"
-                        Content="{x:Static lang:Resources.ImportLibrary}"
-                        FontSize="15"
-                        Style="{StaticResource FlatButton}" />-->
-
-                            <ComboBox
-                                MinWidth="100"
-                                Margin="20,0"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                FontSize="20"
-                                SelectedIndex="0"
-                                SelectionChanged="LanguageChanged"
-                                Style="{StaticResource ComboBoxStyle1}"
-                                Visibility="Collapsed">
-                                <ComboBoxItem Content="中文" />
-                                <ComboBoxItem Content="English" />
-                                <ComboBoxItem Content="日本語" />
-                            </ComboBox>
-                        </Grid>
+                        <Grid Grid.Row="1" Visibility="Collapsed" />
                     </Grid>
                 </Border>
             </TabItem>

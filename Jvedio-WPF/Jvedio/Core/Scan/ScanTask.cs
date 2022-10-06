@@ -95,9 +95,9 @@ namespace Jvedio.Core.Scan
 
         private List<ActorInfo> existActors { get; set; }
 
-        public override void doWrok()
+        public override void DoWork()
         {
-            Task.Run(() =>
+            Task.Run((Action)(() =>
            {
                stopwatch.Start();
                logger.Info("开始扫描任务");
@@ -145,8 +145,8 @@ namespace Jvedio.Core.Scan
                    catch (TaskCanceledException ex)
                    {
                        logger.Error(ex.Message);
-                       FinalizeWithCancel();
-                       OnCompleted(null);
+                       base.FinalizeWithCancel();
+                       base.OnCompleted(null);
                        return;
                    }
 
@@ -160,7 +160,7 @@ namespace Jvedio.Core.Scan
                }
                catch (Exception ex)
                {
-                   Logger.LogF(ex);
+                   Logger.Error(ex);
                    logger.Error(ex.Message);
                }
 
@@ -169,8 +169,8 @@ namespace Jvedio.Core.Scan
                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
                ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
                Status = TaskStatus.RanToCompletion;
-               OnCompleted(null);
-           });
+               base.OnCompleted(null);
+           }));
         }
 
         private List<Video> GetExistVideos()
@@ -564,7 +564,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.LogD(ex);
+                Logger.Error(ex);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
@@ -588,7 +588,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.LogD(ex);
+                Logger.Error(ex);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally

@@ -150,7 +150,7 @@ namespace Jvedio
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogF(ex);
+                    Logger.Error(ex);
                     MessageCard.Error(ex.Message);
                 }
             }

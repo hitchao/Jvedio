@@ -65,7 +65,6 @@
                     FontSize="16"
                     SelectedIndex="{Binding DatabaseSelectedIndex, FallbackValue=0}"
                     SelectionChanged="DatabaseComboBox_SelectionChanged"
-                    Style="{StaticResource SideComboBoxStyle}"
                     ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
 
             </StackPanel>

@@ -1391,7 +1391,7 @@ namespace Jvedio.ViewModel
             }
             catch (Exception ex)
             {
-                Logger.LogF(ex);
+                Logger.Error(ex);
             }
         }
 
@@ -1409,7 +1409,7 @@ namespace Jvedio.ViewModel
             }
             catch (Exception ex)
             {
-                Logger.LogF(ex);
+                Logger.Error(ex);
             }
 
             if (content != string.Empty && content.IndexOf("'") >= 0)

@@ -226,7 +226,7 @@ namespace Jvedio.Core.CustomTask
             Status = TaskStatus.Running;
             CreateTime = DateHelper.Now();
             Running = true;
-            doWrok();
+            DoWork();
         }
 
         public virtual void FinalizeWithCancel()
@@ -239,7 +239,7 @@ namespace Jvedio.Core.CustomTask
             logger.Info($"总计耗时：{ElapsedMilliseconds} ms");
         }
 
-        public virtual void doWrok()
+        public virtual void DoWork()
         {
             throw new NotImplementedException();
         }

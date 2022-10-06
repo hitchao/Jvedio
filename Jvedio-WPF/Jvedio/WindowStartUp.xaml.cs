@@ -95,6 +95,7 @@ namespace Jvedio
             // GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
             await BackupData(); // 备份文件
             await MovePlugins();
+            await DeletePlugins();
             ThemeManager.LoadAllThemes();       // 加载主题
             CrawlerManager.LoadAllCrawlers();   // 初始化爬虫
             PluginManager.Init();     // 将所有插件进行汇总
@@ -132,6 +133,26 @@ namespace Jvedio
                 DirHelper.TryDelete(path);
             return true;
         }
+        private async Task<bool> DeletePlugins()
+        {
+            await Task.Delay(1);
+            List<string> list = JsonUtils.TryDeserializeObject<List<string>>(ConfigManager.PluginConfig.DeleteList);
+            if (list != null && list.Count > 0)
+            {
+                for (int i = list.Count - 1; i >= 0; i--)
+                {
+                    string targetPath = Path.GetFullPath(Path.Combine(PathManager.BasePluginsPath, list[i].ToLower().Replace("/", "s/")));
+                    if (Directory.Exists(targetPath))
+                    {
+                        DirHelper.TryDelete(targetPath);
+                        list.RemoveAt(i);
+                    }
+                }
+                ConfigManager.PluginConfig.DeleteList = JsonUtils.TrySerializeObject(list);
+                ConfigManager.PluginConfig.Save();
+            }
+            return true;
+        }
 
         private async Task<bool> BackupData()
         {
@@ -163,11 +184,11 @@ namespace Jvedio
                 if (backup)
                 {
                     string dir = Path.Combine(BackupPath, DateHelper.NowDate());
-                    DirHelper.TryCreateDirectory(dir, (err) =>
+                    DirHelper.TryCreateDirectory(dir, (Action<Exception>)((err) =>
                     {
                         Logger.Error(err);
                         return;
-                    });
+                    }));
                     string target1 = Path.Combine(dir, "app_configs.sqlite");
                     string target2 = Path.Combine(dir, "app_datas.sqlite");
                     string target3 = Path.Combine(dir, "image");
@@ -230,7 +251,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                Logger.LogE(ex);
+                Logger.Error(ex);
             }
         }
 
@@ -271,7 +292,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                Logger.LogE(ex);
+                Logger.Error(ex);
             }
         }
 
@@ -309,7 +330,7 @@ namespace Jvedio
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                Logger.LogE(ex);
+                Logger.Error(ex);
             }
 
             try
@@ -329,7 +350,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                Logger.LogE(ex);
+                Logger.Error(ex);
             }
         }
 
@@ -589,7 +610,7 @@ namespace Jvedio
                         }
                         catch (Exception ex)
                         {
-                            Logger.LogF(ex);
+                            Logger.Error(ex);
                             MessageBox.Show(ex.Message);
                         }
 

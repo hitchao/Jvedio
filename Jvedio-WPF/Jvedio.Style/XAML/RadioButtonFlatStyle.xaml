@@ -3,9 +3,7 @@
 
 
     <Style x:Key="FlatRadioButton" TargetType="{x:Type RadioButton}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-        <Setter Property="Background" Value="{StaticResource RadioButton.Static.Background}" />
-        <Setter Property="BorderBrush" Value="{StaticResource RadioButton.Static.Border}" />
+
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Margin" Value="5,0" />
@@ -36,7 +34,6 @@
                                     x:Name="optionMark"
                                     MinWidth="6"
                                     MinHeight="6"
-                                    Fill="{StaticResource RadioButton.Static.Glyph}"
                                     Opacity="0" />
                             </Grid>
                         </Border>
@@ -78,7 +75,7 @@
 
 
     <Style x:Key="ColorRadioButton" TargetType="RadioButton">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+
         <Setter Property="Margin" Value="1" />
         <Setter Property="BorderBrush" Value="red" />
         <Setter Property="BorderThickness" Value="2" />
@@ -126,10 +123,7 @@
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="HasContent" Value="True">
-                            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-
-                        </Trigger>
+                        <Trigger Property="HasContent" Value="True" />
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="_borderOver" Property="BorderBrush" Value="{DynamicResource Window.Foreground}" />
                         </Trigger>

@@ -100,7 +100,7 @@ namespace Jvedio
                 // e.Handled = true; //把 Handled 属性设为true，表示此异常已处理，程序可以继续运行，不会强制退出
                 Console.WriteLine(e.Exception.StackTrace);
                 Console.WriteLine(e.Exception.Message);
-                Logger.LogE(e.Exception);
+                Logger.Error(e.Exception);
             }
             catch
             {
@@ -129,7 +129,7 @@ namespace Jvedio
             // }
             Console.WriteLine(((Exception)e.ExceptionObject).StackTrace);
             Console.WriteLine(((Exception)e.ExceptionObject).Message);
-            Logger.LogE((Exception)e.ExceptionObject);
+            Logger.Error((Exception)e.ExceptionObject);
 
             Console.WriteLine(((Exception)e.ExceptionObject).Message);
             Console.WriteLine(((Exception)e.ExceptionObject).StackTrace);
@@ -140,7 +140,7 @@ namespace Jvedio
             // task线程内未处理捕获
             Console.WriteLine(e.Exception.StackTrace);
             Console.WriteLine(e.Exception.Message);
-            Logger.LogE(e.Exception);
+            Logger.Error(e.Exception);
             e.SetObserved(); // 设置该异常已察觉（这样处理后就不会引起程序崩溃）
         }
     }

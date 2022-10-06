@@ -76,7 +76,7 @@ namespace Jvedio.Core.Net
 
         public bool OverrideInfo { get; set; }// 强制下载覆盖信息
 
-        public override void doWrok()
+        public override void DoWork()
         {
             Task.Run(async () =>
             {

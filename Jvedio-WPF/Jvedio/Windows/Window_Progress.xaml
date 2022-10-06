@@ -38,7 +38,7 @@
                     VerticalAlignment="Center"
                     Maximum="100"
                     Minimum="0"
-                    Style="{StaticResource ProgressBarStyle1}"
+                    Style="{StaticResource NormalStaticProgressBar}"
                     Value="{Binding MainProgress, ElementName=Progress_Window}" />
                 <TextBlock
                     Grid.Column="1"
@@ -65,7 +65,7 @@
                     VerticalAlignment="Center"
                     Maximum="100"
                     Minimum="0"
-                    Style="{StaticResource ProgressBarStyle1}"
+                    Style="{StaticResource NormalStaticProgressBar}"
                     Value="{Binding SubProgress, ElementName=Progress_Window}" />
                 <TextBlock
                     Grid.Column="1"

@@ -52,7 +52,7 @@ namespace Jvedio.Core.FFmpeg
 
         public string Title { get; set; }
 
-        public override void doWrok()
+        public override void DoWork()
         {
             Task.Run(async () =>
             {

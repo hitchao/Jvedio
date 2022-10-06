@@ -41,6 +41,7 @@ namespace Jvedio.Core.Plugins.Crawler
                 PluginMetaData data = GetPluginData(dllPath);
                 if (data == null) continue;
                 data.SetPluginID(PluginType.Crawler, Path.GetFileName(crawler_dir));
+                data.Enabled = true;
                 CrawlerInfo info = new CrawlerInfo();
                 info.Path = dllPath;
                 PluginMetaDatas.Add(data);

@@ -71,7 +71,7 @@ namespace SuperUtils.External
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logger.Error(ex);
                     return string.Empty;
                 }
             });
@@ -138,7 +138,7 @@ namespace SuperUtils.External
             }
             catch (Exception ex)
             {
-                Logger.LogN(ex.Message);
+                Logger.Warning(ex.Message);
             }
 
             return string.Empty;

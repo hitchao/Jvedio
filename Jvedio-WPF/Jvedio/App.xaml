@@ -27,23 +27,13 @@
 
                 <!--  Main  -->
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideRadioButtonStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/SideComboBoxStyle.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ContextMenuStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonFlatStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TabControlStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ListBoxStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ProgressBarStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ToggleButtonStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ComboBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/HandyControlStyle.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/ChaoControls/Basic.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/ChaoControls/Pagination.xaml" />

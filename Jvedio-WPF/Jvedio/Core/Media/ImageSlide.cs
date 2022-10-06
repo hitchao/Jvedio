@@ -1,4 +1,5 @@
-﻿using Jvedio.Entity;
+﻿using Jvedio.Core.Logs;
+using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -149,7 +150,7 @@ namespace Jvedio.Core.Media
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex);
             }
         }
     }

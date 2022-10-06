@@ -78,6 +78,7 @@ namespace Jvedio.Core
                 theme.ViewImage = theme.GetViewImage();
                 Themes.Add(theme);
                 data.Installed = true;
+                data.Enabled = true;
                 data.SetPluginID(PluginType.Theme, Path.GetFileName(path));
                 PluginMetaDatas.Add(data);
             }

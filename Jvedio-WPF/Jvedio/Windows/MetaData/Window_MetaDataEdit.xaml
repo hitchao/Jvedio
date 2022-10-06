@@ -28,7 +28,7 @@
 
 
         <Style x:Key="BaseInfoLabel" TargetType="Label">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            
             <Setter Property="HorizontalContentAlignment" Value="Right" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />

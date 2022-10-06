@@ -164,7 +164,7 @@ namespace Jvedio
             }
             catch (Exception e)
             {
-                Logger.LogE(e);
+                Logger.Error(e);
             }
 
             // 扫描根目录
@@ -177,7 +177,7 @@ namespace Jvedio
                 }
                 catch (Exception e)
                 {
-                    Logger.LogE(e);
+                    Logger.Error(e);
                     continue;
                 }
             }
@@ -212,7 +212,7 @@ namespace Jvedio
                             }
                             catch
                             {
-                                Logger.LogScanInfo($"错误路径：{s}");
+                                Logger.Warning($"错误路径：{s}");
                                 return false;
                             }
                         })
@@ -221,7 +221,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                Logger.LogF(ex);
+                Logger.Error(ex);
             }
 
             return new List<string>();
@@ -467,7 +467,7 @@ namespace Jvedio
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error("解析分段视频错误");
+                        Logger.Warning("解析分段视频错误");
                         Logger.Error(ex);
                     }
 

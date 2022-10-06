@@ -3945,17 +3945,15 @@
                                         Background="Transparent"
                                         BorderBrush="{DynamicResource Window.Foreground}"
                                         IsEnabled="{Binding IsLoadingClassify, Converter={StaticResource OppositeBooleanConverter}}"
+                                        ItemContainerStyle="{StaticResource FlatTabItem}"
                                         SelectedIndex="{Binding ClassifySelectedIndex, Mode=TwoWay}"
                                         SelectionChanged="ClassifyTabControl_SelectionChanged"
-                                        Style="{DynamicResource BaseHcTabControlStyle}"
+                                        Style="{StaticResource FlatTabControl}"
                                         TabStripPlacement="Top">
 
 
 
-                                        <TabItem
-                                            Background="Transparent"
-                                            FontSize="15"
-                                            Header="{x:Static lang:Resources.Genre}">
+                                        <TabItem Header="{x:Static lang:Resources.Genre}">
                                             <Grid Margin="10">
                                                 <ItemsControl
                                                     Margin="5"
@@ -3990,10 +3988,7 @@
 
 
                                         </TabItem>
-                                        <TabItem
-                                            Background="Transparent"
-                                            FontSize="15"
-                                            Header="{x:Static lang:Resources.Tag}">
+                                        <TabItem Header="{x:Static lang:Resources.Tag}">
 
                                             <Grid Margin="10">
                                                 <ItemsControl
@@ -4026,10 +4021,7 @@
 
 
                                         </TabItem>
-                                        <TabItem
-                                            Background="Transparent"
-                                            FontSize="15"
-                                            Header="{x:Static lang:Resources.Studio}">
+                                        <TabItem Header="{x:Static lang:Resources.Studio}">
 
                                             <Grid Margin="10">
                                                 <ItemsControl
@@ -4062,10 +4054,7 @@
 
                                         </TabItem>
 
-                                        <TabItem
-                                            Background="Transparent"
-                                            FontSize="15"
-                                            Header="{x:Static lang:Resources.Director}">
+                                        <TabItem Header="{x:Static lang:Resources.Director}">
 
                                             <Grid Margin="10">
                                                 <ItemsControl
@@ -4141,10 +4130,7 @@
                                     FontSize="20"
                                     Style="{StaticResource BaseTextBlock}"
                                     Text="{x:Static lang:Resources.DragFileInOr}" />
-                                <Button
-                                    Click="ImportVideo"
-                                    Content="{x:Static lang:Resources.Scan}"
-                                    Style="{StaticResource ButtonStyleFill}" />
+                                <Button Click="ImportVideo" Content="{x:Static lang:Resources.Scan}" />
                             </StackPanel>
 
 
@@ -4152,15 +4138,14 @@
                     </Grid>
 
                     <Button
-                        Width="30"
                         Height="30"
                         Margin="5"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Background="{DynamicResource Window.Title.Background}"
+                        super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
+                        Background="{DynamicResource Window.InnerDialog.Background}"
                         Click="HideBeginScanGrid"
-                        Style="{StaticResource CloseButton}"
-                        Tag="{DynamicResource Window.Title.Hover.Deep.Background}">
+                        Style="{StaticResource FlatButton}">
                         <Viewbox
                             Width="12"
                             Height="auto"
@@ -4173,211 +4158,6 @@
                         </Viewbox>
                     </Button>
                 </Grid>
-
-
-
-
-
-
-
-
-                <!--  标签  -->
-
-                <!--<Grid
-                    x:Name="LabelGrid"
-                    Width="500"
-                    Height="300"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="Transparent"
-                    Visibility="Collapsed">
-                    <Border
-                        Margin="2"
-                        Background="{DynamicResource Window.InnerDialog.Background}"
-                        CornerRadius="5"
-                        Effect="{StaticResource NormalDropShadowEffect}" />
-
-                    <Border PreviewMouseLeftButtonUp="HideGrid" Style="{StaticResource GridCloseBorderStyle}">
-                        <Image
-                            Width="20"
-                            Height="20"
-                            Source="{Binding Themes, Mode=OneWay, ConverterParameter=close, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                    </Border>
-
-                    <TextBlock
-                        Height="auto"
-                        Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="{x:Static lang:Resources.Choose}" />
-
-                    <Grid
-                        Margin="20,50,20,5"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-
-                        <ScrollViewer
-                            Grid.Row="0"
-                            HorizontalScrollBarVisibility="Disabled"
-                            VerticalScrollBarVisibility="Auto">
-                            <ItemsControl
-                                x:Name="LabelItemsControl"
-                                Height="auto"
-                                VerticalAlignment="Top"
-                                Background="Transparent"
-                                ItemsSource="{Binding LabelList}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel
-                                            MaxWidth="400"
-                                            VerticalAlignment="Top"
-                                            Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <WrapPanel x:Name="LabelWrapPanel">
-                                            <ToggleButton
-                                                Margin="10"
-                                                Padding="5"
-                                                BorderThickness="0"
-                                                Content="{Binding}"
-                                                FontSize="15"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                Style="{StaticResource ToggleButtonStyle1}" />
-                                        </WrapPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-
-
-                        </ScrollViewer>
-
-
-                        <StackPanel
-                            Grid.Row="1"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <Button
-                                Click="Button_Click"
-                                Content="{x:Static lang:Resources.Confirm}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                            <Button
-                                Click="Button_Click_1"
-                                Content="{x:Static lang:Resources.Cancel}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                        </StackPanel>
-
-
-                    </Grid>
-
-
-                </Grid>-->
-
-                <!--  删除标签  -->
-
-                <!--<Grid
-                    x:Name="LabelDelGrid"
-                    Width="500"
-                    Height="300"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="Transparent"
-                    Visibility="Collapsed">
-                    <Border
-                        Margin="2"
-                        Background="{DynamicResource Window.InnerDialog.Background}"
-                        CornerRadius="5"
-                        Effect="{StaticResource NormalDropShadowEffect}" />
-
-                    <Border PreviewMouseLeftButtonUp="HideGrid" Style="{StaticResource GridCloseBorderStyle}">
-                        <Image
-                            Width="20"
-                            Height="20"
-                            Source="{Binding Themes, Mode=OneWay, ConverterParameter=close, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                    </Border>
-
-                    <TextBlock
-                        Height="auto"
-                        Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="{x:Static lang:Resources.Menu_LabelManagement}" />
-
-                    <Grid
-                        Margin="20,50,20,5"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-
-                        <ItemsControl
-                            x:Name="LabelDelItemsControl"
-                            Grid.Row="0"
-                            Height="auto"
-                            VerticalAlignment="Top"
-                            Background="Transparent"
-                            ItemsSource="{Binding CurrentMovieLabelList}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel
-                                        MaxWidth="400"
-                                        VerticalAlignment="Top"
-                                        Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <WrapPanel x:Name="LabelWrapPanel">
-                                        <ToggleButton
-                                            Margin="10"
-                                            Padding="5"
-                                            BorderThickness="0"
-                                            Content="{Binding}"
-                                            FontSize="15"
-                                            Foreground="{DynamicResource Window.Foreground}"
-                                            Style="{StaticResource ToggleButtonStyle1}" />
-                                    </WrapPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                        <StackPanel
-                            Grid.Row="1"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <Button
-                                Click="AddSingleLabel"
-                                Content="{x:Static lang:Resources.Add}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                            <Button
-                                Click="ClearSingleLabel"
-                                Content="{x:Static lang:Resources.Clear}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                            <Button
-                                Click="DeleteSingleLabel"
-                                Content="{x:Static lang:Resources.Delete}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                        </StackPanel>
-
-
-
-
-                    </Grid>
-
-
-                </Grid>-->
-
 
             </Grid>
             <Grid

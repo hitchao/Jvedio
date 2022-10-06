@@ -178,6 +178,7 @@ namespace Jvedio
 #if DEBUG
                     MessageCard.Error(ex.Message);
 #endif
+                    Logger.Error(ex);
                 });
             };
 
@@ -744,7 +745,7 @@ namespace Jvedio
 
         void ShowNotice()
         {
-            Task.Run(async () =>
+            Task.Run((Func<Task>)(async () =>
             {
                 string configName = "Notice";
 
@@ -811,13 +812,13 @@ namespace Jvedio
                         }
                     }
 
-                    Logger.Error("公告解析错误");
+                    Logger.Warning("公告解析错误");
                 }
                 else
                 {
                     Console.WriteLine("公告相同无需提示");
                 }
-            });
+            }));
         }
 
         public void SelectAll(object sender, RoutedEventArgs e)
@@ -987,7 +988,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex);
             }
 
             // 关闭所有窗口
@@ -1098,7 +1099,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                Logger.LogF(ex);
+                Logger.Error(ex);
             }
         }
 
@@ -2315,7 +2316,7 @@ namespace Jvedio
 
             int num = 0;
             int totalCount = vieModel.SelectedVideo.Count;
-            vieModel.SelectedVideo.ForEach(arg =>
+            vieModel.SelectedVideo.ForEach((Action<Video>)(arg =>
             {
                 if (arg.SubSectionList?.Count > 0)
                 {
@@ -2333,7 +2334,7 @@ namespace Jvedio
                             }
                             catch (Exception ex)
                             {
-                                Logger.LogF(ex);
+                                Logger.Error(ex);
                             }
                         }
                     }
@@ -2349,11 +2350,11 @@ namespace Jvedio
                         }
                         catch (Exception ex)
                         {
-                            Logger.LogF(ex);
+                            Logger.Error(ex);
                         }
                     }
                 }
-            });
+            }));
             msgCard.Info($"{Jvedio.Language.Resources.Message_DeleteToRecycleBin} {num}/{totalCount}");
 
             if (Properties.Settings.Default.DelInfoAfterDelFile)
@@ -3483,7 +3484,7 @@ namespace Jvedio
         private void ClassifyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             vieModel.SetClassify();
-            Console.WriteLine("ClassifyTabControl_SelectionChanged");
+
         }
 
         private void HideBeginScanGrid(object sender, RoutedEventArgs e)
@@ -3512,7 +3513,7 @@ namespace Jvedio
             }
             catch (ObjectDisposedException ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex);
             }
         }
 
@@ -3565,7 +3566,7 @@ namespace Jvedio
             }
             catch (ObjectDisposedException ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex);
             }
         }
 

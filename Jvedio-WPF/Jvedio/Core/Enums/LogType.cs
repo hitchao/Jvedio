@@ -2,8 +2,9 @@
 {
     public enum LogType
     {
-        Info,
-        Warning,
+        None,
         Error,
+        Warning,
+        Info,
     }
 }

@@ -869,7 +869,7 @@ namespace Jvedio
                 catch (Exception ex)
                 {
                     msgCard.Error(ex.Message);
-                    Logger.LogF(ex);
+                    Logger.Error(ex);
                 }
             }
 

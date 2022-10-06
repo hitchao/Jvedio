@@ -844,7 +844,7 @@ namespace Jvedio.Entity
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogF(ex);
+                    Logger.Error(ex);
                 }
                 finally
                 {

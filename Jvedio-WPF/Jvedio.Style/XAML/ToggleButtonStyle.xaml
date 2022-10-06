@@ -3,7 +3,7 @@
     <!--  ToggleButton  -->
 
     <Style x:Key="FlatToggleButtonStyle" TargetType="{x:Type ToggleButton}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+
         <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -54,60 +54,4 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ToggleButtonStyle2" TargetType="{x:Type ToggleButton}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Margin" Value="2,0" />
-        <Setter Property="FontSize" Value="15" />
-        <Setter Property="Padding" Value="5,1" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border
-                        x:Name="border"
-                        Padding="5,3"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="4"
-                        Opacity="0.7"
-                        SnapsToDevicePixels="true">
-                        <ContentPresenter
-                            x:Name="contentPresenter"
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Focusable="False"
-                            RecognizesAccessKey="True"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="#79DFD5" />
-                            <!--<Setter Property="BorderThickness"   Value="1"/>-->
-                            <Setter Property="Foreground" Value="#55D5C8" />
-                            <Setter TargetName="border" Property="Opacity" Value="1" />
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-                        <Trigger Property="Button.IsDefaulted" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Opacity" Value="1" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Opacity" Value="1" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="false" />
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 </ResourceDictionary>

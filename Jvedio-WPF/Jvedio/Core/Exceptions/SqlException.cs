@@ -7,7 +7,7 @@ namespace Jvedio.Core.Exceptions
     {
         public SqlException(string sql, Exception ex) : base($"执行 sql 命令错误")
         {
-            Logger.Error("执行 sql 命令错误：=> " + sql);
+            Logger.Warning("执行 sql 命令错误：=> " + sql);
             Logger.Error(ex);
         }
     }

@@ -50,7 +50,7 @@
 
 
         <Style x:Key="ExtraPic" TargetType="Image">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Width" Value="auto" />
             <Setter Property="Height" Value="{Binding ElementName=scrollViewer, Path=ActualHeight, Converter={StaticResource SmallerValueConverter}, ConverterParameter=20, Mode=OneWay}" />
@@ -63,7 +63,7 @@
         </Style>
 
         <Style x:Key="BigImage" TargetType="Image">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="10" />
@@ -81,7 +81,7 @@
             x:Key="ViewTextBox"
             BasedOn="{StaticResource ReadOnlyWrapTextBox}"
             TargetType="TextBox">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            
             <Setter Property="FontSize" Value="16" />
             <!--  删除字体  -->
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
@@ -94,7 +94,7 @@
 
         <Style x:Key="BaseTextBlock" TargetType="TextBlock">
             <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontFamily" Value="微软雅黑" />
             <!--  删除字体  -->
@@ -112,7 +112,7 @@
 
         <!--  如果 tag 为空则不显示  -->
         <Style x:Key="InfoStackPanel" TargetType="StackPanel">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            
             <Setter Property="Orientation" Value="Horizontal" />
             <Setter Property="Margin" Value="0,5,0,0" />
             <Style.Triggers>

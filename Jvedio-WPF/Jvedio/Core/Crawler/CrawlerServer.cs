@@ -1,6 +1,7 @@
 ﻿using DynamicData.Annotations;
 using Jvedio.CommonNet.Entity;
 using Jvedio.Core.Interfaces;
+using Jvedio.Core.Logs;
 using Newtonsoft.Json;
 using SuperUtils.Common;
 using System;
@@ -126,7 +127,7 @@ namespace Jvedio.Core.Crawler
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine(ex.Message);
+                Logger.Error(ex);
                 return false;
             }
         }

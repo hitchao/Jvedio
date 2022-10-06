@@ -142,7 +142,7 @@ namespace Jvedio.Core
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogF(ex);
+                    Logger.Error(ex);
                 }
 
                 // if the config file is not where it's supposed to be create a new one.

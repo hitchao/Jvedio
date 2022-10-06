@@ -1185,7 +1185,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                Logger.LogF(ex);
+                Logger.Error(ex);
             }
 
             // if (v != "")
@@ -1247,9 +1247,13 @@ namespace Jvedio
                 PluginMetaData pluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
                 if (pluginMetaData != null && pluginMetaData.Enabled) vieModel.PluginEnabled = true;
                 else vieModel.PluginEnabled = false;
-                ServersDataGrid.ItemsSource = null;
-                ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
-                ConfigManager.Settings.CrawlerSelectedIndex = idx;
+                if (vieModel.CrawlerServers.ContainsKey(pluginID))
+                {
+                    ServersDataGrid.ItemsSource = null;
+                    ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
+                    ConfigManager.Settings.CrawlerSelectedIndex = idx;
+                }
+
             }
         }
 
@@ -1311,7 +1315,7 @@ namespace Jvedio
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logger.Error(ex);
                 }
             }
 

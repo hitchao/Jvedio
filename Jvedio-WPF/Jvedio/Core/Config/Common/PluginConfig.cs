@@ -26,6 +26,7 @@ namespace Jvedio.Core.Config
         }
 
         public string PluginList { get; set; }
+        public string DeleteList { get; set; }
 
         public void FetchPluginMetaData(Action onRefresh = null)
         {

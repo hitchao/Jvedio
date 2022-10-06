@@ -315,7 +315,7 @@ namespace Jvedio.Entity
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("解析 NFO 失败 => " + path);
+                    Logger.Warning("解析 NFO 失败 => " + path);
                     Logger.Error(ex);
                     continue;
                 }

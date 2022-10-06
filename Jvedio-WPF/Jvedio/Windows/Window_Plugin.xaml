@@ -21,7 +21,6 @@
     ContentRendered="BaseWindow_ContentRendered"
     Foreground="{DynamicResource Window.Sub.Foreground}"
     ResizeMode="CanResize"
-    SizeChanged="BaseWindow_SizeChanged"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -32,8 +31,6 @@
             BasedOn="{StaticResource BaseTogglePanel}"
             TargetType="{x:Type super:TogglePanel}">
             <Setter Property="Padding" Value="0,5" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="FontSize" Value="15" />
             <Setter Property="IsExpanded" Value="True" />
             <Setter Property="LineWidth" Value="0" />
@@ -257,179 +254,174 @@
                 ShowSearchButton="True"
                 Style="{StaticResource BaseSearchTextBox}" />
 
-
-            <StackPanel
-                Grid.Row="2"
-                VerticalAlignment="Top"
-                Orientation="Vertical">
-
-                <super:TogglePanel
-                    Name="freshPlugin"
-                    Header="未安装"
-                    Style="{StaticResource TogglePanelStyle}">
-
-                    <ListBox
-                        Name="freshViewListBox"
-                        VerticalAlignment="Stretch"
-                        d:ItemsSource="{d:SampleData ItemCount=3}"
-                        Background="Transparent"
-                        ItemContainerStyle="{StaticResource NormalListBoxItem}"
-                        ItemsSource="{Binding CurrentFreshPlugins}"
-                        MouseLeftButtonUp="freshViewListBox_MouseLeftButtonUp"
-                        ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        Style="{StaticResource NormalListBox}">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="64" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image
-                                        Grid.Column="0"
-                                        Height="64"
-                                        Margin="5">
-                                        <Image.Source>
-                                            <Binding Path="ImageUrl">
-                                                <Binding.TargetNullValue>
-                                                    <ImageSource>/Resources/Picture/plugin.png</ImageSource>
-                                                </Binding.TargetNullValue>
-                                            </Binding>
-                                        </Image.Source>
-                                    </Image>
-                                    <StackPanel
-                                        Grid.Column="1"
-                                        Margin="5,0"
-                                        Orientation="Vertical">
-                                        <TextBlock
-                                            Margin="0"
-                                            Padding="2"
-                                            FontWeight="Bold"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding PluginName}"
-                                            TextAlignment="Left" />
-                                        <TextBlock
-                                            Margin="0"
-                                            Padding="2"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding ReleaseNotes.Desc}"
-                                            TextAlignment="Left" />
-                                        <TextBlock
-                                            Margin="0"
-                                            Padding="2"
-                                            FontStyle="Italic"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding ReleaseNotes.Date}"
-                                            TextAlignment="Left" />
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+            <ScrollViewer Grid.Row="2" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <StackPanel Orientation="Vertical">
+                    <super:TogglePanel
+                        Name="freshPlugin"
+                        Header="未安装"
+                        Style="{StaticResource TogglePanelStyle}">
+                        <ListBox
+                            Name="freshViewListBox"
+                            d:ItemsSource="{d:SampleData ItemCount=3}"
+                            Background="Transparent"
+                            ItemContainerStyle="{StaticResource NormalListBoxItem}"
+                            ItemsSource="{Binding CurrentFreshPlugins}"
+                            MouseLeftButtonUp="freshViewListBox_MouseLeftButtonUp">
+                            <ListBox.Style>
+                                <Style BasedOn="{StaticResource NormalListBox}" TargetType="ListBox">
+                                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                    <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+                                </Style>
+                            </ListBox.Style>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="64" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image
+                                            Grid.Column="0"
+                                            Height="64"
+                                            Margin="5">
+                                            <Image.Source>
+                                                <Binding Path="ImageUrl">
+                                                    <Binding.TargetNullValue>
+                                                        <ImageSource>/Resources/Picture/plugin.png</ImageSource>
+                                                    </Binding.TargetNullValue>
+                                                </Binding>
+                                            </Image.Source>
+                                        </Image>
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            Margin="5,0"
+                                            Orientation="Vertical">
+                                            <TextBlock
+                                                Margin="0"
+                                                Padding="2"
+                                                FontWeight="Bold"
+                                                Style="{StaticResource BaseTextBlock}"
+                                                Text="{Binding PluginName}"
+                                                TextAlignment="Left" />
+                                            <TextBlock
+                                                Margin="0"
+                                                Padding="2"
+                                                Style="{StaticResource BaseTextBlock}"
+                                                Text="{Binding ReleaseNotes.Desc}"
+                                                TextAlignment="Left" />
+                                            <TextBlock
+                                                Margin="0"
+                                                Padding="2"
+                                                FontStyle="Italic"
+                                                Style="{StaticResource BaseTextBlock}"
+                                                Text="{Binding ReleaseNotes.Date}"
+                                                TextAlignment="Left" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
 
-                </super:TogglePanel>
-                <super:TogglePanel
-                    Name="installedPlugin"
-                    Header="已安装"
-                    Style="{StaticResource TogglePanelStyle}">
+                    </super:TogglePanel>
+                    <super:TogglePanel
+                        Name="installedPlugin"
+                        Header="已安装"
+                        Style="{StaticResource TogglePanelStyle}">
 
-                    <ListBox
-                        Name="pluginViewListBox"
-                        VerticalAlignment="Stretch"
-                        d:ItemsSource="{d:SampleData ItemCount=3}"
-                        Background="Transparent"
-                        ItemContainerStyle="{StaticResource NormalListBoxItem}"
-                        ItemsSource="{Binding CurrentInstalledPlugins}"
-                        MouseLeftButtonUp="pluginViewListBox_MouseLeftButtonUp"
-                        ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        Style="{StaticResource NormalListBox}">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Width="300">
+                        <ListBox
+                            Name="pluginViewListBox"
+                            d:ItemsSource="{d:SampleData ItemCount=3}"
+                            Background="Transparent"
+                            ItemContainerStyle="{StaticResource NormalListBoxItem}"
+                            ItemsSource="{Binding CurrentInstalledPlugins}"
+                            MouseLeftButtonUp="pluginViewListBox_MouseLeftButtonUp"
+                            Style="{StaticResource NormalListBox}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Width="300">
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="64" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.Style>
-                                        <Style TargetType="Grid">
-                                            <Setter Property="Opacity" Value="1" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Enabled}" Value="false">
-                                                    <Setter Property="Opacity" Value="0.3" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Grid.Style>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="64" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.Style>
+                                            <Style TargetType="Grid">
+                                                <Setter Property="Opacity" Value="1" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Enabled}" Value="false">
+                                                        <Setter Property="Opacity" Value="0.3" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Style>
 
-                                    <Border
-                                        Grid.Column="0"
-                                        Width="auto"
-                                        Margin="4"
-                                        Padding="5"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Bottom"
-                                        Panel.ZIndex="5"
-                                        Background="Gold"
-                                        CornerRadius="5"
-                                        Visibility="{Binding HasNewVersion, Converter={StaticResource bool2VisibilityConverter}}">
-                                        <TextBlock
-                                            FontSize="10"
-                                            Foreground="{DynamicResource Window.Background}"
-                                            Text="可升级" />
-                                    </Border>
-                                    <Image
-                                        Grid.Column="0"
-                                        Height="64"
-                                        Margin="5">
-                                        <Image.Source>
-                                            <Binding Path="ImagePath">
-                                                <Binding.TargetNullValue>
-                                                    <ImageSource>/Resources/Picture/plugin.png</ImageSource>
-                                                </Binding.TargetNullValue>
-                                            </Binding>
-                                        </Image.Source>
-                                    </Image>
+                                        <Border
+                                            Grid.Column="0"
+                                            Width="auto"
+                                            Margin="4"
+                                            Padding="5"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            Panel.ZIndex="5"
+                                            Background="Gold"
+                                            CornerRadius="5"
+                                            Visibility="{Binding HasNewVersion, Converter={StaticResource bool2VisibilityConverter}}">
+                                            <TextBlock
+                                                FontSize="10"
+                                                Foreground="{DynamicResource Window.Background}"
+                                                Text="可升级" />
+                                        </Border>
+                                        <Image
+                                            Grid.Column="0"
+                                            Height="64"
+                                            Margin="5">
+                                            <Image.Source>
+                                                <Binding Path="ImagePath">
+                                                    <Binding.TargetNullValue>
+                                                        <ImageSource>/Resources/Picture/plugin.png</ImageSource>
+                                                    </Binding.TargetNullValue>
+                                                </Binding>
+                                            </Image.Source>
+                                        </Image>
 
-                                    <StackPanel
-                                        Grid.Column="1"
-                                        Margin="5,0"
-                                        Orientation="Vertical">
-                                        <TextBlock
-                                            Margin="0"
-                                            Padding="2"
-                                            FontWeight="Bold"
-                                            Style="{StaticResource NoWrapTextBlock}"
-                                            Text="{Binding PluginName}"
-                                            TextAlignment="Left" />
-                                        <TextBlock
-                                            Margin="0"
-                                            Padding="2"
-                                            Style="{StaticResource NoWrapTextBlock}"
-                                            Text="{Binding ReleaseNotes.Desc}"
-                                            TextAlignment="Left" />
-                                        <TextBlock
-                                            Margin="0"
-                                            Padding="2"
-                                            FontStyle="Italic"
-                                            Style="{StaticResource NoWrapTextBlock}"
-                                            Text="{Binding ReleaseNotes.Date}"
-                                            TextAlignment="Left" />
-                                    </StackPanel>
-                                    <!--<Border
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            Margin="5,0"
+                                            Orientation="Vertical">
+                                            <TextBlock
+                                                Margin="0"
+                                                Padding="2"
+                                                FontWeight="Bold"
+                                                Style="{StaticResource NoWrapTextBlock}"
+                                                Text="{Binding PluginName}"
+                                                TextAlignment="Left" />
+                                            <TextBlock
+                                                Margin="0"
+                                                Padding="2"
+                                                Style="{StaticResource NoWrapTextBlock}"
+                                                Text="{Binding ReleaseNotes.Desc}"
+                                                TextAlignment="Left" />
+                                            <TextBlock
+                                                Margin="0"
+                                                Padding="2"
+                                                FontStyle="Italic"
+                                                Style="{StaticResource NoWrapTextBlock}"
+                                                Text="{Binding ReleaseNotes.Date}"
+                                                TextAlignment="Left" />
+                                        </StackPanel>
+                                        <!--<Border
                                                     Grid.Column="1"
                                                     Margin="2"
                                                     Padding="5,2"
@@ -449,296 +441,315 @@
                                                     </Border.Style>
                                                     <TextBlock Text="未启用" />
                                                 </Border>-->
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
 
-                </super:TogglePanel>
-            </StackPanel>
+                    </super:TogglePanel>
 
+                </StackPanel>
+            </ScrollViewer>
 
         </Grid>
 
-        <Grid
-            x:Name="pluginDetailGrid"
-            Grid.Column="1"
-            Visibility="Visible">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="1" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid
-                Grid.Row="0"
-                Margin="50,50"
-                HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="128" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Height="128">
-                    <Image.Source>
-                        <Binding Path="CurrentPlugin.ImageUrl">
-                            <Binding.TargetNullValue>
-                                <ImageSource>/Resources/Picture/plugin.png</ImageSource>
-                            </Binding.TargetNullValue>
-                        </Binding>
-                    </Image.Source>
-                    <!--<Image.Style>
-                                    <Style TargetType="Image">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="false">
-                                                <Setter Property="Source" Value="{Binding CurrentPlugin.ImageUrl}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="true">
-                                                <Setter Property="Source" Value="{Binding CurrentPlugin.Image, Converter={StaticResource Base64ImageConverter}}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>-->
-                </Image>
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="30,0"
-                    VerticalAlignment="Top"
-                    Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
+        <ScrollViewer Grid.Column="1" Margin="0,10">
+
+
+            <Grid x:Name="pluginDetailGrid" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="1" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid
+                    Grid.Row="0"
+                    Margin="50,50"
+                    HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="128" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Height="128">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="false">
+                                        <Setter Property="Source">
+                                            <Setter.Value>
+                                                <Binding Path="CurrentPlugin.ImageUrl">
+                                                    <Binding.TargetNullValue>
+                                                        <ImageSource>/Resources/Picture/plugin.png</ImageSource>
+                                                    </Binding.TargetNullValue>
+                                                </Binding>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="true">
+                                        <Setter Property="Source">
+                                            <Setter.Value>
+                                                <Binding Path="CurrentPlugin.ImagePath">
+                                                    <Binding.TargetNullValue>
+                                                        <ImageSource>/Resources/Picture/plugin.png</ImageSource>
+                                                    </Binding.TargetNullValue>
+                                                </Binding>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="30,0"
+                        VerticalAlignment="Top"
+                        Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0"
+                                Padding="2"
+                                FontSize="30"
+                                FontWeight="Bold"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="{Binding CurrentPlugin.PluginName}"
+                                TextAlignment="Left" />
+                            <Border
+                                Margin="10,0"
+                                Padding="0"
+                                VerticalAlignment="Top"
+                                Background="{DynamicResource Window.Side.Background}"
+                                CornerRadius="5">
+                                <TextBlock
+                                    FontSize="18"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding CurrentPlugin.ReleaseNotes.Version, StringFormat=v{0}}" />
+                            </Border>
+
+                        </StackPanel>
+                        <StackPanel Margin="0,5" Orientation="Horizontal">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding CurrentPlugin.PluginType}" Value="Theme">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+
+                            <super:Switch
+                                Height="20"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Click="SavePluginEnabled"
+                                IsChecked="{Binding CurrentPlugin.Enabled, Mode=TwoWay}" />
+                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="启用" />
+
+                        </StackPanel>
                         <TextBlock
                             Margin="0"
                             Padding="2"
-                            FontSize="30"
-                            FontWeight="Bold"
                             Style="{StaticResource BaseTextBlock}"
-                            Text="{Binding CurrentPlugin.PluginName}"
+                            Text="{Binding CurrentPlugin.ReleaseNotes.Desc}"
                             TextAlignment="Left" />
-                        <Border
-                            Margin="10,0"
-                            Padding="0"
-                            VerticalAlignment="Top"
-                            Background="{DynamicResource Window.Side.Background}"
-                            CornerRadius="5">
-                            <TextBlock
-                                FontSize="18"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="{Binding CurrentPlugin.ReleaseNotes.Version, StringFormat=v{0}}" />
-                        </Border>
+
+                        <TextBlock
+                            Margin="5"
+                            Padding="2"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="作者："
+                            TextAlignment="Left" />
+
+                        <ItemsControl ItemsSource="{Binding CurrentPlugin.Authors}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        MaxWidth="250"
+                                        Margin="2"
+                                        Padding="0"
+                                        MouseLeftButtonUp="ShowAuthorInfo"
+                                        Style="{StaticResource HoverBorder}"
+                                        Tag="{Binding Name}">
+                                        <TextBlock
+                                            Foreground="{DynamicResource Common.HighLight.BorderBrush}"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding Name}"
+                                            TextDecorations="Underline"
+                                            TextTrimming="WordEllipsis"
+                                            TextWrapping="NoWrap" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Popup
+                            x:Name="authorInfoPopup"
+                            MaxHeight="400"
+                            AllowsTransparency="True"
+                            HorizontalOffset="-100"
+                            Placement="Bottom"
+                            PopupAnimation="Fade"
+                            StaysOpen="False"
+                            VerticalOffset="0">
+                            <Grid Margin="5">
+                                <Border
+                                    Margin="5"
+                                    Background="{DynamicResource Menu.Background}"
+                                    CornerRadius="0 0 5 5"
+                                    Effect="{StaticResource PopupDropShadowEffect}" />
+                                <ScrollViewer
+                                    Margin="10"
+                                    HorizontalScrollBarVisibility="Hidden"
+                                    VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl
+                                        Name="authorInfoItemsControl"
+                                        Margin="5,5,5,5"
+                                        Background="Transparent"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="5" Orientation="Horizontal">
+                                                    <Border
+                                                        Width="100"
+                                                        Background="{DynamicResource Window.Title.Background}"
+                                                        CornerRadius="5">
+                                                        <TextBlock
+                                                            Width="100"
+                                                            Style="{StaticResource NoWrapTextBlock}"
+                                                            Text="{Binding Key}" />
+
+                                                    </Border>
+                                                    <TextBlock
+                                                        MaxWidth="400"
+                                                        Cursor="Hand"
+                                                        Foreground="{DynamicResource Common.HighLight.BorderBrush}"
+                                                        MouseLeftButtonUp="OpenAuthorUrl"
+                                                        Style="{StaticResource NoWrapTextBlock}"
+                                                        Text="{Binding Value}"
+                                                        TextDecorations="Underline" />
+                                                </StackPanel>
+
+
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                            </Grid>
+                        </Popup>
+
+
+                        <StackPanel Margin="5,10" Orientation="Horizontal">
+
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CurrentPlugin.HasNewVersion}" Value="true">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="false">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Button
+                                MinWidth="50"
+                                HorizontalAlignment="Left"
+                                Click="DownloadPlugin"
+                                Content="{x:Static lang:Resources.Get}"
+                                Style="{StaticResource FillButton}" />
+                            <Border
+                                Margin="10,0"
+                                Padding="0"
+                                VerticalAlignment="Top"
+                                Background="{DynamicResource Window.Side.Background}"
+                                CornerRadius="5"
+                                Visibility="{Binding CurrentPlugin.HasNewVersion, Converter={StaticResource bool2VisibilityConverter}}">
+                                <TextBlock
+                                    FontSize="18"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding CurrentPlugin.NewVersion, StringFormat=v{0}}" />
+                            </Border>
+                        </StackPanel>
+                        <Button
+                            Margin="5,10"
+                            HorizontalAlignment="Left"
+                            Click="DeletePlugin"
+                            Content="删除"
+                            Style="{StaticResource ButtonDanger}"
+                            Visibility="{Binding CurrentPlugin.Installed, Converter={StaticResource bool2VisibilityConverter}}" />
 
                     </StackPanel>
-                    <StackPanel
-                        Margin="0,5"
-                        Orientation="Horizontal"
-                        Visibility="{Binding CurrentPlugin.Installed, Converter={StaticResource bool2VisibilityConverter}}">
+                </Grid>
+                <GridSplitter
+                    Grid.Row="1"
+                    Margin="50,0"
+                    HorizontalAlignment="Stretch"
+                    Panel.ZIndex="10"
+                    Background="{DynamicResource Control.Disabled.Background}" />
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <RichTextBox
+                        Name="richTextBox"
+                        Grid.Column="0"
+                        Width="auto"
+                        Margin="70,10,0,0"
+                        HorizontalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        CaretBrush="{DynamicResource Window.Foreground}"
+                        ContextMenu="{StaticResource CopyContextMenu}"
+                        Foreground="{DynamicResource Window.Foreground}"
+                        IsReadOnly="True"
+                        Style="{x:Null}" />
 
-                        <super:Switch
-                            Height="20"
-                            Background="{DynamicResource Window.Title.Background}"
-                            Click="SavePluginEnabled"
-                            IsChecked="{Binding CurrentPlugin.Enabled, Mode=TwoWay}" />
-                        <TextBlock Style="{StaticResource BaseTextBlock}" Text="启用" />
-
-                    </StackPanel>
-                    <TextBlock
-                        Margin="0"
-                        Padding="2"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="{Binding CurrentPlugin.ReleaseNotes.Desc}"
-                        TextAlignment="Left" />
-
-                    <TextBlock
-                        Margin="5"
-                        Padding="2"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="作者："
-                        TextAlignment="Left" />
-
-                    <ItemsControl ItemsSource="{Binding CurrentPlugin.Authors}">
+                    <ItemsControl
+                        Grid.Column="1"
+                        Width="100"
+                        Margin="50,10"
+                        ItemsSource="{Binding CurrentPlugin.ReleaseNotes.KeyWords}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel />
+                                <StackPanel Orientation="Vertical" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border
-                                    MaxWidth="250"
-                                    Margin="2"
-                                    Padding="0"
-                                    MouseLeftButtonUp="ShowAuthorInfo"
-                                    Style="{StaticResource HoverBorder}"
-                                    Tag="{Binding Name}">
+                                <StackPanel Orientation="Vertical">
                                     <TextBlock
-                                        Foreground="{DynamicResource Common.HighLight.BorderBrush}"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="{Binding Name}"
-                                        TextDecorations="Underline"
-                                        TextTrimming="WordEllipsis"
-                                        TextWrapping="NoWrap" />
-                                </Border>
+                                        HorizontalAlignment="Left"
+                                        FontWeight="Bold"
+                                        Style="{StaticResource NoWrapTextBlock}"
+                                        Text="{Binding Path=Key}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        FontSize="12"
+                                        Style="{StaticResource NoWrapTextBlock}"
+                                        Text="{Binding Path=Value}" />
+                                </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
-                    <Popup
-                        x:Name="authorInfoPopup"
-                        MaxHeight="400"
-                        AllowsTransparency="True"
-                        HorizontalOffset="-100"
-                        Placement="Bottom"
-                        PopupAnimation="Fade"
-                        StaysOpen="False"
-                        VerticalOffset="0">
-                        <Grid Margin="5">
-                            <Border
-                                Margin="5"
-                                Background="{DynamicResource Menu.Background}"
-                                CornerRadius="0 0 5 5"
-                                Effect="{StaticResource PopupDropShadowEffect}" />
-                            <ScrollViewer
-                                Margin="10"
-                                HorizontalScrollBarVisibility="Hidden"
-                                VerticalScrollBarVisibility="Auto">
-                                <ItemsControl
-                                    Name="authorInfoItemsControl"
-                                    Margin="5,5,5,5"
-                                    Background="Transparent"
-                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Margin="5" Orientation="Horizontal">
-                                                <Border
-                                                    Width="100"
-                                                    Background="{DynamicResource Window.Title.Background}"
-                                                    CornerRadius="5">
-                                                    <TextBlock
-                                                        Width="100"
-                                                        Style="{StaticResource NoWrapTextBlock}"
-                                                        Text="{Binding Key}" />
-
-                                                </Border>
-                                                <TextBlock
-                                                    MaxWidth="400"
-                                                    Cursor="Hand"
-                                                    Foreground="{DynamicResource Common.HighLight.BorderBrush}"
-                                                    MouseLeftButtonUp="OpenAuthorUrl"
-                                                    Style="{StaticResource NoWrapTextBlock}"
-                                                    Text="{Binding Value}"
-                                                    TextDecorations="Underline" />
-                                            </StackPanel>
-
-
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-
-                        </Grid>
-                    </Popup>
-
-
-                    <StackPanel Margin="5,10" Orientation="Horizontal">
-
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentPlugin.HasNewVersion}" Value="true">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding CurrentPlugin.Installed}" Value="false">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                        <Button
-                            MinWidth="50"
-                            HorizontalAlignment="Left"
-                            Click="DownloadPlugin"
-                            Content="{x:Static lang:Resources.Get}"
-                            Style="{StaticResource FillButton}" />
-                        <Border
-                            Margin="10,0"
-                            Padding="0"
-                            VerticalAlignment="Top"
-                            Background="{DynamicResource Window.Side.Background}"
-                            CornerRadius="5"
-                            Visibility="{Binding CurrentPlugin.HasNewVersion, Converter={StaticResource bool2VisibilityConverter}}">
-                            <TextBlock
-                                FontSize="18"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="{Binding CurrentPlugin.NewVersion, StringFormat=v{0}}" />
-                        </Border>
-                    </StackPanel>
-                    <Button
-                        Margin="5,10"
-                        HorizontalAlignment="Left"
-                        Click="DeletePlugin"
-                        Content="删除"
-                        Style="{StaticResource ButtonDanger}"
-                        Visibility="{Binding CurrentPlugin.Installed, Converter={StaticResource bool2VisibilityConverter}}" />
-
-                </StackPanel>
-            </Grid>
-            <GridSplitter
-                Grid.Row="1"
-                Margin="50,0"
-                HorizontalAlignment="Stretch"
-                Panel.ZIndex="10"
-                Background="{DynamicResource Control.Disabled.Background}" />
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <RichTextBox
-                    Name="richTextBox"
-                    Grid.Column="0"
-                    Width="auto"
-                    Margin="70,10,0,0"
-                    HorizontalAlignment="Center"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    CaretBrush="{DynamicResource Window.Foreground}"
-                    ContextMenu="{StaticResource CopyContextMenu}"
-                    Foreground="{DynamicResource Window.Foreground}"
-                    IsReadOnly="True"
-                    Style="{x:Null}" />
-
-                <ItemsControl
-                    Grid.Column="1"
-                    Width="100"
-                    Margin="50,10"
-                    ItemsSource="{Binding CurrentPlugin.ReleaseNotes.KeyWords}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontWeight="Bold"
-                                    Style="{StaticResource NoWrapTextBlock}"
-                                    Text="{Binding Path=Key}" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="12"
-                                    Style="{StaticResource NoWrapTextBlock}"
-                                    Text="{Binding Path=Value}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <!--<StackPanel
+                    <!--<StackPanel
                                 Grid.Column="1"
                                 Margin="50,10"
                                 Orientation="Vertical">
@@ -783,9 +794,9 @@
                                     Style="{StaticResource BaseTextBlock}"
                                     Text="{Binding CurrentPlugin.PublishDate}" />
                             </StackPanel>-->
+                </Grid>
             </Grid>
-        </Grid>
-
+        </ScrollViewer>
 
 
 

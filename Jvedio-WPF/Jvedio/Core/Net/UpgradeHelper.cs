@@ -115,7 +115,7 @@ namespace Jvedio.Core.Net
             catch (Exception ex)
             {
                 onError?.Invoke(null, new MessageCallBackEventArgs(ex.Message));
-                Logger.Error(ex.Message);
+                Logger.Warning(ex.Message);
             }
 
             return toDownload;
@@ -213,7 +213,7 @@ namespace Jvedio.Core.Net
         public static void Cancel()
         {
             Canceld = true;
-            Logger.Error("已取消下载任务");
+            Logger.Warning("已取消下载任务");
         }
     }
 }

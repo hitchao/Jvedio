@@ -51,7 +51,7 @@ namespace Jvedio.Core.Scan
             return exeList[0];
         }
 
-        public override void doWrok()
+        public override void DoWork()
         {
             Task.Run(() =>
             {
@@ -69,7 +69,7 @@ namespace Jvedio.Core.Scan
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logger.Warning(ex.Message);
                     return;
                 }
 
@@ -83,7 +83,7 @@ namespace Jvedio.Core.Scan
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logger.Warning(ex.Message);
                     return;
                 }
 
@@ -176,7 +176,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.LogD(ex);
+                Logger.Error(ex);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
@@ -198,7 +198,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.LogD(ex);
+                Logger.Error(ex);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally

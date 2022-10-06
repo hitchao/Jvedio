@@ -49,12 +49,12 @@ namespace Jvedio.ViewModel
 
             RefreshCurrentPlugins();
 
-            // if (AllFreshPlugins != null)
-            // {
+            //if (AllFreshPlugins != null)
+            //{
             //    CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
             //    foreach (var item in getSortResult(AllFreshPlugins))
             //        CurrentFreshPlugins.Add(item);
-            // }
+            //}
         }
 
         public void RefreshCurrentPlugins()
@@ -64,20 +64,20 @@ namespace Jvedio.ViewModel
                 CurrentInstalledPlugins.Add(item);
 
             CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
-            foreach (var item in GetSortResult(AllFreshPlugins))
+            foreach (var item in GetSortResult(AllFreshPlugins, false))
                 CurrentFreshPlugins.Add(item);
         }
 
         public int SortEnabledIndex = -1;           // 0 启用 1 未启用
         public PluginType SortPluginType = PluginType.None;
 
-        public List<PluginMetaData> GetSortResult(IEnumerable<PluginMetaData> pluginMetaDatas)
+        public List<PluginMetaData> GetSortResult(IEnumerable<PluginMetaData> pluginMetaDatas, bool enabledSort = true)
         {
             // 筛选
             IEnumerable<PluginMetaData> list = pluginMetaDatas;
             if (list == null || list.Count() == 0) return new List<PluginMetaData>();
 
-            if (SortEnabledIndex >= 0)
+            if (SortEnabledIndex >= 0 && enabledSort)
             {
                 bool enabled = SortEnabledIndex == 0;
                 list = list.Where(arg => arg.Enabled == enabled);

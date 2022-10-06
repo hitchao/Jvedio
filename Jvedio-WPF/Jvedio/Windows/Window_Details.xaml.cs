@@ -544,7 +544,7 @@ namespace Jvedio
                         }
                         catch (Exception ex)
                         {
-                            Logger.LogF(ex);
+                            Logger.Error(ex);
                         }
                     }
                 }
@@ -560,7 +560,7 @@ namespace Jvedio
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogF(ex);
+                        Logger.Error(ex);
                     }
                 }
             }

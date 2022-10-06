@@ -154,22 +154,12 @@
             Margin="5"
             Background="Transparent"
             BorderBrush="{DynamicResource Window.Foreground}"
+            ItemContainerStyle="{StaticResource FlatTabItem}"
             SelectedIndex="{Binding TabControlSelectedIndex, Mode=TwoWay, FallbackValue=0}"
-            Style="{DynamicResource BaseHcTabControlStyle}"
+            Style="{StaticResource FlatTabControl}"
             TabStripPlacement="Top">
-            <!--<TabControl
-            x:Name="TabControl"
-            Grid.Row="0"
-            Margin="5"
-            Background="Transparent"
-            BorderBrush="{DynamicResource Window.Foreground}"
-            SelectedIndex="{Binding TabControlSelectedIndex, Mode=TwoWay}"
-            Style="{DynamicResource BaseHcTabControlStyle}"
-            TabStripPlacement="Top">-->
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.Basic}">
+
+            <TabItem Header="{x:Static lang:Resources.Basic}">
                 <StackPanel>
                     <WrapPanel Margin="5" Orientation="Vertical">
                         <CheckBox Content="{x:Static lang:Resources.CloseToBar}" IsChecked="{Binding CloseToTaskBar, Mode=TwoWay}" />
@@ -226,10 +216,7 @@
                             PreviewKeyUp="hotkeyTextBox_PreviewKeyUp"
                             Style="{StaticResource BaseHcTextBox}"
                             Text="{Binding HotKey_String, Mode=OneWay, Source={x:Static p:Settings.Default}}" />
-                        <Button
-                            Click="ApplyHotKey"
-                            Content="{x:Static lang:Resources.Apply}"
-                            Style="{StaticResource ButtonStyleFill}" />
+                        <Button Click="ApplyHotKey" Content="{x:Static lang:Resources.Apply}" />
                     </StackPanel>
 
 
@@ -242,10 +229,7 @@
                             ShowClearButton="True"
                             Style="{StaticResource BaseHcTextBox}"
                             Text="{Binding VedioPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <Button
-                            Click="SetVideoPlayerPath"
-                            Content="{x:Static lang:Resources.Choose}"
-                            Style="{StaticResource ButtonStyleFill}" />
+                        <Button Click="SetVideoPlayerPath" Content="{x:Static lang:Resources.Choose}" />
                     </StackPanel>
 
 
@@ -366,10 +350,7 @@
 
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="图像">
+            <TabItem Header="图像">
 
                 <StackPanel Margin="20,5">
                     <CheckBox Content="无封面时将已截取的图片作为封面" IsChecked="{Binding AutoGenScreenShot}" />
@@ -557,10 +538,7 @@
                 </StackPanel>
 
             </TabItem>
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="扫描与导入">
+            <TabItem Background="Transparent" Header="扫描与导入">
                 <StackPanel>
 
                     <StackPanel
@@ -773,9 +751,12 @@
                                 VerticalAlignment="Top"
                                 d:ItemsSource="{d:SampleData ItemCount=5}"
                                 AllowDrop="True"
+                                Background="Transparent"
                                 DragOver="PathListBox_DragOver"
                                 Drop="PathListBox_Drop"
-                                ItemsSource="{Binding ScanPath}">
+                                Foreground="{DynamicResource Window.Foreground}"
+                                ItemsSource="{Binding ScanPath}"
+                                Style="{StaticResource FolderListBox}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel Orientation="Vertical" />
@@ -867,10 +848,7 @@
 
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.SyncInfo}">
+            <TabItem Header="{x:Static lang:Resources.SyncInfo}">
                 <StackPanel>
                     <Border
                         Margin="10"
@@ -904,8 +882,7 @@
                                     <Button
                                         HorizontalAlignment="Left"
                                         Click="SelectNfoPath"
-                                        Content="{x:Static lang:Resources.ChooseDir}"
-                                        Style="{StaticResource ButtonStyleFill}" />
+                                        Content="{x:Static lang:Resources.ChooseDir}" />
                                     <CheckBox Content="{x:Static lang:Resources.overwrite}" IsChecked="{Binding OverriteNFO, Mode=TwoWay}" />
 
                                 </StackPanel>
@@ -1639,10 +1616,7 @@
 
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.Show}">
+            <TabItem Header="{x:Static lang:Resources.Show}">
                 <StackPanel>
 
                     <StackPanel
@@ -1730,18 +1704,11 @@
 
                 </StackPanel>
             </TabItem>
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="代理"
-                Visibility="Collapsed">
+            <TabItem Header="代理" Visibility="Collapsed">
                 <StackPanel />
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.Translate}">
+            <TabItem Header="{x:Static lang:Resources.Translate}">
                 <StackPanel IsEnabled="False">
                     <StackPanel IsEnabled="True" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
@@ -1749,14 +1716,8 @@
                                 Margin="20,10"
                                 Content="{x:Static lang:Resources.Youdao}"
                                 IsChecked="{Binding Enable_TL_YOUDAO, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button
-                                Click="TestTranslate"
-                                Content="{x:Static lang:Resources.Test}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                            <Button
-                                Click="LoadTranslate"
-                                Content="{x:Static lang:Resources.LoadLocalKey}"
-                                Style="{StaticResource ButtonStyleFill}" />
+                            <Button Click="TestTranslate" Content="{x:Static lang:Resources.Test}" />
+                            <Button Click="LoadTranslate" Content="{x:Static lang:Resources.LoadLocalKey}" />
                             <!--  TODO WIN7  -->
                             <fa:ImageAwesome
                                 Height="20"
@@ -1792,10 +1753,7 @@
                                 Margin="20,10"
                                 Content="百度翻译"
                                 IsChecked="{Binding Enable_TL_BAIDU, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button
-                                Click="TestTranslate"
-                                Content="{x:Static lang:Resources.Test}"
-                                Style="{StaticResource ButtonStyleFill}" />
+                            <Button Click="TestTranslate" Content="{x:Static lang:Resources.Test}" />
                             <Image
                                 Width="32"
                                 Height="32"
@@ -1818,10 +1776,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.AI}">
+            <TabItem Header="{x:Static lang:Resources.AI}">
                 <StackPanel IsEnabled="False">
                     <StackPanel IsEnabled="True" Orientation="Vertical">
 
@@ -1830,14 +1785,8 @@
                                 Margin="20,10"
                                 Content="{x:Static lang:Resources.BaiduFaceRecognition}"
                                 IsChecked="{Binding Enable_BaiduAI, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button
-                                Click="TestAI"
-                                Content="{x:Static lang:Resources.Test}"
-                                Style="{StaticResource ButtonStyleFill}" />
-                            <Button
-                                Click="LoadAI"
-                                Content="{x:Static lang:Resources.LoadLocalKey}"
-                                Style="{StaticResource ButtonStyleFill}" />
+                            <Button Click="TestAI" Content="{x:Static lang:Resources.Test}" />
+                            <Button Click="LoadAI" Content="{x:Static lang:Resources.LoadLocalKey}" />
                             <fa:ImageAwesome
                                 Height="20"
                                 Margin="5,0"
@@ -1869,10 +1818,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.VedioProcessing}">
+            <TabItem Header="{x:Static lang:Resources.VedioProcessing}">
                 <StackPanel>
                     <CheckBox
                         Margin="20,5"
@@ -1905,8 +1851,7 @@
                                 <Button
                                     Margin="10,5"
                                     Click="SetFFMPEGPath"
-                                    Content="{x:Static lang:Resources.ChooseFile}"
-                                    Style="{StaticResource ButtonStyleFill}" />
+                                    Content="{x:Static lang:Resources.ChooseFile}" />
 
 
                                 <TextBlock
@@ -2184,10 +2129,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.CustomAppearance}">
+            <TabItem Header="{x:Static lang:Resources.CustomAppearance}">
                 <StackPanel>
                     <WrapPanel
                         Margin="15"
@@ -2233,10 +2175,7 @@
                 </StackPanel>
 
             </TabItem>
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="{x:Static lang:Resources.Rename}">
+            <TabItem Header="{x:Static lang:Resources.Rename}">
                 <StackPanel>
 
                     <Border
@@ -2512,10 +2451,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="库">
+            <TabItem Header="库">
                 <StackPanel Orientation="Vertical">
                     <Border
                         Margin="10"
@@ -2614,10 +2550,7 @@
 
                 </StackPanel>
             </TabItem>
-            <TabItem
-                Background="Transparent"
-                FontSize="15"
-                Header="网络">
+            <TabItem Header="网络">
                 <StackPanel Orientation="Vertical">
 
                     <StackPanel Orientation="Horizontal">
@@ -2641,11 +2574,13 @@
 
 
             <Button
+                MinWidth="100"
+                MinHeight="30"
+                Margin="10"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Stretch"
                 Click="SaveSettings"
-                Content="{x:Static lang:Resources.Save}"
-                Style="{StaticResource ButtonStyleFill}" />
+                Content="{x:Static lang:Resources.Save}" />
         </Grid>
 
     </Grid>

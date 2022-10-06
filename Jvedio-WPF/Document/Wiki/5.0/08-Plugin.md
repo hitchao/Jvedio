@@ -353,7 +353,7 @@ public class Crawler : AbstractCrawler
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Logger.Error(ex);
             return null;
         }
     }

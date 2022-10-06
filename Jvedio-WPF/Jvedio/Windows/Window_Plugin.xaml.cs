@@ -60,7 +60,6 @@ namespace Jvedio
 
         private void BaseWindow_ContentRendered(object sender, EventArgs e)
         {
-            adjustPluginViewListBox();
 
             // 设置插件排序
             var menuItems = pluginSortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
@@ -260,14 +259,6 @@ namespace Jvedio
             vieModel.SetServers();
         }
 
-        private void adjustPluginViewListBox()
-        {
-            if (this.ActualHeight > 0)
-            {
-                freshViewListBox.MaxHeight = this.ActualHeight - 220;
-                pluginViewListBox.MaxHeight = this.ActualHeight - 220;
-            }
-        }
 
         private void SearchPlugin(object sender, RoutedEventArgs e)
         {
@@ -304,10 +295,6 @@ namespace Jvedio
             PluginManager.DownloadPlugin(pluginMetaData);
         }
 
-        private void BaseWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            adjustPluginViewListBox();
-        }
 
         private async void RefreshPluginList(object sender, MouseButtonEventArgs e)
         {
@@ -435,6 +422,14 @@ namespace Jvedio
                 Msgbox msgbox = new Msgbox(this, $"确定删除插件 {name} ？");
                 if (msgbox.ShowDialog() == false) return;
 
+                List<string> list = JsonUtils.TryDeserializeObject<List<string>>(ConfigManager.PluginConfig.DeleteList);
+                if (list == null) list = new List<string>();
+                if (!list.Contains(metaData.PluginID))
+                {
+                    list.Add(metaData.PluginID);
+                }
+                ConfigManager.PluginConfig.DeleteList = JsonUtils.TrySerializeObject(list);
+                ConfigManager.PluginConfig.Save();
                 MessageCard.Success("该插件已添加到移除列表，重启后生效！");
             }
         }
@@ -450,6 +445,13 @@ namespace Jvedio
                 contextMenu.IsOpen = true;
             }
 
+            e.Handled = true;
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
             e.Handled = true;
         }
     }

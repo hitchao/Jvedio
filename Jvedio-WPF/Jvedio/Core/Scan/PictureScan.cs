@@ -69,7 +69,7 @@ namespace Jvedio.Core.Scan
             return (import, notImport);
         }
 
-        public override void doWrok()
+        public override void DoWork()
         {
             Task.Run(() =>
             {
@@ -198,7 +198,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.LogD(ex);
+                Logger.Error(ex);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
@@ -228,7 +228,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.LogD(ex);
+                Logger.Error(ex);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally

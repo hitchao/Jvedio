@@ -88,12 +88,12 @@ namespace Jvedio.Core.Plugins
         public void SetPluginID(PluginType type, string value)
         {
             if (string.IsNullOrEmpty(value)) return;
-            PluginID = type.ToString() + "-" + value;
+            PluginID = type.ToString() + "/" + value;
         }
 
         public string GetRawPluginID()
         {
-            return PluginID.Replace(PluginType.ToString() + "-", string.Empty);
+            return PluginID.Replace(PluginType.ToString() + "/", string.Empty);
         }
 
         public static PluginMetaData ParseByPath(string jsonPath)
@@ -271,4 +271,5 @@ namespace Jvedio.Core.Plugins
             Console.WriteLine(this.ImageUrl);
         }
     }
+
 }

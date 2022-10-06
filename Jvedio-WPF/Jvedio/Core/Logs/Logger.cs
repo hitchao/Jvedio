@@ -7,139 +7,29 @@ using System.Text;
 
 namespace Jvedio.Core.Logs
 {
-    // todo 优化日志记录
     /// <summary>
-    /// 日志记录静态类
+    /// 日志记录
     /// </summary>
     public static class Logger
     {
-        private static readonly object NetWorkLock = new object();
-        private static readonly object DataBaseLock = new object();
-        private static readonly object ExceptionLock = new object();
-        private static readonly object ScanLogLock = new object();
-        private static readonly object CommonLogLock = new object();
 
-        private static readonly object ErrorLock = new object();
+        /// <summary>
+        /// 日志级别，默认 Info 级别
+        /// </summary>
+        public static LogType LogLevel { get; set; }
 
-        public static void LogE(Exception e)
+        private static object ExceptionLock { get; set; }
+        private static object CommonLogLock { get; set; }
+
+
+        static Logger()
         {
-            Console.WriteLine(e.StackTrace);
-            Console.WriteLine(e.Message);
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Log";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            string filepath = Path.Combine(path, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
-
-            string content;
-            content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
-            content += Environment.NewLine + $"Message=>{e.Message}";
-            content += Environment.NewLine + $"StackTrace=>{Environment.NewLine}{GetAllFootprints(e)}";
-
-            lock (ExceptionLock)
-            {
-                using (StreamWriter sr = new StreamWriter(filepath, true))
-                {
-                    try
-                    {
-                        sr.Write(content);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
+            LogLevel = LogType.Info;
+            ExceptionLock = new object();
+            CommonLogLock = new object();
         }
 
-        public static void LogF(Exception e)
-        {
-            Console.WriteLine(e.StackTrace);
-            Console.WriteLine(e.Message);
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\File";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-            string content;
-            content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
-            content += $"{Environment.NewLine}Message=>{e.Message}";
-            content += $"{Environment.NewLine}StackTrace=>{Environment.NewLine}{GetAllFootprints(e)}";
-
-            lock (ExceptionLock)
-            {
-                using (StreamWriter sr = new StreamWriter(filepath, true))
-                {
-                    try
-                    {
-                        sr.Write(content);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-        }
-
-        public static void LogN(string netWorkStatus)
-        {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\NetWork";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-            string content = Environment.NewLine + "【" + DateTime.Now.ToString() + $"】=>{netWorkStatus}";
-            lock (NetWorkLock)
-            {
-                using (StreamWriter sr = new StreamWriter(filepath, true))
-                {
-                    try
-                    {
-                        sr.Write(content);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-        }
-
-        public static void LogD(Exception e)
-        {
-            Console.WriteLine(e.StackTrace);
-            Console.WriteLine(e.Message);
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\DataBase";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-            string content;
-            content = Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----";
-            content += $"{Environment.NewLine}Message=>{e.Message}";
-            content += $"{Environment.NewLine}StackTrace=>{Environment.NewLine}{GetAllFootprints(e)}";
-            lock (DataBaseLock)
-            {
-                using (StreamWriter sr = new StreamWriter(filepath, true))
-                {
-                    try
-                    {
-                        sr.Write(content);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-        }
-
-        public static string GetAllFootprints(Exception x)
+        private static string GetAllFootprints(Exception x)
         {
             if (x == null) return string.Empty;
             try
@@ -172,61 +62,36 @@ namespace Jvedio.Core.Logs
             return string.Empty;
         }
 
-        public static void LogScanInfo(string content)
-        {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "log/scanlog";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-            lock (ScanLogLock)
-            {
-                using (StreamWriter sr = new StreamWriter(filepath, true))
-                {
-                    try
-                    {
-                        sr.Write(content + Environment.NewLine);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-        }
 
         public static void Info(string content)
         {
-            Log(LogType.Info, content);
-        }
-
-        public static void Error(string content)
-        {
-            Log(LogType.Error, content);
+            if (LogLevel >= LogType.Info)
+                Log(LogType.Info, content);
         }
 
         public static void Warning(string content)
         {
-            Log(LogType.Warning, content);
+            if (LogLevel >= LogType.Warning)
+                Log(LogType.Warning, content);
         }
 
+        /// <summary>
+        /// 单独处理 Error 级别的日志
+        /// </summary>
+        /// <param name="e"></param>
         public static void Error(Exception e)
         {
-            Console.WriteLine(e.StackTrace);
-            Console.WriteLine(e.Message);
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\File";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+            if (LogLevel < LogType.Error) return;
             string content;
-            content = Environment.NewLine + "【" + DateTime.Now.ToString() + "】【Error】";
-            content += $"{Environment.NewLine}#### Message ####{Environment.NewLine}{e.Message}";
-            content += $"{Environment.NewLine}#### StackTrace ####{Environment.NewLine}{GetAllFootprints(e)}";
+            content = $"{Environment.NewLine}[{DateTime.Now.ToString()}]";
+            content += $"{Environment.NewLine}[Message] {e.Message}";
+            content += $"{Environment.NewLine}[StackTrace] {GetAllFootprints(e)}";
+            Console.WriteLine(content);
 
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", "Error");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
             lock (ExceptionLock)
             {
                 using (StreamWriter sr = new StreamWriter(filepath, true))
@@ -235,8 +100,9 @@ namespace Jvedio.Core.Logs
                     {
                         sr.Write(content);
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
@@ -244,13 +110,13 @@ namespace Jvedio.Core.Logs
 
         private static void Log(LogType logType, string content)
         {
+            string output = $"{DateHelper.Now()} => [{logType}] {content} {Environment.NewLine}";
+            Console.WriteLine(output);
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
-
-            string output = $"{DateHelper.Now()} => [{logType}] {content} {Environment.NewLine}";
             string filepath = Path.Combine(path, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
             lock (CommonLogLock)
             {
@@ -265,25 +131,7 @@ namespace Jvedio.Core.Logs
                 {
                     Console.WriteLine(ex.Message);
                 }
-
-                Console.WriteLine(content);
             }
         }
-
-        // public static void Error(string str)
-        // {
-        //    str += Environment.NewLine;
-        //    Console.WriteLine(str);
-        //    string path = AppDomain.CurrentDomain.BaseDirectory + "Log\\Error";
-        //    if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
-        //    string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-        //    lock (DataBaseLock)
-        //    {
-        //        using (StreamWriter sr = new StreamWriter(filepath, true))
-        //        {
-        //            try { sr.Write(str); } catch { }
-        //        }
-        //    }
-        // }
     }
 }
