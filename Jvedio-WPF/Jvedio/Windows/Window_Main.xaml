@@ -2113,8 +2113,7 @@
                             <Grid
                                 Grid.Row="2"
                                 Margin="0,0,5,5"
-                                VerticalAlignment="Bottom"
-                                Cursor="Hand">
+                                VerticalAlignment="Bottom">
                                 <Image
                                     Height="20"
                                     Margin="20,0"
@@ -3008,6 +3007,7 @@
                                                 Background="{DynamicResource Window.Background}"
                                                 FocusVisualStyle="{x:Null}"
                                                 ItemsSource="{Binding CurrentVideoList}"
+                                                PreviewMouseWheel="MovieItemsControl_PreviewMouseWheel"
                                                 ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
                                                 Style="{StaticResource ItemsControlVirtualizedWrapPanelStyle}">
                                                 <ItemsControl.ItemsPanel>
@@ -3504,6 +3504,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Slider
+                                            Name="imageSizeSlider"
                                             Grid.Column="0"
                                             Width="200"
                                             Margin="20,0,0,0"
@@ -4369,7 +4370,12 @@
                                                                 </ProgressBar.Style>
                                                             </ProgressBar>
                                                             <Grid>
-                                                                <TextBlock Margin="5" Text="{Binding CreateTime}" />
+                                                                <TextBlock
+                                                                    Margin="5"
+                                                                    FontSize="10"
+                                                                    Style="{StaticResource BaseTextBlock}"
+                                                                    Text="{Binding CreateTime}"
+                                                                    TextAlignment="Left" />
                                                                 <TextBlock
                                                                     Margin="5"
                                                                     HorizontalAlignment="Right"
@@ -4395,13 +4401,14 @@
 
 
                                                         </StackPanel>
-                                                        <WrapPanel
+                                                        <StackPanel
                                                             Grid.Column="2"
                                                             Width="100"
+                                                            HorizontalAlignment="Right"
                                                             VerticalAlignment="Center"
-                                                            Orientation="Horizontal">
-                                                            <WrapPanel.Style>
-                                                                <Style TargetType="WrapPanel">
+                                                            Orientation="Vertical">
+                                                            <StackPanel.Style>
+                                                                <Style TargetType="StackPanel">
                                                                     <Setter Property="Visibility" Value="Hidden" />
 
                                                                     <Style.Triggers>
@@ -4410,21 +4417,23 @@
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                 </Style>
-                                                            </WrapPanel.Style>
+                                                            </StackPanel.Style>
                                                             <Button
+                                                                MinWidth="80"
+                                                                Margin="4"
+                                                                HorizontalAlignment="Right"
                                                                 Click="CancelScreenShotTask"
                                                                 Content="{DynamicResource Cancel}"
                                                                 Tag="{Binding DataID}" />
-                                                            <!--<Button
-                                                                    Click="PauseDownloadTask"
-                                                                    Content="暂停"
-                                                                    IsEnabled="{Binding Running}"
-                                                                    Tag="{Binding DataID}" />-->
+
                                                             <Button
+                                                                MinWidth="80"
+                                                                Margin="4"
+                                                                HorizontalAlignment="Right"
                                                                 Click="ShowScreenShotDetail"
                                                                 Content="{DynamicResource Detail}"
                                                                 Tag="{Binding DataID}" />
-                                                        </WrapPanel>
+                                                        </StackPanel>
                                                     </Grid>
                                                 </Grid>
 
@@ -4690,23 +4699,27 @@
                                                             Grid.Column="1"
                                                             Margin="5"
                                                             Orientation="Vertical">
-                                                            <TextBlock Margin="5,10" Text="{Binding CreateTime}" />
+                                                            <TextBlock
+                                                                Margin="5,10"
+                                                                FontSize="10"
+                                                                FontWeight="Bold"
+                                                                Style="{StaticResource BaseTextBlock}"
+                                                                Text="{Binding CreateTime}"
+                                                                TextAlignment="Left"
+                                                                TextTrimming="WordEllipsis"
+                                                                TextWrapping="NoWrap" />
 
-                                                            <Grid Width="180" HorizontalAlignment="Left">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="auto" />
-                                                                    <ColumnDefinition Width="*" />
-                                                                </Grid.ColumnDefinitions>
-                                                                <!--<TextBlock
-                                                                        Grid.Column="0"
-                                                                        Margin="5,10"
-                                                                        Text="{Binding StatusText}" />-->
-                                                                <TextBlock
-                                                                    Grid.Column="1"
-                                                                    Margin="5,10"
-                                                                    Text="{Binding Message}"
-                                                                    TextTrimming="WordEllipsis" />
-                                                            </Grid>
+
+                                                            <TextBlock
+                                                                Grid.Column="1"
+                                                                Margin="5,10"
+                                                                FontSize="12"
+                                                                Style="{StaticResource BaseTextBlock}"
+                                                                Text="{Binding Message}"
+                                                                TextAlignment="Left"
+                                                                TextTrimming="WordEllipsis"
+                                                                TextWrapping="NoWrap" />
+
 
                                                         </StackPanel>
                                                         <StackPanel
@@ -4727,6 +4740,7 @@
                                                                 </Style>
                                                             </StackPanel.Style>
                                                             <Button
+                                                                Margin="0,4"
                                                                 Click="CancelScanTask"
                                                                 Content="{DynamicResource Cancel}"
                                                                 IsEnabled="{Binding Running}"
@@ -4938,7 +4952,12 @@
                                                                 </ProgressBar.Style>
                                                             </ProgressBar>
                                                             <Grid>
-                                                                <TextBlock Margin="5" Text="{Binding CreateTime}" />
+                                                                <TextBlock
+                                                                    Margin="5"
+                                                                    FontSize="10"
+                                                                    Style="{StaticResource BaseTextBlock}"
+                                                                    Text="{Binding CreateTime}"
+                                                                    TextAlignment="Left" />
                                                                 <TextBlock
                                                                     Margin="5"
                                                                     HorizontalAlignment="Right"
@@ -4981,16 +5000,19 @@
                                                                 </Style>
                                                             </WrapPanel.Style>
                                                             <Button
+                                                                Margin="2"
                                                                 Click="CancelDownloadTask"
                                                                 Content="{DynamicResource Cancel}"
                                                                 IsEnabled="{Binding Running}"
                                                                 Tag="{Binding DataID}" />
                                                             <Button
+                                                                Margin="2"
                                                                 Click="RestartTask"
                                                                 Content="{DynamicResource Reboot}"
                                                                 IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
                                                                 Tag="{Binding DataID}" />
                                                             <Button
+                                                                Margin="2"
                                                                 Click="ShowDownloadDetail"
                                                                 Content="{DynamicResource Detail}"
                                                                 Tag="{Binding DataID}" />
@@ -5029,6 +5051,7 @@
 
                                         <StackPanel Orientation="Horizontal">
                                             <Button
+                                                Margin="4"
                                                 Click="CancelDownloadTasks"
                                                 Content="{DynamicResource CancelALl}"
                                                 Style="{StaticResource ButtonDanger}" />

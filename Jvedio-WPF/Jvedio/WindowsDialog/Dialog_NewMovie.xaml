@@ -77,7 +77,7 @@
                     MinWidth="100"
                     Margin="5"
                     HorizontalAlignment="Stretch"
-                    SelectedIndex="2"
+                    SelectedIndex="0"
                     SelectionChanged="ComboBox_SelectionChanged"
                     Style="{StaticResource BorderComboBox}">
                     <ComboBoxItem Content="{DynamicResource Normal}" />

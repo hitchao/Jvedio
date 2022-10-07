@@ -1231,7 +1231,7 @@ namespace Jvedio
             if (idx < 0) return;
             if (vieModel.CrawlerServers?.Count > 0)
             {
-                string pluginID = PluginType.Crawler.ToString() + "-" + vieModel.DisplayCrawlerServers[idx];
+                string pluginID = PluginType.Crawler.ToString() + "/" + vieModel.DisplayCrawlerServers[idx];
                 PluginMetaData pluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
                 if (pluginMetaData != null && pluginMetaData.Enabled) vieModel.PluginEnabled = true;
                 else vieModel.PluginEnabled = false;

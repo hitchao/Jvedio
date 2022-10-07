@@ -202,7 +202,7 @@ namespace Jvedio
             vieModel.Reset();           // 加载数据
             OpenListen();
 
-            //OpenWindowByName("Window_Plugin");
+            //OpenWindowByName("Window_Settings");
             // new Msgbox(this, "demo").ShowDialog();
         }
 
@@ -4946,6 +4946,22 @@ namespace Jvedio
             //    videos[i].getSmallImage
             //    videoMapper.UpdateBatch();
             // }
+        }
+
+        private void MovieItemsControl_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                if (e.Delta > 0)
+                {
+                    imageSizeSlider.Value += imageSizeSlider.LargeChange;
+                }
+                else
+                {
+                    imageSizeSlider.Value -= imageSizeSlider.LargeChange;
+                }
+
+            }
         }
     }
 }

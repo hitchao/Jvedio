@@ -1,6 +1,7 @@
 ﻿using HandyControl.Tools;
 using Jvedio.Core.Logs;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +28,9 @@ namespace Jvedio
                 Environment.Exit(0);
             }
 
+#if DEBUG
+            Console.WriteLine("Debug 不捕获未处理异常");
+#else
             // UI线程未捕获异常处理事件
             this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 
@@ -35,6 +39,8 @@ namespace Jvedio
 
             // 非UI线程未捕获异常处理事件
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+#endif
             base.OnStartup(e);
         }
 
@@ -50,42 +56,55 @@ namespace Jvedio
         {
             try
             {
-                // e.Handled = true; //把 Handled 属性设为true，表示此异常已处理，程序可以继续运行，不会强制退出
-                Console.WriteLine(e.Exception.StackTrace);
-                Console.WriteLine(e.Exception.Message);
+                StringBuilder builder = new StringBuilder();
+                builder.Append("[DispatcherUnhandledException] Jvedio 出现了一些问题，将退出");
+                MessageBox.Show(builder.ToString(), "Jvedio 异常");
+                Logger.Warning(builder.ToString());
                 Logger.Error(e.Exception);
             }
-            catch
+            catch (Exception ex)
             {
-                // 此时程序出现严重异常，将强制结束退出
-                Console.WriteLine(e.Exception.StackTrace);
-                Console.WriteLine(e.Exception.Message);
-                MessageBox.Show("程序发生致命错误，将终止！");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                App.Current.Shutdown();
+                Environment.Exit(0);
             }
         }
 
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            // StringBuilder sbEx = new StringBuilder();
-            // if (e.IsTerminating)
-            // {
-            //    sbEx.Append("程序发生致命错误，将终止，请联系运营商！\n");
-            // }
-            // sbEx.Append("捕获未处理异常：");
-            // if (e.ExceptionObject is Exception)
-            // {
-            //    sbEx.Append(((Exception)e.ExceptionObject).Message);
-            // }
-            // else
-            // {
-            //    sbEx.Append(e.ExceptionObject);
-            // }
-            Console.WriteLine(((Exception)e.ExceptionObject).StackTrace);
-            Console.WriteLine(((Exception)e.ExceptionObject).Message);
-            Logger.Error((Exception)e.ExceptionObject);
 
-            Console.WriteLine(((Exception)e.ExceptionObject).Message);
-            Console.WriteLine(((Exception)e.ExceptionObject).StackTrace);
+            try
+            {
+                StringBuilder builder = new StringBuilder();
+                if (e.IsTerminating)
+                {
+                    builder.Append("[CurrentDomain_UnhandledException] Jvedio 出现了一些问题，将退出");
+                    MessageBox.Show(builder.ToString(), "Jvedio 异常");
+                    Logger.Warning(builder.ToString());
+                    if (e.ExceptionObject is Exception ex)
+                    {
+
+                        Logger.Error(ex);
+                    }
+                    else
+                    {
+                        builder.Append(e.ExceptionObject);
+                        Logger.Warning(e.ExceptionObject.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                App.Current.Shutdown();
+                Environment.Exit(0);
+            }
         }
 
         void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)

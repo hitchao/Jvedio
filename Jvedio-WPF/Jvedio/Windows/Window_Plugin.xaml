@@ -247,7 +247,7 @@
                 Grid.Row="1"
                 Clear="SearchPlugin"
                 PlaceHolder="{DynamicResource Search}"
-                PlaceHolderForeground="{DynamicResource RadioButton.Disabled.Background}"
+                PlaceHolderForeground="{DynamicResource Window.Foreground}"
                 Search="SearchPlugin"
                 SearchOnTextChanged="True"
                 ShowSearchButton="True"
