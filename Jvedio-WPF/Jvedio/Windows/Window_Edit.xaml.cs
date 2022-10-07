@@ -128,7 +128,7 @@ namespace Jvedio
 
         private void NewGenre(object sender, RoutedEventArgs e)
         {
-            DialogInput dialogInput = new DialogInput(this, "请输入");
+            DialogInput dialogInput = new DialogInput(this, LangManager.GetValueByKey("PleaseEnter"));
             if (dialogInput.ShowDialog() == true)
             {
                 string text = dialogInput.Text;
@@ -145,7 +145,7 @@ namespace Jvedio
 
         private void NewLabel(object sender, RoutedEventArgs e)
         {
-            DialogInput dialogInput = new DialogInput(this, "请输入");
+            DialogInput dialogInput = new DialogInput(this, LangManager.GetValueByKey("PleaseEnter"));
             if (dialogInput.ShowDialog() == true)
             {
                 string text = dialogInput.Text;
@@ -330,7 +330,7 @@ namespace Jvedio
             vieModel.SelectActor();
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType.Equals(PathType.RelativeToData))
-                MessageCard.Info("由于当前图片资源文相对于影片，因此该页面不显示头像");
+                MessageCard.Info(LangManager.GetValueByKey("ShowActorImageWarning"));
         }
 
         private void DeleteActor(object sender, MouseButtonEventArgs e)

@@ -474,7 +474,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     FontWeight="Bold"
-                                    Text="{DynamicResource Edit}" />
+                                    Text="{DynamicResource View}" />
                             </Border>
 
                         </Grid>
@@ -2047,7 +2047,10 @@
                                     </Grid>
 
                                     <!--  快速访问  -->
-                                    <Grid x:Name="ListGrid" Grid.Row="2">
+                                    <Grid
+                                        x:Name="ListGrid"
+                                        Grid.Row="2"
+                                        Visibility="Collapsed">
                                         <Border
                                             Margin="5"
                                             HorizontalAlignment="Right"

@@ -183,7 +183,7 @@ namespace Jvedio.Core.Plugins
 
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        MessageCard.Info($"插件【{data.PluginName}】下载完成！重启后生效");
+                        MessageCard.Info($"{LangManager.GetValueByKey("Plugin")}【{data.PluginName}】{LangManager.GetValueByKey("DownloadSuccessRebootToTakeEffect")}");
                     });
                 }
             });

@@ -231,7 +231,7 @@ namespace Jvedio
 
             if (!containsFunKey | _key == Key.None)
             {
-                SuperControls.Style.MessageCard.Error("必须为 功能键 + 数字/字母");
+                SuperControls.Style.MessageCard.Error(LangManager.GetValueByKey("HotKeyWarning"));
             }
             else
             {
@@ -252,7 +252,7 @@ namespace Jvedio
                     bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, fsModifiers, VK);
                     if (!success)
                     {
-                        MessageBox.Show("热键冲突！", "热键冲突");
+                        MessageBox.Show(LangManager.GetValueByKey("HotKeyConflict"), LangManager.GetValueByKey("HotKeyConflict"));
                     }
 
                     {
@@ -262,7 +262,7 @@ namespace Jvedio
                         Properties.Settings.Default.HotKey_Enable = true;
                         Properties.Settings.Default.HotKey_String = hotkeyTextBox.Text;
                         Properties.Settings.Default.Save();
-                        MessageCard.Success("设置热键成功");
+                        MessageCard.Success(LangManager.GetValueByKey("HotKeySetSuccess"));
                     }
                 }
             }
@@ -801,7 +801,7 @@ namespace Jvedio
 
             if (!server.isHeaderProper())
             {
-                MessageCard.Error("Header 不合理");
+                MessageCard.Error(LangManager.GetValueByKey("HeaderNotProper"));
                 return;
             }
 
@@ -1247,7 +1247,7 @@ namespace Jvedio
 
         private void ShowCrawlerHelp(object sender, MouseButtonEventArgs e)
         {
-            MessageCard.Info("左侧是支持的信息刮削器，右侧需要自行填入刮削器对应的网址，Jvedio 不提供任何网站地址！");
+            MessageCard.Info(LangManager.GetValueByKey("CrawlerServerHint"));
         }
 
 
@@ -1271,7 +1271,7 @@ namespace Jvedio
         {
             SearchBox searchBox = sender as SearchBox;
             string cookies = searchBox.Text;
-            DialogInput dialogInput = new DialogInput(this, "请填入 cookie", cookies);
+            DialogInput dialogInput = new DialogInput(this, $"{LangManager.GetValueByKey("PleaseEnter")} cookie", cookies);
             if (dialogInput.ShowDialog() == true)
             {
                 searchBox.Text = dialogInput.Text;
@@ -1401,7 +1401,7 @@ namespace Jvedio
             {
                 if (httpResult.StatusCode == HttpStatusCode.OK)
                 {
-                    MessageCard.Success($"成功，延时：{stopwatch.ElapsedMilliseconds} ms");
+                    MessageCard.Success($"{LangManager.GetValueByKey("Success")} {LangManager.GetValueByKey("Delay")} {stopwatch.ElapsedMilliseconds} ms");
                     vieModel.TestProxyStatus = TaskStatus.RanToCompletion;
                 }
                 else
@@ -1412,7 +1412,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Error("失败");
+                MessageCard.Error(LangManager.GetValueByKey("Error"));
                 vieModel.TestProxyStatus = TaskStatus.Canceled;
             }
 
@@ -1422,7 +1422,7 @@ namespace Jvedio
 
         private void ShowHeaderHelp(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("根据之前的方法，打开网页的 cookie 所在处，把 request header 下所有的内容复制进来即可");
+            MessageBox.Show(LangManager.GetValueByKey("HeaderHelp"));
         }
 
         private void ShowScanReHelp(object sender, MouseButtonEventArgs e)
@@ -1470,12 +1470,12 @@ namespace Jvedio
             ConfigManager.Settings.PlayableIndexCreated = true;
             vieModel.IndexCreating = false;
             if (result)
-                MessageCard.Success($"成功建立 {total} 个资源的索引");
+                MessageCard.Success($"{LangManager.GetValueByKey("CreateSuccess")} {total} {LangManager.GetValueByKey("DataIndex")}");
         }
 
         private async void CreatePictureIndex(object sender, RoutedEventArgs e)
         {
-            if (new Msgbox(this, $"当前图片模式为：{((PathType)ConfigManager.Settings.PicPathMode).ToString()}，仅对当前图片模式生效，是否继续？")
+            if (new Msgbox(this, $"{LangManager.GetValueByKey("CurrentImageType")} {((PathType)ConfigManager.Settings.PicPathMode).ToString()}，{LangManager.GetValueByKey("TakeEffectToCurrent")}")
                 .ShowDialog() == false)
             {
                 return;
@@ -1517,7 +1517,7 @@ namespace Jvedio
                 return true;
             });
             if (result)
-                MessageCard.Success($"成功建立 {total} 个资源的索引");
+                MessageCard.Success($"{LangManager.GetValueByKey("CreateSuccess")} {total} {LangManager.GetValueByKey("DataIndex")}");
             ConfigManager.Settings.PictureIndexCreated = true;
             vieModel.IndexCreating = false;
         }

@@ -4,6 +4,7 @@ using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
+using SuperControls.Style;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -41,13 +42,10 @@ namespace Jvedio.Core.Net
             OverrideInfo = overrideInfo;
         }
 
-        public new static Dictionary<TaskStatus, string> STATUS_TO_TEXT_DICT = new Dictionary<TaskStatus, string>()
+        static DownLoadTask()
         {
-            { TaskStatus.WaitingToRun, "等待中..." },
-            { TaskStatus.Running, "下载中..." },
-            { TaskStatus.Canceled, "已取消" },
-            { TaskStatus.RanToCompletion, "已完成" },
-        };
+            STATUS_TO_TEXT_DICT[TaskStatus.Running] = $"{LangManager.GetValueByKey("Downloading")}...";
+        }
 
         public DownLoadTask(MetaData data) : base()
         {
@@ -99,7 +97,7 @@ namespace Jvedio.Core.Net
                     // 判断是否需要下载，自动跳过已下载的信息
                     if (video.toDownload() || OverrideInfo)
                     {
-                        StatusText = "下载信息";
+                        StatusText = LangManager.GetValueByKey("DownloadInfo");
                         if (!string.IsNullOrEmpty(video.VID))
                         {
                             // 有 VID 的
@@ -134,7 +132,7 @@ namespace Jvedio.Core.Net
                     }
                     else
                     {
-                        logger.Info("跳过信息刮削，准备下载图片");
+                        logger.Info(LangManager.GetValueByKey("SkipDownLoadInfoAndDownloadImage"));
                     }
 
                     bool success = true; // 是否刮削到信息（包括db的部分信息）
@@ -166,7 +164,7 @@ namespace Jvedio.Core.Net
                     bool downloadInfo = video.parseDictInfo(dict); // 是否从网络上刮削了信息
                     if (downloadInfo)
                     {
-                        logger.Info($"保存入库");
+                        logger.Info(LangManager.GetValueByKey("SaveToLibrary"));
 
                         // 并发锁
                         videoMapper.UpdateById(video);
@@ -209,7 +207,7 @@ namespace Jvedio.Core.Net
 
                     object o = getInfoFromExist("BigImageUrl", video, dict);
                     string imageUrl = o != null ? o.ToString() : string.Empty;
-                    StatusText = "下载大图";
+                    StatusText = LangManager.GetValueByKey("Poster");
 
                     // 1. 大图
                     if (!string.IsNullOrEmpty(imageUrl))
@@ -229,7 +227,7 @@ namespace Jvedio.Core.Net
                         }
                         else
                         {
-                            logger.Info($"跳过已下载的图片：{saveFileName}");
+                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                         }
                     }
 
@@ -241,7 +239,7 @@ namespace Jvedio.Core.Net
                         return;
                     }
 
-                    StatusText = "下载小图";
+                    StatusText = LangManager.GetValueByKey("Thumbnail");
                     o = getInfoFromExist("SmallImageUrl", video, dict);
                     imageUrl = o != null ? o.ToString() : string.Empty;
 
@@ -262,7 +260,7 @@ namespace Jvedio.Core.Net
                         }
                         else
                         {
-                            logger.Info($"跳过已下载的图片：{saveFileName}");
+                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                         }
                     }
 
@@ -274,7 +272,7 @@ namespace Jvedio.Core.Net
                     }
 
                     onDownloadSuccess?.Invoke(this, null);
-                    StatusText = "下载演员信息和头像";
+                    StatusText = LangManager.GetValueByKey("Actors");
 
                     object names = getInfoFromExist("ActorNames", video, dict);
                     object urls = getInfoFromExist("ActressImageUrl", video, dict);
@@ -315,7 +313,7 @@ namespace Jvedio.Core.Net
                                 }
                                 else
                                 {
-                                    logger.Info($"跳过已下载的图片：{saveFileName}");
+                                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                                 }
                             }
                         }
@@ -332,7 +330,7 @@ namespace Jvedio.Core.Net
                     urls = getInfoFromExist("ExtraImageUrl", video, dict);
                     if (DownloadPreview && urls != null && urls is List<string> imageUrls)
                     {
-                        StatusText = "下载预览图";
+                        StatusText = LangManager.GetValueByKey("Preview");
                         if (imageUrls != null && imageUrls.Count > 0)
                         {
                             for (int i = 0; i < imageUrls.Count; i++)
@@ -351,7 +349,7 @@ namespace Jvedio.Core.Net
                                 string saveFileName = Path.Combine(saveFiledir, Path.GetFileName(url));
                                 if (!File.Exists(saveFileName))
                                 {
-                                    StatusText = $"下载预览图 {i + 1}/{imageUrls.Count}";
+                                    StatusText = $"{LangManager.GetValueByKey("Preview")} {i + 1}/{imageUrls.Count}";
                                     byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
                                     {
                                         if (!string.IsNullOrEmpty(error))
@@ -368,14 +366,14 @@ namespace Jvedio.Core.Net
                                 }
                                 else
                                 {
-                                    logger.Info($"跳过已下载的图片：{saveFileName}");
+                                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                                 }
                             }
                         }
                     }
                     else
                     if (!DownloadPreview)
-                        logger.Info($"未开启预览图下载");
+                        logger.Info(LangManager.GetValueByKey("NotSetPreviewDownload"));
                     Success = true;
                     Status = TaskStatus.RanToCompletion;
                 }
@@ -385,7 +383,7 @@ namespace Jvedio.Core.Net
                 Progress = 100.00f;
                 stopwatch.Stop();
                 ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                logger.Info($"总计耗时：{ElapsedMilliseconds} ms");
+                logger.Info($"{LangManager.GetValueByKey("TotalCost")} {ElapsedMilliseconds} ms");
             });
         }
 

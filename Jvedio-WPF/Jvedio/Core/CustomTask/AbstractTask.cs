@@ -1,4 +1,5 @@
 ﻿using DynamicData.Annotations;
+using SuperControls.Style;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
@@ -33,10 +34,10 @@ namespace Jvedio.Core.CustomTask
 
         public static Dictionary<TaskStatus, string> STATUS_TO_TEXT_DICT = new Dictionary<TaskStatus, string>()
         {
-            { TaskStatus.WaitingToRun, "等待中..." },
-            { TaskStatus.Running, "进行中..." },
-            { TaskStatus.Canceled, "已取消" },
-            { TaskStatus.RanToCompletion, "已完成" },
+            { TaskStatus.WaitingToRun, $"{LangManager.GetValueByKey("Waiting")}..." },
+            { TaskStatus.Running, $"{LangManager.GetValueByKey("Running")}..." },
+            { TaskStatus.Canceled, LangManager.GetValueByKey("Cancel") },
+            { TaskStatus.RanToCompletion, LangManager.GetValueByKey("Done") },
         };
 
         /// <summary>
@@ -217,7 +218,7 @@ namespace Jvedio.Core.CustomTask
                 Running = false;
                 tokenCTS?.Cancel();
                 Canceld = true;
-                logger.Info("已取消");
+                logger.Info(LangManager.GetValueByKey("Cancel"));
             }
         }
 
@@ -236,7 +237,7 @@ namespace Jvedio.Core.CustomTask
             stopwatch?.Stop();
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
             Success = false;
-            logger.Info($"总计耗时：{ElapsedMilliseconds} ms");
+            logger.Info($"{LangManager.GetValueByKey("TotalCost")} {ElapsedMilliseconds} ms");
         }
 
         public virtual void DoWork()

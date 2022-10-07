@@ -1,6 +1,7 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
+using SuperControls.Style;
 using SuperUtils.IO;
 using SuperUtils.Media;
 using System;
@@ -71,7 +72,7 @@ namespace Jvedio.Core.FFmpeg
             string outputDir = CurrentVideo.getScreenShot();
             if (SkipExistScreenShot && Directory.Exists(outputDir))
             {
-                outputs.Append($"跳过截图，因为文件夹存在（可在设置中关闭） => {outputDir}");
+                outputs.Append($"{LangManager.GetValueByKey("SkipScreenShotForDirExists")} => {outputDir}");
                 return outputs.ToString();
             }
 
@@ -189,7 +190,7 @@ namespace Jvedio.Core.FFmpeg
 
             if (ConfigManager.FFmpegConfig.SkipExistGif && File.Exists(saveFileName))
             {
-                outputs.Append($"跳过已截取的 GIF： {saveFileName}");
+                outputs.Append($"{LangManager.GetValueByKey("SkipGif")} {saveFileName}");
                 return outputs.ToString();
             }
 

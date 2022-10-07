@@ -19,7 +19,7 @@
     </Style>
 
     <Style x:Key="BaseSearchTextBox" TargetType="{x:Type super:SearchBox}">
-        
+
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Height" Value="auto" />
         <Setter Property="ShowClearButton" Value="True" />

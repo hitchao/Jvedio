@@ -16,4 +16,10 @@
     <sys:String x:Key="EnterVID">ビデオ認識コードを入力し、車に戻ります</sys:String>
     <sys:String x:Key="LikeAndSponsor">Jvedioが好きなら、次の方法を使用して私を後援することができます〜</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">カバーがない場合は、傍受された画像をカバーとして使用します</sys:String>
+
+    <sys:String x:Key="PleaseSetImageIndex">[options-library]で画像インデックスを確立してください！</sys:String>
+    <sys:String x:Key="PleaseSetExistsIndex">[Options-Library]で再生インデックスを確立してください！</sys:String>
+    <sys:String x:Key="CrawlAllWarning">ライブラリ全体を登ると、IPがブロックされる可能性があります。注意して使用してください。必要なリソースを同期してみてください</sys:String>
+    <sys:String x:Key="CrawlerServerHint">左側には、サポートされている情報スクレーパーがあります。右側のスクラッチに対応するURLを埋める必要があります。JvedioはWebサイトのアドレスを提供しません！</sys:String>
+
 </ResourceDictionary>

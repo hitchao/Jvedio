@@ -2,6 +2,7 @@
 using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;
 using Jvedio.Entity;
+using SuperControls.Style;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,13 +12,11 @@ namespace Jvedio.Core.FFmpeg
 {
     public class ScreenShotTask : AbstractTask
     {
-        public new static Dictionary<TaskStatus, string> STATUS_TO_TEXT_DICT = new Dictionary<TaskStatus, string>()
+
+        static ScreenShotTask()
         {
-            { TaskStatus.WaitingToRun, "等待中..." },
-            { TaskStatus.Running, "截图中..." },
-            { TaskStatus.Canceled, "已取消" },
-            { TaskStatus.RanToCompletion, "已完成" },
-        };
+            STATUS_TO_TEXT_DICT[TaskStatus.Running] = $"{LangManager.GetValueByKey("ScreenShoting")}...";
+        }
 
         public ScreenShotTask(Video video, bool gif = false) : this(video.toMetaData())
         {
@@ -90,8 +89,8 @@ namespace Jvedio.Core.FFmpeg
                     Status = TaskStatus.RanToCompletion;
                     stopwatch.Stop();
                     ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                    logger.Info($"总计耗时：{ElapsedMilliseconds} ms");
-                    logger.Info("详细信息");
+                    logger.Info($"{LangManager.GetValueByKey("TotalCost")} {ElapsedMilliseconds} ms");
+                    logger.Info(LangManager.GetValueByKey("Detail"));
                     logger.Info(outputs);
                 }
                 catch (Exception ex)

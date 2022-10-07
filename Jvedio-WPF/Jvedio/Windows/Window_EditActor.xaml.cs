@@ -57,7 +57,7 @@ namespace Jvedio
             CurrentActorInfo.ActorName = CurrentActorInfo.ActorName.ToProperFileName();
             if (string.IsNullOrEmpty(CurrentActorInfo.ActorName))
             {
-                MessageCard.Error("演员名称不可为空！");
+                MessageCard.Error(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
 
@@ -80,7 +80,7 @@ namespace Jvedio
                 bool insert = true;
                 if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName))
                 {
-                    insert = (bool)new Msgbox(this, $"数据库中已有和 {actorInfo.ActorName} 同名的演员，是否继续添加？").ShowDialog();
+                    insert = (bool)new Msgbox(this, $"{LangManager.GetValueByKey("LibraryAlreadyHas")} {actorInfo.ActorName} {LangManager.GetValueByKey("SameActorToAdd")}").ShowDialog();
                 }
 
                 if (insert)
@@ -91,7 +91,7 @@ namespace Jvedio
                         this.DialogResult = true;
                     }
                     else
-                        MessageCard.Success("添加失败！");
+                        MessageCard.Success(LangManager.GetValueByKey("Error"));
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace Jvedio
             string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
             if (File.Exists(targetFileName))
             {
-                if (new Msgbox(this, "该图片已存在，是否使用演员识别码命名？").ShowDialog() == true)
+                if (new Msgbox(this, LangManager.GetValueByKey("ActorImageExistsAndUseID")).ShowDialog() == true)
                 {
                     string dir = System.IO.Path.GetDirectoryName(targetFileName);
                     string ext = System.IO.Path.GetExtension(targetFileName);
@@ -145,7 +145,7 @@ namespace Jvedio
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData)
             {
-                MessageBox.Show("演员头像相对于影片路径，暂不支持");
+                MessageBox.Show(LangManager.GetValueByKey("ActorImageNotSupported"));
                 return;
             }
 
@@ -154,7 +154,7 @@ namespace Jvedio
 
             if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName))
             {
-                MessageBox.Show("未设置演员名称");
+                MessageBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
 
@@ -173,7 +173,7 @@ namespace Jvedio
                         // 设置演员头像
                         string targetFileName = System.IO.Path.Combine(saveDir, $"{name}{System.IO.Path.GetExtension(originPath).ToLower()}");
                         bool copy = true;
-                        if (File.Exists(targetFileName) && new Msgbox(this, "已存在，是否覆盖？").ShowDialog() != true)
+                        if (File.Exists(targetFileName) && new Msgbox(this, LangManager.GetValueByKey("ExistsToOverrite")).ShowDialog() != true)
                         {
                             copy = false;
                         }

@@ -11,12 +11,17 @@
     <sys:String x:Key="JvedioIsRunning">Jvedio已经在运行！</sys:String>
     <sys:String x:Key="About_Outline">本地视频的管理</sys:String>
     <sys:String x:Key="FlowOut">流出</sys:String>
-
-
-
-
     <sys:String x:Key="ThanksUseJvedio">欢迎使用 Jvedio</sys:String>
     <sys:String x:Key="EnterVID">输入视频识别码，回车分割</sys:String>
     <sys:String x:Key="LikeAndSponsor">如果您喜欢Jvedio，可以使用以下方式赞助我~</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">无封面时将已截取的图片作为封面</sys:String>
+
+
+
+
+
+    <sys:String x:Key="PleaseSetImageIndex">请在【选项-库】中建立图片索引！</sys:String>
+    <sys:String x:Key="PleaseSetExistsIndex">请在【选项-库】中建立播放索引！</sys:String>
+    <sys:String x:Key="CrawlAllWarning">全库爬取可能会导致你的IP被封，请谨慎使用，尽量同步仅需要的资源</sys:String>
+    <sys:String x:Key="CrawlerServerHint">左侧是支持的信息刮削器，右侧需要自行填入刮削器对应的网址，Jvedio 不提供任何网站地址！</sys:String>
 </ResourceDictionary>

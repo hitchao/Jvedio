@@ -15,4 +15,11 @@
     <sys:String x:Key="EnterVID">Enter the video recognition code, and return to the car</sys:String>
     <sys:String x:Key="LikeAndSponsor">If you like JVEDIO, you can use the following ways to sponsor me ~</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">Use the intercepted picture as the cover when there is no cover</sys:String>
+
+
+    <sys:String x:Key="PleaseSetImageIndex">Please establish picture indexes in [Options-Library]!</sys:String>
+    <sys:String x:Key="PleaseSetExistsIndex">Please establish a playback index in [Options-Library]!</sys:String>
+    <sys:String x:Key="CrawlAllWarning">The climbing of the whole library may cause your IP to be blocked, please use it with caution, try to synchronize the resources only required</sys:String>
+    <sys:String x:Key="CrawlerServerHint">On the left is the supported information scraper. You need to fill in the URL corresponding to the scratch on the right. JVEDIO does not provide any website address!</sys:String>
+
 </ResourceDictionary>

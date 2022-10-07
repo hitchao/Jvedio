@@ -5,6 +5,7 @@ using Jvedio.Core.Logs;
 using Jvedio.Core.Scan;
 using JvedioLib.Security;
 using Newtonsoft.Json;
+using SuperControls.Style;
 using SuperUtils.Common;
 using SuperUtils.IO;
 using System;
@@ -315,7 +316,7 @@ namespace Jvedio.Entity
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warning("解析 NFO 失败 => " + path);
+                    Logger.Warning($"{LangManager.GetValueByKey("ParseNfoInfoFailFromFile")} => {path}");
                     Logger.Error(ex);
                     continue;
                 }
@@ -345,7 +346,7 @@ namespace Jvedio.Entity
                     else
                     {
                         // 如果没扫到视频仍然导入
-                        Logger.Warning("未找到和 NFO 同目录的资源：" + path);
+                        Logger.Warning($"{LangManager.GetValueByKey("DataNotFoundWithNFO")} {path}");
                         movie.filepath = path;      // nfo 路径视为该资源路径
                     }
                 }

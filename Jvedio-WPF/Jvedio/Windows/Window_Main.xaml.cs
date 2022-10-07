@@ -365,7 +365,7 @@ namespace Jvedio
                 {
                     if (!ConfigManager.Settings.PictureIndexCreated)
                     {
-                        MessageCard.Error("请在【选项-库】中建立图片索引！");
+                        MessageCard.Error(LangManager.GetValueByKey("PleaseSetImageIndex"));
                         return;
                     }
 
@@ -385,7 +385,7 @@ namespace Jvedio
                 {
                     if (!ConfigManager.Settings.PlayableIndexCreated)
                     {
-                        MessageCard.Error("请在【选项-库】中建立播放索引！");
+                        MessageCard.Error(LangManager.GetValueByKey("PleaseSetExistsIndex"));
                         return;
                     }
 
@@ -588,13 +588,13 @@ namespace Jvedio
             this.MaximumToNormal += (s, e) =>
             {
                 MaxPath.Data = Geometry.Parse(PathData.MaxPath);
-                MaxMenuItem.Header = "最大化";
+                MaxMenuItem.Header = LangManager.GetValueByKey("Windowization");
             };
 
             this.NormalToMaximum += (s, e) =>
             {
                 MaxPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
-                MaxMenuItem.Header = "窗口化";
+                MaxMenuItem.Header = LangManager.GetValueByKey("Windowization");
             };
 
             // 设置排序类型
@@ -812,7 +812,7 @@ namespace Jvedio
                         }
                     }
 
-                    Logger.Warning("公告解析错误");
+                    Logger.Warning(LangManager.GetValueByKey("ParseNoticeError"));
                 }
                 else
                 {
@@ -964,7 +964,7 @@ namespace Jvedio
                 if (baseWindowState == BaseWindowState.Maximized || baseWindowState == BaseWindowState.FullScreen)
                 {
                     MaxPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
-                    MaxMenuItem.Header = "窗口化";
+                    MaxMenuItem.Header = LangManager.GetValueByKey("Windowization");
                 }
             }
         }
@@ -1059,7 +1059,7 @@ namespace Jvedio
                     this.Top = e.GetPosition(border).Y - border.ActualHeight / 2;
                     this.OnLocationChanged(EventArgs.Empty);
                     MaxPath.Data = Geometry.Parse(PathData.MaxPath);
-                    MaxMenuItem.Header = "最大化";
+                    MaxMenuItem.Header = LangManager.GetValueByKey("Maximize");
                 }
 
                 this.DragMove();
@@ -1562,7 +1562,7 @@ namespace Jvedio
             Video video = getVideo(dataid);
             if (video == null)
             {
-                msgCard.Error("无法播放该视频！");
+                msgCard.Error(LangManager.GetValueByKey("CanNotPlay"));
                 return;
             }
 
@@ -1578,7 +1578,7 @@ namespace Jvedio
             Video video = getAssoVideo(dataid);
             if (video == null)
             {
-                msgCard.Error("无法播放该视频！");
+                msgCard.Error(LangManager.GetValueByKey("CanNotPlay"));
                 return;
             }
 
@@ -1787,7 +1787,7 @@ namespace Jvedio
 
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
         {
-            MessageCard.Info("全库爬取可能会导致你的IP被封，请谨慎使用，尽量同步仅需要的资源");
+            MessageCard.Info(LangManager.GetValueByKey("CrawlAllWarning"));
             vieModel.DownloadStatus = "Downloading";
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
@@ -1963,7 +1963,7 @@ namespace Jvedio
 
                     if (!changed)
                     {
-                        logger.Info("新文件名与源文件相同！");
+                        logger.Info(LangManager.GetValueByKey("SameFileNameToOrigin"));
                         break;
                     }
 
@@ -1971,7 +1971,7 @@ namespace Jvedio
                     {
                         if (File.Exists(newPath[i]))
                         {
-                            logger.Error($"存在同名文件 => {newPath[i]}");
+                            logger.Error($"{LangManager.GetValueByKey("SameFileNameExists")} => {newPath[i]}");
                             newPath[i] = oldPaths[i]; // 换回原来的
                             continue;
                         }
@@ -1999,7 +1999,7 @@ namespace Jvedio
                     string origin = newVideo.Path;
                     if (origin.Equals(target))
                     {
-                        logger.Info("新文件名与源文件相同！");
+                        logger.Info(LangManager.GetValueByKey("SameFileNameToOrigin"));
                         continue;
                     }
 
@@ -2022,7 +2022,7 @@ namespace Jvedio
                     }
                     else
                     {
-                        logger.Error($"存在同名文件 => {target}");
+                        logger.Error($"{LangManager.GetValueByKey("SameFileNameExists") } => {target}");
                     }
                 }
             }
@@ -2058,7 +2058,7 @@ namespace Jvedio
             }
             else
             {
-                msgCard.Info($"没有需要重命名的文件");
+                msgCard.Info(LangManager.GetValueByKey("NoFileToRename"));
             }
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
@@ -2191,7 +2191,7 @@ namespace Jvedio
 
             if (paths.Count <= 0)
             {
-                msgCard.Warning($"需要复制文件的个数为 0，文件可能不存在");
+                msgCard.Warning(LangManager.GetValueByKey("CopyFileNameNull"));
                 return;
             }
 
@@ -2236,14 +2236,14 @@ namespace Jvedio
 
             if (paths.Count <= 0)
             {
-                msgCard.Warning($"需要剪切文件的个数为 0，文件可能不存在");
+                msgCard.Warning(LangManager.GetValueByKey("CutFileNameNull"));
                 return;
             }
 
             bool success = ClipBoard.TryCutFileDropList(paths, (error) => { msgCard.Error(error); });
 
             if (success)
-                msgCard.Success($"已剪切 {count}/{total}");
+                msgCard.Success($"{LangManager.GetValueByKey("Cut")} {count}/{total}");
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
@@ -2281,7 +2281,7 @@ namespace Jvedio
 
             if (paths.Count <= 0)
             {
-                msgCard.Warning($"需要复制文件的个数为 0，文件可能不存在");
+                msgCard.Warning(LangManager.GetValueByKey("CopyFileNameNull"));
                 return;
             }
 
@@ -2448,7 +2448,8 @@ namespace Jvedio
             handleMenuSelected(sender);
 
             // 超过 3 个网页，询问是否继续
-            if (vieModel.SelectedVideo.Count >= 3 && new Msgbox(this, $"即将打开 {vieModel.SelectedVideo.Count} 个网页，是否继续？").ShowDialog() == false) return;
+            if (vieModel.SelectedVideo.Count >= 3 && new Msgbox(this,
+                $"{LangManager.GetValueByKey("ReadyToOpenReadyToOpen")} {vieModel.SelectedVideo.Count} {LangManager.GetValueByKey("SomeWebSite")}").ShowDialog() == false) return;
 
             foreach (Video video in vieModel.SelectedVideo)
             {
@@ -2525,7 +2526,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Info("任务已存在！");
+                MessageCard.Info(LangManager.GetValueByKey("TaskExists"));
             }
         }
 
@@ -2538,7 +2539,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Info("任务已存在！");
+                MessageCard.Info(LangManager.GetValueByKey("TaskExists"));
             }
         }
 
@@ -2816,7 +2817,7 @@ namespace Jvedio
 
             scanTask.onCanceled += (s, ev) =>
             {
-                // msgCard.Warning("取消扫描任务");
+                Console.WriteLine("取消扫描任务");
             };
             scanTask.onError += (s, ev) =>
             {
@@ -2846,7 +2847,6 @@ namespace Jvedio
                 {
                     while (true)
                     {
-                        Console.WriteLine("检查状态");
                         if (vieModel.ScanTasks.All(arg =>
                          arg.Status == System.Threading.Tasks.TaskStatus.Canceled ||
                          arg.Status == System.Threading.Tasks.TaskStatus.RanToCompletion))
@@ -2907,7 +2907,9 @@ namespace Jvedio
             }
         }
 
-        // todo 更改皮肤
+        /// <summary>
+        /// 更改皮肤
+        /// </summary>
         public void SetSkin()
         {
             int idx = GetThemeIndex();
@@ -2947,7 +2949,6 @@ namespace Jvedio
                 }
             }
 
-            // ThemeHelper.SetSkin(Properties.Settings.Default.Themes);
             SuperControls.Style.CustomEventHandler.Render();
             windowDetails?.SetSkin();
         }
@@ -3728,11 +3729,11 @@ namespace Jvedio
             TagStamp tagStamp = Main.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
             if (tagStamp.TagID == 1 || tagStamp.TagID == 2)
             {
-                msgCard.Error("默认标记不可删除");
+                msgCard.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
                 return;
             }
 
-            if (new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"标记 【{tagStamp.TagName}】").ShowDialog() == true)
+            if (new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true)
             {
                 tagStampMapper.DeleteById(id);
 
@@ -4075,14 +4076,14 @@ namespace Jvedio
             Button button = sender as Button;
             string dataID = (sender as Button).Tag.ToString();
             DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            if (button.Content.ToString() == "暂停")
+            if (button.Content.ToString() == LangManager.GetValueByKey("Pause"))
             {
-                button.Content = "继续";
+                button.Content = LangManager.GetValueByKey("Continue");
                 task.Pause();
             }
             else
             {
-                button.Content = "暂停";
+                button.Content = LangManager.GetValueByKey("Pause");
             }
         }
 
@@ -4274,7 +4275,7 @@ namespace Jvedio
 
             if (!File.Exists(playerPath))
             {
-                msgCard.Error("未设置播放器路径！");
+                msgCard.Error(LangManager.GetValueByKey("VideoPlayerPathNotSet"));
                 return;
             }
 
@@ -4312,7 +4313,7 @@ namespace Jvedio
             }
 
             if (!success)
-                MessageCard.Error("目前仅支持 potplayer，请设置 PotPlayerMini64.exe 所在路径");
+                MessageCard.Error(LangManager.GetValueByKey("SupportPotPlayerOnly"));
         }
 
         private void OpenImageSavePath(object sender, RoutedEventArgs e)
@@ -4338,7 +4339,7 @@ namespace Jvedio
 
         private void ShowHelpTagStamp(object sender, MouseButtonEventArgs e)
         {
-            msgCard.Info("用于添加带有颜色和文字的标记，显示在主页面或者详情页面");
+            msgCard.Info(LangManager.GetValueByKey("TagStampDesc"));
         }
 
         private void NewActor(object sender, RoutedEventArgs e)
@@ -4346,7 +4347,7 @@ namespace Jvedio
             bool? success = new Window_EditActor(0).ShowDialog();
             if ((bool)success)
             {
-                msgCard.Success("成功添加！");
+                msgCard.Success(LangManager.GetValueByKey("AddSuccess"));
                 vieModel.Statistic();
             }
         }
@@ -4355,7 +4356,7 @@ namespace Jvedio
         {
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType.Equals(PathType.RelativeToData))
-                msgCard.Info("由于当前图片资源文相对于影片，因此该页面不显示头像");
+                msgCard.Info(LangManager.GetValueByKey("ShowActorImageWarning"));
         }
 
         private void HideMsg(object sender, RoutedEventArgs e)
@@ -4401,7 +4402,7 @@ namespace Jvedio
             if (!string.IsNullOrEmpty(path))
             {
                 AddScanTask(new string[] { path });
-                MessageCard.Success("已添加扫描任务：=> " + path);
+                MessageCard.Success($"{LangManager.GetValueByKey("AddScanTaskSuccess")} => " + path);
             }
         }
 
@@ -4413,12 +4414,12 @@ namespace Jvedio
                 List<string> folders = window_SelectPaths.Folders;
                 if (folders.Count == 0)
                 {
-                    MessageCard.Warning("并未选择文件夹");
+                    MessageCard.Warning(LangManager.GetValueByKey("PathNotSelect"));
                 }
                 else
                 {
                     AddScanTask(folders.ToArray());
-                    MessageCard.Success($"已添加 {folders.Count} 个文件夹到扫描任务!");
+                    // MessageCard.Success($"已添加 {folders.Count} 个文件夹到扫描任务!");
                 }
             }
         }
@@ -4427,7 +4428,7 @@ namespace Jvedio
         {
             if (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0)
             {
-                msgCard.Error("此操作需要清空下载任务、扫描任务、截图任务");
+                msgCard.Error(LangManager.GetValueByKey("NeedToClearTask"));
                 return;
             }
 
@@ -4453,13 +4454,14 @@ namespace Jvedio
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        msgCard.Info("所有影片都存在，无需操作");
+                        msgCard.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
                     });
                     vieModel.RunningLongTask = false;
                     return;
                 }
 
-                MessageBoxResult messageBoxResult = MessageBox.Show($"确认从数据库删除 {toDelete.Count} 个不存在的影片", "提示", MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxResult = MessageBox.Show(
+                    $"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotExists")}", LangManager.GetValueByKey("Hint"), MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
                     videoMapper.deleteVideoByIds(toDelete);
@@ -4476,21 +4478,21 @@ namespace Jvedio
         {
             if (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0)
             {
-                msgCard.Error("此操作需要清空下载任务、扫描任务、截图任务");
+                msgCard.Error(LangManager.GetValueByKey("NeedToClearTask"));
                 return;
             }
 
             string scanPath = vieModel.CurrentAppDataBase.ScanPath;
             if (string.IsNullOrEmpty(scanPath))
             {
-                msgCard.Error("该库未设置目录");
+                msgCard.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
                 return;
             }
 
             List<string> scanPaths = JsonUtils.TryDeserializeObject<List<string>>(scanPath).Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             if (scanPaths == null || scanPaths.Count <= 0)
             {
-                msgCard.Error("该库未设置目录");
+                msgCard.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
                 return;
             }
 
@@ -4531,13 +4533,13 @@ namespace Jvedio
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        msgCard.Info("所有影片都存在，无需操作");
+                        msgCard.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
                     });
                     vieModel.RunningLongTask = false;
                     return;
                 }
 
-                MessageBoxResult messageBoxResult = MessageBox.Show($"确认从数据库删除 {toDelete.Count} 个不位于启动时扫描目录的影片", "提示", MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxResult = MessageBox.Show($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotInScanStatupDir")}", LangManager.GetValueByKey("Hint"), MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
                     videoMapper.deleteVideoByIds(toDelete);
@@ -4554,7 +4556,7 @@ namespace Jvedio
         {
             if (vieModel.DownLoadTasks.Count > 0 || vieModel.ScanTasks.Count > 0 || vieModel.ScreenShotTasks.Count > 0)
             {
-                msgCard.Error("此操作需要清空下载任务、扫描任务、截图任务");
+                msgCard.Error(LangManager.GetValueByKey("NeedToClearTask"));
                 return;
             }
         }

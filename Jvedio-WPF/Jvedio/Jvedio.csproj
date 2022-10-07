@@ -335,7 +335,6 @@
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
     <Compile Include="Core\Plugins\PluginManager.cs" />
     <Compile Include="Core\Plugins\PluginMetaData.cs" />
-    <Compile Include="Core\Plugins\Theme\ThemeHelper.cs" />
     <Compile Include="Core\Scan\ComicScan.cs" />
     <Compile Include="Core\Scan\GameScan.cs" />
     <Compile Include="Core\Scan\PictureScan.cs" />
@@ -353,6 +352,9 @@
     <Compile Include="Core\CustomTask\TaskLogger.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="ViewModels\VieModel_Plugin.cs" />
+    <Compile Include="WindowsDialog\Dialog_SetSkinLang.xaml.cs">
+      <DependentUpon>Dialog_SetSkinLang.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
@@ -526,6 +528,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomStyle\ChaoControls\PathRadioButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowsDialog\Dialog_SetSkinLang.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

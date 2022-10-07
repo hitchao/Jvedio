@@ -1398,7 +1398,7 @@ namespace Jvedio
 
         private void NewLabel(object sender, RoutedEventArgs e)
         {
-            DialogInput dialogInput = new DialogInput(this, "请输入");
+            DialogInput dialogInput = new DialogInput(this, LangManager.GetValueByKey("PleaseEnter"));
             if (dialogInput.ShowDialog() == true)
             {
                 string text = dialogInput.Text;

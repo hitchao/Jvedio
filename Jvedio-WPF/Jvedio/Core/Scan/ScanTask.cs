@@ -6,6 +6,7 @@ using Jvedio.Core.Logs;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using JvedioLib.Security;
+using SuperControls.Style;
 using SuperUtils.IO;
 using SuperUtils.Time;
 using System;
@@ -31,11 +32,11 @@ namespace Jvedio.Core.Scan
 
         public static Dictionary<NotImportReason, string> ReasonToString = new Dictionary<NotImportReason, string>()
         {
-            { NotImportReason.NotInExtension, "扩展名不支持" },
-            { NotImportReason.RepetitiveVideo, "重复的视频" },
-            { NotImportReason.RepetitiveVID, "重复的识别码" },
-            { NotImportReason.SizeTooSmall, "文件过小" },
-            { NotImportReason.SizeTooLarge, "文件过大" },
+            { NotImportReason.NotInExtension, LangManager.GetValueByKey("NotSupportedExt") },
+            { NotImportReason.RepetitiveVideo, LangManager.GetValueByKey("RepeatedVideo") },
+            { NotImportReason.RepetitiveVID, LangManager.GetValueByKey("RepeatedVID") },
+            { NotImportReason.SizeTooSmall, LangManager.GetValueByKey("FileSizeTooSmall") },
+            { NotImportReason.SizeTooLarge, LangManager.GetValueByKey("FileSizeTooBig") },
         };
 
         static ScanTask()
@@ -44,18 +45,16 @@ namespace Jvedio.Core.Scan
             PICTURE_EXTENSIONS = "png,jpg,jpeg,bmp,jpe,ico,gif";
             VIDEO_EXTENSIONS_LIST = VIDEO_EXTENSIONS.Split(',').Select(arg => "." + arg).ToList();
             PICTURE_EXTENSIONS_LIST = PICTURE_EXTENSIONS.Split(',').Select(arg => "." + arg).ToList();
+            STATUS_TO_TEXT_DICT[TaskStatus.Running] = $"{LangManager.GetValueByKey("Scanning")}...";
         }
 
         #region "property"
 
         public ScanResult ScanResult { get; set; }
 
-        public static new Dictionary<TaskStatus, string> STATUS_TO_TEXT_DICT = new Dictionary<TaskStatus, string>()
-        {
-            { TaskStatus.Running, "扫描中..." },
-            { TaskStatus.Canceled, "已取消" },
-            { TaskStatus.RanToCompletion, "已完成" },
-        };
+
+
+
 
         #endregion
 
@@ -100,7 +99,7 @@ namespace Jvedio.Core.Scan
             Task.Run((Action)(() =>
            {
                stopwatch.Start();
-               logger.Info("开始扫描任务");
+               logger.Info(LangManager.GetValueByKey("BeginScan"));
                foreach (string path in ScanPaths)
                {
                    IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) =>
@@ -183,8 +182,6 @@ namespace Jvedio.Core.Scan
 
         private void HandleImport(List<Video> import)
         {
-            logger.Info("开始处理导入");
-
             // 分为 2 部分，有识别码和无识别码
             List<Video> noVidList = import.Where(arg => string.IsNullOrEmpty(arg.VID)).ToList();
             List<Video> vidList = import.Where(arg => !string.IsNullOrEmpty(arg.VID)).ToList();
@@ -196,7 +193,7 @@ namespace Jvedio.Core.Scan
             // 存在同路径、相同大小的影片
             foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.Path.Equals(t.Path)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, "同路径、相同大小的影片");
+                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("SamePathFileSize"));
             }
 
             vidList.RemoveAll(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.Path.Equals(t.Path)).Any());
@@ -204,7 +201,7 @@ namespace Jvedio.Core.Scan
             // 存在不同路径、相同大小、相同 VID、且原路径也存在的影片
             foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, "不同路径、相同大小、相同 VID、且原路径也存在的影片");
+                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("NotSamePathSameFileSize"));
             }
 
             vidList.RemoveAll(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path)).Any());
@@ -212,7 +209,7 @@ namespace Jvedio.Core.Scan
             // 存在不同路径，相同 VID，不同大小，且原路径存在（可能是剪辑的视频）
             foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, "不同路径、相同大小、相同 VID、且原路径也存在的影片");
+                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("NotSamePathSameFileSize"));
             }
 
             vidList.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path)).Any());
@@ -242,7 +239,7 @@ namespace Jvedio.Core.Scan
             // 存在相同 HASH ，不同路径的影片
             foreach (var item in noVidList.Where(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, "相同 HASH ，不同路径的影片");
+                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("SameHashNotSamePath"));
             }
 
             noVidList.RemoveAll(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any());
@@ -257,7 +254,7 @@ namespace Jvedio.Core.Scan
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
-                    ScanResult.Update.Add(video.Path, "HASH 相同，原路径不同");
+                    ScanResult.Update.Add(video.Path, LangManager.GetValueByKey("SameHashNotSamePath"));
                 }
             }
 
@@ -490,7 +487,7 @@ namespace Jvedio.Core.Scan
                 {
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
-                    ScanResult.Update.Add(video.Path, "NFO 信息更新");
+                    ScanResult.Update.Add(video.Path, LangManager.GetValueByKey("UpdateNFO"));
                     video.Path = null;
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);

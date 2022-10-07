@@ -62,7 +62,7 @@ namespace Jvedio
             {
                 ScanDetail detail = new ScanDetail()
                 {
-                    Handle = "未导入",
+                    Handle = LangManager.GetValueByKey("NotImport"),
                     FilePath = item,
                     Extension = getExtension(item),
                     Reason = string.Empty,
@@ -74,7 +74,7 @@ namespace Jvedio
             {
                 ScanDetail detail = new ScanDetail()
                 {
-                    Handle = "未导入",
+                    Handle = LangManager.GetValueByKey("NotImport"),
                     FilePath = key,
                     Extension = getExtension(key),
                     Reason = ScanResult.NotImport[key],
@@ -86,7 +86,7 @@ namespace Jvedio
             {
                 ScanDetail detail = new ScanDetail()
                 {
-                    Handle = "更新",
+                    Handle = LangManager.GetValueByKey("Update"),
                     FilePath = key,
                     Extension = getExtension(key),
                     Reason = ScanResult.Update[key],
@@ -98,7 +98,7 @@ namespace Jvedio
             {
                 ScanDetail detail = new ScanDetail()
                 {
-                    Handle = "导入",
+                    Handle = LangManager.GetValueByKey("Import"),
                     FilePath = item,
                     Extension = getExtension(item),
                     Reason = string.Empty,
@@ -176,7 +176,7 @@ namespace Jvedio
                 builder.Append(Environment.NewLine);
             }
 
-            builder.Append("详情：");
+            builder.Append(LangManager.GetValueByKey("Detail"));
             builder.Append(Environment.NewLine);
             for (int i = 0; i < dataGrid.Items.Count; i++)
             {

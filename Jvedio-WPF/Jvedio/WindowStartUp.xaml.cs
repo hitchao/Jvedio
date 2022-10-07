@@ -78,15 +78,17 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"数据库初始化失败：{ex.Message}");
+                MessageBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
                 App.Current.Shutdown();
             }
 
-            ConfigManager.InitConfig();
+            ConfigManager.InitConfig(() =>
+            {
+                SetLang();
+            });
             ConfigManager.EnsurePicPaths();
 
             await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
-
             // if (GlobalFont != null)
             //    this.FontFamily = GlobalFont;
             InitAppData();      // 初始化应用数据
@@ -109,12 +111,14 @@ namespace Jvedio
                 else radioButtons[i].IsChecked = false;
             }
 
-            // 设置语言
-            if (!string.IsNullOrEmpty(ConfigManager.Settings.CurrentLanguage)
-                && SuperControls.Style.LangManager.SupportLanguages.Contains(ConfigManager.Settings.CurrentLanguage))
-            {
-                SuperControls.Style.LangManager.SetLang(ConfigManager.Settings.CurrentLanguage);
-            }
+
+
+#if DEBUG
+            //ConfigManager.Main.FirstRun = true;
+#endif
+
+            if (ConfigManager.Main.FirstRun)
+                new Dialog_SetSkinLang(this).ShowDialog();
 
 
 
@@ -129,6 +133,17 @@ namespace Jvedio
                 tabControl.SelectedIndex = 1;
                 vieModel_StartUp.Loading = false;
                 this.TitleHeight = DEFAULT_TITLE_HEIGHT;
+            }
+        }
+
+        private void SetLang()
+        {
+            // 设置语言
+            if (!string.IsNullOrEmpty(ConfigManager.Settings.CurrentLanguage)
+                && SuperControls.Style.LangManager.SupportLanguages.Contains(ConfigManager.Settings.CurrentLanguage))
+            {
+                SuperControls.Style.LangManager.SetLang(ConfigManager.Settings.CurrentLanguage);
+                Jvedio.Core.Lang.LangManager.SetLang(ConfigManager.Settings.CurrentLanguage);
             }
         }
 
@@ -388,12 +403,13 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error("内部错误");
+                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
             AppDatabase database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            Msgbox msgbox = new Msgbox(this, $"确认删除 {database.Name} 及其 {database.Count} 条数据、标签、翻译、标记等信息？");
+            Msgbox msgbox = new Msgbox(this,
+                $"{LangManager.GetValueByKey("IsToDelete")} {database.Name} {LangManager.GetValueByKey("And")} {database.Count} {LangManager.GetValueByKey("TagLabelAndOtherInfo")}");
             if (msgbox.ShowDialog() == true)
             {
                 try
@@ -419,7 +435,7 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error("内部错误");
+                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
@@ -494,7 +510,7 @@ namespace Jvedio
         {
             vieModel_StartUp.CurrentSearch = string.Empty;
             vieModel_StartUp.Sort = true;
-            vieModel_StartUp.SortType = "创建时间";
+            vieModel_StartUp.SortType = LangManager.GetValueByKey("CreatedDate");
             DialogInput input = new DialogInput(this, SuperControls.Style.LangManager.GetValueByKey("NewLibrary"));
             if (input.ShowDialog() == false) return;
             string targetName = input.Text;
@@ -572,7 +588,7 @@ namespace Jvedio
             // 检测该 id 是否在数据库中存在
             if (database == null)
             {
-                MessageCard.Error("默认打开的数据库被删除了，取消启动时默认打开");
+                MessageCard.Error(LangManager.GetValueByKey("CancelOpenDefault"));
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
@@ -612,7 +628,6 @@ namespace Jvedio
                             while (scanTask.Running)
                             {
                                 await Task.Delay(100);
-                                Console.WriteLine("扫描中");
                                 if (CancelScanTask) break;
                             }
                         }
@@ -681,7 +696,7 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error("内部错误");
+                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
@@ -730,7 +745,7 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error("内部错误");
+                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
@@ -748,7 +763,7 @@ namespace Jvedio
             ConfigManager.StartUp.SideIdx = vieModel_StartUp.CurrentSideIdx;
 
             ConfigManager.StartUp.Sort = vieModel_StartUp.Sort;
-            ConfigManager.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? "名称" : vieModel_StartUp.SortType;
+            ConfigManager.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? LangManager.GetValueByKey("Title") : vieModel_StartUp.SortType;
             ConfigManager.StartUp.Save();
 
             Main main = GetWindowByName("Main") as Main;
@@ -791,7 +806,7 @@ namespace Jvedio
 
         private async void RestoreDatabase(object sender, RoutedEventArgs e)
         {
-            if (new Msgbox(this, "即将删除所有的库信息（保留图片和文件）并重新初始化？").ShowDialog() == true)
+            if (new Msgbox(this, LangManager.GetValueByKey("IsToRestore")).ShowDialog() == true)
             {
                 Button button = sender as Button;
                 button.IsEnabled = false;
@@ -801,7 +816,7 @@ namespace Jvedio
                 await Task.Delay(1000);
                 bool success = FileHelper.TryDeleteFile(SqlManager.DEFAULT_SQLITE_PATH, (error) =>
                 {
-                    MessageCard.Error($"初始化失败：{error}");
+                    MessageCard.Error(error.Message);
                 });
                 if (success)
                 {
@@ -811,11 +826,11 @@ namespace Jvedio
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"数据库初始化失败：{ex.Message}");
+                        MessageBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
                         App.Current.Shutdown();
                     }
 
-                    MessageCard.Success($"初始化成功！");
+                    MessageCard.Success(LangManager.GetValueByKey("Success"));
                 }
 
                 button.IsEnabled = true;

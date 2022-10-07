@@ -29,7 +29,7 @@ namespace Jvedio
         public static Jvedio.Core.Config.PluginConfig PluginConfig = Jvedio.Core.Config.PluginConfig.createInstance();
         public static Jvedio.Core.Config.ThemeConfig ThemeConfig = Jvedio.Core.Config.ThemeConfig.createInstance();
 
-        public static void InitConfig()
+        public static void InitConfig(Action callback)
         {
             System.Reflection.FieldInfo[] fieldInfos = typeof(ConfigManager).GetFields();
 
@@ -43,6 +43,8 @@ namespace Jvedio
                 }
 
                 config.Read();
+                if (item.Name.Equals("Settings"))
+                    callback?.Invoke();
             }
         }
 

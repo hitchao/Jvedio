@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using Jvedio.Entity;
+using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -176,24 +177,22 @@ namespace Jvedio.ViewModel
             if (CurrentDatabases == null) CurrentDatabases = Databases;
             List<AppDatabase> infos = CurrentDatabases.ToList();
             CurrentDatabases = null;
-            switch (SortType)
+
+            if (SortType.Equals(LangManager.GetValueByKey("Title")))
             {
-                case "名称":
-                    infos = infos.OrderBy(x => x.Name).ToList();
-                    break;
-                case "创建时间":
-                    infos = infos.OrderBy(x => x.CreateDate).ToList();
-                    break;
-                case "数据数目":
-                    infos = infos.OrderBy(x => x.Count).ToList();
-                    break;
-
-                case "访问频率":
-                    infos = infos.OrderBy(x => x.ViewCount).ToList();
-                    break;
-
-                default:
-                    break;
+                infos = infos.OrderBy(x => x.Name).ToList();
+            }
+            else if (SortType.Equals(LangManager.GetValueByKey("CreatedDate")))
+            {
+                infos = infos.OrderBy(x => x.CreateDate).ToList();
+            }
+            else if (SortType.Equals(LangManager.GetValueByKey("Number")))
+            {
+                infos = infos.OrderBy(x => x.Count).ToList();
+            }
+            else if (SortType.Equals(LangManager.GetValueByKey("ViewNumber")))
+            {
+                infos = infos.OrderBy(x => x.ViewCount).ToList();
             }
 
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();

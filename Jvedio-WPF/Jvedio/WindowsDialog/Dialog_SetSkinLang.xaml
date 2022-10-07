@@ -5,11 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="{DynamicResource About}"
-    Width="500"
+    Title="{DynamicResource Settings}"
+    Width="auto"
     Background="{DynamicResource Window.InnerDialog.Background}"
-    ContentRendered="BaseDialog_ContentRendered"
-    SizeToContent="Height"
+    SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
 
@@ -33,11 +32,112 @@
                     Source="/Resources/Picture/Title.png" />
             </StackPanel>
 
-            <TextBlock
-                Margin="10"
-                FontSize="20"
-                Style="{StaticResource BaseTextBlock}"
-                Text="{DynamicResource About_Outline}" />
+
+            <StackPanel Margin="20" Orientation="Horizontal">
+                <TextBlock
+                    MinWidth="100"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="{DynamicResource Skin}"
+                    TextAlignment="Left" />
+                <RadioButton
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="{Binding ViewBrush}"
+                    Click="ChangeTheme"
+                    FocusVisualStyle="{x:Null}"
+                    GroupName="SkinRadioButton"
+                    Style="{StaticResource ColorRadioButton}"
+                    Tag="0">
+
+
+                    <Grid
+                        Width="100"
+                        Height="70"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+
+                        <!--  Add rounded corners here  -->
+                        <Border
+                            Grid.RowSpan="2"
+                            Margin="5"
+                            Background="#323233"
+                            CornerRadius="4" />
+                    </Grid>
+
+                </RadioButton>
+
+                <RadioButton
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="{Binding ViewBrush}"
+                    Click="ChangeTheme"
+                    FocusVisualStyle="{x:Null}"
+                    GroupName="SkinRadioButton"
+                    Style="{StaticResource ColorRadioButton}"
+                    Tag="1">
+
+
+                    <Grid
+                        Width="100"
+                        Height="70"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+
+                        <!--  Add rounded corners here  -->
+                        <Border
+                            Grid.RowSpan="2"
+                            Margin="5"
+                            Background="#DDDDDD"
+                            CornerRadius="4" />
+                    </Grid>
+
+                </RadioButton>
+            </StackPanel>
+
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    MinWidth="100"
+                    VerticalAlignment="Top"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="{DynamicResource Language}"
+                    TextAlignment="Left" />
+                <WrapPanel Grid.Column="1" Orientation="Horizontal">
+                    <RadioButton
+                        HorizontalAlignment="Left"
+                        Click="SetLang"
+                        Content="中文"
+                        GroupName="lang"
+                        IsChecked="True"
+                        Style="{StaticResource FlatRadioButton}"
+                        Tag="zh-CN" />
+                    <RadioButton
+                        HorizontalAlignment="Left"
+                        Click="SetLang"
+                        Content="English"
+                        GroupName="lang"
+                        Style="{StaticResource FlatRadioButton}"
+                        Tag="en-US" />
+                    <RadioButton
+                        x:Name="customProxyRadioButton"
+                        HorizontalAlignment="Left"
+                        Click="SetLang"
+                        Content="日本語"
+                        GroupName="lang"
+                        Style="{StaticResource FlatRadioButton}"
+                        Tag="ja-JP" />
+                </WrapPanel>
+            </Grid>
+
 
         </StackPanel>
     </Grid>

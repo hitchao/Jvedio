@@ -35,7 +35,6 @@ def print_key_value():
 def generate_xaml():
     key_path = os.path.join(os.getcwd(), "Translation", "Lang", "key.txt")
     keys = open(key_path, 'r', encoding='utf8').read().split('\n')
-    prefix = open("sample.txt", 'r', encoding='utf8').read()
     for lang in target_lang:
         output = ""
         lang_path = os.path.join(os.getcwd(), "Translation", "Value",
@@ -54,5 +53,5 @@ def generate_xaml():
 
 
 if __name__ == "__main__":
-    # print_key_value()
+    #  print_key_value()
     generate_xaml()

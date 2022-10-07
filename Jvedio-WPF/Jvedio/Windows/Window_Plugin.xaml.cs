@@ -287,7 +287,7 @@ namespace Jvedio
             // 加入到下载列表中
             if (PluginManager.DownloadingList.Any(arg => arg.Equals(pluginMetaData.PluginID)))
             {
-                MessageCard.Warning($"【{pluginMetaData.PluginName}】下载中或已下载");
+                MessageCard.Warning($"【{pluginMetaData.PluginName}】{LangManager.GetValueByKey("DownloadingOrDownloaded")}");
                 return;
             }
 
@@ -419,7 +419,7 @@ namespace Jvedio
             if (metaData != null)
             {
                 string name = metaData.PluginName;
-                Msgbox msgbox = new Msgbox(this, $"确定删除插件 {name} ？");
+                Msgbox msgbox = new Msgbox(this, $"{LangManager.GetValueByKey("IsToDelete")} {name} ？");
                 if (msgbox.ShowDialog() == false) return;
 
                 List<string> list = JsonUtils.TryDeserializeObject<List<string>>(ConfigManager.PluginConfig.DeleteList);
@@ -430,7 +430,7 @@ namespace Jvedio
                 }
                 ConfigManager.PluginConfig.DeleteList = JsonUtils.TrySerializeObject(list);
                 ConfigManager.PluginConfig.Save();
-                MessageCard.Success("该插件已添加到移除列表，重启后生效！");
+                MessageCard.Success(LangManager.GetValueByKey("PluginDeleteSet"));
             }
         }
 
