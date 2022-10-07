@@ -240,7 +240,8 @@
                         IsEnabled="False"
                         IsExpanded="False"
                         LineWidth="0"
-                        Style="{StaticResource BaseTogglePanel}">
+                        Style="{StaticResource BaseTogglePanel}"
+                        Visibility="Collapsed">
                         <StackPanel Orientation="Vertical">
 
 

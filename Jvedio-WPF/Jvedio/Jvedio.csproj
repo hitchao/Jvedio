@@ -181,10 +181,10 @@
       <HintPath>Lib\QueryEngine.dll</HintPath>
     </Reference>
     <Reference Include="SuperControls.Style">
-      <HintPath>..\Jvedio\Reference\SuperControls.Style.dll</HintPath>
+      <HintPath>.\Reference\SuperControls.Style.dll</HintPath>
     </Reference>
     <Reference Include="SuperUtils">
-      <HintPath>..\Jvedio\Reference\SuperUtils.dll</HintPath>
+      <HintPath>.\Reference\SuperUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -657,7 +657,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Content Include="Reference\ChaoControls.Style.dll" />
     <Content Include="Reference\CommonNet.dll" />
     <Resource Include="Resources\Picture\雷达扫描.png" />
     <Resource Include="Resources\Picture\网络信息.png" />
@@ -991,39 +990,29 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>XCOPY  "D:\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll"  "D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\Reference"    /E /Y /i
-XCOPY  "D:\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll"  "D:\Jvedio\Jvedio\Jvedio-WPF\Jvedio\Reference"    /E /Y /i
-
-XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\MediaInfoNET.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\ChaoControls.Style.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\WpfAnimatedGif.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
-
-XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\MediaInfoNET.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\ChaoControls.Style.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\WpfAnimatedGif.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
-
-</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>XCOPY  "$(ProjectDir)bin\Debug"  "$(SolutionDir)Release\public\File"    /E /Y /i
+
 XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i
+
 mkdir "$(ProjectDir)bin\Debug\plugins\crawlers"
+
 XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
+
 XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
 
 XCOPY  "$(ProjectDir)bin\Release"  "$(SolutionDir)Release\public\File"    /E /Y /i
-XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Release"   /Y /i
-mkdir "$(ProjectDir)bin\Release\plugins\crawlers"
-XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i
-XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i
 
-</PostBuildEvent>
+XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Release"   /Y /i
+
+mkdir "$(ProjectDir)bin\Release\plugins\crawlers"
+
+XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i
+
+XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
