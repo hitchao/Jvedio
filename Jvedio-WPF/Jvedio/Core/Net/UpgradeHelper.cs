@@ -57,9 +57,11 @@ namespace Jvedio.Core.Net
                         if (dict.ContainsKey("ReleaseNote") && dict["ReleaseNote"] != null)
                         {
                             Dictionary<string, string> d = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(dict["ReleaseNote"].ToString());
-                            if (d != null && SuperControls.Style.LangManager.SupportLanguages.Contains(ConfigManager.Settings.CurrentLanguage))
+                            string lang = ConfigManager.Settings.CurrentLanguage;
+                            if (string.IsNullOrEmpty(lang))
+                                lang = "zh-CN";
+                            if (d != null && SuperControls.Style.LangManager.SupportLanguages.Contains(lang))
                             {
-                                string lang = ConfigManager.Settings.CurrentLanguage;
                                 ReleaseNote = d.ContainsKey(lang) ? d[lang] : string.Empty;
                             }
                         }

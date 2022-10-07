@@ -17,6 +17,7 @@ namespace Jvedio.Core.WindowConfig
             AutoBackupPeriodIndex = 0;
             AutoBackup = true;
             DetailShowBg = true;
+            CurrentLanguage = "zh-CN";
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
