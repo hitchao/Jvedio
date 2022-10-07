@@ -34,15 +34,21 @@ Capture video pictures based on `FFmpeg`, smooth and beautiful application softw
 
 WebSite：[Jvedio](https://hitchao.github.io/JvedioWebPage/) | Download：[Latest Version](https://github.com/hitchao/Jvedio/releases)
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZRLF.png" alt="XcZRLF.png" style="zoom:80%;" />](https://imgtu.com/i/XcZRLF)
+---
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8KbvT.png" alt="x8KbvT.png" style="zoom:80%;" />](https://imgse.com/i/x8KbvT)
+
+
+---
+[<img src="https://s1.ax1x.com/2022/10/07/x8KOrF.png" alt="x8KOrF.png" style="zoom:80%;" />](https://imgse.com/i/x8KOrF)
 
 ---
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZQVH.png" alt="XcZQVH.png" style="zoom:80%;" />](https://imgtu.com/i/XcZQVH)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MVVH.png" alt="x8MVVH.png" style="zoom:80%;" />](https://imgse.com/i/x8MVVH)
 
 ---
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZlad.png" alt="XcZlad.png" style="zoom:80%;" />](https://imgtu.com/i/XcZlad)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MZad.png" alt="x8MZad.png" style="zoom:80%;" />](https://imgse.com/i/x8MZad)
 
 
 
@@ -64,84 +70,92 @@ Users : [User Guide](https://github.com/hitchao/Jvedio/wiki/02_Beginning)
 |Gif control modified in|[WpfAnimatedGif](https://github.com/hitchao/WpfAnimatedGif)|
 
 
-# Implemented
+# Software Characteristics
 
-## Themes: supports three skins (black, white, blue)
+## plugin
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uGSeO.png)](https://s3.ax1x.com/2021/03/06/6uGSeO.png)
+Including the following plug -in
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uGPFH.png)](https://s3.ax1x.com/2021/03/06/6uGPFH.png)
+- Ter skin plug -in
+- Setal information plug -in
 
 
-## Language: Support Chinese, English, Japanese
+[<img src="https://s1.ax1x.com/2022/10/07/x8MJaj.png" alt="x8MJaj.png" style="zoom:80%;" />](https://imgse.com/i/x8MJaj)
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uJaKP.png)](https://s3.ax1x.com/2021/03/06/6uJaKP.png)
+**Skin plug -in supports a variety of skin switching**
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uJfbT.png)](https://s3.ax1x.com/2021/03/06/6uJfbT.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MUGq.png" alt="x8MUGq.png" style="zoom:80%;" />](https://imgse.com/i/x8MUGq)
+
+
+## Language
+
+**Support Chinese, English, Japanese**
+
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MydJ.png" alt="x8MydJ.png" style="zoom:80%;" />](https://imgse.com/i/x8MydJ)
 
 
 ## Multi-Video Library Management
 
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uJLKx.png)](https://s3.ax1x.com/2021/03/06/6uJLKx.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8KbvT.png" alt="x8KbvT.png" style="zoom:80%;" />](https://imgse.com/i/x8KbvT)
 
+
+## Support NFO recognition import
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8M5LD.png" alt="x8M5LD.png" style="zoom:80%;" />](https://imgse.com/i/x8M5LD)
+
+
+## Support information editing and modification
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MTdH.png" alt="x8MTdH.png" style="zoom:80%;" />](https://imgse.com/i/x8MTdH)
+
+## tag management/screening
+
+- Profile batch addition/modification/delete marks
+- Sef according to the mark
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MLWt.png" alt="x8MLWt.png" style="zoom:80%;" />](https://imgse.com/i/x8MLWt)
+
+## Rich search function
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MxOS.png" alt="x8MxOS.png" style="zoom:80%;" />](https://imgse.com/i/x8MxOS)
+
+## New actor information
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8QAS0.png" alt="x8QAS0.png" style="zoom:80%;" />](https://imgse.com/i/x8QAS0)
+
+## video processing function
+
+- screenshot
+- Cut GIF
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8QVyT.png" alt="x8QVyT.png" style="zoom:80%;" />](https://imgse.com/i/x8QVyT)
+
+## Renamed Video Function
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qnw4.png" alt="x8Qnw4.png" style="zoom:80%;" />](https://imgse.com/i/x8Qnw4)
 
 ## Other functions
 
-- Picture display mode: thumbnail, poster image, preview image, GIF (may be the only video management software that supports GIF)
+- Agenic display mode: shrinkage diagram, poster diagram
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uYFMt.png)](https://s3.ax1x.com/2021/03/06/6uYFMt.png)
+- The rich screening function: Whether the resources have been screening, whether there are screening in the picture, only displayed video, video type selection
 
-- Abundant filtering functions: with picture/no picture, HD/Chinese/streaming, only display and playable, only segmented video, video type selection
-
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uYlMq.png)](https://s3.ax1x.com/2021/03/06/6uYlMq.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qr1P.png" alt="x8Qr1P.png" style="zoom:80%;" />](https://imgse.com/i/x8Qr1P)
 
 
-- Rich right-click function
+- The rich right -click function
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uY3LV.png)](https://s3.ax1x.com/2021/03/06/6uY3LV.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qhhn.png" alt="x8Qhhn.png" style="zoom:80%;" />](https://imgse.com/i/x8Qhhn)
 
+- Smart classification
 
-- Quick navigation function
+[<img src="https://s1.ax1x.com/2022/10/07/x8QHnU.png" alt="x8QHnU.png" style="zoom:80%;" />](https://imgse.com/i/x8QHnU)
 
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uYJdU.png)](https://s3.ax1x.com/2021/03/06/6uYJdU.png)
+- upgrade
 
-- Intelligent classification
-
-[![Click to view](https://s3.ax1x.com/2021/03/06/6uYLWj.png)](https://s3.ax1x.com/2021/03/06/6uYLWj.png)
-
-
-- Highly customizable settings
-
-
-
-[![Click to view](https://s3.ax1x.com/2021/03/06/6utx9H.png)](https://s3.ax1x.com/2021/03/06/6utx9H.png)
-
-
-- Rich tool library
-
-
-[![Click to view](https://s3.ax1x.com/2021/03/06/6ut3pd.png)](https://s3.ax1x.com/2021/03/06/6ut3pd.png)
-
-
-- Batch processing function
-
-
-
-[![Click to view](https://s3.ax1x.com/2021/03/06/6utJXt.png)](https://s3.ax1x.com/2021/03/06/6utJXt.png)
-
-
-- Movie library management function
-
-
-
-[![Click to view](https://s3.ax1x.com/2021/03/06/6utscn.png)](https://s3.ax1x.com/2021/03/06/6utscn.png)
-
-- Upgrade
-
-
-[![Click to view](https://s3.ax1x.com/2021/03/06/6ut0hQ.png)](https://s3.ax1x.com/2021/03/06/6ut0hQ.png)
-
+[<img src="https://s1.ax1x.com/2022/10/07/x8liHe.png" alt="x8liHe.png" style="zoom:80%;" />](https://imgse.com/i/x8liHe)
 
 
 # Thanks

@@ -34,17 +34,21 @@
 
 
 
+---
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZRLF.png" alt="XcZRLF.png" style="zoom:80%;" />](https://imgtu.com/i/XcZRLF)
+[<img src="https://s1.ax1x.com/2022/10/07/x8KbvT.png" alt="x8KbvT.png" style="zoom:80%;" />](https://imgse.com/i/x8KbvT)
+
+
+---
+[<img src="https://s1.ax1x.com/2022/10/07/x8KOrF.png" alt="x8KOrF.png" style="zoom:80%;" />](https://imgse.com/i/x8KOrF)
 
 ---
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZQVH.png" alt="XcZQVH.png" style="zoom:80%;" />](https://imgtu.com/i/XcZQVH)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MVVH.png" alt="x8MVVH.png" style="zoom:80%;" />](https://imgse.com/i/x8MVVH)
 
 ---
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZlad.png" alt="XcZlad.png" style="zoom:80%;" />](https://imgtu.com/i/XcZlad)
-
+[<img src="https://s1.ax1x.com/2022/10/07/x8MZad.png" alt="x8MZad.png" style="zoom:80%;" />](https://imgse.com/i/x8MZad)
 
 
 # 使用説明書
@@ -64,87 +68,90 @@
 | Jvedioアップグレードサーバーソース| [jvedioupdate](https://github.com/hitchao/jvedioupdate)|
 | Gifコン​​トロールが変更されました| [WpfAnimatedGif](https://github.com/hitchao/WpfAnimatedGif)|
 
-# 機能リスト
 
+# ソフトウェア特性
 
-## インターフェース：3つのスキン（黒、白、青）をサポート
+## プラグイン
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uGSeO.png)](https://s3.ax1x.com/2021/03/06/6uGSeO.png)
+次のプラグインを含む
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uGPFH.png)](https://s3.ax1x.com/2021/03/06/6uGPFH.png)
+- スキンプラグ - イン
+- 同期情報プラグイン
 
+[<img src="https://s1.ax1x.com/2022/10/07/x8MJaj.png" alt="x8MJaj.png" style="zoom:80%;" />](https://imgse.com/i/x8MJaj)
 
-## 言語：中国語、英語、日本語をサポート
+**スキンプラグ-Inは、さまざまなスキンスイッチングをサポートしています**
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uJaKP.png)](https://s3.ax1x.com/2021/03/06/6uJaKP.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MUGq.png" alt="x8MUGq.png" style="zoom:80%;" />](https://imgse.com/i/x8MUGq)
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uJfbT.png)](https://s3.ax1x.com/2021/03/06/6uJfbT.png)
+## 言語
 
+**中国語、英語、日本語をサポート**
 
-## マルチビデオライブラリ管理
+[<img src="https://s1.ax1x.com/2022/10/07/x8MydJ.png" alt="x8MydJ.png" style="zoom:80%;" />](https://imgse.com/i/x8MydJ)
 
+## マルチフィルムライブラリ管理
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uJLKx.png)](https://s3.ax1x.com/2021/03/06/6uJLKx.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8KbvT.png" alt="x8KbvT.png" style="zoom:80%;" />](https://imgse.com/i/x8KbvT)
+
+## サポートNFO認識インポート
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8M5LD.png" alt="x8M5LD.png" style="zoom:80%;" />](https://imgse.com/i/x8M5LD)
+
+## サポート情報の編集と変更
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MTdH.png" alt="x8MTdH.png" style="zoom:80%;" />](https://imgse.com/i/x8MTdH)
+
+## タグ管理/スクリーニング
+
+- プロファイルバッチの追加/変更/削除マーク
+- マークに従ってフィルター
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MLWt.png" alt="x8MLWt.png" style="zoom:80%;" />](https://imgse.com/i/x8MLWt)
+
+## リッチ検索機能
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MxOS.png" alt="x8MxOS.png" style="zoom:80%;" />](https://imgse.com/i/x8MxOS)
+
+## 新しい俳優情報
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8QAS0.png" alt="x8QAS0.png" style="zoom:80%;" />](https://imgse.com/i/x8QAS0)
+
+## ビデオ処理機能
+
+- スクリーンショット
+- GIFを傍受します
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8QVyT.png" alt="x8QVyT.png" style="zoom:80%;" />](https://imgse.com/i/x8QVyT)
+
+## ビデオ関数の名前を変更しました
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qnw4.png" alt="x8Qnw4.png" style="zoom:80%;" />](https://imgse.com/i/x8Qnw4)
 
 
 ## その他の機能
 
-- 画像表示モード：サムネイル、ポスター画像、プレビュー画像、GIF(GIFをサポートする唯一のビデオ管理ソフトウェアである可能性があります)
+- エージェニックディスプレイモード：収縮図、ポスター図
+- 豊富なスクリーニング機能：リソースがスクリーニング中かどうか、写真にスクリーニングがあるかどうか、ビデオのみ、ビデオタイプの選択
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uYFMt.png)](https://s3.ax1x.com/2021/03/06/6uYFMt.png)
-
--豊富なフィルタリング機能：画像付き/画像なし、HD /中国語/ストリーミング、表示と再生のみ、セグメント化されたビデオのみ、ビデオタイプの選択
-
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uYlMq.png)](https://s3.ax1x.com/2021/03/06/6uYlMq.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qr1P.png" alt="x8Qr1P.png" style="zoom:80%;" />](https://imgse.com/i/x8Qr1P)
 
 
-- 豊富な右クリック機能
+- リッチな権利 - 関数をクリックします
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uY3LV.png)](https://s3.ax1x.com/2021/03/06/6uY3LV.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qhhn.png" alt="x8Qhhn.png" style="zoom:80%;" />](https://imgse.com/i/x8Qhhn)
 
+- マーク分類
 
-- クイックナビゲーション機能
-
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uYJdU.png)](https://s3.ax1x.com/2021/03/06/6uYJdU.png)
-
-- インテリジェントな分類
-
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6uYLWj.png)](https://s3.ax1x.com/2021/03/06/6uYLWj.png)
-
-
-- 高度にカスタマイズ可能な設定
-
-
-
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6utx9H.png)](https://s3.ax1x.com/2021/03/06/6utx9H.png)
-
-
-- 豊富なツールライブラリ
-
-
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6ut3pd.png)](https://s3.ax1x.com/2021/03/06/6ut3pd.png)
-
-
-- バッチ処理機能
-
-
-
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6utJXt.png)](https://s3.ax1x.com/2021/03/06/6utJXt.png)
-
-
-- ムービーライブラリ管理機能
-
-
-
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6utscn.png)](https://s3.ax1x.com/2021/03/06/6utscn.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8QHnU.png" alt="x8QHnU.png" style="zoom:80%;" />](https://imgse.com/i/x8QHnU)
 
 - アップグレード
 
+[<img src="https://s1.ax1x.com/2022/10/07/x8liHe.png" alt="x8liHe.png" style="zoom:80%;" />](https://imgse.com/i/x8liHe)
 
-[![クリックして表示](https://s3.ax1x.com/2021/03/06/6ut0hQ.png)](https://s3.ax1x.com/2021/03/06/6ut0hQ.png)
 
 
 
 # ありがとう
 
-**Jvedio の開発に貢献してくれた以下のネチズンに感謝します**。皆様のご支援により、 `Jvedio`がどんどん良くなっていくことを願っています！
+**Jvedio の開発に貢献してくれた以下のネチズンに感謝します**。皆様のご支援により、 `Jvedio`がどんどん良くなっていくことを願っています
