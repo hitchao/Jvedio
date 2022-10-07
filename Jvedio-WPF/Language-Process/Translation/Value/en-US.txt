@@ -1,0 +1,145 @@
+Open
+Set picture
+video
+game
+comics
+Newly built
+Tile
+Display hidden library
+Initialize the library
+The path where the program is located
+Prefix
+Sponsor
+Update source: github
+New version details
+Show search history
+View history
+Film and television picture path
+Absolute path
+Path relative to software
+Compared to the video path
+Please enter the relative path ('./' represents the current directory, '../' indicate the previous layer of directory)
+Please enter the file name or folder name (no complex name, automatic identification)
+Scan and import
+Scanned file size
+Extracting resource recognition code
+Cover the original picture
+Copy poster/shrinkage diagram
+Copy actor avatar
+Copy preview
+Copy video screenshot
+Switching library
+Download the preview at the same time when the main interface synchronizes
+Skip the downloaded picture
+Forced synchronous information (not recommended)
+Ignore a certificate error (unsafe)
+Request timed out
+Proxy settings
+No proxy
+Use system proxy
+Custom agent
+type
+server
+port
+username
+password
+Test address
+Scraper list
+Not activated
+Please copy all the request heads in the browser here
+Tutorial
+Automatic Identification
+search bar
+Page adjustment bar
+Page adjustment drop -down
+The release date is empty display creation date
+Baidu translator
+Task timeout
+If the folder exists, skip
+Apply the background to the details page
+Remove the space on both sides of the title
+Information separator
+Tag/category/actor and other separators
+Library
+Automatic backup library
+Backup cycle (day)
+index
+Establish an index of resource existence
+Picture index of establishing video resources
+network
+Import details
+Scan time
+time consuming
+total
+renew
+Non -importing NFO
+operate
+Suffix
+path
+View abnormalities
+schedule
+Plug -in
+Upload
+Enable all plug -in
+Disable all plug -in
+Whether to enable
+Scraper
+Not Installed
+Installed
+Upgrade
+Editor
+Set Avatar
+Actor
+Repeated actor names share the same picture
+add to
+Delete mark
+Visit
+Delete all pictures in the list
+Make
+mark
+Background
+Prospect
+Check
+processing
+Search title/path/recognition code
+Associated
+To be associated
+Add label
+minimize
+maximize
+return
+Film actor
+My tag
+Fast access
+Scan multiple folders
+Scan network disk
+warn
+mistake
+Import video
+does it exist
+exist
+Picture existence
+All resources
+Add to play list
+Resource correlation
+Clear the downloaded information
+Cut (x)
+Go to the top
+New actor
+Number of works
+nationality
+blood type
+weight
+gender
+continue
+Screenshot task
+Clear list
+completed
+Cancelled
+Detail
+Everything
+Scanning task
+result
+Download task
+Restart
+Recent news

@@ -9,7 +9,11 @@
     <sys:String x:Key="CopyNFOImage">ビデオの同じファイルの下にあるポスターとファンアートをJvedioの画像ディレクトリにコピーします</sys:String>
     <sys:String x:Key="OpenJvedio">Jvedioを開く</sys:String>
     <sys:String x:Key="JvedioIsRunning">Jvedio はすでに動いている!</sys:String>
-
     <sys:String x:Key="FlowOut">流出</sys:String>
     <sys:String x:Key="About_Outline">ローカル動画の管理</sys:String>
+
+    <sys:String x:Key="ThanksUseJvedio">Jvedioへようこそ</sys:String>
+    <sys:String x:Key="EnterVID">ビデオ認識コードを入力し、車に戻ります</sys:String>
+    <sys:String x:Key="LikeAndSponsor">Jvedioが好きなら、次の方法を使用して私を後援することができます〜</sys:String>
+    <sys:String x:Key="UseScreenIfNoImage">カバーがない場合は、傍受された画像をカバーとして使用します</sys:String>
 </ResourceDictionary>
