@@ -539,313 +539,314 @@
 
             </TabItem>
             <TabItem Background="Transparent" Header="{DynamicResource ScanAndImport}">
-                <StackPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
 
-                    <StackPanel
-                        Margin="5,20,0,5"
-                        Orientation="Vertical"
-                        Visibility="Collapsed">
-                        <CheckBox
-                            x:Name="ListenCheckBox"
-                            Margin="10,5,10,5"
-                            Checked="ListenCheckBox_Checked"
-                            Content="监听所有文件改动并更新数据库（不包括C盘）"
-                            IsChecked="{Binding ListenAllDir, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-
-                    </StackPanel>
-
-
-
-
-
-                    <StackPanel
-                        Margin="20,5"
-                        Orientation="Horizontal"
-                        Visibility="Visible">
-                        <TextBlock
-                            MinWidth="200"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="{DynamicResource ScanMinFileSize}"
-                            TextAlignment="Left"
-                            ToolTip="[0-2000]" />
-                        <super:SearchBox
-                            MinWidth="100"
-                            ShowClearButton="False"
-                            Style="{StaticResource BaseSearchTextBox}"
-                            Text="{Binding MinFileSize, Mode=TwoWay}"
-                            TextAlignment="Center"
-                            ToolTip="[0-2000]" />
-                        <TextBlock Style="{StaticResource BaseTextBlock}" Text="MB" />
-                    </StackPanel>
-                    <StackPanel
-                        Margin="20,5"
-                        IsEnabled="False"
-                        Orientation="Horizontal"
-                        Visibility="Collapsed">
-                        <TextBlock
-                            MinWidth="200"
-                            Style="{StaticResource BaseTextBlock}"
-                            Text="视频识别码的正则表达式"
-                            TextAlignment="Left"
-                            ToolTip="[0-2000]" />
-                        <super:SearchBox
-                            MinWidth="400"
-                            LostFocus="SetScanRe"
-                            PlaceHolder="正则表达式，使用英文分号分割每个正则"
-                            PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                            Style="{StaticResource BaseSearchTextBox}"
-                            Text="{Binding ScanRe, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-                        <Border
-                            Width="30"
-                            Height="30"
-                            Margin="10,5"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Panel.ZIndex="20"
-                            CornerRadius="5"
-                            PreviewMouseLeftButtonUp="ShowScanReHelp"
-                            Style="{StaticResource RoundBorder}"
-                            Tag="{DynamicResource Window.Title.Hover.Background}">
-                            <Viewbox
-                                Width="20"
-                                Height="auto"
-                                VerticalAlignment="Center">
-                                <Path
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Data="M563.363941 572.337203c-0.662107-10.635221 5.985569-21.937638 19.948145-33.908274 13.962576-11.964496 29.591164-25.264407 46.879625-39.893592 17.288461-14.628162 33.242474-31.083949 47.872273-49.365314 14.630823-18.286482 22.606806-39.397289 23.936137-63.332421 1.330354-25.932626-1.329331-50.199309-7.977007-72.810283-6.647676-22.604834-17.620026-42.050722-32.910909-58.33971-15.297023-16.290011-35.079386-29.258371-59.347087-38.900985-24.267702-9.636474-52.694294-14.45727-85.274661-14.45727-40.563514 0-74.308452 7.148817-101.239931 21.441335-26.925339 14.293541-48.705279 31.581276-65.326516 51.864228-16.621237 20.276812-28.26081 41.222867-34.908486 62.829977-6.647676 21.60711-9.641996 39.727817-8.974772 54.358025 0.662107 17.282618 6.150328 29.92045 16.455454 37.897122 10.305126 7.976672 21.442235 12.135388 33.413373 12.466939 11.964998 0.331551 22.937348-2.989077 32.910909-9.973142 9.973561-6.984065 14.960341-17.121959 14.960341-30.416753 0-7.982812 2.493902-17.790178 7.480682-29.424146s11.805356-22.771633 20.450609-33.411971c8.643207-10.635221 19.115139-19.615757 31.416819-26.924209 12.30168-7.315616 26.098473-10.971889 41.39038-10.971889 29.921706 0 53.857842 7.480368 71.81455 22.440082 17.950567 14.959713 26.263233 33.742499 24.934925 56.348356 0 11.302417-3.325885 21.772886-9.973561 31.4155-6.652793 9.642614-15.131241 18.948561-25.43739 27.929096-10.304103 8.974395-21.276452 17.949814-32.910909 26.924209-11.639573 8.974395-22.606806 18.286482-32.917049 27.929096-10.304103 9.636474-18.949356 20.111037-25.927574 31.4155-6.984358 11.302417-10.806567 23.603581-11.474814 36.898375l0.998789 37.903262c0 9.973142 4.656239 19.444864 13.962576 28.4254 9.311454 8.975419 21.613134 13.796214 36.906064 14.458293 15.29293-0.662079 27.427804-5.64865 36.403599-14.959713 8.974772-9.30697 13.134686-19.947308 12.467463-31.911804L563.365987 572.337203zM512.496324 817.685098c17.289484 0 31.753501-5.814426 43.387957-17.453511 11.639573-11.633968 17.454243-25.761734 17.454243-42.387389 0-17.287735-5.81467-31.747051-17.454243-43.386136-11.634456-11.633968-26.098473-17.453511-43.387957-17.453511-17.283344 0-31.747361 5.819542-43.381817 17.453511-11.639573 11.639085-17.454243 26.098401-17.454243 43.386136 0 16.625656 5.81467 30.753421 17.454243 42.387389C480.748964 811.870672 495.212981 817.685098 512.496324 817.685098zM511.503676 65.687048c61.834849 0 119.851582 11.799744 174.04099 35.403325 54.194524 23.604604 101.570473 55.522548 142.127847 95.746668 40.56249 40.225143 72.476657 87.433328 95.750687 141.625578 23.27403 54.187133 34.908486 112.201431 34.908486 174.033685 0 61.838394-11.634456 119.6818-34.908486 173.543521-23.27403 53.855582-55.188196 101.063767-95.750687 141.619438-40.557374 40.560788-87.933322 72.473615-142.127847 95.746668-54.189408 23.273053-112.206141 34.907021-174.04099 34.907021-61.840989 0-119.686823-11.633968-173.550806-34.907021-53.857842-23.273053-101.068009-55.18588-141.625382-95.746668-40.56249-40.555671-72.476657-87.763856-95.750687-141.619438C77.302771 632.17708 65.668315 574.333674 65.668315 512.496304c0-61.832254 11.634456-119.846552 34.908486-174.033685 23.27403-54.19225 55.188196-101.400435 95.750687-141.625578 40.557374-40.22412 87.76754-72.142064 141.625382-95.746668C391.816852 77.486792 449.662687 65.687048 511.503676 65.687048z"
-                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                            </Viewbox>
-                        </Border>
-                    </StackPanel>
-
-                    <StackPanel
-                        Margin="20,5"
-                        Orientation="Horizontal"
-                        Visibility="Collapsed">
-                        <Label Content="{DynamicResource SubsectionSpiltChar}" Style="{StaticResource InfoLabel}" />
-                        <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding SubSectionFeature, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                    </StackPanel>
-
-                    <CheckBox
-                        Margin="25,5"
-                        HorizontalAlignment="Left"
-                        Content="{DynamicResource FetchVID}"
-                        IsChecked="{Binding FetchVID, Mode=TwoWay}" />
-
-
-                    <CheckBox
-                        Margin="25,5"
-                        HorizontalAlignment="Left"
-                        Content="{DynamicResource ImportNFOWhenScan}"
-                        IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-
-                    <StackPanel
-                        Margin="20,0"
-                        Orientation="Vertical"
-                        Visibility="{Binding ScanNfo, Converter={StaticResource bool2VisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
-                        <CheckBox
-                            Margin="25,5"
-                            HorizontalAlignment="Left"
-                            Content="{DynamicResource OverriteImage}"
-                            IsChecked="{Binding CopyNFOOverriteImage}" />
-                        <CheckBox
-                            Margin="25,5"
-                            HorizontalAlignment="Left"
-                            Content="{DynamicResource CopyPosterAndThumbnail}"
-                            IsChecked="{Binding CopyNFOPicture}" />
-
-
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel
+                            Margin="5,20,0,5"
+                            Orientation="Vertical"
+                            Visibility="Collapsed">
                             <CheckBox
-                                MinWidth="150"
-                                Margin="25,5"
-                                HorizontalAlignment="Left"
-                                Content="{DynamicResource CopyActorImage}"
-                                IsChecked="{Binding CopyNFOActorPicture}" />
-
-                            <super:SearchBox
-                                MinWidth="400"
-                                PlaceHolder="{DynamicResource ActressImage}"
-                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                Style="{StaticResource BaseSearchTextBox}"
-                                Text="{Binding CopyNFOActorPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox
-                                MinWidth="150"
-                                Margin="25,5"
-                                HorizontalAlignment="Left"
-                                Content="{DynamicResource CopyPreview}"
-                                IsChecked="{Binding CopyNFOPreview}" />
-
-                            <super:SearchBox
-                                MinWidth="400"
-                                PlaceHolder="{DynamicResource Preview}"
-                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                Style="{StaticResource BaseSearchTextBox}"
-                                Text="{Binding CopyNFOPreviewPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                x:Name="ListenCheckBox"
+                                Margin="10,5,10,5"
+                                Checked="ListenCheckBox_Checked"
+                                Content="监听所有文件改动并更新数据库（不包括C盘）"
+                                IsChecked="{Binding ListenAllDir, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox
-                                MinWidth="150"
-                                Margin="25,5"
-                                HorizontalAlignment="Left"
-                                Content="{DynamicResource CopyScreenShot}"
-                                IsChecked="{Binding CopyNFOScreenShot}" />
-
-                            <super:SearchBox
-                                MinWidth="400"
-                                PlaceHolder="{DynamicResource ScreenShot}"
-                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                Style="{StaticResource BaseSearchTextBox}"
-                                Text="{Binding CopyNFOScreenShotPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                        </StackPanel>
-                    </StackPanel>
 
 
-                    <StackPanel
-                        Margin="5,0"
-                        Orientation="Vertical"
-                        Visibility="{Binding MainWindowVisiblie, Converter={StaticResource bool2VisibilityConverter}}">
-                        <CheckBox
-                            Margin="20,10"
-                            Content="{DynamicResource ScanDirWhenStartUp}"
-                            IsChecked="{Binding ScanOnStartUp, Mode=TwoWay}" />
 
-                        <StackPanel Margin="10,0,10,10" Orientation="Horizontal">
 
+                        <StackPanel
+                            Margin="20,5"
+                            Orientation="Horizontal"
+                            Visibility="Visible">
                             <TextBlock
-                                Margin="10"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="{DynamicResource SetLibraryAsso}" />
-
-
-                            <ComboBox
-                                Name="DatabaseComboBox"
-                                Grid.Column="1"
-                                Height="30"
                                 MinWidth="200"
-                                Margin="5"
-                                HorizontalAlignment="Stretch"
-                                DisplayMemberPath="Name"
-                                ItemsSource="{Binding DataBases}"
-                                SelectedValuePath="DBId"
-                                SelectionChanged="DatabaseComboBox_SelectionChanged"
-                                Style="{StaticResource BorderComboBox}" />
-
-
-
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="{DynamicResource ScanMinFileSize}"
+                                TextAlignment="Left"
+                                ToolTip="[0-2000]" />
+                            <super:SearchBox
+                                MinWidth="100"
+                                ShowClearButton="False"
+                                Style="{StaticResource BaseSearchTextBox}"
+                                Text="{Binding MinFileSize, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                ToolTip="[0-2000]" />
+                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="MB" />
+                        </StackPanel>
+                        <StackPanel
+                            Margin="20,5"
+                            IsEnabled="False"
+                            Orientation="Horizontal"
+                            Visibility="Collapsed">
+                            <TextBlock
+                                MinWidth="200"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="视频识别码的正则表达式"
+                                TextAlignment="Left"
+                                ToolTip="[0-2000]" />
+                            <super:SearchBox
+                                MinWidth="400"
+                                LostFocus="SetScanRe"
+                                PlaceHolder="正则表达式，使用英文分号分割每个正则"
+                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                Style="{StaticResource BaseSearchTextBox}"
+                                Text="{Binding ScanRe, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                            <Border
+                                Width="30"
+                                Height="30"
+                                Margin="10,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Panel.ZIndex="20"
+                                CornerRadius="5"
+                                PreviewMouseLeftButtonUp="ShowScanReHelp"
+                                Style="{StaticResource RoundBorder}"
+                                Tag="{DynamicResource Window.Title.Hover.Background}">
+                                <Viewbox
+                                    Width="20"
+                                    Height="auto"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="M563.363941 572.337203c-0.662107-10.635221 5.985569-21.937638 19.948145-33.908274 13.962576-11.964496 29.591164-25.264407 46.879625-39.893592 17.288461-14.628162 33.242474-31.083949 47.872273-49.365314 14.630823-18.286482 22.606806-39.397289 23.936137-63.332421 1.330354-25.932626-1.329331-50.199309-7.977007-72.810283-6.647676-22.604834-17.620026-42.050722-32.910909-58.33971-15.297023-16.290011-35.079386-29.258371-59.347087-38.900985-24.267702-9.636474-52.694294-14.45727-85.274661-14.45727-40.563514 0-74.308452 7.148817-101.239931 21.441335-26.925339 14.293541-48.705279 31.581276-65.326516 51.864228-16.621237 20.276812-28.26081 41.222867-34.908486 62.829977-6.647676 21.60711-9.641996 39.727817-8.974772 54.358025 0.662107 17.282618 6.150328 29.92045 16.455454 37.897122 10.305126 7.976672 21.442235 12.135388 33.413373 12.466939 11.964998 0.331551 22.937348-2.989077 32.910909-9.973142 9.973561-6.984065 14.960341-17.121959 14.960341-30.416753 0-7.982812 2.493902-17.790178 7.480682-29.424146s11.805356-22.771633 20.450609-33.411971c8.643207-10.635221 19.115139-19.615757 31.416819-26.924209 12.30168-7.315616 26.098473-10.971889 41.39038-10.971889 29.921706 0 53.857842 7.480368 71.81455 22.440082 17.950567 14.959713 26.263233 33.742499 24.934925 56.348356 0 11.302417-3.325885 21.772886-9.973561 31.4155-6.652793 9.642614-15.131241 18.948561-25.43739 27.929096-10.304103 8.974395-21.276452 17.949814-32.910909 26.924209-11.639573 8.974395-22.606806 18.286482-32.917049 27.929096-10.304103 9.636474-18.949356 20.111037-25.927574 31.4155-6.984358 11.302417-10.806567 23.603581-11.474814 36.898375l0.998789 37.903262c0 9.973142 4.656239 19.444864 13.962576 28.4254 9.311454 8.975419 21.613134 13.796214 36.906064 14.458293 15.29293-0.662079 27.427804-5.64865 36.403599-14.959713 8.974772-9.30697 13.134686-19.947308 12.467463-31.911804L563.365987 572.337203zM512.496324 817.685098c17.289484 0 31.753501-5.814426 43.387957-17.453511 11.639573-11.633968 17.454243-25.761734 17.454243-42.387389 0-17.287735-5.81467-31.747051-17.454243-43.386136-11.634456-11.633968-26.098473-17.453511-43.387957-17.453511-17.283344 0-31.747361 5.819542-43.381817 17.453511-11.639573 11.639085-17.454243 26.098401-17.454243 43.386136 0 16.625656 5.81467 30.753421 17.454243 42.387389C480.748964 811.870672 495.212981 817.685098 512.496324 817.685098zM511.503676 65.687048c61.834849 0 119.851582 11.799744 174.04099 35.403325 54.194524 23.604604 101.570473 55.522548 142.127847 95.746668 40.56249 40.225143 72.476657 87.433328 95.750687 141.625578 23.27403 54.187133 34.908486 112.201431 34.908486 174.033685 0 61.838394-11.634456 119.6818-34.908486 173.543521-23.27403 53.855582-55.188196 101.063767-95.750687 141.619438-40.557374 40.560788-87.933322 72.473615-142.127847 95.746668-54.189408 23.273053-112.206141 34.907021-174.04099 34.907021-61.840989 0-119.686823-11.633968-173.550806-34.907021-53.857842-23.273053-101.068009-55.18588-141.625382-95.746668-40.56249-40.555671-72.476657-87.763856-95.750687-141.619438C77.302771 632.17708 65.668315 574.333674 65.668315 512.496304c0-61.832254 11.634456-119.846552 34.908486-174.033685 23.27403-54.19225 55.188196-101.400435 95.750687-141.625578 40.557374-40.22412 87.76754-72.142064 141.625382-95.746668C391.816852 77.486792 449.662687 65.687048 511.503676 65.687048z"
+                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                </Viewbox>
+                            </Border>
                         </StackPanel>
 
+                        <StackPanel
+                            Margin="20,5"
+                            Orientation="Horizontal"
+                            Visibility="Collapsed">
+                            <Label Content="{DynamicResource SubsectionSpiltChar}" Style="{StaticResource InfoLabel}" />
+                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding SubSectionFeature, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        </StackPanel>
 
-                        <StackPanel Margin="20,0" Orientation="Vertical">
-                            <ListBox
-                                x:Name="PathListBox"
-                                Height="200"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Top"
-                                d:ItemsSource="{d:SampleData ItemCount=5}"
-                                AllowDrop="True"
-                                Background="Transparent"
-                                DragOver="PathListBox_DragOver"
-                                Drop="PathListBox_Drop"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                ItemsSource="{Binding ScanPath}"
-                                Style="{StaticResource FolderListBox}">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Vertical" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image
-                                                Width="20"
-                                                Margin="1"
-                                                Source="pack://application:,,,/Resources/Picture/folder.png" />
-                                            <TextBlock
-                                                Margin="2,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="15"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                Text="{Binding}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                        <CheckBox
+                            Margin="25,5"
+                            HorizontalAlignment="Left"
+                            Content="{DynamicResource FetchVID}"
+                            IsChecked="{Binding FetchVID, Mode=TwoWay}" />
 
-                            <StackPanel
-                                Margin="0,10"
+
+                        <CheckBox
+                            Margin="25,5"
+                            HorizontalAlignment="Left"
+                            Content="{DynamicResource ImportNFOWhenScan}"
+                            IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+
+                        <StackPanel
+                            Margin="20,0"
+                            Orientation="Vertical"
+                            Visibility="{Binding ScanNfo, Converter={StaticResource bool2VisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+                            <CheckBox
+                                Margin="25,5"
                                 HorizontalAlignment="Left"
-                                Orientation="Horizontal">
+                                Content="{DynamicResource OverriteImage}"
+                                IsChecked="{Binding CopyNFOOverriteImage}" />
+                            <CheckBox
+                                Margin="25,5"
+                                HorizontalAlignment="Left"
+                                Content="{DynamicResource CopyPosterAndThumbnail}"
+                                IsChecked="{Binding CopyNFOPicture}" />
 
-                                <Button
-                                    Width="27"
-                                    Height="27"
-                                    Margin="5,0"
-                                    Click="AddPath"
-                                    Style="{StaticResource RoundNormalButton}">
-                                    <Viewbox
-                                        Width="20"
-                                        Height="20"
-                                        VerticalAlignment="Center">
-                                        <Path
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Data="M183.232 128c0 0-52.544 0 37.184 0 80.448 0 164.288 0 250.368 0 58.368 0 58.24 128.832 140.864 128.832 50.88 0 228.992 0 228.992 0C906.56 256.832 960 310.272 960 376.128l0 398.656c0 65.856-53.44 119.232-119.296 119.232L183.232 894.016C117.44 894.08 64 840.704 64 774.784L64 247.296C64 181.376 117.44 128 183.232 128z"
-                                            Fill="{DynamicResource Window.Foreground}" />
-                                    </Viewbox>
-                                </Button>
 
-                                <Button
-                                    Width="27"
-                                    Height="27"
-                                    Margin="5,0"
-                                    Click="DelPath"
-                                    Style="{StaticResource RoundNormalButton}">
-                                    <Viewbox
-                                        Width="20"
-                                        Height="auto"
-                                        VerticalAlignment="Center">
-                                        <Path
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Data="M827.392 195.584q65.536 65.536 97.792 147.456t32.256 167.936-32.256 167.936-97.792 147.456-147.456 98.304-167.936 32.768-168.448-32.768-147.968-98.304-98.304-147.456-32.768-167.936 32.768-167.936 98.304-147.456 147.968-97.792 168.448-32.256 167.936 32.256 147.456 97.792zM720.896 715.776q21.504-21.504 18.944-49.152t-24.064-49.152l-107.52-107.52 107.52-107.52q21.504-21.504 24.064-49.152t-18.944-49.152-51.712-21.504-51.712 21.504l-107.52 106.496-104.448-104.448q-21.504-20.48-49.152-23.04t-49.152 17.92q-21.504 21.504-21.504 52.224t21.504 52.224l104.448 104.448-104.448 104.448q-21.504 21.504-21.504 51.712t21.504 51.712 49.152 18.944 49.152-24.064l104.448-104.448 107.52 107.52q21.504 21.504 51.712 21.504t51.712-21.504z"
-                                            Fill="{DynamicResource Window.Foreground}" />
-                                    </Viewbox>
-                                </Button>
-                                <Button
-                                    Width="27"
-                                    Height="27"
-                                    Margin="5,0"
-                                    Click="ClearPath"
-                                    Style="{StaticResource RoundCloseButton}">
-                                    <Viewbox
-                                        Width="20"
-                                        Height="auto"
-                                        VerticalAlignment="Center">
-                                        <Path
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Data="M687.6 96.4H336.4v91.2h351.1V96.4zM636.7 398v405.5h-73.9V398h73.9z m-175.5 0v405.5h-73.9V398h73.9z m332.1-119.2H230.7l27.9 648.8h506.7l28-648.8zM696.8 5.1c40.4 0 73.3 35.6 73.9 79.8v102.7h147.8c20.2 0 36.6 17.8 37 39.9v41.2c0 5.5-4 10-9 10.1h-70.1L848 941.6c-1.8 42.9-33.7 76.6-72.6 77.3H249.8c-39 0-71.3-33.4-73.7-76l-0.1-1.3-28.5-662.7H77.7c-5 0-9.1-4.4-9.2-9.8v-40.9c0-22.2 16.2-40.2 36.3-40.5h148.4V86.2c0-44.3 32.5-80.4 72.7-81.1h370.9z"
-                                            Fill="{DynamicResource Window.Foreground}" />
-                                    </Viewbox>
-                                </Button>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox
+                                    MinWidth="150"
+                                    Margin="25,5"
+                                    HorizontalAlignment="Left"
+                                    Content="{DynamicResource CopyActorImage}"
+                                    IsChecked="{Binding CopyNFOActorPicture}" />
+
+                                <super:SearchBox
+                                    MinWidth="400"
+                                    PlaceHolder="{DynamicResource ActressImage}"
+                                    PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Text="{Binding CopyNFOActorPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox
+                                    MinWidth="150"
+                                    Margin="25,5"
+                                    HorizontalAlignment="Left"
+                                    Content="{DynamicResource CopyPreview}"
+                                    IsChecked="{Binding CopyNFOPreview}" />
+
+                                <super:SearchBox
+                                    MinWidth="400"
+                                    PlaceHolder="{DynamicResource Preview}"
+                                    PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Text="{Binding CopyNFOPreviewPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
                             </StackPanel>
 
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox
+                                    MinWidth="150"
+                                    Margin="25,5"
+                                    HorizontalAlignment="Left"
+                                    Content="{DynamicResource CopyScreenShot}"
+                                    IsChecked="{Binding CopyNFOScreenShot}" />
+
+                                <super:SearchBox
+                                    MinWidth="400"
+                                    PlaceHolder="{DynamicResource ScreenShot}"
+                                    PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
+                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Text="{Binding CopyNFOScreenShotPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                            </StackPanel>
                         </StackPanel>
+
+
+                        <StackPanel
+                            Margin="5,0"
+                            Orientation="Vertical"
+                            Visibility="{Binding MainWindowVisiblie, Converter={StaticResource bool2VisibilityConverter}}">
+                            <CheckBox
+                                Margin="20,10"
+                                Content="{DynamicResource ScanDirWhenStartUp}"
+                                IsChecked="{Binding ScanOnStartUp, Mode=TwoWay}" />
+
+                            <StackPanel Margin="10,0,10,10" Orientation="Horizontal">
+
+                                <TextBlock
+                                    Margin="10"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{DynamicResource SetLibraryAsso}" />
+
+
+                                <ComboBox
+                                    Name="DatabaseComboBox"
+                                    Grid.Column="1"
+                                    Height="30"
+                                    MinWidth="200"
+                                    Margin="5"
+                                    HorizontalAlignment="Stretch"
+                                    DisplayMemberPath="Name"
+                                    ItemsSource="{Binding DataBases}"
+                                    SelectedValuePath="DBId"
+                                    SelectionChanged="DatabaseComboBox_SelectionChanged"
+                                    Style="{StaticResource BorderComboBox}" />
+
+
+
+                            </StackPanel>
+
+
+                            <StackPanel Margin="20,0" Orientation="Vertical">
+                                <ListBox
+                                    x:Name="PathListBox"
+                                    Height="200"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    d:ItemsSource="{d:SampleData ItemCount=5}"
+                                    AllowDrop="True"
+                                    Background="Transparent"
+                                    DragOver="PathListBox_DragOver"
+                                    Drop="PathListBox_Drop"
+                                    Foreground="{DynamicResource Window.Foreground}"
+                                    ItemsSource="{Binding ScanPath}"
+                                    Style="{StaticResource FolderListBox}">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image
+                                                    Width="20"
+                                                    Margin="1"
+                                                    Source="pack://application:,,,/Resources/Picture/folder.png" />
+                                                <TextBlock
+                                                    Margin="2,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="15"
+                                                    Foreground="{DynamicResource Window.Foreground}"
+                                                    Text="{Binding}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+
+                                <StackPanel
+                                    Margin="0,10"
+                                    HorizontalAlignment="Left"
+                                    Orientation="Horizontal">
+
+                                    <Button
+                                        Width="27"
+                                        Height="27"
+                                        Margin="5,0"
+                                        Click="AddPath"
+                                        Style="{StaticResource RoundNormalButton}">
+                                        <Viewbox
+                                            Width="20"
+                                            Height="20"
+                                            VerticalAlignment="Center">
+                                            <Path
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="M183.232 128c0 0-52.544 0 37.184 0 80.448 0 164.288 0 250.368 0 58.368 0 58.24 128.832 140.864 128.832 50.88 0 228.992 0 228.992 0C906.56 256.832 960 310.272 960 376.128l0 398.656c0 65.856-53.44 119.232-119.296 119.232L183.232 894.016C117.44 894.08 64 840.704 64 774.784L64 247.296C64 181.376 117.44 128 183.232 128z"
+                                                Fill="{DynamicResource Window.Foreground}" />
+                                        </Viewbox>
+                                    </Button>
+
+                                    <Button
+                                        Width="27"
+                                        Height="27"
+                                        Margin="5,0"
+                                        Click="DelPath"
+                                        Style="{StaticResource RoundNormalButton}">
+                                        <Viewbox
+                                            Width="20"
+                                            Height="auto"
+                                            VerticalAlignment="Center">
+                                            <Path
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="M827.392 195.584q65.536 65.536 97.792 147.456t32.256 167.936-32.256 167.936-97.792 147.456-147.456 98.304-167.936 32.768-168.448-32.768-147.968-98.304-98.304-147.456-32.768-167.936 32.768-167.936 98.304-147.456 147.968-97.792 168.448-32.256 167.936 32.256 147.456 97.792zM720.896 715.776q21.504-21.504 18.944-49.152t-24.064-49.152l-107.52-107.52 107.52-107.52q21.504-21.504 24.064-49.152t-18.944-49.152-51.712-21.504-51.712 21.504l-107.52 106.496-104.448-104.448q-21.504-20.48-49.152-23.04t-49.152 17.92q-21.504 21.504-21.504 52.224t21.504 52.224l104.448 104.448-104.448 104.448q-21.504 21.504-21.504 51.712t21.504 51.712 49.152 18.944 49.152-24.064l104.448-104.448 107.52 107.52q21.504 21.504 51.712 21.504t51.712-21.504z"
+                                                Fill="{DynamicResource Window.Foreground}" />
+                                        </Viewbox>
+                                    </Button>
+                                    <Button
+                                        Width="27"
+                                        Height="27"
+                                        Margin="5,0"
+                                        Click="ClearPath"
+                                        Style="{StaticResource RoundCloseButton}">
+                                        <Viewbox
+                                            Width="20"
+                                            Height="auto"
+                                            VerticalAlignment="Center">
+                                            <Path
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="M687.6 96.4H336.4v91.2h351.1V96.4zM636.7 398v405.5h-73.9V398h73.9z m-175.5 0v405.5h-73.9V398h73.9z m332.1-119.2H230.7l27.9 648.8h506.7l28-648.8zM696.8 5.1c40.4 0 73.3 35.6 73.9 79.8v102.7h147.8c20.2 0 36.6 17.8 37 39.9v41.2c0 5.5-4 10-9 10.1h-70.1L848 941.6c-1.8 42.9-33.7 76.6-72.6 77.3H249.8c-39 0-71.3-33.4-73.7-76l-0.1-1.3-28.5-662.7H77.7c-5 0-9.1-4.4-9.2-9.8v-40.9c0-22.2 16.2-40.2 36.3-40.5h148.4V86.2c0-44.3 32.5-80.4 72.7-81.1h370.9z"
+                                                Fill="{DynamicResource Window.Foreground}" />
+                                        </Viewbox>
+                                    </Button>
+                                </StackPanel>
+
+                            </StackPanel>
+                        </StackPanel>
+
+
                     </StackPanel>
 
-
-                </StackPanel>
-
-
+                </ScrollViewer>
             </TabItem>
 
             <TabItem Header="{DynamicResource SyncInfo}">

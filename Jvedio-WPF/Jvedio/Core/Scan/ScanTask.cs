@@ -331,7 +331,7 @@ namespace Jvedio.Core.Scan
                     if (dict.ContainsKey("BigImagePath") && !string.IsNullOrEmpty(dict["BigImagePath"]))
                     {
                         string path = dict["BigImagePath"];
-                        string dirname = Path.GetFileNameWithoutExtension(path).ToLower();
+                        string dirname = path.ToLower();
                         CopyImage(import, dirname, imageType);
                     }
                     break;
@@ -339,7 +339,7 @@ namespace Jvedio.Core.Scan
                     if (dict.ContainsKey("SmallImagePath") && !string.IsNullOrEmpty(dict["SmallImagePath"]))
                     {
                         string path = dict["SmallImagePath"];
-                        string dirname = Path.GetFileNameWithoutExtension(path).ToLower();
+                        string dirname = path.ToLower();
                         CopyImage(import, dirname, imageType);
                     }
                     break;
@@ -385,7 +385,8 @@ namespace Jvedio.Core.Scan
                 List<string> list = FileHelper.TryGetAllFiles(dir, "*.*").ToList();
                 if (list?.Count <= 0) continue;
                 list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
-                string originPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(dirName) >= 0).FirstOrDefault();
+                string filename = Path.GetFileName(dirName);
+                string originPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(filename) >= 0).FirstOrDefault();
                 if (File.Exists(originPath))
                 {
                     string targetImagePath = GetImagePathByType(item, imageType);

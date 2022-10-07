@@ -3077,6 +3077,7 @@ namespace Jvedio
             vieModel.Statistic();
             vieModel.Reset();
             vieModel.InitCurrentTagStamps();
+            vieModel.SetClassify(true);
 
             // vieModel.InitLettersNavigation();
             // vieModel.GetFilterInfo();

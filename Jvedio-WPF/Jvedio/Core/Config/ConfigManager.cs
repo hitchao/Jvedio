@@ -66,8 +66,8 @@ namespace Jvedio
                 dict.Add(PathType.RelativeToApp.ToString(), "./Pic");
 
                 Dictionary<string, string> d = new Dictionary<string, string>();
-                d.Add("BigImagePath", "./.fanart");
-                d.Add("SmallImagePath", "./.poster");
+                d.Add("BigImagePath", "./fanart");
+                d.Add("SmallImagePath", "./poster");
                 d.Add("PreviewImagePath", "./.preview");
                 d.Add("ScreenShotPath", "./.screenshot");
                 d.Add("ActorImagePath", "./.actor");

@@ -116,14 +116,6 @@ namespace Jvedio.ViewModel
             refreshVideoRenderToken();
             refreshActorRenderToken();
 
-            // 注册
-            // GenreList.CollectionChanged += (sender, eventArgs) =>
-            // {
-            //    if (eventArgs..Cast<string>().Any(a => a.Equals("0005"))) resetEvent.Set();
-
-            // };
-            // resetEvent.WaitOne();
-
             // 初始化皮肤
             InitThemes();
         }

@@ -98,6 +98,11 @@ namespace Jvedio
 
         private void SetActorImage(object sender, RoutedEventArgs e)
         {
+            if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName))
+            {
+                MessageBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
+                return;
+            }
             string imageFileName = string.Empty;
             System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             openFileDialog1.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
@@ -171,7 +176,7 @@ namespace Jvedio
                     if (FileHelper.IsFile(originPath))
                     {
                         // 设置演员头像
-                        string targetFileName = System.IO.Path.Combine(saveDir, $"{name}{System.IO.Path.GetExtension(originPath).ToLower()}");
+                        string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
                         bool copy = true;
                         if (File.Exists(targetFileName) && new Msgbox(this, LangManager.GetValueByKey("ExistsToOverrite")).ShowDialog() != true)
                         {

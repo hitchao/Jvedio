@@ -85,7 +85,7 @@ namespace Jvedio.Core.Logs
             string content;
             content = $"{Environment.NewLine}[{DateTime.Now.ToString()}]";
             content += $"{Environment.NewLine}[Message] {e.Message}";
-            content += $"{Environment.NewLine}[StackTrace] {GetAllFootprints(e)}";
+            content += $"{Environment.NewLine}[StackTrace] {Environment.NewLine} {GetAllFootprints(e)}";
             Console.WriteLine(content);
 
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", "Error");
