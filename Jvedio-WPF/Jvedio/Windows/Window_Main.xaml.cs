@@ -209,10 +209,10 @@ namespace Jvedio
         public void RefreshThemeData()
         {
             // 找到先前选择的皮肤
-            int idx = GetThemeIndex();
+            long idx = GetThemeIndex();
             if (idx < ColorThemesItemsControl.Items.Count)
             {
-                ContentPresenter presenter = (ContentPresenter)ColorThemesItemsControl.ItemContainerGenerator.ContainerFromItem(ColorThemesItemsControl.Items[idx]);
+                ContentPresenter presenter = (ContentPresenter)ColorThemesItemsControl.ItemContainerGenerator.ContainerFromItem(ColorThemesItemsControl.Items[(int)idx]);
                 if (presenter == null) return;
                 RadioButton element = FindElementByName<RadioButton>(presenter, "rb");
                 if (element == null) return;
@@ -220,9 +220,9 @@ namespace Jvedio
             }
         }
 
-        private int GetThemeIndex()
+        private long GetThemeIndex()
         {
-            int idx = ConfigManager.ThemeConfig.ThemeIndex;
+            long idx = ConfigManager.ThemeConfig.ThemeIndex;
             if (!string.IsNullOrEmpty(ConfigManager.ThemeConfig.ThemeID))
             {
                 for (int i = 0; i < ThemeManager.Themes.Count; i++)
@@ -2912,7 +2912,7 @@ namespace Jvedio
         /// </summary>
         public void SetSkin()
         {
-            int idx = GetThemeIndex();
+            int idx = (int)GetThemeIndex();
             if (idx >= ThemeManager.Themes.Count) idx = 0;
             Theme theme = ThemeManager.Themes[idx];
             if (theme.Images != null && theme.Images.Background != null)

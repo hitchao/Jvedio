@@ -21,6 +21,6 @@ namespace Jvedio.Core.Config
 
         public string ThemeID { get; set; }
 
-        public int ThemeIndex { get; set; }
+        public long ThemeIndex { get; set; }
     }
 }

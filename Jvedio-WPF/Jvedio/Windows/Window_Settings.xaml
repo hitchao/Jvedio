@@ -1679,8 +1679,14 @@
                                 Margin="20,10"
                                 Content="{DynamicResource Youdao}"
                                 IsChecked="{Binding Enable_TL_YOUDAO, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button Click="TestTranslate" Content="{DynamicResource Test}" />
-                            <Button Click="LoadTranslate" Content="{DynamicResource LoadLocalKey}" />
+                            <Button
+                                Margin="5,0"
+                                Click="TestTranslate"
+                                Content="{DynamicResource Test}" />
+                            <Button
+                                Margin="5,0"
+                                Click="LoadTranslate"
+                                Content="{DynamicResource LoadLocalKey}" />
                             <!--  TODO WIN7  -->
                             <fa:ImageAwesome
                                 Height="20"

@@ -58,6 +58,7 @@
             <TextBox
                 x:Name="VersionTextBlock"
                 Margin="10"
+                HorizontalAlignment="Center"
                 FontSize="20"
                 Foreground="{DynamicResource Window.Foreground}"
                 Style="{StaticResource ReadOnlyTextBox}"
