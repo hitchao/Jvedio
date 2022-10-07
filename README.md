@@ -32,15 +32,21 @@
 
 官方网址：[Jvedio](https://hitchao.github.io/JvedioWebPage/) | 下载地址：[最新版本](https://github.com/hitchao/Jvedio/releases)
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZRLF.png" alt="XcZRLF.png" style="zoom:80%;" />](https://imgtu.com/i/XcZRLF)
+---
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8KbvT.png" alt="x8KbvT.png" style="zoom:80%;" />](https://imgse.com/i/x8KbvT)
+
+
+---
+[<img src="https://s1.ax1x.com/2022/10/07/x8KOrF.png" alt="x8KOrF.png" style="zoom:80%;" />](https://imgse.com/i/x8KOrF)
 
 ---
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZQVH.png" alt="XcZQVH.png" style="zoom:80%;" />](https://imgtu.com/i/XcZQVH)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MVVH.png" alt="x8MVVH.png" style="zoom:80%;" />](https://imgse.com/i/x8MVVH)
 
 ---
 
-[<img src="https://s1.ax1x.com/2022/06/11/XcZlad.png" alt="XcZlad.png" style="zoom:80%;" />](https://imgtu.com/i/XcZlad)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MZad.png" alt="x8MZad.png" style="zoom:80%;" />](https://imgse.com/i/x8MZad)
 
 # 使用说明
 
@@ -59,83 +65,88 @@
 |Jvedio 升级的服务器源|[jvedioupdate](https://github.com/hitchao/jvedioupdate)|
 |Gif 控件修改于|[WpfAnimatedGif](https://github.com/hitchao/WpfAnimatedGif)|
 
-# 功能列表
+# 软件特性
 
-## 界面：支持三种主题（黑、白、蓝）
+## 插件
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uGSeO.png)](https://s3.ax1x.com/2021/03/06/6uGSeO.png)
+包含以下插件
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uGPFH.png)](https://s3.ax1x.com/2021/03/06/6uGPFH.png)
+- 皮肤插件
+- 同步信息插件
 
+[<img src="https://s1.ax1x.com/2022/10/07/x8MJaj.png" alt="x8MJaj.png" style="zoom:80%;" />](https://imgse.com/i/x8MJaj)
 
-## 语言：支持中文、英语、日语
+**皮肤插件支持多种皮肤切换**
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uJaKP.png)](https://s3.ax1x.com/2021/03/06/6uJaKP.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8MUGq.png" alt="x8MUGq.png" style="zoom:80%;" />](https://imgse.com/i/x8MUGq)
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uJfbT.png)](https://s3.ax1x.com/2021/03/06/6uJfbT.png)
+## 语言
+
+**支持中文、英语、日语**
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MydJ.png" alt="x8MydJ.png" style="zoom:80%;" />](https://imgse.com/i/x8MydJ)
 
 
 ## 多影视库管理
 
+[<img src="https://s1.ax1x.com/2022/10/07/x8KbvT.png" alt="x8KbvT.png" style="zoom:80%;" />](https://imgse.com/i/x8KbvT)
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uJLKx.png)](https://s3.ax1x.com/2021/03/06/6uJLKx.png)
+## 支持 NFO 识别导入
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8M5LD.png" alt="x8M5LD.png" style="zoom:80%;" />](https://imgse.com/i/x8M5LD)
+
+## 支持信息编辑与修改
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MTdH.png" alt="x8MTdH.png" style="zoom:80%;" />](https://imgse.com/i/x8MTdH)
+
+## 标记管理/筛选
+
+- 支持批量添加/修改/删除标记
+- 根据标记进行筛选
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MLWt.png" alt="x8MLWt.png" style="zoom:80%;" />](https://imgse.com/i/x8MLWt)
+
+## 丰富的搜索功能
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8MxOS.png" alt="x8MxOS.png" style="zoom:80%;" />](https://imgse.com/i/x8MxOS)
+
+## 新增演员信息
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8QAS0.png" alt="x8QAS0.png" style="zoom:80%;" />](https://imgse.com/i/x8QAS0)
+
+## 视频处理功能
+
+- 截图
+- 截取 GIF
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8QVyT.png" alt="x8QVyT.png" style="zoom:80%;" />](https://imgse.com/i/x8QVyT)
+
+## 重命名影片功能
+
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qnw4.png" alt="x8Qnw4.png" style="zoom:80%;" />](https://imgse.com/i/x8Qnw4)
+
 
 
 ## 其他功能
 
-- 图片展示模式：缩略图、海报图、预览图、GIF（可能是唯一一个支持 GIF 的视频管理软件）
+- 图片展示模式：缩略图、海报图
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uYFMt.png)](https://s3.ax1x.com/2021/03/06/6uYFMt.png)
+- 丰富的筛选功能：资源自否存在筛选、图片是否存在筛选、仅显示分段视频、视频类型选择
 
-- 丰富的筛选功能：有图/无图、高清/中文/流出、仅显示可播放、仅显示分段视频、视频类型选择
-
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uYlMq.png)](https://s3.ax1x.com/2021/03/06/6uYlMq.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qr1P.png" alt="x8Qr1P.png" style="zoom:80%;" />](https://imgse.com/i/x8Qr1P)
 
 
 - 丰富的右键功能
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uY3LV.png)](https://s3.ax1x.com/2021/03/06/6uY3LV.png)
-
-
-- 快速导航功能
-
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uYJdU.png)](https://s3.ax1x.com/2021/03/06/6uYJdU.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8Qhhn.png" alt="x8Qhhn.png" style="zoom:80%;" />](https://imgse.com/i/x8Qhhn)
 
 - 智能分类
 
-[![点击查看](https://s3.ax1x.com/2021/03/06/6uYLWj.png)](https://s3.ax1x.com/2021/03/06/6uYLWj.png)
-
-
-- 自定义度较高的设置
-
-
-
-[![点击查看](https://s3.ax1x.com/2021/03/06/6utx9H.png)](https://s3.ax1x.com/2021/03/06/6utx9H.png)
-
-
-- 丰富的工具库
-
-
-[![点击查看](https://s3.ax1x.com/2021/03/06/6ut3pd.png)](https://s3.ax1x.com/2021/03/06/6ut3pd.png)
-
-
-- 批量处理功能
-
-
-
-[![点击查看](https://s3.ax1x.com/2021/03/06/6utJXt.png)](https://s3.ax1x.com/2021/03/06/6utJXt.png)
-
-
-- 影视库管理功能
-
-
-
-[![点击查看](https://s3.ax1x.com/2021/03/06/6utscn.png)](https://s3.ax1x.com/2021/03/06/6utscn.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8QHnU.png" alt="x8QHnU.png" style="zoom:80%;" />](https://imgse.com/i/x8QHnU)
 
 - 升级
 
-
-[![点击查看](https://s3.ax1x.com/2021/03/06/6ut0hQ.png)](https://s3.ax1x.com/2021/03/06/6ut0hQ.png)
+[<img src="https://s1.ax1x.com/2022/10/07/x8liHe.png" alt="x8liHe.png" style="zoom:80%;" />](https://imgse.com/i/x8liHe)
 
 # 鸣谢
 
