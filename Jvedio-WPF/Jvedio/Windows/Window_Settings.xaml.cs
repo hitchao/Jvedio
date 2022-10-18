@@ -1,6 +1,6 @@
 ﻿using FontAwesome.WPF;
-using Jvedio.CommonNet;
-using Jvedio.CommonNet.Entity;
+using SuperUtils.NetWork;
+using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Logs;

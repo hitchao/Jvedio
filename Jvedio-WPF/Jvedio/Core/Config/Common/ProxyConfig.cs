@@ -2,6 +2,7 @@
 using Jvedio.Core.Logs;
 using JvedioLib.Security;
 using MihaZupan;
+using SuperUtils.NetWork;
 using System;
 using System.Net;
 
@@ -63,60 +64,26 @@ namespace Jvedio.Core.Config
 
         public IWebProxy GetWebProxy()
         {
-            WebProxy proxy = null;
-            if (ProxyMode == 0)
+            SuperWebProxy webProxy = new SuperWebProxy();
+            if (ProxyMode == 1)
             {
-                return proxy;
-            }
-            else if (ProxyMode == 1)
-            {
-#pragma warning disable CS0618 // 类型或成员已过时
-                proxy = WebProxy.GetDefaultProxy();
-#pragma warning restore CS0618 // 类型或成员已过时
-                if (proxy.Address != null)
-                {
-                    proxy.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
-                    return new System.Net.WebProxy(proxy.Address, proxy.BypassProxyOnLocal, proxy.BypassList, proxy.Credentials);
-                }
+                webProxy.ProxyMode = SuperUtils.NetWork.Enums.ProxyMode.System;
+                return webProxy.GetWebProxy();
             }
             else if (ProxyMode == 2)
             {
-                if (string.IsNullOrEmpty(Server) || Port <= 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    string pwd = getRealPwd();
-                    if (ProxyType == 0)
-                    {
-                        // http
-                        proxy = new WebProxy(Server, (int)Port);
-                        if (!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(pwd))
-                        {
-                            NetworkCredential credential = new NetworkCredential(UserName, pwd);
-                            if (credential != null) proxy.Credentials = credential;
-                        }
-                    }
-                    else
-                    {
-                        // socks
-                        if (!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(pwd))
-                        {
-                            return new HttpToSocks5Proxy(Server, (int)Port, UserName, pwd);
-                        }
-                        else
-                        {
-                            return new HttpToSocks5Proxy(Server, (int)Port);
-                        }
-                    }
-                }
+                webProxy.ProxyMode = SuperUtils.NetWork.Enums.ProxyMode.Custom;
+                webProxy.ProxyProtocol = ProxyType == 0 ? SuperUtils.NetWork.Enums.ProxyProtocol.HTTP : SuperUtils.NetWork.Enums.ProxyProtocol.SOCKS;
+                webProxy.Server = Server;
+                webProxy.Port = (int)Port;
+                webProxy.Pwd = GetRealPwd();
+                return webProxy.GetWebProxy();
             }
 
-            return proxy;
+            return null;
         }
 
-        public string getRealPwd()
+        public string GetRealPwd()
         {
             if (!string.IsNullOrEmpty(Password))
             {

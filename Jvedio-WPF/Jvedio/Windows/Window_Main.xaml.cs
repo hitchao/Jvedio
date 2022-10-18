@@ -1,7 +1,7 @@
 ﻿using DynamicData;
 using HandyControl.Data;
-using Jvedio.CommonNet;
-using Jvedio.CommonNet.Entity;
+using SuperUtils.NetWork;
+using SuperUtils.NetWork.Entity;
 using Jvedio.Core;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;

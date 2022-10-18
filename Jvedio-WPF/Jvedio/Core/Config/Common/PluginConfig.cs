@@ -1,5 +1,5 @@
-﻿using Jvedio.CommonNet;
-using Jvedio.CommonNet.Entity;
+﻿using SuperUtils.NetWork;
+using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Config.Base;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Global;

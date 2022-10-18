@@ -1,5 +1,5 @@
 ﻿using DynamicData.Annotations;
-using Jvedio.CommonNet.Entity;
+using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Interfaces;
 using Jvedio.Core.Logs;
 using Newtonsoft.Json;

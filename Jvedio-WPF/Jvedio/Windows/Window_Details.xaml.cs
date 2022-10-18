@@ -1,5 +1,5 @@
 ﻿using HandyControl.Data;
-using Jvedio.CommonNet;
+using SuperUtils.NetWork;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Logs;

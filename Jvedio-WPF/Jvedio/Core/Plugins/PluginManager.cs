@@ -1,5 +1,5 @@
-﻿using Jvedio.CommonNet;
-using Jvedio.CommonNet.Entity;
+﻿using SuperUtils.NetWork;
+using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Global;
 using Jvedio.Core.Plugins.Crawler;
@@ -139,7 +139,7 @@ namespace Jvedio.Core.Plugins
                     // 解析 main.json
 
                     // 下载 main.json, readme.md, plugin.png
-                    HttpResult result = await HttpClient.Get(url_main_json, header, CommonNet.Enums.HttpMode.Stream);
+                    HttpResult result = await HttpClient.Get(url_main_json, header, SuperUtils.NetWork.Enums.HttpMode.Stream);
                     if (result.StatusCode == HttpStatusCode.OK && result.FileByte != null)
                     {
                         string savePath = System.IO.Path.Combine(base_path, "main.json");
@@ -147,14 +147,14 @@ namespace Jvedio.Core.Plugins
                         FileHelper.ByteArrayToFile(result.FileByte, savePath);
                     }
 
-                    result = await HttpClient.Get(url_readme, header, CommonNet.Enums.HttpMode.String);
+                    result = await HttpClient.Get(url_readme, header, SuperUtils.NetWork.Enums.HttpMode.String);
                     if (result.StatusCode == HttpStatusCode.OK && result.SourceCode != null)
                     {
                         string savePath = System.IO.Path.Combine(base_path, "readme.md");
                         FileHelper.TryWriteToFile(savePath, result.SourceCode);
                     }
 
-                    result = await HttpClient.Get(url_plugin_image, header, CommonNet.Enums.HttpMode.Stream);
+                    result = await HttpClient.Get(url_plugin_image, header, SuperUtils.NetWork.Enums.HttpMode.Stream);
                     if (result.StatusCode == HttpStatusCode.OK && result.FileByte != null)
                     {
                         string savePath = System.IO.Path.Combine(base_path, "images");
@@ -171,7 +171,7 @@ namespace Jvedio.Core.Plugins
                         {
                             string url = System.IO.Path.Combine(base_url, item);
                             string savePath = System.IO.Path.Combine(base_path, item);
-                            result = await HttpClient.Get(url, header, CommonNet.Enums.HttpMode.Stream);
+                            result = await HttpClient.Get(url, header, SuperUtils.NetWork.Enums.HttpMode.Stream);
                             if (result.StatusCode == HttpStatusCode.OK && result.FileByte != null)
                             {
                                 string path = System.IO.Path.GetDirectoryName(savePath);

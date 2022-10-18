@@ -1,4 +1,4 @@
-﻿using Jvedio.CommonNet.Entity;
+﻿using SuperUtils.NetWork.Entity;
 using System.Collections.Generic;
 
 namespace Jvedio.Core.Crawler
@@ -16,11 +16,9 @@ namespace Jvedio.Core.Crawler
 
         static CrawlerHeader()
         {
-            GitHub = new RequestHeader();
-            GitHub.Method = System.Net.Http.HttpMethod.Get;
-            GitHub.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
-            GitHub.Headers = DEFAULT_HEADERS;
-            Default = GitHub;
+            System.Net.IWebProxy webProxy = ConfigManager.ProxyConfig.GetWebProxy();
+            Default = new SuperUtils.NetWork.Crawler.CrawlerHeader(webProxy).Default;
+            GitHub = Default;
         }
     }
 }

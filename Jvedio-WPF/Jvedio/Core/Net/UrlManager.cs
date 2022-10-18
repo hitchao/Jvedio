@@ -8,6 +8,8 @@ namespace Jvedio.Core.Global
         public static readonly string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
         public static readonly string UpgradeSource = "https://hitchao.github.io";
         public static readonly string UpdateUrl = "https://hitchao.github.io/jvedioupdate/latest.json";
+        public const string UpdateFileListUrl = "https://hitchao.github.io/jvedioupdate/list.json";
+        public static string UpdateFilePathUrl = "https://hitchao.github.io/jvedioupdate/File/";
 
         // public static readonly string UpdateUrl = "https://hitchao.github.io:444/jvedioupdate/latest.json";   // 旧版本
         // public static readonly string UpdateUrl = "https://hitchao.github.io/jvedioupdate/Version";           // 旧版本

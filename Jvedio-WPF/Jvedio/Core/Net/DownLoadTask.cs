@@ -1,4 +1,4 @@
-﻿using Jvedio.CommonNet.Entity;
+﻿using SuperUtils.NetWork.Entity;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;

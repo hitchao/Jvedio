@@ -1,5 +1,5 @@
 ﻿using DynamicData.Annotations;
-using Jvedio.CommonNet;
+using SuperUtils.NetWork;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
