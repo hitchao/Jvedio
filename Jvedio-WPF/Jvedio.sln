@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio", "Jvedio\Jvedio.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Style", "Jvedio.Style\Jvedio.Style.csproj", "{C398561C-9E61-4258-A9A0-1692832A6A95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Release", "Jvedio.Release\Jvedio.Release.csproj", "{464EC247-E814-46B0-9061-007E0CCBCC4C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jvedio.Update", "Jvedio.Update\Jvedio.Update.csproj", "{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{838BD431-431B-4066-80F5-A1B14140E9DF}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -32,14 +28,6 @@ Global
 		{C398561C-9E61-4258-A9A0-1692832A6A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C398561C-9E61-4258-A9A0-1692832A6A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C398561C-9E61-4258-A9A0-1692832A6A95}.Release|Any CPU.Build.0 = Release|Any CPU
-		{464EC247-E814-46B0-9061-007E0CCBCC4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{464EC247-E814-46B0-9061-007E0CCBCC4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{464EC247-E814-46B0-9061-007E0CCBCC4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{464EC247-E814-46B0-9061-007E0CCBCC4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAB67F8C-F304-48A4-8D34-E096C92F7A3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B29AFDAB-68AD-4CB6-83EF-7B9128491DC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B29AFDAB-68AD-4CB6-83EF-7B9128491DC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B29AFDAB-68AD-4CB6-83EF-7B9128491DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU

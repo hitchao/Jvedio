@@ -1,4 +1,0 @@
-<sys:String x:Key="PleaseSetImageIndex">[options-library]で画像インデックスを確立してください！</sys:String>
-<sys:String x:Key="PleaseSetExistsIndex">[Options-Library]で再生インデックスを確立してください！</sys:String>
-<sys:String x:Key="CrawlAllWarning">ライブラリ全体を登ると、IPがブロックされる可能性があります。注意して使用してください。必要なリソースを同期してみてください</sys:String>
-<sys:String x:Key="CrawlerServerHint">左側には、サポートされている情報スクレーパーがあります。右側のスクラッチに対応するURLを埋める必要があります。JvedioはWebサイトのアドレスを提供しません！</sys:String>

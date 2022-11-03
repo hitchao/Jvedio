@@ -999,9 +999,7 @@ mkdir "$(ProjectDir)bin\Release"
 XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /E /Y /i</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>XCOPY  "$(ProjectDir)bin\Debug"  "$(SolutionDir)Release\public\File"    /E /Y /i
-
-XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i
+    <PostBuildEvent>XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i
 
 mkdir "$(ProjectDir)bin\Debug\plugins\crawlers"
 

@@ -2,6 +2,9 @@
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Global;
 using SuperControls.Style.Upgrade;
+using SuperUtils.IO;
+using System;
+using System.Text;
 using System.Windows;
 using static Jvedio.VisualTools.WindowHelper;
 
@@ -38,8 +41,13 @@ namespace Jvedio.Core.Command
                 upgrader.Language = ConfigManager.Settings.CurrentLanguage;
                 upgrader.Header = CrawlerHeader.GitHub;
                 upgrader.Logger = null;//todo
-                SuperControls.Style.Upgrade.Dialog_Upgrade dialog_Upgrade =
-                new SuperControls.Style.Upgrade.Dialog_Upgrade(parent, false, "", "", "", upgrader);
+                                       // 写入配置文件
+                upgrader.BeforeUpdateDelay = 5;
+                upgrader.AfterUpdateDelay = 1;
+                upgrader.UpDateFileDir = "TEMP";
+                upgrader.AppName = "Jvedio.exe";
+
+                SuperControls.Style.Upgrade.Dialog_Upgrade dialog_Upgrade = new SuperControls.Style.Upgrade.Dialog_Upgrade(parent, upgrader);
                 dialog_Upgrade.LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 dialog_Upgrade.ShowDialog();
             });

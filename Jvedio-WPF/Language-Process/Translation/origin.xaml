@@ -1,4 +1,0 @@
-    <sys:String x:Key="PleaseSetImageIndex">请在【选项-库】中建立图片索引！</sys:String>
-    <sys:String x:Key="PleaseSetExistsIndex">请在【选项-库】中建立播放索引！</sys:String>
-    <sys:String x:Key="CrawlAllWarning">全库爬取可能会导致你的IP被封，请谨慎使用，尽量同步仅需要的资源</sys:String>
-    <sys:String x:Key="CrawlerServerHint">左侧是支持的信息刮削器，右侧需要自行填入刮削器对应的网址，Jvedio 不提供任何网站地址！</sys:String>
