@@ -1278,25 +1278,7 @@ namespace Jvedio.ViewModel
 
         private void InsertID(string id, VideoType vedioType)
         {
-            // Movie movie = DataBase.SelectMovieByID(id);
-            // if (movie != null)
-            // {
-            //    HandyControl.Controls.Growl.Info($"{id} {SuperControls.Style.LangManager.GetValueByKey("Message_AlreadyExist")}", "Main");
-            // }
-            // else
-            // {
-            //    Movie movie1 = new Movie()
-            //    {
-            //        id = id,
-            //        vediotype = (int)vedioType,
-            //        releasedate = "1900-01-01",
-            //        otherinfo = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            //    };
-            //    DataBase.InsertScanMovie(movie1);
-            //    MovieList.Insert(0, movie1);
-            //    CurrentMovieList.Insert(0, movie1);
-            //    FilterMovieList.Insert(0, movie1);
-            // }
+
         }
 
         public List<string> GetIDListFromString(string str, VideoType vedioType)

@@ -4,13 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     Title="{Binding CurrentVideo.Title, TargetNullValue=Detail}"
     Width="1230"
     Height="720"
@@ -425,14 +423,12 @@
                                             PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
                                             Tag="{Binding DataID, Mode=OneWay}"
                                             Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                            <hc:Rate
-                                                AllowClear="True"
-                                                AllowHalf="True"
-                                                Background="{DynamicResource Window.Title.Background}"
-                                                DefaultValue="0"
-                                                Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                ItemHeight="15"
-                                                ItemMargin="3 0"
+                                            <super:Rating
+                                                Half="True"
+                                                RateBackground="{DynamicResource Window.Title.Background}"
+                                                RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                StarHeight="15"
+                                                StarMargin="3 0"
                                                 ValueChanged="AssoDataRate_ValueChanged"
                                                 Value="{Binding Grade, Mode=TwoWay}" />
                                         </StackPanel>
@@ -819,7 +815,7 @@
                                 IsVisibleChanged="ProgressBar_IsVisibleChanged"
                                 Maximum="100"
                                 Minimum="0"
-                                Style="{StaticResource ProgressBarSuccessStripe}"
+                                Style="{StaticResource NormalStaticProgressBar}"
                                 ValueChanged="ProgressBar_ValueChanged"
                                 Visibility="Visible"
                                 Value="0" />
@@ -1026,12 +1022,12 @@
                                                 HorizontalAlignment="Left"
                                                 Cursor="Hand"
                                                 Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource bool2VisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                <hc:Rate
-                                                    AllowClear="True"
-                                                    Background="{DynamicResource Window.Title.Background}"
-                                                    DefaultValue="0"
+                                                <super:Rating
                                                     FocusVisualStyle="{x:Null}"
-                                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                    Half="True"
+                                                    RateBackground="{DynamicResource Window.Title.Background}"
+                                                    RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                    StarMargin="3 0"
                                                     ValueChanged="Rate_ValueChanged"
                                                     Value="{Binding CurrentVideo.Grade, Mode=TwoWay}" />
                                             </StackPanel>

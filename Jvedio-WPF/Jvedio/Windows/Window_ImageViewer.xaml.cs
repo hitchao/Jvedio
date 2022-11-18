@@ -18,7 +18,7 @@ namespace Jvedio
             this.Owner = owner;
             this.Height = SystemParameters.PrimaryScreenHeight * 0.8;
             this.Width = SystemParameters.PrimaryScreenHeight * 0.8 * 1230 / 720;
-            ImageViewer.ImageSource = BitmapFrame.Create((BitmapSource)source);
+            ImageViewer.Source = BitmapFrame.Create((BitmapSource)source);
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
@@ -37,7 +37,7 @@ namespace Jvedio
 
         protected override void OnClosed(EventArgs e)
         {
-            ImageViewer.ImageSource = null;
+            ImageViewer.Source = null;
             base.OnClosed(e);
         }
 

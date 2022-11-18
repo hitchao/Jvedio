@@ -398,9 +398,6 @@
     <Compile Include="WindowsDialog\Dialog_SelectActor.xaml.cs">
       <DependentUpon>Dialog_SelectActor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowsDialog\Dialog_Upgrade.xaml.cs">
-      <DependentUpon>Dialog_Upgrade.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WindowsDialog\Dialog_Notice.xaml.cs">
       <DependentUpon>Dialog_Notice.xaml</DependentUpon>
     </Compile>
@@ -548,10 +545,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="WindowsDialog\Dialog_Sponsor.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WindowsDialog\Dialog_Upgrade.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

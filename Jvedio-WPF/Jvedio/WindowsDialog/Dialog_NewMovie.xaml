@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Add}"
@@ -18,21 +17,7 @@
 
     <Grid>
 
-        <!--  消息提示框  -->
-        <ScrollViewer
-            Width="auto"
-            Height="auto"
-            Margin="20"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Panel.ZIndex="6"
-            Background="Transparent"
-            VerticalScrollBarVisibility="Hidden">
-            <StackPanel
-                Margin="0,10,10,10"
-                VerticalAlignment="Bottom"
-                hc:Growl.Token="ToolsGrowl" />
-        </ScrollViewer>
+
 
         <Grid>
 
@@ -47,19 +32,33 @@
                 MinHeight="200"
                 Margin="10"
                 Padding="10"
+                HorizontalAlignment="Stretch"
                 VerticalContentAlignment="Top"
-                hc:InfoElement.Placeholder="{DynamicResource EnterVID}"
-                hc:InfoElement.Title=""
                 AcceptsReturn="True"
                 Background="{DynamicResource Window.Side.Background}"
-                BorderBrush="{DynamicResource Window.Foreground}"
+                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                BorderThickness="1"
                 CaretBrush="{DynamicResource Window.Foreground}"
                 ContextMenu="{StaticResource TextBoxContextMenu}"
                 FontSize="15"
                 Foreground="{DynamicResource Window.Foreground}"
-                Style="{StaticResource TextBoxExtend}"
+                LostFocus="AddMovieTextBox_LostFocus"
+                Style="{StaticResource BaseTextBox}"
+                TextChanged="AddMovieTextBox_TextChanged"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
+
+            <TextBlock
+                x:Name="placeHolderTextBlock"
+                Grid.Row="0"
+                Margin="22"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Cursor="IBeam"
+                Foreground="{DynamicResource Window.Sub.Foreground}"
+                MouseDown="placeHolderTextBlock_MouseDown"
+                Style="{StaticResource BaseTextBlock}"
+                Text="{DynamicResource EnterVID}" />
 
 
             <WrapPanel
@@ -70,8 +69,7 @@
                     Margin="10"
                     Background="Transparent"
                     Content="{DynamicResource VideoType}"
-                    Foreground="{DynamicResource Window.Foreground}"
-                    Style="{StaticResource LabelPrimary}" />
+                    Foreground="{DynamicResource Window.Foreground}" />
                 <ComboBox
                     Height="30"
                     MinWidth="100"
@@ -99,6 +97,7 @@
                 <super:SearchBox
                     x:Name="PrefixTextBox"
                     MinWidth="200"
+                    Padding="0,4"
                     LostFocus="PrefixTextBox_LostFocus"
                     PlaceHolder="{DynamicResource Prefix}"
                     PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"

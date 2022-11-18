@@ -5,9 +5,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--  HandyControl  -->
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonFlatStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TabControlStyle.xaml" />

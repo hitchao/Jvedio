@@ -69,20 +69,6 @@ namespace Jvedio
             colorPopup.IsOpen = false;
         }
 
-        private void ColorPicker_SelectedColorChanged(object sender, HandyControl.Data.FunctionEventArgs<Color> e)
-        {
-            colorPopup.IsOpen = false;
-            if (idx == 0)
-            {
-                border.Background = ColorPicker.SelectedBrush;
-                BackgroundBrush = ColorPicker.SelectedBrush;
-            }
-            else
-            {
-                border2.Background = ColorPicker.SelectedBrush;
-                ForegroundBrush = ColorPicker.SelectedBrush;
-            }
-        }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -109,6 +95,26 @@ namespace Jvedio
         {
             textBox.Focus();
             textBox.SelectAll();
+        }
+
+        private void CancelColorPicker(object sender, RoutedEventArgs e)
+        {
+            colorPopup.IsOpen = false;
+        }
+
+        private void ConfirmColorPicker(object sender, RoutedEventArgs e)
+        {
+            colorPopup.IsOpen = false;
+            if (idx == 0)
+            {
+                border.Background = new SolidColorBrush(colorPicker.SelectedColor);
+                BackgroundBrush = new SolidColorBrush(colorPicker.SelectedColor);
+            }
+            else
+            {
+                border2.Background = new SolidColorBrush(colorPicker.SelectedColor);
+                ForegroundBrush = new SolidColorBrush(colorPicker.SelectedColor);
+            }
         }
     }
 }

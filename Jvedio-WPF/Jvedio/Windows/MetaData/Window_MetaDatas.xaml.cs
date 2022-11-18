@@ -471,10 +471,10 @@ namespace Jvedio
             ConfigManager.MetaData.Save();
         }
 
-        private void Rate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        private void Rate_ValueChanged(object sender, EventArgs e)
         {
             if (!CanRateChange) return;
-            HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
+            Rating rate = (Rating)sender;
             StackPanel stackPanel = rate.Parent as StackPanel;
             long id = getDataID(stackPanel);
             metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), id);

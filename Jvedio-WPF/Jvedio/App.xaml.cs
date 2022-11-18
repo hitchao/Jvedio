@@ -1,5 +1,4 @@
-﻿using HandyControl.Tools;
-using Jvedio.Core.Logs;
+﻿using Jvedio.Core.Logs;
 using System;
 using System.Text;
 using System.Threading;

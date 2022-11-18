@@ -5,9 +5,6 @@
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
     xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    
-    xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
@@ -673,27 +670,7 @@
                                                     </Popup>
                                                 </Grid>
 
-                                                <hc:SearchBar
-                                                    x:Name="SearchBar"
-                                                    Margin="5,5,5,5"
-                                                    Padding="35,0"
-                                                    hc:InfoElement.Placeholder="{Binding SearchHint}"
-                                                    hc:InfoElement.Title=""
-                                                    hc:InfoElement.TitleWidth="140"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    CaretBrush="{DynamicResource Window.Foreground}"
-                                                    ContextMenu="{StaticResource TextBoxContextMenu}"
-                                                    Focusable="True"
-                                                    Foreground="{DynamicResource Window.Foreground}"
-                                                    GotFocus="SearchBar_GotFocus"
-                                                    LostFocus="SearchBar_LostFocus"
-                                                    PreviewKeyUp="SearchBar_PreviewKeyUp"
-                                                    PreviewMouseLeftButtonDown="ShowSearchPopup"
-                                                    SearchStarted="SearchBar_SearchStarted"
-                                                    ShowClearButton="True"
-                                                    Style="{StaticResource SearchBarPlus}"
-                                                    TextChanged="RefreshCandiadte" />
+
 
                                                 <Popup
                                                     Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}, Mode=FindAncestor}, Path=ActualWidth}"
@@ -1241,14 +1218,12 @@
                                                                 PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
                                                                 Tag="{Binding DataID, Mode=OneWay}"
                                                                 Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                                <hc:Rate
-                                                                    AllowClear="True"
-                                                                    AllowHalf="True"
-                                                                    Background="{DynamicResource Window.Title.Background}"
-                                                                    DefaultValue="0"
-                                                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                                    ItemHeight="15"
-                                                                    ItemMargin="3 0"
+                                                                <super:Rating
+                                                                    Half="True"
+                                                                    RateBackground="{DynamicResource Window.Title.Background}"
+                                                                    RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                                    StarHeight="15"
+                                                                    StarMargin="3 0"
                                                                     ValueChanged="Rate_ValueChanged"
                                                                     Value="{Binding Grade, Mode=TwoWay}" />
                                                             </StackPanel>

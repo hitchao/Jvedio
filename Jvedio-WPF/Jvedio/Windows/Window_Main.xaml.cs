@@ -1,7 +1,4 @@
 ﻿using DynamicData;
-using HandyControl.Data;
-using SuperUtils.NetWork;
-using SuperUtils.NetWork.Entity;
 using Jvedio.Core;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
@@ -25,6 +22,8 @@ using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
+using SuperUtils.NetWork;
+using SuperUtils.NetWork.Entity;
 using SuperUtils.Time;
 using SuperUtils.WPF.VisualTools;
 using System;
@@ -161,12 +160,34 @@ namespace Jvedio
             // 初始化任务栏的进度条
             if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
                 taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
+
+            LoadNotifyIcon();
         }
 
         public Main()
         {
             InitializeComponent();
             Init();
+        }
+
+        System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
+        public void LoadNotifyIcon()
+        {
+            string icon_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jvedio.ico");
+            nIcon.Icon = new System.Drawing.Icon(icon_path);
+            nIcon.Visible = true;
+            //nIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
+            nIcon.MouseClick += (s, e) =>
+              {
+                  if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                  {
+                      notiIconPopup.IsOpen = true;
+                  }
+                  else if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                  {
+                      ShowMainWindow(s, e);
+                  }
+              };
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -718,12 +739,14 @@ namespace Jvedio
 
         public void Notify_Close(object sender, RoutedEventArgs e)
         {
+            notiIconPopup.IsOpen = false;
             Application.Current.Shutdown(0);
         }
 
-        public void ShowMainWindow(object sender, RoutedEventArgs e)
+        public void ShowMainWindow(object sender, EventArgs e)
         {
             SetWindowVisualStatus(true);
+            notiIconPopup.IsOpen = false;
         }
 
         private void AnimateWindow(Window window)
@@ -1093,7 +1116,8 @@ namespace Jvedio
                     string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     if (local.CompareTo(remote) < 0)
                     {
-                        new Dialog_Upgrade(this, false, remote, result.ReleaseDate, result.ReleaseNote).ShowDialog();
+                        // todo 
+                        //new Dialog_Upgrade(this, false, remote, result.ReleaseDate, result.ReleaseNote).ShowDialog();
                     }
                 }
             }
@@ -3199,10 +3223,10 @@ namespace Jvedio
             Properties.Settings.Default.Save();
         }
 
-        private void Rate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        private void Rate_ValueChanged(object sender, EventArgs e)
         {
             if (!CanRateChange) return;
-            HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
+            Rating rate = (Rating)sender;
             if (rate == null) return;
             StackPanel stackPanel = rate.Parent as StackPanel;
             long id = getDataID(stackPanel);
@@ -3466,9 +3490,9 @@ namespace Jvedio
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
 
-        private void ActorRate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        private void ActorRate_ValueChanged(object sender, EventArgs e)
         {
-            HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
+            Rating rate = (Rating)sender;
             actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), vieModel.CurrentActorInfo.ActorID);
         }
 
@@ -4001,9 +4025,9 @@ namespace Jvedio
             pagination.CurrentPageChange += Pagination_CurrentPageChange;
         }
 
-        private void SideActorRate_ValueChanged(object sender, FunctionEventArgs<double> e)
+        private void SideActorRate_ValueChanged(object sender, EventArgs e)
         {
-            HandyControl.Controls.Rate rate = sender as HandyControl.Controls.Rate;
+            Rating rate = sender as Rating;
             if (rate.Tag == null) return;
             long.TryParse(rate.Tag.ToString(), out long actorID);
             if (actorID <= 0) return;
@@ -4964,5 +4988,7 @@ namespace Jvedio
 
             }
         }
+
+
     }
 }

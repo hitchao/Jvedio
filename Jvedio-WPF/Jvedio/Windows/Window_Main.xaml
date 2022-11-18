@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
@@ -229,15 +228,14 @@
 
 
                         </StackPanel>
-                        <hc:Rate
+                        <super:Rating
                             Grid.Row="1"
                             Margin="5"
                             VerticalAlignment="Center"
-                            AllowClear="True"
-                            AllowHalf="True"
-                            Background="{DynamicResource Window.Background}"
-                            Count="5"
-                            Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                            Half="True"
+                            RateBackground="{DynamicResource Window.Background}"
+                            RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                            StarMargin="3 0"
                             Tag="{Binding ActorID, Mode=OneWay}"
                             ToolTip="{DynamicResource DoubleClickToCancel}"
                             ValueChanged="SideActorRate_ValueChanged"
@@ -639,6 +637,7 @@
 
         <!--  长任务遮罩  -->
         <Grid Panel.ZIndex="99" Visibility="{Binding RunningLongTask, Converter={StaticResource bool2VisibilityConverter}, FallbackValue=Hidden}">
+
             <Border Background="{DynamicResource Window.Background}" Opacity="0.5" />
             <Border
                 MinWidth="200"
@@ -648,7 +647,14 @@
                 Background="{DynamicResource Window.Title.Background}"
                 CornerRadius="10">
                 <StackPanel Orientation="Horizontal">
-                    <hc:LoadingCircle Margin="30,5" Foreground="{DynamicResource Window.Foreground}" />
+                    <super:LoadingCircle
+                        Width="40"
+                        Height="40"
+                        Margin="30,5"
+                        VerticalAlignment="Center"
+                        DotInterval="10"
+                        DotSize="7"
+                        Foreground="{DynamicResource Window.Foreground}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="20"
@@ -658,25 +664,70 @@
         </Grid>
 
 
+
         <!--  托盘图标  -->
-        <hc:NotifyIcon
-            Click="ShowMainWindow"
-            Icon="/Jvedio;component/Resources/Jvedio.ico"
-            IsBlink="False"
-            Text="Jvedio"
-            Visibility="{Binding TaskIconVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Visibility}">
-            <hc:NotifyIcon.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Click="ShowMainWindow" Header="{DynamicResource OpenJvedio}" />
-                    <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />
-                    <MenuItem
+
+        <Popup
+            x:Name="notiIconPopup"
+            Width="auto"
+            Height="auto"
+            AllowsTransparency="True"
+            HorizontalOffset="-5"
+            Placement="MousePoint"
+            PopupAnimation="Fade"
+            StaysOpen="False"
+            VerticalOffset="-5">
+            <Grid Margin="5">
+                <Border
+                    Margin="5"
+                    Background="{DynamicResource Menu.Background}"
+                    CornerRadius="2"
+                    Effect="{StaticResource PopupDropShadowEffect}" />
+
+                <StackPanel Margin="0,10" Orientation="Vertical">
+                    <Button
+                        Margin="5,0"
+                        Padding="20,7"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        super:CommonExt.HoverBackground="{DynamicResource Menu.Hover.Background}"
+                        Click="ShowMainWindow"
+                        Content="{DynamicResource OpenJvedio}"
+                        Style="{StaticResource FlatButton}" />
+                    <Button
+                        Margin="5,0"
+                        Padding="20,7"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        super:CommonExt.HoverBackground="{DynamicResource Menu.Hover.Background}"
+                        Command="cmd:OpenWindow.Settings"
+                        Content="{DynamicResource Settings}"
+                        Style="{StaticResource FlatButton}" />
+                    <Button
+                        Margin="5,0"
+                        Padding="20,7"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        super:CommonExt.HoverBackground="{DynamicResource Menu.Hover.Background}"
                         Command="cmd:OpenWindow.Upgrade"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                        Header="{DynamicResource CheckUpgrade}" />
-                    <MenuItem Click="Notify_Close" Header="{DynamicResource Exit}" />
-                </ContextMenu>
-            </hc:NotifyIcon.ContextMenu>
-        </hc:NotifyIcon>
+                        Content="{DynamicResource CheckUpgrade}"
+                        Style="{StaticResource FlatButton}" />
+
+                    <Button
+                        Margin="5,0"
+                        Padding="20,7"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        super:CommonExt.HoverBackground="{DynamicResource Menu.Hover.Background}"
+                        Click="Notify_Close"
+                        Content="{DynamicResource Exit}"
+                        Style="{StaticResource FlatButton}" />
+                </StackPanel>
+
+            </Grid>
+        </Popup>
+
 
         <!--  背景  -->
         <Image
@@ -1450,14 +1501,11 @@
                                             PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
                                             Tag="{Binding DataID, Mode=OneWay}"
                                             Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                            <hc:Rate
-                                                AllowClear="True"
-                                                AllowHalf="True"
-                                                Background="{DynamicResource Window.Title.Background}"
-                                                DefaultValue="0"
-                                                Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                ItemHeight="15"
-                                                ItemMargin="3 0"
+                                            <super:Rating
+                                                Half="True"
+                                                RateBackground="{DynamicResource Window.Title.Background}"
+                                                RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                StarMargin="3 0"
                                                 ValueChanged="Rate_ValueChanged"
                                                 Value="{Binding Grade, Mode=TwoWay}" />
                                         </StackPanel>
@@ -2669,10 +2717,15 @@
                                                     </Grid.RowDefinitions>
                                                     <StackPanel
                                                         Grid.Row="0"
+                                                        Margin="20,10"
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"
                                                         Orientation="Horizontal">
-                                                        <hc:LoadingCircle Height="30" Foreground="{DynamicResource Window.Foreground}" />
+                                                        <super:LoadingCircle
+                                                            Width="40"
+                                                            Height="40"
+                                                            DotSize="7"
+                                                            Foreground="{DynamicResource Window.Foreground}" />
                                                         <TextBlock
                                                             Grid.Row="0"
                                                             MaxHeight="300"
@@ -2862,15 +2915,14 @@
 
                                                 </StackPanel>
 
-                                                <hc:Rate
+                                                <super:Rating
                                                     Grid.Row="2"
                                                     Margin="5"
                                                     VerticalAlignment="Center"
-                                                    AllowClear="True"
-                                                    AllowHalf="True"
-                                                    Background="{DynamicResource Window.Side.Background}"
-                                                    Count="5"
-                                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                    Half="True"
+                                                    RateBackground="{DynamicResource Window.Side.Background}"
+                                                    RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                    StarMargin="2 0"
                                                     ToolTip="{DynamicResource DoubleClickToCancel}"
                                                     ValueChanged="ActorRate_ValueChanged"
                                                     Visibility="Visible"
@@ -3380,14 +3432,11 @@
                                                                     PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
                                                                     Tag="{Binding DataID, Mode=OneWay}"
                                                                     Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                                    <hc:Rate
-                                                                        AllowClear="True"
-                                                                        AllowHalf="True"
-                                                                        Background="{DynamicResource Window.Title.Background}"
-                                                                        DefaultValue="0"
-                                                                        Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                                        ItemHeight="15"
-                                                                        ItemMargin="3 0"
+                                                                    <super:Rating
+                                                                        Half="True"
+                                                                        RateBackground="{DynamicResource Window.Title.Background}"
+                                                                        RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                                        StarMargin="3 0"
                                                                         ValueChanged="Rate_ValueChanged"
                                                                         Value="{Binding Grade, Mode=TwoWay}" />
                                                                 </StackPanel>
@@ -3913,10 +3962,15 @@
                                                     </Grid.RowDefinitions>
                                                     <StackPanel
                                                         Grid.Row="0"
+                                                        Margin="20,10"
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"
                                                         Orientation="Horizontal">
-                                                        <hc:LoadingCircle Height="30" Foreground="{DynamicResource Window.Foreground}" />
+                                                        <super:LoadingCircle
+                                                            Width="40"
+                                                            Height="40"
+                                                            DotSize="7"
+                                                            Foreground="{DynamicResource Window.Foreground}" />
                                                         <TextBlock
                                                             Grid.Row="0"
                                                             MaxHeight="300"

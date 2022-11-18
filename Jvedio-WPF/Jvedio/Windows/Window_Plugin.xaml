@@ -4,12 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:p="clr-namespace:Jvedio.Properties"
-    xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Plugin}"
     Width="1000"
@@ -96,25 +91,6 @@
         </Style>
 
 
-        <Style
-            x:Key="BaseHcTextBox"
-            BasedOn="{StaticResource TextBoxBaseStyle}"
-            TargetType="TextBox">
-
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
-            <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Width" Value="auto" />
-            <Setter Property="Height" Value="auto" />
-            <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="MinWidth" Value="400" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="5" />
-            <Setter Property="Margin" Value="5,0" />
-            <Setter Property="CaretBrush" Value="{DynamicResource Window.Foreground}" />
-        </Style>
     </super:BaseWindow.Resources>
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

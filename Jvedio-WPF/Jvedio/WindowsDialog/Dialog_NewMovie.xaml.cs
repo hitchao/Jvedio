@@ -76,6 +76,26 @@ namespace Jvedio
             ConfigManager.Settings.Prefix = Prefix;
             ConfigManager.Settings.Save();
         }
+
+
+        private void AddMovieTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(AddMovieTextBox.Text))
+                placeHolderTextBlock.Visibility = Visibility.Visible;
+        }
+
+        private void placeHolderTextBlock_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            AddMovieTextBox.Focus();
+        }
+
+        private void AddMovieTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(AddMovieTextBox.Text))
+                placeHolderTextBlock.Visibility = Visibility.Visible;
+            else
+                placeHolderTextBlock.Visibility = Visibility.Collapsed;
+        }
     }
 
     public class NewVideoDialogResult

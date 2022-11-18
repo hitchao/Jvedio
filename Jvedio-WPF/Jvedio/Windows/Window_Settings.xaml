@@ -5,11 +5,8 @@
     xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
-    xmlns:style="clr-namespace:Jvedio.Style;assembly=Jvedio.Style"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Settings}"
     Width="1000"
@@ -99,8 +96,8 @@
 
 
         <Style
-            x:Key="BaseHcTextBox"
-            BasedOn="{StaticResource TextBoxBaseStyle}"
+            x:Key="SettingBaseTextBox"
+            BasedOn="{StaticResource BaseTextBox}"
             TargetType="TextBox">
 
             <Setter Property="FontSize" Value="15" />
@@ -127,22 +124,6 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <!--  消息提示框  -->
-        <ScrollViewer
-            Width="auto"
-            Height="auto"
-            Margin="10,0,30,20"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Panel.ZIndex="6"
-            Background="Transparent"
-            VerticalScrollBarVisibility="Hidden">
-            <StackPanel
-                Margin="0,10,10,10"
-                VerticalAlignment="Bottom"
-                hc:Growl.GrowlParent="True"
-                hc:Growl.Token="SettingsGrowl" />
-        </ScrollViewer>
 
 
 
@@ -207,28 +188,47 @@
                             Content="{DynamicResource BossKey}"
                             IsChecked="{Binding HotKey_Enable, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                             Unchecked="Unregister_HotKey" />
-                        <hc:TextBox
+                        <TextBox
                             x:Name="hotkeyTextBox"
+                            Height="40"
+                            MinWidth="400"
+                            Padding="10,0"
+                            VerticalContentAlignment="Center"
+                            Background="{DynamicResource Window.Title.Background}"
                             ContextMenu="{x:Null}"
                             IsReadOnly="True"
                             PreviewKeyDown="hotkeyTextBox_PreviewKeyDown"
                             PreviewKeyUp="hotkeyTextBox_PreviewKeyUp"
-                            Style="{StaticResource BaseHcTextBox}"
+                            Style="{StaticResource ReadOnlyTextBox}"
                             Text="{Binding HotKey_String, Mode=OneWay, Source={x:Static p:Settings.Default}}" />
-                        <Button Click="ApplyHotKey" Content="{DynamicResource Apply}" />
+                        <Button
+                            Margin="5,0"
+                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                            Click="ApplyHotKey"
+                            Content="{DynamicResource Apply}"
+                            Style="{StaticResource BorderButton}" />
                     </StackPanel>
 
 
 
 
 
-                    <StackPanel Margin="15,5" Orientation="Horizontal">
+                    <StackPanel Margin="15,10" Orientation="Horizontal">
                         <Label Content="{DynamicResource SetPlayer}" Style="{StaticResource InfoLabel}" />
-                        <hc:TextBox
-                            ShowClearButton="True"
-                            Style="{StaticResource BaseHcTextBox}"
+                        <TextBox
+                            Width="400"
+                            Height="40"
+                            Margin="5,0"
+                            Padding="10,0"
+                            VerticalContentAlignment="Center"
+                            Background="{DynamicResource Window.Title.Background}"
+                            Style="{StaticResource BaseTextBox}"
                             Text="{Binding VedioPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        <Button Click="SetVideoPlayerPath" Content="{DynamicResource Choose}" />
+                        <Button
+                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                            Click="SetVideoPlayerPath"
+                            Content="{DynamicResource Choose}"
+                            Style="{StaticResource BorderButton}" />
                     </StackPanel>
 
 
@@ -621,11 +621,19 @@
                         </StackPanel>
 
                         <StackPanel
-                            Margin="20,5"
+                            Margin="20,10"
                             Orientation="Horizontal"
                             Visibility="Collapsed">
                             <Label Content="{DynamicResource SubsectionSpiltChar}" Style="{StaticResource InfoLabel}" />
-                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding SubSectionFeature, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <TextBox
+                                Width="400"
+                                Height="40"
+                                Margin="10,0"
+                                Padding="10,0"
+                                VerticalAlignment="Center"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding SubSectionFeature, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         </StackPanel>
 
                         <CheckBox
@@ -1710,20 +1718,31 @@
 
                         <StackPanel Margin="20,5" Orientation="Horizontal">
                             <Label Content="API Key" Style="{StaticResource InfoLabel}" />
-                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding TL_YOUDAO_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <TextBox
+                                Width="400"
+                                Height="40"
+                                Margin="10,0"
+                                Padding="10,0"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding TL_YOUDAO_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         </StackPanel>
                         <StackPanel Margin="20,5" Orientation="Horizontal">
                             <Label Content="Secret Key" Style="{StaticResource InfoLabel}" />
-                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding TL_YOUDAO_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <TextBox
+                                Width="400"
+                                Height="40"
+                                Margin="10,0"
+                                Padding="10,0"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding TL_YOUDAO_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         </StackPanel>
 
                     </StackPanel>
 
 
-                    <StackPanel
-                        IsEnabled="False"
-                        Orientation="Vertical"
-                        Visibility="Collapsed">
+                    <StackPanel IsEnabled="False" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <CheckBox
                                 Margin="20,10"
@@ -1738,11 +1757,25 @@
 
                         <StackPanel Margin="20,5" Orientation="Horizontal">
                             <Label Content="API Key" Style="{StaticResource InfoLabel}" />
-                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding TL_BAIDU_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <TextBox
+                                Width="400"
+                                Height="40"
+                                Margin="10,0"
+                                Padding="10,0"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding TL_BAIDU_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         </StackPanel>
                         <StackPanel Margin="20,5" Orientation="Horizontal">
                             <Label Content="Secret Key" Style="{StaticResource InfoLabel}" />
-                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding TL_BAIDU_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <TextBox
+                                Width="400"
+                                Height="40"
+                                Margin="10,0"
+                                Padding="10,0"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding TL_BAIDU_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         </StackPanel>
 
                     </StackPanel>
@@ -1777,11 +1810,25 @@
 
                         <StackPanel Margin="20,5" Orientation="Horizontal">
                             <Label Content="API Key" Style="{StaticResource InfoLabel}" />
-                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding Baidu_API_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <TextBox
+                                Width="400"
+                                Height="40"
+                                Margin="10,0"
+                                Padding="10,0"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding Baidu_API_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         </StackPanel>
                         <StackPanel Margin="20,5" Orientation="Horizontal">
                             <Label Content="Secret Key" Style="{StaticResource InfoLabel}" />
-                            <hc:TextBox Style="{StaticResource BaseHcTextBox}" Text="{Binding Baidu_SECRET_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                            <TextBox
+                                Width="400"
+                                Height="40"
+                                Margin="10,0"
+                                Padding="10,0"
+                                Background="{DynamicResource Window.Title.Background}"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding Baidu_SECRET_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         </StackPanel>
 
                     </StackPanel>
@@ -2360,7 +2407,7 @@
                                     IsReadOnly="False"
                                     PreviewKeyDown="hotkeyTextBox_PreviewKeyDown"
                                     PreviewKeyUp="hotkeyTextBox_PreviewKeyUp"
-                                    Style="{StaticResource BaseHcTextBox}"
+                                    Style="{StaticResource SettingBaseTextBox}"
                                     Text="{Binding FormatString, Mode=TwoWay}"
                                     TextAlignment="Left"
                                     TextChanged="TextBox_TextChanged"
@@ -2476,9 +2523,10 @@
                                     HorizontalAlignment="Left"
                                     Style="{StaticResource BaseTextBlock}"
                                     Text="{DynamicResource Index}" />
-                                <hc:LoadingCircle
-                                    Height="20"
-                                    DotDiameter="3"
+                                <super:LoadingCircle
+                                    Width="25"
+                                    Height="25"
+                                    Margin="5,0"
                                     Foreground="{DynamicResource Window.Foreground}"
                                     Visibility="{Binding IndexCreating, Converter={StaticResource bool2VisibilityConverter}}" />
                                 <Button
@@ -2493,7 +2541,7 @@
                                     Width="300"
                                     Height="10"
                                     Maximum="100"
-                                    Style="{StaticResource ProgressBarFlat}"
+                                    Style="{StaticResource NormalStaticProgressBar}"
                                     Visibility="{Binding IndexCreating, Converter={StaticResource bool2VisibilityConverter}}" />
 
                             </StackPanel>

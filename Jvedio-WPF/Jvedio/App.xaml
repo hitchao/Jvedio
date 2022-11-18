@@ -14,13 +14,6 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-
-
-                <!--  HandyControl  -->
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
-
-
                 <!--  Lang  -->
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/Lang/zh-CN.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/Core/Lang/zh-CN.xaml" />

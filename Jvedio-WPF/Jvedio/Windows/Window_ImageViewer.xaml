@@ -3,10 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource ImageViewer}"
     Width="800"
     Height="450"
@@ -47,9 +44,10 @@
                     Fill="{DynamicResource Window.Foreground}" />
             </Viewbox>
         </Button>
-        <hc:ImageViewer
-            x:Name="ImageViewer"
-            Background="Transparent"
-            BorderThickness="0" />
+        <Image Name="ImageViewer" Stretch="UniformToFill">
+            <!--<Image.Effect>
+                <BlurEffect KernelType="Gaussian" Radius="100" />
+            </Image.Effect>-->
+        </Image>
     </Grid>
 </Window>

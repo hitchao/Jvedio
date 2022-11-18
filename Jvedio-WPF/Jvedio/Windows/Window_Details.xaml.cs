@@ -1,6 +1,4 @@
-﻿using HandyControl.Data;
-using SuperUtils.NetWork;
-using Jvedio.Core.CustomEventArgs;
+﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Logs;
 using Jvedio.Core.Net;
@@ -14,6 +12,7 @@ using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
+using SuperUtils.NetWork;
 using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
@@ -824,7 +823,7 @@ namespace Jvedio
             // }
         }
 
-        private void Rate_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        private void Rate_ValueChanged(object sender, EventArgs e)
         {
             if (vieModel.CurrentVideo != null)
             {
@@ -1360,10 +1359,10 @@ namespace Jvedio
             return -1;
         }
 
-        private void AssoDataRate_ValueChanged(object sender, FunctionEventArgs<double> e)
+        private void AssoDataRate_ValueChanged(object sender, EventArgs e)
         {
             if (!CanRateChange) return;
-            HandyControl.Controls.Rate rate = (HandyControl.Controls.Rate)sender;
+            Rating rate = (Rating)sender;
             StackPanel stackPanel = rate.Parent as StackPanel;
             long id = getDataID(stackPanel);
             if (id <= 0) return;

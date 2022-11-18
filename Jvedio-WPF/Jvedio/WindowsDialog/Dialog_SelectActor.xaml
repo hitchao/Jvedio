@@ -88,10 +88,7 @@
             x:Name="VedioTypeStackPanel"
             Grid.Row="0"
             Orientation="Horizontal">
-            <Label
-                Margin="20,10"
-                Content="{DynamicResource SearchVideoType}"
-                Style="{StaticResource LabelPrimary}" />
+            <Label Margin="20,10" Content="{DynamicResource SearchVideoType}" />
             <RadioButton
                 Click="SaveVedioType"
                 Content="{DynamicResource Uncensored}"
@@ -114,10 +111,7 @@
         </StackPanel>
 
         <DockPanel Grid.Row="1" LastChildFill="True">
-            <Label
-                Margin="20,10"
-                Content="{DynamicResource StartPage}"
-                Style="{StaticResource LabelPrimary}" />
+            <Label Margin="20,10" Content="{DynamicResource StartPage}" />
             <TextBlock
                 Width="30"
                 VerticalAlignment="Center"
@@ -138,10 +132,7 @@
         </DockPanel>
 
         <DockPanel Grid.Row="2" LastChildFill="True">
-            <Label
-                Margin="20,10"
-                Content="{DynamicResource EndPage}"
-                Style="{StaticResource LabelPrimary}" />
+            <Label Margin="20,10" Content="{DynamicResource EndPage}" />
             <TextBlock
                 Width="30"
                 VerticalAlignment="Center"
