@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
 using Jvedio.Core.Scan;
@@ -18,6 +18,13 @@ namespace Jvedio.Entity
     [Table(tableName: "actor_info")]
     public class ActorInfo : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         [TableId(IdType.AUTO)]
         public long ActorID { get; set; }
 
@@ -90,17 +97,11 @@ namespace Jvedio.Entity
             set
             {
                 _smallimage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public override bool Equals(object obj)
         {

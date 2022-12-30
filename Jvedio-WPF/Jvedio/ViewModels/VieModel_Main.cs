@@ -1,6 +1,4 @@
-﻿using DynamicData;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
+﻿
 using Jvedio.Core;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
@@ -12,11 +10,13 @@ using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using JvedioLib.Security;
+using SuperControls.Style;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Time;
+using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -83,7 +83,7 @@ namespace Jvedio.ViewModel
 
         public RelayCommand<object> ShowClassifyCommand { get; set; }
 
-        public RelayCommand AddNewMovie { get; set; }
+        public RelayCommand<object> AddNewMovie { get; set; }
         #endregion
 
         static VieModel_Main()
@@ -110,7 +110,7 @@ namespace Jvedio.ViewModel
             ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
             ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
             ShowClassifyCommand = new RelayCommand<object>(t => ShowClassify(t));
-            AddNewMovie = new RelayCommand(AddSingleMovie);
+            AddNewMovie = new RelayCommand<object>(t => AddSingleMovie());
             DataBases = new ObservableCollection<AppDatabase>();
 
             refreshVideoRenderToken();

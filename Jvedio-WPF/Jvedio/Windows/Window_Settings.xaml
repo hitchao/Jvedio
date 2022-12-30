@@ -188,21 +188,22 @@
                             Content="{DynamicResource BossKey}"
                             IsChecked="{Binding HotKey_Enable, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
                             Unchecked="Unregister_HotKey" />
-                        <TextBox
-                            x:Name="hotkeyTextBox"
-                            Height="40"
-                            MinWidth="400"
-                            Padding="10,0"
-                            VerticalContentAlignment="Center"
-                            Background="{DynamicResource Window.Title.Background}"
-                            ContextMenu="{x:Null}"
-                            IsReadOnly="True"
-                            PreviewKeyDown="hotkeyTextBox_PreviewKeyDown"
-                            PreviewKeyUp="hotkeyTextBox_PreviewKeyUp"
-                            Style="{StaticResource ReadOnlyTextBox}"
-                            Text="{Binding HotKey_String, Mode=OneWay, Source={x:Static p:Settings.Default}}" />
+
+                        <Border Style="{StaticResource InfoBorder}">
+                            <TextBox
+                                x:Name="hotkeyTextBox"
+                                Height="25"
+                                MinWidth="400"
+                                ContextMenu="{x:Null}"
+                                IsReadOnly="True"
+                                PreviewKeyDown="hotkeyTextBox_PreviewKeyDown"
+                                PreviewKeyUp="hotkeyTextBox_PreviewKeyUp"
+                                Style="{StaticResource ReadOnlyTextBox}"
+                                Text="{Binding HotKey_String, Mode=OneWay, Source={x:Static p:Settings.Default}}" />
+                        </Border>
+
                         <Button
-                            Margin="5,0"
+                            Margin="14,0"
                             BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                             Click="ApplyHotKey"
                             Content="{DynamicResource Apply}"
@@ -215,16 +216,12 @@
 
                     <StackPanel Margin="15,10" Orientation="Horizontal">
                         <Label Content="{DynamicResource SetPlayer}" Style="{StaticResource InfoLabel}" />
-                        <TextBox
-                            Width="400"
-                            Height="40"
-                            Margin="5,0"
-                            Padding="10,0"
-                            VerticalContentAlignment="Center"
-                            Background="{DynamicResource Window.Title.Background}"
-                            Style="{StaticResource BaseTextBox}"
+                        <super:SearchBox
+                            Width="410"
+                            Margin="9,0"
                             Text="{Binding VedioPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <Button
+                            Margin="10,0"
                             BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                             Click="SetVideoPlayerPath"
                             Content="{DynamicResource Choose}"
@@ -398,8 +395,7 @@
                                 </StackPanel.Style>
                                 <super:SearchBox
                                     MinWidth="500"
-                                    ShowClearButton="True"
-                                    Style="{StaticResource BaseSearchTextBox}"
+                                    Margin="10,5"
                                     Text="{Binding BasePicPath, Mode=TwoWay}" />
                                 <Border
                                     Grid.Column="2"
@@ -470,11 +466,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="{DynamicResource Poster}"
                                         Style="{StaticResource InfoLabel}" />
-                                    <super:SearchBox
-                                        MinWidth="500"
-                                        ShowClearButton="True"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding BigImagePath, Mode=TwoWay}" />
+                                    <super:SearchBox MinWidth="500" Text="{Binding BigImagePath, Mode=TwoWay}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Label
@@ -483,11 +475,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="{DynamicResource Thumbnail}"
                                         Style="{StaticResource InfoLabel}" />
-                                    <super:SearchBox
-                                        MinWidth="500"
-                                        ShowClearButton="True"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding SmallImagePath, Mode=TwoWay}" />
+                                    <super:SearchBox MinWidth="500" Text="{Binding SmallImagePath, Mode=TwoWay}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Label
@@ -496,11 +484,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="{DynamicResource Preview}"
                                         Style="{StaticResource InfoLabel}" />
-                                    <super:SearchBox
-                                        MinWidth="500"
-                                        ShowClearButton="True"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding PreviewImagePath, Mode=TwoWay}" />
+                                    <super:SearchBox MinWidth="500" Text="{Binding PreviewImagePath, Mode=TwoWay}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Label
@@ -509,11 +493,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="{DynamicResource ScreenShot}"
                                         Style="{StaticResource InfoLabel}" />
-                                    <super:SearchBox
-                                        MinWidth="500"
-                                        ShowClearButton="True"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ScreenShotPath, Mode=TwoWay}" />
+                                    <super:SearchBox MinWidth="500" Text="{Binding ScreenShotPath, Mode=TwoWay}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Label
@@ -522,11 +502,7 @@
                                         VerticalContentAlignment="Top"
                                         Content="{DynamicResource ActressImage}"
                                         Style="{StaticResource InfoLabel}" />
-                                    <super:SearchBox
-                                        MinWidth="500"
-                                        ShowClearButton="True"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ActorImagePath, Mode=TwoWay}" />
+                                    <super:SearchBox MinWidth="500" Text="{Binding ActorImagePath, Mode=TwoWay}" />
                                 </StackPanel>
 
                             </StackPanel>
@@ -571,8 +547,6 @@
                                 ToolTip="[0-2000]" />
                             <super:SearchBox
                                 MinWidth="100"
-                                ShowClearButton="False"
-                                Style="{StaticResource BaseSearchTextBox}"
                                 Text="{Binding MinFileSize, Mode=TwoWay}"
                                 TextAlignment="Center"
                                 ToolTip="[0-2000]" />
@@ -594,7 +568,6 @@
                                 LostFocus="SetScanRe"
                                 PlaceHolder="正则表达式，使用英文分号分割每个正则"
                                 PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                Style="{StaticResource BaseSearchTextBox}"
                                 Text="{Binding ScanRe, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
                             <Border
                                 Width="30"
@@ -677,7 +650,6 @@
                                     MinWidth="400"
                                     PlaceHolder="{DynamicResource ActressImage}"
                                     PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                    Style="{StaticResource BaseSearchTextBox}"
                                     Text="{Binding CopyNFOActorPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             </StackPanel>
@@ -693,7 +665,6 @@
                                     MinWidth="400"
                                     PlaceHolder="{DynamicResource Preview}"
                                     PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                    Style="{StaticResource BaseSearchTextBox}"
                                     Text="{Binding CopyNFOPreviewPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             </StackPanel>
@@ -710,7 +681,6 @@
                                     MinWidth="400"
                                     PlaceHolder="{DynamicResource ScreenShot}"
                                     PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                    Style="{StaticResource BaseSearchTextBox}"
                                     Text="{Binding CopyNFOScreenShotPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             </StackPanel>
@@ -881,13 +851,13 @@
                                         <super:SearchBox
                                             Width="380"
                                             MinWidth="400"
-                                            Margin="10,0"
-                                            Background="{DynamicResource Window.Title.Background}"
+                                            Padding="5,0"
+                                            Background="{DynamicResource Menu.Background}"
                                             FontSize="15"
                                             PlaceHolder="{DynamicResource ToolTip_SameAsVedio}"
                                             PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                            Style="{StaticResource BaseSearchTextBox}"
-                                            Text="{Binding NFOSavePath, Mode=TwoWay}" />
+                                            Text="{Binding NFOSavePath, Mode=TwoWay}"
+                                            TextPadding="0" />
 
                                         <Button
                                             HorizontalAlignment="Left"
@@ -933,10 +903,9 @@
                                         TextAlignment="Left"
                                         ToolTip="[0-2000]" />
                                     <super:SearchBox
-                                        MinWidth="50"
+                                        MinWidth="100"
                                         Padding="0"
-                                        ShowClearButton="False"
-                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Background="{DynamicResource Menu.Background}"
                                         Text="{Binding HttpTimeout, Mode=TwoWay}"
                                         TextAlignment="Center" />
                                     <TextBlock
@@ -953,7 +922,7 @@
                         <Border
                             Margin="10"
                             Padding="5"
-                            Background="{DynamicResource Control.Background}"
+                            Background="{DynamicResource Menu.Background}"
                             CornerRadius="10">
                             <super:TogglePanel
                                 Padding="0,5"
@@ -1018,10 +987,7 @@
                                                 Style="{StaticResource BaseTextBlock}"
                                                 Text="{DynamicResource Server}"
                                                 TextAlignment="Left" />
-                                            <super:SearchBox
-                                                MinWidth="400"
-                                                Style="{StaticResource BaseSearchTextBox}"
-                                                Text="{Binding ProxyServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <super:SearchBox MinWidth="400" Text="{Binding ProxyServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
                                             <TextBlock
@@ -1029,10 +995,7 @@
                                                 Style="{StaticResource BaseTextBlock}"
                                                 Text="{DynamicResource Port}"
                                                 TextAlignment="Left" />
-                                            <super:SearchBox
-                                                MinWidth="200"
-                                                Style="{StaticResource BaseSearchTextBox}"
-                                                Text="{Binding ProxyPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <super:SearchBox MinWidth="200" Text="{Binding ProxyPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                         </StackPanel>
                                         <StackPanel
@@ -1044,10 +1007,7 @@
                                                 Style="{StaticResource BaseTextBlock}"
                                                 Text="{DynamicResource UserName}"
                                                 TextAlignment="Left" />
-                                            <super:SearchBox
-                                                MinWidth="400"
-                                                Style="{StaticResource BaseSearchTextBox}"
-                                                Text="{Binding ProxyUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <super:SearchBox MinWidth="400" Text="{Binding ProxyUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
                                             <TextBlock
@@ -1056,28 +1016,45 @@
                                                 Text="{DynamicResource Password}"
                                                 TextAlignment="Left" />
 
-                                            <PasswordBox
-                                                Name="passwordBox"
-                                                Height="30"
-                                                MinWidth="200"
-                                                Margin="10,5"
-                                                Padding="5"
-                                                VerticalContentAlignment="Center"
-                                                Background="{DynamicResource ListBoxItem.Background}"
-                                                BorderThickness="0"
-                                                ContextMenu="{DynamicResource PasteOnlyContextMenu}"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                PasswordChar="●"
-                                                Style="{x:Null}" />
-                                            <!--<super:SearchBox
-                                        MinWidth="200"
-                                        Style="{StaticResource BaseSearchTextBox}"
-                                        Text="{Binding ProxyPwd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
+                                            <Border
+                                                Margin="1"
+                                                Background="{DynamicResource Window.Title.Background}"
+                                                Style="{StaticResource InfoBorder}">
+                                                <PasswordBox
+                                                    Name="passwordBox"
+                                                    Width="188"
+                                                    Height="25"
+                                                    VerticalContentAlignment="Center"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    CaretBrush="{DynamicResource Window.Foreground}"
+                                                    ContextMenu="{DynamicResource PasteOnlyContextMenu}"
+                                                    Foreground="{DynamicResource Window.Foreground}"
+                                                    PasswordChar="●"
+                                                    Style="{x:Null}" />
+                                            </Border>
+
 
                                         </StackPanel>
 
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
+
+                                        <Button
+                                            MinWidth="100"
+                                            Margin="20,10"
+                                            HorizontalAlignment="Left"
+                                            Click="TestProxy"
+                                            Content="{DynamicResource Test}" />
+
+                                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource TestUrl}" />
+                                        <super:SearchBox
+                                            Name="textProxyUrl"
+                                            MinWidth="200"
+                                            Margin="10,0"
+                                            VerticalAlignment="Center"
+                                            Background="{DynamicResource Window.Title.Background}"
+                                            Text="http://www.google.com" />
                                         <fa:ImageAwesome
                                             Grid.Column="0"
                                             Width="20"
@@ -1109,19 +1086,6 @@
                                             </fa:ImageAwesome.Style>
 
                                         </fa:ImageAwesome>
-                                        <Button
-                                            MinWidth="100"
-                                            Margin="20,10"
-                                            HorizontalAlignment="Left"
-                                            Click="TestProxy"
-                                            Content="{DynamicResource Test}" />
-
-                                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource TestUrl}" />
-                                        <super:SearchBox
-                                            Name="textProxyUrl"
-                                            MinWidth="200"
-                                            Style="{StaticResource BaseSearchTextBox}"
-                                            Text="http://www.google.com" />
                                     </StackPanel>
                                 </StackPanel>
                             </super:TogglePanel>
@@ -1321,7 +1285,6 @@
                                                                         Foreground="{DynamicResource Window.Foreground}"
                                                                         PlaceHolder="{DynamicResource Url}"
                                                                         PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
-                                                                        Style="{StaticResource BaseSearchTextBox}"
                                                                         Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
@@ -1344,7 +1307,6 @@
                                                                         PlaceHolder="Cookies"
                                                                         PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                         PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp"
-                                                                        Style="{StaticResource BaseSearchTextBox}"
                                                                         Text="{Binding Cookies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
@@ -1362,7 +1324,6 @@
                                                                         PlaceHolder="Headers"
                                                                         PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                         PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp_1"
-                                                                        Style="{StaticResource BaseSearchTextBox}"
                                                                         Text="{Binding Headers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
@@ -1686,7 +1647,7 @@
             </TabItem>
 
 
-            <TabItem Header="{DynamicResource Translate}">
+            <TabItem Header="{DynamicResource Translate}" Visibility="Collapsed">
                 <StackPanel IsEnabled="False">
                     <StackPanel IsEnabled="True" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
@@ -1785,7 +1746,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{DynamicResource AI}">
+            <TabItem Header="{DynamicResource AI}" Visibility="Collapsed">
                 <StackPanel IsEnabled="False">
                     <StackPanel IsEnabled="True" Orientation="Vertical">
 
@@ -1868,7 +1829,7 @@
                                         TextAlignment="Left" />
                                     <super:SearchBox
                                         MinWidth="400"
-                                        Style="{StaticResource BaseSearchTextBox}"
+                                        Background="{DynamicResource Menu.Background}"
                                         Text="{Binding FFMPEG_Path, Mode=TwoWay}" />
 
 
@@ -1990,6 +1951,11 @@
                                         HorizontalAlignment="Left"
                                         Content="{DynamicResource SkipIfDirExists}"
                                         IsChecked="{Binding SkipExistScreenShot, Mode=TwoWay}" />
+                                    <CheckBox
+                                        Margin="20,10"
+                                        HorizontalAlignment="Left"
+                                        Content="{DynamicResource ScreenShotAfterImport}"
+                                        IsChecked="{Binding ScreenShotAfterImport, Mode=TwoWay}" />
 
                                     <StackPanel Margin="20,5" Orientation="Horizontal">
                                         <Slider
@@ -2583,11 +2549,11 @@
                         <CheckBox Content="开启端口监听" IsChecked="{Binding ListenEnabled, Mode=TwoWay}" />
 
                         <super:SearchBox
-                            Width="100"
+                            Width="150"
+                            Padding="5,0"
                             Foreground="{DynamicResource Window.Foreground}"
                             PlaceHolder="端口号"
                             PlaceHolderForeground="{DynamicResource Window.Sub.Foreground}"
-                            Style="{StaticResource BaseSearchTextBox}"
                             Text="{Binding ListenPort, Mode=TwoWay}"
                             Visibility="{Binding ListenEnabled, Mode=OneWay, Converter={StaticResource bool2VisibilityConverter}}" />
                     </StackPanel>

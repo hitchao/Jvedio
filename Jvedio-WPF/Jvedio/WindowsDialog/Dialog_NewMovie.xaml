@@ -97,12 +97,13 @@
                 <super:SearchBox
                     x:Name="PrefixTextBox"
                     MinWidth="200"
-                    Padding="0,4"
+                    Margin="5"
+                    Padding="5,0"
                     LostFocus="PrefixTextBox_LostFocus"
                     PlaceHolder="{DynamicResource Prefix}"
                     PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                    Style="{StaticResource BaseSearchTextBox}"
-                    TextChanged="PrefixTextBox_TextChanged" />
+                    TextChanged="PrefixTextBox_TextChanged"
+                    TextPadding="0" />
             </StackPanel>
 
         </Grid>

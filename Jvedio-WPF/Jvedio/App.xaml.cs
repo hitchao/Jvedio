@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Logs;
+using SuperControls.Style.Windows;
 using System;
 using System.Text;
 using System.Threading;
@@ -55,11 +56,9 @@ namespace Jvedio
         {
             try
             {
-                StringBuilder builder = new StringBuilder();
-                builder.Append("[DispatcherUnhandledException] Jvedio 出现了一些问题，将退出");
-                MessageBox.Show(builder.ToString(), "Jvedio 异常");
-                Logger.Warning(builder.ToString());
-                Logger.Error(e.Exception);
+                Window_ErrorMsg window_ErrorMsg = new Window_ErrorMsg();
+                window_ErrorMsg.SetError(e.Exception.ToString());
+                window_ErrorMsg.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -80,8 +79,9 @@ namespace Jvedio
                 StringBuilder builder = new StringBuilder();
                 if (e.IsTerminating)
                 {
-                    builder.Append("[CurrentDomain_UnhandledException] Jvedio 出现了一些问题，将退出");
-                    MessageBox.Show(builder.ToString(), "Jvedio 异常");
+                    Window_ErrorMsg window_ErrorMsg = new Window_ErrorMsg();
+                    window_ErrorMsg.SetError(e.ExceptionObject.ToString());
+                    window_ErrorMsg.ShowDialog();
                     Logger.Warning(builder.ToString());
                     if (e.ExceptionObject is Exception ex)
                     {

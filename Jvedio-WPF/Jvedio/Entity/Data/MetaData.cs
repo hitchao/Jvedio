@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using Jvedio.Core.Enums;
 using Jvedio.Entity.CommonSQL;
 using SuperUtils.Framework.ORM.Attributes;
@@ -18,6 +18,14 @@ namespace Jvedio.Entity
     [Table(tableName: "metadata")]
     public class MetaData : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
         [TableId(IdType.AUTO)]
         public long DataID { get; set; }
 
@@ -34,7 +42,7 @@ namespace Jvedio.Entity
             set
             {
                 _Size = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -48,7 +56,7 @@ namespace Jvedio.Entity
             {
                 _Path = value;
 
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -83,7 +91,7 @@ namespace Jvedio.Entity
                 if (!string.IsNullOrEmpty(value))
                     GenreList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -105,7 +113,7 @@ namespace Jvedio.Entity
                 LabelList = new List<string>();
                 if (!string.IsNullOrEmpty(value))
                     LabelList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -123,7 +131,7 @@ namespace Jvedio.Entity
             set
             {
                 _FirstScanDate = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -136,7 +144,7 @@ namespace Jvedio.Entity
             set
             {
                 _LastScanDate = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -154,7 +162,7 @@ namespace Jvedio.Entity
             set
             {
                 _ViewImage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -186,13 +194,7 @@ namespace Jvedio.Entity
             DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public override bool Equals(object obj)
         {

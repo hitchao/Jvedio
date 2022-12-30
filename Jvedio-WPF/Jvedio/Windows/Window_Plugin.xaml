@@ -221,13 +221,14 @@
 
             <super:SearchBox
                 Grid.Row="1"
+                Margin="5"
                 Clear="SearchPlugin"
                 PlaceHolder="{DynamicResource Search}"
-                PlaceHolderForeground="{DynamicResource Window.Foreground}"
+                PlaceHolderForeground="{DynamicResource Window.Sub.Foreground}"
                 Search="SearchPlugin"
                 SearchOnTextChanged="True"
                 ShowSearchButton="True"
-                Style="{StaticResource BaseSearchTextBox}" />
+                TextPadding="0" />
 
             <ScrollViewer Grid.Row="2" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                 <StackPanel Orientation="Vertical">

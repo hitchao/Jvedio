@@ -1,9 +1,10 @@
-﻿using GalaSoft.MvvmLight;
+﻿
 using Jvedio.Core.Logs;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -177,7 +178,8 @@ namespace Jvedio.ViewModel
 
         public void CleanUp()
         {
-            MessengerInstance.Unregister(this);
+            // todo
+            //MessengerInstance.Unregister(this);
         }
 
         public void LoadVideoInfo()

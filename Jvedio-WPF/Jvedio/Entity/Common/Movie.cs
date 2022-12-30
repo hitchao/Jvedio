@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using Jvedio.Core.Config;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Logs;
@@ -22,8 +22,16 @@ namespace Jvedio.Entity
     /// <summary>
     /// Jvedio 影片
     /// </summary>
-    public class Movie : IDisposable
+    public class Movie : IDisposable, INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         private const int DEFAULT_RELEASE_YEAR = 1970;
 
         public Movie(string id)
@@ -109,7 +117,7 @@ namespace Jvedio.Entity
             set
             {
                 _title = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -124,7 +132,7 @@ namespace Jvedio.Entity
             set
             {
                 _filepath = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -150,7 +158,7 @@ namespace Jvedio.Entity
                     }
                 }
 
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -236,7 +244,7 @@ namespace Jvedio.Entity
             set
             {
                 _GifUri = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -249,7 +257,7 @@ namespace Jvedio.Entity
             set
             {
                 _smallimage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -262,17 +270,10 @@ namespace Jvedio.Entity
             set
             {
                 _bigimage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public static Movie GetInfoFromNfo(string path)
         {

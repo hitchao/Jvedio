@@ -53,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="FFmpeg\command.md" />
     <None Include="Files\Files.7z" />
     <None Include="Files\NFO.7z" />

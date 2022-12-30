@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Interfaces;
 using Jvedio.Core.Logs;
@@ -17,6 +17,13 @@ namespace Jvedio.Core.Crawler
     /// </summary>
     public class CrawlerServer : INotifyPropertyChanged, IDictKeys
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         public CrawlerServer()
         {
             PluginID = string.Empty;
@@ -36,7 +43,7 @@ namespace Jvedio.Core.Crawler
             set
             {
                 _Url = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -52,7 +59,7 @@ namespace Jvedio.Core.Crawler
             set
             {
                 _Enabled = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -71,7 +78,7 @@ namespace Jvedio.Core.Crawler
             set
             {
                 _Available = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -89,7 +96,7 @@ namespace Jvedio.Core.Crawler
             set
             {
                 _Cookies = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -105,16 +112,8 @@ namespace Jvedio.Core.Crawler
             set
             {
                 _Headers = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public bool isHeaderProper()

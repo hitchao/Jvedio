@@ -15,6 +15,9 @@
     <sys:String x:Key="EnterVID">Enter the video recognition code, and return to the car</sys:String>
     <sys:String x:Key="LikeAndSponsor">If you like JVEDIO, you can use the following ways to sponsor me ~</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">Use the intercepted picture as the cover when there is no cover</sys:String>
+    <sys:String x:Key="ScreenShotAfterImport">Immediately generate screenshots after importing resources</sys:String>
+
+
 
 
     <sys:String x:Key="PleaseSetImageIndex">Please establish picture indexes in [Options-Library]!</sys:String>

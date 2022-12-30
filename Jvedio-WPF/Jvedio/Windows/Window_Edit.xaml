@@ -62,7 +62,7 @@
                         VerticalAlignment="Stretch">
                         <DockPanel>
                             <Label Content="{DynamicResource ID}" Style="{StaticResource BaseInfoLabel}" />
-                            <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.VID, Mode=TwoWay}" />
+                            <super:SearchBox Margin="5" Text="{Binding CurrentVideo.VID, Mode=TwoWay}" />
                         </DockPanel>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=TwoWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                             <Label Content="{DynamicResource VideoType}" Style="{StaticResource BaseInfoLabel}" />
@@ -527,7 +527,7 @@
                                 Style="{StaticResource BaseInfoLabel}" />
                             <super:SearchBox
                                 Grid.Column="1"
-                                Style="{StaticResource BaseSearchTextBox}"
+                                Margin="5"
                                 Text="{Binding CurrentVideo.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
@@ -593,6 +593,7 @@
                         <super:TogglePanel
                             Padding="0,5"
                             FontSize="15"
+                            Foreground="{DynamicResource Window.Foreground}"
                             Header="{DynamicResource ShowOtherOptions}"
                             IsExpanded="{Binding MoreExpanded, Mode=TwoWay}"
                             IsSelected="False"
@@ -601,7 +602,7 @@
                             <StackPanel Orientation="Vertical">
                                 <DockPanel>
                                     <Label Content="{DynamicResource Title}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Title, Mode=TwoWay}" />
+                                    <super:SearchBox Text="{Binding CurrentVideo.Title, Mode=TwoWay}" />
                                 </DockPanel>
 
 
@@ -630,37 +631,53 @@
                                 <DockPanel Panel.ZIndex="5">
                                     <Label Content="{DynamicResource ReleaseDate}" Style="{StaticResource BaseInfoLabel}" />
                                     <super:SearchBox
+                                        Margin="5"
+                                        Background="Transparent"
                                         LostFocus="TextBox_LostFocus"
-                                        Style="{StaticResource BaseSearchTextBox}"
                                         Text="{Binding CurrentVideo.ReleaseDate, Mode=OneWay}" />
                                 </DockPanel>
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Duration}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Duration, Mode=TwoWay}" />
+                                    <super:SearchBox
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Text="{Binding CurrentVideo.Duration, Mode=TwoWay}" />
                                 </DockPanel>
 
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Tag}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Series, Mode=TwoWay}" />
+                                    <super:SearchBox
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Text="{Binding CurrentVideo.Series, Mode=TwoWay}" />
                                 </DockPanel>
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Director}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Director, Mode=TwoWay}" />
+                                    <super:SearchBox
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Text="{Binding CurrentVideo.Director, Mode=TwoWay}" />
                                 </DockPanel>
 
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Studio}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Studio, Mode=TwoWay}" />
+                                    <super:SearchBox
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Text="{Binding CurrentVideo.Studio, Mode=TwoWay}" />
                                 </DockPanel>
 
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Country}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox Style="{StaticResource BaseSearchTextBox}" Text="{Binding CurrentVideo.Country, Mode=TwoWay}" />
+                                    <super:SearchBox
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Text="{Binding CurrentVideo.Country, Mode=TwoWay}" />
                                 </DockPanel>
 
 

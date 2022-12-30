@@ -1,9 +1,9 @@
-﻿using GalaSoft.MvvmLight;
-using Jvedio.Core.Enums;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Media;
+using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

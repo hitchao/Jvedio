@@ -1565,7 +1565,10 @@
                             Name="MaxMenuItem"
                             Click="OnMaxWindow"
                             Header="{DynamicResource Maximize}" />
-                        <MenuItem Click="CloseWindow" Header="{DynamicResource Close}" />
+                        <MenuItem
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
+                            Click="CloseWindow"
+                            Header="{DynamicResource Close}" />
                     </ContextMenu>
                 </Border.ContextMenu>
                 <Grid Panel.ZIndex="50">
@@ -2311,7 +2314,7 @@
                                 ShowClearButton="True"
                                 ShowSearchButton="True"
                                 Text="{Binding SearchText, Mode=TwoWay}"
-                                TextPadding="5 0"
+                                TextPadding="0"
                                 Visibility="{Binding DisplaySearchBox, Source={x:Static p:Settings.Default}, Converter={StaticResource bool2VisibilityConverter}}" />
 
                             <Popup

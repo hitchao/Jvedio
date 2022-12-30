@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Core.Global;
@@ -17,6 +17,12 @@ namespace Jvedio.Entity
     [Table(tableName: "app_databases")]
     public class AppDatabase : Serilizable, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
         public AppDatabase()
         {
             Image = new BitmapImage(new Uri("/Resources/Picture/datalist_video.png", UriKind.Relative));
@@ -35,7 +41,7 @@ namespace Jvedio.Entity
             set
             {
                 _Name = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -50,7 +56,7 @@ namespace Jvedio.Entity
                 _ImagePath = value;
                 string actual_path = Path.Combine(PathManager.ProjectImagePath, ImagePath);
                 if (File.Exists(actual_path)) Image = ImageHelper.BitmapImageFromFile(actual_path);
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -64,7 +70,7 @@ namespace Jvedio.Entity
             set
             {
                 _image = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -83,7 +89,7 @@ namespace Jvedio.Entity
             set
             {
                 _CreateDate = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -95,13 +101,6 @@ namespace Jvedio.Entity
 
         public string ExtraInfo { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public override bool Equals(object obj)
         {

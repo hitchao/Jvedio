@@ -47,7 +47,7 @@ namespace Jvedio.Entity
             set
             {
                 _labellist = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using Jvedio.Core;
 using Newtonsoft.Json.Linq;
 using SuperUtils.Media;
@@ -26,6 +26,15 @@ namespace Jvedio.Entity
 
     public class Theme : INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
         public string ID { get; set; }
 
         public ThemeImage Images { get; set; }
@@ -64,7 +73,7 @@ namespace Jvedio.Entity
             set
             {
                 _ViewBrush = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -77,7 +86,7 @@ namespace Jvedio.Entity
             set
             {
                 _ViewImage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -344,12 +353,6 @@ namespace Jvedio.Entity
             return theme;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

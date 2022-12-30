@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -11,6 +11,14 @@ namespace Jvedio.Entity
     /// </summary>
     public class Actress : INotifyPropertyChanged, IDisposable
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
         public static DateTime DEFAULT_DATETIME = new DateTime(1970, 01, 01);
 
         public Actress() : this(string.Empty)
@@ -65,7 +73,7 @@ namespace Jvedio.Entity
             set
             {
                 _smallimage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -84,7 +92,7 @@ namespace Jvedio.Entity
                 if (DateTime.TryParse(value, out dateTime))
                     _birthday = dateTime.ToString("yyyy-MM-dd");
                 else _birthday = string.Empty;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -99,7 +107,7 @@ namespace Jvedio.Entity
                 int.TryParse(value.ToString(), out int a);
                 if (a < 0 || a > 200) a = 0;
                 _age = a;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -114,7 +122,7 @@ namespace Jvedio.Entity
                 int.TryParse(value.ToString(), out int a);
                 if (a < 0 || a > 300) a = 0;
                 _height = a;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -130,7 +138,7 @@ namespace Jvedio.Entity
                     _cup = string.Empty;
                 else
                     _cup = value[0].ToString().ToUpper();
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -145,7 +153,7 @@ namespace Jvedio.Entity
                 int.TryParse(value.ToString(), out int a);
                 if (a < 0 || a > 500) a = 0;
                 _hipline = a;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -160,7 +168,7 @@ namespace Jvedio.Entity
                 int.TryParse(value.ToString(), out int a);
                 if (a < 0 || a > 500) a = 0;
                 _waist = a;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -190,13 +198,6 @@ namespace Jvedio.Entity
 
         public int like { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public ActorInfo toActorInfo()
         {

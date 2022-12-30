@@ -1,5 +1,5 @@
-﻿using DynamicData.Annotations;
-using SuperUtils.NetWork;
+﻿using SuperUtils.NetWork;
+using SuperUtils.WPF.VieModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -8,7 +8,7 @@ namespace Jvedio.Entity
     /// <summary>
     /// 服务器源
     /// </summary>
-    public class Server : INotifyPropertyChanged
+    public class Server : ViewModelBase
     {
         public Server(string name)
         {
@@ -31,7 +31,7 @@ namespace Jvedio.Entity
             get => isEnable; set
             {
                 isEnable = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -40,7 +40,7 @@ namespace Jvedio.Entity
             get => url; set
             {
                 url = value.ToString().ToProperUrl();
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Jvedio.Entity
             get => cookie; set
             {
                 cookie = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -58,7 +58,7 @@ namespace Jvedio.Entity
             get => available; set
             {
                 available = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -67,7 +67,7 @@ namespace Jvedio.Entity
             get => name; set
             {
                 name = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -76,16 +76,8 @@ namespace Jvedio.Entity
             get => lastRefreshDate; set
             {
                 lastRefreshDate = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

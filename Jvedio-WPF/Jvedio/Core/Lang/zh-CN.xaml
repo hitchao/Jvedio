@@ -15,6 +15,7 @@
     <sys:String x:Key="EnterVID">输入视频识别码，回车分割</sys:String>
     <sys:String x:Key="LikeAndSponsor">如果您喜欢Jvedio，可以使用以下方式赞助我~</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">无封面时将已截取的图片作为封面</sys:String>
+    <sys:String x:Key="ScreenShotAfterImport">导入资源后立即生成截图</sys:String>
 
 
 

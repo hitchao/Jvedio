@@ -1,10 +1,10 @@
-﻿using GalaSoft.MvvmLight;
-using Jvedio.Core.Crawler;
+﻿using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
 using SuperUtils.Common;
+using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -1020,6 +1020,18 @@ namespace Jvedio.ViewModel
             set
             {
                 _SkipExistScreenShot = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _ScreenShotAfterImport = ConfigManager.FFmpegConfig.ScreenShotAfterImport;
+
+        public bool ScreenShotAfterImport
+        {
+            get { return _ScreenShotAfterImport; }
+
+            set
+            {
+                _ScreenShotAfterImport = value;
                 RaisePropertyChanged();
             }
         }

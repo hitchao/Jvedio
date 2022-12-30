@@ -1,10 +1,10 @@
-﻿using GalaSoft.MvvmLight;
-using Jvedio.Core.Crawler;
+﻿using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
 using SuperUtils.Common;
+using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -480,57 +480,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _DownloadPreviewImage = ConfigManager.Settings.DownloadPreviewImage;
 
-        public bool DownloadPreviewImage
-        {
-            get { return _DownloadPreviewImage; }
-
-            set
-            {
-                _DownloadPreviewImage = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _SkipExistImage = ConfigManager.Settings.SkipExistImage;
-
-        public bool SkipExistImage
-        {
-            get { return _SkipExistImage; }
-
-            set
-            {
-                _SkipExistImage = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _OverrideInfo = ConfigManager.Settings.OverrideInfo;
-
-        public bool OverrideInfo
-        {
-            get { return _OverrideInfo; }
-
-            set
-            {
-                _OverrideInfo = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _IgnoreCertVal = ConfigManager.Settings.IgnoreCertVal;
-
-        public bool IgnoreCertVal
-        {
-            get { return _IgnoreCertVal; }
-
-            set
-            {
-                _IgnoreCertVal = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private Dictionary<string, ObservableCollection<CrawlerServer>> _CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
 
@@ -558,86 +508,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _ProxyServer = ConfigManager.ProxyConfig.Server;
 
-        public string ProxyServer
-        {
-            get { return _ProxyServer; }
-
-            set
-            {
-                _ProxyServer = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _ProxyPort = (int)ConfigManager.ProxyConfig.Port;
-
-        public int ProxyPort
-        {
-            get { return _ProxyPort; }
-
-            set
-            {
-                _ProxyPort = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string _ProxyUserName = ConfigManager.ProxyConfig.UserName;
-
-        public string ProxyUserName
-        {
-            get { return _ProxyUserName; }
-
-            set
-            {
-                _ProxyUserName = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string _ProxyPwd = ConfigManager.ProxyConfig.Password;
-
-        public string ProxyPwd
-        {
-            get
-            {
-                return _ProxyPwd;
-            }
-
-            set
-            {
-                _ProxyPwd = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private TaskStatus _TestProxyStatus;
-
-        public TaskStatus TestProxyStatus
-        {
-            get { return _TestProxyStatus; }
-
-            set
-            {
-                _TestProxyStatus = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _HttpTimeout = (int)ConfigManager.ProxyConfig.HttpTimeout;
-
-        public int HttpTimeout
-        {
-            get { return _HttpTimeout; }
-
-            set
-            {
-                _HttpTimeout = value;
-                RaisePropertyChanged();
-            }
-        }
 
     }
 }

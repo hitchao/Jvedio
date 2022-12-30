@@ -1,7 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿
 using Jvedio.Entity;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -48,10 +49,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public override void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            base.RaisePropertyChanged(propertyName);
-        }
+
 
         private bool _ShowHideItem = ConfigManager.StartUp.ShowHideItem;
 

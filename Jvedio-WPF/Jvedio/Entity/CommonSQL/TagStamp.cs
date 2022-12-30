@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.WPF.VisualTools;
 using System.ComponentModel;
@@ -10,6 +10,13 @@ namespace Jvedio.Entity.CommonSQL
     [Table(tableName: "common_tagstamp")]
     public class TagStamp : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         [TableId(IdType.AUTO)]
         public long TagID { get; set; }
 
@@ -29,7 +36,7 @@ namespace Jvedio.Entity.CommonSQL
                 _Foreground = value;
                 if (!string.IsNullOrEmpty(value) && value.IndexOf(",") > 0)
                     ForegroundBrush = VisualHelper.RGBAToBrush(value.Split(','));
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -47,7 +54,7 @@ namespace Jvedio.Entity.CommonSQL
                 _Background = value;
                 if (!string.IsNullOrEmpty(value) && value.IndexOf(",") > 0)
                     BackgroundBrush = VisualHelper.RGBAToBrush(value.Split(','));
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -67,7 +74,7 @@ namespace Jvedio.Entity.CommonSQL
             set
             {
                 _Selected = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -95,12 +102,5 @@ namespace Jvedio.Entity.CommonSQL
             return TagID.GetHashCode();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

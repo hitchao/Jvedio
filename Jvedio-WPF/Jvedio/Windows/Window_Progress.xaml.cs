@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+﻿
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -11,10 +11,9 @@ namespace Jvedio.Windows
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private string _MainText = string.Empty;
@@ -25,7 +24,7 @@ namespace Jvedio.Windows
             set
             {
                 _MainText = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -37,7 +36,7 @@ namespace Jvedio.Windows
             set
             {
                 _SubText = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -49,7 +48,7 @@ namespace Jvedio.Windows
             set
             {
                 _MainProgress = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -61,7 +60,7 @@ namespace Jvedio.Windows
             set
             {
                 _MainProgress = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -73,7 +72,7 @@ namespace Jvedio.Windows
             set
             {
                 _LogText = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -85,7 +84,7 @@ namespace Jvedio.Windows
             set
             {
                 _HideSub = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

@@ -98,7 +98,7 @@ namespace Jvedio.Entity
             set
             {
                 _VideoType = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -128,7 +128,7 @@ namespace Jvedio.Entity
                 _SubSection = value;
                 SubSectionList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 if (SubSectionList.Count >= 2) HasSubSection = true;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -159,7 +159,7 @@ namespace Jvedio.Entity
             set
             {
                 _smallimage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -173,7 +173,7 @@ namespace Jvedio.Entity
             set
             {
                 _bigimage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -187,7 +187,7 @@ namespace Jvedio.Entity
             set
             {
                 _GifUri = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -214,7 +214,7 @@ namespace Jvedio.Entity
                 if (!string.IsNullOrEmpty(value))
                     ActorNameList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -243,7 +243,7 @@ namespace Jvedio.Entity
                         value.Select(arg => arg.ActorName).ToList());
                 }
 
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

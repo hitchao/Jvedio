@@ -1,5 +1,4 @@
-﻿using DynamicData.Annotations;
-using SuperControls.Style;
+﻿using SuperControls.Style;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
@@ -13,6 +12,15 @@ namespace Jvedio.Core.CustomTask
 {
     public class AbstractTask : ITask, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
+
         public Stopwatch stopwatch { get; set; }
 
         public bool Success { get; set; }
@@ -78,7 +86,7 @@ namespace Jvedio.Core.CustomTask
                 if (STATUS_TO_TEXT_DICT.ContainsKey(value))
                     StatusText = STATUS_TO_TEXT_DICT[value];
                 else StatusText = string.Empty;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -94,7 +102,7 @@ namespace Jvedio.Core.CustomTask
             set
             {
                 _Message = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -111,7 +119,7 @@ namespace Jvedio.Core.CustomTask
             {
                 _StatusText = value;
                 logger?.Info(value);
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -127,7 +135,7 @@ namespace Jvedio.Core.CustomTask
             set
             {
                 _ElapsedMilliseconds = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -143,7 +151,7 @@ namespace Jvedio.Core.CustomTask
             set
             {
                 _Progress = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -162,7 +170,7 @@ namespace Jvedio.Core.CustomTask
             set
             {
                 _Running = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -178,7 +186,7 @@ namespace Jvedio.Core.CustomTask
             set
             {
                 _CreateTime = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -202,13 +210,7 @@ namespace Jvedio.Core.CustomTask
             eventHandler?.Invoke(this, e);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public virtual void Cancel()
         {

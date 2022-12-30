@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
+﻿
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Logs;
@@ -12,6 +11,7 @@ using JvedioLib.Security;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Time;
+using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -84,7 +84,7 @@ namespace Jvedio.ViewModel
 
         public RelayCommand<object> ShowClassifyCommand { get; set; }
 
-        public RelayCommand AddNewMovie { get; set; }
+        //public RelayCommand AddNewMovie { get; set; }
         #endregion
 
         public VieModel_MetaData()
@@ -93,7 +93,7 @@ namespace Jvedio.ViewModel
 
             ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
             ShowClassifyCommand = new RelayCommand<object>(t => ShowClassify(t));
-            AddNewMovie = new RelayCommand(AddSingleMovie);
+            //AddNewMovie = new RelayCommand(AddSingleMovie);
 
             DataBases = new ObservableCollection<AppDatabase>();
 

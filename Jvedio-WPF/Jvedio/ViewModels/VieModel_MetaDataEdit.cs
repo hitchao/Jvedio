@@ -1,7 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
 using SuperUtils.Framework.ORM.Utils;
+using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
