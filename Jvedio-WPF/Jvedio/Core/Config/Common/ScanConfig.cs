@@ -18,6 +18,7 @@ namespace Jvedio.Core.Config
             CopyNFOScreenShotPath = ".screenshot";
 
             FetchVID = true;
+            LoadDataAfterScan = true;
         }
 
         private static ScanConfig _instance = null;
@@ -59,5 +60,6 @@ namespace Jvedio.Core.Config
         public string CopyNFOPreviewPath { get; set; }
 
         public bool FetchVID { get; set; }
+        public bool LoadDataAfterScan { get; set; }
     }
 }

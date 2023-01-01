@@ -1,4 +1,5 @@
-﻿using SuperUtils.Time;
+﻿using Jvedio.Entity;
+using SuperUtils.Time;
 using System.Collections.Generic;
 
 namespace Jvedio.Core.Scan
@@ -7,12 +8,13 @@ namespace Jvedio.Core.Scan
     {
         public ScanResult()
         {
+            ScanDate = DateHelper.Now();
             Update = new Dictionary<string, string>();
             Import = new List<string>();
             NotImport = new Dictionary<string, string>();
             FailNFO = new List<string>();
             Logs = new List<string>();
-            ScanDate = DateHelper.Now();
+            InsertVideos = new List<Video>();
         }
 
         public Dictionary<string, string> Update { get; set; }
@@ -20,6 +22,7 @@ namespace Jvedio.Core.Scan
         public List<string> Logs { get; set; }
 
         public List<string> Import { get; set; }
+        public List<Video> InsertVideos { get; set; }
 
         /// <summary>
         /// （路径，原因）

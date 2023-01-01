@@ -16,9 +16,7 @@
     <sys:String x:Key="LikeAndSponsor">如果您喜欢Jvedio，可以使用以下方式赞助我~</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">无封面时将已截取的图片作为封面</sys:String>
     <sys:String x:Key="ScreenShotAfterImport">导入资源后立即生成截图</sys:String>
-
-
-
+    <sys:String x:Key="LoadDataAfterScan">扫描完成后立即加载新影片</sys:String>
 
 
     <sys:String x:Key="PleaseSetImageIndex">请在【选项-库】中建立图片索引！</sys:String>

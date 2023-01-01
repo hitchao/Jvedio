@@ -156,11 +156,13 @@ namespace Jvedio.Core.Scan
                    HandleImportNFO(importNFO);          // 导入视频后再导入 NFO
                    HandleNotImport(parseResult.notImport);
                    HandleFailNFO(parseResult.failNFO);
+                   Success = true;
                }
                catch (Exception ex)
                {
                    Logger.Error(ex);
                    logger.Error(ex.Message);
+                   Success = false;
                }
 
                Running = false;
@@ -168,6 +170,7 @@ namespace Jvedio.Core.Scan
                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
                ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
                Status = TaskStatus.RanToCompletion;
+
                base.OnCompleted(null);
            }));
         }
@@ -601,6 +604,8 @@ namespace Jvedio.Core.Scan
             existActors = actorMapper.SelectList();
             foreach (var video in toInsert)
                 HandleActor(video);
+
+            ScanResult.InsertVideos.AddRange(toInsert);
         }
 
         private void AddTags(ICollection<Video> videos)
@@ -616,6 +621,10 @@ namespace Jvedio.Core.Scan
                 // 中文
                 if (video.IsCHS())
                     list.Add($"({video.DataID},2)");
+
+                // 新加入
+                // todo 由于设计之初未考虑到多的空余位置添加标记，因此新标记以 ID 10000开头
+                list.Add($"({video.DataID},10000)");
             }
 
             if (list.Count > 0)

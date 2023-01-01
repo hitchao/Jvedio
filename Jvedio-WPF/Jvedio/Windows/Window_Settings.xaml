@@ -614,6 +614,11 @@
                             HorizontalAlignment="Left"
                             Content="{DynamicResource FetchVID}"
                             IsChecked="{Binding FetchVID, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="25,5"
+                            HorizontalAlignment="Left"
+                            Content="{DynamicResource LoadDataAfterScan}"
+                            IsChecked="{Binding LoadDataAfterScan, Mode=TwoWay}" />
 
 
                         <CheckBox
@@ -1860,7 +1865,21 @@
                                         Style="{StaticResource BaseTextBlock}"
                                         Text="{DynamicResource ThreadNumber}"
                                         TextAlignment="Left" />
-                                    <Slider
+
+                                    <super:Slider
+                                        x:Name="ThreadNumSlider"
+                                        Width="200"
+                                        Height="30"
+                                        Margin="0,5"
+                                        BarCornerRadius="4"
+                                        BarHeight="6"
+                                        DragSize="20"
+                                        Integer="True"
+                                        Maximum="10"
+                                        Minimum="0"
+                                        Value="{Binding ScreenShot_ThreadNum, Mode=TwoWay}" />
+
+                                    <!--<Slider
                                         x:Name="ThreadNumSlider"
                                         Width="200"
                                         Margin="10,0"
@@ -1870,7 +1889,7 @@
                                         Minimum="1"
                                         SmallChange="1"
                                         TickFrequency="1"
-                                        Value="{Binding ScreenShot_ThreadNum, Mode=TwoWay}" />
+                                        Value="{Binding ScreenShot_ThreadNum, Mode=TwoWay}" />-->
 
 
                                     <TextBlock
@@ -1958,7 +1977,19 @@
                                         IsChecked="{Binding ScreenShotAfterImport, Mode=TwoWay}" />
 
                                     <StackPanel Margin="20,5" Orientation="Horizontal">
-                                        <Slider
+                                        <super:Slider
+                                            x:Name="ScreenshotNumSlider"
+                                            Width="200"
+                                            Height="30"
+                                            Margin="0,5"
+                                            BarCornerRadius="4"
+                                            BarHeight="6"
+                                            DragSize="20"
+                                            Integer="True"
+                                            Maximum="30"
+                                            Minimum="0"
+                                            Value="{Binding ScreenShotNum, Mode=TwoWay}" />
+                                        <!--<Slider
                                             x:Name="ScreenshotNumSlider"
                                             Width="200"
                                             VerticalAlignment="Center"
@@ -1967,7 +1998,7 @@
                                             Minimum="1"
                                             SmallChange="1"
                                             TickFrequency="1"
-                                            Value="{Binding ScreenShotNum, Mode=TwoWay}" />
+                                            Value="{Binding ScreenShotNum, Mode=TwoWay}" />-->
                                         <TextBlock
                                             Width="30"
                                             Style="{StaticResource BaseTextBlock}"
@@ -1976,8 +2007,19 @@
 
                                     </StackPanel>
                                     <StackPanel Margin="20,5" Orientation="Horizontal">
-
-                                        <Slider
+                                        <super:Slider
+                                            x:Name="ScreenShotIgnoreSlider1"
+                                            Width="200"
+                                            Height="30"
+                                            Margin="0,5"
+                                            BarCornerRadius="4"
+                                            BarHeight="6"
+                                            DragSize="20"
+                                            Integer="True"
+                                            Maximum="10"
+                                            Minimum="0"
+                                            Value="{Binding ScreenShotIgnoreStart, Mode=TwoWay}" />
+                                        <!--<Slider
                                             x:Name="ScreenShotIgnoreSlider1"
                                             Width="200"
                                             VerticalAlignment="Center"
@@ -1986,7 +2028,7 @@
                                             Minimum="0"
                                             SmallChange="1"
                                             TickFrequency="1"
-                                            Value="{Binding ScreenShotIgnoreStart, Mode=TwoWay}" />
+                                            Value="{Binding ScreenShotIgnoreStart, Mode=TwoWay}" />-->
                                         <TextBlock
                                             Width="30"
                                             Style="{StaticResource BaseTextBlock}"
@@ -1994,8 +2036,19 @@
                                         <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource SkipBegin}" />
                                     </StackPanel>
                                     <StackPanel Margin="20,5" Orientation="Horizontal">
-
-                                        <Slider
+                                        <super:Slider
+                                            x:Name="ScreenShotIgnoreSlider2"
+                                            Width="200"
+                                            Height="30"
+                                            Margin="0,5"
+                                            BarCornerRadius="4"
+                                            BarHeight="6"
+                                            DragSize="20"
+                                            Integer="True"
+                                            Maximum="10"
+                                            Minimum="0"
+                                            Value="{Binding ScreenShotIgnoreEnd, Mode=TwoWay}" />
+                                        <!--<Slider
                                             x:Name="ScreenShotIgnoreSlider2"
                                             Width="200"
                                             VerticalAlignment="Center"
@@ -2004,7 +2057,7 @@
                                             Minimum="0"
                                             SmallChange="1"
                                             TickFrequency="1"
-                                            Value="{Binding ScreenShotIgnoreEnd, Mode=TwoWay}" />
+                                            Value="{Binding ScreenShotIgnoreEnd, Mode=TwoWay}" />-->
                                         <TextBlock
                                             Width="30"
                                             Style="{StaticResource BaseTextBlock}"
@@ -2042,7 +2095,20 @@
                                         HorizontalAlignment="Left"
                                         Orientation="Horizontal">
                                         <Label Content="{DynamicResource Resolution}" Style="{StaticResource InfoLabel}" />
-                                        <Slider
+
+                                        <super:Slider
+                                            x:Name="GifSlider1"
+                                            Width="200"
+                                            Height="30"
+                                            Margin="0,5"
+                                            BarCornerRadius="4"
+                                            BarHeight="6"
+                                            DragSize="20"
+                                            Integer="True"
+                                            Maximum="4096"
+                                            Minimum="0"
+                                            Value="{Binding GifWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <!--<Slider
                                             x:Name="GifSlider1"
                                             Width="250"
                                             Margin="5,0"
@@ -2055,12 +2121,27 @@
                                             SmallChange="1"
                                             TickFrequency="1"
                                             TickPlacement="None"
-                                            Value="{Binding GifWidth, Mode=TwoWay}" />
+                                            Value="{Binding GifWidth, Mode=TwoWay}" />-->
                                         <TextBlock
+                                            MinWidth="100"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding Value, ElementName=GifSlider1, StringFormat={}{0} px}" />
-                                        <Slider
+                                            Text="{Binding Value, Mode=OneWay, ElementName=GifSlider1, StringFormat={}{0} px}" />
+
+                                        <super:Slider
+                                            x:Name="GifSlider2"
+                                            Width="200"
+                                            Height="30"
+                                            Margin="10,5"
+                                            BarCornerRadius="4"
+                                            BarHeight="6"
+                                            DragSize="20"
+                                            Integer="True"
+                                            IsEnabled="{Binding GifAutoHeight, Converter={StaticResource OppositeBooleanConverter}}"
+                                            Maximum="2160"
+                                            Minimum="0"
+                                            Value="{Binding GifHeight, Mode=TwoWay}" />
+                                        <!--<Slider
                                             x:Name="GifSlider2"
                                             Width="250"
                                             Margin="20,0,10,0"
@@ -2074,7 +2155,7 @@
                                             SmallChange="1"
                                             TickFrequency="1"
                                             TickPlacement="None"
-                                            Value="{Binding GifHeight, Mode=TwoWay}" />
+                                            Value="{Binding GifHeight, Mode=TwoWay}" />-->
                                         <TextBlock
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"
@@ -2092,7 +2173,20 @@
                                         HorizontalAlignment="Left"
                                         Orientation="Horizontal">
                                         <Label Content="{DynamicResource Duration}" Style="{StaticResource InfoLabel}" />
-                                        <Slider
+
+                                        <super:Slider
+                                            x:Name="GifDurationSlider1"
+                                            Width="520"
+                                            Height="30"
+                                            Margin="0,5"
+                                            BarCornerRadius="4"
+                                            BarHeight="6"
+                                            DragSize="20"
+                                            Integer="True"
+                                            Maximum="20"
+                                            Minimum="0"
+                                            Value="{Binding GifDuration, Mode=TwoWay}" />
+                                        <!--<Slider
                                             x:Name="GifDurationSlider1"
                                             Width="300"
                                             Margin="5,0"
@@ -2105,7 +2199,7 @@
                                             SmallChange="1"
                                             TickFrequency="1"
                                             TickPlacement="None"
-                                            Value="{Binding GifDuration, Mode=TwoWay}" />
+                                            Value="{Binding GifDuration, Mode=TwoWay}" />-->
                                         <TextBlock
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBlock}"

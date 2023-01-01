@@ -1111,6 +1111,7 @@ namespace Jvedio
             // 扫描
             ConfigManager.ScanConfig.MinFileSize = vieModel.MinFileSize;
             ConfigManager.ScanConfig.FetchVID = vieModel.FetchVID;
+            ConfigManager.ScanConfig.LoadDataAfterScan = vieModel.LoadDataAfterScan;
             ConfigManager.ScanConfig.ScanOnStartUp = vieModel.ScanOnStartUp;
             ConfigManager.ScanConfig.CopyNFOOverriteImage = vieModel.CopyNFOOverriteImage;
             ConfigManager.ScanConfig.CopyNFOPicture = vieModel.CopyNFOPicture;

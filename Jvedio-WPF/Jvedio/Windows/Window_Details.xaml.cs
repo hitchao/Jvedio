@@ -97,6 +97,14 @@ namespace Jvedio
             rootGrid.Focus();       // 设置键盘左右可切换
             InitDataIDs();          // 设置切换的影片列表
             OpenOtherUrlMenuItem.Items.Clear(); // 设置右键菜单
+            RemoveNewAddTag();      // 移除【新加入】标记
+        }
+
+        private void RemoveNewAddTag()
+        {
+            string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAGID_NEW_ADD}' and DataID='{DataID}'";
+            tagStampMapper.ExecuteNonQuery(sql);
+            windowMain?.vieModel.InitCurrentTagStamps();
         }
 
         private void SetLabel()
@@ -1308,11 +1316,11 @@ namespace Jvedio
         private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
-            Label label = (menuItem.Parent as ContextMenu).PlacementTarget as Label;
-            if (label == null || label.Tag == null) return;
-            long.TryParse(label.Tag.ToString(), out long tagID);
+            Border border = (menuItem.Parent as ContextMenu).PlacementTarget as Border;
+            if (border == null || border.Tag == null) return;
+            long.TryParse(border.Tag.ToString(), out long tagID);
 
-            ItemsControl itemsControl = label.FindParentOfType<ItemsControl>();
+            ItemsControl itemsControl = border.FindParentOfType<ItemsControl>();
             if (itemsControl == null || itemsControl.Tag == null || itemsControl.ItemsSource == null) return;
             long.TryParse(itemsControl.Tag.ToString(), out long DataID);
             if (tagID <= 0 || DataID <= 0) return;

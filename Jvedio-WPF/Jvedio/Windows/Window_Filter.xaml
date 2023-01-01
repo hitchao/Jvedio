@@ -90,12 +90,11 @@
                             Text="文件大小" />
 
                         <Grid>
-                            <super:Slider
+                            <super:DoubleSlider
                                 Height="20"
                                 Margin="20,0"
                                 BarCornerRadius="2"
                                 BarHeight="6"
-                                DoubleSlider="True"
                                 Integer="True"
                                 MaxValue="10240"
                                 Maximum="10240"
@@ -115,12 +114,11 @@
                             FontSize="16"
                             Text="我的评分" />
 
-                        <super:Slider
+                        <super:DoubleSlider
                             Height="20"
                             Margin="20,0"
                             BarCornerRadius="2"
                             BarHeight="6"
-                            DoubleSlider="True"
                             Integer="True"
                             MaxValue="5"
                             Maximum="5"

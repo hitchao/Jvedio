@@ -777,6 +777,18 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _LoadDataAfterScan = ConfigManager.ScanConfig.LoadDataAfterScan;
+
+        public bool LoadDataAfterScan
+        {
+            get { return _LoadDataAfterScan; }
+
+            set
+            {
+                _LoadDataAfterScan = value;
+                RaisePropertyChanged();
+            }
+        }
 
         #endregion
 

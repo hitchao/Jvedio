@@ -1,6 +1,7 @@
 ﻿
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.WPF.VisualTools;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
@@ -100,6 +101,17 @@ namespace Jvedio.Entity.CommonSQL
         public override int GetHashCode()
         {
             return TagID.GetHashCode();
+        }
+
+        private static List<long> SystemTags = new List<long>() { TAGID_HD, TAGID_TRANSLATED, TAGID_NEW_ADD };
+
+        public const long TAGID_NEW_ADD = 10000;
+        public const long TAGID_HD = 1;
+        public const long TAGID_TRANSLATED = 2;
+
+        public bool IsSystemTag()
+        {
+            return SystemTags.Contains(TagID);
         }
 
     }

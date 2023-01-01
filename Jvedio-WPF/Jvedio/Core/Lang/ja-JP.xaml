@@ -17,7 +17,7 @@
     <sys:String x:Key="LikeAndSponsor">Jvedioが好きなら、次の方法を使用して私を後援することができます〜</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">カバーがない場合は、傍受された画像をカバーとして使用します</sys:String>
     <sys:String x:Key="ScreenShotAfterImport">リソースをインポートした後、すぐにスクリーンショットを生成します</sys:String>
-
+    <sys:String x:Key="LoadDataAfterScan">スキャンが完了した直後に新しいビデオをロードする</sys:String>
 
 
 

@@ -138,10 +138,13 @@
             Grid.Row="1"
             Margin="5,0"
             HorizontalContentAlignment="Left"
+            IsReadOnly="True"
+            RowHeight="30"
             Style="{DynamicResource FlatDataGrid}">
             <DataGrid.RowStyle>
                 <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
                     <Setter Property="ContextMenu" Value="{StaticResource contextMenu}" />
+
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
@@ -159,8 +162,25 @@
                     Binding="{Binding Extension}"
                     Header="{DynamicResource Extension}"
                     IsReadOnly="True" />
-                <DataGridTextColumn Binding="{Binding FilePath}" Header="{DynamicResource Path}" />
-
+                <DataGridTemplateColumn
+                    Width="*"
+                    MinWidth="50"
+                    Header="{DynamicResource Path}"
+                    SortMemberPath="FilePath">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                MinWidth="40"
+                                Margin="5"
+                                Background="Transparent"
+                                Foreground="{DynamicResource Window.Sub.Foreground}"
+                                IsReadOnly="True"
+                                Style="{StaticResource BaseTextBox}"
+                                Text="{Binding FilePath, Mode=OneWay}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
             </DataGrid.Columns>
 

@@ -16,7 +16,7 @@
     <sys:String x:Key="LikeAndSponsor">If you like JVEDIO, you can use the following ways to sponsor me ~</sys:String>
     <sys:String x:Key="UseScreenIfNoImage">Use the intercepted picture as the cover when there is no cover</sys:String>
     <sys:String x:Key="ScreenShotAfterImport">Immediately generate screenshots after importing resources</sys:String>
-
+    <sys:String x:Key="LoadDataAfterScan">Load the new video immediately after the scan is completed</sys:String>
 
 
 

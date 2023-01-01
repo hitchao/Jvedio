@@ -377,20 +377,20 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Label
+                                                        <Border
                                                             Margin="2,0"
                                                             Padding="4"
                                                             Background="{Binding BackgroundBrush}"
                                                             BorderThickness="0"
-                                                            Content="{Binding TagName}"
-                                                            Foreground="{Binding ForegroundBrush}"
+                                                            CornerRadius="3"
                                                             Tag="{Binding TagID}">
-                                                            <Label.ContextMenu>
+                                                            <Border.ContextMenu>
                                                                 <ContextMenu>
                                                                     <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
                                                                 </ContextMenu>
-                                                            </Label.ContextMenu>
-                                                        </Label>
+                                                            </Border.ContextMenu>
+                                                            <TextBlock Foreground="{DynamicResource Window.Foreground}" Text="{Binding TagName}" />
+                                                        </Border>
 
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
@@ -985,13 +985,14 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Label
+                                                        <Border
                                                             Margin="2,0"
                                                             Padding="4"
                                                             Background="{Binding BackgroundBrush}"
                                                             BorderThickness="0"
-                                                            Content="{Binding TagName}"
-                                                            Foreground="{Binding ForegroundBrush}" />
+                                                            CornerRadius="3">
+                                                            <TextBlock Foreground="{DynamicResource Window.Foreground}" Text="{Binding TagName}" />
+                                                        </Border>
 
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>

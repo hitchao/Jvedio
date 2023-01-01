@@ -2528,7 +2528,38 @@ namespace Jvedio
             {
                 msgCard.Error((ev as MessageCallBackEventArgs).Message);
             };
+            task.onCompleted += (s, ev) =>
+            {
+                if (task.Success)
+                    LoadImageAfterScreenShort(video);
+            };
             addToScreenShot(task);
+        }
+
+        private void LoadImageAfterScreenShort(Video video)
+        {
+            for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
+            {
+                if (!video.DataID.Equals(vieModel.CurrentVideoList[i].DataID))
+                    continue;
+                if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage)
+                {
+                    // 检查有无截图
+                    Video currentVideo = vieModel.CurrentVideoList[i];
+                    string path = currentVideo.getScreenShot();
+                    if (Directory.Exists(path))
+                    {
+                        string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+                        if (array.Length > 0)
+                        {
+                            Video.SetImage(ref currentVideo, array[array.Length / 2]);
+                            vieModel.CurrentVideoList[i].BigImage = null;
+                            vieModel.CurrentVideoList[i].BigImage = currentVideo.ViewImage;
+                        }
+                    }
+                }
+                break;
+            }
         }
 
         public void screenShotVideo(MetaData metaData)
@@ -2849,17 +2880,42 @@ namespace Jvedio
             };
             scanTask.onCompleted += (s, ev) =>
             {
-                Dispatcher.Invoke(() =>
+                if (scanTask.Success)
                 {
-                    vieModel.Statistic();
-                    if (vieModel.CurrentVideoList?.Count <= 0)
-                        vieModel.LoadData();
-                });
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        vieModel.Statistic();
+                        if (ConfigManager.ScanConfig.LoadDataAfterScan)
+                            vieModel.LoadData();
+                        if (ConfigManager.FFmpegConfig.ScreenShotAfterImport)
+                        {
+                            ScanResult scanResult = scanTask.ScanResult;
+                            if (scanResult != null)
+                                ScreenShotAfterImport(scanResult.InsertVideos);
+                        }
+
+
+                    });
+                }
                 (s as ScanTask).Running = false;
             };
             vieModel.ScanTasks.Add(scanTask);
             scanTask.Start();
             setScanStatus();
+        }
+
+
+        private void ScreenShotAfterImport(List<Video> import)
+        {
+            if (import?.Count > 0 && File.Exists(ConfigManager.FFmpegConfig.Path))
+            {
+                foreach (Video video in import)
+                    screenShotVideo(video, false);
+
+                if (!Global.FFmpegManager.Dispatcher.Working)
+                    Global.FFmpegManager.Dispatcher.BeginWork();
+            }
         }
 
         private void setScanStatus()
@@ -3752,7 +3808,7 @@ namespace Jvedio
             long.TryParse(tag, out long id);
             if (id <= 0) return;
             TagStamp tagStamp = Main.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
-            if (tagStamp.TagID == 1 || tagStamp.TagID == 2)
+            if (tagStamp.IsSystemTag())
             {
                 msgCard.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
                 return;
@@ -4593,11 +4649,11 @@ namespace Jvedio
         private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
-            Label label = (menuItem.Parent as ContextMenu).PlacementTarget as Label;
-            long.TryParse(label.Tag.ToString(), out long tagID);
+            Border border = (menuItem.Parent as ContextMenu).PlacementTarget as Border;
+            long.TryParse(border.Tag.ToString(), out long tagID);
             if (tagID <= 0) return;
 
-            ItemsControl itemsControl = label.FindParentOfType<ItemsControl>();
+            ItemsControl itemsControl = border.FindParentOfType<ItemsControl>();
             if (itemsControl == null || itemsControl.Tag == null) return;
             long.TryParse(itemsControl.Tag.ToString(), out long DataID);
             if (DataID <= 0) return;
