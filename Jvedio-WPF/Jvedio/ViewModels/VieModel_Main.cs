@@ -1238,6 +1238,7 @@ namespace Jvedio.ViewModel
                     if (videos != null && videos.Count > 0)
                         exists = videos.Select(arg => arg.VID).ToList();
                     vidList = vidList.Except(exists).ToList();
+                    List<Video> videoList = new List<Video>();
                     foreach (string vid in vidList)
                     {
                         Video video = new Video()
@@ -1252,10 +1253,25 @@ namespace Jvedio.ViewModel
                         MetaData metaData = video.toMetaData();
                         metaDataMapper.Insert(metaData);
                         videoMapper.Insert(video);
+                        videoList.Add(video);
                     }
-
+                    AddTags(videoList);// 新加入标记
                     Statistic();
+                    if (ConfigManager.ScanConfig.LoadDataAfterScan)
+                        LoadData();
                 }
+            }
+        }
+
+        private void AddTags(List<Video> videos)
+        {
+            List<string> list = new List<string>();
+            foreach (Video video in videos)
+                list.Add($"({video.DataID},10000)");
+            if (list.Count > 0)
+            {
+                string sql = $"insert or ignore into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
+                videoMapper.ExecuteNonQuery(sql);
             }
         }
 

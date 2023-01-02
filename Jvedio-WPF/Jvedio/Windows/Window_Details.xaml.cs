@@ -102,9 +102,14 @@ namespace Jvedio
 
         private void RemoveNewAddTag()
         {
-            string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAGID_NEW_ADD}' and DataID='{DataID}'";
-            tagStampMapper.ExecuteNonQuery(sql);
-            windowMain?.vieModel.InitCurrentTagStamps();
+            if (vieModel.CurrentVideo != null && vieModel.CurrentVideo.TagStamp != null &&
+                vieModel.CurrentVideo.TagStamp.Any(arg => arg.TagID == TagStamp.TAGID_NEW_ADD))
+            {
+                string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAGID_NEW_ADD}' and DataID='{DataID}'";
+                tagStampMapper.ExecuteNonQuery(sql);
+                windowMain?.vieModel.InitCurrentTagStamps();
+                windowMain?.RefreshData(DataID);
+            }
         }
 
         private void SetLabel()
@@ -392,6 +397,7 @@ namespace Jvedio
                 cancelLoadImage = false;
                 vieModel.Load(nextID);
                 vieModel.SelectImageIndex = 0;
+                RemoveNewAddTag();
             }
         }
 
@@ -420,6 +426,7 @@ namespace Jvedio
                 vieModel.CleanUp();
                 vieModel.Load(nextID);
                 vieModel.SelectImageIndex = 0;
+                RemoveNewAddTag();
             }
         }
 

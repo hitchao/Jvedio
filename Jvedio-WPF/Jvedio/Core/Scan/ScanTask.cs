@@ -567,12 +567,6 @@ namespace Jvedio.Core.Scan
                 metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 metaDataMapper.InsertBatch(toInsertData);
                 SqlManager.DataBaseBusy = true;
-                //if (ConfigManager.ScanConfig.DataExistsIndexAfterScan)
-                //{
-                //    // 更新资源存在索引
-
-                //}
-
             }
             catch (Exception ex)
             {
