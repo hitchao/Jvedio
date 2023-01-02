@@ -17,6 +17,8 @@
     <sys:String x:Key="UseScreenIfNoImage">无封面时将已截取的图片作为封面</sys:String>
     <sys:String x:Key="ScreenShotAfterImport">导入资源后立即生成截图</sys:String>
     <sys:String x:Key="LoadDataAfterScan">扫描完成后立即加载新影片</sys:String>
+    <sys:String x:Key="DataExistsIndexAfterScan">对新影片建立资源存在索引</sys:String>
+    <sys:String x:Key="ImageExistsIndexAfterScan">对新影片建立图片存在索引</sys:String>
 
 
     <sys:String x:Key="PleaseSetImageIndex">请在【选项-库】中建立图片索引！</sys:String>

@@ -228,6 +228,7 @@ namespace Jvedio.Core.Scan
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
+                    video.PathExist = 1;
                     toUpdate.Add(video);
                     ScanResult.Update.Add(video.Path, string.Empty);
                 }
@@ -239,10 +240,10 @@ namespace Jvedio.Core.Scan
             List<Video> toInsert = vidList;
 
             // 2. 处理无识别码的
-            // 存在相同 HASH ，不同路径的影片
+            // 存在相同 HASH ，相同路径的影片
             foreach (var item in noVidList.Where(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("SameHashNotSamePath"));
+                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("SameHashSamePath"));
             }
 
             noVidList.RemoveAll(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any());
@@ -256,6 +257,7 @@ namespace Jvedio.Core.Scan
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
+                    video.PathExist = 1;
                     toUpdate.Add(video);
                     ScanResult.Update.Add(video.Path, LangManager.GetValueByKey("SameHashNotSamePath"));
                 }
@@ -268,7 +270,7 @@ namespace Jvedio.Core.Scan
             // 1.更新
             videoMapper.UpdateBatch(toUpdate, "SubSection"); // 分段视频
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
-            metaDataMapper.UpdateBatch(toUpdateData, "Path", "LastScanDate");
+            metaDataMapper.UpdateBatch(toUpdateData, "Path", "LastScanDate", "PathExist");
             AddTags(toUpdate);
 
             // 2.导入
@@ -308,6 +310,7 @@ namespace Jvedio.Core.Scan
             "Genre",
             "Rating",
             "LastScanDate",
+            "PathExist",
         };
 
         private static string[] NFOUpdateVideoProps = new string[]
@@ -493,6 +496,7 @@ namespace Jvedio.Core.Scan
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     ScanResult.Update.Add(video.Path, LangManager.GetValueByKey("UpdateNFO"));
                     video.Path = null;
+                    video.PathExist = 1;
                     video.LastScanDate = DateHelper.Now();
                     toUpdate.Add(video);
                     HandleActor(video);
@@ -549,6 +553,7 @@ namespace Jvedio.Core.Scan
                 video.DBId = ConfigManager.Main.CurrentDBId;
                 video.FirstScanDate = DateHelper.Now();
                 video.LastScanDate = DateHelper.Now();
+                video.PathExist = 1;
                 ScanResult.Import.Add(video.Path);
             }
 
@@ -562,6 +567,12 @@ namespace Jvedio.Core.Scan
                 metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 metaDataMapper.InsertBatch(toInsertData);
                 SqlManager.DataBaseBusy = true;
+                //if (ConfigManager.ScanConfig.DataExistsIndexAfterScan)
+                //{
+                //    // 更新资源存在索引
+
+                //}
+
             }
             catch (Exception ex)
             {

@@ -789,6 +789,30 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _DataExistsIndexAfterScan = ConfigManager.ScanConfig.LoadDataAfterScan;
+
+        public bool DataExistsIndexAfterScan
+        {
+            get { return _DataExistsIndexAfterScan; }
+
+            set
+            {
+                _DataExistsIndexAfterScan = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _ImageExistsIndexAfterScan = ConfigManager.ScanConfig.ImageExistsIndexAfterScan;
+
+        public bool ImageExistsIndexAfterScan
+        {
+            get { return _ImageExistsIndexAfterScan; }
+
+            set
+            {
+                _ImageExistsIndexAfterScan = value;
+                RaisePropertyChanged();
+            }
+        }
 
         #endregion
 

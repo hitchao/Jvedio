@@ -19,6 +19,8 @@ namespace Jvedio.Core.Config
 
             FetchVID = true;
             LoadDataAfterScan = true;
+            DataExistsIndexAfterScan = true;
+            ImageExistsIndexAfterScan = true;
         }
 
         private static ScanConfig _instance = null;
@@ -61,5 +63,7 @@ namespace Jvedio.Core.Config
 
         public bool FetchVID { get; set; }
         public bool LoadDataAfterScan { get; set; }
+        public bool DataExistsIndexAfterScan { get; set; }
+        public bool ImageExistsIndexAfterScan { get; set; }
     }
 }

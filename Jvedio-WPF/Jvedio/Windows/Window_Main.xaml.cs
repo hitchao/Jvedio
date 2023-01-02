@@ -2515,6 +2515,9 @@ namespace Jvedio
                 Dispatcher.Invoke(() =>
                 {
                     RefreshData(t.DataID);
+                    // 更新图片存在
+                    if (t.Success)
+                        UpdateImageIndex(video, true, true);
                 });
             };
 
@@ -2523,17 +2526,17 @@ namespace Jvedio
 
         public void screenShotVideo(Video video, bool gif = false)
         {
-            ScreenShotTask task = new ScreenShotTask(video, gif);
-            task.onError += (s, ev) =>
+            ScreenShotTask screenShotTask = new ScreenShotTask(video, gif);
+            screenShotTask.onError += (s, ev) =>
             {
                 msgCard.Error((ev as MessageCallBackEventArgs).Message);
             };
-            task.onCompleted += (s, ev) =>
+            screenShotTask.onCompleted += (s, ev) =>
             {
-                if (task.Success)
+                if (screenShotTask.Success)
                     LoadImageAfterScreenShort(video);
             };
-            addToScreenShot(task);
+            addToScreenShot(screenShotTask);
         }
 
         private void LoadImageAfterScreenShort(Video video)
@@ -2555,11 +2558,25 @@ namespace Jvedio
                             Video.SetImage(ref currentVideo, array[array.Length / 2]);
                             vieModel.CurrentVideoList[i].BigImage = null;
                             vieModel.CurrentVideoList[i].BigImage = currentVideo.ViewImage;
+                            // 更新索引
+                            UpdateImageIndex(video, false, true);
                         }
                     }
                 }
                 break;
             }
+        }
+
+        public void UpdateImageIndex(Video video, bool smallImageExists = false, bool bigImageExists = false)
+        {
+            long pathType = ConfigManager.Settings.PicPathMode;
+            List<string> list = new List<string>();
+            // 小图
+            list.Add($"({video.DataID},{pathType},0,{(smallImageExists ? 1 : 0)})");
+            // 大图
+            list.Add($"({video.DataID},{pathType},1,{(bigImageExists ? 1 : 0)})");
+            string insertSql = $"begin;insert or replace into common_picture_exist(DataID,PathType,ImageType,Exist) values {string.Join(",", list)};commit;";
+            MapperManager.videoMapper.ExecuteNonQuery(insertSql);
         }
 
         public void screenShotVideo(MetaData metaData)
@@ -2886,14 +2903,20 @@ namespace Jvedio
                     Dispatcher.Invoke(() =>
                     {
                         vieModel.Statistic();
+                        ScanResult scanResult = scanTask.ScanResult;
+                        List<Video> insertVideos = null;
+                        if (scanResult != null)
+                            insertVideos = scanResult.InsertVideos;
                         if (ConfigManager.ScanConfig.LoadDataAfterScan)
                             vieModel.LoadData();
                         if (ConfigManager.FFmpegConfig.ScreenShotAfterImport)
                         {
-                            ScanResult scanResult = scanTask.ScanResult;
-                            if (scanResult != null)
-                                ScreenShotAfterImport(scanResult.InsertVideos);
+                            ScreenShotAfterImport(insertVideos);
                         }
+
+
+                        if (ConfigManager.ScanConfig.ImageExistsIndexAfterScan)
+                            SetImageExistsIndexAfterScan();
 
 
                     });
@@ -2903,6 +2926,15 @@ namespace Jvedio
             vieModel.ScanTasks.Add(scanTask);
             scanTask.Start();
             setScanStatus();
+        }
+
+        private void SetImageExistsIndexAfterScan()
+        {
+
+        }
+        private void SetDataExistsIndexAfterScan()
+        {
+
         }
 
 

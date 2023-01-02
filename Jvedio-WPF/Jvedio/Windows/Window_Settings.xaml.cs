@@ -704,11 +704,25 @@ namespace Jvedio
         // todo 检视
         private void SetCheckedBoxChecked()
         {
-            foreach (ToggleButton item in CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList())
+            List<ToggleButton> toggleButtons = CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList();
+            List<string> list = toggleButtons.Select(arg => Video.ToSqlField(arg.Content.ToString())).ToList();
+
+            // 按照顺序
+            string formatString = ConfigManager.RenameConfig.FormatString;
+            if (!string.IsNullOrEmpty(formatString))
             {
-                if (ConfigManager.RenameConfig.FormatString.IndexOf(Video.ToSqlField(item.Content.ToString())) >= 0)
+                int left = formatString.IndexOf("{"), right = formatString.IndexOf("}");
+                while (right > 0 && right < formatString.Length)
                 {
-                    item.IsChecked = true;
+                    string name = formatString.Substring(left + 1, right - left - 1);
+                    if (list.Contains(name))
+                    {
+                        //RenameList.Add(name);
+                        toggleButtons[list.IndexOf(name)].IsChecked = true;
+                    }
+                    left = formatString.IndexOf("{", left + 1);
+                    right = formatString.IndexOf("}", right + 1);
+                    Console.WriteLine();
                 }
             }
         }
@@ -984,29 +998,57 @@ namespace Jvedio
             }
         }
 
+        //private List<string> RenameList = new List<string>();
+
+
         private void SetRenameFormat()
         {
-            List<ToggleButton> toggleButtons = CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList();
-            List<string> names = toggleButtons.Where(arg => (bool)arg.IsChecked).Select(arg => arg.Content.ToString()).ToList();
+            //string format = vieModel.FormatString;
+            //if (RenameList.Count > 0)
+            //{
 
-            if (names.Count > 0)
-            {
-                StringBuilder builder = new StringBuilder();
-                string sep = ConfigManager.RenameConfig.OutSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.OutSplit;
-                List<string> formatNames = new List<string>();
-                foreach (string name in names)
-                {
-                    formatNames.Add($"{{{Video.ToSqlField(name)}}}");
-                }
+            //    StringBuilder builder = new StringBuilder();
+            //    string sep = ConfigManager.RenameConfig.OutSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.OutSplit;
+            //    List<string> formatNames = new List<string>();
+            //    foreach (string name in RenameList)
+            //    {
+            //        formatNames.Add($"{{{name}}}");
+            //    }
 
-                vieModel.FormatString = string.Join(sep, formatNames);
-            }
-            else
-                vieModel.FormatString = string.Empty;
+            //    vieModel.FormatString = string.Join(sep, formatNames);
+            //}
+            //else
+            //    vieModel.FormatString = string.Empty;
         }
 
         private void AddToRename(object sender, RoutedEventArgs e)
         {
+            ToggleButton toggleButton = sender as ToggleButton;
+            if (toggleButton != null)
+            {
+                string sep = ConfigManager.RenameConfig.OutSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.OutSplit;
+                string format = vieModel.FormatString;
+                string value = Video.ToSqlField(toggleButton.Content.ToString());
+                if ((bool)toggleButton.IsChecked)
+                {
+
+                    if (format.IndexOf($"{{{value}}}") < 0)
+                    {
+                        // 加到最后
+                        if (format.Length > 0 && !format[format.Length - 1].Equals(sep.ToCharArray()[0]))
+                            format += sep;
+                        format += $"{{{value}}}";
+                        //RenameList.Add(value);
+                    }
+                }
+                else
+                {
+                    // 移除所有
+                    format = format.Replace($"{sep}{{{value}}}", "");
+                    format = format.Replace($"{{{value}}}", "");
+                }
+                vieModel.FormatString = format;
+            }
             SetRenameFormat();
             ShowViewRename(vieModel.FormatString);
         }
@@ -1112,6 +1154,8 @@ namespace Jvedio
             ConfigManager.ScanConfig.MinFileSize = vieModel.MinFileSize;
             ConfigManager.ScanConfig.FetchVID = vieModel.FetchVID;
             ConfigManager.ScanConfig.LoadDataAfterScan = vieModel.LoadDataAfterScan;
+            ConfigManager.ScanConfig.DataExistsIndexAfterScan = vieModel.DataExistsIndexAfterScan;
+            ConfigManager.ScanConfig.ImageExistsIndexAfterScan = vieModel.ImageExistsIndexAfterScan;
             ConfigManager.ScanConfig.ScanOnStartUp = vieModel.ScanOnStartUp;
             ConfigManager.ScanConfig.CopyNFOOverriteImage = vieModel.CopyNFOOverriteImage;
             ConfigManager.ScanConfig.CopyNFOPicture = vieModel.CopyNFOPicture;

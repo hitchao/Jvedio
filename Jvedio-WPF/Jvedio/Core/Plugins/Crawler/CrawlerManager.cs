@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Logs;
+using SuperControls.Style;
 using SuperUtils.IO;
 using SuperUtils.Reflections;
 using System;
@@ -76,7 +77,7 @@ namespace Jvedio.Core.Plugins.Crawler
             if (data == null) return null;
             Assembly dll = ReflectionHelper.TryLoadAssembly(dllPath);
             if (dll == null) return null;
-            Type classType = getPublicType(dll.GetTypes());
+            Type classType = getPublicType(dll);
             if (classType == null) return null;
             data.Installed = true;
 
@@ -90,8 +91,20 @@ namespace Jvedio.Core.Plugins.Crawler
             return Path.Combine(dir, name + ".json");
         }
 
-        private static Type getPublicType(Type[] types)
+        private static Type getPublicType(Assembly dll)
         {
+            Type[] types = null;
+            try
+            {
+                types = dll.GetTypes();
+            }
+            catch (Exception ex)
+            {
+                MessageCard.Error(ex.Message);
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
             if (types == null || types.Length == 0) return null;
             foreach (Type type in types)
             {

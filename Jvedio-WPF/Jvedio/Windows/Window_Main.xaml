@@ -2490,7 +2490,7 @@
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
                             SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}"
-                            Style="{StaticResource HeaderHideTabControlStyle}">
+                            Style="{StaticResource FlatTabControl}">
                             <TabItem Header="{DynamicResource Movie}">
                                 <!--  影片  -->
                                 <Grid HorizontalAlignment="Stretch">
@@ -3026,7 +3026,7 @@
                                                     <MenuItem Name="VideoTypeMenuItem" Header="{DynamicResource VideoType}">
                                                         <MenuItem Header="{DynamicResource Normal}" IsCheckable="True" />
                                                         <MenuItem Header="{DynamicResource Uncensored}" IsCheckable="True" />
-                                                        <MenuItem Header="{DynamicResource 修正}" IsCheckable="True" />
+                                                        <MenuItem Header="{DynamicResource Censored}" IsCheckable="True" />
                                                         <MenuItem Header="{DynamicResource Europe}" IsCheckable="True" />
                                                     </MenuItem>
                                                     <MenuItem Name="PictureFilterType" Header="{DynamicResource ImageExisted}">
@@ -4016,12 +4016,11 @@
 
 
                                         <TabItem Header="{DynamicResource Genre}">
-                                            <Grid Margin="10">
+                                            <ScrollViewer Margin="10">
                                                 <ItemsControl
                                                     Margin="5"
                                                     Background="Transparent"
-                                                    ItemsSource="{Binding GenreList}"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    ItemsSource="{Binding GenreList}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Name="LabelWrapPanel" Orientation="Horizontal" />
@@ -4041,23 +4040,18 @@
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
-
-
-
-
-                                            </Grid>
+                                            </ScrollViewer>
 
 
 
                                         </TabItem>
                                         <TabItem Header="{DynamicResource Tag}">
 
-                                            <Grid Margin="10">
+                                            <ScrollViewer Margin="10">
                                                 <ItemsControl
                                                     Margin="5"
                                                     Background="Transparent"
-                                                    ItemsSource="{Binding SeriesList}"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    ItemsSource="{Binding SeriesList}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Name="LabelWrapPanel" Orientation="Horizontal" />
@@ -4078,19 +4072,18 @@
                                                 </ItemsControl>
 
 
-                                            </Grid>
+                                            </ScrollViewer>
 
 
 
                                         </TabItem>
                                         <TabItem Header="{DynamicResource Studio}">
 
-                                            <Grid Margin="10">
+                                            <ScrollViewer Margin="10">
                                                 <ItemsControl
                                                     Margin="5"
                                                     Background="Transparent"
-                                                    ItemsSource="{Binding StudioList}"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    ItemsSource="{Binding StudioList}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Orientation="Horizontal" />
@@ -4110,7 +4103,7 @@
                                                 </ItemsControl>
 
 
-                                            </Grid>
+                                            </ScrollViewer>
 
 
 
@@ -4118,12 +4111,11 @@
 
                                         <TabItem Header="{DynamicResource Director}">
 
-                                            <Grid Margin="10">
+                                            <ScrollViewer Margin="10">
                                                 <ItemsControl
                                                     Margin="5"
                                                     Background="Transparent"
-                                                    ItemsSource="{Binding DirectorList}"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    ItemsSource="{Binding DirectorList}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Orientation="Horizontal" />
@@ -4144,7 +4136,7 @@
                                                 </ItemsControl>
 
 
-                                            </Grid>
+                                            </ScrollViewer>
 
 
 

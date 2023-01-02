@@ -619,6 +619,16 @@
                             HorizontalAlignment="Left"
                             Content="{DynamicResource LoadDataAfterScan}"
                             IsChecked="{Binding LoadDataAfterScan, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="25,5"
+                            HorizontalAlignment="Left"
+                            Content="{DynamicResource DataExistsIndexAfterScan}"
+                            IsChecked="{Binding DataExistsIndexAfterScan, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="25,5"
+                            HorizontalAlignment="Left"
+                            Content="{DynamicResource ImageExistsIndexAfterScan}"
+                            IsChecked="{Binding ImageExistsIndexAfterScan, Mode=TwoWay}" />
 
 
                         <CheckBox

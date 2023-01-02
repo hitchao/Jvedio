@@ -151,6 +151,7 @@ namespace Jvedio.Entity
         public string CreateDate { get; set; }
 
         public string UpdateDate { get; set; }
+        public int PathExist { get; set; }
 
         private BitmapSource _ViewImage;
 
