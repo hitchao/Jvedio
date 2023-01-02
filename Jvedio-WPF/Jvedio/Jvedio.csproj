@@ -944,7 +944,7 @@
     <Content Include="Reference\UsnOperation.dll" />
     <Content Include="Reference\WpfAnimatedGif.dll" />
     <Resource Include="Resources\Jvedio.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
   <ItemGroup>
@@ -966,10 +966,13 @@
     <PreBuildEvent>mkdir "$(ProjectDir)bin\Debug"
 
 XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
+XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Debug"    /E /Y /i
 
 mkdir "$(ProjectDir)bin\Release"
 
-XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /E /Y /i</PreBuildEvent>
+XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
+XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Release"    /E /Y /i
+</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i
