@@ -28,6 +28,11 @@ namespace Jvedio
 
         private static bool Inited = false;
 
+        public static void ResetInitState()
+        {
+            Inited = false;
+        }
+
         public static void Init()
         {
             if (Inited) return;

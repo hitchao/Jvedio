@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title=""
@@ -22,7 +21,7 @@
             x:Key="ViewTextBox"
             BasedOn="{StaticResource ReadOnlyTextBox}"
             TargetType="TextBox">
-            
+
             <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
             <Setter Property="Margin" Value="20,0" />
             <Setter Property="Width" Value="450" />
@@ -71,22 +70,23 @@
                         Grid.Row="1"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
-                        <Button
-                            x:Name="CancelButton"
-                            MinWidth="100"
-                            Margin="10"
-                            Click="Cancel"
-                            Content="{DynamicResource Cancel}"
-                            Cursor="Hand"
-                            Style="{StaticResource ButtonDanger}" />
+
                         <Button
                             x:Name="YesButton"
-                            MinWidth="100"
+                            MinWidth="60"
                             Margin="10"
                             Click="Confirm"
                             Content="{DynamicResource Confirm}"
                             Cursor="Hand"
                             Style="{StaticResource ButtonPrimary}" />
+                        <Button
+                            x:Name="CancelButton"
+                            MinWidth="60"
+                            Margin="10"
+                            Click="Cancel"
+                            Content="{DynamicResource Cancel}"
+                            Cursor="Hand"
+                            Style="{StaticResource ButtonDanger}" />
                     </StackPanel>
                 </Grid>
             </Border>

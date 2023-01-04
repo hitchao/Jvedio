@@ -214,6 +214,27 @@
 
     <Grid>
 
+        <Grid Panel.ZIndex="10" Visibility="{Binding Restoring, Converter={StaticResource bool2VisibilityConverter}, FallbackValue=Collapsed}">
+            <Border Background="{DynamicResource Window.Background}" Opacity="0.7" />
+            <Border
+                Width="200"
+                Height="200"
+                Padding="20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Effect="{StaticResource PopupDropShadowEffect}"
+                Style="{StaticResource InfoBorder}" />
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+
+
+                <super:LoadingCircle Width="30" Height="30" />
+                <TextBlock Margin="10" Text="{DynamicResource RestoreLibrary}" />
+            </StackPanel>
+        </Grid>
+
         <TabControl
             Name="tabControl"
             Background="Transparent"
@@ -397,18 +418,12 @@
                                     <ColumnDefinition Width="auto" />
                                 </Grid.ColumnDefinitions>
                                 <super:SearchBox
-                                    Padding="5,0"
-                                    VerticalAlignment="Center"
                                     Background="Transparent"
                                     Clear="SearchText_Changed"
                                     FontSize="15"
-                                    Foreground="{DynamicResource Window.Foreground}"
                                     PlaceHolder="{DynamicResource Search}"
-                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                     Search="SearchText_Changed"
-                                    SearchOnTextChanged="True"
-                                    ShowClearButton="True"
-                                    ShowSearchButton="False" />
+                                    SearchOnTextChanged="True" />
 
                                 <StackPanel
                                     Grid.Column="1"
@@ -548,7 +563,11 @@
                                 Grid.Row="3"
                                 Margin="5"
                                 Orientation="Horizontal">
-                                <Button Click="RestoreDatabase" Content="{DynamicResource RestoreLibrary}" />
+                                <Button
+                                    Margin="5"
+                                    Click="RestoreDatabase"
+                                    Content="{DynamicResource RestoreLibrary}"
+                                    IsEnabled="{Binding Restoring, Converter={StaticResource OppositeBooleanConverter}}" />
                             </StackPanel>
 
 

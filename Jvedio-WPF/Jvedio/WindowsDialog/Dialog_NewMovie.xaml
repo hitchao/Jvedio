@@ -98,12 +98,9 @@
                     x:Name="PrefixTextBox"
                     MinWidth="200"
                     Margin="5"
-                    Padding="5,0"
                     LostFocus="PrefixTextBox_LostFocus"
                     PlaceHolder="{DynamicResource Prefix}"
-                    PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                    TextChanged="PrefixTextBox_TextChanged"
-                    TextPadding="0" />
+                    TextChanged="PrefixTextBox_TextChanged" />
             </StackPanel>
 
         </Grid>

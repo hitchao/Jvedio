@@ -4923,7 +4923,7 @@ namespace Jvedio
 
                 if (found)
                 {
-                    new Dialog_Sponsor(this).ShowDialog();
+                    //new Dialog_Sponsor(this).ShowDialog();
                     return;
                 }
             }

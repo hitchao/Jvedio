@@ -88,7 +88,10 @@
             x:Name="VedioTypeStackPanel"
             Grid.Row="0"
             Orientation="Horizontal">
-            <Label Margin="20,10" Content="{DynamicResource SearchVideoType}" />
+            <TextBlock
+                Margin="20,10"
+                Style="{StaticResource BaseTextBlock}"
+                Text="{DynamicResource SearchVideoType}" />
             <RadioButton
                 Click="SaveVedioType"
                 Content="{DynamicResource Uncensored}"
@@ -111,13 +114,16 @@
         </StackPanel>
 
         <DockPanel Grid.Row="1" LastChildFill="True">
-            <Label Margin="20,10" Content="{DynamicResource StartPage}" />
+            <TextBlock
+                Margin="20,10"
+                Style="{StaticResource BaseTextBlock}"
+                Text="{DynamicResource StartPage}" />
             <TextBlock
                 Width="30"
                 VerticalAlignment="Center"
                 Style="{StaticResource BaseTextBlock}"
                 Text="{Binding Value, ElementName=Slider, Mode=OneWay, Converter={StaticResource IntConverter}}" />
-            <Slider
+            <super:Slider
                 Name="Slider"
                 Width="auto"
                 Margin="20,0"
@@ -126,19 +132,21 @@
                 Maximum="500"
                 Minimum="1"
                 SmallChange="1"
-                TickFrequency="1"
                 ValueChanged="Slider_ValueChanged"
                 Value="1" />
         </DockPanel>
 
         <DockPanel Grid.Row="2" LastChildFill="True">
-            <Label Margin="20,10" Content="{DynamicResource EndPage}" />
+            <TextBlock
+                Margin="20,10"
+                Style="{StaticResource BaseTextBlock}"
+                Text="{DynamicResource EndPage}" />
             <TextBlock
                 Width="30"
                 VerticalAlignment="Center"
                 Style="{StaticResource BaseTextBlock}"
                 Text="{Binding Value, ElementName=SliderEnd, Mode=OneWay, Converter={StaticResource IntConverter}}" />
-            <Slider
+            <super:Slider
                 Name="SliderEnd"
                 Margin="20,0"
                 VerticalAlignment="Center"
@@ -146,7 +154,6 @@
                 Maximum="500"
                 Minimum="1"
                 SmallChange="1"
-                TickFrequency="1"
                 ValueChanged="SliderEnd_ValueChanged"
                 Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Maximum, Mode=OneTime}" />
         </DockPanel>

@@ -1035,7 +1035,7 @@ namespace Jvedio
                     if (format.IndexOf($"{{{value}}}") < 0)
                     {
                         // 加到最后
-                        if (format.Length > 0 && !format[format.Length - 1].Equals(sep.ToCharArray()[0]))
+                        if (format.Length > 0 && !string.IsNullOrEmpty(sep) && !format[format.Length - 1].Equals(sep.ToCharArray()[0]))
                             format += sep;
                         format += $"{{{value}}}";
                         //RenameList.Add(value);

@@ -37,13 +37,9 @@
                 Grid.Column="1"
                 Margin="20,0"
                 Background="{DynamicResource Window.Side.Background}"
-                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                BorderThickness="2"
-                Foreground="{DynamicResource Window.Foreground}"
                 KeyDown="textBox_KeyDown"
-                PlaceHolder=""
-                TextChanged="textBox_TextChanged"
-                TextPadding="10 0" />
+                PlaceHolder="{DynamicResource Stamp}"
+                TextChanged="textBox_TextChanged" />
         </Grid>
 
         <Grid Grid.Row="1">
@@ -149,12 +145,12 @@
                 MinWidth="50"
                 Click="Confirm"
                 Content="{DynamicResource Confirm}"
-                Style="{StaticResource FillButton}" />
+                Style="{StaticResource ButtonPrimary}" />
             <Button
                 MinWidth="50"
                 Click="Cancel"
                 Content="{DynamicResource Cancel}"
-                Style="{StaticResource FillButton}" />
+                Style="{StaticResource ButtonDanger}" />
         </StackPanel>
     </Grid>
 </super:BaseWindow>

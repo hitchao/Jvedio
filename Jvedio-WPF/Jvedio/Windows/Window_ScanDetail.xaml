@@ -193,11 +193,13 @@
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button
+                MinWidth="70"
                 HorizontalAlignment="Right"
                 Click="ShowExceptions"
                 Content="{DynamicResource ViewAbnormal}"
                 Style="{StaticResource ButtonDanger}" />
             <Button
+                MinWidth="70"
                 HorizontalAlignment="Right"
                 Click="Save"
                 Content="{DynamicResource Save}"

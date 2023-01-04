@@ -808,12 +808,11 @@ namespace Jvedio
         {
             if (new Msgbox(this, LangManager.GetValueByKey("IsToRestore")).ShowDialog() == true)
             {
-                Button button = sender as Button;
-                button.IsEnabled = false;
+                vieModel_StartUp.Restoring = true;
 
                 // todo 多数据库
                 MapperManager.Dispose();
-                await Task.Delay(1000);
+                await Task.Delay(2000);
                 bool success = FileHelper.TryDeleteFile(SqlManager.DEFAULT_SQLITE_PATH, (error) =>
                 {
                     MessageCard.Error(error.Message);
@@ -822,7 +821,9 @@ namespace Jvedio
                 {
                     try
                     {
+                        MapperManager.ResetInitState();
                         MapperManager.Init();    // 初始化数据库连接
+                        await Task.Delay(3000);
                     }
                     catch (Exception ex)
                     {
@@ -832,8 +833,8 @@ namespace Jvedio
 
                     MessageCard.Success(LangManager.GetValueByKey("Success"));
                 }
-
-                button.IsEnabled = true;
+                vieModel_StartUp.Restoring = false;
+                vieModel_StartUp.ReadFromDataBase();
             }
         }
     }

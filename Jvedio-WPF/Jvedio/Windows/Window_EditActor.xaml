@@ -97,10 +97,7 @@
 
                 <super:SearchBox
                     Width="200"
-                    Padding="10,0"
-                    Foreground="{DynamicResource Window.Foreground}"
                     PlaceHolder="{DynamicResource ActorName}"
-                    PlaceHolderForeground="{DynamicResource Window.Sub.Foreground}"
                     Text="{Binding CurrentActorInfo.ActorName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 

@@ -216,22 +216,9 @@
                                         </Grid.RowDefinitions>
 
                                         <super:SearchBox
-                                            Name="searchBox"
                                             Grid.Row="0"
-                                            Width="auto"
-                                            Height="30"
-                                            Margin="0"
-                                            Padding="3,0"
-                                            HorizontalAlignment="Stretch"
-                                            Background="{DynamicResource Window.Side.Background}"
-                                            BorderBrush="#326CF3"
-                                            BorderThickness="0"
-                                            Foreground="{DynamicResource Window.Foreground}"
-                                            PlaceHolder="{DynamicResource Search}"
-                                            PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
-                                            SearchOnTextChanged="False"
-                                            ShowClearButton="True"
-                                            ShowSearchButton="True"
+                                            Margin="5"
+                                            Style="{StaticResource SearchBoxStyle}"
                                             Text="{Binding SearchText, Mode=TwoWay}" />
 
                                         <Grid Grid.Row="1">
@@ -461,22 +448,9 @@
                                             </Grid.RowDefinitions>
 
                                             <super:SearchBox
-                                                Name="labelSearchBox"
                                                 Grid.Row="0"
-                                                Width="auto"
-                                                Height="30"
-                                                Margin="0"
-                                                Padding="3,0"
-                                                HorizontalAlignment="Stretch"
-                                                Background="{DynamicResource Window.Side.Background}"
-                                                BorderBrush="#326CF3"
-                                                BorderThickness="0"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                PlaceHolder="{DynamicResource Search}"
-                                                PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
-                                                SearchOnTextChanged="False"
-                                                ShowClearButton="True"
-                                                ShowSearchButton="True"
+                                                Margin="5"
+                                                Style="{StaticResource SearchBoxStyle}"
                                                 Text="{Binding LabelText, Mode=TwoWay}" />
 
 
@@ -499,7 +473,7 @@
                                                     </ItemsControl.ItemsPanel>
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Border MouseUp="Border_MouseUp" Style="{StaticResource ActorInfoBorderStyle}">
+                                                            <Border MouseUp="Border_MouseUp" Style="{StaticResource HoverBorder}">
                                                                 <TextBlock Style="{StaticResource GenreTextBlock}" Text="{Binding}" />
                                                             </Border>
                                                         </DataTemplate>
@@ -632,52 +606,36 @@
                                     <Label Content="{DynamicResource ReleaseDate}" Style="{StaticResource BaseInfoLabel}" />
                                     <super:SearchBox
                                         Margin="5"
-                                        Background="Transparent"
                                         LostFocus="TextBox_LostFocus"
                                         Text="{Binding CurrentVideo.ReleaseDate, Mode=OneWay}" />
                                 </DockPanel>
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Duration}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox
-                                        Margin="5"
-                                        Background="Transparent"
-                                        Text="{Binding CurrentVideo.Duration, Mode=TwoWay}" />
+                                    <super:SearchBox Margin="5" Text="{Binding CurrentVideo.Duration, Mode=TwoWay}" />
                                 </DockPanel>
 
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Tag}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox
-                                        Margin="5"
-                                        Background="Transparent"
-                                        Text="{Binding CurrentVideo.Series, Mode=TwoWay}" />
+                                    <super:SearchBox Margin="5" Text="{Binding CurrentVideo.Series, Mode=TwoWay}" />
                                 </DockPanel>
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Director}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox
-                                        Margin="5"
-                                        Background="Transparent"
-                                        Text="{Binding CurrentVideo.Director, Mode=TwoWay}" />
+                                    <super:SearchBox Margin="5" Text="{Binding CurrentVideo.Director, Mode=TwoWay}" />
                                 </DockPanel>
 
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Studio}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox
-                                        Margin="5"
-                                        Background="Transparent"
-                                        Text="{Binding CurrentVideo.Studio, Mode=TwoWay}" />
+                                    <super:SearchBox Margin="5" Text="{Binding CurrentVideo.Studio, Mode=TwoWay}" />
                                 </DockPanel>
 
 
                                 <DockPanel>
                                     <Label Content="{DynamicResource Country}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox
-                                        Margin="5"
-                                        Background="Transparent"
-                                        Text="{Binding CurrentVideo.Country, Mode=TwoWay}" />
+                                    <super:SearchBox Margin="5" Text="{Binding CurrentVideo.Country, Mode=TwoWay}" />
                                 </DockPanel>
 
 

@@ -664,7 +664,6 @@
                                 <super:SearchBox
                                     MinWidth="400"
                                     PlaceHolder="{DynamicResource ActressImage}"
-                                    PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                                     Text="{Binding CopyNFOActorPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             </StackPanel>
@@ -679,7 +678,6 @@
                                 <super:SearchBox
                                     MinWidth="400"
                                     PlaceHolder="{DynamicResource Preview}"
-                                    PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                                     Text="{Binding CopyNFOPreviewPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             </StackPanel>
@@ -695,7 +693,6 @@
                                 <super:SearchBox
                                     MinWidth="400"
                                     PlaceHolder="{DynamicResource ScreenShot}"
-                                    PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
                                     Text="{Binding CopyNFOScreenShotPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             </StackPanel>
@@ -866,13 +863,12 @@
                                         <super:SearchBox
                                             Width="380"
                                             MinWidth="400"
-                                            Padding="5,0"
+                                            Margin="5"
                                             Background="{DynamicResource Menu.Background}"
                                             FontSize="15"
                                             PlaceHolder="{DynamicResource ToolTip_SameAsVedio}"
                                             PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                            Text="{Binding NFOSavePath, Mode=TwoWay}"
-                                            TextPadding="0" />
+                                            Text="{Binding NFOSavePath, Mode=TwoWay}" />
 
                                         <Button
                                             HorizontalAlignment="Left"
@@ -919,7 +915,6 @@
                                         ToolTip="[0-2000]" />
                                     <super:SearchBox
                                         MinWidth="100"
-                                        Padding="0"
                                         Background="{DynamicResource Menu.Background}"
                                         Text="{Binding HttpTimeout, Mode=TwoWay}"
                                         TextAlignment="Center" />
@@ -1065,7 +1060,7 @@
                                         <TextBlock VerticalAlignment="Center" Text="{DynamicResource TestUrl}" />
                                         <super:SearchBox
                                             Name="textProxyUrl"
-                                            MinWidth="200"
+                                            MinWidth="300"
                                             Margin="10,0"
                                             VerticalAlignment="Center"
                                             Background="{DynamicResource Window.Title.Background}"
@@ -1297,9 +1292,7 @@
                                                                         Padding="5,0"
                                                                         HorizontalAlignment="Stretch"
                                                                         Background="Transparent"
-                                                                        Foreground="{DynamicResource Window.Foreground}"
                                                                         PlaceHolder="{DynamicResource Url}"
-                                                                        PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                         Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
@@ -1317,10 +1310,8 @@
                                                                         Padding="5,0"
                                                                         HorizontalAlignment="Stretch"
                                                                         Background="Transparent"
-                                                                        Foreground="{DynamicResource Window.Foreground}"
                                                                         IsReadOnly="True"
                                                                         PlaceHolder="Cookies"
-                                                                        PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                         PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp"
                                                                         Text="{Binding Cookies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                 </DataTemplate>
@@ -1334,10 +1325,8 @@
                                                                         Padding="5,0"
                                                                         HorizontalAlignment="Stretch"
                                                                         Background="Transparent"
-                                                                        Foreground="{DynamicResource Window.Foreground}"
                                                                         IsReadOnly="True"
                                                                         PlaceHolder="Headers"
-                                                                        PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                                                                         PreviewMouseLeftButtonUp="url_PreviewMouseLeftButtonUp_1"
                                                                         Text="{Binding Headers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                 </DataTemplate>
@@ -2242,18 +2231,16 @@
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
                         <Label Content="{DynamicResource MovieOpacity}" Style="{StaticResource InfoLabel}" />
-                        <Slider
+                        <super:Slider
                             Width="200"
                             Margin="5,0"
                             VerticalAlignment="Center"
                             Cursor="Hand"
-                            IsSnapToTickEnabled="True"
+                            Integer="False"
                             LargeChange="0.1"
                             Maximum="1"
                             Minimum="0.1"
                             SmallChange="0.05"
-                            TickFrequency="0.05"
-                            TickPlacement="None"
                             Value="{Binding MovieOpacity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <Label Content="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource RoundNumberConverter}, ConverterParameter=2}" Style="{StaticResource InfoLabel}" />
 
@@ -2676,7 +2663,8 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Stretch"
                 Click="SaveSettings"
-                Content="{DynamicResource Save}" />
+                Content="{DynamicResource Save}"
+                Style="{StaticResource ButtonSuccess}" />
         </Grid>
 
     </Grid>

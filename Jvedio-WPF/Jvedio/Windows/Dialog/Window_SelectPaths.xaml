@@ -133,12 +133,12 @@
                 MinWidth="50"
                 Click="Confirm"
                 Content="{DynamicResource Confirm}"
-                Style="{StaticResource FillButton}" />
+                Style="{StaticResource ButtonPrimary}" />
             <Button
                 MinWidth="50"
                 Click="Cancel"
                 Content="{DynamicResource Cancel}"
-                Style="{StaticResource FillButton}" />
+                Style="{StaticResource ButtonDanger}" />
         </StackPanel>
     </Grid>
 </super:BaseWindow>

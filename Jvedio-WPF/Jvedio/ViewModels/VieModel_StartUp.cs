@@ -105,6 +105,18 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _Restoring = false;
+
+        public bool Restoring
+        {
+            get { return _Restoring; }
+
+            set
+            {
+                _Restoring = value;
+                RaisePropertyChanged();
+            }
+        }
 
         #endregion
 

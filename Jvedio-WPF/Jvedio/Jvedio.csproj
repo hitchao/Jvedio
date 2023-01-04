@@ -339,9 +339,6 @@
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowsDialog\Dialog_Sponsor.xaml.cs">
-      <DependentUpon>Dialog_Sponsor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Entity\Common\Actor.cs" />
     <Compile Include="Entity\Common\ActorInfo.cs" />
     <Compile Include="Entity\Common\Actress.cs" />
@@ -521,10 +518,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="WindowsDialog\Dialog_SelectActor.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WindowsDialog\Dialog_Sponsor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

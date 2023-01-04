@@ -1345,21 +1345,9 @@
                                                                 </Grid.RowDefinitions>
 
                                                                 <super:SearchBox
-                                                                    Name="labelSearchBox"
                                                                     Grid.Row="0"
-                                                                    Width="auto"
-                                                                    Height="30"
-                                                                    Margin="0"
-                                                                    Padding="3,0"
-                                                                    HorizontalAlignment="Stretch"
-                                                                    Background="{DynamicResource Window.Side.Background}"
-                                                                    BorderBrush="#326CF3"
-                                                                    BorderThickness="0"
-                                                                    Foreground="{DynamicResource Window.Foreground}"
-                                                                    PlaceHolder="{DynamicResource Search}"
-                                                                    PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
+                                                                    Margin="5"
                                                                     SearchOnTextChanged="False"
-                                                                    ShowClearButton="True"
                                                                     ShowSearchButton="True"
                                                                     Text="{Binding LabelText, Mode=TwoWay}" />
 
@@ -1383,7 +1371,7 @@
                                                                         </ItemsControl.ItemsPanel>
                                                                         <ItemsControl.ItemTemplate>
                                                                             <DataTemplate>
-                                                                                <Border MouseUp="Border_MouseUp" Style="{StaticResource ActorInfoBorderStyle}">
+                                                                                <Border MouseUp="Border_MouseUp" Style="{StaticResource HoverBorder}">
                                                                                     <TextBlock Style="{StaticResource GenreTextBlock}" Text="{Binding}" />
                                                                                 </Border>
                                                                             </DataTemplate>
