@@ -288,7 +288,7 @@ namespace Jvedio
             // 加入到下载列表中
             if (PluginManager.DownloadingList.Any(arg => arg.Equals(pluginMetaData.PluginID)))
             {
-                MessageCard.Warning($"【{pluginMetaData.PluginName}】{LangManager.GetValueByKey("DownloadingOrDownloaded")}");
+                MessageNotify.Warning($"【{pluginMetaData.PluginName}】{LangManager.GetValueByKey("DownloadingOrDownloaded")}");
                 return;
             }
 
@@ -431,7 +431,7 @@ namespace Jvedio
                 }
                 ConfigManager.PluginConfig.DeleteList = JsonUtils.TrySerializeObject(list);
                 ConfigManager.PluginConfig.Save();
-                MessageCard.Success(LangManager.GetValueByKey("PluginDeleteSet"));
+                MessageNotify.Success(LangManager.GetValueByKey("PluginDeleteSet"));
             }
         }
 

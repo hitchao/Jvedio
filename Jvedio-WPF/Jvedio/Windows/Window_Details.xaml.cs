@@ -523,7 +523,7 @@ namespace Jvedio
             videoMapper.UpdateFieldById("BigImagePath", path, DataID);
             Refresh();
             windowMain?.RefreshImage(vieModel.CurrentVideo);
-            SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
+            SuperControls.Style.MessageNotify.Info(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
         }
 
         public void CopyFile(object sender, RoutedEventArgs e)
@@ -533,11 +533,11 @@ namespace Jvedio
             {
                 StringCollection paths = new StringCollection { filepath };
                 bool success = ClipBoard.TrySetFileDropList(paths, (error) => { MessageCard.Error(error); });
-                if (success) MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("HasCopy"));
+                if (success) MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("HasCopy"));
             }
             else
             {
-                SuperControls.Style.MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_FileNotExist"));
+                SuperControls.Style.MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_FileNotExist"));
             }
         }
 
@@ -1300,7 +1300,7 @@ namespace Jvedio
             Video video = getAssoVideo(dataid);
             if (video == null)
             {
-                MessageCard.Error("无法播放该视频！");
+                MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
                 return;
             }
 
@@ -1408,7 +1408,7 @@ namespace Jvedio
             if (builder.Length > 0)
                 ClipBoard.TrySetDataObject(builder.ToString());
             else
-                MessageCard.Error("无信息！");
+                MessageNotify.Error("无信息！");
         }
 
         private void NewLabel(object sender, RoutedEventArgs e)

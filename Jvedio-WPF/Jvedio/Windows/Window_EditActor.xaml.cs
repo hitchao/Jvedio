@@ -58,7 +58,7 @@ namespace Jvedio
             CurrentActorInfo.ActorName = CurrentActorInfo.ActorName.ToProperFileName();
             if (string.IsNullOrEmpty(CurrentActorInfo.ActorName))
             {
-                MessageCard.Error(LangManager.GetValueByKey("ActorCanNotBeNull"));
+                MessageNotify.Error(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
 
@@ -67,7 +67,7 @@ namespace Jvedio
                 int update = actorMapper.UpdateById(CurrentActorInfo);
                 if (update > 0)
                 {
-                    MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
+                    MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
                     main?.RefreshActor(CurrentActorInfo.ActorID);
                 }
             }
@@ -92,7 +92,7 @@ namespace Jvedio
                         this.DialogResult = true;
                     }
                     else
-                        MessageCard.Success(LangManager.GetValueByKey("Error"));
+                        MessageNotify.Error(LangManager.GetValueByKey("Error"));
                 }
             }
         }

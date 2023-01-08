@@ -388,7 +388,7 @@ namespace Jvedio
                 {
                     if (!ConfigManager.Settings.PictureIndexCreated)
                     {
-                        MessageCard.Error(LangManager.GetValueByKey("PleaseSetImageIndex"));
+                        MessageNotify.Error(LangManager.GetValueByKey("PleaseSetImageIndex"));
                         return;
                     }
 
@@ -408,7 +408,7 @@ namespace Jvedio
                 {
                     if (!ConfigManager.Settings.PlayableIndexCreated)
                     {
-                        MessageCard.Error(LangManager.GetValueByKey("PleaseSetExistsIndex"));
+                        MessageNotify.Error(LangManager.GetValueByKey("PleaseSetExistsIndex"));
                         return;
                     }
 
@@ -1824,7 +1824,7 @@ namespace Jvedio
         {
             if (!File.Exists(ConfigManager.FFmpegConfig.Path))
             {
-                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_SetFFmpeg"));
+                MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_SetFFmpeg"));
                 return;
             }
 
@@ -1844,7 +1844,7 @@ namespace Jvedio
 
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
         {
-            MessageCard.Info(LangManager.GetValueByKey("CrawlAllWarning"));
+            MessageNotify.Info(LangManager.GetValueByKey("CrawlAllWarning"));
             vieModel.DownloadStatus = "Downloading";
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
@@ -1863,7 +1863,7 @@ namespace Jvedio
         {
             if (!File.Exists(ConfigManager.FFmpegConfig.Path))
             {
-                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_SetFFmpeg"));
+                MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_SetFFmpeg"));
                 return;
             }
 
@@ -2631,7 +2631,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Info(LangManager.GetValueByKey("TaskExists"));
+                MessageNotify.Info(LangManager.GetValueByKey("TaskExists"));
             }
         }
 
@@ -2644,7 +2644,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Info(LangManager.GetValueByKey("TaskExists"));
+                MessageNotify.Info(LangManager.GetValueByKey("TaskExists"));
             }
         }
 
@@ -4459,7 +4459,7 @@ namespace Jvedio
             }
 
             if (!success)
-                MessageCard.Error(LangManager.GetValueByKey("SupportPotPlayerOnly"));
+                MessageNotify.Error(LangManager.GetValueByKey("SupportPotPlayerOnly"));
         }
 
         private void OpenImageSavePath(object sender, RoutedEventArgs e)
@@ -4548,7 +4548,7 @@ namespace Jvedio
             if (!string.IsNullOrEmpty(path))
             {
                 AddScanTask(new string[] { path });
-                MessageCard.Success($"{LangManager.GetValueByKey("AddScanTaskSuccess")} => " + path);
+                MessageNotify.Success($"{LangManager.GetValueByKey("AddScanTaskSuccess")} => " + path);
             }
         }
 
@@ -4560,7 +4560,7 @@ namespace Jvedio
                 List<string> folders = window_SelectPaths.Folders;
                 if (folders.Count == 0)
                 {
-                    MessageCard.Warning(LangManager.GetValueByKey("PathNotSelect"));
+                    MessageNotify.Warning(LangManager.GetValueByKey("PathNotSelect"));
                 }
                 else
                 {

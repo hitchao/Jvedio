@@ -66,11 +66,11 @@ namespace Jvedio
                 // 更新到主界面和详情界面
                 main?.RefreshGrade(vieModel.CurrentVideo);
                 windowDetails?.Refresh();
-                SuperControls.Style.MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
+                SuperControls.Style.MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
             else
             {
-                SuperControls.Style.MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_Fail"));
+                SuperControls.Style.MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_Fail"));
             }
         }
 

@@ -263,7 +263,7 @@ namespace Jvedio
                         Properties.Settings.Default.HotKey_Enable = true;
                         Properties.Settings.Default.HotKey_String = hotkeyTextBox.Text;
                         Properties.Settings.Default.Save();
-                        MessageCard.Success(LangManager.GetValueByKey("HotKeySetSuccess"));
+                        MessageNotify.Success(LangManager.GetValueByKey("HotKeySetSuccess"));
                     }
                 }
             }
@@ -442,7 +442,7 @@ namespace Jvedio
                 }
                 catch
                 {
-                    SuperControls.Style.MessageCard.Error($"{SuperControls.Style.LangManager.GetValueByKey("NoPermissionToListen")} {drives[i]}");
+                    SuperControls.Style.MessageNotify.Error($"{SuperControls.Style.LangManager.GetValueByKey("NoPermissionToListen")} {drives[i]}");
                     return false;
                 }
             }
@@ -498,7 +498,7 @@ namespace Jvedio
                 SavePath();
                 SaveSettings();
 
-                SuperControls.Style.MessageCard.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
+                SuperControls.Style.MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
         }
 
@@ -772,7 +772,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_CanNotBeNull"));
+                MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_CanNotBeNull"));
             }
         }
 
@@ -816,7 +816,7 @@ namespace Jvedio
 
             if (!server.isHeaderProper())
             {
-                MessageCard.Error(LangManager.GetValueByKey("HeaderNotProper"));
+                MessageNotify.Error(LangManager.GetValueByKey("HeaderNotProper"));
                 return;
             }
 

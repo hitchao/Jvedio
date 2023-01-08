@@ -406,7 +406,7 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
+                MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
@@ -438,7 +438,7 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
+                MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
@@ -591,7 +591,7 @@ namespace Jvedio
             // 检测该 id 是否在数据库中存在
             if (database == null)
             {
-                MessageCard.Error(LangManager.GetValueByKey("CancelOpenDefault"));
+                MessageNotify.Error(LangManager.GetValueByKey("CancelOpenDefault"));
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
@@ -699,7 +699,7 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
+                MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
@@ -748,7 +748,7 @@ namespace Jvedio
         {
             if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
             {
-                MessageCard.Error(LangManager.GetValueByKey("InnerError"));
+                MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
@@ -834,7 +834,7 @@ namespace Jvedio
                         App.Current.Shutdown();
                     }
 
-                    MessageCard.Success(LangManager.GetValueByKey("Success"));
+                    MessageNotify.Success(LangManager.GetValueByKey("Success"));
                 }
                 vieModel_StartUp.Restoring = false;
                 vieModel_StartUp.ReadFromDataBase();
