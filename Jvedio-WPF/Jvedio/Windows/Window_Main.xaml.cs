@@ -343,6 +343,8 @@ namespace Jvedio
             vieModel.LoadAssoMetaDataCompleted += (s, e) =>
             {
                 SetAssoSelected();
+                if (ConfigManager.Settings.AutoGenScreenShot)
+                    AutoGenScreenShot(vieModel.AssociationDatas);
             };
 
             Global.DownloadManager.Dispatcher.onWorking += (s, e) =>
@@ -665,8 +667,11 @@ namespace Jvedio
             vieModel.PageChangedCompleted += (s, ev) =>
             {
                 if (Properties.Settings.Default.EditMode) SetSelected();
-                if (ConfigManager.Settings.AutoGenScreenShot) AutoGenScreenShot();
+                if (ConfigManager.Settings.AutoGenScreenShot)
+                    AutoGenScreenShot(vieModel.CurrentVideoList);
             };
+
+
 
             vieModel.ActorPageChangedCompleted += (s, ev) =>
             {
@@ -706,14 +711,15 @@ namespace Jvedio
             return null;
         }
 
-        private void AutoGenScreenShot()
+        private void AutoGenScreenShot(ObservableCollection<Video> data)
         {
-            for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage)
+                if (data[i].BigImage == MetaData.DefaultBigImage ||
+                    data[i].BigImage == MetaData.DefaultSmallImage)
                 {
                     // 检查有无截图
-                    Video video = vieModel.CurrentVideoList[i];
+                    Video video = data[i];
                     string path = video.getScreenShot();
                     if (Directory.Exists(path))
                     {
@@ -721,8 +727,8 @@ namespace Jvedio
                         if (array.Length > 0)
                         {
                             Video.SetImage(ref video, array[array.Length / 2]);
-                            vieModel.CurrentVideoList[i].BigImage = null;
-                            vieModel.CurrentVideoList[i].BigImage = video.ViewImage;
+                            data[i].BigImage = null;
+                            data[i].BigImage = video.ViewImage;
                         }
                     }
                 }
@@ -4838,10 +4844,10 @@ namespace Jvedio
                 Grid grid = border.Parent as Grid;
                 if (grid == null) continue;
                 long dataID = getDataID(border);
+                border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
+                border.BorderBrush = Brushes.Transparent;
                 if (dataID > 0 && vieModel.AssociationSelectedDatas?.Count > 0)
                 {
-                    border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
-                    border.BorderBrush = Brushes.Transparent;
                     if (vieModel.AssociationSelectedDatas.Where(arg => arg.DataID == dataID).Any())
                     {
                         border.Background = StyleManager.Common.HighLight.Background;
@@ -5147,4 +5153,5 @@ namespace Jvedio
             }
         }
     }
+
 }

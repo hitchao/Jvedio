@@ -4,10 +4,12 @@ using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.IO;
 using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -283,6 +285,21 @@ namespace Jvedio.ViewModel
                 video.BigImage = bigimage;
                 Video.setTagStamps(ref video); // 设置标签戳
                 Video.handleEmpty(ref video); // 设置标题和发行日期
+
+                if (ConfigManager.Settings.AutoGenScreenShot)
+                {
+                    string path = video.getScreenShot();
+                    if (Directory.Exists(path))
+                    {
+                        string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+                        if (array.Length > 0)
+                        {
+                            Video.SetImage(ref video, array[array.Length / 2]);
+                            video.BigImage = null;
+                            video.BigImage = video.ViewImage;
+                        }
+                    }
+                }
                 App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
             }
 

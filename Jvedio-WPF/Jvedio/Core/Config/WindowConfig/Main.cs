@@ -12,6 +12,8 @@ namespace Jvedio.Core.WindowConfig
             SideGridWidth = 200;
             FirstRun = true;
             ShowSearchHistory = true;
+            SideDefaultExpanded = true;
+            SideTagStampExpanded = true;
         }
 
         private static Main _instance = null;
@@ -44,5 +46,7 @@ namespace Jvedio.Core.WindowConfig
         public bool FirstRun { get; set; }
 
         public bool ShowSearchHistory { get; set; }
+        public bool SideDefaultExpanded { get; set; }
+        public bool SideTagStampExpanded { get; set; }
     }
 }

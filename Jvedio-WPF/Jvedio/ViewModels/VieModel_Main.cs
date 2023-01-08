@@ -1082,6 +1082,34 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        public bool _SideDefaultExpanded = ConfigManager.Main.SideDefaultExpanded;
+
+        public bool SideDefaultExpanded
+        {
+            get { return _SideDefaultExpanded; }
+
+            set
+            {
+                _SideDefaultExpanded = value;
+                RaisePropertyChanged();
+                ConfigManager.Main.SideDefaultExpanded = value;
+                ConfigManager.Main.Save();
+            }
+        }
+        public bool _SideTagStampExpanded = ConfigManager.Main.SideTagStampExpanded;
+
+        public bool SideTagStampExpanded
+        {
+            get { return _SideTagStampExpanded; }
+
+            set
+            {
+                _SideTagStampExpanded = value;
+                RaisePropertyChanged();
+                ConfigManager.Main.SideTagStampExpanded = value;
+                ConfigManager.Main.Save();
+            }
+        }
 
         #region "右键筛选"
 
@@ -2098,10 +2126,10 @@ namespace Jvedio.ViewModel
             if (videos == null) videos = new List<Video>();
             VideoList.AddRange(videos);
             CurrentCount = VideoList.Count;
-            render();
+            Render();
         }
 
-        public async void render()
+        public async void Render()
         {
             if (CurrentVideoList == null) CurrentVideoList = new ObservableCollection<Video>();
             int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageMode);
