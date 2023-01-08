@@ -760,9 +760,7 @@
     <Content Include="Reference\SuperControls.Style.dll" />
     <Content Include="Reference\SuperUtils.dll" />
     <Content Include="Reference\UsnOperation.dll" />
-    <Resource Include="Resources\Jvedio.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Resources\Jvedio.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Reference\MediaInfo.dll" />
@@ -801,8 +799,6 @@ mkdir "$(ProjectDir)bin\Debug\plugins\crawlers"
 XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
 
 XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
-
-XCOPY  "$(ProjectDir)bin\Release"  "$(SolutionDir)Release\public\File"    /E /Y /i
 
 XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Release"   /Y /i
 

@@ -105,6 +105,18 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private string _Version;
+
+        public string Version
+        {
+            get { return _Version; }
+
+            set
+            {
+                _Version = value;
+                RaisePropertyChanged();
+            }
+        }
         private bool _Restoring = false;
 
         public bool Restoring
@@ -123,6 +135,8 @@ namespace Jvedio.ViewModel
         public VieModel_StartUp()
         {
             ReadFromDataBase();
+            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Version = local.Substring(0, local.Length - ".0.0".Length);
         }
 
         public void ReadFromDataBase()

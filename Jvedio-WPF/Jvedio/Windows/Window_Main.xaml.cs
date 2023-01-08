@@ -1625,7 +1625,7 @@ namespace Jvedio
             Video video = getVideo(dataid);
             if (video == null)
             {
-                msgCard.Error(LangManager.GetValueByKey("CanNotPlay"));
+                MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
                 return;
             }
 
@@ -1641,7 +1641,7 @@ namespace Jvedio
             Video video = getAssoVideo(dataid);
             if (video == null)
             {
-                msgCard.Error(LangManager.GetValueByKey("CanNotPlay"));
+                MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
                 return;
             }
 
@@ -1964,7 +1964,7 @@ namespace Jvedio
         {
             if (ConfigManager.RenameConfig.FormatString.IndexOf("{") < 0)
             {
-                msgCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_SetRenameRule"));
+                MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_SetRenameRule"));
                 return;
             }
 
@@ -2121,7 +2121,7 @@ namespace Jvedio
             }
             else
             {
-                msgCard.Info(LangManager.GetValueByKey("NoFileToRename"));
+                MessageNotify.Info(LangManager.GetValueByKey("NoFileToRename"));
             }
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
@@ -2254,14 +2254,14 @@ namespace Jvedio
 
             if (paths.Count <= 0)
             {
-                msgCard.Warning(LangManager.GetValueByKey("CopyFileNameNull"));
+                MessageNotify.Warning(LangManager.GetValueByKey("CopyFileNameNull"));
                 return;
             }
 
             bool success = ClipBoard.TrySetFileDropList(paths, (error) => { msgCard.Error(error); });
 
             if (success)
-                msgCard.Success($"{SuperControls.Style.LangManager.GetValueByKey("Message_Copied")} {count}/{total}");
+                MessageNotify.Success($"{SuperControls.Style.LangManager.GetValueByKey("Message_Copied")} {count}/{total}");
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
@@ -2299,14 +2299,14 @@ namespace Jvedio
 
             if (paths.Count <= 0)
             {
-                msgCard.Warning(LangManager.GetValueByKey("CutFileNameNull"));
+                MessageNotify.Warning(LangManager.GetValueByKey("CutFileNameNull"));
                 return;
             }
 
             bool success = ClipBoard.TryCutFileDropList(paths, (error) => { msgCard.Error(error); });
 
             if (success)
-                msgCard.Success($"{LangManager.GetValueByKey("Cut")} {count}/{total}");
+                MessageNotify.Success($"{LangManager.GetValueByKey("Cut")} {count}/{total}");
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
@@ -2344,14 +2344,14 @@ namespace Jvedio
 
             if (paths.Count <= 0)
             {
-                msgCard.Warning(LangManager.GetValueByKey("CopyFileNameNull"));
+                MessageNotify.Warning(LangManager.GetValueByKey("CopyFileNameNull"));
                 return;
             }
 
             bool success = ClipBoard.TrySetFileDropList(paths, (error) => { msgCard.Error(error); });
 
             if (success)
-                msgCard.Success($"{SuperControls.Style.LangManager.GetValueByKey("Message_Copied")} {count}/{total}");
+                MessageNotify.Success($"{SuperControls.Style.LangManager.GetValueByKey("Message_Copied")} {count}/{total}");
 
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
         }
@@ -2418,7 +2418,7 @@ namespace Jvedio
                     }
                 }
             }));
-            msgCard.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_DeleteToRecycleBin")} {num}/{totalCount}");
+            MessageNotify.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_DeleteToRecycleBin")} {num}/{totalCount}");
 
             if (Properties.Settings.Default.DelInfoAfterDelFile)
                 deleteIDs(vieModel.SelectedVideo, false);
@@ -3881,7 +3881,7 @@ namespace Jvedio
             TagStamp tagStamp = Main.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
             if (tagStamp.IsSystemTag())
             {
-                msgCard.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
+                MessageNotify.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
                 return;
             }
 
@@ -4279,20 +4279,25 @@ namespace Jvedio
         private void HideDownloadPopup(object sender, MouseButtonEventArgs e)
         {
             downloadStatusPopup.IsOpen = false;
+            downloadStatusPopup.StaysOpen = false;
         }
 
         private void HideScreenShotPopup(object sender, MouseButtonEventArgs e)
         {
             screenShotStatusPopup.IsOpen = false;
+            screenShotStatusPopup.StaysOpen = false;
         }
 
         private void ShowContextMenu(object sender, RoutedEventArgs e)
         {
+            downloadStatusPopup.StaysOpen = true;
+            screenShotStatusPopup.StaysOpen = true;
             (sender as Button).ContextMenu.IsOpen = true;
         }
 
         private void RemoveCompleteTask(object sender, RoutedEventArgs e)
         {
+            downloadStatusPopup.StaysOpen = false;
             for (int i = vieModel.DownLoadTasks.Count - 1; i >= 0; i--)
             {
                 if (vieModel.DownLoadTasks[i].Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
@@ -4308,6 +4313,7 @@ namespace Jvedio
 
         private void RemoveCancelTask(object sender, RoutedEventArgs e)
         {
+            downloadStatusPopup.StaysOpen = false;
             for (int i = vieModel.DownLoadTasks.Count - 1; i >= 0; i--)
             {
                 if (vieModel.DownLoadTasks[i].Status == System.Threading.Tasks.TaskStatus.Canceled)
@@ -4323,6 +4329,7 @@ namespace Jvedio
 
         private void RemoveCompleteScreenShot(object sender, RoutedEventArgs e)
         {
+            screenShotStatusPopup.StaysOpen = false;
             for (int i = vieModel.ScreenShotTasks.Count - 1; i >= 0; i--)
             {
                 if (vieModel.ScreenShotTasks[i].Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
@@ -4338,6 +4345,7 @@ namespace Jvedio
 
         private void RemoveCancelScreenShot(object sender, RoutedEventArgs e)
         {
+            screenShotStatusPopup.StaysOpen = false;
             for (int i = vieModel.ScreenShotTasks.Count - 1; i >= 0; i--)
             {
                 if (vieModel.ScreenShotTasks[i].Status == System.Threading.Tasks.TaskStatus.Canceled)
@@ -4427,7 +4435,7 @@ namespace Jvedio
 
             if (!File.Exists(playerPath))
             {
-                msgCard.Error(LangManager.GetValueByKey("VideoPlayerPathNotSet"));
+                MessageNotify.Error(LangManager.GetValueByKey("VideoPlayerPathNotSet"));
                 return;
             }
 
@@ -4499,7 +4507,7 @@ namespace Jvedio
             bool? success = new Window_EditActor(0).ShowDialog();
             if ((bool)success)
             {
-                msgCard.Success(LangManager.GetValueByKey("AddSuccess"));
+                MessageNotify.Success(LangManager.GetValueByKey("AddSuccess"));
                 vieModel.Statistic();
             }
         }
@@ -4580,7 +4588,7 @@ namespace Jvedio
         {
             if (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0)
             {
-                msgCard.Error(LangManager.GetValueByKey("NeedToClearTask"));
+                MessageNotify.Error(LangManager.GetValueByKey("NeedToClearTask"));
                 return;
             }
 
@@ -4606,7 +4614,7 @@ namespace Jvedio
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        msgCard.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
+                        MessageNotify.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
                     });
                     vieModel.RunningLongTask = false;
                     return;
@@ -4630,21 +4638,21 @@ namespace Jvedio
         {
             if (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0)
             {
-                msgCard.Error(LangManager.GetValueByKey("NeedToClearTask"));
+                MessageNotify.Error(LangManager.GetValueByKey("NeedToClearTask"));
                 return;
             }
 
             string scanPath = vieModel.CurrentAppDataBase.ScanPath;
             if (string.IsNullOrEmpty(scanPath))
             {
-                msgCard.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
+                MessageNotify.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
                 return;
             }
 
             List<string> scanPaths = JsonUtils.TryDeserializeObject<List<string>>(scanPath).Where(arg => !string.IsNullOrEmpty(arg)).ToList();
             if (scanPaths == null || scanPaths.Count <= 0)
             {
-                msgCard.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
+                MessageNotify.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
                 return;
             }
 
@@ -4685,7 +4693,7 @@ namespace Jvedio
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        msgCard.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
+                        MessageNotify.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
                     });
                     vieModel.RunningLongTask = false;
                     return;
@@ -4708,7 +4716,7 @@ namespace Jvedio
         {
             if (vieModel.DownLoadTasks.Count > 0 || vieModel.ScanTasks.Count > 0 || vieModel.ScreenShotTasks.Count > 0)
             {
-                msgCard.Error(LangManager.GetValueByKey("NeedToClearTask"));
+                MessageNotify.Error(LangManager.GetValueByKey("NeedToClearTask"));
                 return;
             }
         }
@@ -4967,7 +4975,7 @@ namespace Jvedio
                 }
             }
 
-            msgCard.Info(message);
+            MessageNotify.Info(message);
         }
 
         private void DeleteActors(object sender, RoutedEventArgs e)

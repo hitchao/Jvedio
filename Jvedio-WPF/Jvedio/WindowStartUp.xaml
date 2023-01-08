@@ -369,10 +369,11 @@
                                 Margin="0,30,0,0"
                                 Source="/Resources/Picture/logo.png" />
                             <TextBlock
+                                Margin="10"
                                 HorizontalAlignment="Center"
                                 FontSize="15"
                                 Foreground="{DynamicResource Control.Disabled.Background}"
-                                Text="5.0.0.0" />
+                                Text="{Binding Version, FallbackValue=5.0}" />
                             <RadioButton
                                 Margin="0,20,0,0"
                                 HorizontalAlignment="Stretch"

@@ -9,7 +9,8 @@ namespace Jvedio.Core.Exceptions
         {
         }
 
-        public DllLoadFailedException(string path) : base($"{LangManager.GetValueByKey("DllLoadFailed")} => {path}")
+        public DllLoadFailedException(string path, string reason) :
+            base($"{LangManager.GetValueByKey("DllLoadFailed")} => {path}, reason: {reason}")
         {
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Logs;
+using SuperControls.Style;
 using SuperControls.Style.Windows;
 using System;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Jvedio
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
             if (!createNew)
             {
-                MessageBox.Show("Jvedio 运行中！");
+                new MsgBox(null, $"Jvedio {LangManager.GetValueByKey("Running")}").ShowDialog();
                 App.Current.Shutdown();
                 Environment.Exit(0);
             }

@@ -4995,6 +4995,7 @@
                                                                 <TextBlock
                                                                     Margin="5"
                                                                     FontSize="10"
+                                                                    Foreground="{DynamicResource Window.Sub.Foreground}"
                                                                     Style="{StaticResource BaseTextBlock}"
                                                                     Text="{Binding CreateTime}"
                                                                     TextAlignment="Left" />
@@ -5016,7 +5017,14 @@
                                                             </Grid>
                                                             <StackPanel Margin="5" Orientation="Horizontal">
                                                                 <TextBlock Text="{Binding StatusText}" />
-                                                                <TextBlock Foreground="Red" Text="{Binding Message, StringFormat='   {0} '}" />
+                                                                <TextBlock
+                                                                    Width="250"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="Red"
+                                                                    Text="{Binding Message, StringFormat='    {0} '}"
+                                                                    TextTrimming="WordEllipsis"
+                                                                    TextWrapping="NoWrap"
+                                                                    ToolTip="{Binding Message}" />
 
                                                             </StackPanel>
 
