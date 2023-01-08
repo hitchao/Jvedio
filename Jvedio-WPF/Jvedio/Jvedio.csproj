@@ -332,6 +332,7 @@
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Core\CustomTask\TaskLogger.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
+    <Compile Include="Upgrade\UpgradeHelper.cs" />
     <Compile Include="ViewModels\VieModel_Plugin.cs" />
     <Compile Include="WindowsDialog\Dialog_SetSkinLang.xaml.cs">
       <DependentUpon>Dialog_SetSkinLang.xaml</DependentUpon>
@@ -965,7 +966,9 @@ mkdir "$(ProjectDir)bin\Release"
 
 XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
 XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Release"    /E /Y /i
-</PreBuildEvent>
+
+XCOPY "D:\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll" "$(ProjectDir)Reference"    /E /Y /i
+XCOPY "D:\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll" "$(ProjectDir)Reference"    /E /Y /i</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i

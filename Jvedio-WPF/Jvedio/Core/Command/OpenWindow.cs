@@ -18,7 +18,7 @@ namespace Jvedio.Core.Command
 
         public static RelayCommand<Window> About { get; set; }
 
-        public static RelayCommand<Window> Upgrade { get; set; }
+        //public static RelayCommand<Window> Upgrade { get; set; }
 
         public static RelayCommand<Window> Thanks { get; set; }
 
@@ -31,27 +31,27 @@ namespace Jvedio.Core.Command
 
             Thanks = new RelayCommand<Window>(parent => OpenWindowByName("Dialog_Thanks", parent));
 
-            Upgrade = new RelayCommand<Window>(parent =>
-            {
-                SuperUpgrader upgrader = new SuperUpgrader();
-                upgrader.InfoUrl = UrlManager.UpdateUrl;
-                upgrader.FileListUrl = UrlManager.UpdateFileListUrl;
-                upgrader.FilePathUrl = UrlManager.UpdateFilePathUrl;
-                upgrader.ReleaseUrl = UrlManager.ReleaseUrl;
-                upgrader.UpgradeSource = UrlManager.UpgradeSource;
-                upgrader.Language = ConfigManager.Settings.CurrentLanguage;
-                upgrader.Header = CrawlerHeader.GitHub;
-                upgrader.Logger = null;//todo
-                                       // 写入配置文件
-                upgrader.BeforeUpdateDelay = 5;
-                upgrader.AfterUpdateDelay = 1;
-                upgrader.UpDateFileDir = "TEMP";
-                upgrader.AppName = "Jvedio.exe";
+            //Upgrade = new RelayCommand<Window>(parent =>
+            //{
+            //    SuperUpgrader upgrader = new SuperUpgrader();
+            //    upgrader.InfoUrl = UrlManager.UpdateUrl;
+            //    upgrader.FileListUrl = UrlManager.UpdateFileListUrl;
+            //    upgrader.FilePathUrl = UrlManager.UpdateFilePathUrl;
+            //    upgrader.ReleaseUrl = UrlManager.ReleaseUrl;
+            //    upgrader.UpgradeSource = UrlManager.UpgradeSource;
+            //    upgrader.Language = ConfigManager.Settings.CurrentLanguage;
+            //    upgrader.Header = CrawlerHeader.GitHub;
+            //    upgrader.Logger = null;//todo
+            //                           // 写入配置文件
+            //    upgrader.BeforeUpdateDelay = 5;
+            //    upgrader.AfterUpdateDelay = 1;
+            //    upgrader.UpDateFileDir = "TEMP";
+            //    upgrader.AppName = "Jvedio.exe";
 
-                SuperControls.Style.Upgrade.Dialog_Upgrade dialog_Upgrade = new SuperControls.Style.Upgrade.Dialog_Upgrade(parent, upgrader);
-                dialog_Upgrade.LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                dialog_Upgrade.ShowDialog();
-            });
+            //    SuperControls.Style.Upgrade.Dialog_Upgrade dialog_Upgrade = new SuperControls.Style.Upgrade.Dialog_Upgrade(parent, upgrader);
+            //    dialog_Upgrade.LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //    dialog_Upgrade.ShowDialog();
+            //});
         }
     }
 }

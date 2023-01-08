@@ -15,6 +15,7 @@
     CanMinimized="True"
     CanResize="True"
     Closing="Window_StartUp_Closing"
+    ContentRendered="Window_StartUp_ContentRendered"
     Foreground="{DynamicResource Window.Title.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     Loaded="Window_Loaded"
@@ -592,7 +593,7 @@
                                         Header="{DynamicResource About}" />
                                     <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />
                                     <MenuItem
-                                        Command="cmd:OpenWindow.Upgrade"
+                                        Click="ShowUpgradeWindow"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                         Header="{DynamicResource CheckUpgrade}" />
                                     <MenuItem Command="cmd:File.OpenBaseDir" Header="{DynamicResource OpenAppPath}" />

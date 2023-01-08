@@ -568,7 +568,7 @@
                             Padding="0,5"
                             FontSize="15"
                             Foreground="{DynamicResource Window.Foreground}"
-                            Header="{DynamicResource ShowOtherOptions}"
+                            Header="{DynamicResource Others}"
                             IsExpanded="{Binding MoreExpanded, Mode=TwoWay}"
                             IsSelected="False"
                             LineWidth="0"

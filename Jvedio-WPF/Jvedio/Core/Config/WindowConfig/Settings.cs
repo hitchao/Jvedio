@@ -94,5 +94,6 @@ namespace Jvedio.Core.WindowConfig
         public bool ListenEnabled { get; set; }
 
         public string ListenPort { get; set; }
+        public long RemoteIndex { get; set; }
     }
 }

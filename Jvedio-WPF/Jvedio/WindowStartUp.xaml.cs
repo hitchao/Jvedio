@@ -837,5 +837,17 @@ namespace Jvedio
                 vieModel_StartUp.ReadFromDataBase();
             }
         }
+
+        private void ShowUpgradeWindow(object sender, RoutedEventArgs e)
+        {
+            UpgradeHelper.OpenWindow();
+        }
+
+        private void Window_StartUp_ContentRendered(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }

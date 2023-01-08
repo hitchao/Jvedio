@@ -27,6 +27,7 @@
     Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     PreviewKeyUp="Window_PreviewKeyUp"
+    CloseToTaskBar="True"
     TitleAlign="Left"
     TitleHeight="0"
     TitleMargin="5 0"
@@ -709,7 +710,7 @@
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Left"
                         super:CommonExt.HoverBackground="{DynamicResource Menu.Hover.Background}"
-                        Command="cmd:OpenWindow.Upgrade"
+                        Click="ShowUpgradeWindow"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                         Content="{DynamicResource CheckUpgrade}"
                         Style="{StaticResource FlatButton}" />
@@ -2233,7 +2234,7 @@
                                             </MenuItem>
 
                                             <MenuItem
-                                                Command="cmd:OpenWindow.Upgrade"
+                                                Click="ShowUpgradeWindow"
                                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                                 Header="{DynamicResource CheckUpgrade}" />
 

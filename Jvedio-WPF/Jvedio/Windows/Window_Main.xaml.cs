@@ -12,10 +12,12 @@ using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
+using Jvedio.Upgrade;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
 using SuperControls.Style;
+using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Utils;
@@ -144,6 +146,7 @@ namespace Jvedio
 
             // 每页数目
             Properties.Settings.Default.OnlyShowSubSection = false;
+
         }
 
         public void Init()
@@ -162,6 +165,7 @@ namespace Jvedio
                 taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
 
             LoadNotifyIcon();
+
         }
 
         public Main()
@@ -169,25 +173,13 @@ namespace Jvedio
             InitializeComponent();
             Init();
         }
-
-        System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
         public void LoadNotifyIcon()
         {
-            string icon_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jvedio.ico");
-            nIcon.Icon = new System.Drawing.Icon(icon_path);
-            nIcon.Visible = true;
-            //nIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
-            nIcon.MouseClick += (s, e) =>
-              {
-                  if (e.Button == System.Windows.Forms.MouseButtons.Right)
-                  {
-                      notiIconPopup.IsOpen = true;
-                  }
-                  else if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                  {
-                      ShowMainWindow(s, e);
-                  }
-              };
+            SetNotiIconPopup(notiIconPopup);
+            this.OnNotifyIconMouseLeftClick += (s, e) =>
+            {
+                ShowMainWindow(s, e);
+            };
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -208,7 +200,7 @@ namespace Jvedio
             SetSkin(); // 设置主题颜色
             InitNotice(); // 初始化公告
             SetLoadingStatus(false); // todo 删除该行
-            CheckUpgrade(); // 检查更新
+
             setDataBases(); // 设置当前下拉数据库
             setRecentWatched(); // 显示最近播放
 
@@ -225,6 +217,13 @@ namespace Jvedio
 
             //OpenWindowByName("Window_Settings");
             // new Msgbox(this, "demo").ShowDialog();
+            InitUpgrade();
+        }
+
+        public void InitUpgrade()
+        {
+            UpgradeHelper.Init(this);
+            CheckUpgrade(); // 检查更新
         }
 
         public void RefreshThemeData()
@@ -585,6 +584,7 @@ namespace Jvedio
             }
 
             vieModel.TaskIconVisible = taskIconVisible;
+            SetIconVisible(taskIconVisible);
             WindowsVisible = visible;
         }
 
@@ -598,6 +598,7 @@ namespace Jvedio
             // DisposeGif("", true);                       //清除 gif 资源
             NoticeTimer.Stop();
             windowFilter?.Close();
+            this.DestroyIcon();
             base.OnClosed(e);
         }
 
@@ -1034,7 +1035,7 @@ namespace Jvedio
 
         public override void CloseWindow(object sender, RoutedEventArgs e)
         {
-            if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
+            if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible)
             {
                 SetWindowVisualStatus(false);
             }
@@ -1104,26 +1105,55 @@ namespace Jvedio
             FileHelper.TryOpenUrl(WebPageUrl);
         }
 
+        //private async void CheckUpgrade()
+        //{
+        //    // 启动后检查更新
+        //    await Task.Delay(UpgradeHelper.AUTO_CHECK_UPGRADE_DELAY);
+        //    try
+        //    {
+        //        (string LatestVersion, string ReleaseDate, string ReleaseNote) result = await UpgradeHelper.GetUpgardeInfo();
+        //        string remote = result.LatestVersion;
+        //        if (!string.IsNullOrEmpty(remote))
+        //        {
+        //            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        //            if (local.CompareTo(remote) < 0)
+        //            {
+        //                // todo 
+        //                //new Dialog_Upgrade(this, false, remote, result.ReleaseDate, result.ReleaseNote).ShowDialog();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error(ex);
+        //    }
+        //}
+
         private async void CheckUpgrade()
         {
             // 启动后检查更新
             try
             {
-                (string LatestVersion, string ReleaseDate, string ReleaseNote) result = await UpgradeHelper.getUpgardeInfo();
+                await Task.Delay(UpgradeHelper.AUTO_CHECK_UPGRADE_DELAY);
+                (string LatestVersion, string ReleaseDate, string ReleaseNote) result = await UpgradeHelper.GetUpgardeInfo();
                 string remote = result.LatestVersion;
+                string ReleaseDate = result.ReleaseDate;
                 if (!string.IsNullOrEmpty(remote))
                 {
                     string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    local = local.Substring(0, local.Length - ".0.0".Length);
                     if (local.CompareTo(remote) < 0)
                     {
-                        // todo 
-                        //new Dialog_Upgrade(this, false, remote, result.ReleaseDate, result.ReleaseNote).ShowDialog();
+                        bool opened = (bool)new MsgBox(this,
+                            $"存在新版本\n版本：{remote}\n日期：{ReleaseDate}").ShowDialog();
+                        if (opened)
+                            UpgradeHelper.OpenWindow();
                     }
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -5077,6 +5107,9 @@ namespace Jvedio
             }
         }
 
-
+        private void ShowUpgradeWindow(object sender, RoutedEventArgs e)
+        {
+            UpgradeHelper.OpenWindow();
+        }
     }
 }
