@@ -1558,5 +1558,17 @@ namespace Jvedio.Properties {
                 this["Debug"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.5")]
+        public double ScrollSpeedFactor {
+            get {
+                return ((double)(this["ScrollSpeedFactor"]));
+            }
+            set {
+                this["ScrollSpeedFactor"] = value;
+            }
+        }
     }
 }

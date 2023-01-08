@@ -1,6 +1,5 @@
 ﻿using SuperUtils.NetWork.Entity;
 using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
@@ -15,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static Jvedio.MapperManager;
+using SuperUtils.Framework.Tasks;
 
 namespace Jvedio.Core.Net
 {
@@ -140,7 +140,7 @@ namespace Jvedio.Core.Net
                     if (dict != null && dict.ContainsKey("Error"))
                     {
                         string error = dict["Error"].ToString();
-                        if (!string.IsNullOrEmpty(error))
+                        if (!string.IsNullOrEmpty(error) && !error.Equals(HttpResult.DEFAULT_ERROR_MSG))
                         {
                             Message = error;
                             logger.Error(error);
@@ -376,6 +376,7 @@ namespace Jvedio.Core.Net
                         logger.Info(LangManager.GetValueByKey("NotSetPreviewDownload"));
                     Success = true;
                     Status = TaskStatus.RanToCompletion;
+                    Message = "";
                 }
 
                 Console.WriteLine("下载完成！");

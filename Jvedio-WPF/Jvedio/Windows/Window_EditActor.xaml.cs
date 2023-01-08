@@ -2,6 +2,7 @@
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
 using SuperControls.Style;
+using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
@@ -80,7 +81,7 @@ namespace Jvedio
                 bool insert = true;
                 if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName))
                 {
-                    insert = (bool)new Msgbox(this, $"{LangManager.GetValueByKey("LibraryAlreadyHas")} {actorInfo.ActorName} {LangManager.GetValueByKey("SameActorToAdd")}").ShowDialog();
+                    insert = (bool)new MsgBox(this, $"{LangManager.GetValueByKey("LibraryAlreadyHas")} {actorInfo.ActorName} {LangManager.GetValueByKey("SameActorToAdd")}").ShowDialog();
                 }
 
                 if (insert)
@@ -120,7 +121,7 @@ namespace Jvedio
             string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
             if (File.Exists(targetFileName))
             {
-                if (new Msgbox(this, LangManager.GetValueByKey("ActorImageExistsAndUseID")).ShowDialog() == true)
+                if (new MsgBox(this, LangManager.GetValueByKey("ActorImageExistsAndUseID")).ShowDialog() == true)
                 {
                     string dir = System.IO.Path.GetDirectoryName(targetFileName);
                     string ext = System.IO.Path.GetExtension(targetFileName);
@@ -178,7 +179,7 @@ namespace Jvedio
                         // 设置演员头像
                         string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
                         bool copy = true;
-                        if (File.Exists(targetFileName) && new Msgbox(this, LangManager.GetValueByKey("ExistsToOverrite")).ShowDialog() != true)
+                        if (File.Exists(targetFileName) && new MsgBox(this, LangManager.GetValueByKey("ExistsToOverrite")).ShowDialog() != true)
                         {
                             copy = false;
                         }

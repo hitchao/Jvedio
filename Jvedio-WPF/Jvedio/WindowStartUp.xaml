@@ -588,7 +588,7 @@
                             <Border.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem
-                                        Command="cmd:OpenWindow.About"
+                                        Click="ShowAbout"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                         Header="{DynamicResource About}" />
                                     <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />

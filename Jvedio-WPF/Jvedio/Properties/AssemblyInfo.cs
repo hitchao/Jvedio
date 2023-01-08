@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Jvedio")]
 [assembly: AssemblyDescription("Jvedio 是本地视频管理软件，支持扫描本地视频并导入软件，建立视频库，提取出视频的唯一识别码，自动分类视频，从网上下载信息以及图片，添加标签管理视频，使用人工智能识别演员，支持翻译信息，基于 ffmpeg 截取视频图片，window 桌面端流畅美观的应用软件")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("hitchao")]
+[assembly: AssemblyCompany("chao")]
 [assembly: AssemblyProduct("Jvedio")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]

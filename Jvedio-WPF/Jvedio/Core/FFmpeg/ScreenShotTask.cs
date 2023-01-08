@@ -1,8 +1,9 @@
 ﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using SuperControls.Style;
+using SuperUtils.CustomEventArgs;
+using SuperUtils.Framework.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

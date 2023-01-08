@@ -12,8 +12,11 @@ using Jvedio.Entity;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
 using SuperControls.Style;
+using SuperControls.Style.Windows;
 using SuperUtils.Common;
+using SuperUtils.CustomEventArgs;
 using SuperUtils.IO;
+using SuperUtils.Media;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
@@ -408,7 +411,7 @@ namespace Jvedio
             }
 
             AppDatabase database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            Msgbox msgbox = new Msgbox(this,
+            MsgBox msgbox = new MsgBox(this,
                 $"{LangManager.GetValueByKey("IsToDelete")} {database.Name} {LangManager.GetValueByKey("And")} {database.Count} {LangManager.GetValueByKey("TagLabelAndOtherInfo")}");
             if (msgbox.ShowDialog() == true)
             {
@@ -671,20 +674,20 @@ namespace Jvedio
             }
             else
             {
-                Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
-                if (metaData == null)
-                {
-                    metaData = new Window_MetaDatas();
-                    metaData.Title = "Jvedio-" + Main.CurrentDataType.ToString();
-                    Application.Current.MainWindow = metaData;
-                }
-                else
-                {
-                    metaData.setDataBases();
-                    metaData.setComboboxID();
-                }
+                //Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
+                //if (metaData == null)
+                //{
+                //    metaData = new Window_MetaDatas();
+                //    metaData.Title = "Jvedio-" + Main.CurrentDataType.ToString();
+                //    Application.Current.MainWindow = metaData;
+                //}
+                //else
+                //{
+                //    metaData.setDataBases();
+                //    metaData.setComboboxID();
+                //}
 
-                metaData.Show();
+                //metaData.Show();
             }
 
             // 设置当前状态为：进入库
@@ -806,7 +809,7 @@ namespace Jvedio
 
         private async void RestoreDatabase(object sender, RoutedEventArgs e)
         {
-            if (new Msgbox(this, LangManager.GetValueByKey("IsToRestore")).ShowDialog() == true)
+            if (new MsgBox(this, LangManager.GetValueByKey("IsToRestore")).ShowDialog() == true)
             {
                 vieModel_StartUp.Restoring = true;
 
@@ -848,6 +851,19 @@ namespace Jvedio
 
         }
 
-
+        private void ShowAbout(object sender, RoutedEventArgs e)
+        {
+            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            local = local.Substring(0, local.Length);
+            System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
+            About about = new About(this, bitmapImage, "Jvedio",
+                "超级本地视频管理软件", local, ConfigManager.ReleaseDate,
+                "Github", UrlManager.ProjectUrl, "Chao", "GPL-3.0");
+            about.OnOtherClick += (s, ev) =>
+            {
+                FileHelper.TryOpenUrl(UrlManager.WebPage);
+            };
+            about.ShowDialog();
+        }
     }
 }

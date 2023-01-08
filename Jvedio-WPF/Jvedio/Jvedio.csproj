@@ -112,9 +112,6 @@
     <Reference Include="Google.Protobuf, Version=3.14.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.14.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
-    <Reference Include="HandyControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=45be8712787a1e5b, processorArchitecture=MSIL">
-      <HintPath>..\packages\HandyControl.3.1.0\lib\net472\HandyControl.dll</HintPath>
-    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -275,8 +272,6 @@
     <Compile Include="Core\Crawler\ActorSearch.cs" />
     <Compile Include="Core\Crawler\CrawlerHeader.cs" />
     <Compile Include="Core\CustomEventArgs\PreviewImageEventArgs.cs" />
-    <Compile Include="Core\CustomEventArgs\MessageCallBackEventArgs.cs" />
-    <Compile Include="Core\CustomTask\AbstractTask.cs" />
     <Compile Include="Core\Enums\AssociationType.cs" />
     <Compile Include="Core\Enums\DownLoadState.cs" />
     <Compile Include="Core\Enums\ImageType.cs" />
@@ -284,14 +279,13 @@
     <Compile Include="Core\Exceptions\CrawlerNotFoundException.cs" />
     <Compile Include="Core\Exceptions\MediaCutOutOfRangeException.cs" />
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
+    <Compile Include="Core\Extensions\WheelSpeedScrollViewer.cs" />
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
-    <Compile Include="Core\CustomTask\TaskDispatcher.cs" />
     <Compile Include="Core\Config\PathManager.cs" />
     <Compile Include="Core\Lang\LangManager.cs" />
     <Compile Include="Core\Net\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
-    <Compile Include="Core\Net\UpgradeHelper.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerManager.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
     <Compile Include="Core\DataBase\MysqlConnection.cs" />
@@ -319,7 +313,6 @@
     <Compile Include="Core\Scan\ComicScan.cs" />
     <Compile Include="Core\Scan\GameScan.cs" />
     <Compile Include="Core\Scan\PictureScan.cs" />
-    <Compile Include="Core\CustomTask\ITask.cs" />
     <Compile Include="Core\Scan\ScanFactory.cs" />
     <Compile Include="Core\Scan\ScanResult.cs" />
     <Compile Include="Mapper\BaseMapper\BaseMapper.cs" />
@@ -330,7 +323,6 @@
     <Compile Include="Core\Config\WindowConfig\MetaData.cs" />
     <Compile Include="Core\Config\WindowConfig\Main.cs" />
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
-    <Compile Include="Core\CustomTask\TaskLogger.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="Upgrade\UpgradeHelper.cs" />
     <Compile Include="ViewModels\VieModel_Plugin.cs" />
@@ -382,9 +374,6 @@
     <Compile Include="WindowsDialog\Dialog_NewMovie.xaml.cs">
       <DependentUpon>Dialog_NewMovie.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowsDialog\Dialog_About.xaml.cs">
-      <DependentUpon>Dialog_About.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Extern\JvedioLib.cs" />
     <Compile Include="Core\Media\FFmpegManager.cs" />
     <Compile Include="Core\Net\DownloadManager.cs" />
@@ -422,11 +411,6 @@
     <Compile Include="Utils\Extern\Translate.cs" />
     <Compile Include="Entity\Common\MySqlite.cs" />
     <Compile Include="Utils\VisualTools\WindowHelper.cs" />
-    <Compile Include="ViewModels\VieModel_MetaDataEdit.cs" />
-    <Compile Include="ViewModels\VieModel_MetaData.cs" />
-    <Compile Include="Windows\Dialog\DialogInput.xaml.cs">
-      <DependentUpon>DialogInput.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Core\Net\VideoDownLoader.cs" />
     <Compile Include="Core\Media\ImageSlide.cs" />
     <Compile Include="Core\Logs\Logger.cs" />
@@ -434,15 +418,6 @@
     <Compile Include="Core\Scan\ScanHelper.cs" />
     <Compile Include="Windows\Dialog\Window_SelectPaths.xaml.cs">
       <DependentUpon>Window_SelectPaths.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\MetaData\Window_MetaDataEdit.xaml.cs">
-      <DependentUpon>Window_MetaDataEdit.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\MetaData\Window_MetaDatas.xaml.cs">
-      <DependentUpon>Window_MetaDatas.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Dialog\Msgbox.xaml.cs">
-      <DependentUpon>Msgbox.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\VieModel_Details.cs" />
     <Compile Include="ViewModels\VieModel_Edit.cs" />
@@ -530,10 +505,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WindowsDialog\Dialog_About.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="WindowsDialog\Dialog_Thanks.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -541,14 +512,6 @@
     <Page Include="Windows\Dialog\Window_SelectPaths.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Windows\MetaData\Window_MetaDataEdit.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Windows\MetaData\Window_MetaDatas.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Window_Plugin.xaml">
       <SubType>Designer</SubType>
@@ -571,14 +534,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Window_ImageViewer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Dialog\DialogInput.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Dialog\Msgbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -653,13 +608,7 @@
     <Resource Include="Resources\Picture\datalist_video.png" />
     <Content Include="Data\x64\SQLite.Interop.dll" />
     <Content Include="Data\x86\SQLite.Interop.dll" />
-    <Resource Include="Resources\Skin\white\classify.png" />
-    <Resource Include="Resources\Skin\black\classify.png" />
-    <Resource Include="Resources\Skin\black\hide.png" />
-    <Resource Include="Resources\Skin\white\hide.png" />
     <Resource Include="Resources\Picture\其他.png" />
-    <Resource Include="Resources\Skin\white\add.png" />
-    <Resource Include="Resources\Skin\black\add.png" />
     <Resource Include="Resources\Picture\视频.png" />
     <Resource Include="Resources\Picture\图像.png" />
     <Resource Include="Resources\Picture\收起.png" />
@@ -667,37 +616,9 @@
     <Resource Include="Resources\Picture\NoPrinting_S.png" />
     <Resource Include="Resources\Picture\NoPrinting_B.png" />
     <Resource Include="Resources\Picture\筛选.png" />
-    <Resource Include="Resources\Skin\white\_score.png" />
-    <Resource Include="Resources\Skin\black\_score.png" />
     <Resource Include="Resources\Picture\score.png" />
-    <Resource Include="Resources\Skin\white\runtime.png" />
-    <Resource Include="Resources\Skin\black\runtime.png" />
-    <Resource Include="Resources\Skin\white\create.png" />
-    <Resource Include="Resources\Skin\black\create.png" />
     <Resource Include="Resources\Picture\sort_up.png" />
     <Resource Include="Resources\Picture\sort_down.png" />
-    <Resource Include="Resources\Skin\black\selectmode.png" />
-    <Resource Include="Resources\Skin\white\selectmode.png" />
-    <Resource Include="Resources\Skin\white\download.png" />
-    <Resource Include="Resources\Skin\black\download.png" />
-    <Resource Include="Resources\Skin\white\image.png" />
-    <Resource Include="Resources\Skin\black\image.png" />
-    <Resource Include="Resources\Skin\white\search.png" />
-    <Resource Include="Resources\Skin\black\search.png" />
-    <Resource Include="Resources\Skin\white\menu.png" />
-    <Resource Include="Resources\Skin\black\menu.png" />
-    <Resource Include="Resources\Skin\black\arrow_up.png" />
-    <Resource Include="Resources\Skin\white\arrow_up.png" />
-    <Resource Include="Resources\Skin\white\arrow_down.png" />
-    <Resource Include="Resources\Skin\black\arrow_down.png" />
-    <Resource Include="Resources\Skin\white\dir.png" />
-    <Resource Include="Resources\Skin\black\dir.png" />
-    <Resource Include="Resources\Skin\black\like.png" />
-    <Resource Include="Resources\Skin\white\like.png" />
-    <Resource Include="Resources\Skin\black\recent.png" />
-    <Resource Include="Resources\Skin\white\recent.png" />
-    <Resource Include="Resources\Skin\white\all.png" />
-    <Resource Include="Resources\Skin\black\all.png" />
     <Resource Include="Resources\Ico\github.png" />
     <Resource Include="Resources\Ico\gitee.ico" />
     <Resource Include="Resources\Picture\随机.png" />
@@ -762,63 +683,6 @@
     <Resource Include="Resources\Picture\hdcn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Picture\flowout.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\actor.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\genre.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\label.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\fullscreen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\skin.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\skin.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\actor.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\edit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\edit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\fullscreen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\genre.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\label.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\openfolder.png" />
-    <Resource Include="Resources\Skin\white\openfolder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\clear.png" />
-    <Resource Include="Resources\Skin\white\clear.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\option.png" />
-    <Resource Include="Resources\Skin\black\option.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\menuitem\openfolder.png" />
   </ItemGroup>
   <ItemGroup>
@@ -858,27 +722,7 @@
     <Resource Include="Resources\menuitem\scrolltoend.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Skin\white\right.png" />
-    <Resource Include="Resources\Skin\white\left.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\right.png" />
-    <Resource Include="Resources\Skin\black\left.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Picture\back.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\triangle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\detaildownload.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\up.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\up.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Picture\network.png" />
@@ -888,26 +732,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Picture\screenshot.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\detaildownload.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\triangle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\close.png" />
-    <Resource Include="Resources\Skin\white\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\max.png" />
-    <Resource Include="Resources\Skin\black\max.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\white\min.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Skin\black\min.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Picture\subsection2.png" />
@@ -936,7 +760,6 @@
     <Content Include="Reference\SuperControls.Style.dll" />
     <Content Include="Reference\SuperUtils.dll" />
     <Content Include="Reference\UsnOperation.dll" />
-    <Content Include="Reference\WpfAnimatedGif.dll" />
     <Resource Include="Resources\Jvedio.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

@@ -42,8 +42,6 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Stretch"
         Background="{DynamicResource Window.Background}">
-        <!--<Image Source="/Resources/Picture/hankuke.jpg" Stretch="Fill" Margin="2"/>-->
-
         <RichTextBox
             Name="richTextBox"
             Width="auto"

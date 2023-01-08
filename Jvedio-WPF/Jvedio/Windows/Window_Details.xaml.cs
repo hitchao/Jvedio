@@ -8,6 +8,7 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using SuperControls.Style;
+using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
@@ -622,7 +623,7 @@ namespace Jvedio
             ////检查是否已经翻译过，如有提示
             // if (!string.IsNullOrEmpty(dataBase.SelectByField("translate_title", "youdao", movie.id)))
             // {
-            //    if (new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("AlreadyTranslate")).ShowDialog() == false)
+            //    if (new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("AlreadyTranslate")).ShowDialog() == false)
             //    {
             //        IsTranslating = false;
             //        return;
@@ -1162,12 +1163,12 @@ namespace Jvedio
 
         private void DownLoadMagnets(object sender, RoutedEventArgs e)
         {
-            new Msgbox(this, "开发中").ShowDialog();
+            new MsgBox(this, "开发中").ShowDialog();
         }
 
         public void ShowSubsection(object sender)
         {
-            ContextMenu contextMenu = (sender as Canvas).ContextMenu;
+            ContextMenu contextMenu = (sender as Grid).ContextMenu;
             contextMenu.Items.Clear();
             for (int i = 0; i < vieModel.CurrentVideo.SubSectionList?.Count; i++)
             {

@@ -42,6 +42,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.Core.Global.UrlManager;
 using static Jvedio.VisualTools.WindowHelper;
+using SuperControls.Style.Windows;
 
 namespace Jvedio
 {
@@ -419,7 +420,7 @@ namespace Jvedio
             if (metaData != null)
             {
                 string name = metaData.PluginName;
-                Msgbox msgbox = new Msgbox(this, $"{LangManager.GetValueByKey("IsToDelete")} {name} ？");
+                MsgBox msgbox = new MsgBox(this, $"{LangManager.GetValueByKey("IsToDelete")} {name} ？");
                 if (msgbox.ShowDialog() == false) return;
 
                 List<string> list = JsonUtils.TryDeserializeObject<List<string>>(ConfigManager.PluginConfig.DeleteList);

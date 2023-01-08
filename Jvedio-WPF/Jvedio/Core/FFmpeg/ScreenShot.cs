@@ -2,6 +2,7 @@
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
 using SuperControls.Style;
+using SuperUtils.CustomEventArgs;
 using SuperUtils.IO;
 using SuperUtils.Media;
 using System;

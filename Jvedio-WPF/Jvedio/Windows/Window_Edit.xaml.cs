@@ -2,6 +2,7 @@
 using Jvedio.Entity;
 using Jvedio.ViewModel;
 using SuperControls.Style;
+using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using System;

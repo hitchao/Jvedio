@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:local="clr-namespace:Jvedio.Core.Extensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
@@ -20,6 +21,7 @@
     Background="{DynamicResource Window.Background}"
     CanMinimized="True"
     CanResize="True"
+    CloseToTaskBar="True"
     Closed="Window_Closed"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
@@ -27,7 +29,6 @@
     Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     PreviewKeyUp="Window_PreviewKeyUp"
-    CloseToTaskBar="True"
     TitleAlign="Left"
     TitleHeight="0"
     TitleMargin="5 0"
@@ -40,11 +41,6 @@
         <ContextMenu x:Key="TextBlockContextMenu">
             <MenuItem Click="CopyTextBlock" Header="{DynamicResource Copy}" />
         </ContextMenu>
-
-
-
-
-        <!--<local:MovieStampTypeToVisibilityConverter x:Key="MovieStampTypeToVisibilityConverter" />-->
         <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <converter:NotEqualConverter x:Key="NotEqualConverter" />
         <converter:MultiLargerConverter x:Key="MultiLargerConverter" />
@@ -2213,7 +2209,7 @@
                                             <MenuItem Header="Jvedio">
 
                                                 <MenuItem
-                                                    Command="cmd:OpenWindow.About"
+                                                    Click="ShowAbout"
                                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                                     Header="{DynamicResource About}" />
                                                 <MenuItem Click="OpenHelp" Header="{DynamicResource Help}" />
@@ -2247,19 +2243,6 @@
                                         <Path Data="M940 596l-76-57.6c0.8-8 1.6-16.8 1.6-26.4s-0.8-18.4-1.6-26.4l76-57.6c20.8-16 26.4-44 12.8-68l-84.8-143.2c-9.6-16.8-28-27.2-47.2-27.2-6.4 0-12 0.8-18.4 3.2L712 228c-15.2-10.4-31.2-19.2-47.2-26.4l-13.6-92c-4-26.4-26.4-45.6-53.6-45.6H426.4c-27.2 0-49.6 19.2-53.6 44.8L360 201.6c-16 7.2-31.2 16-47.2 26.4l-90.4-35.2c-6.4-2.4-12.8-3.2-19.2-3.2-19.2 0-37.6 9.6-46.4 26.4L71.2 360c-13.6 22.4-8 52 12.8 68l76 57.6c-0.8 9.6-1.6 18.4-1.6 26.4s0 16.8 1.6 26.4l-76 57.6c-20.8 16-26.4 44-12.8 68l84.8 143.2c9.6 16.8 28 27.2 47.2 27.2 6.4 0 12-0.8 18.4-3.2L312 796c15.2 10.4 31.2 19.2 47.2 26.4l13.6 92c3.2 25.6 26.4 45.6 53.6 45.6h171.2c27.2 0 49.6-19.2 53.6-44.8l13.6-92.8c16-7.2 31.2-16 47.2-26.4l90.4 35.2c6.4 2.4 12.8 3.2 19.2 3.2 19.2 0 37.6-9.6 46.4-26.4l85.6-144.8c12.8-23.2 7.2-51.2-13.6-67.2zM704 512c0 105.6-86.4 192-192 192S320 617.6 320 512s86.4-192 192-192 192 86.4 192 192z" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                                     </Viewbox>
                                 </Border>
-
-
-                                <!--<Border
-                                    x:Name="SettingsBorder"
-                                    Height="30"
-                                    HorizontalAlignment="Right"
-                                    ContextMenu="{StaticResource SettingsContextMenu}"
-                                    CornerRadius="3"
-                                    MouseUp="ShowSettingsPopup"
-                                    Style="{StaticResource BorderStyle}"
-                                    ToolTip="{DynamicResource Settings}">
-                                    <Image Margin="4" Source="{Binding Themes, Mode=OneWay, ConverterParameter=menu, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                </Border>-->
                             </Grid>
 
                         </Grid>
@@ -2796,19 +2779,26 @@
 
 
                                             <Border
-                                                Width="27"
-                                                Height="27"
-                                                Margin="5"
+                                                Width="24"
+                                                Height="24"
+                                                Margin="10"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
                                                 Panel.ZIndex="5"
-                                                CornerRadius="20"
+                                                CornerRadius="5"
+                                                Cursor="Hand"
                                                 MouseLeftButtonUp="HideActressGrid"
                                                 Style="{StaticResource CloseBorderStyle}">
-                                                <Image
-                                                    Width="20"
-                                                    Height="20"
-                                                    Source="{Binding Themes, Mode=OneWay, ConverterParameter=close, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
+                                                <Viewbox
+                                                    Width="12"
+                                                    Height="auto"
+                                                    VerticalAlignment="Center">
+                                                    <Path
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
+                                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                                </Viewbox>
                                             </Border>
 
                                             <Grid Margin="10">
@@ -3043,6 +3033,15 @@
                                                 PreviewMouseWheel="MovieItemsControl_PreviewMouseWheel"
                                                 ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
                                                 Style="{StaticResource ItemsControlVirtualizedWrapPanelStyle}">
+
+                                                <ItemsControl.Template>
+                                                    <ControlTemplate>
+                                                        <local:WheelSpeedScrollViewer SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static p:Settings.Default}}" Style="{StaticResource FlatScrollViewer}">
+                                                            <ItemsPresenter />
+                                                        </local:WheelSpeedScrollViewer>
+                                                    </ControlTemplate>
+                                                </ItemsControl.Template>
+
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <WrapPanel />
@@ -3585,84 +3584,6 @@
                                                 Style="{StaticResource NormalPagination}"
                                                 Total="{Binding TotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </Grid>
-
-                                        <!--<StackPanel
-                                        Grid.Column="3"
-                                        Width="auto"
-                                        Height="40"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Background="Transparent"
-                                        IsEnabled="{Binding IsLoadingMovie, Converter={StaticResource OppositeBooleanConverter}}"
-                                        Orientation="Horizontal"
-                                        Visibility="Visible">
-
-                                        <Border
-                                            Margin="5,0"
-                                            Padding="3"
-                                            VerticalAlignment="Center"
-                                            BorderBrush="{DynamicResource Window.Side.Background}"
-                                            BorderThickness="0"
-                                            CornerRadius="3"
-                                            Cursor="Hand"
-                                            PreviewMouseLeftButtonDown="PreviousPage"
-                                            Style="{StaticResource BorderStyle}"
-                                            ToolTip="{DynamicResource PreviewPage}">
-                                            <Image
-                                                Width="20"
-                                                Height="20"
-                                                Source="{Binding Themes, Mode=OneWay, ConverterParameter=left, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
-                                        </Border>
-
-
-
-
-                                        <StackPanel
-                                            Width="auto"
-                                            Height="40"
-                                            Orientation="Horizontal">
-                                            <TextBox
-                                                Margin="10,1,10,1"
-                                                Padding="10,0"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Center"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                GotFocus="TextBox_GotFocus"
-                                                PreviewKeyDown="GoToPage"
-                                                Style="{StaticResource BaseTextBox}"
-                                                Text="{Binding CurrentPage}" />
-                                            <TextBlock
-                                                Margin="10,1,10,1"
-                                                Padding="10,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                FontSize="15"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                Text="{Binding TotalPage, StringFormat=/\{0\}}" />
-                                        </StackPanel>
-
-                                        <Border
-                                            Margin="5,0"
-                                            Padding="3"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            BorderBrush="{DynamicResource Window.Side.Background}"
-                                            BorderThickness="0"
-                                            CornerRadius="3"
-                                            Cursor="Hand"
-                                            PreviewMouseLeftButtonDown="NextPage"
-                                            Style="{StaticResource BorderStyle}"
-                                            ToolTip="{DynamicResource NextPage}">
-                                            <Image
-                                                Width="20"
-                                                Height="20"
-                                                Source="{Binding Themes, Mode=OneWay, ConverterParameter=right, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}"
-                                                Visibility="Visible" />
-                                        </Border>
-
-                                    </StackPanel>-->
-
                                     </Grid>
 
                                 </Grid>
@@ -4232,7 +4153,7 @@
                             Placement="Top"
                             PlacementTarget="{Binding ElementName=downloadPathMsg}"
                             PopupAnimation="Fade"
-                            StaysOpen="True"
+                            StaysOpen="False"
                             VerticalOffset="0">
                             <Grid Margin="5">
                                 <Border
@@ -4265,10 +4186,11 @@
 
                                         <Button
                                             Grid.Column="1"
-                                            BorderThickness="0"
+                                            Margin="5,0"
+                                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                                             Click="ShowContextMenu"
                                             Content="{DynamicResource ClearList}"
-                                            Style="{StaticResource FlatButton}">
+                                            Style="{StaticResource BorderButton}">
                                             <Button.ContextMenu>
                                                 <ContextMenu HorizontalOffset="-70" VerticalOffset="5">
                                                     <MenuItem
@@ -4316,12 +4238,23 @@
 
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid Name="rootGrid">
+                                                <Grid Name="rootGrid" Cursor="Hand">
                                                     <Border
                                                         Margin="5"
                                                         Background="{DynamicResource Menu.Background}"
-                                                        CornerRadius="0 0 5 5"
-                                                        Effect="{StaticResource PopupDropShadowEffect}" />
+                                                        BorderThickness="1"
+                                                        CornerRadius="5"
+                                                        Effect="{StaticResource PopupDropShadowEffect}">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
                                                     <Grid Margin="5">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="auto" />
@@ -4448,18 +4381,31 @@
                                                             </StackPanel.Style>
                                                             <Button
                                                                 MinWidth="80"
-                                                                Margin="4"
+                                                                Margin="6"
                                                                 HorizontalAlignment="Right"
                                                                 Click="CancelScreenShotTask"
                                                                 Content="{DynamicResource Cancel}"
-                                                                Tag="{Binding DataID}" />
+                                                                Tag="{Binding DataID}">
+                                                                <Button.Style>
+                                                                    <Style BasedOn="{StaticResource ButtonDanger}" TargetType="Button">
+                                                                        <Setter Property="IsEnabled" Value="False" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
+                                                                                <Setter Property="IsEnabled" Value="True" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+
+                                                                    </Style>
+                                                                </Button.Style>
+                                                            </Button>
 
                                                             <Button
                                                                 MinWidth="80"
-                                                                Margin="4"
+                                                                Margin="6,0"
                                                                 HorizontalAlignment="Right"
                                                                 Click="ShowScreenShotDetail"
                                                                 Content="{DynamicResource Detail}"
+                                                                Style="{StaticResource ButtonPrimary}"
                                                                 Tag="{Binding DataID}" />
                                                         </StackPanel>
                                                     </Grid>
@@ -4493,6 +4439,7 @@
                                                 Value="{Binding ScreenShotProgress}" />
                                             <TextBlock
                                                 Grid.Column="1"
+                                                MinWidth="50"
                                                 Margin="10,0"
                                                 Text="{Binding ScreenShotProgress, StringFormat=\{0\} %}" />
                                         </Grid>
@@ -4592,14 +4539,14 @@
 
                         <Popup
                             x:Name="scanStatusPopup"
-                            Width="350"
+                            Width="400"
                             MaxHeight="600"
                             AllowsTransparency="True"
-                            HorizontalOffset="-300"
+                            HorizontalOffset="-350"
                             Placement="Top"
                             PlacementTarget="{Binding ElementName=msgScan}"
                             PopupAnimation="Fade"
-                            StaysOpen="True"
+                            StaysOpen="False"
                             VerticalOffset="0">
                             <Grid Margin="5">
                                 <Border
@@ -4675,12 +4622,31 @@
 
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid Name="rootGrid">
+                                                <Grid Name="rootGrid" Cursor="Hand">
+                                                    <Grid.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem
+                                                                Click="OpenScanPath"
+                                                                Header="{DynamicResource OpenPath}"
+                                                                Tag="{Binding Message}" />
+                                                        </ContextMenu>
+                                                    </Grid.ContextMenu>
                                                     <Border
                                                         Margin="5"
                                                         Background="{DynamicResource Menu.Background}"
-                                                        CornerRadius="0 0 5 5"
-                                                        Effect="{StaticResource PopupDropShadowEffect}" />
+                                                        BorderThickness="1"
+                                                        CornerRadius="5"
+                                                        Effect="{StaticResource PopupDropShadowEffect}">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
                                                     <Grid Margin="5">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="auto" />
@@ -4727,23 +4693,25 @@
                                                             Grid.Column="1"
                                                             Margin="5"
                                                             Orientation="Vertical">
-                                                            <TextBlock
-                                                                Margin="5,10"
-                                                                FontSize="10"
-                                                                FontWeight="Bold"
-                                                                Style="{StaticResource BaseTextBlock}"
-                                                                Text="{Binding CreateTime}"
-                                                                TextAlignment="Left"
-                                                                TextTrimming="WordEllipsis"
-                                                                TextWrapping="NoWrap" />
+
 
 
                                                             <TextBlock
                                                                 Grid.Column="1"
                                                                 Margin="5,10"
-                                                                FontSize="12"
+                                                                FontSize="14"
+                                                                FontWeight="Bold"
                                                                 Style="{StaticResource BaseTextBlock}"
                                                                 Text="{Binding Message}"
+                                                                TextAlignment="Left"
+                                                                TextTrimming="WordEllipsis"
+                                                                TextWrapping="NoWrap" />
+                                                            <TextBlock
+                                                                Margin="5,10"
+                                                                FontSize="10"
+                                                                Foreground="{DynamicResource Window.Sub.Foreground}"
+                                                                Style="{StaticResource BaseTextBlock}"
+                                                                Text="{Binding CreateTime}"
                                                                 TextAlignment="Left"
                                                                 TextTrimming="WordEllipsis"
                                                                 TextWrapping="NoWrap" />
@@ -4772,6 +4740,7 @@
                                                                 Click="CancelScanTask"
                                                                 Content="{DynamicResource Cancel}"
                                                                 IsEnabled="{Binding Running}"
+                                                                Style="{StaticResource ButtonDanger}"
                                                                 Tag="{Binding CreateTime}" />
                                                             <Button
                                                                 Click="ShowScanDetail"
@@ -4815,7 +4784,7 @@
                             Placement="Top"
                             PlacementTarget="{Binding ElementName=downloadPathMsg}"
                             PopupAnimation="Fade"
-                            StaysOpen="True"
+                            StaysOpen="False"
                             VerticalOffset="0">
                             <Grid Margin="5">
                                 <Border
@@ -4848,10 +4817,10 @@
 
                                         <Button
                                             Grid.Column="1"
-                                            BorderThickness="0"
+                                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                                             Click="ShowContextMenu"
                                             Content="{DynamicResource ClearList}"
-                                            Style="{StaticResource FlatButton}">
+                                            Style="{StaticResource BorderButton}">
                                             <Button.ContextMenu>
                                                 <ContextMenu HorizontalOffset="-70" VerticalOffset="5">
                                                     <MenuItem
@@ -4898,12 +4867,23 @@
 
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid Name="rootGrid">
+                                                <Grid Name="rootGrid" Cursor="Hand">
                                                     <Border
                                                         Margin="5"
                                                         Background="{DynamicResource Menu.Background}"
-                                                        CornerRadius="0 0 5 5"
-                                                        Effect="{StaticResource PopupDropShadowEffect}" />
+                                                        BorderThickness="1"
+                                                        CornerRadius="5"
+                                                        Effect="{StaticResource PopupDropShadowEffect}">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
                                                     <Grid Margin="5">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="auto" />
@@ -5032,6 +5012,7 @@
                                                                 Click="CancelDownloadTask"
                                                                 Content="{DynamicResource Cancel}"
                                                                 IsEnabled="{Binding Running}"
+                                                                Style="{StaticResource ButtonDanger}"
                                                                 Tag="{Binding DataID}" />
                                                             <Button
                                                                 Margin="2"
@@ -5077,18 +5058,25 @@
                                                 Visibility="{Binding DownLoadVisibility}" />
                                         </Grid>
 
-                                        <StackPanel Orientation="Horizontal">
-                                            <Button
-                                                Margin="4"
-                                                Click="CancelDownloadTasks"
-                                                Content="{DynamicResource CancelALl}"
-                                                Style="{StaticResource ButtonDanger}" />
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                Text="{Binding Path=DownloadLongTaskDelay, StringFormat=Wait {0} s}"
-                                                Visibility="{Binding DisplayDownloadLongTaskDelay}" />
-                                        </StackPanel>
+                                        <Border
+                                            Margin="0"
+                                            CornerRadius="0 0 5 5"
+                                            Style="{StaticResource InfoBorder}">
 
+
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button
+                                                    Margin="20,10"
+                                                    Click="CancelDownloadTasks"
+                                                    Content="{DynamicResource CancelALl}"
+                                                    Style="{StaticResource ButtonDanger}" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding Path=DownloadLongTaskDelay, StringFormat=Wait {0} s}"
+                                                    Visibility="{Binding DisplayDownloadLongTaskDelay}" />
+                                            </StackPanel>
+                                        </Border>
 
                                     </StackPanel>
 
@@ -5108,14 +5096,14 @@
                             Style="{StaticResource NormalPathMsg}" />
                         <Popup
                             x:Name="msgPopup"
-                            Width="350"
+                            Width="550"
                             MaxHeight="600"
                             AllowsTransparency="True"
-                            HorizontalOffset="-300"
+                            HorizontalOffset="-520"
                             Placement="Top"
                             PlacementTarget="{Binding ElementName=msgPathMsg}"
                             PopupAnimation="Fade"
-                            StaysOpen="True"
+                            StaysOpen="False"
                             VerticalOffset="0">
                             <Grid Margin="5">
                                 <Border
@@ -5186,18 +5174,18 @@
                                     <ItemsControl
                                         Grid.Row="1"
                                         Margin="10"
+                                        AlternationCount="99999"
                                         ItemsSource="{Binding Message}"
                                         Style="{StaticResource ItemsControlVirtualizedStyle}">
 
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <super:MessageCard
-                                                    Width="280"
-                                                    Height="80"
-                                                    Margin="0,10"
+                                                    Close="MessageCard_Close"
                                                     Foreground="{DynamicResource Window.Foreground}"
                                                     Message="{Binding Text}"
-                                                    MessageType="{Binding Type}" />
+                                                    MessageType="{Binding Type}"
+                                                    Tag="{Binding Date}" />
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
 

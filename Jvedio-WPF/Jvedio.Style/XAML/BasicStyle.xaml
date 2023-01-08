@@ -22,7 +22,6 @@
     <converter:BitToGBConverter x:Key="BitToGBConverter" />
     <converter:WidthToMarginConverter x:Key="WidthToMarginConverter" />
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
-    <converter:StringToUriStringConverter x:Key="StringToUriStringConverter" />
 
     <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converter:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />

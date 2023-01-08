@@ -386,5 +386,8 @@
     <Setting Name="Debug" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ScrollSpeedFactor" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.5</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -38,9 +38,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HandyControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=45be8712787a1e5b, processorArchitecture=MSIL">
-      <HintPath>..\packages\HandyControl.3.1.0\lib\net472\HandyControl.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="SuperControls.Style">
       <HintPath>..\Jvedio\Reference\SuperControls.Style.dll</HintPath>

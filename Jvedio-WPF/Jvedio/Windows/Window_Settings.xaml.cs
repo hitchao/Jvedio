@@ -42,6 +42,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.Core.Global.UrlManager;
 using static Jvedio.VisualTools.WindowHelper;
+using SuperControls.Style.Windows;
 
 namespace Jvedio
 {
@@ -1521,7 +1522,7 @@ namespace Jvedio
 
         private async void CreatePictureIndex(object sender, RoutedEventArgs e)
         {
-            if (new Msgbox(this, $"{LangManager.GetValueByKey("CurrentImageType")} {((PathType)ConfigManager.Settings.PicPathMode).ToString()}，{LangManager.GetValueByKey("TakeEffectToCurrent")}")
+            if (new MsgBox(this, $"{LangManager.GetValueByKey("CurrentImageType")} {((PathType)ConfigManager.Settings.PicPathMode).ToString()}，{LangManager.GetValueByKey("TakeEffectToCurrent")}")
                 .ShowDialog() == false)
             {
                 return;

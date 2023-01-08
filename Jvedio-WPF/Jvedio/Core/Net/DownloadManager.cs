@@ -1,5 +1,6 @@
-﻿using Jvedio.Core.CustomTask;
+﻿
 using Jvedio.Core.Net;
+using SuperUtils.Framework.Tasks;
 
 namespace Jvedio.Global
 {

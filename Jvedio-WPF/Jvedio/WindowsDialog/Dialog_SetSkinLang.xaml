@@ -35,12 +35,14 @@
 
             <StackPanel Margin="20" Orientation="Horizontal">
                 <TextBlock
-                    MinWidth="100"
+                    MinWidth="60"
+                    Margin="20"
+                    VerticalAlignment="Center"
                     FontSize="20"
                     FontWeight="Bold"
                     Style="{StaticResource BaseTextBlock}"
                     Text="{DynamicResource Skin}"
-                    TextAlignment="Left" />
+                    TextAlignment="Right" />
                 <RadioButton
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -104,13 +106,14 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock
-                    MinWidth="100"
-                    VerticalAlignment="Top"
+                    MinWidth="60"
+                    Margin="20,0"
+                    VerticalAlignment="Center"
                     FontSize="20"
                     FontWeight="Bold"
                     Style="{StaticResource BaseTextBlock}"
                     Text="{DynamicResource Language}"
-                    TextAlignment="Left" />
+                    TextAlignment="Right" />
                 <WrapPanel Grid.Column="1" Orientation="Horizontal">
                     <RadioButton
                         HorizontalAlignment="Left"

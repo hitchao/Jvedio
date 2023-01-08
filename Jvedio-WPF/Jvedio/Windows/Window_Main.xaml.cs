@@ -2,7 +2,6 @@
 using Jvedio.Core;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.CustomTask;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Global;
@@ -19,9 +18,11 @@ using Newtonsoft.Json.Linq;
 using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
+using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Framework.Tasks;
 using SuperUtils.IO;
 using SuperUtils.Media;
 using SuperUtils.NetWork;
@@ -62,6 +63,8 @@ namespace Jvedio
     /// </summary>
     public partial class Main : SuperControls.Style.BaseWindow
     {
+
+
         public static int NOTICE_INTERVAL = 1800; // 30分钟检测一次
         public static Msg msgCard = new Msg();
 
@@ -216,7 +219,7 @@ namespace Jvedio
             OpenListen();
 
             //OpenWindowByName("Window_Settings");
-            // new Msgbox(this, "demo").ShowDialog();
+            // new MsgBox(this, "demo").ShowDialog();
             InitUpgrade();
         }
 
@@ -283,14 +286,14 @@ namespace Jvedio
             public void Success(string msg)
             {
                 MessageCard.Success(msg);
-                Message message = new Message(MessageCard.MessageCardType.Succes, msg);
+                Message message = new Message(MessageCard.MessageCardType.Success, msg);
                 MsgShown?.Invoke(this, new MessageEventArg(message));
             }
 
             public void Error(string msg)
             {
                 MessageCard.Error(msg);
-                Message message = new Message(MessageCard.MessageCardType.Succes, msg);
+                Message message = new Message(MessageCard.MessageCardType.Error, msg);
                 MsgShown?.Invoke(this, new MessageEventArg(message));
             }
 
@@ -2363,7 +2366,7 @@ namespace Jvedio
         public void DeleteFile(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode && new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
+            if (Properties.Settings.Default.EditMode && new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
             {
                 return;
             }
@@ -2488,7 +2491,7 @@ namespace Jvedio
         public void DeleteID(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode && new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
+            if (Properties.Settings.Default.EditMode && new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
             {
                 return;
             }
@@ -2502,7 +2505,7 @@ namespace Jvedio
             handleMenuSelected(sender);
 
             // 超过 3 个网页，询问是否继续
-            if (vieModel.SelectedVideo.Count >= 3 && new Msgbox(this,
+            if (vieModel.SelectedVideo.Count >= 3 && new MsgBox(this,
                 $"{LangManager.GetValueByKey("ReadyToOpenReadyToOpen")} {vieModel.SelectedVideo.Count} {LangManager.GetValueByKey("SomeWebSite")}").ShowDialog() == false) return;
 
             foreach (Video video in vieModel.SelectedVideo)
@@ -3876,7 +3879,7 @@ namespace Jvedio
                 return;
             }
 
-            if (new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true)
+            if (new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true)
             {
                 tagStampMapper.DeleteById(id);
 
@@ -4963,7 +4966,7 @@ namespace Jvedio
 
         private void DeleteActors(object sender, RoutedEventArgs e)
         {
-            if (new Msgbox(this, "即将删除演员信息，是否继续？").ShowDialog() == true)
+            if (new MsgBox(this, "即将删除演员信息，是否继续？").ShowDialog() == true)
             {
                 MenuItem mnu = sender as MenuItem;
                 ContextMenu contextMenu = mnu.Parent as ContextMenu;
@@ -5076,7 +5079,7 @@ namespace Jvedio
         private void DeleteDownloadInfo(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode && new Msgbox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
+            if (Properties.Settings.Default.EditMode && new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
                 return;
             CleanDataInfo(vieModel.SelectedVideo);
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
@@ -5110,6 +5113,38 @@ namespace Jvedio
         private void ShowUpgradeWindow(object sender, RoutedEventArgs e)
         {
             UpgradeHelper.OpenWindow();
+        }
+
+        private void ShowAbout(object sender, RoutedEventArgs e)
+        {
+            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            local = local.Substring(0, local.Length);
+            System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
+            About about = new About(this, bitmapImage, "Jvedio",
+                "超级本地视频管理软件", local, ConfigManager.ReleaseDate,
+                "Github", UrlManager.ProjectUrl, "Chao", "GPL-3.0");
+            about.OnOtherClick += (s, ev) =>
+            {
+                FileHelper.TryOpenUrl(UrlManager.WebPage);
+            };
+            about.ShowDialog();
+        }
+
+        private void MessageCard_Close(object sender, EventArgs e)
+        {
+            MessageCard messageCard = sender as MessageCard;
+            string Date = messageCard.Tag.ToString();
+            List<Message> messages = vieModel.Message.Where(arg => arg.Date.Equals(Date)).ToList();
+            vieModel.Message.RemoveMany(messages);
+        }
+
+        private void OpenScanPath(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null && menuItem.Tag != null)
+            {
+                FileHelper.TryOpenPath(menuItem.Tag.ToString());
+            }
         }
     }
 }

@@ -500,13 +500,16 @@
                         </Style>
                     </Border.Style>
 
-                    <Image
-                        Canvas.Left="9"
-                        Canvas.Top="11"
+                    <Viewbox
                         Width="20"
-                        Height="20"
-                        Cursor="Hand"
-                        Source="{Binding Themes, Mode=OneWay, ConverterParameter=left, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
+                        Height="auto"
+                        Margin="-5,0,0,0"
+                        VerticalAlignment="Center">
+                        <Path
+                            Width="auto"
+                            Data="M1277.88977564 224.440834H740.72230864l-0.906357-176.437459c-0.151059-42.749829-51.964457-64.049214-82.17635-33.83732L194.49127464 478.371798c-18.882433 18.882433-18.731374 49.396446 0.151059 68.27888L662.32244564 1009.950065c30.514012 30.211894 82.32741 8.45933 82.02529-34.441559l-0.755297-170.999317H1278.04083464c26.284347 0 47.432673-21.299385 47.432673-47.432673V271.873506c0-26.284347-21.299385-47.432673-47.583732-47.432672z"
+                            Fill="{DynamicResource Window.Sub.Foreground}" />
+                    </Viewbox>
                 </Border>
 
                 <StackPanel
@@ -634,10 +637,16 @@
                             super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
                             Click="CloseWindow"
                             Style="{StaticResource FlatButton}">
-                            <Image
-                                Width="24"
-                                Height="24"
-                                Source="{Binding Themes, Mode=OneWay, ConverterParameter=close, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
+                            <Viewbox
+                                Width="12"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
                         </Button>
                     </StackPanel>
 
@@ -664,7 +673,7 @@
 
                         <Button
                             Height="auto"
-                            Margin="5,5,15,70"
+                            Margin="5,5,10,70"
                             Padding="5"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
@@ -682,44 +691,48 @@
                                 Source="/Resources/Picture/asso.png" />
                         </Button>
 
-                        <StackPanel
-                            Margin="20"
+                        <Grid
+                            Margin="10,20"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Panel.ZIndex="10"
-                            Orientation="Horizontal">
-                            <Canvas
-                                Width="40"
-                                Height="40"
-                                VerticalAlignment="Center"
-                                FocusVisualStyle="{x:Null}"
-                                PreviewMouseLeftButtonUp="PlayVedio">
-                                <Canvas.ContextMenu>
-                                    <ContextMenu
-                                        Width="100"
-                                        HorizontalOffset="-50"
-                                        VerticalOffset="10"
-                                        Visibility="Collapsed" />
-                                </Canvas.ContextMenu>
-                                <Ellipse
-                                    Canvas.Left="3"
-                                    Canvas.Top="3"
-                                    Width="40"
-                                    Height="40"
-                                    Style="{StaticResource OrangeEllipse}" />
-                                <Image
-                                    Canvas.Left="11"
-                                    Canvas.Top="38"
-                                    Height="28"
-                                    Cursor="Hand"
-                                    Source="{Binding Themes, Mode=OneWay, ConverterParameter=triangle, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}">
-                                    <Image.RenderTransform>
-                                        <RotateTransform x:Name="rotateTransform" Angle="-90" />
-                                    </Image.RenderTransform>
-                                </Image>
-                            </Canvas>
+                            PreviewMouseLeftButtonUp="PlayVedio">
+                            <Grid.ContextMenu>
+                                <ContextMenu
+                                    Width="100"
+                                    HorizontalOffset="-50"
+                                    VerticalOffset="10"
+                                    Visibility="Collapsed" />
+                            </Grid.ContextMenu>
 
-                        </StackPanel>
+
+                            <Ellipse Width="40" Height="40">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+
+
+                                        <Setter Property="Cursor" Value="Hand" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}, Path=IsMouseOver}" Value="True">
+                                                <Setter Property="Fill" Value="#AD744C" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}, Path=IsMouseOver}" Value="False">
+                                                <Setter Property="Fill" Value="#E07C4A" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+
+
+                            <Viewbox Width="20" Height="auto">
+                                <Path
+                                    Width="auto"
+                                    Data="M870.2 466.333333l-618.666667-373.28a53.333333 53.333333 0 0 0-80.866666 45.666667v746.56a53.206667 53.206667 0 0 0 80.886666 45.666667l618.666667-373.28a53.333333 53.333333 0 0 0 0-91.333334z"
+                                    Fill="{DynamicResource Window.Foreground}" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--  大图  -->
                         <Grid
@@ -1006,7 +1019,12 @@
                                                     Text="{Binding CurrentVideo.ReleaseDate}" />
 
                                                 <StackPanel Margin="10,0" Orientation="Horizontal">
-                                                    <Image VerticalAlignment="Center" Source="{Binding Themes, Mode=OneWay, ConverterParameter=runtime, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
+                                                    <Viewbox Width="20" Height="auto">
+                                                        <Path
+                                                            Width="auto"
+                                                            Data="M541.541 499.932V326.635c0-16.568-13.432-30-30-30s-30 13.432-30 30v185.723l0.002 0.082c0.001 0.467 0.012 0.934 0.035 1.4 0.012 0.241 0.034 0.479 0.052 0.719 0.018 0.247 0.032 0.495 0.056 0.741 0.029 0.301 0.069 0.598 0.107 0.896 0.023 0.183 0.043 0.366 0.07 0.549 0.047 0.322 0.104 0.64 0.162 0.959 0.029 0.159 0.054 0.319 0.085 0.478 0.063 0.322 0.136 0.64 0.21 0.958 0.036 0.158 0.07 0.315 0.109 0.473 0.076 0.308 0.161 0.612 0.247 0.916 0.048 0.169 0.093 0.338 0.144 0.507 0.085 0.283 0.178 0.562 0.271 0.841 0.064 0.191 0.126 0.382 0.194 0.572 0.089 0.25 0.185 0.497 0.281 0.744 0.084 0.217 0.167 0.433 0.256 0.648 0.089 0.215 0.184 0.426 0.277 0.639 0.107 0.243 0.214 0.486 0.328 0.726 0.086 0.181 0.177 0.359 0.266 0.538 0.132 0.264 0.264 0.527 0.404 0.788 0.083 0.154 0.17 0.306 0.256 0.459 0.155 0.277 0.31 0.553 0.475 0.825 0.082 0.136 0.168 0.269 0.252 0.403 0.175 0.28 0.35 0.559 0.535 0.835 0.088 0.131 0.181 0.259 0.271 0.389 0.187 0.269 0.373 0.537 0.569 0.801 0.107 0.144 0.22 0.284 0.33 0.426 0.187 0.242 0.373 0.485 0.568 0.723 0.146 0.177 0.299 0.349 0.449 0.523 0.169 0.196 0.333 0.394 0.508 0.586 0.272 0.301 0.554 0.593 0.838 0.882 0.061 0.062 0.118 0.127 0.18 0.189l131.327 131.325c5.857 5.858 13.535 8.787 21.213 8.787s15.355-2.929 21.213-8.787c11.716-11.716 11.716-30.71 0-42.426l-122.54-122.54z M871.34 360.185c-19.645-46.444-47.761-88.149-83.568-123.957-35.808-35.808-77.513-63.924-123.957-83.568C615.714 132.315 564.637 122 512 122s-103.714 10.315-151.815 30.66c-46.444 19.645-88.149 47.761-123.957 83.568-35.808 35.807-63.924 77.512-83.568 123.957C132.315 408.286 122 459.363 122 512s10.315 103.714 30.66 151.814c19.645 46.444 47.761 88.149 83.568 123.957 35.807 35.808 77.512 63.924 123.957 83.568C408.286 891.685 459.363 902 512 902s103.714-10.315 151.814-30.66c46.444-19.645 88.149-47.761 123.957-83.568s63.924-77.513 83.568-123.957C891.685 615.714 902 564.637 902 512s-10.315-103.714-30.66-151.815zM512 842c-181.963 0-330-148.037-330-330s148.037-330 330-330 330 148.037 330 330-148.037 330-330 330z"
+                                                            Fill="{DynamicResource Window.Sub.Foreground}" />
+                                                    </Viewbox>
                                                     <TextBox
                                                         Margin="5,0"
                                                         VerticalAlignment="Center"
@@ -1648,7 +1666,11 @@
                                 CornerRadius="10"
                                 Cursor="Hand"
                                 MouseLeftButtonUp="NextMovie"
+                                RenderTransformOrigin="0.5, 0.5"
                                 ToolTip="{DynamicResource Next}">
+                                <Border.RenderTransform>
+                                    <RotateTransform Angle="180" />
+                                </Border.RenderTransform>
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
@@ -1660,12 +1682,16 @@
                                     </Style>
                                 </Border.Style>
 
-                                <Image
-                                    Canvas.Left="11"
-                                    Canvas.Top="11"
-                                    Height="20"
-                                    Cursor="Hand"
-                                    Source="{Binding Themes, Mode=OneWay, ConverterParameter=right, Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}" />
+                                <Viewbox
+                                    Width="20"
+                                    Height="auto"
+                                    Margin="-5,0,0,0"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        Width="auto"
+                                        Data="M1277.88977564 224.440834H740.72230864l-0.906357-176.437459c-0.151059-42.749829-51.964457-64.049214-82.17635-33.83732L194.49127464 478.371798c-18.882433 18.882433-18.731374 49.396446 0.151059 68.27888L662.32244564 1009.950065c30.514012 30.211894 82.32741 8.45933 82.02529-34.441559l-0.755297-170.999317H1278.04083464c26.284347 0 47.432673-21.299385 47.432673-47.432673V271.873506c0-26.284347-21.299385-47.432673-47.583732-47.432672z"
+                                        Fill="{DynamicResource Window.Sub.Foreground}" />
+                                </Viewbox>
                             </Border>
                         </Grid>
                     </Grid>

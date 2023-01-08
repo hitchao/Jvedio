@@ -8,6 +8,8 @@ namespace Jvedio.Core.Global
     public static class UrlManager
     {
 
+        public static readonly string ProjectUrl = "https://github.com/hitchao/Jvedio";
+        public static readonly string WebPage = "https://hitchao.github.io/JvedioWebPage/";
         public static readonly string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
         public static readonly string UpgradeSource = "https://hitchao.github.io/";
         public static Dictionary<string, UpgradeSource> UpgradeSourceDict = new Dictionary<string, UpgradeSource>()

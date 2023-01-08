@@ -2230,7 +2230,11 @@
                         Margin="20,5"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
-                        <Label Content="{DynamicResource MovieOpacity}" Style="{StaticResource InfoLabel}" />
+                        <TextBlock
+                            MinWidth="100"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="{DynamicResource MovieOpacity}"
+                            TextAlignment="Right" />
                         <super:Slider
                             Width="200"
                             Margin="5,0"
@@ -2243,6 +2247,29 @@
                             SmallChange="0.05"
                             Value="{Binding MovieOpacity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                         <Label Content="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource RoundNumberConverter}, ConverterParameter=2}" Style="{StaticResource InfoLabel}" />
+
+                    </WrapPanel>
+                    <WrapPanel
+                        Margin="20,5"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            MinWidth="100"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="{DynamicResource ScrollSpeed}"
+                            TextAlignment="Right" />
+                        <super:Slider
+                            Width="200"
+                            Margin="5,0"
+                            VerticalAlignment="Center"
+                            Cursor="Hand"
+                            Integer="False"
+                            LargeChange="0.5"
+                            Maximum="3.0"
+                            Minimum="0.1"
+                            SmallChange="0.2"
+                            Value="{Binding ScrollSpeedFactor, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <Label Content="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource RoundNumberConverter}, ConverterParameter=2}" Style="{StaticResource InfoLabel}" />
 
                     </WrapPanel>
 
