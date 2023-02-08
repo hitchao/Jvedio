@@ -16,6 +16,7 @@ namespace Jvedio.Core.Global
         {
             {"Github",new UpgradeSource(UpgradeSource,ReleaseUrl,"jvedioupdate") },
             {"Github加速",new UpgradeSource("https://cdn.jsdelivr.net/gh/hitchao/",ReleaseUrl,"jvedioupdate") },
+            {"StormKit",new UpgradeSource("https://divealpine-ab8zhe--77466901127398.stormkit.dev/",ReleaseUrl,"") },
         };
 
         public static List<string> UpgradeSourceKeys = UpgradeSourceDict.Keys.ToList();

@@ -200,6 +200,7 @@ namespace Jvedio
 
             AdjustWindow(); // 还原窗口为上一次状态
             ConfigFirstRun();
+            InitThemeSelector();
             SetSkin(); // 设置主题颜色
             InitNotice(); // 初始化公告
             SetLoadingStatus(false); // todo 删除该行
@@ -222,6 +223,40 @@ namespace Jvedio
             // new MsgBox(this, "demo").ShowDialog();
             InitUpgrade();
         }
+
+        public void InitThemeSelector()
+        {
+            themeSelector.AddTransParentColor("TabItem.Background");
+            themeSelector.AddTransParentColor("Window.Title.Background");
+            themeSelector.AddTransParentColor("ListBoxItem.Background");
+            themeSelector.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
+            themeSelector.onThemeChanged += (ThemeIdx, ThemeID) =>
+            {
+                ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;
+                ConfigManager.ThemeConfig.ThemeID = ThemeID;
+                ConfigManager.ThemeConfig.Save();
+
+                SetSkin();
+                SetSelected();
+                ActorSetSelected();
+            };
+            themeSelector.onBackGroundImageChanged += (image) =>
+            {
+                BgImage.Source = image;
+            };
+            themeSelector.onSetBgColorTransparent += () =>
+            {
+                TitleBorder.Background = Brushes.Transparent;
+            };
+
+            themeSelector.onReSetBgColorBinding += () =>
+            {
+                TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+            };
+
+            themeSelector.InitThemes();
+        }
+
 
         public void InitUpgrade()
         {
@@ -312,10 +347,19 @@ namespace Jvedio
             }
         }
 
-        private void InitTagStamp()
+        private void InitTagStamp(List<TagStamp> tagStamps = null)
         {
-            Main.TagStamps = tagStampMapper.getAllTagStamp();
-            vieModel.InitCurrentTagStamps();
+            Main.TagStamps = tagStampMapper.GetAllTagStamp();
+            if (tagStamps != null && tagStamps.Count > 0)
+            {
+                foreach (var item in Main.TagStamps)
+                {
+                    TagStamp tagStamp = tagStamps.FirstOrDefault(arg => arg.TagID == item.TagID);
+                    if (tagStamp != null)
+                        item.Selected = tagStamp.Selected;
+                }
+            }
+            vieModel.InitCurrentTagStamps(tagStamps);
         }
 
         private void BindingEventAfterRender()
@@ -1628,7 +1672,10 @@ namespace Jvedio
                 MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
                 return;
             }
-
+            string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAGID_NEW_ADD}' and DataID='{dataid}'";
+            tagStampMapper.ExecuteNonQuery(sql);
+            vieModel.InitCurrentTagStamps();
+            RefreshData(dataid);
             PlayVideoWithPlayer(video.Path, dataid);
         }
 
@@ -2981,8 +3028,8 @@ namespace Jvedio
         {
             if (import?.Count > 0 && File.Exists(ConfigManager.FFmpegConfig.Path))
             {
-                foreach (Video video in import)
-                    screenShotVideo(video, false);
+                for (int i = import.Count - 1; i >= 0; i--)
+                    screenShotVideo(import[i], false);
 
                 if (!Global.FFmpegManager.Dispatcher.Working)
                     Global.FFmpegManager.Dispatcher.BeginWork();
@@ -3884,6 +3931,8 @@ namespace Jvedio
                 MessageNotify.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
                 return;
             }
+            // 记住之前的状态
+            List<TagStamp> tagStamps = vieModel.TagStamps.ToList();
 
             if (new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true)
             {
@@ -3892,7 +3941,7 @@ namespace Jvedio
                 // 删除
                 string sql = $"delete from metadata_to_tagstamp where TagID={tagStamp.TagID};";
                 tagStampMapper.ExecuteNonQuery(sql);
-                InitTagStamp();
+                InitTagStamp(tagStamps);
 
                 // 更新主窗体
                 if (vieModel.CurrentVideoList != null)
@@ -4497,11 +4546,6 @@ namespace Jvedio
             FileHelper.TryOpenPath(AppDomain.CurrentDomain.BaseDirectory);
         }
 
-        private void ShowHelpTagStamp(object sender, MouseButtonEventArgs e)
-        {
-            msgCard.Info(LangManager.GetValueByKey("TagStampDesc"));
-        }
-
         private void NewActor(object sender, RoutedEventArgs e)
         {
             bool? success = new Window_EditActor(0).ShowDialog();
@@ -5080,14 +5124,14 @@ namespace Jvedio
 
         private async void ReLoadTheme(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            button.IsEnabled = false;
-            ThemeManager.LoadAllThemes();
-            vieModel.InitThemes();
-            await Task.Delay(500);
-            RefreshThemeData();
-            ChangeTheme(null, null);
-            button.IsEnabled = true;
+            //Button button = sender as Button;
+            //button.IsEnabled = false;
+            //ThemeManager.LoadAllThemes();
+            ////vieModel.InitThemes();
+            //await Task.Delay(500);
+            //RefreshThemeData();
+            //ChangeTheme(null, null);
+            //button.IsEnabled = true;
         }
 
         private void DeleteDownloadInfo(object sender, RoutedEventArgs e)
@@ -5131,16 +5175,19 @@ namespace Jvedio
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
+            Dialog_About about = new Dialog_About();
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            local = local.Substring(0, local.Length);
-            System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
-            About about = new About(this, bitmapImage, "Jvedio",
-                "超级本地视频管理软件", local, ConfigManager.ReleaseDate,
-                "Github", UrlManager.ProjectUrl, "Chao", "GPL-3.0");
-            about.OnOtherClick += (s, ev) =>
-            {
-                FileHelper.TryOpenUrl(UrlManager.WebPage);
-            };
+            local = local.Substring(0, local.Length - ".0.0".Length);
+            about.AppName = "Jvedio";
+            about.AppSubName = "本地视频管理软件";
+            about.Version = local;
+            about.ReleaseDate = ConfigManager.RELEASE_DATE;
+            about.Author = "Chao";
+            about.License = "GPL-3.0";
+            about.GithubUrl = UrlManager.ProjectUrl;
+            about.WebUrl = UrlManager.WebPage;
+            about.JoinGroupUrl = UrlManager.ProjectUrl;
+            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
             about.ShowDialog();
         }
 

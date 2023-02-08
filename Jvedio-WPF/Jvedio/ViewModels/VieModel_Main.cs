@@ -117,17 +117,17 @@ namespace Jvedio.ViewModel
             refreshActorRenderToken();
 
             // 初始化皮肤
-            InitThemes();
+            //InitThemes();
         }
 
-        public void InitThemes()
-        {
-            ColorThemes = new ObservableCollection<Theme>();
-            foreach (var item in ThemeManager.Themes)
-            {
-                ColorThemes.Add(item);
-            }
-        }
+        //public void InitThemes()
+        //{
+        //    ColorThemes = new ObservableCollection<Theme>();
+        //    foreach (var item in ThemeManager.Themes)
+        //    {
+        //        ColorThemes.Add(item);
+        //    }
+        //}
 
         public void refreshVideoRenderToken()
         {
@@ -1223,19 +1223,34 @@ namespace Jvedio.ViewModel
             TabSelectedIndex = 3;
         }
 
-        public void InitCurrentTagStamps()
+        public void InitCurrentTagStamps(List<TagStamp> beforeTagStamps = null)
         {
             List<Dictionary<string, object>> list = tagStampMapper.Select(TagStampMapper.GetTagSql());
             List<TagStamp> tagStamps = new List<TagStamp>();
             if (list?.Count > 0)
+            {
                 tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
+                if (beforeTagStamps != null && beforeTagStamps.Count > 0)
+                {
+                    foreach (var item in tagStamps)
+                    {
+                        TagStamp tagStamp = beforeTagStamps.FirstOrDefault(arg => arg.TagID == item.TagID);
+                        if (tagStamp != null)
+                            item.Selected = tagStamp.Selected;
+                    }
+                }
+            }
+
+
+
             TagStamps = new ObservableCollection<TagStamp>();
 
             // 先增加默认的：高清、中文
             foreach (TagStamp item in Main.TagStamps)
             {
                 TagStamp tagStamp = tagStamps.Where(arg => arg.TagID == item.TagID).FirstOrDefault();
-                if (tagStamp != null) TagStamps.Add(tagStamp);
+                if (tagStamp != null)
+                    TagStamps.Add(tagStamp);
                 else
                 {
                     // 无该标记

@@ -43,7 +43,7 @@ namespace Jvedio
         }
 
         public (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO)
-            parseMovie(List<string> filepaths, List<string> fileExt, CancellationToken ct, bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
+            ParseMovie(List<string> filepaths, List<string> fileExt, CancellationToken ct, bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
         {
             List<Video> import = new List<Video>();
             List<string> failNFO = new List<string>();
@@ -432,7 +432,7 @@ namespace Jvedio
                 else
                 {
                     // 有识别码
-                    // 检查 重复或分段的视频
+                    // 检查分段的视频
                     if (!vIDDict.ContainsKey(VID))
                     {
                         List<string> pathlist = new List<string> { path };
@@ -445,7 +445,7 @@ namespace Jvedio
                 }
             }
 
-            // 检查分段或者重复的视频
+            // 检查分段的视频
             foreach (string vID in vIDDict.Keys)
             {
                 List<string> paths = vIDDict[vID];
@@ -481,9 +481,9 @@ namespace Jvedio
                     }
                     else
                     {
-                        // todo 不是分段视频，但是几个视频的识别码一致，检测一下 hash，判断是否重复
                         // 重复的视频
-                        // 仅导入最大的视频
+                        // 1、不是分段视频，但是几个视频的识别码一致，检测一下 hash，判断是否重复
+                        // 2、仅导入最大的视频
                         int maxIndex = 0;
                         long maxLenght = 0;
                         for (int i = 0; i < notSubSection.Count; i++)

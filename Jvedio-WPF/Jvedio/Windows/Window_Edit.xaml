@@ -348,22 +348,18 @@
 
 
 
-                                        <StackPanel
-                                            Grid.Row="2"
-                                            Margin="5"
-                                            Orientation="Horizontal">
-                                            <Button
-                                                HorizontalAlignment="Center"
-                                                Click="newActor_Cancel"
-                                                Content="{DynamicResource Cancel}" />
-                                            <Button
-                                                HorizontalAlignment="Center"
-                                                Click="newActor_Confirm"
-                                                Content="{DynamicResource Confirm}" />
+                                        <Grid Grid.Row="2" Margin="5">
+
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                            </Grid.ColumnDefinitions>
 
                                             <super:Pagination
                                                 Name="actorPagination"
-                                                Grid.Column="2"
+                                                Grid.Column="0"
                                                 Background="{DynamicResource Menu.Background}"
                                                 BorderBrush="{DynamicResource Window.Title.Foreground}"
                                                 CurrentPage="1"
@@ -377,7 +373,20 @@
                                                 PageSizeChange="ActorPageSizeChange"
                                                 PageSizes="[10,20,40,50,100,200]"
                                                 Total="{Binding ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
+                                            <Button
+                                                Grid.Column="1"
+                                                MinWidth="70"
+                                                Click="newActor_Confirm"
+                                                Content="{DynamicResource Confirm}"
+                                                Style="{StaticResource ButtonPrimary}" />
+                                            <Button
+                                                Grid.Column="2"
+                                                MinWidth="70"
+                                                Click="newActor_Cancel"
+                                                Content="{DynamicResource Cancel}"
+                                                Style="{StaticResource ButtonDanger}" />
+
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Popup>

@@ -1442,14 +1442,17 @@
                                                                     Content="{DynamicResource AutoRecognize}"
                                                                     IsChecked="{Binding AutoHandleHeader, Mode=TwoWay}"
                                                                     Visibility="Collapsed" />
+
                                                                 <Button
-                                                                    Click="CancelHeader"
-                                                                    Content="{DynamicResource Cancel}"
-                                                                    Style="{StaticResource ButtonDanger}" />
-                                                                <Button
+                                                                    MinWidth="70"
                                                                     Click="ConfirmHeader"
                                                                     Content="{DynamicResource Confirm}"
                                                                     Style="{StaticResource ButtonPrimary}" />
+                                                                <Button
+                                                                    MinWidth="70"
+                                                                    Click="CancelHeader"
+                                                                    Content="{DynamicResource Cancel}"
+                                                                    Style="{StaticResource ButtonDanger}" />
                                                             </StackPanel>
                                                         </Grid>
                                                     </Grid>

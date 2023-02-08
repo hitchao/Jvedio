@@ -15,7 +15,15 @@ namespace Jvedio.Core.Scan
             FailNFO = new List<string>();
             Logs = new List<string>();
             InsertVideos = new List<Video>();
+            // 重复的资源统计
         }
+
+
+        public class RepeatVideo
+        {
+
+        }
+
 
         public Dictionary<string, string> Update { get; set; }
 

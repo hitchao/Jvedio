@@ -857,7 +857,7 @@ namespace Jvedio
             local = local.Substring(0, local.Length);
             System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
             About about = new About(this, bitmapImage, "Jvedio",
-                "超级本地视频管理软件", local, ConfigManager.ReleaseDate,
+                "超级本地视频管理软件", local, ConfigManager.RELEASE_DATE,
                 "Github", UrlManager.ProjectUrl, "Chao", "GPL-3.0");
             about.OnOtherClick += (s, ev) =>
             {

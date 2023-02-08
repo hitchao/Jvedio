@@ -142,12 +142,12 @@
             VerticalAlignment="Bottom"
             Orientation="Horizontal">
             <Button
-                MinWidth="50"
+                MinWidth="70"
                 Click="Confirm"
                 Content="{DynamicResource Confirm}"
                 Style="{StaticResource ButtonPrimary}" />
             <Button
-                MinWidth="50"
+                MinWidth="70"
                 Click="Cancel"
                 Content="{DynamicResource Cancel}"
                 Style="{StaticResource ButtonDanger}" />

@@ -64,7 +64,7 @@ namespace Jvedio
                 ReLoad();
 
                 // 更新到主界面和详情界面
-                main?.RefreshGrade(vieModel.CurrentVideo);
+                main?.RefreshData(vieModel.CurrentVideo.DataID);
                 windowDetails?.Refresh();
                 SuperControls.Style.MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
