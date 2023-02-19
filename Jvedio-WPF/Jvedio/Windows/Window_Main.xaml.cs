@@ -264,19 +264,6 @@ namespace Jvedio
             CheckUpgrade(); // 检查更新
         }
 
-        public void RefreshThemeData()
-        {
-            // 找到先前选择的皮肤
-            long idx = GetThemeIndex();
-            if (idx < ColorThemesItemsControl.Items.Count)
-            {
-                ContentPresenter presenter = (ContentPresenter)ColorThemesItemsControl.ItemContainerGenerator.ContainerFromItem(ColorThemesItemsControl.Items[(int)idx]);
-                if (presenter == null) return;
-                RadioButton element = FindElementByName<RadioButton>(presenter, "rb");
-                if (element == null) return;
-                element.IsChecked = true;
-            }
-        }
 
         private long GetThemeIndex()
         {
@@ -347,8 +334,10 @@ namespace Jvedio
             }
         }
 
-        private void InitTagStamp(List<TagStamp> tagStamps = null)
+        private void InitTagStamp()
         {
+            // 记住之前的状态
+            List<TagStamp> tagStamps = vieModel.TagStamps.ToList();
             Main.TagStamps = tagStampMapper.GetAllTagStamp();
             if (tagStamps != null && tagStamps.Count > 0)
             {
@@ -1118,22 +1107,85 @@ namespace Jvedio
             this.MaxWindow(sender, e);
         }
 
-        private void MoveWindow(object sender, MouseEventArgs e)
+
+        private void TopBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            canDragMove = false;
+        }
+
+        private void TopBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            canDragMove = false;
+        }
+
+        private bool EqualWorkAreaSize(bool both = false)
+        {
+            if (both && Math.Abs(this.Width - SystemParameters.WorkArea.Width) <= 2 || Math.Abs(this.Height - SystemParameters.WorkArea.Height) <= 2) return true;
+            if (!both && Math.Abs(this.Width - SystemParameters.WorkArea.Width) <= 2 || Math.Abs(this.Height - SystemParameters.WorkArea.Height) <= 2) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 仅支持双显示器
+        /// </summary>
+        /// <param name="AllScreens"></param>
+        /// <param name="scaleRatio"></param>
+        /// <returns></returns>
+        private int getCurrentScreen(System.Windows.Forms.Screen[] AllScreens, double scaleRatio)
+        {
+            if (AllScreens.Length == 1) return 0;
+            int max_idx;
+            if (AllScreens[0].Bounds.X > AllScreens[1].Bounds.X) max_idx = 0;
+            else max_idx = 1;
+            double windowX = PointToScreen(new Point(this.Left, this.Top)).X / scaleRatio;
+            if (windowX >= AllScreens[max_idx].Bounds.X) return max_idx;
+            return max_idx == 1 ? 0 : 1;
+        }
+
+        System.Windows.Forms.Screen[] AllScreens = System.Windows.Forms.Screen.AllScreens;
+
+        private new void MoveWindow(object sender, MouseEventArgs e)
         {
             Border border = sender as Border;
-
             // 移动窗口
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed && canDragMove)
             {
-                if (baseWindowState == BaseWindowState.Maximized || (this.Width == SystemParameters.WorkArea.Width && this.Height == SystemParameters.WorkArea.Height))
+                if (baseWindowState == BaseWindowState.Maximized || EqualWorkAreaSize(true))
                 {
                     baseWindowState = 0;
-                    double fracWidth = e.GetPosition(border).X / border.ActualWidth;
-                    this.Width = WindowSize.Width;
+                    Border grid = TitleBorder;
+                    AllScreens = System.Windows.Forms.Screen.AllScreens;
+                    var scaleRatio = Math.Max(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width / SystemParameters.PrimaryScreenWidth,
+    System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height / SystemParameters.PrimaryScreenHeight);
+                    int currentScreen = getCurrentScreen(AllScreens, scaleRatio);
+                    double left = System.Windows.Forms.Screen.AllScreens[currentScreen].WorkingArea.Left / scaleRatio;
+                    double fracWidth = e.GetPosition(grid).X / grid.ActualWidth;
                     this.Height = WindowSize.Height;
+                    this.Width = WindowSize.Width;
                     this.WindowState = System.Windows.WindowState.Normal;
-                    this.Left = e.GetPosition(border).X - border.ActualWidth * fracWidth;
-                    this.Top = e.GetPosition(border).Y - border.ActualHeight / 2;
+                    if (AllScreens.Length == 1)
+                    {
+                        this.Left += e.GetPosition(grid).X - grid.ActualWidth * fracWidth;
+                    }
+                    else
+                    {
+                        if (Math.Abs(e.GetPosition(grid).X - grid.ActualWidth * fracWidth) >= 300)
+                            this.Left = left + grid.ActualWidth / 2;//屏幕在右侧的问题
+                    }
+                    int maxIndex = 0;
+                    if (AllScreens[1].Bounds.Height > AllScreens[0].Bounds.Height)
+                        maxIndex = 1;
+                    if (maxIndex == currentScreen)
+                    {
+                        this.Top = e.GetPosition(grid).Y - grid.ActualHeight / 2;
+                    }
+                    else
+                    {
+                        double monitorHeightDiff = Math.Abs(AllScreens[0].Bounds.Height - AllScreens[1].Bounds.Height);
+                        this.Top = e.GetPosition(grid).Y - grid.ActualHeight / 2 + monitorHeightDiff / 2;
+                    }
+
+
                     this.OnLocationChanged(EventArgs.Empty);
                     MaxPath.Data = Geometry.Parse(PathData.MaxPath);
                     MaxMenuItem.Header = LangManager.GetValueByKey("Maximize");
@@ -2132,7 +2184,7 @@ namespace Jvedio
                     }
                     else
                     {
-                        logger.Error($"{LangManager.GetValueByKey("SameFileNameExists") } => {target}");
+                        logger.Error($"{LangManager.GetValueByKey("SameFileNameExists")} => {target}");
                     }
                 }
             }
@@ -2992,7 +3044,11 @@ namespace Jvedio
                         ScanResult scanResult = scanTask.ScanResult;
                         List<Video> insertVideos = null;
                         if (scanResult != null)
+                        {
                             insertVideos = scanResult.InsertVideos;
+                            MessageCard.Info($"总数    {scanResult.TotalCount.ToString().PadRight(8)}已导入    {scanResult.Import.Count}{Environment.NewLine}" +
+                                $"更新    {scanResult.Update.Count.ToString().PadRight(8)} 未导入    {scanResult.NotImport.Count}");
+                        }
                         if (ConfigManager.ScanConfig.LoadDataAfterScan)
                             vieModel.LoadData();
                         if (ConfigManager.FFmpegConfig.ScreenShotAfterImport)
@@ -3308,11 +3364,17 @@ namespace Jvedio
             ActorSetSelected();
         }
 
+        private bool canDragMove = false;
         private void TopBorder_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount > 1)
             {
                 MaxWindow(sender, new RoutedEventArgs());
+                canDragMove = false;
+            }
+            else
+            {
+                canDragMove = true;
             }
         }
 
@@ -3931,8 +3993,7 @@ namespace Jvedio
                 MessageNotify.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
                 return;
             }
-            // 记住之前的状态
-            List<TagStamp> tagStamps = vieModel.TagStamps.ToList();
+
 
             if (new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true)
             {
@@ -3941,7 +4002,7 @@ namespace Jvedio
                 // 删除
                 string sql = $"delete from metadata_to_tagstamp where TagID={tagStamp.TagID};";
                 tagStampMapper.ExecuteNonQuery(sql);
-                InitTagStamp(tagStamps);
+                InitTagStamp();
 
                 // 更新主窗体
                 if (vieModel.CurrentVideoList != null)
@@ -5089,51 +5150,6 @@ namespace Jvedio
             vieModel.LoadData();
         }
 
-        private void ShowThemes(object sender, RoutedEventArgs e)
-        {
-            themesPopup.IsOpen = true;
-            RefreshThemeData();
-        }
-
-        private void CloseThemePopup(object sender, RoutedEventArgs e)
-        {
-            themesPopup.IsOpen = false;
-        }
-
-        private void ChangeTheme(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < ColorThemesItemsControl.Items.Count; i++)
-            {
-                ContentPresenter presenter = (ContentPresenter)ColorThemesItemsControl.ItemContainerGenerator.ContainerFromItem(ColorThemesItemsControl.Items[i]);
-                if (presenter == null) return;
-                RadioButton element = FindElementByName<RadioButton>(presenter, "rb");
-                if (element == null) return;
-                if ((bool)element.IsChecked)
-                {
-                    ConfigManager.ThemeConfig.ThemeIndex = i;
-                    ConfigManager.ThemeConfig.ThemeID = element.Tag.ToString();
-                    ConfigManager.ThemeConfig.Save();
-                    break;
-                }
-            }
-
-            SetSkin();
-            SetSelected();
-            ActorSetSelected();
-        }
-
-        private async void ReLoadTheme(object sender, RoutedEventArgs e)
-        {
-            //Button button = sender as Button;
-            //button.IsEnabled = false;
-            //ThemeManager.LoadAllThemes();
-            ////vieModel.InitThemes();
-            //await Task.Delay(500);
-            //RefreshThemeData();
-            //ChangeTheme(null, null);
-            //button.IsEnabled = true;
-        }
-
         private void DeleteDownloadInfo(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
@@ -5207,6 +5223,7 @@ namespace Jvedio
                 FileHelper.TryOpenPath(menuItem.Tag.ToString());
             }
         }
+
     }
 
 }

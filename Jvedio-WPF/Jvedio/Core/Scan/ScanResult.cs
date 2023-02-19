@@ -11,7 +11,7 @@ namespace Jvedio.Core.Scan
             ScanDate = DateHelper.Now();
             Update = new Dictionary<string, string>();
             Import = new List<string>();
-            NotImport = new Dictionary<string, string>();
+            NotImport = new Dictionary<string, ScanDetailInfo>();
             FailNFO = new List<string>();
             Logs = new List<string>();
             InsertVideos = new List<Video>();
@@ -19,10 +19,7 @@ namespace Jvedio.Core.Scan
         }
 
 
-        public class RepeatVideo
-        {
 
-        }
 
 
         public Dictionary<string, string> Update { get; set; }
@@ -35,7 +32,7 @@ namespace Jvedio.Core.Scan
         /// <summary>
         /// （路径，原因）
         /// </summary>
-        public Dictionary<string, string> NotImport { get; set; }
+        public Dictionary<string, ScanDetailInfo> NotImport { get; set; }
 
         public List<string> FailNFO { get; set; }
 

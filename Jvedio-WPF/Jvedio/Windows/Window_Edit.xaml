@@ -75,28 +75,28 @@
                                     FontSize="15"
                                     Foreground="{DynamicResource Window.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=0, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
-                                    Style="{StaticResource FlatRadioButton}" />
+                                    Style="{StaticResource FlatRoundRadioButton}" />
                                 <RadioButton
                                     Content="{DynamicResource Uncensored}"
                                     FocusVisualStyle="{x:Null}"
                                     FontSize="15"
                                     Foreground="{DynamicResource Window.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=1, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
-                                    Style="{StaticResource FlatRadioButton}" />
+                                    Style="{StaticResource FlatRoundRadioButton}" />
                                 <RadioButton
                                     Content="{DynamicResource Censored}"
                                     FocusVisualStyle="{x:Null}"
                                     FontSize="15"
                                     Foreground="{DynamicResource Window.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=2, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
-                                    Style="{StaticResource FlatRadioButton}" />
+                                    Style="{StaticResource FlatRoundRadioButton}" />
                                 <RadioButton
                                     Content="{DynamicResource Europe}"
                                     FocusVisualStyle="{x:Null}"
                                     FontSize="15"
                                     Foreground="{DynamicResource Window.Foreground}"
                                     IsChecked="{Binding Path=CurrentVideo.VideoType, ConverterParameter=3, Converter={StaticResource VideoTypeConverter}, Mode=TwoWay}"
-                                    Style="{StaticResource FlatRadioButton}" />
+                                    Style="{StaticResource FlatRoundRadioButton}" />
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -131,7 +131,9 @@
                                 <Border
                                     Grid.Column="0"
                                     Margin="5"
+                                    Padding="5"
                                     HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
                                     Panel.ZIndex="6"
                                     PreviewMouseLeftButtonDown="NewActor"
                                     Style="{StaticResource RoundBorder}"
@@ -157,12 +159,14 @@
                                             <Grid Name="rootGrid" Tag="{Binding ActorID}">
                                                 <Border
                                                     Margin="5"
+                                                    Padding="2,0"
                                                     CornerRadius="5"
                                                     Cursor="Hand"
-                                                    Style="{StaticResource TagBarBorderStyle}">
+                                                    Style="{StaticResource HoverBorderBrush}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBox
                                                             ContextMenu="{StaticResource CopyContextMenu}"
+                                                            FontSize="12"
                                                             Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                             Text="{Binding ActorName, Mode=OneWay}" />
                                                         <Border
@@ -422,7 +426,7 @@
                                 <Button
                                     MinWidth="0"
                                     MinHeight="0"
-                                    Margin="15,0"
+                                    Margin="15,0,0,0"
                                     Click="AddToLabel"
                                     Content="{DynamicResource AddTo}"
                                     Style="{StaticResource ButtonPrimary}" />
@@ -482,8 +486,17 @@
                                                     </ItemsControl.ItemsPanel>
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Border MouseUp="Border_MouseUp" Style="{StaticResource HoverBorder}">
-                                                                <TextBlock Style="{StaticResource GenreTextBlock}" Text="{Binding}" />
+                                                            <Border
+                                                                Margin="5"
+                                                                Padding="4"
+                                                                CornerRadius="4"
+                                                                MouseUp="Border_MouseUp"
+                                                                Style="{StaticResource HoverBorder}">
+                                                                <TextBlock
+                                                                    FontSize="14"
+                                                                    Foreground="{DynamicResource Window.Sub.Foreground}"
+                                                                    Style="{StaticResource BaseTextBlock}"
+                                                                    Text="{Binding}" />
                                                             </Border>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
@@ -582,7 +595,7 @@
                             IsSelected="False"
                             LineWidth="0"
                             Style="{StaticResource BaseTogglePanel}">
-                            <StackPanel Orientation="Vertical">
+                            <StackPanel Margin="0,4" Orientation="Vertical">
                                 <DockPanel>
                                     <Label Content="{DynamicResource Title}" Style="{StaticResource BaseInfoLabel}" />
                                     <super:SearchBox Text="{Binding CurrentVideo.Title, Mode=TwoWay}" />
@@ -659,6 +672,7 @@
                                         Height="80"
                                         Margin="15,10"
                                         Padding="5"
+                                        HorizontalAlignment="Stretch"
                                         Background="{DynamicResource ListBoxItem.Background}"
                                         BorderThickness="0"
                                         FontSize="14"
@@ -675,6 +689,7 @@
                                         Height="80"
                                         Margin="15,10"
                                         Padding="5"
+                                        HorizontalAlignment="Stretch"
                                         Background="{DynamicResource ListBoxItem.Background}"
                                         BorderThickness="0"
                                         FontSize="14"

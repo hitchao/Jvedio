@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Crawler;
+﻿using Jvedio.Core;
+using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
@@ -23,7 +24,33 @@ namespace Jvedio.ViewModel
             PicPaths = new Dictionary<string, object>();
             SetServers();
             RenderPlugins();
-            setBasePicPaths();
+            SetBasePicPaths();
+            InitCursor();
+        }
+
+        public void InitCursor()
+        {
+            int idx = (int)GetThemeIndex();
+            if (idx >= ThemeManager.Themes.Count) idx = 0;
+            CurrentTheme = ThemeManager.Themes[idx];
+        }
+
+        private long GetThemeIndex()
+        {
+            long idx = ConfigManager.ThemeConfig.ThemeIndex;
+            if (!string.IsNullOrEmpty(ConfigManager.ThemeConfig.ThemeID))
+            {
+                for (int i = 0; i < ThemeManager.Themes.Count; i++)
+                {
+                    if (ThemeManager.Themes[i].ID.Equals(ConfigManager.ThemeConfig.ThemeID))
+                    {
+                        idx = i;
+                        break;
+                    }
+                }
+            }
+
+            return idx;
         }
 
         public void LoadScanPath(AppDatabase db)
@@ -178,7 +205,7 @@ namespace Jvedio.ViewModel
 
         public int PIC_PATH_MODE_COUNT = 3;
 
-        public void setBasePicPaths()
+        public void SetBasePicPaths()
         {
             PicPaths = ConfigManager.Settings.PicPaths;
 
@@ -1242,5 +1269,22 @@ namespace Jvedio.ViewModel
 
         #endregion
 
+
+        #region "鼠标样式"
+
+        private Theme _CurrentTheme;
+
+        public Theme CurrentTheme
+        {
+            get { return _CurrentTheme; }
+
+            set
+            {
+                _CurrentTheme = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Jvedio.Core.Logs;
 using Jvedio.Core.Scan;
 using SuperControls.Style;
+using SuperControls.Style.Windows;
 using SuperUtils.IO;
 using SuperUtils.Reflections;
 using SuperUtils.Time;
@@ -11,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
+
 
 namespace Jvedio
 {
@@ -29,13 +30,19 @@ namespace Jvedio
 
         public class ScanDetail
         {
+            public long ID { get; set; }
             public string Handle { get; set; }
 
             public string Extension { get; set; }
 
             public string Reason { get; set; }
+            public string Details { get; set; }
+
+            public bool ShowDetail { get; set; }
 
             public string FilePath { get; set; }
+
+
 
             public override string ToString()
             {
@@ -54,10 +61,11 @@ namespace Jvedio
             return System.IO.Path.GetExtension(path).ToLower().Replace(".", string.Empty);
         }
 
+        List<ScanDetail> details;
         private void BaseWindow_ContentRendered(object sender, EventArgs e)
         {
-            List<ScanDetail> details = new List<ScanDetail>();
-
+            details = new List<ScanDetail>();
+            long idx = 0;
             foreach (var item in ScanResult.FailNFO)
             {
                 ScanDetail detail = new ScanDetail()
@@ -66,6 +74,7 @@ namespace Jvedio
                     FilePath = item,
                     Extension = getExtension(item),
                     Reason = string.Empty,
+                    ID = idx++,
                 };
                 details.Add(detail);
             }
@@ -77,7 +86,10 @@ namespace Jvedio
                     Handle = LangManager.GetValueByKey("NotImport"),
                     FilePath = key,
                     Extension = getExtension(key),
-                    Reason = ScanResult.NotImport[key],
+                    Reason = ScanResult.NotImport[key].Reason,
+                    Details = ScanResult.NotImport[key].Detail,
+                    ShowDetail = !string.IsNullOrEmpty(ScanResult.NotImport[key].Detail),
+                    ID = idx++,
                 };
                 details.Add(detail);
             }
@@ -90,6 +102,7 @@ namespace Jvedio
                     FilePath = key,
                     Extension = getExtension(key),
                     Reason = ScanResult.Update[key],
+                    ID = idx++,
                 };
                 details.Add(detail);
             }
@@ -102,6 +115,7 @@ namespace Jvedio
                     FilePath = item,
                     Extension = getExtension(item),
                     Reason = string.Empty,
+                    ID = idx++,
                 };
                 details.Add(detail);
             }
@@ -132,12 +146,12 @@ namespace Jvedio
 
         private void Save(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 
             saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             saveFileDialog.FilterIndex = 2;
             saveFileDialog.RestoreDirectory = true;
-            saveFileDialog.FileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
+            saveFileDialog.FileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
 
             if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -147,6 +161,7 @@ namespace Jvedio
                     if (!path.ToLower().EndsWith(".txt")) path += ".txt";
                     File.WriteAllText(path, GenerateOutput());
                     MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
+                    FileHelper.TryOpenSelectPathEx(path);
                 }
                 catch (Exception ex)
                 {
@@ -191,6 +206,20 @@ namespace Jvedio
         private void ShowExceptions(object sender, RoutedEventArgs e)
         {
             new Dialog_Logs(this, string.Join(Environment.NewLine, ScanResult.Logs)).ShowDialog();
+        }
+
+        private void ShowDetail(object sender, RoutedEventArgs e)
+        {
+            if (details != null && details.Count > 0)
+            {
+                if (sender is Button button && button.Tag != null &&
+                    long.TryParse(button.Tag.ToString(), out long id))
+                {
+                    ScanDetail scanDetail = details.FirstOrDefault(arg => arg.ID == id);
+                    if (scanDetail != null)
+                        new Dialog_Logs(this, string.Join(Environment.NewLine, scanDetail.Details)).ShowDialog();
+                }
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Jvedio.Test.ScanTest
             List<string> import = scanResult.Import;
             List<string> failNFO = scanResult.FailNFO;
             long total = scanResult.TotalCount;
-            Dictionary<string, string> notImport = scanResult.NotImport;
+            Dictionary<string, ScanDetailInfo> notImport = scanResult.NotImport;
             Assert.IsNotNull(import);
         }
     }

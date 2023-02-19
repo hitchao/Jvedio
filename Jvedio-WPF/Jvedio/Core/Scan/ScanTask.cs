@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using static Jvedio.MapperManager;
 
@@ -101,6 +102,13 @@ namespace Jvedio.Core.Scan
            {
                stopwatch.Start();
                logger.Info(LangManager.GetValueByKey("BeginScan"));
+               if (ScanPaths.Count == 0 && FilePaths.Count != 0)
+               {
+                   string path = FilePaths[FilePaths.Count - 1];
+                   Message = path;
+                   onScanning?.Invoke(this, new MessageCallBackEventArgs(path));
+               }
+
                foreach (string path in ScanPaths)
                {
                    IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) =>
@@ -114,6 +122,7 @@ namespace Jvedio.Core.Scan
                    }, tokenCTS);
                    FilePaths.AddRange(paths);
                }
+
 
                try
                {
@@ -197,23 +206,45 @@ namespace Jvedio.Core.Scan
             // 存在同路径、相同大小的影片
             foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.Path.Equals(t.Path)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("SamePathFileSize"));
+                ScanResult.NotImport.Add(item.Path, new ScanDetailInfo(LangManager.GetValueByKey("SamePathFileSize")));
             }
 
             vidList.RemoveAll(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.Path.Equals(t.Path)).Any());
 
             // 存在不同路径、相同大小、相同 VID、且原路径也存在的影片
-            foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path)).Any()))
+            foreach (var item in vidList.Where(arg => existVideos
+                .Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path))
+                .Any()))
             {
-                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("NotSamePathSameFileSize"));
+                ScanDetailInfo scanDetailInfo = new ScanDetailInfo(LangManager.GetValueByKey("NotSamePathSameFileSize"));
+                StringBuilder builder = new StringBuilder($"和 {item.Path} 存在重复：");
+                builder.AppendLine();
+                builder.AppendLine();
+                List<Video> _videos = existVideos
+                .Where(t => item.Size.Equals(t.Size) && item.VID.Equals(t.VID) && !item.Path.Equals(t.Path) && File.Exists(t.Path)).ToList();
+                foreach (var _video in _videos)
+                    builder.AppendLine(_video.Path);
+                scanDetailInfo.Detail = builder.ToString();
+                ScanResult.NotImport.Add(item.Path, scanDetailInfo);
             }
 
             vidList.RemoveAll(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path)).Any());
 
             // 存在不同路径，相同 VID，不同大小，且原路径存在（可能是剪辑的视频）
-            foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path)).Any()))
+            foreach (var item in vidList
+                .Where(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path))
+                .Any()))
             {
-                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("NotSamePathSameFileSize"));
+                ScanDetailInfo scanDetailInfo = new ScanDetailInfo(LangManager.GetValueByKey("SamePathNotSameFileSize"));
+                StringBuilder builder = new StringBuilder($"和 {item.Path} 存在重复：");
+                builder.AppendLine();
+                builder.AppendLine();
+                List<Video> _videos = existVideos
+                    .Where(t => item.VID.Equals(t.VID) && !item.Path.Equals(t.Path) && !item.Size.Equals(t.Size) && File.Exists(t.Path)).ToList();
+                foreach (var _video in _videos)
+                    builder.AppendLine(_video.Path);
+                scanDetailInfo.Detail = builder.ToString();
+                ScanResult.NotImport.Add(item.Path, scanDetailInfo);
             }
 
             vidList.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path)).Any());
@@ -244,7 +275,16 @@ namespace Jvedio.Core.Scan
             // 存在相同 HASH ，相同路径的影片
             foreach (var item in noVidList.Where(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, LangManager.GetValueByKey("SameHashSamePath"));
+                ScanDetailInfo scanDetailInfo = new ScanDetailInfo(LangManager.GetValueByKey("SameHashSamePath"));
+                StringBuilder builder = new StringBuilder($"和 {item.Path} 存在重复：");
+                builder.AppendLine();
+                builder.AppendLine();
+                List<Video> _videos = existVideos
+                    .Where(t => item.Hash.Equals(t.Hash) && item.Path.Equals(t.Path)).ToList();
+                foreach (var _video in _videos)
+                    builder.AppendLine(_video.Path);
+                scanDetailInfo.Detail = builder.ToString();
+                ScanResult.NotImport.Add(item.Path, scanDetailInfo);
             }
 
             noVidList.RemoveAll(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any());
@@ -287,11 +327,11 @@ namespace Jvedio.Core.Scan
                 if (reason == NotImportReason.RepetitiveVID)
                 {
                     string vid = Identify.GetVID(Path.GetFileNameWithoutExtension(key));
-                    ScanResult.NotImport.Add(key, $"{ReasonToString[reason]} => {vid}");
+                    ScanResult.NotImport.Add(key, new ScanDetailInfo($"{ReasonToString[reason]} => {vid}"));
                 }
                 else
                 {
-                    ScanResult.NotImport.Add(key, ReasonToString[reason]);
+                    ScanResult.NotImport.Add(key, new ScanDetailInfo(ReasonToString[reason]));
                 }
             }
         }

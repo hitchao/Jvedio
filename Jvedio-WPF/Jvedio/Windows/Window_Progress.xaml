@@ -52,8 +52,8 @@
             <TextBlock
                 Margin="0,20"
                 Text="{Binding SubText, ElementName=Progress_Window}"
-                Visibility="{Binding HideSub, Converter={StaticResource bool2VisibilityConverter}}" />
-            <Grid Visibility="{Binding HideSub, Converter={StaticResource bool2VisibilityConverter}}">
+                Visibility="{Binding HideSub, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <Grid Visibility="{Binding HideSub, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" MinWidth="60" />

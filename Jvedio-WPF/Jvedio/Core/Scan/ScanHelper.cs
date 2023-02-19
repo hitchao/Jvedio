@@ -412,9 +412,7 @@ namespace Jvedio
         {
             List<Video> result = new List<Video>();
             Dictionary<string, List<string>> vIDDict = new Dictionary<string, List<string>>();
-
             string sep = SuperUtils.Values.ConstValues.SeparatorString;
-
             List<string> noVIDList = new List<string>();
 
             // 检查无识别码的视频
@@ -497,17 +495,17 @@ namespace Jvedio
                             }
                         }
 
-                        Dictionary<string, NotImportReason> list = new Dictionary<string, NotImportReason>();
+                        Dictionary<string, NotImportReason> notImportList = new Dictionary<string, NotImportReason>();
                         for (int i = 0; i < notSubSection.Count; i++)
                         {
                             string path = notSubSection[i];
                             if (i == maxIndex) continue;
-                            list.Add(path, NotImportReason.RepetitiveVID);
+                            notImportList.Add(path, NotImportReason.RepetitiveVID);
                         }
 
                         if (notSubSection.Count > 0)
                             result.Add(ParseVideo(vID, notSubSection[maxIndex]));
-                        sameVideoCallBack?.Invoke(list);
+                        sameVideoCallBack?.Invoke(notImportList);
                     }
                 }
 

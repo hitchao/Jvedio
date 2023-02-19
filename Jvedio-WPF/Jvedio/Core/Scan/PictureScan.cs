@@ -127,7 +127,7 @@ namespace Jvedio.Core.Scan
             // 存在同路径、同哈希的图片路径
             foreach (var item in import.Where(arg => existPictures.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any()))
             {
-                ScanResult.NotImport.Add(item.Path, "同路径、同哈希");
+                ScanResult.NotImport.Add(item.Path, new ScanDetailInfo("同路径、同哈希"));
             }
 
             import.RemoveAll(arg => existPictures.Where(t => arg.Path.Equals(t.Path) && arg.Hash.Equals(t.Hash)).Any());
@@ -245,7 +245,7 @@ namespace Jvedio.Core.Scan
         {
             foreach (string path in notImport)
             {
-                ScanResult.NotImport.Add(path, "不导入");
+                ScanResult.NotImport.Add(path, new ScanDetailInfo("不导入"));
             }
         }
     }

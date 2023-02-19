@@ -305,6 +305,7 @@
     <Compile Include="Core\CustomEventArgs\WrapperEventArg.cs" />
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
+    <Compile Include="Core\Scan\ScanDetailInfo.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
     <Compile Include="CustomStyle\StyleManager.cs" />
     <Compile Include="Core\Plugins\Plugin.cs" />
@@ -470,15 +471,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomStyle\ChaoControls\Basic.xaml">
+    <Page Include="CustomStyle\SuperControls\Basic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomStyle\ChaoControls\Pagination.xaml">
+    <Page Include="CustomStyle\SuperControls\Pagination.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomStyle\ChaoControls\PathRadioButton.xaml">
+    <Page Include="CustomStyle\SuperControls\PathRadioButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

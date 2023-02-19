@@ -199,7 +199,7 @@
                         <WrapPanel
                             Name="genreWrapPanel"
                             Orientation="Horizontal"
-                            Visibility="{Binding Path=IsChecked, ElementName=genreToggleButton, Converter={StaticResource bool2VisibilityConverter}}" />
+                            Visibility="{Binding Path=IsChecked, ElementName=genreToggleButton, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
 
                     <StackPanel Margin="5" Orientation="Vertical">
@@ -226,7 +226,7 @@
                         <WrapPanel
                             Name="seriesWrapPanel"
                             Orientation="Horizontal"
-                            Visibility="{Binding Path=IsChecked, ElementName=seriesToggleButton, Converter={StaticResource bool2VisibilityConverter}}" />
+                            Visibility="{Binding Path=IsChecked, ElementName=seriesToggleButton, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
 
                     <StackPanel Margin="5" Orientation="Vertical">
@@ -253,7 +253,7 @@
                         <WrapPanel
                             Name="directorWrapPanel"
                             Orientation="Horizontal"
-                            Visibility="{Binding Path=IsChecked, ElementName=directorToggleButton, Converter={StaticResource bool2VisibilityConverter}}" />
+                            Visibility="{Binding Path=IsChecked, ElementName=directorToggleButton, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
 
 
@@ -281,7 +281,7 @@
                         <WrapPanel
                             Name="studioWrapPanel"
                             Orientation="Horizontal"
-                            Visibility="{Binding Path=IsChecked, ElementName=studioToggleButton, Converter={StaticResource bool2VisibilityConverter}}" />
+                            Visibility="{Binding Path=IsChecked, ElementName=studioToggleButton, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
 
 
@@ -309,7 +309,7 @@
                         <WrapPanel
                             Name="publisherWrapPanel"
                             Orientation="Horizontal"
-                            Visibility="{Binding Path=IsChecked, ElementName=publisherToggleButton, Converter={StaticResource bool2VisibilityConverter}}" />
+                            Visibility="{Binding Path=IsChecked, ElementName=publisherToggleButton, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
 
 

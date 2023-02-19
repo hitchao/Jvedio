@@ -366,7 +366,7 @@
                                                     Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                     Text="{Binding VID, Mode=OneWay}"
                                                     TextAlignment="Left"
-                                                    Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                    Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
                                                 <Border
                                                     Grid.Column="1"
                                                     MouseLeftButtonDown="CopyVID"
@@ -401,7 +401,7 @@
                                                     HorizontalAlignment="Right"
                                                     ItemsSource="{Binding TagStamp}"
                                                     Tag="{Binding DataID}"
-                                                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <StackPanel Orientation="Horizontal" />
@@ -443,7 +443,7 @@
                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                 Text="{Binding ReleaseDate, Mode=OneWay}"
                                                 TextAlignment="Left"
-                                                Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
 
                                             <!--  评分  -->
                                             <StackPanel
@@ -454,7 +454,7 @@
                                                 Cursor="Hand"
                                                 PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
                                                 Tag="{Binding DataID, Mode=OneWay}"
-                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                                                 <super:Rating
                                                     Half="True"
                                                     RateBackground="{DynamicResource Window.Title.Background}"
@@ -483,7 +483,7 @@
                                                 TextAlignment="Left"
                                                 TextWrapping="Wrap"
                                                 ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                                                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
 
 
                                         </Grid>
@@ -557,7 +557,7 @@
                         FocusVisualStyle="{x:Null}"
                         GroupName="ExtraImageView"
                         IsChecked="{Binding ShowScreenShot, Mode=TwoWay, Converter={StaticResource OppositeBooleanConverter}}"
-                        Style="{StaticResource FlatRadioButton}"
+                        Style="{StaticResource FlatRoundRadioButton}"
                         ToolTip="{DynamicResource Poster}">
                         <Image
                             Width="22"
@@ -571,7 +571,7 @@
                         FocusVisualStyle="{x:Null}"
                         GroupName="ExtraImageView"
                         IsChecked="{Binding ShowScreenShot, Mode=TwoWay}"
-                        Style="{StaticResource FlatRadioButton}"
+                        Style="{StaticResource FlatRoundRadioButton}"
                         ToolTip="{DynamicResource ScreenShot}">
                         <Image
                             Width="22"
@@ -638,10 +638,11 @@
                         <Border
                             Margin="10,5"
                             Padding="5"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Background}"
                             CornerRadius="3"
                             Cursor="Hand"
                             MouseLeftButtonUp="DownLoadInfo"
-                            Style="{StaticResource BorderStyle}">
+                            Style="{StaticResource HoverBorder}">
                             <TextBlock
                                 Grid.Column="1"
                                 Style="{StaticResource BaseTextBlock}"
@@ -650,9 +651,10 @@
                         <Border
                             Margin="10,5"
                             Padding="5"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Background}"
                             CornerRadius="3"
                             Cursor="Hand"
-                            Style="{StaticResource BorderStyle}">
+                            Style="{StaticResource HoverBorder}">
                             <TextBlock
                                 Grid.Column="1"
                                 MouseLeftButtonUp="EditInfo"
@@ -784,7 +786,7 @@
                                     <MenuItem
                                         Header="{DynamicResource Menu_SyncExtra}"
                                         IsEnabled="False"
-                                        Visibility="{Binding ShowSecret, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource bool2VisibilityConverter}}">
+                                        Visibility="{Binding ShowSecret, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <MenuItem Click="DownLoadMagnets" Header="{DynamicResource SyncMagnets}" />
                                     </MenuItem>
                                     <MenuItem Header="{DynamicResource Menu_Advance}">
@@ -990,12 +992,12 @@
                                 Margin="10,5"
                                 Background="Transparent"
                                 SelectedIndex="{Binding InfoSelectedIndex, Mode=TwoWay}"
-                                Style="{DynamicResource TapControlStyle}">
+                                Style="{DynamicResource RoundTabControlStyle}">
                                 <TabItem
                                     Margin="5"
                                     Padding="5"
                                     Header="{DynamicResource MovieInfo}"
-                                    Style="{DynamicResource TopTabItemStyle}">
+                                    Style="{DynamicResource RoundTabItemStyle}">
 
                                     <Grid Name="infoGrid">
                                         <Grid.RowDefinitions>
@@ -1022,7 +1024,7 @@
                                                 Margin="5,5"
                                                 HorizontalAlignment="Left"
                                                 ItemsSource="{Binding CurrentVideo.TagStamp}"
-                                                Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel Orientation="Horizontal" />
@@ -1072,7 +1074,7 @@
                                                 Margin="0,20"
                                                 HorizontalAlignment="Left"
                                                 Cursor="Hand"
-                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource bool2VisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                                                 <super:Rating
                                                     FocusVisualStyle="{x:Null}"
                                                     Half="True"
@@ -1314,10 +1316,11 @@
                                                                 <Border
                                                                     Margin="5,0"
                                                                     Padding="5,2"
+                                                                    super:CommonExt.HoverBackground="{DynamicResource Window.Title.Background}"
                                                                     CornerRadius="3"
                                                                     Cursor="Hand"
                                                                     MouseLeftButtonUp="ShowSameGenre"
-                                                                    Style="{StaticResource BorderStyle}">
+                                                                    Style="{StaticResource HoverBorder}">
                                                                     <TextBlock
                                                                         Style="{StaticResource BaseTextBlock}"
                                                                         Text="{Binding}"
@@ -1421,8 +1424,17 @@
                                                                         </ItemsControl.ItemsPanel>
                                                                         <ItemsControl.ItemTemplate>
                                                                             <DataTemplate>
-                                                                                <Border MouseUp="Border_MouseUp" Style="{StaticResource HoverBorder}">
-                                                                                    <TextBlock Style="{StaticResource GenreTextBlock}" Text="{Binding}" />
+                                                                                <Border
+                                                                                    Margin="5"
+                                                                                    Padding="4"
+                                                                                    CornerRadius="4"
+                                                                                    MouseUp="Border_MouseUp"
+                                                                                    Style="{StaticResource HoverBorder}">
+                                                                                    <TextBlock
+                                                                                        FontSize="14"
+                                                                                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                                                                                        Style="{StaticResource BaseTextBlock}"
+                                                                                        Text="{Binding}" />
                                                                                 </Border>
                                                                             </DataTemplate>
                                                                         </ItemsControl.ItemTemplate>
@@ -1499,7 +1511,7 @@
                                     Margin="5"
                                     Padding="10,5"
                                     Header="{DynamicResource VideoInfo}"
-                                    Style="{DynamicResource TopTabItemStyle}">
+                                    Style="{DynamicResource RoundTabItemStyle}">
                                     <StackPanel Name="infoStackPanel">
 
                                         <Border

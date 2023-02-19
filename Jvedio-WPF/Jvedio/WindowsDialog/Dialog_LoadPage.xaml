@@ -2,7 +2,6 @@
     x:Class="Jvedio.Dialog_LoadPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
@@ -11,9 +10,6 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
-    <Window.Resources>
-        <converter:IntConverter x:Key="IntConverter" />
-    </Window.Resources>
 
 
     <Grid Background="{DynamicResource Window.InnerDialog.Background}">
@@ -80,19 +76,19 @@
                     FontSize="15"
                     Foreground="{DynamicResource Window.Foreground}"
                     IsChecked="True"
-                    Style="{StaticResource FlatRadioButton}" />
+                    Style="{StaticResource FlatRoundRadioButton}" />
                 <RadioButton
                     Click="SaveVedioType"
                     Content="{DynamicResource Censored}"
                     FontSize="15"
                     Foreground="{DynamicResource Window.Foreground}"
-                    Style="{StaticResource FlatRadioButton}" />
+                    Style="{StaticResource FlatRoundRadioButton}" />
                 <RadioButton
                     Click="SaveVedioType"
                     Content="{DynamicResource Europe}"
                     FontSize="15"
                     Foreground="{DynamicResource Window.Foreground}"
-                    Style="{StaticResource FlatRadioButton}" />
+                    Style="{StaticResource FlatRoundRadioButton}" />
             </StackPanel>
 
             <DockPanel>

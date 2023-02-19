@@ -7,47 +7,23 @@
     xmlns:local="clr-namespace:Jvedio"
     d1p1:Ignorable="d"
     StartupUri="WindowStartUp.xaml">
-
-
-
     <Application.Resources>
         <ResourceDictionary>
-
             <ResourceDictionary.MergedDictionaries>
                 <!--  Lang  -->
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/Lang/zh-CN.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/Core/Lang/zh-CN.xaml" />
 
-
-                <!--  ChaoControls  -->
+                <!--  SuperControls  -->
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/XAML/Skin/DefaultColor.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/XAML/Skin/White.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/Themes/SuperControls.xaml" />
 
                 <!--  Main  -->
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/RadioButtonFlatStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TabControlStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ButtonStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/ToggleButtonStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/CheckBoxStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/TextBoxStyle.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio.Style;Component/XAML/BasicStyle.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/ChaoControls/Basic.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/ChaoControls/Pagination.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/ChaoControls/PathRadioButton.xaml" />
-
-
-
-
-
+                <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/SuperControls/Basic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/SuperControls/Pagination.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Jvedio;Component/CustomStyle/SuperControls/PathRadioButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-
-
-
-
         </ResourceDictionary>
     </Application.Resources>
 

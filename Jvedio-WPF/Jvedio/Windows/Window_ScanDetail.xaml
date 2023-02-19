@@ -65,7 +65,7 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid>
-            <Border Margin="0,10,0,0" Background="{DynamicResource Window.Side.Background}" />
+            <Border Background="{DynamicResource Window.Side.Background}" />
 
             <WrapPanel Name="wrapPanel" Orientation="Horizontal">
                 <Border Style="{StaticResource StatisticBorder}">
@@ -73,6 +73,7 @@
                         <TextBlock Text="{DynamicResource ScanTime}" />
                         <TextBox
                             Name="scanDate"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="2022-07-02 10:49:29" />
                     </Grid>
@@ -82,6 +83,7 @@
                         <TextBlock Text="{DynamicResource TimeSpan}" />
                         <TextBox
                             Name="cost"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="00h:00m:00s:020ms" />
                     </Grid>
@@ -91,6 +93,7 @@
                         <TextBlock Text="{DynamicResource Total}" />
                         <TextBox
                             Name="total"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="150" />
                     </Grid>
@@ -100,6 +103,7 @@
                         <TextBlock Text="{DynamicResource Import}" />
                         <TextBox
                             Name="import"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="22" />
                     </Grid>
@@ -109,6 +113,7 @@
                         <TextBlock Text="{DynamicResource NotImport}" />
                         <TextBox
                             Name="notImport"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="22" />
                     </Grid>
@@ -118,6 +123,7 @@
                         <TextBlock Text="{DynamicResource Update}" />
                         <TextBox
                             Name="update"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="33" />
                     </Grid>
@@ -127,6 +133,7 @@
                         <TextBlock Text="{DynamicResource NotImportNFO}" />
                         <TextBox
                             Name="failNfo"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="75" />
                     </Grid>
@@ -138,6 +145,7 @@
             Grid.Row="1"
             Margin="5,0"
             HorizontalContentAlignment="Left"
+            CanUserResizeColumns="True"
             IsReadOnly="True"
             RowHeight="30"
             Style="{DynamicResource FlatDataGrid}">
@@ -148,12 +156,34 @@
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
+                <DataGridTemplateColumn
+                    MinWidth="50"
+                    Header="{DynamicResource Detail}"
+                    SortMemberPath="ShowDetail">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                Margin="0"
+                                Padding="10,4"
+                                Click="ShowDetail"
+                                Content="{DynamicResource Detail}"
+                                FontSize="10"
+                                Style="{StaticResource ButtonPrimary}"
+                                Tag="{Binding ID}"
+                                Visibility="{Binding ShowDetail, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTextColumn
+                    MinWidth="50"
                     Binding="{Binding Handle}"
+                    FontWeight="Bold"
                     Header="{DynamicResource Operate}"
                     IsReadOnly="True" />
 
                 <DataGridTextColumn
+                    MinWidth="100"
                     Binding="{Binding Reason}"
                     Header="{DynamicResource Reason}"
                     IsReadOnly="True" />
@@ -172,12 +202,15 @@
                             <TextBox
                                 MinWidth="40"
                                 Margin="5"
+                                AcceptsReturn="False"
                                 Background="Transparent"
+                                FontSize="12"
                                 Foreground="{DynamicResource Window.Sub.Foreground}"
                                 IsReadOnly="True"
                                 Style="{StaticResource BaseTextBox}"
                                 Text="{Binding FilePath, Mode=OneWay}"
-                                TextAlignment="Left" />
+                                TextAlignment="Left"
+                                TextWrapping="NoWrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

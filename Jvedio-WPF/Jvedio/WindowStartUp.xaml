@@ -215,7 +215,7 @@
 
     <Grid>
 
-        <Grid Panel.ZIndex="10" Visibility="{Binding Restoring, Converter={StaticResource bool2VisibilityConverter}, FallbackValue=Collapsed}">
+        <Grid Panel.ZIndex="10" Visibility="{Binding Restoring, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
             <Border Background="{DynamicResource Window.Background}" Opacity="0.7" />
             <Border
                 Width="200"
