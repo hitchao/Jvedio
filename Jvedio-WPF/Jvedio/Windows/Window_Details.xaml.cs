@@ -1025,7 +1025,7 @@ namespace Jvedio
                     if (video.BigImage == MetaData.DefaultBigImage)
                     {
                         // 检查有无截图
-                        string path = video.getScreenShot();
+                        string path = video.GetScreenShot();
                         if (Directory.Exists(path))
                         {
                             string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
@@ -1052,7 +1052,7 @@ namespace Jvedio
             // 扫描预览图目录
             List<string> imagePathList = new List<string>();
             string imagePath = video.getExtraImage();
-            if (isScreenShot) imagePath = video.getScreenShot();
+            if (isScreenShot) imagePath = video.GetScreenShot();
             await Task.Run(() =>
             {
                 if (Directory.Exists(imagePath))
@@ -1244,7 +1244,7 @@ namespace Jvedio
             }
             else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot")))
             {
-                FileHelper.TryOpenSelectPath(video.getScreenShot());
+                FileHelper.TryOpenSelectPath(video.GetScreenShot());
             }
             else if (header.Equals("GIF"))
             {

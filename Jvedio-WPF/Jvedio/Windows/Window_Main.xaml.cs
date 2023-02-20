@@ -699,7 +699,8 @@ namespace Jvedio
 
             vieModel.PageChangedCompleted += (s, ev) =>
             {
-                if (Properties.Settings.Default.EditMode) SetSelected();
+                if (Properties.Settings.Default.EditMode)
+                    SetSelected();
                 if (ConfigManager.Settings.AutoGenScreenShot)
                     AutoGenScreenShot(vieModel.CurrentVideoList);
             };
@@ -746,6 +747,7 @@ namespace Jvedio
 
         private void AutoGenScreenShot(ObservableCollection<Video> data)
         {
+            Debug.WriteLine("2.AutoGenScreenShot");
             for (int i = 0; i < data.Count; i++)
             {
                 if (data[i].BigImage == MetaData.DefaultBigImage ||
@@ -753,7 +755,7 @@ namespace Jvedio
                 {
                     // 检查有无截图
                     Video video = data[i];
-                    string path = video.getScreenShot();
+                    string path = video.GetScreenShot();
                     if (Directory.Exists(path))
                     {
                         string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
@@ -2687,7 +2689,7 @@ namespace Jvedio
                 {
                     // 检查有无截图
                     Video currentVideo = vieModel.CurrentVideoList[i];
-                    string path = currentVideo.getScreenShot();
+                    string path = currentVideo.GetScreenShot();
                     if (Directory.Exists(path))
                     {
                         string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
@@ -3432,6 +3434,8 @@ namespace Jvedio
             return null;
         }
 
+
+        // todo 重写图片模式
         private void ImageSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (Properties.Settings.Default.ShowImageMode == "0")
@@ -4063,7 +4067,8 @@ namespace Jvedio
 
         public void RefreshData(long dataID)
         {
-            if (vieModel.CurrentVideoList?.Count <= 0) return;
+            if (vieModel.CurrentVideoList?.Count <= 0)
+                return;
             for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
             {
                 if (vieModel.CurrentVideoList[i]?.DataID == dataID)
@@ -4075,7 +4080,7 @@ namespace Jvedio
                     Video.handleEmpty(ref video); // 设置标题和发行日期
 
                     // 设置关联
-                    HashSet<long> set = associationMapper.getAssociationDatas(dataID);
+                    HashSet<long> set = associationMapper.GetAssociationDatas(dataID);
                     if (set != null)
                     {
                         video.HasAssociation = set.Count > 0;
@@ -4095,7 +4100,7 @@ namespace Jvedio
                         if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage)
                         {
                             // 检查有无截图
-                            string path = video.getScreenShot();
+                            string path = video.GetScreenShot();
                             if (Directory.Exists(path))
                             {
                                 string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
@@ -4494,7 +4499,7 @@ namespace Jvedio
             }
             else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot")))
             {
-                FileHelper.TryOpenSelectPath(video.getScreenShot());
+                FileHelper.TryOpenSelectPath(video.GetScreenShot());
             }
             else if (header.Equals("GIF"))
             {
@@ -4876,18 +4881,31 @@ namespace Jvedio
 
         private void AddDataAssociation(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.EditMode = false;
-            vieModel.SelectedVideo.Clear();
-            SetSelected();
-            long dataID = GetIDFromMenuItem(sender as MenuItem, 1);
-            if (dataID <= 0) return;
-            vieModel.LoadExistAssociationDatas(dataID);
-            CurrentAssoDataID = dataID;
-            searchDataBox.Text = string.Empty;
-            vieModel.AssociationDatas?.Clear();
-            vieModel.AssociationSelectedDatas?.Clear();
-            vieModel.LoadAssoMetaData();
-            searchDataPopup.IsOpen = true;
+            if (Properties.Settings.Default.EditMode && vieModel.SelectedVideo.Count > 0)
+            {
+                // 多选关联
+                vieModel.SaveAssociations(vieModel.SelectedVideo);
+                foreach (var item in vieModel.SelectedVideo)
+                {
+                    RefreshData(item.DataID);
+                }
+            }
+            else
+            {
+                Properties.Settings.Default.EditMode = false;
+                vieModel.SelectedVideo.Clear();
+                SetSelected();
+                long dataID = GetIDFromMenuItem(sender as MenuItem, 1);
+                if (dataID <= 0) return;
+                vieModel.LoadExistAssociationDatas(dataID);
+                CurrentAssoDataID = dataID;
+                searchDataBox.Text = string.Empty;
+                vieModel.AssociationDatas?.Clear();
+                vieModel.AssociationSelectedDatas?.Clear();
+                vieModel.LoadAssoMetaData();
+                searchDataPopup.IsOpen = true;
+            }
+
         }
 
         private void associationCancel(object sender, RoutedEventArgs e)
@@ -4898,11 +4916,12 @@ namespace Jvedio
         private void associationConfirm(object sender, RoutedEventArgs e)
         {
             searchDataPopup.IsOpen = false;
-            if (CurrentAssoDataID <= 0) return;
+            if (CurrentAssoDataID <= 0)
+                return;
             List<long> toDelete = vieModel.SaveAssociation(CurrentAssoDataID);
 
             // 刷新关联的影片
-            HashSet<long> set = associationMapper.getAssociationDatas(CurrentAssoDataID);
+            HashSet<long> set = associationMapper.GetAssociationDatas(CurrentAssoDataID);
             set.Add(CurrentAssoDataID);
             foreach (var item in toDelete)
                 set.Add(item);

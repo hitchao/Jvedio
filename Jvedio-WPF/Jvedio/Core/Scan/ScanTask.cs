@@ -411,7 +411,7 @@ namespace Jvedio.Core.Scan
                 case ImageType.Small:
                     return video.getSmallImage();
                 case ImageType.ScreenShot:
-                    return video.getScreenShot();
+                    return video.GetScreenShot();
                 case ImageType.Preview:
                     return video.getExtraImage();
                 case ImageType.Actor:
@@ -469,7 +469,7 @@ namespace Jvedio.Core.Scan
                 // 预览图目录
                 string targetPath = item.getExtraImage();
                 if (type == ImageType.ScreenShot)
-                    targetPath = item.getScreenShot();
+                    targetPath = item.GetScreenShot();
                 else if (type == ImageType.Actor)
                     targetPath = item.getActorPath();
                 DirHelper.TryCreateDirectory(targetPath);

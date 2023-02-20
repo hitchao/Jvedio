@@ -227,7 +227,7 @@ namespace Jvedio.ViewModel
             Video.handleEmpty(ref video);
 
             // 设置关联
-            HashSet<long> set = associationMapper.getAssociationDatas(video.DataID);
+            HashSet<long> set = associationMapper.GetAssociationDatas(video.DataID);
             video.HasAssociation = set.Count > 0;
             video.AssociationList = set.ToList();
             CurrentVideo = video;
@@ -288,7 +288,7 @@ namespace Jvedio.ViewModel
 
                 if (ConfigManager.Settings.AutoGenScreenShot)
                 {
-                    string path = video.getScreenShot();
+                    string path = video.GetScreenShot();
                     if (Directory.Exists(path))
                     {
                         string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);

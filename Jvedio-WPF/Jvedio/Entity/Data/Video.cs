@@ -449,7 +449,7 @@ namespace Jvedio.Entity
             return FileHelper.TryGetFullPath(imagePath);
         }
 
-        public string getScreenShot()
+        public string GetScreenShot()
         {
             string imagePath = GetImagePath(ImageType.ScreenShot);
 

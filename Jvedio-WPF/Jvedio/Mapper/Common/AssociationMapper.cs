@@ -70,7 +70,7 @@ namespace Jvedio.Mapper
             // Console.WriteLine();
         }
 
-        public HashSet<long> getAssociationDatas(long dataID)
+        public HashSet<long> GetAssociationDatas(long dataID)
         {
             InitAdjacencyList();
             Dictionary<long, ListNode<long>> dict = AdjacencyList;

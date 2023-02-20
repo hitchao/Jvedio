@@ -21,13 +21,13 @@ namespace Jvedio
 {
     public class ScanHelper
     {
-        public static double MinFileSize { get; set; } // 最小文件大小吗，单位 B
+        public static double MinFileSize { get; set; } // 最小文件大小（B）
 
         public static string SubSectionFeature { get; set; }
 
         public static List<string> FilePattern { get; set; } // 文件格式
 
-        private const int DEFAULT_MIN_FILESIZE = 1 * 1024 * 1024;
+        public const int DEFAULT_MIN_FILESIZE = 1 * 1024 * 1024;   // 1MB
 
         static ScanHelper()
         {
@@ -310,11 +310,15 @@ namespace Jvedio
 
             // 目录都相同，判断是否分段视频的特征
 
-            // -1  cd1  _1   fhd1
+            // -1,-2,-3,...
+            // cd1,cd2,...
+            // _1,_2,...
+            // fhd1,fhd2,...
+            // ...
             StringBuilder builder = new StringBuilder();
             foreach (var item in GetSubSectionFeature())
                 builder.Append(item + "|");
-            string regexFeature = "(" + builder.ToString().Substring(0, builder.Length - 1) + ")[1-9]{1}";
+            string regexFeature = "(" + builder.ToString().Substring(0, builder.Length - 1) + ")[0-9]{1,2}";
 
             builder.Clear();
             List<string> originPaths = filePathList.Select(arg => arg).ToList();

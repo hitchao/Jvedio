@@ -70,7 +70,7 @@ namespace Jvedio.Core.FFmpeg
             int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum; // 截图线程
             if (threadNum > MAX_THREAD_NUM || threadNum <= 0) threadNum = DEFAULT_THREAD_NUM;
 
-            string outputDir = CurrentVideo.getScreenShot();
+            string outputDir = CurrentVideo.GetScreenShot();
             if (SkipExistScreenShot && Directory.Exists(outputDir))
             {
                 outputs.Append($"{LangManager.GetValueByKey("SkipScreenShotForDirExists")} => {outputDir}");

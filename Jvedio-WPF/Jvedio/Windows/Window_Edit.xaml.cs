@@ -6,6 +6,7 @@ using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -190,10 +191,10 @@ namespace Jvedio
 
         private void NewSubSection(object sender, RoutedEventArgs e)
         {
-            string text = SelectVideo(string.Empty);
+            List<string> fileNames = SelectVideo(string.Empty, true);
             if (vieModel.CurrentVideo.SubSectionList == null)
                 vieModel.CurrentVideo.SubSectionList = new System.Collections.Generic.List<string>();
-            vieModel.CurrentVideo.SubSectionList.Add(text);
+            vieModel.CurrentVideo.SubSectionList.AddRange(fileNames);
             vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
             subSectionTagPanel.TagList = null;
             subSectionTagPanel.TagList = vieModel.CurrentVideo.SubSectionList;
@@ -203,8 +204,14 @@ namespace Jvedio
 
         private void ChooseFile(object sender, MouseButtonEventArgs e)
         {
-            vieModel.CurrentVideo.Path = SelectVideo(vieModel.CurrentVideo.Path);
-            calcSize();
+
+
+            List<string> fileNames = SelectVideo(vieModel.CurrentVideo.Path);
+            if (fileNames.Count > 0)
+            {
+                vieModel.CurrentVideo.Path = fileNames[0];
+                calcSize();
+            }
         }
 
         public void calcSize()
@@ -226,22 +233,20 @@ namespace Jvedio
             vieModel.CurrentVideo.LastScanDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-        public string SelectVideo(string path)
+        public List<string> SelectVideo(string path, bool multi = false)
         {
-            System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog1.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
-            openFileDialog1.FileName = path;
-            openFileDialog1.Filter = Window_Settings.SupportVideoFormat;
-            openFileDialog1.FilterIndex = 1;
-            openFileDialog1.RestoreDirectory = true;
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                string filename = openFileDialog1.FileName;
-                if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
-                    return filename;
-            }
-
-            return path;
+            List<string> result = new List<string>();
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
+            fileDialog.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
+            fileDialog.FileName = path;
+            fileDialog.Filter = Window_Settings.SupportVideoFormat;
+            fileDialog.FilterIndex = 1;
+            fileDialog.RestoreDirectory = true;
+            fileDialog.Multiselect = multi;
+            if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+                fileDialog.FileNames != null)
+                result.AddRange(fileDialog.FileNames.Where(arg => File.Exists(arg)));
+            return result;
         }
 
         private void AddToLabel(object sender, RoutedEventArgs e)

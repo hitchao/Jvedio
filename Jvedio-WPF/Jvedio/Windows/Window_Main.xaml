@@ -37,6 +37,19 @@
 
     <super:BaseWindow.Resources>
 
+        <Style x:Key="BgHoverBorder" TargetType="Border">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Opacity" Value="0.8" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Window.Title.Hover.Background}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <ContextMenu x:Key="TextBlockContextMenu">
             <MenuItem Click="CopyTextBlock" Header="{DynamicResource Copy}" />
         </ContextMenu>
@@ -443,26 +456,28 @@
                                 Height="25"
                                 Margin="0"
                                 MouseLeftButtonUp="EditActor"
-                                Style="{StaticResource HoverBorder}"
+                                Style="{StaticResource BgHoverBorder}"
                                 Tag="{Binding ActorID, Mode=OneWay}">
 
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     FontWeight="Bold"
+                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                     Text="{DynamicResource Edit}" />
                             </Border>
                             <Border
                                 Grid.Column="1"
                                 Margin="0"
                                 MouseLeftButtonUp="ShowSameActor"
-                                Style="{StaticResource HoverBorder}"
+                                Style="{StaticResource BgHoverBorder}"
                                 Tag="{Binding ActorID, Mode=OneWay}">
 
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     FontWeight="Bold"
+                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                                     Text="{DynamicResource View}" />
                             </Border>
 
@@ -1807,10 +1822,7 @@
                                         IsSelected="False"
                                         LineWidth="0"
                                         Style="{StaticResource BaseTogglePanel}">
-                                        <StackPanel
-                                            Name="sideRadioButtons"
-                                            Height="auto"
-                                            VerticalAlignment="Stretch">
+                                        <StackPanel Height="auto" VerticalAlignment="Stretch">
                                             <super:PathRadioButton
                                                 Name="AllRadioButton"
                                                 Command="{Binding SelectCommand}"
@@ -3013,10 +3025,7 @@
                                                                                 <MenuItem Click="AddToPlayerList" Header="{DynamicResource AddToPlayList}" />
                                                                                 <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
                                                                                 <MenuItem Header="{DynamicResource Menu_Advance}">
-                                                                                    <MenuItem
-                                                                                        Click="AddDataAssociation"
-                                                                                        Header="{DynamicResource DataAsso}"
-                                                                                        Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                                                                    <MenuItem Click="AddDataAssociation" Header="{DynamicResource DataAsso}" />
                                                                                     <MenuItem Click="GenerateScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
                                                                                     <MenuItem Click="GenerateGif" Header="{DynamicResource Menu_GenerateGif}" />
                                                                                     <MenuItem

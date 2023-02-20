@@ -20,6 +20,7 @@ using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -113,7 +114,7 @@ namespace Jvedio.ViewModel
             AddNewMovie = new RelayCommand<object>(t => AddSingleMovie());
             DataBases = new ObservableCollection<AppDatabase>();
 
-            refreshVideoRenderToken();
+            RefreshVideoRenderToken();
             refreshActorRenderToken();
 
             // 初始化皮肤
@@ -129,7 +130,7 @@ namespace Jvedio.ViewModel
         //    }
         //}
 
-        public void refreshVideoRenderToken()
+        public void RefreshVideoRenderToken()
         {
             renderVideoCTS = new CancellationTokenSource();
             renderVideoCTS.Token.Register(() => { Console.WriteLine("取消加载页码的任务"); });
@@ -1987,11 +1988,12 @@ namespace Jvedio.ViewModel
             main.pagination.CurrentPage = 1;
             ClickFilterType = string.Empty;
             ShowActorGrid = Visibility.Collapsed;
-            Select();
+            //Select();
         }
 
         public async void Select(bool random = false)
         {
+            Debug.WriteLine("0.Select");
             TabSelectedIndex = 0; // 影片
 
             // 判断当前获取的队列
@@ -2146,7 +2148,9 @@ namespace Jvedio.ViewModel
 
         public async void Render()
         {
-            if (CurrentVideoList == null) CurrentVideoList = new ObservableCollection<Video>();
+            Debug.WriteLine("1.Render");
+            if (CurrentVideoList == null)
+                CurrentVideoList = new ObservableCollection<Video>();
             int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageMode);
             for (int i = 0; i < VideoList.Count; i++)
             {
@@ -2168,7 +2172,7 @@ namespace Jvedio.ViewModel
                 Video.handleEmpty(ref video); // 设置标题和发行日期
 
                 // 设置关联
-                HashSet<long> set = associationMapper.getAssociationDatas(video.DataID);
+                HashSet<long> set = associationMapper.GetAssociationDatas(video.DataID);
                 if (set != null)
                 {
                     video.HasAssociation = set.Count > 0;
@@ -2184,7 +2188,8 @@ namespace Jvedio.ViewModel
                 CurrentVideoList.RemoveAt(i);
             }
 
-            if (renderVideoCT.IsCancellationRequested) refreshVideoRenderToken();
+            if (renderVideoCT.IsCancellationRequested)
+                RefreshVideoRenderToken();
             rendering = false;
 
             // if (pageQueue.Count > 0) pageQueue.Dequeue();
@@ -2266,7 +2271,7 @@ namespace Jvedio.ViewModel
 
                 if (ConfigManager.Settings.AutoGenScreenShot)
                 {
-                    string path = video.getScreenShot();
+                    string path = video.GetScreenShot();
                     if (Directory.Exists(path))
                     {
                         string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
@@ -2358,7 +2363,7 @@ namespace Jvedio.ViewModel
             CurrentExistAssoData = new List<Video>();
 
             // 遍历邻接表，找到所有关联的 id
-            HashSet<long> set = associationMapper.getAssociationDatas(dataID);
+            HashSet<long> set = associationMapper.GetAssociationDatas(dataID);
             if (set?.Count > 0)
             {
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
@@ -2374,6 +2379,12 @@ namespace Jvedio.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// 保存关联关系，并返回被删除的关联
+        /// </summary>
+        /// <param name="dataID"></param>
+        /// <returns></returns>
         public List<long> SaveAssociation(long dataID)
         {
             List<Association> toInsert = new List<Association>();
@@ -2411,6 +2422,19 @@ namespace Jvedio.ViewModel
             }
 
             return toDelete;
+        }
+
+
+        public bool SaveAssociations(List<Video> videoList)
+        {
+            if (videoList.Count == 1)
+                return false;
+            List<Association> toInsert = new List<Association>();
+            long baseId = videoList[0].DataID;
+            foreach (Video item in videoList)
+                toInsert.Add(new Association(baseId, item.DataID));
+            int count = associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
+            return count > 0;
         }
     }
 }
