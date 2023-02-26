@@ -35,7 +35,6 @@ namespace Jvedio.Core.Plugins
 
         private static void MergeAllPlugin()
         {
-            PluginList.AddRange(ThemeManager.PluginMetaDatas);
             PluginList.AddRange(CrawlerManager.PluginMetaDatas);
         }
 

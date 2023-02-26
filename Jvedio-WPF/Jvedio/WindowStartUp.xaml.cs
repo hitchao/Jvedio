@@ -12,6 +12,7 @@ using Jvedio.Entity;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
 using SuperControls.Style;
+using SuperControls.Style.Plugin.Themes;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
@@ -64,7 +65,6 @@ namespace Jvedio
                 FileHelper.TryDeleteDir("Temp");
             }
 
-            // FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers", "temp"));
             FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
         }
 
@@ -101,7 +101,6 @@ namespace Jvedio
             await BackupData(); // 备份文件
             await MovePlugins();
             await DeletePlugins();
-            ThemeManager.LoadAllThemes();       // 加载主题
             CrawlerManager.LoadAllCrawlers();   // 初始化爬虫
             PluginManager.Init();     // 将所有插件进行汇总
 
@@ -121,7 +120,27 @@ namespace Jvedio
 #endif
 
             if (ConfigManager.Main.FirstRun)
-                new Dialog_SetSkinLang(this).ShowDialog();
+            {
+                Dialog_SetSkinLang skinLang =
+                    new Dialog_SetSkinLang(this);
+                skinLang.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex,
+                    ConfigManager.ThemeConfig.ThemeID);
+                skinLang.InitThemes();
+                Dialog_SetSkinLang.OnLangChanged += (lang) =>
+                {
+                    Jvedio.Core.Lang.LangManager.SetLang(lang);
+                    ConfigManager.Settings.CurrentLanguage = lang;
+                    ConfigManager.Settings.Save();
+                };
+                Dialog_SetSkinLang.OnThemeChanged += (ThemeIdx, ThemeID) =>
+                {
+                    ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;
+                    ConfigManager.ThemeConfig.ThemeID = ThemeID;
+                    ConfigManager.ThemeConfig.Save();
+                };
+
+                skinLang.ShowDialog();
+            }
 
 
 
@@ -138,6 +157,9 @@ namespace Jvedio
                 this.TitleHeight = DEFAULT_TITLE_HEIGHT;
             }
         }
+
+
+
 
         private void SetLang()
         {

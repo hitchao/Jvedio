@@ -1178,23 +1178,6 @@ namespace Jvedio.ViewModel
 
         #endregion
 
-        #region "皮肤"
-
-        private ObservableCollection<Theme> _ColorThemes;
-
-        public ObservableCollection<Theme> ColorThemes
-        {
-            get { return _ColorThemes; }
-
-            set
-            {
-                _ColorThemes = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
-
         public void LoadData()
         {
             Select();
@@ -2261,8 +2244,8 @@ namespace Jvedio.ViewModel
             {
                 Video video = videos[i];
                 if (video == null) continue;
-                BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
-                BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
+                BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage bigimage = ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
@@ -2332,8 +2315,8 @@ namespace Jvedio.ViewModel
             {
                 Video video = videos[i];
                 if (video == null) continue;
-                BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
-                BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
+                BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage bigimage = ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;

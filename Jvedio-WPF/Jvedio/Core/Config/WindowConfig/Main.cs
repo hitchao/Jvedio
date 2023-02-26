@@ -5,6 +5,7 @@ namespace Jvedio.Core.WindowConfig
 {
     public class Main : AbstractConfig
     {
+        public const int MAX_IMAGE_WIDTH = 800;
         private Main() : base($"WindowConfig.Main")
         {
             Width = SystemParameters.WorkArea.Width * 0.8;

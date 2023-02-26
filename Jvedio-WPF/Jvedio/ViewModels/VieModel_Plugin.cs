@@ -247,19 +247,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<Theme> _ThemeList;
-
-        [Obsolete]
-        public ObservableCollection<Theme> ThemeList
-        {
-            get { return _ThemeList; }
-
-            set
-            {
-                _ThemeList = value;
-                RaisePropertyChanged();
-            }
-        }
 
         public List<PluginMetaData> InstalledPlugins { get; set; }
 

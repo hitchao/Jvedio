@@ -25,10 +25,9 @@ namespace Jvedio.Entity
 {
     // todo 检视
     [Table(tableName: "metadata_video")]
-#pragma warning disable CS0659 // “Video”重写 Object.Equals(object o) 但不重写 Object.GetHashCode()
     public class Video : MetaData
-#pragma warning restore CS0659 // “Video”重写 Object.Equals(object o) 但不重写 Object.GetHashCode()
     {
+
         public Video() : this(true)
         {
         }
@@ -365,7 +364,7 @@ namespace Jvedio.Entity
             return FileHelper.TryGetFullPath(path);
         }
 
-        private static string parseRelativePath(string path)
+        private static string ParseRelativePath(string path)
         {
             string rootDir = System.IO.Path.GetDirectoryName(path);
             List<string> list = DirHelper.TryGetDirList(rootDir).ToList();
@@ -379,7 +378,7 @@ namespace Jvedio.Entity
             return FileHelper.TryGetFullPath(path);
         }
 
-        public string getSmallImage(string ext = ".jpg", bool searchExt = true)
+        public string GetSmallImage(string ext = ".jpg", bool searchExt = true)
         {
             string smallImagePath = GetImagePath(ImageType.Small, ext);
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
@@ -398,7 +397,7 @@ namespace Jvedio.Entity
             return FileHelper.TryGetFullPath(smallImagePath);
         }
 
-        public string getBigImage(string ext = ".jpg", bool searchExt = true)
+        public string GetBigImage(string ext = ".jpg", bool searchExt = true)
         {
             string bigImagePath = GetImagePath(ImageType.Big, ext);
 
@@ -428,7 +427,7 @@ namespace Jvedio.Entity
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["PreviewImagePath"]));
-                imagePath = parseRelativePath(path);
+                imagePath = ParseRelativePath(path);
             }
 
             return FileHelper.TryGetFullPath(imagePath);
@@ -443,7 +442,7 @@ namespace Jvedio.Entity
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["ActorImagePath"]));
-                imagePath = parseRelativePath(path);
+                imagePath = ParseRelativePath(path);
             }
 
             return FileHelper.TryGetFullPath(imagePath);
@@ -459,7 +458,7 @@ namespace Jvedio.Entity
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["ScreenShotPath"]));
-                imagePath = parseRelativePath(path);
+                imagePath = ParseRelativePath(path);
             }
 
             return imagePath;
@@ -475,11 +474,13 @@ namespace Jvedio.Entity
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["Gif"]));
-                imagePath = parseRelativePath(path);
+                imagePath = ParseRelativePath(path);
             }
 
             return FileHelper.TryGetFullPath(imagePath);
         }
+
+
 
         public bool parseDictInfo(Dictionary<string, object> dict)
         {
@@ -751,16 +752,19 @@ namespace Jvedio.Entity
                      Series?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 || Label?.IndexOfAnyString(Main.TagStrings_Translated) >= 0;
         }
 
-        public void CleanInfo()
+        public static void SetImage(ref Video video, string imgPath)
         {
+            if (video == null) return;
+            BitmapImage image = ImageHelper.ReadImageFromFile(imgPath, Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+            if (image == null) image = MetaData.DefaultBigImage;
+            video.ViewImage = image;
         }
-
         public static void SetImage(ref Video video, int imageMode = 0)
         {
             if (imageMode < 2)
             {
-                BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.getSmallImage());
-                BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.getBigImage());
+                BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = MetaData.DefaultBigImage;
                 video.SmallImage = smallimage;

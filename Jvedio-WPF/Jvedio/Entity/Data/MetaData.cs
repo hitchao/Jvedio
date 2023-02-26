@@ -217,22 +217,6 @@ namespace Jvedio.Entity
             return wrapper;
         }
 
-        public static void SetImage(ref MetaData data, string imgPath)
-        {
-            if (data == null) return;
-            BitmapImage image = ImageHelper.ReadImageFromFile(imgPath);
-            if (image == null) image = MetaData.DefaultBigImage;
-            data.ViewImage = image;
-        }
-
-        public static void SetImage(ref Video video, string imgPath)
-        {
-            if (video == null) return;
-            BitmapImage image = ImageHelper.ReadImageFromFile(imgPath);
-            if (image == null) image = MetaData.DefaultBigImage;
-            video.ViewImage = image;
-        }
-
         public static void handleEmpty(ref MetaData data)
         {
             if (data == null) return;

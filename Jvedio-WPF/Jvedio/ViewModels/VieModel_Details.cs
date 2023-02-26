@@ -248,7 +248,7 @@ namespace Jvedio.ViewModel
                 }
             }
 
-            BitmapImage image = BitmapImageFromFile(CurrentVideo.getBigImage());
+            BitmapImage image = BitmapImageFromFile(CurrentVideo.GetBigImage());
             if (image == null) image = MetaData.DefaultBigImage;
             CurrentVideo.BigImage = image;
             if (InfoSelectedIndex == 1) LoadVideoInfo();
@@ -278,8 +278,8 @@ namespace Jvedio.ViewModel
             {
                 Video video = videos[i];
                 if (video == null) continue;
-                BitmapImage smallimage = ReadImageFromFile(video.getSmallImage());
-                BitmapImage bigimage = ReadImageFromFile(video.getBigImage());
+                BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage());
+                BitmapImage bigimage = ReadImageFromFile(video.GetBigImage());
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;

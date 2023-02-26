@@ -25,33 +25,9 @@ namespace Jvedio.ViewModel
             SetServers();
             RenderPlugins();
             SetBasePicPaths();
-            InitCursor();
         }
 
-        public void InitCursor()
-        {
-            int idx = (int)GetThemeIndex();
-            if (idx >= ThemeManager.Themes.Count) idx = 0;
-            CurrentTheme = ThemeManager.Themes[idx];
-        }
 
-        private long GetThemeIndex()
-        {
-            long idx = ConfigManager.ThemeConfig.ThemeIndex;
-            if (!string.IsNullOrEmpty(ConfigManager.ThemeConfig.ThemeID))
-            {
-                for (int i = 0; i < ThemeManager.Themes.Count; i++)
-                {
-                    if (ThemeManager.Themes[i].ID.Equals(ConfigManager.ThemeConfig.ThemeID))
-                    {
-                        idx = i;
-                        break;
-                    }
-                }
-            }
-
-            return idx;
-        }
 
         public void LoadScanPath(AppDatabase db)
         {
@@ -272,19 +248,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<Theme> _ThemeList;
-
-        [Obsolete]
-        public ObservableCollection<Theme> ThemeList
-        {
-            get { return _ThemeList; }
-
-            set
-            {
-                _ThemeList = value;
-                RaisePropertyChanged();
-            }
-        }
 
         public List<PluginMetaData> InstalledPlugins { get; set; }
 
@@ -1263,24 +1226,6 @@ namespace Jvedio.ViewModel
             set
             {
                 _ListenPort = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
-
-
-        #region "鼠标样式"
-
-        private Theme _CurrentTheme;
-
-        public Theme CurrentTheme
-        {
-            get { return _CurrentTheme; }
-
-            set
-            {
-                _CurrentTheme = value;
                 RaisePropertyChanged();
             }
         }

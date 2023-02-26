@@ -14,7 +14,7 @@ namespace Jvedio.Core.Command
     public class OpenWindow
     {
         public static RelayCommand<Window> Settings { get; set; }
-        public static RelayCommand<Window> Plugin { get; set; }
+        // public static RelayCommand<Window> Plugin { get; set; }
 
         //public static RelayCommand<Window> About { get; set; }
 
@@ -25,7 +25,7 @@ namespace Jvedio.Core.Command
         static OpenWindow()
         {
             Settings = new RelayCommand<Window>(parent => OpenWindowByName("Window_Settings"));
-            Plugin = new RelayCommand<Window>(parent => OpenWindowByName("Window_Plugin"));
+            // Plugin = new RelayCommand<Window>(parent => OpenWindowByName("Window_Plugin"));
             //About = new RelayCommand<Window>(parent => OpenWindowByName("Dialog_About", parent));
             //Upgrade = new RelayCommand<Window>(parent => OpenWindowByName("Dialog_Upgrade", parent));
 

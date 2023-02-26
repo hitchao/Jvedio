@@ -213,7 +213,7 @@ namespace Jvedio.Core.Net
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
                         // todo 原来的 domain 可能没法用，得替换 domain
-                        string saveFileName = video.getBigImage(Path.GetExtension(imageUrl), false);
+                        string saveFileName = video.GetBigImage(Path.GetExtension(imageUrl), false);
                         if (!File.Exists(saveFileName))
                         {
                             byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
@@ -246,7 +246,7 @@ namespace Jvedio.Core.Net
                     // 2. 小图
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
-                        string saveFileName = video.getSmallImage(Path.GetExtension(imageUrl), false);
+                        string saveFileName = video.GetSmallImage(Path.GetExtension(imageUrl), false);
                         if (!File.Exists(saveFileName))
                         {
                             byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>

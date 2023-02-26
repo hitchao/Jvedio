@@ -2077,7 +2077,7 @@
                                             HorizontalOffset="-45"
                                             VerticalOffset="-5">
                                             <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />
-                                            <MenuItem Command="cmd:OpenWindow.Plugin" Header="{DynamicResource Plugin}" />
+                                            <MenuItem Click="ShowPluginWindow" Header="{DynamicResource Plugin}" />
                                             <MenuItem Header="{DynamicResource Scan}">
                                                 <MenuItem Click="ImportVideoByPaths" Header="{DynamicResource ScanMultiDir}" />
                                                 <MenuItem Click="ImportVideo" Header="{DynamicResource ScanNas}" />

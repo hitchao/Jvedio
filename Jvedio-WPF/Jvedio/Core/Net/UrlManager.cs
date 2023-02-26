@@ -43,6 +43,11 @@ namespace Jvedio.Core.Global
             return $"{GetRemoteBasePath()}{DonateJsonBasePath}/config.json";
         }
 
+        public static string GetPluginUrl()
+        {
+            return PLUGIN_LIST_BASE_URL;
+        }
+
 
 
         // *************** 网址 ***************

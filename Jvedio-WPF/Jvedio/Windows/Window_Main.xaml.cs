@@ -16,6 +16,7 @@ using Jvedio.ViewModel;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
 using SuperControls.Style;
+using SuperControls.Style.Plugin;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
@@ -201,7 +202,7 @@ namespace Jvedio
             AdjustWindow(); // 还原窗口为上一次状态
             ConfigFirstRun();
             InitThemeSelector();
-            SetSkin(); // 设置主题颜色
+            //SetSkin(); // 设置主题颜色
             InitNotice(); // 初始化公告
             SetLoadingStatus(false); // todo 删除该行
 
@@ -229,14 +230,14 @@ namespace Jvedio
             themeSelector.AddTransParentColor("TabItem.Background");
             themeSelector.AddTransParentColor("Window.Title.Background");
             themeSelector.AddTransParentColor("ListBoxItem.Background");
+            themeSelector.AddTransParentColor("Window.Side.Background");
+            themeSelector.AddTransParentColor("Window.Side.Hover.Background");
             themeSelector.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
             themeSelector.onThemeChanged += (ThemeIdx, ThemeID) =>
             {
                 ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;
                 ConfigManager.ThemeConfig.ThemeID = ThemeID;
                 ConfigManager.ThemeConfig.Save();
-
-                SetSkin();
                 SetSelected();
                 ActorSetSelected();
             };
@@ -264,24 +265,6 @@ namespace Jvedio
             CheckUpgrade(); // 检查更新
         }
 
-
-        private long GetThemeIndex()
-        {
-            long idx = ConfigManager.ThemeConfig.ThemeIndex;
-            if (!string.IsNullOrEmpty(ConfigManager.ThemeConfig.ThemeID))
-            {
-                for (int i = 0; i < ThemeManager.Themes.Count; i++)
-                {
-                    if (ThemeManager.Themes[i].ID.Equals(ConfigManager.ThemeConfig.ThemeID))
-                    {
-                        idx = i;
-                        break;
-                    }
-                }
-            }
-
-            return idx;
-        }
 
         private void OpenListen()
         {
@@ -353,7 +336,7 @@ namespace Jvedio
 
         private void BindingEventAfterRender()
         {
-            // 翻页
+            // 翻页完成
             pagination.PageSizeChange += (s, e) =>
             {
                 Pagination pagination = s as Pagination;
@@ -373,6 +356,7 @@ namespace Jvedio
                 RefreshCandiadte(null, null);
             };
 
+            // 加载关联影片完成
             vieModel.LoadAssoMetaDataCompleted += (s, e) =>
             {
                 SetAssoSelected();
@@ -380,6 +364,7 @@ namespace Jvedio
                     AutoGenScreenShot(vieModel.AssociationDatas);
             };
 
+            // 下载中
             Global.DownloadManager.Dispatcher.onWorking += (s, e) =>
             {
                 double progress = Global.DownloadManager.Dispatcher.Progress;
@@ -404,6 +389,7 @@ namespace Jvedio
                 });
             };
 
+            // 截图中
             Global.FFmpegManager.Dispatcher.onWorking += (s, e) =>
             {
                 vieModel.ScreenShotProgress = Global.FFmpegManager.Dispatcher.Progress;
@@ -3162,100 +3148,6 @@ namespace Jvedio
                 ConfigManager.Main.FirstRun = false;
             }
         }
-
-        /// <summary>
-        /// 更改皮肤
-        /// </summary>
-        public void SetSkin()
-        {
-            int idx = (int)GetThemeIndex();
-            if (idx >= ThemeManager.Themes.Count) idx = 0;
-            Theme theme = ThemeManager.Themes[idx];
-            if (theme.Images != null && theme.Images.Background != null)
-            {
-                // 设置背景图片
-                string bgPath = Path.GetFullPath(Path.Combine(theme.GetThemePath(), theme.Images.Background));
-                if (File.Exists(bgPath))
-                {
-                    StyleManager.BackgroundImage = ImageHelper.BitmapImageFromFile(bgPath);
-
-                    // 设置颜色绑定
-                    SetBgImageProperty(true, ref theme);
-                }
-                else
-                {
-                    SetBgImageProperty(false, ref theme);
-                    StyleManager.BackgroundImage = null;
-                }
-            }
-            else
-            {
-                SetBgImageProperty(false, ref theme);
-                StyleManager.BackgroundImage = null;
-            }
-
-            BgImage.Source = StyleManager.BackgroundImage;
-
-            // 设置颜色
-            if (theme.Colors != null && theme.Colors.Count > 0)
-            {
-                foreach (string key in theme.Colors.Keys)
-                {
-                    Application.Current.Resources[key] = VisualHelper.HexStringToBrush(theme.Colors[key]);
-                }
-            }
-
-            SuperControls.Style.CustomEventHandler.Render();
-            windowDetails?.SetSkin();
-        }
-
-        private static List<string> TransParentColors = new List<string>()
-        {
-            "Window.Side.Background",
-            "Window.Side.Hover.Background",
-            "Menu.Background",
-        };
-
-        private void SetBgImageProperty(bool enabled, ref Theme theme)
-        {
-            // SettingsBorder.ContextMenu.UpdateDefaultStyle();//设置弹出的菜单正确显示
-            if (enabled)
-            {
-                contentGrid.Background = Brushes.Transparent;
-                SideBorder.Background = Brushes.Transparent;
-                TitleBorder.Background = Brushes.Transparent;
-                statusBar.Background = Brushes.Transparent;
-                MovieItemsControl.Background = Brushes.Transparent;
-
-                // 给颜色透明度降低
-                foreach (var item in TransParentColors)
-                {
-                    if (item.IndexOf("Background") < 0) continue;
-                    string hexString = theme.Colors[item];
-                    Brush brush = VisualHelper.HexStringToBrush(hexString);
-
-                    if (brush != null)
-                    {
-                        StringBuilder color = new StringBuilder(brush.ToString().ToUpper());
-                        if (!color[1].Equals('F') && !!color[2].Equals('F')) continue;
-                        int value = (int)(255 * theme.BgColorOpacity);
-                        string str = value.ToString("X");
-                        color[1] = str[0];
-                        color[2] = str[1];
-                        theme.Colors[item] = color.ToString();
-                    }
-                }
-            }
-            else
-            {
-                contentGrid.SetResourceReference(Control.BackgroundProperty, "Window.Background");
-                SideBorder.SetResourceReference(Control.BackgroundProperty, "Window.Side.Background");
-                TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
-                statusBar.SetResourceReference(Control.BackgroundProperty, "Window.StatusBar.Background");
-                MovieItemsControl.SetResourceReference(Control.BackgroundProperty, "Window.Background");
-            }
-        }
-
         // todo
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
         {
@@ -4487,11 +4379,11 @@ namespace Jvedio
             if (video == null) return;
             if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Poster")))
             {
-                FileHelper.TryOpenSelectPath(video.getBigImage());
+                FileHelper.TryOpenSelectPath(video.GetBigImage());
             }
             else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail")))
             {
-                FileHelper.TryOpenSelectPath(video.getSmallImage());
+                FileHelper.TryOpenSelectPath(video.GetSmallImage());
             }
             else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview")))
             {
@@ -5243,6 +5135,37 @@ namespace Jvedio
             }
         }
 
+        SuperControls.Style.Plugin.Window_Plugin window_Plugin;
+        private void ShowPluginWindow(object sender, RoutedEventArgs e)
+        {
+            if (window_Plugin == null || window_Plugin.IsClosed)
+            {
+                PluginConfig config = new PluginConfig();
+                config.PluginBaseDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+                config.RemoteUrl = UrlManager.GetPluginUrl();
+                window_Plugin = new SuperControls.Style.Plugin.Window_Plugin();
+                window_Plugin.SetConfig(config);
+
+                window_Plugin.OnEnabledChange += (data, enabled) =>
+                {
+                    return true;
+                };
+
+                window_Plugin.OnDelete += (data) =>
+                {
+                    return true;
+                };
+
+                window_Plugin.OnBeginDownload += (data) =>
+                {
+                    return true;
+                };
+            }
+            window_Plugin.Show();
+            window_Plugin.BringIntoView();
+            window_Plugin.Focus();
+            window_Plugin.Activate();
+        }
     }
 
 }

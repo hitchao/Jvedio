@@ -540,23 +540,6 @@ namespace Jvedio
             }
         }
 
-        private void SetSkin(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Themes = (sender as RadioButton).Content.ToString();
-            Properties.Settings.Default.Save();
-            OnSetSkin();
-        }
-
-        private void OnSetSkin()
-        {
-            windowMain?.SetSkin();
-            windowMain?.SetSelected();
-            windowMain?.ActorSetSelected();
-        }
-
-
-
-
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
@@ -1548,10 +1531,10 @@ namespace Jvedio
                     Video video = videos[i];
 
                     // 小图
-                    list.Add($"({video.DataID},{pathType},0,{(File.Exists(video.getSmallImage()) ? 1 : 0)})");
+                    list.Add($"({video.DataID},{pathType},0,{(File.Exists(video.GetSmallImage()) ? 1 : 0)})");
 
                     // 大图
-                    list.Add($"({video.DataID},{pathType},1,{(File.Exists(video.getBigImage()) ? 1 : 0)})");
+                    list.Add($"({video.DataID},{pathType},1,{(File.Exists(video.GetBigImage()) ? 1 : 0)})");
                     if (IndexCanceled) return false;
                     App.Current.Dispatcher.Invoke(() =>
                     {
@@ -1584,9 +1567,8 @@ namespace Jvedio
 
         private void SetDetailBg(object sender, RoutedEventArgs e)
         {
+            // todo
             ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
-
-            windowMain?.SetSkin();
         }
 
 

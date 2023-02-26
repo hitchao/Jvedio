@@ -407,15 +407,15 @@ namespace Jvedio.Core.Scan
             switch (type)
             {
                 case ImageType.Big:
-                    return video.getBigImage();
+                    return video.GetBigImage();
                 case ImageType.Small:
-                    return video.getSmallImage();
+                    return video.GetSmallImage();
                 case ImageType.ScreenShot:
                     return video.GetScreenShot();
                 case ImageType.Preview:
                     return video.getExtraImage();
                 case ImageType.Actor:
-                    return video.getBigImage();
+                    return video.GetBigImage();
             }
             return "";
         }

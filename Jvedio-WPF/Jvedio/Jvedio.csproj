@@ -328,9 +328,6 @@
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="Upgrade\UpgradeHelper.cs" />
     <Compile Include="ViewModels\VieModel_Plugin.cs" />
-    <Compile Include="WindowsDialog\Dialog_SetSkinLang.xaml.cs">
-      <DependentUpon>Dialog_SetSkinLang.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
@@ -362,8 +359,6 @@
     <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
     <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\Common\VideoInfo.cs" />
-    <Compile Include="Core\Plugins\Theme\Theme.cs" />
-    <Compile Include="Core\Plugins\Theme\ThemeManager.cs" />
     <Compile Include="WindowsDialog\Dialog_LoadPage.xaml.cs">
       <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
     </Compile>
@@ -480,10 +475,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomStyle\SuperControls\PathRadioButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WindowsDialog\Dialog_SetSkinLang.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

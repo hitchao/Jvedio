@@ -1012,7 +1012,7 @@ namespace Jvedio
             video.PreviewImageList = new ObservableCollection<BitmapSource>();
             video.PreviewImagePathList = new ObservableCollection<string>();
 
-            string bigImagePath = video.getBigImage();
+            string bigImagePath = video.GetBigImage();
             if (!isScreenShot)
             {
                 if (File.Exists(bigImagePath))
@@ -1232,11 +1232,11 @@ namespace Jvedio
             Video video = vieModel.CurrentVideo;
             if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Poster")))
             {
-                FileHelper.TryOpenSelectPath(video.getBigImage());
+                FileHelper.TryOpenSelectPath(video.GetBigImage());
             }
             else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail")))
             {
-                FileHelper.TryOpenSelectPath(video.getSmallImage());
+                FileHelper.TryOpenSelectPath(video.GetSmallImage());
             }
             else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview")))
             {
