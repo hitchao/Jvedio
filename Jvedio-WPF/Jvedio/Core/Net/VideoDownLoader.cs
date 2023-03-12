@@ -12,6 +12,12 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SuperControls.Style.Plugin;
+using SuperControls.Style;
+using SuperUtils.Framework.ORM.Wrapper;
+using System.Security.Cryptography;
+using SuperUtils.Common;
+using Jvedio.Core.Logs;
 
 namespace Jvedio.Core.Net
 {
@@ -33,6 +39,7 @@ namespace Jvedio.Core.Net
         {
             CurrentVideo = video;
             cancellationToken = token;
+            Header = CrawlerHeader.Default;
         }
 
         /// <summary>
@@ -44,67 +51,68 @@ namespace Jvedio.Core.Net
             State = DownLoadState.Fail;
         }
 
-        public async Task<Dictionary<string, object>> GetInfo(Action<RequestHeader> callBack)
+        public async Task<Dictionary<string, object>> GetInfo(Action<RequestHeader> headerCallBack)
         {
             // 下载信息
             State = DownLoadState.DownLoading;
-            Dictionary<string, object> result = new Dictionary<string, object>();
-            (CrawlerServer crawler, PluginMetaData pluginMetaData) = getCrawlerServer();
-            (string url, string code) = getUrlAndCode(crawler);
-            Header = CrawlerServer.parseHeader(crawler);
-            callBack?.Invoke(Header);
-            Dictionary<string, string> dataInfo = CurrentVideo.ToDictionary();
-            if (!dataInfo.ContainsKey("DataCode"))
-                dataInfo.Add("DataCode", code);
-            else
-                dataInfo["DataCode"] = code;
-            dataInfo["url"] = url;
+            Dictionary<string, object> dataInfo = CurrentVideo.ToDictionary();
+            // 获得所有可用服务器源
+            Dictionary<PluginMetaData, List<CrawlerServer>> crawlers = GetCrawlerServer(dataInfo);
 
-            // 路径就是 pluginID 组合
-            Plugin plugin = new Plugin(pluginMetaData.GetFilePath(), "GetInfo", new object[] { false, Header, dataInfo });
-
-            // 等待很久
-            object o = await plugin.InvokeAsyncMethod();
-            if (o is Dictionary<string, object> d)
+            foreach (var key in crawlers.Keys)
             {
-                return d;
+                List<CrawlerServer> crawlerServers = crawlers[key];
+                foreach (CrawlerServer server in crawlerServers)
+                {
+                    if (server.Invoker == null)
+                        continue;
+                    server.AttachToDict(dataInfo);
+                    // Header 传递代理配置进去
+                    object o = await server.Invoker.SetMethod("GetInfo").InvokeAsync(new object[] { Header, dataInfo });
+                    if (o is Dictionary<string, object> d)
+                    {
+                        // 成功一个立即返回，否则使用下一个
+                        if (d.ContainsKey("Header") && d["Header"] is Dictionary<string, string> dict)
+                        {
+                            server.Headers = JsonUtils.TrySerializeObject(dict);
+                            Header.Headers = dict;
+                        }
+                        headerCallBack?.Invoke(Header);
+                        return d;
+                    }
+                }
             }
-
-            return result;
+            return null;
         }
 
-        public (string url, string code) getUrlAndCode(CrawlerServer server)
-        {
-            // server != NULL
-            // server.ServerName != NULL
-            string baseUrl = server.Url;
-            string url = baseUrl;
-            string code = string.Empty;
-            string vid = CurrentVideo.VID;
+        //public (string url, string code) GetUrlAndCode(CrawlerServer server)
+        //{
+        //    // server != NULL
+        //    // server.ServerName != NULL
+        //    string baseUrl = server.Url;
+        //    string url = baseUrl;
 
-            // if ("BUS".Equals(serverName))
-            // {
-            //    url = $"{baseUrl}{vid}";
-            //    code = vid;
-            // }
-            // else if ("DB".Equals(serverName))
-            // {
-            //    url = baseUrl;
-            //    IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>()
-            //        .Eq("WebType", "db").Eq("ValueType", "video").Eq("LocalValue", vid);
-            //    UrlCode urlCode = GlobalMapper.urlCodeMapper.selectOne(wrapper);
-            //    if (urlCode != null)
-            //        code = urlCode.RemoteValue;
-            // }
-            // else if ("FC".Equals(serverName))
-            // {
-            //    // 后面必须要有 /
-            //    url = $"{baseUrl}article/{vid.Replace("FC2-", "")}/";
-            // }
-            return (url, code);
-        }
 
-        public (CrawlerServer, PluginMetaData) getCrawlerServer()
+
+        // if ("BUS".Equals(serverName))
+        // {
+        //    url = $"{baseUrl}{vid}";
+        //    code = vid;
+        // }
+        // else if ("DB".Equals(serverName))
+        // {
+        //    url = baseUrl;
+
+        // }
+        // else if ("FC".Equals(serverName))
+        // {
+        //    // 后面必须要有 /
+        //    url = $"{baseUrl}article/{vid.Replace("FC2-", "")}/";
+        // }
+        //    return (url, code);
+        //}
+
+        public Dictionary<PluginMetaData, List<CrawlerServer>> GetCrawlerServer(Dictionary<string, object> dataInfo)
         {
             // 获取信息类型，并设置爬虫类型
             if (ConfigManager.ServerConfig.CrawlerServers.Count == 0 || CrawlerManager.PluginMetaDatas?.Count == 0)
@@ -112,28 +120,65 @@ namespace Jvedio.Core.Net
             List<PluginMetaData> pluginMetaDatas = CrawlerManager.PluginMetaDatas.Where(arg => arg.Enabled).ToList();
             if (pluginMetaDatas.Count == 0)
                 throw new CrawlerNotFoundException();
-
-            PluginMetaData PluginMetaData = null;
-            List<CrawlerServer> crawlers = null;
+            Dictionary<PluginMetaData, List<CrawlerServer>> result =
+                new Dictionary<PluginMetaData, List<CrawlerServer>>();
             for (int i = 0; i < pluginMetaDatas.Count; i++)
             {
                 // 一组支持刮削的网址列表
-                PluginMetaData = pluginMetaDatas[i];
-                crawlers = ConfigManager.ServerConfig.CrawlerServers
+                PluginMetaData metaData = pluginMetaDatas[i];
+                List<CrawlerServer> crawlerServers = ConfigManager.ServerConfig.CrawlerServers
                     .Where(arg => arg.Enabled && !string.IsNullOrEmpty(arg.PluginID) &&
-                    arg.PluginID.ToLower().Equals(PluginMetaData.PluginID.ToLower())
+                    arg.PluginID.ToLower().Equals(metaData.PluginID.ToLower())
                     && arg.Available == 1 && !string.IsNullOrEmpty(arg.Url)).ToList();
 
-                if (crawlers != null && crawlers.Count > 0) break;
+                if (crawlerServers == null || crawlerServers.Count == 0)
+                    continue;
+
+                // 过滤器仅可使用的刮削器
+                try
+                {
+                    PluginInvoker invoker = new PluginInvoker(metaData.GetFilePath());
+                    object reasonObject = invoker.SetMethod("IsPluginAvailable").Invoke(new object[] { dataInfo });
+                    string reason = reasonObject as string;
+                    if (string.IsNullOrEmpty(reason))
+                    {
+
+                        string urlCodeString = string.Empty;
+                        IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>().Eq("ValueType", "video").Eq("LocalValue", CurrentVideo.VID);
+                        UrlCode urlCode = MapperManager.urlCodeMapper.SelectOne(wrapper);
+                        if (urlCode != null && urlCode.CodeId > 0)
+                        {
+                            foreach (var item in crawlerServers)
+                            {
+                                item.UrlCode = urlCode;
+                            }
+                        }
+
+                        foreach (var item in crawlerServers)
+                        {
+                            item.Invoker = invoker;
+                        }
+                        result[metaData] = crawlerServers;
+                    }
+                    else
+                    {
+                        Logger.Warning(reason);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageCard.Error($"插件 {metaData.PluginName} 发生了异常：" + ex.Message);
+                    continue;
+                }
             }
 
-            if (crawlers == null || crawlers.Count == 0)
+            if (result.Keys.Count == 0)
                 throw new CrawlerNotFoundException();
 
+
+
             // todo 爬虫调度器
-            crawlers = crawlers.OrderBy(arg => arg.PluginID).ToList();
-            CrawlerServer crawler = crawlers[0];        // 如果有多个可用的网址，默认取第一个
-            return (crawler, PluginMetaData);
+            return result;
         }
 
         public async Task<byte[]> DownloadImage(string url, RequestHeader header, Action<string> onError = null)

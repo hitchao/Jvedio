@@ -4,6 +4,7 @@ using Jvedio.Entity;
 using SuperControls.Style;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.Tasks;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -90,7 +91,7 @@ namespace Jvedio.Core.FFmpeg
                     Status = TaskStatus.RanToCompletion;
                     stopwatch.Stop();
                     ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                    logger.Info($"{LangManager.GetValueByKey("TotalCost")} {ElapsedMilliseconds} ms");
+                    logger.Info($"{LangManager.GetValueByKey("TotalCost")} {DateHelper.ToReadableTime(ElapsedMilliseconds)}");
                     logger.Info(LangManager.GetValueByKey("Detail"));
                     logger.Info(outputs);
                 }

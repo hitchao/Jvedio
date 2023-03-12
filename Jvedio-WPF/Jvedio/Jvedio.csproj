@@ -256,6 +256,7 @@
     <Compile Include="Core\Enums\NotImportReason.cs" />
     <Compile Include="Core\Enums\SearchMode.cs" />
     <Compile Include="Core\Enums\ThemeSingleColor.cs" />
+    <Compile Include="Core\Exceptions\CrawlerNotSupportException.cs" />
     <Compile Include="Core\Exceptions\SqlException.cs" />
     <Compile Include="Core\Exceptions\NFOParseException.cs" />
     <Compile Include="Core\Exceptions\DllLoadFailedException.cs" />
@@ -308,10 +309,7 @@
     <Compile Include="Core\Scan\ScanDetailInfo.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
     <Compile Include="CustomStyle\StyleManager.cs" />
-    <Compile Include="Core\Plugins\Plugin.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
-    <Compile Include="Core\Plugins\PluginManager.cs" />
-    <Compile Include="Core\Plugins\PluginMetaData.cs" />
     <Compile Include="Core\Scan\ComicScan.cs" />
     <Compile Include="Core\Scan\GameScan.cs" />
     <Compile Include="Core\Scan\PictureScan.cs" />
@@ -327,7 +325,6 @@
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="Upgrade\UpgradeHelper.cs" />
-    <Compile Include="ViewModels\VieModel_Plugin.cs" />
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
@@ -421,9 +418,6 @@
     <Compile Include="ViewModels\VieModel_Main.cs" />
     <Compile Include="ViewModels\VieModel_StartUp.cs" />
     <Compile Include="ViewModels\VieModel_Settings.cs" />
-    <Compile Include="Windows\Window_Plugin.xaml.cs">
-      <DependentUpon>Window_Plugin.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\Window_ScanDetail.xaml.cs">
       <DependentUpon>Window_ScanDetail.xaml</DependentUpon>
     </Compile>
@@ -506,10 +500,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\Window_Plugin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Windows\Window_ScanDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -573,6 +563,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Content Include="Reference\CommonNet.dll" />
+    <Resource Include="Resources\Picture\update.png" />
+    <Resource Include="Resources\Picture\setting.png" />
+    <Resource Include="Resources\Picture\about.png" />
     <Resource Include="Resources\Picture\雷达扫描.png" />
     <Resource Include="Resources\Picture\网络信息.png" />
     <Resource Include="Resources\Picture\欧美扫描.png" />
@@ -774,34 +767,36 @@
   <PropertyGroup>
     <PreBuildEvent>mkdir "$(ProjectDir)bin\Debug"
 
-XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Debug"    /E /Y /i
-XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Debug"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Debug"    /Y /i
+XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Debug"    /Y /i
 
 mkdir "$(ProjectDir)bin\Release"
 
-XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /E /Y /i
-XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Release"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Release"    /Y /i
+XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Release"    /Y /i
 
-XCOPY  "D:\SuperStudio\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\net472\Newtonsoft.Json.dll" "$(ProjectDir)Reference"    /E /Y /i
-XCOPY "D:\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll" "$(ProjectDir)Reference"    /E /Y /i
-XCOPY "D:\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll" "$(ProjectDir)Reference"    /E /Y /i</PreBuildEvent>
+XCOPY  "D:\SuperStudio\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\net472\Newtonsoft.Json.dll" "$(ProjectDir)Reference"    /Y /i
+
+XCOPY "D:\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll" "$(ProjectDir)Reference"    /Y /i
+
+XCOPY "D:\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll" "$(ProjectDir)Reference"    /Y /i
+
+</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i
 
 mkdir "$(ProjectDir)bin\Debug\plugins\crawlers"
 
-XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
-
-XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Debug\plugins\crawlers"    /Y /i
 
 XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Release"   /Y /i
 
 mkdir "$(ProjectDir)bin\Release\plugins\crawlers"
 
-XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i
+XCOPY  "$(ProjectDir)Reference\CommonNet.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /Y /i
 
-XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /E /Y /i</PostBuildEvent>
+XCOPY  "$(ProjectDir)Reference\HtmlAgilityPack.dll"  "$(ProjectDir)bin\Release\plugins\crawlers"    /Y /i</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

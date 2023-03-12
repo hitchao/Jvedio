@@ -8,6 +8,7 @@ using Jvedio.Core.Global;
 using Jvedio.Core.Logs;
 using Jvedio.Core.Media;
 using Jvedio.Core.Net;
+using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
@@ -223,6 +224,7 @@ namespace Jvedio
             //OpenWindowByName("Window_Settings");
             // new MsgBox(this, "demo").ShowDialog();
             InitUpgrade();
+            //ShowPluginWindow(null, null);
         }
 
         public void InitThemeSelector()
@@ -2715,16 +2717,27 @@ namespace Jvedio
             addToScreenShot(task);
         }
 
-        public void addToDownload(DownLoadTask task)
+        public bool addToDownload(DownLoadTask task)
         {
             if (!vieModel.DownLoadTasks.Contains(task))
             {
                 Global.DownloadManager.Dispatcher.Enqueue(task);
                 vieModel.DownLoadTasks.Add(task);
+                return true;
             }
             else
             {
-                MessageNotify.Info(LangManager.GetValueByKey("TaskExists"));
+                DownLoadTask downLoadTask = vieModel.DownLoadTasks.Where(arg => arg.DataID == task.DataID).FirstOrDefault();
+                if (!downLoadTask.Running)
+                {
+                    downLoadTask.Restart();
+                    return true;
+                }
+                else
+                {
+                    MessageNotify.Error("任务进行中！");
+                    return false;
+                }
             }
         }
 
@@ -5064,7 +5077,9 @@ namespace Jvedio
         private void DeleteDownloadInfo(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode && new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
+            if (Properties.Settings.Default.EditMode &&
+                new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete"))
+                .ShowDialog() == false)
                 return;
             CleanDataInfo(vieModel.SelectedVideo);
             if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
@@ -5136,6 +5151,7 @@ namespace Jvedio
         }
 
         SuperControls.Style.Plugin.Window_Plugin window_Plugin;
+
         private void ShowPluginWindow(object sender, RoutedEventArgs e)
         {
             if (window_Plugin == null || window_Plugin.IsClosed)
@@ -5151,14 +5167,58 @@ namespace Jvedio
                     return true;
                 };
 
-                window_Plugin.OnDelete += (data) =>
+                window_Plugin.OnBeginDelete += (PluginMetaData data) =>
                 {
-                    return true;
+                    PluginType pluginType = data.PluginType;
+
+                    if (pluginType == PluginType.Crawler)
+                    {
+                        List<string> list = JsonUtils.TryDeserializeObject<List<string>>(ConfigManager.PluginConfig.DeleteList);
+                        if (list == null)
+                            list = new List<string>();
+                        if (!list.Contains(data.PluginID))
+                        {
+                            list.Add(data.PluginID);
+                            ConfigManager.PluginConfig.DeleteList = JsonUtils.TrySerializeObject(list);
+                            ConfigManager.PluginConfig.Save();
+                            MessageNotify.Info("已加入待删除列表，重启后生效");
+                        }
+                        else
+                        {
+                            MessageNotify.Warning("已经在待删除列表里");
+                        }
+                    }
+                    return false;
+                };
+                window_Plugin.OnDeleteCompleted += (data) =>
+                {
+                    PluginType pluginType = data.PluginType;
+                    if (pluginType == PluginType.Theme)
+                    {
+                        themeSelector.InitThemes();
+                    }
+                    else if (pluginType == PluginType.Crawler)
+                    {
+                        CrawlerManager.Init();
+                    }
                 };
 
                 window_Plugin.OnBeginDownload += (data) =>
                 {
                     return true;
+                };
+                window_Plugin.OnDownloadCompleted += (data) =>
+                {
+                    // 根据类型，通知到对应模块
+                    PluginType pluginType = data.PluginType;
+                    if (pluginType == PluginType.Theme)
+                    {
+                        themeSelector.InitThemes();
+                    }
+                    else if (pluginType == PluginType.Crawler)
+                    {
+                        CrawlerManager.Init();
+                    }
                 };
             }
             window_Plugin.Show();

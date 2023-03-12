@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static Jvedio.MapperManager;
 using SuperUtils.Framework.Tasks;
+using SuperUtils.Time;
 
 namespace Jvedio.Core.Net
 {
@@ -66,6 +67,28 @@ namespace Jvedio.Core.Net
             return DataID.GetHashCode();
         }
 
+        private const String WRONG_STATUS_CODE = "-1";
+
+        static Dictionary<int, string> STATUS_DICT = new Dictionary<int, string>()
+        {
+            {200,"成功获取资源" },
+            {500,"远程服务器错误" },
+            {403,"远程服务器拒绝了您的访问" },
+            {404,"远程服务器无该资源" },
+        };
+
+        public string StatusCodeToMessage(int status)
+        {
+            if (STATUS_DICT.ContainsKey(status))
+            {
+                return STATUS_DICT[status];
+            }
+            else
+            {
+                return status.ToString();
+            }
+        }
+
         public long DataID { get; set; }
 
         public DataType DataType { get; set; }
@@ -74,121 +97,355 @@ namespace Jvedio.Core.Net
 
         public bool OverrideInfo { get; set; }// 强制下载覆盖信息
 
+
+        public async Task<Dictionary<string, object>> GetDataInfo(Video video, VideoDownLoader downLoader, RequestHeader header)
+        {
+            Dictionary<string, object> dict = null;
+            if (video == null || video.DataID <= 0)
+            {
+                Message = $"不存在 DataID={DataID} 的资源";
+                logger.Error(Message);
+                FinalizeWithCancel();
+                throw new Exception(Message);
+            }
+
+            // 判断是否需要下载，自动跳过已下载的信息
+            if (video.toDownload() || OverrideInfo)
+            {
+                if (!string.IsNullOrEmpty(video.VID))
+                {
+                    // 有 VID 的
+                    try
+                    {
+                        dict = await downLoader.GetInfo((h) => { header = h; });
+                    }
+                    catch (CrawlerNotFoundException ex)
+                    {
+                        // todo 显示到界面上
+                        Message = ex.Message;
+                        logger.Error(Message);
+                        FinalizeWithCancel();
+                        throw ex;
+                    }
+                    catch (DllLoadFailedException ex)
+                    {
+                        Message = ex.Message;
+                        logger.Error(Message);
+                        FinalizeWithCancel();
+                        throw ex;
+                    }
+                }
+                else
+                {
+                    // 无 VID 的
+                    throw new Exception("同步信息需要 VID");
+                }
+
+                // 等待了很久都没成功
+                logger.Info($"暂停 {DateHelper.ToReadableTime(Delay.INFO)}");
+                await Task.Delay(Delay.INFO);
+                return dict;
+            }
+            else
+            {
+                Message = "该资源信息已同步，跳过信息下载";
+                logger.Info(Message);
+                logger.Info(LangManager.GetValueByKey("SkipDownLoadInfoAndDownloadImage"));
+                return null;
+            }
+        }
+
+        public async Task<bool> DownloadPoster(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
+        {
+            object o = getInfoFromExist("BigImageUrl", video, dict);
+            string imageUrl = o != null ? o.ToString() : string.Empty;
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                // todo 原来的 domain 可能没法用，得替换 domain
+                string saveFileName = video.GetBigImage(Path.GetExtension(imageUrl), false);
+                if (!File.Exists(saveFileName))
+                {
+                    byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
+                    {
+                        if (!string.IsNullOrEmpty(error))
+                            logger.Error($"{imageUrl} => {error}");
+                    });
+                    if (fileByte != null && fileByte.Length > 0)
+                    {
+                        FileHelper.ByteArrayToFile(fileByte, saveFileName);
+                        StatusText = "3.1 同步海报图成功";
+                        return true;
+                    }
+                    else
+                        logger.Error($"同步海报图x失败x，获取字节大小为空");
+                    await Task.Delay(Delay.BIG_IMAGE);
+                }
+                else
+                {
+                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                }
+            }
+            else
+            {
+                logger.Error("同步海报图地址为空");
+            }
+            return false;
+        }
+
+        public async Task<bool> DownloadThumnail(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
+        {
+            object o = getInfoFromExist("SmallImageUrl", video, dict);
+            string imageUrl = o != null ? o.ToString() : string.Empty;
+
+            // 2. 小图
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                string saveFileName = video.GetSmallImage(Path.GetExtension(imageUrl), false);
+                if (!File.Exists(saveFileName))
+                {
+                    byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
+                    {
+                        if (!string.IsNullOrEmpty(error))
+                            logger.Error($"{imageUrl} => {error}");
+                    });
+                    if (fileByte != null && fileByte.Length > 0)
+                    {
+                        FileHelper.ByteArrayToFile(fileByte, saveFileName);
+                        StatusText = "4.1 同步缩略图成功";
+                        return true;
+                    }
+                    else
+                        logger.Error($"同步缩略图x失败x，获取字节大小为空");
+                    await Task.Delay(Delay.SMALL_IMAGE);
+                }
+                else
+                {
+                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                }
+            }
+            else
+            {
+                logger.Error("同步缩略图地址为空");
+            }
+            return false;
+        }
+
+        public async Task<bool> DownloadActors(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
+        {
+            object names = getInfoFromExist("ActorNames", video, dict);
+            object urls = getInfoFromExist("ActressImageUrl", video, dict);
+
+            if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl)
+            {
+                if (actorNames != null && ActressImageUrl != null && actorNames.Count == ActressImageUrl.Count)
+                {
+                    int actorCount = actorNames.Count;
+                    for (int i = 0; i < actorCount; i++)
+                    {
+                        string actorName = actorNames[i];
+                        string url = ActressImageUrl[i];
+                        ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
+                        if (actorInfo == null || actorInfo.ActorID <= 0)
+                        {
+                            actorInfo = new ActorInfo();
+                            actorInfo.ActorName = actorName;
+                            actorInfo.ImageUrl = url;
+                            actorMapper.Insert(actorInfo);
+                        }
+
+                        // 保存信息
+                        string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
+                        metaDataMapper.ExecuteNonQuery(sql);
+                        StatusText = $"{i + 1}/{actorCount} 成功保存演员信息：{actorName}";
+                        // 下载图片
+                        string saveFileName = actorInfo.GetImagePath(video.Path, Path.GetExtension(url), false);
+                        if (!File.Exists(saveFileName))
+                        {
+                            byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
+                            {
+                                if (!string.IsNullOrEmpty(error))
+                                    logger.Error($"{url} => {error}");
+                            });
+                            if (fileByte != null && fileByte.Length > 0)
+                            {
+                                FileHelper.ByteArrayToFile(fileByte, saveFileName);
+                                StatusText = $"{i + 1}/{actorCount}同步演员头像（{actorName}）成功";
+                            }
+                            else
+                                logger.Error($"{i + 1}/{actorCount}同步演员头像（{actorName}）x失败x，获取字节大小为空");
+                        }
+                        else
+                        {
+                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> DownloadPreviews(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
+        {
+            object urls = getInfoFromExist("ExtraImageUrl", video, dict);
+            if (DownloadPreview && urls != null && urls is List<string> imageUrls)
+            {
+                if (imageUrls != null && imageUrls.Count > 0)
+                {
+                    int imageCount = imageUrls.Count;
+                    for (int i = 0; i < imageCount; i++)
+                    {
+                        if (Canceld)
+                        {
+                            FinalizeWithCancel();
+                            return false;
+                        }
+                        string url = imageUrls[i];
+                        // 下载图片
+                        string saveFiledir = video.getExtraImage();
+                        if (!Directory.Exists(saveFiledir))
+                            Directory.CreateDirectory(saveFiledir);
+                        string saveFileName = Path.Combine(saveFiledir, Path.GetFileName(url));
+                        if (!File.Exists(saveFileName))
+                        {
+                            StatusText = $"{LangManager.GetValueByKey("Preview")} {i + 1}/{imageCount}";
+                            byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
+                            {
+                                if (!string.IsNullOrEmpty(error))
+                                    logger.Error($"{url} => {error}");
+                            });
+                            if (fileByte != null && fileByte.Length > 0)
+                            {
+                                FileHelper.ByteArrayToFile(fileByte, saveFileName);
+                                PreviewImageEventArgs arg = new PreviewImageEventArgs(saveFileName, fileByte);
+                                onDownloadPreview?.Invoke(this, arg);
+                                StatusText = $"{i + 1}/{imageCount}同步预览图 成功";
+                            }
+                            else
+                            {
+                                logger.Error($"{i + 1}/{imageCount}同步预览图 x失败x，获取字节大小为空");
+                            }
+
+                            await Task.Delay(Delay.EXTRA_IMAGE);
+                        }
+                        else
+                        {
+                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                        }
+                    }
+                    return true;
+                }
+            }
+            else if (!DownloadPreview)
+                StatusText = LangManager.GetValueByKey("NotSetPreviewDownload");
+            return false;
+        }
+
+        public async Task<bool> CheckDataInfo(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
+        {
+            // 只有同步了信息才需要校验信息
+            if (!(video.toDownload() || OverrideInfo))
+            {
+                return true;
+            }
+            bool success = false;
+            if (dict != null && dict.ContainsKey("Error"))
+            {
+                string statusCode = dict.Get("StatusCode", WRONG_STATUS_CODE).ToString();
+                logger.Info($"StatusCode: {statusCode}");
+                string error = dict["Error"].ToString();
+                if (!string.IsNullOrEmpty(error) && !error.Equals(HttpResult.DEFAULT_ERROR_MSG))
+                {
+                    Message = error;
+                    logger.Error(error);
+                }
+                success = dict.ContainsKey("Title") && !string.IsNullOrEmpty(dict["Title"].ToString());
+            }
+            await Task.Delay(10);
+            if (!success)
+            {
+                if (string.IsNullOrEmpty(Message))
+                    Message = dict.Get("StatusCode", "-1").ToString();
+                if (int.TryParse(Message, out int status))
+                    Message = StatusCodeToMessage(status);
+                logger.Error(Message);
+                // 发生了错误，停止下载
+                FinalizeWithCancel();
+                // 但是已经请求了网址，所以视为完成，并加入到长时间等待队列
+                Status = TaskStatus.Canceled;
+                return false;
+            }
+            else
+            {
+                StatusText = "2.1 成功同步信息";
+            }
+
+            bool downloadInfo = video.ParseDictInfo(dict); // 是否从网络上刮削了信息
+            if (downloadInfo)
+            {
+                StatusText = LangManager.GetValueByKey("SaveToLibrary");
+                // 并发锁
+                videoMapper.UpdateById(video);
+                metaDataMapper.UpdateById(video.toMetaData());
+
+                // 保存 dataCode
+                if (dict.ContainsKey("DataCode") && dict.ContainsKey("WebType"))
+                {
+                    UrlCode urlCode = new UrlCode();
+                    urlCode.LocalValue = video.VID;
+                    urlCode.RemoteValue = dict["DataCode"].ToString();
+                    urlCode.ValueType = "video";
+                    urlCode.WebType = dict["WebType"].ToString();
+                    urlCodeMapper.Insert(urlCode, InsertMode.Replace);
+                    StatusText = "2.2 成功保存 DataCode";
+                }
+
+                // 保存 nfo
+                video.SaveNfo();
+                if (ConfigManager.Settings.SaveInfoToNFO)
+                    StatusText = "2.3 成功保存 NFO";
+                onDownloadSuccess?.Invoke(this, null);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public override void DoWork()
         {
             Task.Run(async () =>
             {
                 Progress = 0;
                 stopwatch.Start();
-                Dictionary<string, object> dict = null;
                 if (DataType == DataType.Video)
                 {
                     Video video = videoMapper.SelectVideoByID(DataID);
-                    if (video == null || video.DataID <= 0)
+                    RequestHeader header = null;
+                    Dictionary<string, object> dict = null;
+                    VideoDownLoader downLoader = new VideoDownLoader(video, token);
+                    StatusText = "1. 开始同步信息";
+                    try
                     {
-                        Message = $"不存在 DataID={DataID} 的资源";
+                        dict = await GetDataInfo(video, downLoader, header);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex.Message);
                         FinalizeWithCancel();
                         return;
                     }
-
-                    VideoDownLoader downLoader = new VideoDownLoader(video, token);
-                    RequestHeader header = null;
-
-                    // 判断是否需要下载，自动跳过已下载的信息
-                    if (video.toDownload() || OverrideInfo)
-                    {
-                        StatusText = LangManager.GetValueByKey("DownloadInfo");
-                        if (!string.IsNullOrEmpty(video.VID))
-                        {
-                            // 有 VID 的
-                            try
-                            {
-                                dict = await downLoader.GetInfo((h) => { header = h; });
-                            }
-                            catch (CrawlerNotFoundException ex)
-                            {
-                                // todo 显示到界面上
-                                Message = ex.Message;
-                                logger.Error(Message);
-                                FinalizeWithCancel();
-                                return;
-                            }
-                            catch (DllLoadFailedException ex)
-                            {
-                                Message = ex.Message;
-                                logger.Error(Message);
-                                FinalizeWithCancel();
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            // 无 VID 的
-                            Status = TaskStatus.Canceled;
-                        }
-
-                        // 等待了很久都没成功
-                        await Task.Delay(Delay.INFO);
-                    }
-                    else
-                    {
-                        logger.Info(LangManager.GetValueByKey("SkipDownLoadInfoAndDownloadImage"));
-                    }
-
-                    bool success = true; // 是否刮削到信息（包括db的部分信息）
-                    Progress = 33f;
-                    if (dict != null && dict.ContainsKey("Error"))
-                    {
-                        string error = dict["Error"].ToString();
-                        if (!string.IsNullOrEmpty(error) && !error.Equals(HttpResult.DEFAULT_ERROR_MSG))
-                        {
-                            Message = error;
-                            logger.Error(error);
-                        }
-
-                        success = dict.ContainsKey("Title") && !string.IsNullOrEmpty(dict["Title"].ToString());
-                    }
-
+                    bool success = true;
+                    Progress = 10f;
+                    StatusText = "2. 校验信息";
+                    success = await CheckDataInfo(video, dict, downLoader, header);
                     if (!success)
                     {
                         dict = null;
-
-                        // 发生了错误，停止下载
+                        StatusText = "2.1. 校验信息不通过";
                         FinalizeWithCancel();
-
-                        // 但是已经请求了网址，所以视为完成，并加入到长时间等待队列
-                        Status = TaskStatus.RanToCompletion;
                         return;
-                    }
-
-                    bool downloadInfo = video.parseDictInfo(dict); // 是否从网络上刮削了信息
-                    if (downloadInfo)
-                    {
-                        logger.Info(LangManager.GetValueByKey("SaveToLibrary"));
-
-                        // 并发锁
-                        videoMapper.UpdateById(video);
-                        metaDataMapper.UpdateById(video.toMetaData());
-
-                        // 保存 dataCode
-                        if (dict.ContainsKey("DataCode") && dict.ContainsKey("WebType"))
-                        {
-                            UrlCode urlCode = new UrlCode();
-                            urlCode.LocalValue = video.VID;
-                            urlCode.RemoteValue = dict["DataCode"].ToString();
-                            urlCode.ValueType = "video";
-                            urlCode.WebType = dict["WebType"].ToString();
-                            urlCodeMapper.Insert(urlCode, InsertMode.Replace);
-                        }
-
-                        // 保存 nfo
-                        video.SaveNfo();
-
-                        onDownloadSuccess?.Invoke(this, null);
-                    }
-                    else
-                    {
-                        dict = null;
                     }
 
                     if (Canceld)
@@ -204,66 +461,17 @@ namespace Jvedio.Core.Net
                         header.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
                         header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
                     }
-
-                    object o = getInfoFromExist("BigImageUrl", video, dict);
-                    string imageUrl = o != null ? o.ToString() : string.Empty;
-                    StatusText = LangManager.GetValueByKey("Poster");
-
-                    // 1. 大图
-                    if (!string.IsNullOrEmpty(imageUrl))
-                    {
-                        // todo 原来的 domain 可能没法用，得替换 domain
-                        string saveFileName = video.GetBigImage(Path.GetExtension(imageUrl), false);
-                        if (!File.Exists(saveFileName))
-                        {
-                            byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
-                             {
-                                 if (!string.IsNullOrEmpty(error))
-                                     logger.Error($"{imageUrl} => {error}");
-                             });
-                            if (fileByte != null && fileByte.Length > 0)
-                                FileHelper.ByteArrayToFile(fileByte, saveFileName);
-                            await Task.Delay(Delay.BIG_IMAGE);
-                        }
-                        else
-                        {
-                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
-                        }
-                    }
-
+                    Message = "";
+                    StatusText = "3. 开始同步海报图";
+                    success = await DownloadPoster(video, dict, downLoader, header);
                     Progress = 66f;
-
                     if (Canceld)
                     {
                         FinalizeWithCancel();
                         return;
                     }
-
-                    StatusText = LangManager.GetValueByKey("Thumbnail");
-                    o = getInfoFromExist("SmallImageUrl", video, dict);
-                    imageUrl = o != null ? o.ToString() : string.Empty;
-
-                    // 2. 小图
-                    if (!string.IsNullOrEmpty(imageUrl))
-                    {
-                        string saveFileName = video.GetSmallImage(Path.GetExtension(imageUrl), false);
-                        if (!File.Exists(saveFileName))
-                        {
-                            byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
-                            {
-                                if (!string.IsNullOrEmpty(error))
-                                    logger.Error($"{imageUrl} => {error}");
-                            });
-                            if (fileByte != null && fileByte.Length > 0)
-                                FileHelper.ByteArrayToFile(fileByte, saveFileName);
-                            await Task.Delay(Delay.SMALL_IMAGE);
-                        }
-                        else
-                        {
-                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
-                        }
-                    }
-
+                    StatusText = "4. 开始同步缩略图";
+                    success = await DownloadThumnail(video, dict, downLoader, header);
                     Progress = 77f;
                     if (Canceld)
                     {
@@ -272,52 +480,8 @@ namespace Jvedio.Core.Net
                     }
 
                     onDownloadSuccess?.Invoke(this, null);
-                    StatusText = LangManager.GetValueByKey("Actors");
-
-                    object names = getInfoFromExist("ActorNames", video, dict);
-                    object urls = getInfoFromExist("ActressImageUrl", video, dict);
-
-                    // 3. 演员信息和头像
-                    if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl)
-                    {
-                        if (actorNames != null && ActressImageUrl != null && actorNames.Count == ActressImageUrl.Count)
-                        {
-                            for (int i = 0; i < actorNames.Count; i++)
-                            {
-                                string actorName = actorNames[i];
-                                string url = ActressImageUrl[i];
-                                ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
-                                if (actorInfo == null || actorInfo.ActorID <= 0)
-                                {
-                                    actorInfo = new ActorInfo();
-                                    actorInfo.ActorName = actorName;
-                                    actorInfo.ImageUrl = url;
-                                    actorMapper.Insert(actorInfo);
-                                }
-
-                                // 保存信息
-                                string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
-                                metaDataMapper.ExecuteNonQuery(sql);
-
-                                // 下载图片
-                                string saveFileName = actorInfo.GetImagePath(video.Path, Path.GetExtension(url), false);
-                                if (!File.Exists(saveFileName))
-                                {
-                                    byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
-                                    {
-                                        if (!string.IsNullOrEmpty(error))
-                                            logger.Error($"{url} => {error}");
-                                    });
-                                    if (fileByte != null && fileByte.Length > 0)
-                                        FileHelper.ByteArrayToFile(fileByte, saveFileName);
-                                }
-                                else
-                                {
-                                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
-                                }
-                            }
-                        }
-                    }
+                    StatusText = "5. 开始同步演员头像";
+                    success = await DownloadActors(video, dict, downLoader, header);
 
                     Progress = 88f;
                     if (Canceld)
@@ -326,65 +490,16 @@ namespace Jvedio.Core.Net
                         return;
                     }
 
-                    // 4. 下载预览图
-                    urls = getInfoFromExist("ExtraImageUrl", video, dict);
-                    if (DownloadPreview && urls != null && urls is List<string> imageUrls)
-                    {
-                        StatusText = LangManager.GetValueByKey("Preview");
-                        if (imageUrls != null && imageUrls.Count > 0)
-                        {
-                            for (int i = 0; i < imageUrls.Count; i++)
-                            {
-                                if (Canceld)
-                                {
-                                    FinalizeWithCancel();
-                                    return;
-                                }
-
-                                string url = imageUrls[i];
-
-                                // 下载图片
-                                string saveFiledir = video.getExtraImage();
-                                if (!Directory.Exists(saveFiledir)) Directory.CreateDirectory(saveFiledir);
-                                string saveFileName = Path.Combine(saveFiledir, Path.GetFileName(url));
-                                if (!File.Exists(saveFileName))
-                                {
-                                    StatusText = $"{LangManager.GetValueByKey("Preview")} {i + 1}/{imageUrls.Count}";
-                                    byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
-                                    {
-                                        if (!string.IsNullOrEmpty(error))
-                                            logger.Error($"{url} => {error}");
-                                    });
-                                    if (fileByte != null && fileByte.Length > 0)
-                                    {
-                                        FileHelper.ByteArrayToFile(fileByte, saveFileName);
-                                        PreviewImageEventArgs arg = new PreviewImageEventArgs(saveFileName, fileByte);
-                                        onDownloadPreview?.Invoke(this, arg);
-                                    }
-
-                                    await Task.Delay(Delay.EXTRA_IMAGE);
-                                }
-                                else
-                                {
-                                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
-                                }
-                            }
-                        }
-                    }
-                    else
-                    if (!DownloadPreview)
-                        logger.Info(LangManager.GetValueByKey("NotSetPreviewDownload"));
-                    Success = true;
+                    StatusText = "6. 开始同步预览图";
+                    success = await DownloadPreviews(video, dict, downLoader, header);
                     Status = TaskStatus.RanToCompletion;
-                    Message = "";
                 }
-
-                Console.WriteLine("下载完成！");
+                StatusText = "7. 同步所有内容完成";
                 Running = false;
                 Progress = 100.00f;
                 stopwatch.Stop();
                 ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                logger.Info($"{LangManager.GetValueByKey("TotalCost")} {ElapsedMilliseconds} ms");
+                logger.Info($"{LangManager.GetValueByKey("TotalCost")} {DateHelper.ToReadableTime(ElapsedMilliseconds)}");
             });
         }
 

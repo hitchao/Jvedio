@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Jvedio.Entity;
+using SuperControls.Style.Plugin;
 
 namespace Jvedio.Core.Crawler
 {
@@ -28,6 +30,9 @@ namespace Jvedio.Core.Crawler
         {
             PluginID = string.Empty;
         }
+
+        public UrlCode UrlCode;
+        public PluginInvoker Invoker;
 
         public string PluginID { get; set; }
 
@@ -131,7 +136,7 @@ namespace Jvedio.Core.Crawler
             }
         }
 
-        public static RequestHeader parseHeader(CrawlerServer server)
+        public static RequestHeader ParseHeader(CrawlerServer server)
         {
             if (server == null) return CrawlerHeader.Default;
             RequestHeader result = new RequestHeader();
@@ -146,7 +151,6 @@ namespace Jvedio.Core.Crawler
                     dict.Add("cookie", server.Cookies);
                 result.Headers = dict;
             }
-
             return result;
         }
 
@@ -161,6 +165,12 @@ namespace Jvedio.Core.Crawler
             }
 
             return true;
+        }
+
+        public void AttachToDict(Dictionary<string, object> dict)
+        {
+            dict["Url"] = Url;
+            dict["Header"] = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(Headers);
         }
     }
 }

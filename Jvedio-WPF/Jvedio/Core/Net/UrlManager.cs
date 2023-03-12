@@ -61,6 +61,7 @@ namespace Jvedio.Core.Global
         public static readonly string PLUGIN_LIST_BASE_URL = "https://hitchao.github.io/Jvedio-Plugin/";
         public static readonly string FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/";
         public static readonly string PLUGIN_UPLOAD_HELP = "https://github.com/hitchao/Jvedio/wiki/08_Plugin";
+        public static readonly string HEADER_HELP = "https://github.com/hitchao/Jvedio/wiki/05_Headers";
 
         // public static readonly string FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z";
         [Obsolete]

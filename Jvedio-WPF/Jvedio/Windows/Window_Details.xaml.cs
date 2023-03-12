@@ -226,6 +226,11 @@ namespace Jvedio
 
         public void DownLoad(object sender, RoutedEventArgs e)
         {
+            if (windowMain == null)
+            {
+                MessageNotify.Error("主界面必须开启！");
+                return;
+            }
             Video video = vieModel.CurrentVideo;
             if (video == null || video.DataID <= 0) return;
             DownLoadTask task = new DownLoadTask(video, true, ConfigManager.Settings.OverrideInfo); // 详情页面下载预览图
@@ -260,8 +265,12 @@ namespace Jvedio
             };
             if (!Global.DownloadManager.Dispatcher.Working)
                 Global.DownloadManager.Dispatcher.BeginWork();
-            windowMain?.addToDownload(task);
-            windowMain?.setDownloadStatus();
+            bool? added = windowMain?.addToDownload(task);
+            if ((bool)added)
+            {
+                windowMain?.setDownloadStatus();
+                MessageNotify.Success("成功加入下载列表");
+            }
         }
 
         public void GetScreenGif(object sender, RoutedEventArgs e)

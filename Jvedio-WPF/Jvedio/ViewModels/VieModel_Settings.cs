@@ -4,6 +4,7 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
+using SuperControls.Style.Plugin;
 using SuperUtils.Common;
 using SuperUtils.WPF.VieModel;
 using System;
@@ -23,7 +24,6 @@ namespace Jvedio.ViewModel
         {
             PicPaths = new Dictionary<string, object>();
             SetServers();
-            RenderPlugins();
             SetBasePicPaths();
         }
 
@@ -42,82 +42,7 @@ namespace Jvedio.ViewModel
             Servers = new ObservableCollection<Server>();
         }
 
-        public void RenderPlugins()
-        {
-            InstalledPlugins = new List<PluginMetaData>();
-            foreach (PluginMetaData plugin in PluginManager.PluginList)
-                InstalledPlugins.Add(plugin);
 
-            RefreshCurrentPlugins();
-
-            // if (AllFreshPlugins != null)
-            // {
-            //    CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
-            //    foreach (var item in getSortResult(AllFreshPlugins))
-            //        CurrentFreshPlugins.Add(item);
-            // }
-        }
-
-        public void RefreshCurrentPlugins()
-        {
-            CurrentInstalledPlugins = new ObservableCollection<PluginMetaData>();
-            foreach (var item in GetSortResult(InstalledPlugins))
-                CurrentInstalledPlugins.Add(item);
-
-            CurrentFreshPlugins = new ObservableCollection<PluginMetaData>();
-            foreach (var item in GetSortResult(AllFreshPlugins))
-                CurrentFreshPlugins.Add(item);
-        }
-
-        public int SortEnabledIndex = -1;           // 0 启用 1 未启用
-        public PluginType SortPluginType = PluginType.None;
-
-        public List<PluginMetaData> GetSortResult(IEnumerable<PluginMetaData> pluginMetaDatas)
-        {
-            // 筛选
-            IEnumerable<PluginMetaData> list = pluginMetaDatas;
-            if (list == null || list.Count() == 0) return new List<PluginMetaData>();
-
-            if (SortEnabledIndex >= 0)
-            {
-                bool enabled = SortEnabledIndex == 0;
-                list = list.Where(arg => arg.Enabled == enabled);
-            }
-
-            if (SortPluginType != PluginType.None)
-            {
-                list = list.Where(arg => arg.PluginType == SortPluginType);
-            }
-
-            if (!string.IsNullOrEmpty(PluginSearch))
-            {
-                list = pluginMetaDatas.Where(arg => arg.PluginName.ToLower().IndexOf(PluginSearch.ToLower()) >= 0);
-            }
-
-            if (PluginSortIndex == 0)
-            {
-                if (PluginSortDesc)
-                    list = list.OrderByDescending(arg => arg.PluginName);
-                else
-                    list = list.OrderBy(arg => arg.PluginName);
-            }
-            else if (PluginSortIndex == 1)
-            {
-                if (PluginSortDesc)
-                    list = list.OrderByDescending(arg => arg.AuthorNames);
-                else
-                    list = list.OrderBy(arg => arg.AuthorNames);
-            }
-            else if (PluginSortIndex == 2)
-            {
-                if (PluginSortDesc)
-                    list = list.OrderByDescending(arg => arg.ReleaseNotes.Date);
-                else
-                    list = list.OrderBy(arg => arg.ReleaseNotes.Date);
-            }
-
-            return list.ToList();
-        }
 
         public void SetServers()
         {
@@ -248,101 +173,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-        public List<PluginMetaData> InstalledPlugins { get; set; }
-
-        public List<PluginMetaData> AllFreshPlugins { get; set; }
-
-        private ObservableCollection<PluginMetaData> _CurrentInstalledPlugins;
-
-        public ObservableCollection<PluginMetaData> CurrentInstalledPlugins
-        {
-            get { return _CurrentInstalledPlugins; }
-
-            set
-            {
-                _CurrentInstalledPlugins = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<PluginMetaData> _CurrentFreshPlugins;
-
-        public ObservableCollection<PluginMetaData> CurrentFreshPlugins
-        {
-            get { return _CurrentFreshPlugins; }
-
-            set
-            {
-                _CurrentFreshPlugins = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _PluginSortDesc;
-
-        public bool PluginSortDesc
-        {
-            get { return _PluginSortDesc; }
-
-            set
-            {
-                _PluginSortDesc = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _PluginSortIndex;
-
-        public int PluginSortIndex
-        {
-            get { return _PluginSortIndex; }
-
-            set
-            {
-                _PluginSortIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string _PluginSearch = string.Empty;
-
-        public string PluginSearch
-        {
-            get { return _PluginSearch; }
-
-            set
-            {
-                _PluginSearch = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _PluginEnabled;
-
-        public bool PluginEnabled
-        {
-            get { return _PluginEnabled; }
-
-            set
-            {
-                _PluginEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private PluginMetaData _CurrentPlugin;
-
-        public PluginMetaData CurrentPlugin
-        {
-            get { return _CurrentPlugin; }
-
-            set
-            {
-                _CurrentPlugin = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private ObservableCollection<Server> _Servers;
 
@@ -493,6 +323,18 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _DownloadWhenTitleNull = ConfigManager.Settings.DownloadWhenTitleNull;
+
+        public bool DownloadWhenTitleNull
+        {
+            get { return _DownloadWhenTitleNull; }
+
+            set
+            {
+                _DownloadWhenTitleNull = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private bool _OverrideInfo = ConfigManager.Settings.OverrideInfo;
 
@@ -529,6 +371,18 @@ namespace Jvedio.ViewModel
             set
             {
                 _CrawlerServers = value;
+                RaisePropertyChanged();
+            }
+        }
+        private PluginMetaData _CurrentPlugin;
+
+        public PluginMetaData CurrentPlugin
+        {
+            get { return _CurrentPlugin; }
+
+            set
+            {
+                _CurrentPlugin = value;
                 RaisePropertyChanged();
             }
         }

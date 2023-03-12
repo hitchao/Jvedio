@@ -18,6 +18,7 @@ namespace Jvedio.Core.WindowConfig
             AutoBackup = true;
             DetailShowBg = true;
             CurrentLanguage = "zh-CN";
+            DownloadWhenTitleNull = true;
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
@@ -46,6 +47,7 @@ namespace Jvedio.Core.WindowConfig
         public bool DownloadPreviewImage { get; set; }
 
         public bool SkipExistImage { get; set; }
+        public bool DownloadWhenTitleNull { get; set; }
 
         public bool OverrideInfo { get; set; }
 

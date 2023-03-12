@@ -43,6 +43,8 @@ using System.Windows.Threading;
 using static Jvedio.Core.Global.UrlManager;
 using static Jvedio.VisualTools.WindowHelper;
 using SuperControls.Style.Windows;
+using SuperControls.Style.Plugin;
+using Jvedio.Core.Global;
 
 namespace Jvedio
 {
@@ -845,7 +847,7 @@ namespace Jvedio
         private async void CheckUrl(CrawlerServer server, Action<int> callback)
         {
             // library 需要保证 Cookies 和 UserAgent完全一致
-            RequestHeader header = CrawlerServer.parseHeader(server);
+            RequestHeader header = CrawlerServer.ParseHeader(server);
             try
             {
                 string title = await HttpHelper.AsyncGetWebTitle(server.Url, header);
@@ -1122,6 +1124,7 @@ namespace Jvedio
             ConfigManager.Settings.PicPathMode = vieModel.PicPathMode;
             ConfigManager.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
             ConfigManager.Settings.SkipExistImage = vieModel.SkipExistImage;
+            ConfigManager.Settings.DownloadWhenTitleNull = vieModel.DownloadWhenTitleNull;
             ConfigManager.Settings.OverrideInfo = vieModel.OverrideInfo;
             ConfigManager.Settings.IgnoreCertVal = vieModel.IgnoreCertVal;
             ConfigManager.Settings.AutoBackup = vieModel.AutoBackup;
@@ -1257,22 +1260,22 @@ namespace Jvedio
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int idx = (sender as ListBox).SelectedIndex;
-            if (idx < 0) return;
-            if (vieModel.CrawlerServers?.Count > 0)
-            {
-                string pluginID = PluginType.Crawler.ToString() + "/" + vieModel.DisplayCrawlerServers[idx];
-                PluginMetaData pluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
-                if (pluginMetaData != null && pluginMetaData.Enabled) vieModel.PluginEnabled = true;
-                else vieModel.PluginEnabled = false;
-                if (vieModel.CrawlerServers.ContainsKey(pluginID))
-                {
-                    ServersDataGrid.ItemsSource = null;
-                    ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
-                    ConfigManager.Settings.CrawlerSelectedIndex = idx;
-                }
+            //int idx = (sender as ListBox).SelectedIndex;
+            //if (idx < 0) return;
+            //if (vieModel.CrawlerServers?.Count > 0)
+            //{
+            //    string pluginID = PluginType.Crawler.ToString() + "/" + vieModel.DisplayCrawlerServers[idx];
+            //    PluginMetaData pluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+            //    if (pluginMetaData != null && pluginMetaData.Enabled) vieModel.PluginEnabled = true;
+            //    else vieModel.PluginEnabled = false;
+            //    if (vieModel.CrawlerServers.ContainsKey(pluginID))
+            //    {
+            //        ServersDataGrid.ItemsSource = null;
+            //        ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
+            //        ConfigManager.Settings.CrawlerSelectedIndex = idx;
+            //    }
 
-            }
+            //}
         }
 
         private void ShowCrawlerHelp(object sender, MouseButtonEventArgs e)
@@ -1452,7 +1455,8 @@ namespace Jvedio
 
         private void ShowHeaderHelp(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(LangManager.GetValueByKey("HeaderHelp"));
+            setHeaderPopup.IsOpen = false;
+            FileHelper.TryOpenUrl(UrlManager.HEADER_HELP);
         }
 
         private void ShowScanReHelp(object sender, MouseButtonEventArgs e)
@@ -1460,10 +1464,6 @@ namespace Jvedio
             // MessageCard.Info("在扫描时，对于视频 VID 的识别，例如填写正则为 .*钢铁侠.* 则只要文件名含有钢铁侠，");
         }
 
-        private void ShowRenameHelp(object sender, MouseButtonEventArgs e)
-        {
-            MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("Attention_Rename"));
-        }
 
 
 
@@ -1571,6 +1571,31 @@ namespace Jvedio
             ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
         }
 
+        private void PluginList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int idx = (sender as ListBox).SelectedIndex;
+            if (idx < 0) return;
+            if (vieModel.CrawlerServers?.Count > 0)
+            {
+                string pluginID = PluginType.Crawler.ToString().ToLower() + "/" + vieModel.DisplayCrawlerServers[idx];
+                PluginMetaData pluginMetaData = CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+                if (vieModel.CrawlerServers.ContainsKey(pluginID))
+                {
+                    ServersDataGrid.ItemsSource = null;
+                    ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
+                    vieModel.CurrentPlugin = pluginMetaData;
+                    ConfigManager.Settings.CrawlerSelectedIndex = idx;
+                }
 
+            }
+        }
+
+        private void SavePluginSetting(object sender, RoutedEventArgs e)
+        {
+            // 保存插件启用情况
+            vieModel.CurrentPlugin.SaveConfig();
+
+
+        }
     }
 }

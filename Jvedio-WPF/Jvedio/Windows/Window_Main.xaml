@@ -1814,7 +1814,7 @@
 
                                     <super:TogglePanel
                                         Grid.Row="0"
-                                        Width="{Binding ElementName=SideBorder, Path=ActualWidth}"
+                                        Margin="1,0"
                                         Padding="0,5"
                                         FontSize="15"
                                         Header="{DynamicResource Default}"
@@ -1923,6 +1923,7 @@
                                         </Border>
                                         <super:TogglePanel
                                             Height="auto"
+                                            Margin="1,0"
                                             Padding="0,5"
                                             FontSize="15"
                                             Header="{DynamicResource TagStamp}"
@@ -2076,7 +2077,10 @@
                                             Panel.ZIndex="7"
                                             HorizontalOffset="-45"
                                             VerticalOffset="-5">
-                                            <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />
+                                            <MenuItem
+                                                Command="cmd:OpenWindow.Settings"
+                                                Header="{DynamicResource Settings}"
+                                                Icon="/Resources/Picture/setting.png" />
                                             <MenuItem Click="ShowPluginWindow" Header="{DynamicResource Plugin}" />
                                             <MenuItem Header="{DynamicResource Scan}">
                                                 <MenuItem Click="ImportVideoByPaths" Header="{DynamicResource ScanMultiDir}" />
@@ -2108,7 +2112,8 @@
                                                 <MenuItem
                                                     Click="ShowAbout"
                                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                                                    Header="{DynamicResource About}" />
+                                                    Header="{DynamicResource About}"
+                                                    Icon="/Resources/Picture/about.png" />
                                                 <MenuItem Click="OpenHelp" Header="{DynamicResource Help}" />
                                                 <MenuItem Click="OpenFeedBack" Header="{DynamicResource FeedBack}" />
                                                 <MenuItem Click="OpenJvedioWebPage" Header="{DynamicResource WebSite}" />
@@ -2129,7 +2134,8 @@
                                             <MenuItem
                                                 Click="ShowUpgradeWindow"
                                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                                                Header="{DynamicResource CheckUpgrade}" />
+                                                Header="{DynamicResource CheckUpgrade}"
+                                                Icon="/Resources/Picture/update.png" />
 
                                         </ContextMenu>
                                     </Border.ContextMenu>
@@ -4900,7 +4906,7 @@
                                                             <StackPanel Margin="5" Orientation="Horizontal">
                                                                 <TextBlock Text="{Binding StatusText}" />
                                                                 <TextBlock
-                                                                    Width="250"
+                                                                    Width="150"
                                                                     VerticalAlignment="Center"
                                                                     Foreground="Red"
                                                                     Text="{Binding Message, StringFormat='    {0} '}"

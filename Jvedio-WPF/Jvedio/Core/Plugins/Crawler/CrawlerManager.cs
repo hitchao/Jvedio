@@ -1,5 +1,7 @@
 ﻿using Jvedio.Core.Logs;
 using SuperControls.Style;
+using SuperControls.Style.Plugin;
+using SuperUtils.Common;
 using SuperUtils.IO;
 using SuperUtils.Reflections;
 using System;
@@ -25,7 +27,7 @@ namespace Jvedio.Core.Plugins.Crawler
         public static string BaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
 
         // todo DLL 签名验证
-        public static void LoadAllCrawlers()
+        public static void Init()
         {
             // 移动
 
@@ -42,7 +44,7 @@ namespace Jvedio.Core.Plugins.Crawler
                 PluginMetaData data = GetPluginData(dllPath);
                 if (data == null) continue;
                 data.SetPluginID(PluginType.Crawler, Path.GetFileName(crawler_dir));
-                data.Enabled = true;
+                //data.Enabled = true;
                 CrawlerInfo info = new CrawlerInfo();
                 info.Path = dllPath;
                 PluginMetaDatas.Add(data);
@@ -54,6 +56,7 @@ namespace Jvedio.Core.Plugins.Crawler
             }
 
             ConfigManager.ServerConfig.Read(); // 必须在加载所有爬虫插件后在初始化
+            PluginMetaData.BaseDir = BaseDir;
         }
 
         public static bool NeedToCopy(string dllPath)
@@ -69,17 +72,35 @@ namespace Jvedio.Core.Plugins.Crawler
 
         private static PluginMetaData GetPluginData(string dllPath)
         {
-            string json_path = Path.Combine(Path.GetDirectoryName(dllPath), "main.json");
+            string basePath = Path.GetDirectoryName(dllPath);
+            string json_path = Path.Combine(basePath, "main.json");
             PluginMetaData data = null;
             string jsonPath = GetCrawlerJsonPath(json_path);
             if (!File.Exists(jsonPath)) return null;
             data = PluginMetaData.ParseByPath(jsonPath);
             if (data == null) return null;
+            // 必须加载
             Assembly dll = ReflectionHelper.TryLoadAssembly(dllPath);
             if (dll == null) return null;
             Type classType = getPublicType(dll);
             if (classType == null) return null;
             data.Installed = true;
+
+            // 读取配置
+            string configPath = Path.Combine(basePath, "config.json");
+            if (File.Exists(configPath) && FileHelper.TryReadFile(configPath) is string configString
+                && !string.IsNullOrEmpty(configString))
+            {
+                Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(configString);
+                if (dict != null)
+                {
+                    dict.TryGetValue("enabled", out object enabledString);
+                    if (enabledString is bool enabled)
+                        data.Enabled = enabled;
+                }
+            }
+
+
 
             return data;
         }
@@ -90,6 +111,12 @@ namespace Jvedio.Core.Plugins.Crawler
             string name = Path.GetFileNameWithoutExtension(dllPath);
             return Path.Combine(dir, name + ".json");
         }
+
+        //public static bool IsPluginInUsed(string pluginId)
+        //{
+        //    // 如果在刮削，则不允许删除任何刮削器插件
+
+        //}
 
         private static Type getPublicType(Assembly dll)
         {
@@ -109,37 +136,6 @@ namespace Jvedio.Core.Plugins.Crawler
             foreach (Type type in types)
             {
                 if (type.IsPublic) return type;
-            }
-
-            return null;
-        }
-
-        public static Dictionary<string, string> GetInfo(Type type)
-        {
-            FieldInfo fieldInfo = type.GetField("Infos");
-            if (fieldInfo != null)
-            {
-                object value = fieldInfo.GetValue(null);
-                if (value != null)
-                {
-                    try
-                    {
-                        return (Dictionary<string, string>)value;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex);
-                        return null;
-                    }
-                }
-                else
-                {
-                    Logger.Warning("Infos 字段没有值");
-                }
-            }
-            else
-            {
-                Logger.Warning("DLL 无 Infos 字段");
             }
 
             return null;

@@ -101,8 +101,7 @@ namespace Jvedio
             await BackupData(); // 备份文件
             await MovePlugins();
             await DeletePlugins();
-            CrawlerManager.LoadAllCrawlers();   // 初始化爬虫
-            PluginManager.Init();     // 将所有插件进行汇总
+            CrawlerManager.Init();   // 初始化爬虫
 
             vieModel_StartUp = new VieModel_StartUp();  // todo 检视
             this.DataContext = vieModel_StartUp;
@@ -141,6 +140,7 @@ namespace Jvedio
 
                 skinLang.ShowDialog();
             }
+
 
 
 
@@ -189,7 +189,15 @@ namespace Jvedio
             {
                 for (int i = list.Count - 1; i >= 0; i--)
                 {
-                    string targetPath = Path.GetFullPath(Path.Combine(PathManager.BasePluginsPath, list[i].ToLower().Replace("/", "s/")));
+                    string pluginId = list[i];
+                    string[] paths = pluginId.Split(new char[] { '/', '\\' });
+                    if (paths.Length <= 1)
+                        continue;
+                    string type = paths[0];
+                    if (!type.EndsWith("s"))
+                        type += "s";
+                    paths[0] = type;
+                    string targetPath = Path.GetFullPath(Path.Combine(PathManager.BasePluginsPath, paths.Aggregate(Path.Combine)));
                     if (Directory.Exists(targetPath))
                     {
                         DirHelper.TryDelete(targetPath);

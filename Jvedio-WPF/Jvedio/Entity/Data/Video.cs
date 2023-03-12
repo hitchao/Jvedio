@@ -261,6 +261,10 @@ namespace Jvedio.Entity
 
         public bool toDownload()
         {
+            if (ConfigManager.Settings.DownloadWhenTitleNull)
+            {
+                return string.IsNullOrEmpty(Title);
+            }
             return string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(WebUrl) || string.IsNullOrEmpty(ImageUrls);
         }
 
@@ -323,10 +327,10 @@ namespace Jvedio.Entity
             return metaData;
         }
 
-        public Dictionary<string, string> ToDictionary()
+        public Dictionary<string, object> ToDictionary()
         {
             List<string> fields = new List<string> { "VideoType", "DataID", "VID", "Size", "Path", "Hash", "DataType" };
-            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Dictionary<string, object> dict = new Dictionary<string, object>();
             PropertyInfo[] propertyInfos = this.GetType().GetProperties();
             foreach (PropertyInfo info in propertyInfos)
             {
@@ -334,7 +338,7 @@ namespace Jvedio.Entity
                 {
                     object value = info.GetValue(this);
                     if (value == null) value = string.Empty;
-                    dict.Add(info.Name, value.ToString());
+                    dict.Add(info.Name, value);
                 }
             }
 
@@ -482,7 +486,7 @@ namespace Jvedio.Entity
 
 
 
-        public bool parseDictInfo(Dictionary<string, object> dict)
+        public bool ParseDictInfo(Dictionary<string, object> dict)
         {
             if (dict == null || dict.Count == 0) return false;
             PropertyInfo[] propertyInfos = this.GetType().GetProperties();
@@ -512,13 +516,13 @@ namespace Jvedio.Entity
             }
 
             // 图片地址
-            ImageUrls = parseImageUrlFromDict(dict);
+            ImageUrls = ParseImageUrlFromDict(dict);
             return true;
         }
 
-        private string parseImageUrlFromDict(Dictionary<string, object> dict)
+        private string ParseImageUrlFromDict(Dictionary<string, object> dict)
         {
-            if (dict == null || dict.Count == 0 || string.IsNullOrEmpty(ImageUrls)) return string.Empty;
+            if (dict == null || dict.Count == 0) return string.Empty;
             Dictionary<string, object> result = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(ImageUrls);
             if (result == null) result = new Dictionary<string, object>();
             if (dict.ContainsKey("SmallImageUrl")) result["SmallImageUrl"] = dict["SmallImageUrl"];
