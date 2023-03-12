@@ -26,16 +26,24 @@ namespace Jvedio.Core.Plugins.Crawler
 
         public static string BaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
 
-        // todo DLL 签名验证
-        public static void Init()
-        {
-            // 移动
 
+        private static void MoveDir(string baseDir)
+        {
+
+        }
+
+
+        // todo DLL 签名验证
+        public static void Init(bool moveFile)
+        {
             // 扫描
             List<string> list = DirHelper.TryGetDirList(BaseDir).ToList();
             PluginMetaDatas = new List<PluginMetaData>();
             foreach (string crawler_dir in list)
             {
+                // 移动并删除 temp
+                if (moveFile)
+                    DirHelper.TryMoveDir(Path.Combine(crawler_dir, "temp"), crawler_dir, true);
                 string[] arr = FileHelper.TryGetAllFiles(crawler_dir, "*.dll");
                 if (arr.Length <= 0) continue;
                 string dllPath = arr[0];

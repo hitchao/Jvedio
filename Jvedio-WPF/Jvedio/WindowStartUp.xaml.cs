@@ -101,7 +101,7 @@ namespace Jvedio
             await BackupData(); // 备份文件
             await MovePlugins();
             await DeletePlugins();
-            CrawlerManager.Init();   // 初始化爬虫
+            CrawlerManager.Init(true);   // 初始化爬虫
 
             vieModel_StartUp = new VieModel_StartUp();  // todo 检视
             this.DataContext = vieModel_StartUp;

@@ -154,14 +154,10 @@ namespace Jvedio.Core.Net
                             wrapper.Eq("WebType", webType);
                         wrapper.Eq("LocalValue", CurrentVideo.VID);
                         UrlCode urlCode = MapperManager.urlCodeMapper.SelectOne(wrapper);
-                        if (urlCode != null && urlCode.CodeId > 0)
+                        foreach (var item in crawlerServers)
                         {
-                            foreach (var item in crawlerServers)
-                            {
-                                item.UrlCode = urlCode;
-                            }
+                            item.UrlCode = urlCode;
                         }
-
                         foreach (var item in crawlerServers)
                         {
                             item.Invoker = invoker;

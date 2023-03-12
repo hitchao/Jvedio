@@ -98,7 +98,7 @@ namespace Jvedio.Core.Net
         public bool OverrideInfo { get; set; }// 强制下载覆盖信息
 
 
-        public async Task<Dictionary<string, object>> GetDataInfo(Video video, VideoDownLoader downLoader, RequestHeader header)
+        public async Task<Dictionary<string, object>> GetDataInfo(Video video, VideoDownLoader downLoader, RequestHeader header, Action<RequestHeader> headerCallBack)
         {
             Dictionary<string, object> dict = null;
             if (video == null || video.DataID <= 0)
@@ -117,7 +117,7 @@ namespace Jvedio.Core.Net
                     // 有 VID 的
                     try
                     {
-                        dict = await downLoader.GetInfo((h) => { header = h; });
+                        dict = await downLoader.GetInfo((h) => { headerCallBack?.Invoke(h); });
                     }
                     catch (CrawlerNotFoundException ex)
                     {
@@ -230,11 +230,44 @@ namespace Jvedio.Core.Net
             return false;
         }
 
+        public void SaveActorNames(object names, Video video)
+        {
+            if (names is List<string> actorNames && actorNames.Count > 0)
+            {
+                int actorCount = actorNames.Count;
+                for (int i = 0; i < actorCount; i++)
+                {
+                    string actorName = actorNames[i];
+                    ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
+                    if (actorInfo == null || actorInfo.ActorID <= 0)
+                    {
+                        actorInfo = new ActorInfo();
+                        actorInfo.ActorName = actorName;
+                        actorMapper.Insert(actorInfo);
+                    }
+                    // 保存信息
+                    string sql = $"insert or ignore into metadata_to_actor (ActorID,DataID) values ({actorInfo.ActorID},{video.DataID})";
+                    metaDataMapper.ExecuteNonQuery(sql);
+                    StatusText = $"{i + 1}/{actorCount} 成功保存演员信息：{actorName}";
+                }
+            }
+        }
+
         public async Task<bool> DownloadActors(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
             object names = GetInfoFromExist("ActorNames", video, dict);
             object urls = GetInfoFromExist("ActressImageUrl", video, dict);
 
+            if (names == null)
+                return false;
+
+            if (urls == null)
+            {
+                SaveActorNames(names, video);
+                return true;
+            }
+
+            // 必须要有演员头像才能导入
             if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl)
             {
                 if (actorNames != null && ActressImageUrl != null && actorNames.Count == ActressImageUrl.Count)
@@ -430,7 +463,7 @@ namespace Jvedio.Core.Net
                     StatusText = "1. 开始同步信息";
                     try
                     {
-                        dict = await GetDataInfo(video, downLoader, header);
+                        dict = await GetDataInfo(video, downLoader, header, (h) => { header = h; });
                     }
                     catch (Exception ex)
                     {

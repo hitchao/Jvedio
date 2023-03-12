@@ -5199,7 +5199,7 @@ namespace Jvedio
                     }
                     else if (pluginType == PluginType.Crawler)
                     {
-                        CrawlerManager.Init();
+                        CrawlerManager.Init(false);
                     }
                 };
 
@@ -5217,7 +5217,9 @@ namespace Jvedio
                     }
                     else if (pluginType == PluginType.Crawler)
                     {
-                        CrawlerManager.Init();
+                        // 如果是新下载，则可以直接使用
+                        // 如果是更新，则需要重启
+                        CrawlerManager.Init(false);
                     }
                 };
             }
