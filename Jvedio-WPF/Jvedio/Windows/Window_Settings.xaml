@@ -796,7 +796,7 @@
                                 CornerRadius="10">
                                 <StackPanel Orientation="Vertical">
 
-                                    <CheckBox Content="{DynamicResource DownloadPreviewInMainWindow}" IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
+                                    <CheckBox Content="同步时下载预览图" IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
                                     <CheckBox Content="标题为空才同步信息" IsChecked="{Binding DownloadWhenTitleNull, Mode=TwoWay}" />
                                     <CheckBox Content="{DynamicResource SkipDownloadImage}" IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
                                     <CheckBox Content="{DynamicResource ForcedFetchInfo}" IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />

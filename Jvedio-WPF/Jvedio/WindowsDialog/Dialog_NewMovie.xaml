@@ -7,6 +7,8 @@
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Add}"
     Width="600"
+    Height="300"
+    MaxHeight="300"
     Background="{DynamicResource Window.InnerDialog.Background}"
     Closing="BaseDialog_Closing"
     ContentRendered="BaseDialog_ContentRendered"

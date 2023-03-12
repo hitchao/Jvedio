@@ -143,8 +143,16 @@ namespace Jvedio.Core.Net
                     if (string.IsNullOrEmpty(reason))
                     {
 
+                        object webTypeObject = invoker.SetMethod("GetWebType").Invoke(null);
+                        string webType = "";
+                        if (webTypeObject != null)
+                            webType = webTypeObject.ToString();
                         string urlCodeString = string.Empty;
-                        IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>().Eq("ValueType", "video").Eq("LocalValue", CurrentVideo.VID);
+                        // 索引是 ValueType, WebType, LocalValue
+                        IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>().Eq("ValueType", "video");
+                        if (!string.IsNullOrEmpty(webType))
+                            wrapper.Eq("WebType", webType);
+                        wrapper.Eq("LocalValue", CurrentVideo.VID);
                         UrlCode urlCode = MapperManager.urlCodeMapper.SelectOne(wrapper);
                         if (urlCode != null && urlCode.CodeId > 0)
                         {

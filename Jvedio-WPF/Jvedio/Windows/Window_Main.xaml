@@ -2489,7 +2489,7 @@
                                                             ToolTip="{DynamicResource Thumbnail}" />
                                                         <super:PathRadioButton
                                                             Padding="0,0,0,0"
-                                                            CornerRadius="0"
+                                                            CornerRadius="0 5 5 0"
                                                             Fill="{DynamicResource Window.Foreground}"
                                                             Path="M934.4 107.52H89.6c-20.48 0-35.84 15.36-35.84 35.84V883.2c0 20.48 15.36 35.84 35.84 35.84h844.8c20.48 0 35.84-15.36 35.84-35.84V143.36c0-20.48-15.36-35.84-35.84-35.84z m-35.84 739.84H125.44V176.64h775.68v670.72h-2.56z m0 0 M335.36 440.32c38.4 0 71.68-30.72 71.68-71.68 0-38.4-30.72-71.68-71.68-71.68-38.4 0-71.68 30.72-71.68 71.68 2.56 40.96 33.28 71.68 71.68 71.68z m0 0M652.8 396.8L445.44 691.2 337.92 540.16 158.72 793.6h704L652.8 396.8z m0 0"
                                                             PathHeight="19"
@@ -5001,7 +5001,7 @@
                                                     Style="{StaticResource ButtonDanger}" />
                                                 <TextBlock
                                                     VerticalAlignment="Center"
-                                                    Text="{Binding Path=DownloadLongTaskDelay, StringFormat=Wait {0} s}"
+                                                    Text="{Binding Path=DownloadLongTaskDelay, StringFormat=防止服务器屏蔽，随机暂停 {0} s}"
                                                     Visibility="{Binding DisplayDownloadLongTaskDelay}" />
                                             </StackPanel>
                                         </Border>

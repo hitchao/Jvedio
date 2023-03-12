@@ -2186,38 +2186,35 @@ namespace Jvedio.ViewModel
         /// </summary>
         public void Statistic()
         {
-            Task.Run(() =>
-            {
-                long dbid = ConfigManager.Main.CurrentDBId;
-                AllVideoCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
-                appDatabaseMapper.UpdateFieldById("Count", AllVideoCount.ToString(), dbid);
+            long dbid = ConfigManager.Main.CurrentDBId;
+            AllVideoCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0));
+            appDatabaseMapper.UpdateFieldById("Count", AllVideoCount.ToString(), dbid);
 
-                FavoriteVideoCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
+            FavoriteVideoCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Gt("Grade", 0));
 
-                string actor_count_sql = "SELECT count(*) as Count " +
-                         "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
-                         "on metadata_to_actor.ActorID=actor_info.ActorID " +
-                         "join metadata " +
-                         "on metadata_to_actor.DataID=metadata.DataID " +
-                         $"WHERE metadata.DBId={dbid} and metadata.DataType={0} " +
-                         "GROUP BY actor_info.ActorID " +
-                         "UNION " +
-                         "select actor_info.ActorID  " +
-                         "FROM actor_info WHERE NOT EXISTS " +
-                         "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
-                         "GROUP BY actor_info.ActorID)";
+            string actor_count_sql = "SELECT count(*) as Count " +
+                     "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
+                     "on metadata_to_actor.ActorID=actor_info.ActorID " +
+                     "join metadata " +
+                     "on metadata_to_actor.DataID=metadata.DataID " +
+                     $"WHERE metadata.DBId={dbid} and metadata.DataType={0} " +
+                     "GROUP BY actor_info.ActorID " +
+                     "UNION " +
+                     "select actor_info.ActorID  " +
+                     "FROM actor_info WHERE NOT EXISTS " +
+                     "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
+                     "GROUP BY actor_info.ActorID)";
 
-                AllActorCount = actorMapper.SelectCount(actor_count_sql);
+            AllActorCount = actorMapper.SelectCount(actor_count_sql);
 
-                string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +
-                                        "join metadata on metadata_to_label.DataID=metadata.DataID " +
-                                         $"WHERE metadata.DBId={dbid} and metadata.DataType={0} ";
+            string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +
+                                    "join metadata on metadata_to_label.DataID=metadata.DataID " +
+                                     $"WHERE metadata.DBId={dbid} and metadata.DataType={0} ";
 
-                AllLabelCount = metaDataMapper.SelectCount(label_count_sql);
-                DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
-                DateTime date2 = DateTime.Now;
-                RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
-            });
+            AllLabelCount = metaDataMapper.SelectCount(label_count_sql);
+            DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
+            DateTime date2 = DateTime.Now;
+            RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
         }
 
         public void LoadViewAssoData(long dataID)

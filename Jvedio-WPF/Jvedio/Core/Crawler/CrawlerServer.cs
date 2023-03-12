@@ -149,6 +149,7 @@ namespace Jvedio.Core.Crawler
             {
                 if (!dict.ContainsKey("cookie") && !string.IsNullOrEmpty(server.Cookies))
                     dict.Add("cookie", server.Cookies);
+                dict["Cache-Control"] = "no-cache";   // 不缓存
                 result.Headers = dict;
             }
             return result;
@@ -170,6 +171,7 @@ namespace Jvedio.Core.Crawler
         public void AttachToDict(Dictionary<string, object> dict)
         {
             dict["Url"] = Url;
+            dict["UrlCode"] = JsonUtils.TrySerializeObject(UrlCode);
             dict["Header"] = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(Headers);
         }
     }

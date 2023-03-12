@@ -30,7 +30,7 @@ namespace Jvedio.Core.Net
 
         private static class Delay
         {
-            public static int INFO = 1000;
+            public static int INFO = 3000;
             public static int EXTRA_IMAGE = 500;
             public static int BIG_IMAGE = 50;
             public static int SMALL_IMAGE = 50;
@@ -157,7 +157,7 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadPoster(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
-            object o = getInfoFromExist("BigImageUrl", video, dict);
+            object o = GetInfoFromExist("BigImageUrl", video, dict);
             string imageUrl = o != null ? o.ToString() : string.Empty;
             if (!string.IsNullOrEmpty(imageUrl))
             {
@@ -194,7 +194,7 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadThumnail(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
-            object o = getInfoFromExist("SmallImageUrl", video, dict);
+            object o = GetInfoFromExist("SmallImageUrl", video, dict);
             string imageUrl = o != null ? o.ToString() : string.Empty;
 
             // 2. 小图
@@ -232,8 +232,8 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadActors(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
-            object names = getInfoFromExist("ActorNames", video, dict);
-            object urls = getInfoFromExist("ActressImageUrl", video, dict);
+            object names = GetInfoFromExist("ActorNames", video, dict);
+            object urls = GetInfoFromExist("ActressImageUrl", video, dict);
 
             if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl)
             {
@@ -287,7 +287,7 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadPreviews(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
-            object urls = getInfoFromExist("ExtraImageUrl", video, dict);
+            object urls = GetInfoFromExist("ExtraImageUrl", video, dict);
             if (DownloadPreview && urls != null && urls is List<string> imageUrls)
             {
                 if (imageUrls != null && imageUrls.Count > 0)
@@ -338,6 +338,8 @@ namespace Jvedio.Core.Net
             }
             else if (!DownloadPreview)
                 StatusText = LangManager.GetValueByKey("NotSetPreviewDownload");
+            else
+                logger.Info("该资源无预览图");
             return false;
         }
 
@@ -361,7 +363,6 @@ namespace Jvedio.Core.Net
                 }
                 success = dict.ContainsKey("Title") && !string.IsNullOrEmpty(dict["Title"].ToString());
             }
-            await Task.Delay(10);
             if (!success)
             {
                 if (string.IsNullOrEmpty(Message))
@@ -369,6 +370,7 @@ namespace Jvedio.Core.Net
                 if (int.TryParse(Message, out int status))
                     Message = StatusCodeToMessage(status);
                 logger.Error(Message);
+                await Task.Delay(Delay.INFO);
                 // 发生了错误，停止下载
                 FinalizeWithCancel();
                 // 但是已经请求了网址，所以视为完成，并加入到长时间等待队列
@@ -503,7 +505,7 @@ namespace Jvedio.Core.Net
             });
         }
 
-        private object getInfoFromExist(string type, Video video, Dictionary<string, object> dict)
+        private object GetInfoFromExist(string type, Video video, Dictionary<string, object> dict)
         {
             if (dict != null && dict.Count > 0)
             {
@@ -527,7 +529,7 @@ namespace Jvedio.Core.Net
                 {
                     Dictionary<string, object> dic = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(imageUrls);
                     if (dic == null) return null;
-                    return getInfoFromExist(type, null, dic); // 递归调用
+                    return GetInfoFromExist(type, null, dic); // 递归调用
                 }
             }
 
