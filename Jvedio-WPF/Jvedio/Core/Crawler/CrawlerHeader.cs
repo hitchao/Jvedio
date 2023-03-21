@@ -14,10 +14,17 @@ namespace Jvedio.Core.Crawler
 
         public static RequestHeader Default { get; set; }
 
+        public static System.Net.IWebProxy WebProxy { get; set; }
+
         static CrawlerHeader()
         {
-            System.Net.IWebProxy webProxy = ConfigManager.ProxyConfig.GetWebProxy();
-            Default = new SuperUtils.NetWork.Crawler.CrawlerHeader(webProxy).Default;
+            Init();
+        }
+
+        public static void Init()
+        {
+            WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
+            Default = new SuperUtils.NetWork.Crawler.CrawlerHeader(WebProxy).Default;
             GitHub = Default;
         }
     }

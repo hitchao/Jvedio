@@ -234,9 +234,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\UsnOperation.dll</HintPath>
     </Reference>
-    <Reference Include="VirtualizingWrapPanel, Version=1.5.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VirtualizingWrapPanel.1.5.7\lib\net452\VirtualizingWrapPanel.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -251,7 +248,9 @@
     </ApplicationDefinition>
     <Compile Include="Core\Config\Base\AbstractConfig.cs" />
     <Compile Include="Core\Config\Base\IConfig.cs" />
+    <Compile Include="Core\Config\Common\DownloadConfig.cs" />
     <Compile Include="Core\Config\Common\ThemeConfig.cs" />
+    <Compile Include="Core\Config\UtilsManager.cs" />
     <Compile Include="Core\DataBase\SqlManager.cs" />
     <Compile Include="Core\Enums\NotImportReason.cs" />
     <Compile Include="Core\Enums\SearchMode.cs" />
@@ -769,6 +768,9 @@
 
 XCOPY  "$(ProjectDir)Reference\JvedioLib.dll"  "$(ProjectDir)bin\Debug"    /Y /i
 XCOPY  "$(ProjectDir)Resources\Jvedio.ico"  "$(ProjectDir)bin\Debug"    /Y /i
+
+XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Debug"    /Y /i
+XCOPY  "$(ProjectDir)Reference\MediaInfo.dll"  "$(ProjectDir)bin\Release"    /Y /i
 
 mkdir "$(ProjectDir)bin\Release"
 

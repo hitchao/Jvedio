@@ -20,7 +20,6 @@
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     Loaded="Window_Loaded"
     TitleAlign="Left"
-    TitleHeight="0"
     TitleMargin="5 0"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -250,7 +249,7 @@
                             Margin="0,30,0,0"
                             Source="/Resources/Picture/logo.png" />
                         <super:LoadingLine
-                            Width="200"
+                            Width="400"
                             Height="30"
                             Margin="0,20"
                             HorizontalAlignment="Center"

@@ -157,6 +157,8 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadPoster(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
+            if (!ConfigManager.DownloadConfig.DownloadPoster)
+                return true;
             object o = GetInfoFromExist("BigImageUrl", video, dict);
             string imageUrl = o != null ? o.ToString() : string.Empty;
             if (!string.IsNullOrEmpty(imageUrl))
@@ -194,6 +196,8 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadThumnail(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
+            if (!ConfigManager.DownloadConfig.DownloadThumbNail)
+                return true;
             object o = GetInfoFromExist("SmallImageUrl", video, dict);
             string imageUrl = o != null ? o.ToString() : string.Empty;
 
@@ -255,6 +259,8 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadActors(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
+            if (!ConfigManager.DownloadConfig.DownloadActor)
+                return true;
             object names = GetInfoFromExist("ActorNames", video, dict);
             object urls = GetInfoFromExist("ActressImageUrl", video, dict);
 
@@ -320,6 +326,8 @@ namespace Jvedio.Core.Net
 
         public async Task<bool> DownloadPreviews(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
+            if (!ConfigManager.DownloadConfig.DownloadPreviewImage)
+                return true;
             object urls = GetInfoFromExist("ExtraImageUrl", video, dict);
             if (DownloadPreview && urls != null && urls is List<string> imageUrls)
             {

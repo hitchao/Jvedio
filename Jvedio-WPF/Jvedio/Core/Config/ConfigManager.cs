@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Config.Base;
+﻿using Jvedio.Core.Config;
+using Jvedio.Core.Config.Base;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
 using Jvedio.Core.Logs;
@@ -13,7 +14,7 @@ namespace Jvedio
 {
     public static class ConfigManager
     {
-        public const string RELEASE_DATE = "2023-02-05";
+        public const string RELEASE_DATE = "2023-03-20";
         public static StartUp StartUp = StartUp.createInstance();
         public static Core.WindowConfig.Main Main = Core.WindowConfig.Main.createInstance();
         public static Filter Filter = Core.WindowConfig.Filter.createInstance();
@@ -29,6 +30,7 @@ namespace Jvedio
         public static Jvedio.Core.Config.RenameConfig RenameConfig = Jvedio.Core.Config.RenameConfig.createInstance();
         public static Jvedio.Core.Config.PluginConfig PluginConfig = Jvedio.Core.Config.PluginConfig.createInstance();
         public static Jvedio.Core.Config.ThemeConfig ThemeConfig = Jvedio.Core.Config.ThemeConfig.createInstance();
+        public static Jvedio.Core.Config.DownloadConfig DownloadConfig = Jvedio.Core.Config.DownloadConfig.createInstance();
 
         public static void InitConfig(Action callback)
         {
@@ -56,6 +58,8 @@ namespace Jvedio
             {
                 ConfigManager.FFmpegConfig.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");
             }
+
+
         }
 
         public static void EnsurePicPaths()

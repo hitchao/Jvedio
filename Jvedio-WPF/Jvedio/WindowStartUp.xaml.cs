@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core;
+using Jvedio.Core.Config;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
@@ -111,7 +112,7 @@ namespace Jvedio
                 if (i == vieModel_StartUp.CurrentSideIdx) radioButtons[i].IsChecked = true;
                 else radioButtons[i].IsChecked = false;
             }
-
+            UtilsManager.OnUtilSettingChange(); // 初始化 SuperUtils 的配置
 
 
 #if DEBUG
@@ -154,7 +155,7 @@ namespace Jvedio
             {
                 tabControl.SelectedIndex = 1;
                 vieModel_StartUp.Loading = false;
-                this.TitleHeight = DEFAULT_TITLE_HEIGHT;
+                //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
             }
         }
 
@@ -586,7 +587,7 @@ namespace Jvedio
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
-                this.TitleHeight = DEFAULT_TITLE_HEIGHT;
+                //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
             }
 
@@ -625,7 +626,7 @@ namespace Jvedio
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
-                this.TitleHeight = DEFAULT_TITLE_HEIGHT;
+                //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
             }
             else
@@ -644,8 +645,8 @@ namespace Jvedio
                     if (!string.IsNullOrEmpty(database.ScanPath))
                     {
                         tabControl.SelectedIndex = 0;
-
-                        this.TitleHeight = 0;
+                        await Task.Delay(5000);
+                        //this.TitleHeight = 0;
                         List<string> toScan = JsonUtils.TryDeserializeObject<List<string>>(database.ScanPath);
                         try
                         {
@@ -670,7 +671,7 @@ namespace Jvedio
                             MessageBox.Show(ex.Message);
                         }
 
-                        this.TitleHeight = DEFAULT_TITLE_HEIGHT;
+                        //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                     }
                     else
                     {
@@ -834,7 +835,7 @@ namespace Jvedio
             scanTask?.Cancel();
             CancelScanTask = true;
             tabControl.SelectedIndex = 1;
-            this.TitleHeight = DEFAULT_TITLE_HEIGHT;
+            //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
         }
 
         private async void RestoreDatabase(object sender, RoutedEventArgs e)

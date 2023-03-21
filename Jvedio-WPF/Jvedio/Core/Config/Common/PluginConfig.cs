@@ -14,7 +14,19 @@ namespace Jvedio.Core.Config
         private PluginConfig() : base("PluginConfig")
         {
             PluginList = string.Empty;
+
+            DownloadInfo = true;
+            DownloadThumbNail = true;
+            DownloadPoster = true;
+            DownloadPreviewImage = false;
+            DownloadActor = true;
         }
+
+        public bool DownloadInfo { get; set; }
+        public bool DownloadThumbNail { get; set; }
+        public bool DownloadPoster { get; set; }
+        public bool DownloadPreviewImage { get; set; }
+        public bool DownloadActor { get; set; }
 
         private static PluginConfig _instance = null;
 
@@ -33,8 +45,14 @@ namespace Jvedio.Core.Config
             RequestHeader header = CrawlerHeader.GitHub;
             Task.Run(async () =>
             {
-                HttpResult httpResult = await HttpClient.Get(UrlManager.PLUGIN_LIST_URL, header);
-                if (httpResult.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
+                HttpResult httpResult = null;
+                try
+                {
+                    httpResult = await HttpClient.Get(UrlManager.PLUGIN_LIST_URL, header, SuperUtils.NetWork.Enums.HttpMode.String);
+                }
+                catch (TimeoutException) { }
+                catch (Exception) { }
+                if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(httpResult.SourceCode))
                 {
                     // 更新插件
                     string json = httpResult.SourceCode;

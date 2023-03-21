@@ -5,15 +5,24 @@ using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Jvedio.Core.Config.Base
 {
     /// <summary>
     ///
     /// </summary>
-    public abstract class AbstractConfig : IConfig
+    public abstract class AbstractConfig : IConfig, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
         protected string ConfigName { get; set; }
 
         /// <summary>

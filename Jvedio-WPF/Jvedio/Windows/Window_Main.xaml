@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
+    xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
@@ -11,16 +12,13 @@
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
-    Title="Jvedio"
+    Title="Jvedio-超级视频管理"
     Width="1100"
     Height="600"
     MinWidth="800"
     MinHeight="500"
     Background="{DynamicResource Window.Background}"
-    CanMinimized="True"
-    CanResize="True"
-    CloseToTaskBar="True"
+    CloseToTaskBar="{Binding CloseToTaskBar, Source={x:Static config:ConfigManager.Settings}, Mode=OneWay}"
     Closed="Window_Closed"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
@@ -28,8 +26,9 @@
     Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     PreviewKeyUp="Window_PreviewKeyUp"
+    ShowThemeSelector="True"
     TitleAlign="Left"
-    TitleHeight="0"
+    TitleHeight="30"
     TitleMargin="5 0"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -60,7 +59,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <wpftk:VirtualizingWrapPanel />
+                        <super:VirtualizingWrapPanel />
                         <!--<WrapPanel/>-->
                     </ItemsPanelTemplate>
                 </Setter.Value>
@@ -734,19 +733,6 @@
             </Grid>
         </Popup>
 
-
-        <!--  背景  -->
-        <!--<Image
-            x:Name="BgImage"
-            Margin="0"
-            Source="{x:Null}"
-            Stretch="UniformToFill" />-->
-        <Image
-            x:Name="BgImage"
-            Margin="0"
-            Source="{x:Null}"
-            Stretch="UniformToFill" />
-
         <!--  影片关联编辑弹框  -->
         <Popup
             x:Name="searchDataPopup"
@@ -1022,6 +1008,7 @@
                                                         MouseEnter="AssoBorderMouseEnter"
                                                         MouseLeave="AssoBorderMouseLeave"
                                                         MouseLeftButtonDown="AddToAssociation"
+                                                        RenderOptions.BitmapScalingMode="LowQuality"
                                                         SourceType="BigImage"
                                                         Stretch="UniformToFill" />
 
@@ -1312,6 +1299,7 @@
                                                     Cursor="Hand"
                                                     MouseLeftButtonDown="CanShowDetails"
                                                     MouseLeftButtonUp="ShowDetails"
+                                                    RenderOptions.BitmapScalingMode="LowQuality"
                                                     SourceType="BigImage"
                                                     Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}">
                                                     <Image.ContextMenu>
@@ -1578,144 +1566,10 @@
 
         <Grid Margin="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-
-            <Border
-                x:Name="TitleBorder"
-                Grid.Row="0"
-                Background="{DynamicResource Window.Title.Background}"
-                BorderThickness="0"
-                MouseLeave="TopBorder_MouseLeave"
-                MouseMove="MoveWindow"
-                MouseUp="TopBorder_MouseUp"
-                PreviewMouseLeftButtonDown="TopBorder_MouseLeftButtonUp">
-                <Border.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Click="MinWindow" Header="{DynamicResource Minimize}" />
-                        <MenuItem
-                            Name="MaxMenuItem"
-                            Click="OnMaxWindow"
-                            Header="{DynamicResource Maximize}" />
-                        <MenuItem
-                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
-                            Click="CloseWindow"
-                            Header="{DynamicResource Close}" />
-                    </ContextMenu>
-                </Border.ContextMenu>
-                <Grid x:Name="TitleGrid" Panel.ZIndex="50">
-
-
-                    <StackPanel
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-
-                        <Border
-                            Name="SideTriggerBorder"
-                            Margin="5,0"
-                            CornerRadius="0"
-                            MouseUp="ShowSideGrid"
-                            Style="{StaticResource ToolsBarBorderStyle}"
-                            ToolTip="{DynamicResource Sorting}">
-
-                            <Viewbox Width="auto" Height="14">
-                                <Path
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Data="M897.427256 249.003144 126.57172 249.003144c-34.673707 0-62.73174-28.088732-62.73174-62.73174s28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174S932.101987 249.003144 897.427256 249.003144z M897.427256 574.73174 126.57172 574.73174c-34.673707 0-62.73174-28.088732-62.73174-62.73174s28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174S932.101987 574.73174 897.427256 574.73174z M897.427256 900.460336 126.57172 900.460336c-34.673707 0-62.73174-28.088732-62.73174-62.73174 0-34.643008 28.058033-62.73174 62.73174-62.73174l770.855536 0c34.673707 0 62.73174 28.088732 62.73174 62.73174C960.16002 872.371604 932.101987 900.460336 897.427256 900.460336z"
-                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                            </Viewbox>
-                        </Border>
-                        <Image
-                            Height="20"
-                            Margin="10,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Source="/Resources/Picture/Jvedio.png" />
-                        <Image
-                            Height="20"
-                            Margin="0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Source="/Resources/Picture/Title.png"
-                            ToolTip="Jvedio" />
-                    </StackPanel>
-
-                    <StackPanel
-                        Name="TitleStackPanel"
-                        Grid.Column="1"
-                        Height="30"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                        <super:ThemeSelector x:Name="themeSelector" Width="40" />
-                        <Button
-                            Width="40"
-                            Margin="0"
-                            Padding="0"
-                            VerticalAlignment="Stretch"
-                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
-                            Click="MinWindow"
-                            Style="{StaticResource FlatButton}">
-                            <Viewbox
-                                Width="12"
-                                Height="auto"
-                                VerticalAlignment="Center">
-                                <Path
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Data="M512 0h6144c307.2 0 512 204.8 512 512s-204.8 512-512 512H512c-307.2 0-512-204.8-512-512s204.8-512 512-512z"
-                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                            </Viewbox>
-                        </Button>
-                        <Button
-                            Name="ButtonMax"
-                            Width="40"
-                            Margin="0"
-                            Padding="0"
-                            VerticalAlignment="Stretch"
-                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
-                            Click="OnMaxWindow"
-                            Style="{StaticResource FlatButton}">
-                            <Viewbox
-                                Width="12"
-                                Height="auto"
-                                VerticalAlignment="Center">
-                                <Path
-                                    x:Name="MaxPath"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Data="M834.688 1024H189.312A189.568 189.568 0 0 1 0 834.688V189.312A189.568 189.568 0 0 1 189.312 0h645.376A189.568 189.568 0 0 1 1024 189.312v645.376A189.482667 189.482667 0 0 1 834.688 1024zM189.312 99.712a89.6 89.6 0 0 0-89.6 89.6v645.376a89.6 89.6 0 0 0 89.6 89.6h645.376a89.6 89.6 0 0 0 89.6-89.6V189.312a89.6 89.6 0 0 0-89.6-89.6z"
-                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                            </Viewbox>
-                        </Button>
-                        <Button
-                            Name="ButtonClose"
-                            Width="40"
-                            Margin="0"
-                            Padding="0"
-                            VerticalAlignment="Stretch"
-                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
-                            Click="CloseWindow"
-                            Style="{StaticResource FlatButton}">
-                            <Viewbox
-                                Width="12"
-                                Height="auto"
-                                VerticalAlignment="Center">
-                                <Path
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
-                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                            </Viewbox>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="0">
 
 
                 <super:WaitingPanel
@@ -2937,9 +2791,31 @@
 
                                                 <ItemsControl.Template>
                                                     <ControlTemplate>
-                                                        <local:WheelSpeedScrollViewer SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static p:Settings.Default}}" Style="{StaticResource FlatScrollViewer}">
+                                                        <local:WheelSpeedScrollViewer
+                                                            super:ScrollAnimationBehavior.IsEnabled="True"
+                                                            super:ScrollAnimationBehavior.PointsToScroll="1"
+                                                            super:ScrollAnimationBehavior.TimeDuration="00:00:00.5"
+                                                            super:ScrollAnimationBehavior.VerticalOffset="0"
+                                                            SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static p:Settings.Default}}"
+                                                            Style="{StaticResource FlatScrollViewer}">
                                                             <ItemsPresenter />
                                                         </local:WheelSpeedScrollViewer>
+
+                                                        <!--<ScrollViewer
+                                                            super:ScrollAnimationBehavior.IsEnabled="False"
+                                                            super:ScrollAnimationBehavior.PointsToScroll="1"
+                                                            super:ScrollAnimationBehavior.TimeDuration="00:00:00.05">
+                                                            <ItemsPresenter />
+                                                        </ScrollViewer>-->
+                                                        <!--<super:SmoothScrollViewer>
+                                                            <ItemsPresenter />
+                                                        </super:SmoothScrollViewer>-->
+
+
+
+                                                        <!--<ScrollViewer>
+                                                            <ItemsPresenter />
+                                                        </ScrollViewer>-->
                                                     </ControlTemplate>
                                                 </ItemsControl.Template>
 
@@ -3009,6 +2885,7 @@
                                                                         MouseLeave="BorderMouseLeave"
                                                                         MouseLeftButtonDown="CanShowDetails"
                                                                         MouseLeftButtonUp="ShowDetails"
+                                                                        RenderOptions.BitmapScalingMode="LowQuality"
                                                                         SmallImageSource="{Binding SmallImage, Mode=OneWay}"
                                                                         Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
                                                                         Style="{StaticResource GifImageStyle}">
@@ -4034,7 +3911,7 @@
             </Grid>
             <Grid
                 x:Name="statusBar"
-                Grid.Row="2"
+                Grid.Row="1"
                 Height="30"
                 Background="{DynamicResource Window.StatusBar.Background}"
                 Visibility="{Binding DisplayStatusBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">

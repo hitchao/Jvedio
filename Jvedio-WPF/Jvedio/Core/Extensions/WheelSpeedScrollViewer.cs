@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace Jvedio.Core.Extensions
 {
@@ -24,6 +26,7 @@ namespace Jvedio.Core.Extensions
             set { SetValue(SpeedFactorProperty, value); }
         }
 
+
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
             if (ScrollInfo is ScrollContentPresenter scp &&
@@ -33,5 +36,31 @@ namespace Jvedio.Core.Extensions
                 e.Handled = true;
             }
         }
+
+        //protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
+        //{
+        //    if (ScrollInfo is ScrollContentPresenter scp &&
+        //        ComputedVerticalScrollBarVisibility == Visibility.Visible)
+        //    {
+        //        if (Animating)
+        //            return;
+        //        double originOffset = this.VerticalOffset; ;
+        //        double targetOffset = VerticalOffset - e.Delta * SpeedFactor;
+        //        Console.WriteLine("targetOffset = " + targetOffset);
+        //        //scp.SetVerticalOffset(targetOffset);
+        //        //this.BeginAnimation(VerticalOffsetProperty, null);
+        //        DoubleAnimation verticalAnimation = new DoubleAnimation();
+        //        verticalAnimation.From = originOffset;
+        //        verticalAnimation.To = targetOffset;
+        //        verticalAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(10));
+        //        Animating = true;
+        //        verticalAnimation.Completed += delegate
+        //        {
+        //            Animating = false;
+        //        };
+        //        this.BeginAnimation(VerticalOffsetProperty, verticalAnimation);
+        //        e.Handled = true;
+        //    }
+        //}
     }
 }

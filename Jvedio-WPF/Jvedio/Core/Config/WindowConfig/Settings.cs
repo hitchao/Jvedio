@@ -19,6 +19,7 @@ namespace Jvedio.Core.WindowConfig
             DetailShowBg = true;
             CurrentLanguage = "zh-CN";
             DownloadWhenTitleNull = true;
+            IgnoreCertVal = true;
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
@@ -59,7 +60,16 @@ namespace Jvedio.Core.WindowConfig
 
         public bool OpenDataBaseDefault { get; set; }
 
-        public bool CloseToTaskBar { get; set; }
+        private bool _CloseToTaskBar = true;
+        public bool CloseToTaskBar
+        {
+            get { return _CloseToTaskBar; }
+            set
+            {
+                _CloseToTaskBar = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public bool AutoGenScreenShot { get; set; }
 

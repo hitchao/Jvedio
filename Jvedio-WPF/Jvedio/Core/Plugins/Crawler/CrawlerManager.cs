@@ -43,7 +43,11 @@ namespace Jvedio.Core.Plugins.Crawler
             {
                 // 移动并删除 temp
                 if (moveFile)
-                    DirHelper.TryMoveDir(Path.Combine(crawler_dir, "temp"), crawler_dir, true);
+                {
+                    string tempPath = Path.Combine(crawler_dir, "temp");
+                    if (Directory.Exists(tempPath))
+                        DirHelper.TryMoveDir(tempPath, crawler_dir, true);
+                }
                 string[] arr = FileHelper.TryGetAllFiles(crawler_dir, "*.dll");
                 if (arr.Length <= 0) continue;
                 string dllPath = arr[0];

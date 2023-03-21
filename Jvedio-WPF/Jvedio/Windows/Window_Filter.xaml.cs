@@ -220,9 +220,9 @@ namespace Jvedio
             e.Handled = true;
         }
 
-        public override void CloseWindow(object sender, RoutedEventArgs e)
-        {
-            this.Hide();
-        }
+        ////public override void CloseWindow(object sender, RoutedEventArgs e)
+        ////{
+        ////    this.Hide();
+        ////}
     }
 }

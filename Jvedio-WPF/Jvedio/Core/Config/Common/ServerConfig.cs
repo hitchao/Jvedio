@@ -15,7 +15,18 @@ namespace Jvedio.Core.Config
     {
         private ServerConfig() : base("Servers")
         {
+            //DownloadInfo = true;
+            //DownloadThumbNail = true;
+            //DownloadPoster = true;
+            //DownloadPreviewImage = false;
+            //DownloadActor = true;
         }
+
+        //public bool DownloadInfo { get; set; }
+        //public bool DownloadThumbNail { get; set; }
+        //public bool DownloadPoster { get; set; }
+        //public bool DownloadPreviewImage { get; set; }
+        //public bool DownloadActor { get; set; }
 
         private static ServerConfig instance = null;
 

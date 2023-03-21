@@ -2,6 +2,7 @@
     x:Class="Jvedio.Window_Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -781,7 +782,7 @@
                 </ScrollViewer>
             </TabItem>
 
-            <TabItem Header="{DynamicResource SyncInfo}">
+            <TabItem Header="{DynamicResource NetWork}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Grid>
@@ -789,21 +790,50 @@
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Style="{StaticResource SettingTitleStyle}" Text="{DynamicResource Basic}" />
+                            <TextBlock Style="{StaticResource SettingTitleStyle}" Text="网络设置" />
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="5"
+                                Orientation="Vertical">
+                                <CheckBox Content="忽略证书错误" IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}" />
+                                <StackPanel Margin="5" Orientation="Horizontal">
+                                    <TextBlock
+                                        MinWidth="60"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{DynamicResource RequestTimedOut}"
+                                        TextAlignment="Left"
+                                        ToolTip="[0-2000]" />
+                                    <super:SearchBox
+                                        MinWidth="100"
+                                        Background="{DynamicResource Window.Title.Background}"
+                                        Text="{Binding HttpTimeout, Mode=TwoWay}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        MinWidth="60"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="s"
+                                        TextAlignment="Left" />
+                                </StackPanel>
+                            </StackPanel>
+
+
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Style="{StaticResource SettingTitleStyle}" Text="同步选项" />
                             <Border
                                 Grid.Column="1"
                                 Padding="5"
                                 CornerRadius="10">
                                 <StackPanel Orientation="Vertical">
 
-                                    <CheckBox Content="同步时下载预览图" IsChecked="{Binding DownloadPreviewImage, Mode=TwoWay}" />
+
                                     <CheckBox Content="标题为空才同步信息" IsChecked="{Binding DownloadWhenTitleNull, Mode=TwoWay}" />
                                     <CheckBox Content="{DynamicResource SkipDownloadImage}" IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
                                     <CheckBox Content="{DynamicResource ForcedFetchInfo}" IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
-                                    <CheckBox
-                                        Content="{DynamicResource IgnoreCertError}"
-                                        IsChecked="{Binding IgnoreCertVal, Mode=TwoWay}"
-                                        IsEnabled="False" />
 
 
                                     <WrapPanel Margin="10,0" Orientation="Horizontal">
@@ -840,24 +870,7 @@
 
 
 
-                                    <StackPanel Margin="5" Orientation="Horizontal">
-                                        <TextBlock
-                                            MinWidth="60"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{DynamicResource RequestTimedOut}"
-                                            TextAlignment="Left"
-                                            ToolTip="[0-2000]" />
-                                        <super:SearchBox
-                                            MinWidth="100"
-                                            Background="{DynamicResource Menu.Background}"
-                                            Text="{Binding HttpTimeout, Mode=TwoWay}"
-                                            TextAlignment="Center" />
-                                        <TextBlock
-                                            MinWidth="60"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="s"
-                                            TextAlignment="Left" />
-                                    </StackPanel>
+
 
                                 </StackPanel>
                             </Border>
@@ -868,7 +881,28 @@
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Style="{StaticResource SettingTitleStyle}" Text="代理" />
+                            <TextBlock Style="{StaticResource SettingTitleStyle}" Text="同步内容" />
+                            <WrapPanel
+                                Grid.Column="1"
+                                Margin="5"
+                                Orientation="Horizontal">
+                                <CheckBox
+                                    Content="信息"
+                                    IsChecked="{Binding DownloadInfo, Source={x:Static config:ConfigManager.DownloadConfig}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="Collapsed" />
+                                <CheckBox Content="缩略图" IsChecked="{Binding DownloadThumbNail, Source={x:Static config:ConfigManager.DownloadConfig}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Content="海报图" IsChecked="{Binding DownloadPoster, Source={x:Static config:ConfigManager.DownloadConfig}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Content="预览图" IsChecked="{Binding DownloadPreviewImage, Source={x:Static config:ConfigManager.DownloadConfig}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Content="演员信息及头像" IsChecked="{Binding DownloadActor, Source={x:Static config:ConfigManager.DownloadConfig}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </WrapPanel>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Style="{StaticResource SettingTitleStyle}" Text="代理设置" />
                             <StackPanel Grid.Column="1" Orientation="Vertical">
 
                                 <StackPanel
@@ -2365,7 +2399,8 @@
                         <ListBox
                             Name="serverListBox"
                             Grid.Row="2"
-                            Margin="0,0,1,0"
+                            Margin="1"
+                            Padding="1"
                             VerticalAlignment="Top"
                             HorizontalContentAlignment="Stretch"
                             d:ItemsSource="{d:SampleData ItemCount=5}"
@@ -2395,12 +2430,21 @@
                         HorizontalAlignment="Left"
                         Panel.ZIndex="10"
                         Style="{StaticResource HoverSpliter}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Panel.ZIndex="-1"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="请前往插件中心下载插件"
+                        Visibility="{Binding ShowCurrentPlugin, Mode=OneWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
 
-                    <Grid Grid.Column="2" Visibility="{Binding ShowCurrentSendCommand, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <StackPanel Orientation="Vertical">
+                    <Grid Grid.Column="2" Visibility="{Binding ShowCurrentPlugin, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <DockPanel Panel.ZIndex="1" LastChildFill="True">
                             <TextBlock
                                 Margin="10"
                                 HorizontalAlignment="Left"
+                                DockPanel.Dock="Top"
                                 FontWeight="Bold"
                                 Style="{StaticResource BaseTextBlock}"
                                 Text="是否启用" />
@@ -2410,15 +2454,17 @@
                                 HorizontalAlignment="Left"
                                 Background="{DynamicResource Window.Title.Background}"
                                 Click="SavePluginSetting"
+                                DockPanel.Dock="Top"
                                 IsChecked="{Binding CurrentPlugin.Enabled, Mode=TwoWay}" />
                             <TextBlock
                                 Margin="10"
                                 HorizontalAlignment="Left"
+                                DockPanel.Dock="Top"
                                 FontWeight="Bold"
                                 Style="{StaticResource BaseTextBlock}"
                                 Text="服务器源" />
 
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                 <Button
                                     MinWidth="100"
                                     Margin="10"
@@ -2451,9 +2497,7 @@
                             </StackPanel>
                             <DataGrid
                                 x:Name="ServersDataGrid"
-                                Grid.Column="1"
                                 MinHeight="200"
-                                MaxHeight="220"
                                 Margin="10,5"
                                 CanUserDeleteRows="True"
                                 CanUserResizeColumns="True"
@@ -2745,7 +2789,8 @@
                                 </Grid>
                             </Popup>
 
-                        </StackPanel>
+                        </DockPanel>
+
 
                     </Grid>
 

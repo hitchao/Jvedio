@@ -285,19 +285,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _TaskIconVisible = true;
-
-        public bool TaskIconVisible
-        {
-            get { return _TaskIconVisible; }
-
-            set
-            {
-                _TaskIconVisible = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private Thickness _MainGridThickness = new Thickness(10);
 
         public Thickness MainGridThickness

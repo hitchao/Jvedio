@@ -45,6 +45,7 @@ using static Jvedio.VisualTools.WindowHelper;
 using SuperControls.Style.Windows;
 using SuperControls.Style.Plugin;
 using Jvedio.Core.Global;
+using Jvedio.Core.Config;
 
 namespace Jvedio
 {
@@ -78,8 +79,8 @@ namespace Jvedio
         public static uint VK;
         public static IntPtr _windowHandle;
         public static HwndSource _source;
-        public static bool WindowsVisible = true;
-        public static List<string> OpeningWindows = new List<string>();
+        //public static bool WindowsVisible = true;
+        //public static List<string> OpeningWindows = new List<string>();
         public static List<Key> funcKeys = new List<Key>();     // 功能键 [1,3] 个
         public static Key key = Key.None;                       // 基础键 1 个
         public static List<Key> _funcKeys = new List<Key>();
@@ -474,6 +475,9 @@ namespace Jvedio
             //    App.Current.Windows[0].Opacity = 1;
 
             // 保存扫描库
+
+            ConfigManager.DownloadConfig.Save();
+
             if (DatabaseComboBox.ItemsSource != null && DatabaseComboBox.SelectedItem != null)
             {
                 AppDatabase db = DatabaseComboBox.SelectedItem as AppDatabase;
@@ -502,6 +506,7 @@ namespace Jvedio
 
                 SuperControls.Style.MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
+            UtilsManager.OnUtilSettingChange();
         }
 
         private void SetListenStatus()
@@ -1114,6 +1119,8 @@ namespace Jvedio
             ConfigManager.Settings.AutoGenScreenShot = vieModel.AutoGenScreenShot;
             ConfigManager.Settings.TeenMode = vieModel.TeenMode;
             ConfigManager.Settings.CloseToTaskBar = vieModel.CloseToTaskBar;
+            //if (windowMain != null)
+            //    windowMain.CloseToTaskBar = ConfigManager.Settings.CloseToTaskBar;
             ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
             ConfigManager.Settings.CurrentLanguage = vieModel.CurrentLanguage;
             ConfigManager.Settings.SaveInfoToNFO = vieModel.SaveInfoToNFO;
@@ -1428,8 +1435,14 @@ namespace Jvedio
             IWebProxy proxy = ConfigManager.ProxyConfig.GetWebProxy();
             header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
             header.WebProxy = proxy;
-
-            HttpResult httpResult = await HttpClient.Get(url, header);
+            string error = LangManager.GetValueByKey("Error");
+            HttpResult httpResult = null;
+            try
+            {
+                httpResult = await HttpClient.Get(url, header, SuperUtils.NetWork.Enums.HttpMode.String);
+            }
+            catch (TimeoutException ex) { error = ex.Message; }
+            catch (Exception ex) { error = ex.Message; }
             if (httpResult != null)
             {
                 if (httpResult.StatusCode == HttpStatusCode.OK)
@@ -1445,7 +1458,7 @@ namespace Jvedio
             }
             else
             {
-                MessageCard.Error(LangManager.GetValueByKey("Error"));
+                MessageCard.Error(error);
                 vieModel.TestProxyStatus = TaskStatus.Canceled;
             }
 
@@ -1585,6 +1598,7 @@ namespace Jvedio
                     ServersDataGrid.ItemsSource = vieModel.CrawlerServers[pluginID];
                     vieModel.CurrentPlugin = pluginMetaData;
                     ConfigManager.Settings.CrawlerSelectedIndex = idx;
+                    vieModel.ShowCurrentPlugin = true;
                 }
 
             }
@@ -1593,9 +1607,7 @@ namespace Jvedio
         private void SavePluginSetting(object sender, RoutedEventArgs e)
         {
             // 保存插件启用情况
-            vieModel.CurrentPlugin.SaveConfig();
-
-
+            vieModel.CurrentPlugin?.SaveConfig();
         }
     }
 }

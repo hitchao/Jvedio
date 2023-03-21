@@ -137,6 +137,8 @@ namespace Jvedio
 
         public static DataType CurrentDataType { get; set; }
 
+        private bool AnimatingSideGrid = false;
+
         static Main()
         {
             TagStamps = new List<TagStamp>();
@@ -170,7 +172,24 @@ namespace Jvedio
                 taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
 
             LoadNotifyIcon();
-
+            this.OnSideTrigger += async () =>
+            {
+                //SideGridColumn.Width = new GridLength(200);
+                AnimatingSideGrid = true;
+                SideTopButton.Visibility = Visibility.Collapsed;
+                await Task.Run(async () =>
+                {
+                    for (int i = 0; i <= 200; i += 10)
+                    {
+                        await App.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            SideGridColumn.Width = new GridLength(i);
+                        });
+                        await Task.Delay(5);
+                    }
+                });
+                AnimatingSideGrid = false;
+            };
         }
 
         public Main()
@@ -183,7 +202,7 @@ namespace Jvedio
             SetNotiIconPopup(notiIconPopup);
             this.OnNotifyIconMouseLeftClick += (s, e) =>
             {
-                ShowMainWindow(s, e);
+                ShowMainWindow(s, new RoutedEventArgs());
             };
         }
 
@@ -229,13 +248,12 @@ namespace Jvedio
 
         public void InitThemeSelector()
         {
-            themeSelector.AddTransParentColor("TabItem.Background");
-            themeSelector.AddTransParentColor("Window.Title.Background");
-            themeSelector.AddTransParentColor("ListBoxItem.Background");
-            themeSelector.AddTransParentColor("Window.Side.Background");
-            themeSelector.AddTransParentColor("Window.Side.Hover.Background");
-            themeSelector.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
-            themeSelector.onThemeChanged += (ThemeIdx, ThemeID) =>
+            DefaultThemeSelector.AddTransParentColor("TabItem.Background");
+            DefaultThemeSelector.AddTransParentColor("ListBoxItem.Background");
+            DefaultThemeSelector.AddTransParentColor("Window.Side.Background");
+            DefaultThemeSelector.AddTransParentColor("Window.Side.Hover.Background");
+            DefaultThemeSelector.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
+            DefaultThemeSelector.onThemeChanged += (ThemeIdx, ThemeID) =>
             {
                 ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;
                 ConfigManager.ThemeConfig.ThemeID = ThemeID;
@@ -243,21 +261,21 @@ namespace Jvedio
                 SetSelected();
                 ActorSetSelected();
             };
-            themeSelector.onBackGroundImageChanged += (image) =>
+            DefaultThemeSelector.onBackGroundImageChanged += (image) =>
             {
-                BgImage.Source = image;
+                DefaultBgImage.Source = image;
             };
-            themeSelector.onSetBgColorTransparent += () =>
+            DefaultThemeSelector.onSetBgColorTransparent += () =>
             {
-                TitleBorder.Background = Brushes.Transparent;
-            };
-
-            themeSelector.onReSetBgColorBinding += () =>
-            {
-                TitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+                DefaultTitleBorder.Background = Brushes.Transparent;
             };
 
-            themeSelector.InitThemes();
+            DefaultThemeSelector.onReSetBgColorBinding += () =>
+            {
+                DefaultTitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+            };
+
+            DefaultThemeSelector.InitThemes();
         }
 
 
@@ -552,7 +570,7 @@ namespace Jvedio
                             int vkey = ((int)lParam >> 16) & 0xFFFF;
                             if (vkey == Properties.Settings.Default.HotKey_VK)
                             {
-                                if (vieModel.TaskIconVisible)
+                                if (TaskIconVisible)
                                 {
                                     SetWindowVisualStatus(false, false);
                                 }
@@ -572,59 +590,54 @@ namespace Jvedio
             return IntPtr.Zero;
         }
 
-        private void SetWindowVisualStatus(bool visible, bool taskIconVisible = true)
-        {
-            if (visible)
-            {
-                bool showMain = true;               // 如果是库选择界面，则不显示 Main 窗口
-                string nameMain = "Main";
-                string nameStartUp = "WindowStartUp";
-                foreach (Window window in App.Current.Windows)
-                {
-                    string name = window.GetType().Name;
-                    if (name.Equals(nameStartUp))
-                    {
-                        showMain = false;
-                        break;
-                    }
-                }
+        //private void SetWindowVisualStatus(bool visible, bool taskIconVisible = true)
+        //{
+        //    if (visible)
+        //    {
+        //        bool showMain = true;               // 如果是库选择界面，则不显示 Main 窗口
+        //        string nameMain = "Main";
+        //        string nameStartUp = "WindowStartUp";
+        //        foreach (Window window in App.Current.Windows)
+        //        {
+        //            string name = window.GetType().Name;
+        //            if (name.Equals(nameStartUp))
+        //            {
+        //                showMain = false;
+        //                break;
+        //            }
+        //        }
 
-                foreach (Window window in App.Current.Windows)
-                {
-                    if (OpeningWindows.Contains(window.GetType().ToString()))
-                    {
-                        string name = window.GetType().Name;
-                        if (name.Equals(nameMain) && !showMain) continue;
-                        AnimateWindow(window);
-                    }
-                }
-            }
-            else
-            {
-                OpeningWindows.Clear();
-                foreach (Window window in App.Current.Windows)
-                {
-                    window.Hide();
-                    OpeningWindows.Add(window.GetType().ToString());
-                }
-            }
+        //        foreach (Window window in App.Current.Windows)
+        //        {
+        //            if (OpeningWindows.Contains(window.GetType().ToString()))
+        //            {
+        //                string name = window.GetType().Name;
+        //                if (name.Equals(nameMain) && !showMain) continue;
+        //                AnimateWindow(window);
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        OpeningWindows.Clear();
+        //        foreach (Window window in App.Current.Windows)
+        //        {
+        //            window.Hide();
+        //            OpeningWindows.Add(window.GetType().ToString());
+        //        }
+        //    }
 
-            vieModel.TaskIconVisible = taskIconVisible;
-            SetIconVisible(taskIconVisible);
-            WindowsVisible = visible;
-        }
+        //    vieModel.TaskIconVisible = taskIconVisible;
+        //    SetIconVisible(taskIconVisible);
+        //    WindowsVisible = visible;
+        //}
 
         protected override void OnClosed(EventArgs e)
         {
-            // Console.WriteLine("***************OnClosed***************");
             _source.RemoveHook(HwndHook);
             UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消热键
-            vieModel.TaskIconVisible = false;                // 隐藏图标
-
-            // DisposeGif("", true);                       //清除 gif 资源
             NoticeTimer.Stop();
             windowFilter?.Close();
-            this.DestroyIcon();
             base.OnClosed(e);
         }
 
@@ -633,17 +646,6 @@ namespace Jvedio
         // 绑定事件
         private void BindingEvent()
         {
-            this.MaximumToNormal += (s, e) =>
-            {
-                MaxPath.Data = Geometry.Parse(PathData.MaxPath);
-                MaxMenuItem.Header = LangManager.GetValueByKey("Windowization");
-            };
-
-            this.NormalToMaximum += (s, e) =>
-            {
-                MaxPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
-                MaxMenuItem.Header = LangManager.GetValueByKey("Windowization");
-            };
 
             // 设置排序类型
             int.TryParse(Properties.Settings.Default.SortType, out int sortType);
@@ -773,10 +775,10 @@ namespace Jvedio
         public void Notify_Close(object sender, RoutedEventArgs e)
         {
             notiIconPopup.IsOpen = false;
-            Application.Current.Shutdown(0);
+            this.CloseWindow();
         }
 
-        public void ShowMainWindow(object sender, EventArgs e)
+        public void ShowMainWindow(object sender, RoutedEventArgs e)
         {
             SetWindowVisualStatus(true);
             notiIconPopup.IsOpen = false;
@@ -812,10 +814,18 @@ namespace Jvedio
                 AppConfig appConfig = appConfigMapper.SelectOne(wrapper);
                 if (appConfig != null && !string.IsNullOrEmpty(appConfig.ConfigValue))
                     notices = appConfig.ConfigValue;
-                HttpResult httpResult = await HttpClient.Get(NoticeUrl, CrawlerHeader.GitHub);
+                HttpResult httpResult = null;
+                try
+                {
+                    httpResult = await HttpClient.Get(NoticeUrl, CrawlerHeader.GitHub, SuperUtils.NetWork.Enums.HttpMode.String);
 
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 // 判断公告是否内容不同
-                if (httpResult.StatusCode == HttpStatusCode.OK && !SqlStringFormat.HandleNewLine(httpResult.SourceCode).Equals(notices))
+                if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && !SqlStringFormat.HandleNewLine(httpResult.SourceCode).Equals(notices))
                 {
                     // 覆盖原有公告
                     string json = httpResult.SourceCode;
@@ -991,9 +1001,7 @@ namespace Jvedio
             {
                 if (ConfigManager.Main.Height == SystemParameters.WorkArea.Height && ConfigManager.Main.Width < SystemParameters.WorkArea.Width)
                 {
-                    baseWindowState = 0;
                     this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                    this.CanResize = true;
                 }
                 else
                 {
@@ -1001,26 +1009,6 @@ namespace Jvedio
                     this.Top = ConfigManager.Main.Y;
                     this.Width = ConfigManager.Main.Width;
                     this.Height = ConfigManager.Main.Height;
-                }
-
-                baseWindowState = (BaseWindowState)ConfigManager.Main.WindowState;
-                if (baseWindowState == BaseWindowState.FullScreen)
-                {
-                    this.WindowState = System.Windows.WindowState.Maximized;
-                }
-                else if (baseWindowState == BaseWindowState.None)
-                {
-                    baseWindowState = 0;
-                    this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                }
-
-                if (this.Width == SystemParameters.WorkArea.Width
-                    && this.Height == SystemParameters.WorkArea.Height) baseWindowState = BaseWindowState.Maximized;
-
-                if (baseWindowState == BaseWindowState.Maximized || baseWindowState == BaseWindowState.FullScreen)
-                {
-                    MaxPath.Data = Geometry.Parse(PathData.MaxToNormalPath);
-                    MaxMenuItem.Header = LangManager.GetValueByKey("Windowization");
                 }
             }
         }
@@ -1065,125 +1053,7 @@ namespace Jvedio
             }
         }
 
-        public override void CloseWindow(object sender, RoutedEventArgs e)
-        {
-            if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible)
-            {
-                SetWindowVisualStatus(false);
-            }
-            else
-            {
-                FadeOut();
-                base.CloseWindow(sender, e);
-            }
-        }
 
-        public new void MinWindow(object sender, RoutedEventArgs e)
-        {
-            if (Properties.Settings.Default.EnableWindowFade)
-            {
-                var anim = new DoubleAnimation(0, (Duration)FadeInterval, FillBehavior.Stop);
-                anim.Completed += (s, _) => this.WindowState = System.Windows.WindowState.Minimized;
-                this.BeginAnimation(UIElement.OpacityProperty, anim);
-            }
-            else
-            {
-                this.WindowState = System.Windows.WindowState.Minimized;
-            }
-        }
-
-        public void OnMaxWindow(object sender, RoutedEventArgs e)
-        {
-            this.MaxWindow(sender, e);
-        }
-
-
-        private void TopBorder_MouseLeave(object sender, MouseEventArgs e)
-        {
-            canDragMove = false;
-        }
-
-        private void TopBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            canDragMove = false;
-        }
-
-        private bool EqualWorkAreaSize(bool both = false)
-        {
-            if (both && Math.Abs(this.Width - SystemParameters.WorkArea.Width) <= 2 || Math.Abs(this.Height - SystemParameters.WorkArea.Height) <= 2) return true;
-            if (!both && Math.Abs(this.Width - SystemParameters.WorkArea.Width) <= 2 || Math.Abs(this.Height - SystemParameters.WorkArea.Height) <= 2) return true;
-            return false;
-        }
-
-        /// <summary>
-        /// 仅支持双显示器
-        /// </summary>
-        /// <param name="AllScreens"></param>
-        /// <param name="scaleRatio"></param>
-        /// <returns></returns>
-        private int getCurrentScreen(System.Windows.Forms.Screen[] AllScreens, double scaleRatio)
-        {
-            if (AllScreens.Length == 1) return 0;
-            int max_idx;
-            if (AllScreens[0].Bounds.X > AllScreens[1].Bounds.X) max_idx = 0;
-            else max_idx = 1;
-            double windowX = PointToScreen(new Point(this.Left, this.Top)).X / scaleRatio;
-            if (windowX >= AllScreens[max_idx].Bounds.X) return max_idx;
-            return max_idx == 1 ? 0 : 1;
-        }
-
-        System.Windows.Forms.Screen[] AllScreens = System.Windows.Forms.Screen.AllScreens;
-
-        private new void MoveWindow(object sender, MouseEventArgs e)
-        {
-            Border border = sender as Border;
-            // 移动窗口
-            if (e.LeftButton == MouseButtonState.Pressed && canDragMove)
-            {
-                if (baseWindowState == BaseWindowState.Maximized || EqualWorkAreaSize(true))
-                {
-                    baseWindowState = 0;
-                    Border grid = TitleBorder;
-                    AllScreens = System.Windows.Forms.Screen.AllScreens;
-                    var scaleRatio = Math.Max(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width / SystemParameters.PrimaryScreenWidth,
-    System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height / SystemParameters.PrimaryScreenHeight);
-                    int currentScreen = getCurrentScreen(AllScreens, scaleRatio);
-                    double left = System.Windows.Forms.Screen.AllScreens[currentScreen].WorkingArea.Left / scaleRatio;
-                    double fracWidth = e.GetPosition(grid).X / grid.ActualWidth;
-                    this.Height = WindowSize.Height;
-                    this.Width = WindowSize.Width;
-                    this.WindowState = System.Windows.WindowState.Normal;
-                    if (AllScreens.Length == 1)
-                    {
-                        this.Left += e.GetPosition(grid).X - grid.ActualWidth * fracWidth;
-                    }
-                    else
-                    {
-                        if (Math.Abs(e.GetPosition(grid).X - grid.ActualWidth * fracWidth) >= 300)
-                            this.Left = left + grid.ActualWidth / 2;//屏幕在右侧的问题
-                    }
-                    int maxIndex = 0;
-                    if (AllScreens[1].Bounds.Height > AllScreens[0].Bounds.Height)
-                        maxIndex = 1;
-                    if (maxIndex == currentScreen)
-                    {
-                        this.Top = e.GetPosition(grid).Y - grid.ActualHeight / 2;
-                    }
-                    else
-                    {
-                        double monitorHeightDiff = Math.Abs(AllScreens[0].Bounds.Height - AllScreens[1].Bounds.Height);
-                        this.Top = e.GetPosition(grid).Y - grid.ActualHeight / 2 + monitorHeightDiff / 2;
-                    }
-
-
-                    this.OnLocationChanged(EventArgs.Empty);
-                    MaxPath.Data = Geometry.Parse(PathData.MaxPath);
-                    MaxMenuItem.Header = LangManager.GetValueByKey("Maximize");
-                }
-
-                this.DragMove();
-            }
-        }
 
         private void OpenFeedBack(object sender, RoutedEventArgs e)
         {
@@ -1677,30 +1547,19 @@ namespace Jvedio
                 ItemsControl itemsControl = sender as ItemsControl;
                 dataScrollViewer = FindVisualChild<ScrollViewer>(itemsControl);
             }
-
-            // if (dataScrollViewer == null) return;
-
-            // double offset = dataScrollViewer.VerticalOffset;
-
-            // if (offset >= 500)
-            //    vieModel.GoToTopCanvas = Visibility.Visible;
-            // else
-            //    vieModel.GoToTopCanvas = Visibility.Hidden;
-
-            // if (offset == dataScrollViewer.ScrollableHeight)
-            //    vieModel.GoToBottomCanvas = Visibility.Hidden;
-            // else
-            //    vieModel.GoToBottomCanvas = Visibility.Visible;
         }
 
         public void GotoTop(object sender, MouseButtonEventArgs e)
         {
+            //dataScrollViewer?.AnimateScroll(0, true);
             dataScrollViewer?.ScrollToTop();
         }
 
         private void GotoBottom(object sender, MouseButtonEventArgs e)
         {
             dataScrollViewer?.ScrollToBottom();
+            //dataScrollViewer?.AnimateScroll(dataScrollViewer.ScrollableHeight, true);
+            //dataScrollViewer?.ScrollToTop();
         }
 
         public void PlayVideo(object sender, MouseButtonEventArgs e)
@@ -2837,7 +2696,7 @@ namespace Jvedio
             ConfigManager.Main.Y = this.Top;
             ConfigManager.Main.Width = this.Width;
             ConfigManager.Main.Height = this.Height;
-            ConfigManager.Main.WindowState = (long)baseWindowState;
+            //ConfigManager.Main.WindowState = (long)baseWindowState;
             ConfigManager.Main.SearchSelectedIndex = vieModel.SearchSelectedIndex;
             ConfigManager.Main.ClassifySelectedIndex = vieModel.ClassifySelectedIndex;
             ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
@@ -2847,12 +2706,6 @@ namespace Jvedio
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (this.WindowState != System.Windows.WindowState.Minimized)
-            {
-                if (this.WindowState == System.Windows.WindowState.Normal) baseWindowState = BaseWindowState.Normal;
-                else if (this.WindowState == System.Windows.WindowState.Maximized) baseWindowState = BaseWindowState.FullScreen;
-                else if (this.Width == SystemParameters.WorkArea.Width & this.Height == SystemParameters.WorkArea.Height) baseWindowState = BaseWindowState.Maximized;
-            }
 
             SetConfigValue();
             Properties.Settings.Default.EditMode = false;
@@ -2861,11 +2714,11 @@ namespace Jvedio
             ConfigManager.Main?.Save();
             ConfigManager.Settings?.Save();
 
-            if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
-            {
-                SetWindowVisualStatus(false);
-                e.Cancel = true;
-            }
+            //if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
+            //{
+            //    //SetWindowVisualStatus(false);
+            //    e.Cancel = true;
+            //}
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -3269,20 +3122,6 @@ namespace Jvedio
         {
             vieModel.SelectedActors.Clear();
             ActorSetSelected();
-        }
-
-        private bool canDragMove = false;
-        private void TopBorder_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount > 1)
-            {
-                MaxWindow(sender, new RoutedEventArgs());
-                canDragMove = false;
-            }
-            else
-            {
-                canDragMove = true;
-            }
         }
 
         public void ContextMenu_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -4123,22 +3962,20 @@ namespace Jvedio
 
         private void SideBorder_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (SideGridColumn.ActualWidth <= 100)
+            if (SideGridColumn.ActualWidth <= 100 && !AnimatingSideGrid)
             {
                 SideGridColumn.Width = new GridLength(0);
-                SideTriggerBorder.Visibility = Visibility.Visible;
+                if (SideTopButton != null)
+                    SideTopButton.Visibility = Visibility.Visible;
             }
             else
             {
-                SideTriggerBorder.Visibility = Visibility.Collapsed;
+                if (SideTopButton != null)
+                    SideTopButton.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void ShowSideGrid(object sender, MouseButtonEventArgs e)
-        {
-            SideGridColumn.Width = new GridLength(200);
-            SideTriggerBorder.Visibility = Visibility.Collapsed;
-        }
+
 
         private void ShowMessage(object sender, MouseButtonEventArgs e)
         {
@@ -5195,7 +5032,7 @@ namespace Jvedio
                     PluginType pluginType = data.PluginType;
                     if (pluginType == PluginType.Theme)
                     {
-                        themeSelector.InitThemes();
+                        DefaultThemeSelector.InitThemes();
                     }
                     else if (pluginType == PluginType.Crawler)
                     {
@@ -5213,7 +5050,7 @@ namespace Jvedio
                     PluginType pluginType = data.PluginType;
                     if (pluginType == PluginType.Theme)
                     {
-                        themeSelector.InitThemes();
+                        DefaultThemeSelector.InitThemes();
                     }
                     else if (pluginType == PluginType.Crawler)
                     {
@@ -5228,6 +5065,7 @@ namespace Jvedio
             window_Plugin.Focus();
             window_Plugin.Activate();
         }
+
     }
 
 }

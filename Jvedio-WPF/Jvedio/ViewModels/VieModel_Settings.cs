@@ -387,7 +387,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public ObservableCollection<string> _DisplayCrawlerServers = new ObservableCollection<string>();
+        private ObservableCollection<string> _DisplayCrawlerServers = new ObservableCollection<string>();
 
         public ObservableCollection<string> DisplayCrawlerServers
         {
@@ -396,6 +396,18 @@ namespace Jvedio.ViewModel
             set
             {
                 _DisplayCrawlerServers = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _ShowCurrentPlugin = false;
+
+        public bool ShowCurrentPlugin
+        {
+            get { return _ShowCurrentPlugin; }
+
+            set
+            {
+                _ShowCurrentPlugin = value;
                 RaisePropertyChanged();
             }
         }
@@ -710,6 +722,7 @@ namespace Jvedio.ViewModel
             set
             {
                 _CloseToTaskBar = value;
+
                 RaisePropertyChanged();
             }
         }
