@@ -884,16 +884,30 @@ namespace Jvedio
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
+            //string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //local = local.Substring(0, local.Length);
+            //System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
+            //About about = new About(this, bitmapImage, "Jvedio",
+            //    "超级本地视频管理软件", local, ConfigManager.RELEASE_DATE,
+            //    "Github", UrlManager.ProjectUrl, "Chao", "GPL-3.0");
+            //about.OnOtherClick += (s, ev) =>
+            //{
+            //    FileHelper.TryOpenUrl(UrlManager.WebPage);
+            //};
+            //about.ShowDialog();
+            Dialog_About about = new Dialog_About();
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            local = local.Substring(0, local.Length);
-            System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
-            About about = new About(this, bitmapImage, "Jvedio",
-                "超级本地视频管理软件", local, ConfigManager.RELEASE_DATE,
-                "Github", UrlManager.ProjectUrl, "Chao", "GPL-3.0");
-            about.OnOtherClick += (s, ev) =>
-            {
-                FileHelper.TryOpenUrl(UrlManager.WebPage);
-            };
+            local = local.Substring(0, local.Length - ".0.0".Length);
+            about.AppName = "Jvedio";
+            about.AppSubName = "本地视频管理软件";
+            about.Version = local;
+            about.ReleaseDate = ConfigManager.RELEASE_DATE;
+            about.Author = "Chao";
+            about.License = "GPL-3.0";
+            about.GithubUrl = UrlManager.ProjectUrl;
+            about.WebUrl = UrlManager.WebPage;
+            about.JoinGroupUrl = UrlManager.ProjectUrl;
+            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
             about.ShowDialog();
         }
     }

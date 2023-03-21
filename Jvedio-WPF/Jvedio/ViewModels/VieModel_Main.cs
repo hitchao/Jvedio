@@ -100,6 +100,8 @@ namespace Jvedio.ViewModel
             {
                 ActorSortDict.Add(i, ActorSortDictList[i]);
             }
+
+
         }
 
         public VieModel_Main()
@@ -119,6 +121,7 @@ namespace Jvedio.ViewModel
 
             // 初始化皮肤
             //InitThemes();
+            InitBinding();
         }
 
         //public void InitThemes()
@@ -129,6 +132,17 @@ namespace Jvedio.ViewModel
         //        ColorThemes.Add(item);
         //    }
         //}
+
+        public void InitBinding()
+        {
+            CurrentVideoList.CollectionChanged += (s, e) =>
+            {
+                if (CurrentVideoList != null && CurrentVideoList.Count > 0)
+                    ShowSoft = false;
+                else
+                    ShowSoft = true;
+            };
+        }
 
         public void RefreshVideoRenderToken()
         {
@@ -432,7 +446,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<Video> _CurrentVideoList;
+        private ObservableCollection<Video> _CurrentVideoList = new ObservableCollection<Video>();
 
         public ObservableCollection<Video> CurrentVideoList
         {
@@ -1096,6 +1110,18 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
                 ConfigManager.Main.SideTagStampExpanded = value;
                 ConfigManager.Main.Save();
+            }
+        }
+        public bool _ShowSoft = true;
+
+        public bool ShowSoft
+        {
+            get { return _ShowSoft; }
+
+            set
+            {
+                _ShowSoft = value;
+                RaisePropertyChanged();
             }
         }
 

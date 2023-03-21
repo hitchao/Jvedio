@@ -13,7 +13,7 @@
     Width="1230"
     Height="720"
     AllowsTransparency="True"
-    Background="{DynamicResource Window.Detail.Background}"
+    Background="Transparent"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
     Foreground="{DynamicResource Window.Detail.Foreground}"
@@ -129,13 +129,19 @@
         Focusable="True"
         PreviewKeyUp="Grid_PreviewKeyUp">
 
+        <Border
+            x:Name="backgroundBorder"
+            Margin="10"
+            Background="{DynamicResource Window.Background}"
+            CornerRadius="5"
+            Effect="{StaticResource PopupDropShadowEffect}" />
+
+
         <Image
             x:Name="BgImage"
-            Margin="0"
+            Margin="10"
             Source="{x:Null}"
             Stretch="UniformToFill" />
-
-
 
         <!--  影片关联弹框  -->
         <Popup
@@ -500,7 +506,7 @@
         </Popup>
 
 
-        <Grid>
+        <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" MinWidth="50" />
                 <ColumnDefinition Width="*" />
@@ -665,15 +671,19 @@
 
 
                         <Button
-                            Width="60"
-                            Height="auto"
+                            Width="30"
+                            Height="30"
+                            Margin="5,5,10,5"
                             VerticalAlignment="Stretch"
+                            super:CommonExt.CornerRadius="3"
                             super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
                             Click="CloseWindow"
                             Style="{StaticResource FlatButton}">
                             <Viewbox
-                                Width="12"
+                                Width="10"
                                 Height="auto"
+                                Margin="-5,0"
+                                HorizontalAlignment="Left"
                                 VerticalAlignment="Center">
                                 <Path
                                     HorizontalAlignment="Center"

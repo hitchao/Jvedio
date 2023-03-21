@@ -279,7 +279,7 @@
       <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="GlobalImageWidth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">200</Value>
+      <Value Profile="(Default)">300</Value>
     </Setting>
     <Setting Name="MainImageAutoMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

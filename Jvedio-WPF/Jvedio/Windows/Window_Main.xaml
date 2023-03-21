@@ -12,6 +12,7 @@
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
+    xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     Title="Jvedio-超级视频管理"
     Width="1100"
     Height="600"
@@ -59,12 +60,13 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <super:VirtualizingWrapPanel />
+                        <wpftk:VirtualizingWrapPanel />
+                        <!--<super:VirtualizingWrapPanel />-->
                         <!--<WrapPanel/>-->
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Template">
+            <!--<Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ItemsControl">
                         <Border
@@ -79,7 +81,7 @@
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
-            </Setter>
+            </Setter>-->
         </Style>
 
         <Style x:Key="ItemsControlVirtualizedStyle" TargetType="ItemsControl">
@@ -1669,8 +1671,8 @@
                                     <super:TogglePanel
                                         Grid.Row="0"
                                         Margin="1,0"
-                                        Padding="0,5"
-                                        FontSize="15"
+                                        Padding="0,4"
+                                        FontSize="14"
                                         Header="{DynamicResource Default}"
                                         IsExpanded="{Binding SideDefaultExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         IsSelected="False"
@@ -1728,9 +1730,9 @@
                                     </super:TogglePanel>
                                     <Grid Grid.Row="1">
                                         <ToggleButton
-                                            Width="23"
-                                            Height="23"
-                                            Margin="0,5,35,0"
+                                            Width="20"
+                                            Height="20"
+                                            Margin="0,3,30,0"
                                             Padding="0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
@@ -1758,7 +1760,7 @@
                                             </Border>
                                         </ToggleButton>
                                         <Border
-                                            Margin="5"
+                                            Margin="4,2"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
                                             Panel.ZIndex="6"
@@ -1767,7 +1769,7 @@
                                             Tag="{DynamicResource Window.Title.Hover.Background}"
                                             ToolTip="{DynamicResource Add}">
 
-                                            <Viewbox Width="auto" Height="14">
+                                            <Viewbox Width="auto" Height="13">
                                                 <Path
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
@@ -1778,8 +1780,8 @@
                                         <super:TogglePanel
                                             Height="auto"
                                             Margin="1,0"
-                                            Padding="0,5"
-                                            FontSize="15"
+                                            Padding="0,4"
+                                            FontSize="14"
                                             Header="{DynamicResource TagStamp}"
                                             IsExpanded="{Binding SideTagStampExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             IsSelected="False"
@@ -2767,6 +2769,58 @@
                                                 </ContextMenu>
                                             </Grid.ContextMenu>
 
+                                            <StackPanel
+                                                Grid.RowSpan="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Orientation="Vertical"
+                                                Visibility="{Binding ShowSoft, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                                                <Image
+                                                    Grid.Row="0"
+                                                    Height="128"
+                                                    Margin="10"
+                                                    Source="pack://application:,,,/Resources/Picture/Jvedio.png">
+                                                    <Image.Effect>
+                                                        <DropShadowEffect
+                                                            BlurRadius="4"
+                                                            Direction="315"
+                                                            Opacity="1"
+                                                            ShadowDepth="5"
+                                                            Color="Black" />
+                                                    </Image.Effect>
+                                                </Image>
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    FontSize="25"
+                                                    Style="{StaticResource BaseTextBlock}"
+                                                    Text="欢迎使用 Jvedio">
+                                                    <TextBlock.Effect>
+                                                        <DropShadowEffect
+                                                            BlurRadius="4"
+                                                            Direction="315"
+                                                            Opacity="1"
+                                                            ShadowDepth="5"
+                                                            Color="Black" />
+                                                    </TextBlock.Effect>
+                                                </TextBlock>
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    FontSize="15"
+                                                    Foreground="{DynamicResource Window.Sub.Foreground}"
+                                                    Style="{StaticResource BaseTextBlock}"
+                                                    Text="@SuperStudio Copyright © 2020">
+                                                    <TextBlock.Effect>
+                                                        <DropShadowEffect
+                                                            BlurRadius="4"
+                                                            Direction="315"
+                                                            Opacity="1"
+                                                            ShadowDepth="5"
+                                                            Color="Black" />
+                                                    </TextBlock.Effect>
+                                                </TextBlock>
+                                            </StackPanel>
+
                                             <Border
                                                 x:Name="dragOverBorder"
                                                 Panel.ZIndex="99"
@@ -2819,16 +2873,10 @@
                                                     </ControlTemplate>
                                                 </ItemsControl.Template>
 
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <!--  影片加载动画  -->
-                                                        <DataTemplate.Triggers>
+                                                        <!--<DataTemplate.Triggers>
                                                             <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
@@ -2842,7 +2890,7 @@
                                                                     </Storyboard>
                                                                 </BeginStoryboard>
                                                             </EventTrigger>
-                                                        </DataTemplate.Triggers>
+                                                        </DataTemplate.Triggers>-->
 
                                                         <Grid
                                                             Name="rootGrid"

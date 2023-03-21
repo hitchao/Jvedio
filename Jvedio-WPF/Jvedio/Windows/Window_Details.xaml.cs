@@ -214,7 +214,6 @@ namespace Jvedio
             vieModel.Load(DataID);
         }
 
-        // todo
         public void SetSkin()
         {
             BgImage.Source = null;

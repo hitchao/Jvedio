@@ -260,10 +260,12 @@ namespace Jvedio
                 ConfigManager.ThemeConfig.Save();
                 SetSelected();
                 ActorSetSelected();
+                windowDetails?.SetSkin();
             };
             DefaultThemeSelector.onBackGroundImageChanged += (image) =>
             {
                 DefaultBgImage.Source = image;
+                StyleManager.BackgroundImage = image;
             };
             DefaultThemeSelector.onSetBgColorTransparent += () =>
             {
