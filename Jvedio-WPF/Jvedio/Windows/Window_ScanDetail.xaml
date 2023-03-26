@@ -199,17 +199,16 @@
                     SortMemberPath="FilePath">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox
+                            <TextBlock
                                 MinWidth="40"
                                 Margin="5"
-                                AcceptsReturn="False"
                                 Background="Transparent"
                                 FontSize="12"
                                 Foreground="{DynamicResource Window.Sub.Foreground}"
-                                IsReadOnly="True"
-                                Style="{StaticResource BaseTextBox}"
+                                Style="{StaticResource BaseTextBlock}"
                                 Text="{Binding FilePath, Mode=OneWay}"
                                 TextAlignment="Left"
+                                TextTrimming="WordEllipsis"
                                 TextWrapping="NoWrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

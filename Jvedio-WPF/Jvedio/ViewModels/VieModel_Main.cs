@@ -1960,8 +1960,20 @@ namespace Jvedio.ViewModel
             { "RecentWatch", "  " },
         };
 
+
+        static bool g_showRelativeScreen = false;
+
+
         public void GenerateSelect(object o = null)
         {
+            if (!g_showRelativeScreen &&
+             (PathType)ConfigManager.Settings.PicPathMode == PathType.RelativeToData)
+            {
+                g_showRelativeScreen = true;
+                MessageCard.Info("当前图片模式为相对于影片，如果影片都位于同一目录，图片将会重复/覆盖");
+            }
+
+
             extraWrapper = new SelectWrapper<Video>();
 
             // 侧边栏参数

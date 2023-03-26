@@ -14,7 +14,7 @@ namespace Jvedio
 {
     public static class ConfigManager
     {
-        public const string RELEASE_DATE = "2023-03-20";
+        public const string RELEASE_DATE = "2023-03-26";
         public static StartUp StartUp = StartUp.createInstance();
         public static Core.WindowConfig.Main Main = Core.WindowConfig.Main.createInstance();
         public static Filter Filter = Core.WindowConfig.Filter.createInstance();

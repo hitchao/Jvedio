@@ -1,4 +1,4 @@
-﻿<super:BaseWindow
+﻿<super:BaseWindowEx
     x:Class="Jvedio.Main"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -35,7 +35,7 @@
     mc:Ignorable="d">
 
 
-    <super:BaseWindow.Resources>
+    <super:BaseWindowEx.Resources>
 
         <Style x:Key="BgHoverBorder" TargetType="Border">
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -60,9 +60,9 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <wpftk:VirtualizingWrapPanel />
+                        <!--<wpftk:VirtualizingWrapPanel />-->
                         <!--<super:VirtualizingWrapPanel />-->
-                        <!--<WrapPanel/>-->
+                        <WrapPanel />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -636,7 +636,7 @@
         </Style>
 
 
-    </super:BaseWindow.Resources>
+    </super:BaseWindowEx.Resources>
 
 
     <Grid AllowDrop="True">
@@ -782,7 +782,8 @@
                                 <StackPanel Orientation="Vertical">
                                     <super:TogglePanel
                                         Width="150"
-                                        Padding="0,5"
+                                        Margin="5,0"
+                                        Padding="2,5"
                                         FontSize="15"
                                         Header="{DynamicResource Associated}"
                                         IsExpanded="True"
@@ -853,7 +854,8 @@
                                     </super:TogglePanel>
                                     <super:TogglePanel
                                         Width="150"
-                                        Padding="0,5"
+                                        Margin="5,0"
+                                        Padding="2,5"
                                         FontSize="15"
                                         Header="{DynamicResource ToBeAssociated}"
                                         IsExpanded="True"
@@ -1489,7 +1491,7 @@
                                                                     </ContextMenu>
                                                                 </Border.ContextMenu>
 
-                                                                <TextBlock Foreground="{DynamicResource Window.Foreground}" Text="{Binding TagName}" />
+                                                                <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
                                                             </Border>
 
                                                         </DataTemplate>
@@ -3224,7 +3226,7 @@
                                                                                         </ContextMenu>
                                                                                     </Border.ContextMenu>
 
-                                                                                    <TextBlock Foreground="{DynamicResource Window.Foreground}" Text="{Binding TagName}" />
+                                                                                    <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
                                                                                 </Border>
 
                                                                             </DataTemplate>
@@ -5065,4 +5067,4 @@
             </Grid>
         </Grid>
     </Grid>
-</super:BaseWindow>
+</super:BaseWindowEx>

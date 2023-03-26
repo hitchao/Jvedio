@@ -63,7 +63,7 @@ namespace Jvedio
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : SuperControls.Style.BaseWindow
+    public partial class Main : SuperControls.Style.BaseWindowEx
     {
 
 
@@ -237,6 +237,7 @@ namespace Jvedio
             InitTagStamp();
             AllRadioButton.IsChecked = true;
 
+
             vieModel.Reset();           // 加载数据
             OpenListen();
 
@@ -339,7 +340,7 @@ namespace Jvedio
             }
         }
 
-        private void InitTagStamp()
+        public void InitTagStamp()
         {
             // 记住之前的状态
             List<TagStamp> tagStamps = vieModel.TagStamps.ToList();
@@ -555,7 +556,7 @@ namespace Jvedio
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success)
                 {
-                    MessageBox.Show(SuperControls.Style.LangManager.GetValueByKey("HotKeyConflict"), SuperControls.Style.LangManager.GetValueByKey("HotKeyConflict"));
+                    MsgBox.Show(SuperControls.Style.LangManager.GetValueByKey("HotKeyConflict"));
                 }
             }
         }
@@ -1577,7 +1578,7 @@ namespace Jvedio
             }
             string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAGID_NEW_ADD}' and DataID='{dataid}'";
             tagStampMapper.ExecuteNonQuery(sql);
-            vieModel.InitCurrentTagStamps();
+            InitTagStamp();
             RefreshData(dataid);
             PlayVideoWithPlayer(video.Path, dataid);
         }
@@ -3667,6 +3668,7 @@ namespace Jvedio
         private void NewTagStamp(object sender, MouseButtonEventArgs e)
         {
             Window_TagStamp window_TagStamp = new Window_TagStamp();
+            window_TagStamp.Owner = this;
             bool? dialog = window_TagStamp.ShowDialog();
             if ((bool)dialog)
             {
@@ -4247,7 +4249,7 @@ namespace Jvedio
             }
             else if (header.Equals("GIF"))
             {
-                FileHelper.TryOpenSelectPath(video.getGifPath());
+                FileHelper.TryOpenSelectPath(video.GetGifPath());
             }
         }
 
@@ -4348,7 +4350,7 @@ namespace Jvedio
 
         private void OpenLogPath(object sender, RoutedEventArgs e)
         {
-            FileHelper.TryOpenPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log"));
+            FileHelper.TryOpenPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"));
         }
 
         private void OpenApplicationPath(object sender, RoutedEventArgs e)
@@ -4474,9 +4476,9 @@ namespace Jvedio
                     return;
                 }
 
-                MessageBoxResult messageBoxResult = MessageBox.Show(
-                    $"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotExists")}", LangManager.GetValueByKey("Hint"), MessageBoxButton.YesNo);
-                if (messageBoxResult == MessageBoxResult.Yes)
+                bool ok = MsgBox.Show(
+                    $"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotExists")}");
+                if (ok)
                 {
                     videoMapper.deleteVideoByIds(toDelete);
                     await Task.Delay(5000); // todo
@@ -4553,8 +4555,8 @@ namespace Jvedio
                     return;
                 }
 
-                MessageBoxResult messageBoxResult = MessageBox.Show($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotInScanStatupDir")}", LangManager.GetValueByKey("Hint"), MessageBoxButton.YesNo);
-                if (messageBoxResult == MessageBoxResult.Yes)
+                bool ok = MsgBox.Show($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotInScanStatupDir")}");
+                if (ok)
                 {
                     videoMapper.deleteVideoByIds(toDelete);
                     await Task.Delay(5000); // todo
@@ -4613,7 +4615,7 @@ namespace Jvedio
                     }
                 }
 
-                vieModel.InitCurrentTagStamps();
+                InitTagStamp();
             }
         }
 

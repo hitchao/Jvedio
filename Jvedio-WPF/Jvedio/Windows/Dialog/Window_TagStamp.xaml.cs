@@ -11,7 +11,7 @@ namespace Jvedio
     /// <summary>
     /// Window_TagStamp.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_TagStamp : BaseWindow
+    public partial class Window_TagStamp : BaseDialog
     {
         public SolidColorBrush _BackgroundBrush = Brushes.Orange;
 
@@ -45,16 +45,6 @@ namespace Jvedio
             border2.Background = foreground;
             BackgroundBrush = background;
             ForegroundBrush = foreground;
-        }
-
-        private void Confirm(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
-
-        private void Cancel(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
         }
 
         private async void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

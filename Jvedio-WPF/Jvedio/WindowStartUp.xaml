@@ -253,15 +253,24 @@
                             Height="30"
                             Margin="0,20"
                             HorizontalAlignment="Center"
+                            DotInterval="4"
                             Foreground="{DynamicResource Window.Foreground}" />
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="{DynamicResource Scanning}" />
 
                         <TextBlock
-                            Margin="10,0"
+                            Margin="50,0"
                             HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
                             FontSize="15"
+                            Style="{StaticResource BaseTextBlock}"
                             Text="{Binding LoadingText}"
                             TextAlignment="Center"
                             TextTrimming="WordEllipsis"
+                            TextWrapping="NoWrap"
                             ToolTip="{Binding LoadingText}" />
                         <Button
                             Margin="20"
@@ -421,10 +430,11 @@
                                 <super:SearchBox
                                     Background="Transparent"
                                     Clear="SearchText_Changed"
-                                    FontSize="15"
+                                    FontSize="12"
                                     PlaceHolder="{DynamicResource Search}"
                                     Search="SearchText_Changed"
-                                    SearchOnTextChanged="True" />
+                                    SearchOnTextChanged="True"
+                                    ShowSearchButton="True" />
 
                                 <StackPanel
                                     Grid.Column="1"

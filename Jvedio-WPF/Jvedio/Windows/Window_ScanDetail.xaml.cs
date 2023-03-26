@@ -148,17 +148,17 @@ namespace Jvedio
         {
             System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 
-            saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
             saveFileDialog.FilterIndex = 2;
             saveFileDialog.RestoreDirectory = true;
-            saveFileDialog.FileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
+            saveFileDialog.FileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
 
             if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
                 {
                     string path = saveFileDialog.FileName;
-                    if (!path.ToLower().EndsWith(".txt")) path += ".txt";
+                    if (!path.ToLower().EndsWith(".csv")) path += ".csv";
                     File.WriteAllText(path, GenerateOutput());
                     MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
                     FileHelper.TryOpenSelectPathEx(path);
@@ -173,34 +173,36 @@ namespace Jvedio
 
         private string GenerateOutput()
         {
-            StringBuilder builder = new StringBuilder();
-            List<Border> borders = wrapPanel.Children.OfType<Border>().ToList();
-            for (int i = 0; i < borders.Count; i++)
-            {
-                Border border = borders[i];
-                UIElementCollection children = (border.Child as Grid).Children;
-                foreach (var item in children)
-                {
-                    if (item.GetType().GetProperty("Text") != null)
-                    {
-                        string text = item.GetType().GetProperty("Text").GetValue(item).ToString();
-                        builder.Append(text + " ");
-                    }
-                }
+            //StringBuilder builder = new StringBuilder();
+            //List<Border> borders = wrapPanel.Children.OfType<Border>().ToList();
+            //for (int i = 0; i < borders.Count; i++)
+            //{
+            //    Border border = borders[i];
+            //    UIElementCollection children = (border.Child as Grid).Children;
+            //    foreach (var item in children)
+            //    {
+            //        if (item.GetType().GetProperty("Text") != null)
+            //        {
+            //            string text = item.GetType().GetProperty("Text").GetValue(item).ToString();
+            //            builder.Append(text + " ");
+            //        }
+            //    }
 
-                builder.Append(Environment.NewLine);
-            }
+            //    builder.Append(Environment.NewLine);
+            //}
 
-            builder.Append(LangManager.GetValueByKey("Detail"));
-            builder.Append(Environment.NewLine);
+            //builder.Append(LangManager.GetValueByKey("Detail"));
+            //builder.Append(Environment.NewLine);
+
+            List<ScanDetail> datas = new List<ScanDetail>();
+
             for (int i = 0; i < dataGrid.Items.Count; i++)
             {
                 ScanDetail detail = (ScanDetail)dataGrid.Items[i];
-                builder.Append(detail.ToString());
-                builder.Append(Environment.NewLine);
+                datas.Add(detail);
             }
 
-            return builder.ToString();
+            return ClassUtils.ToCsv(datas);
         }
 
         private void ShowExceptions(object sender, RoutedEventArgs e)

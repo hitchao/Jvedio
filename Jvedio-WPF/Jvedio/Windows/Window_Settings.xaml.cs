@@ -256,7 +256,7 @@ namespace Jvedio
                     bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, fsModifiers, VK);
                     if (!success)
                     {
-                        MessageBox.Show(LangManager.GetValueByKey("HotKeyConflict"), LangManager.GetValueByKey("HotKeyConflict"));
+                        MsgBox.Show(LangManager.GetValueByKey("HotKeyConflict"));
                     }
 
                     {

@@ -6,6 +6,7 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using Jvedio.Windows;
 using Newtonsoft.Json;
+using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -142,7 +143,7 @@ namespace Jvedio.Upgrade
                 if (!File.Exists(file)) continue;
                 result = await MoveOldData(file, (err) =>
                 {
-                    MessageBox.Show(err);
+                    MsgBox.Show(err);
                 });
                 setProgress((100 * (float)i + 1) / (float)files.Length, $"迁移数据：{Path.GetFileName(file)}");
             }

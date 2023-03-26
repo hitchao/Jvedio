@@ -108,7 +108,7 @@ namespace Jvedio
             {
                 string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAGID_NEW_ADD}' and DataID='{DataID}'";
                 tagStampMapper.ExecuteNonQuery(sql);
-                windowMain?.vieModel.InitCurrentTagStamps();
+                windowMain?.InitTagStamp();
                 windowMain?.RefreshData(DataID);
             }
         }
@@ -1256,7 +1256,7 @@ namespace Jvedio
             }
             else if (header.Equals("GIF"))
             {
-                FileHelper.TryOpenSelectPath(video.getGifPath());
+                FileHelper.TryOpenSelectPath(video.GetGifPath());
             }
         }
 

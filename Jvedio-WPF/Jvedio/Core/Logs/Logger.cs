@@ -88,7 +88,7 @@ namespace Jvedio.Core.Logs
             content += $"{Environment.NewLine}[StackTrace] {Environment.NewLine} {GetAllFootprints(e)}";
             Console.WriteLine(content);
 
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", "Error");
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "error");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             string filepath = path + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
@@ -112,7 +112,7 @@ namespace Jvedio.Core.Logs
         {
             string output = $"{DateHelper.Now()} => [{logType}] {content} {Environment.NewLine}";
             Console.WriteLine(output);
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log");
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);

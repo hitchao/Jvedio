@@ -468,7 +468,7 @@ namespace Jvedio.Entity
             return imagePath;
         }
 
-        public string getGifPath()
+        public string GetGifPath()
         {
             string imagePath = GetImagePath(ImageType.Gif, ".gif");
 

@@ -82,7 +82,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
+                MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
                 App.Current.Shutdown();
             }
 
@@ -386,7 +386,7 @@ namespace Jvedio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MsgBox.Show(ex.Message);
                 Logger.Error(ex);
             }
 
@@ -428,7 +428,7 @@ namespace Jvedio
         {
             if (!File.Exists(@"x64\SQLite.Interop.dll") || !File.Exists(@"x86\SQLite.Interop.dll"))
             {
-                MessageBox.Show($"{SuperControls.Style.LangManager.GetValueByKey("Missing")} SQLite.Interop.dll", "Jvedio");
+                MsgBox.Show($"{SuperControls.Style.LangManager.GetValueByKey("Missing")} SQLite.Interop.dll");
                 this.Close();
             }
         }
@@ -645,7 +645,7 @@ namespace Jvedio
                     if (!string.IsNullOrEmpty(database.ScanPath))
                     {
                         tabControl.SelectedIndex = 0;
-                        await Task.Delay(5000);
+                        //await Task.Delay(1000);
                         //this.TitleHeight = 0;
                         List<string> toScan = JsonUtils.TryDeserializeObject<List<string>>(database.ScanPath);
                         try
@@ -668,7 +668,7 @@ namespace Jvedio
                         catch (Exception ex)
                         {
                             Logger.Error(ex);
-                            MessageBox.Show(ex.Message);
+                            MsgBox.Show(ex.Message);
                         }
 
                         //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
@@ -861,7 +861,7 @@ namespace Jvedio
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
+                        MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
                         App.Current.Shutdown();
                     }
 

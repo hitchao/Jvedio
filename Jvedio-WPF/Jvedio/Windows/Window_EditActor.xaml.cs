@@ -101,7 +101,7 @@ namespace Jvedio
         {
             if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName))
             {
-                MessageBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
+                MsgBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
             string imageFileName = string.Empty;
@@ -151,7 +151,7 @@ namespace Jvedio
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType == PathType.RelativeToData)
             {
-                MessageBox.Show(LangManager.GetValueByKey("ActorImageNotSupported"));
+                MsgBox.Show(LangManager.GetValueByKey("ActorImageNotSupported"));
                 return;
             }
 
@@ -160,7 +160,7 @@ namespace Jvedio
 
             if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName))
             {
-                MessageBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
+                MsgBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
 

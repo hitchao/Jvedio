@@ -181,11 +181,12 @@ namespace Jvedio.Core.FFmpeg
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
 
-            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); // 获得需要截图的视频进度
+            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum,
+                ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); // 获得需要截图的视频进度
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
 
-            string saveFileName = CurrentVideo.getGifPath();
+            string saveFileName = CurrentVideo.GetGifPath();
             if (string.IsNullOrEmpty(saveFileName))
                 throw new NotFoundException(saveFileName);
 

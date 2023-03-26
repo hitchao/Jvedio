@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SuperControls.Style.Windows;
+using System;
 using System.IO;
 using System.Windows;
 
@@ -60,7 +61,7 @@ namespace Jvedio.Core.Global
                 }
                 catch (Exception ex2)
                 {
-                    MessageBox.Show("数据目录创建失败 => " + ex2.Message);
+                    MsgBox.Show("数据目录创建失败 => " + ex2.Message);
                     App.Current.Shutdown();
                 }
             }

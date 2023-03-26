@@ -78,6 +78,7 @@ namespace Jvedio.Core.Net
                             Header.Headers = dict;
                         }
                         headerCallBack?.Invoke(Header);
+                        d.Add("PluginID", server.PluginID);
                         return d;
                     }
                 }

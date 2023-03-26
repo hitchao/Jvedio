@@ -479,6 +479,9 @@ namespace Jvedio.Core.Net
                         FinalizeWithCancel();
                         return;
                     }
+                    if (dict != null && dict.ContainsKey("PluginID") && dict["PluginID"] is string PluginID)
+                        logger?.Info($"使用刮削器：{PluginID}");
+
                     bool success = true;
                     Progress = 10f;
                     StatusText = "2. 校验信息";
