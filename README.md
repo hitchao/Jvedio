@@ -65,6 +65,23 @@
 |Jvedio 升级的服务器源|[jvedioupdate](https://github.com/hitchao/jvedioupdate)|
 |Gif 控件修改于|[WpfAnimatedGif](https://github.com/hitchao/WpfAnimatedGif)|
 
+# 版本计划
+
+---
+
+<img src="https://s1.ax1x.com/2023/03/26/ppseG9K.png" alt="x8MJaj.png" style="zoom:80%;" />
+
+---
+
+<img src="https://s1.ax1x.com/2023/03/26/ppseM7R.png" alt="x8MJaj.png" style="zoom:80%;" />
+
+
+
+
+
+
+
+
 # 软件特性
 
 ## 插件
