@@ -10,7 +10,7 @@ namespace Jvedio.Global
 
         static FFmpegManager()
         {
-            Dispatcher = TaskDispatcher<ScreenShotTask>.createInstance(0);
+            Dispatcher = TaskDispatcher<ScreenShotTask>.CreateInstance(0);
         }
     }
 }

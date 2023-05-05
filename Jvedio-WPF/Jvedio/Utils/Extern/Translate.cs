@@ -1,6 +1,5 @@
 ﻿using Jvedio;
-using Jvedio.Core.Logs;
-using JvedioLib.Security;
+using static Jvedio.LogManager;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using SuperUtils.Security;
 
 namespace SuperUtils.External
 {
@@ -138,7 +138,7 @@ namespace SuperUtils.External
             }
             catch (Exception ex)
             {
-                Logger.Warning(ex.Message);
+                Logger.Warn(ex.Message);
             }
 
             return string.Empty;
@@ -215,7 +215,7 @@ namespace SuperUtils.External
             // http://api.fanyi.baidu.com/doc/21
             // appid+q+salt+密钥
             string r = appid + query + salt + pwd;
-            return Encrypt.CalculateMD5Hash(r);
+            return Encrypt.TryGetMD5(r);
         }
     }
 }

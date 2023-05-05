@@ -30,7 +30,7 @@ namespace Jvedio.Core.Config
 
         private static ServerConfig instance = null;
 
-        public static ServerConfig createInstance()
+        public static ServerConfig CreateInstance()
         {
             if (instance == null) instance = new ServerConfig();
             return instance;

@@ -1936,7 +1936,7 @@
                                             HorizontalOffset="-45"
                                             VerticalOffset="-5">
                                             <MenuItem
-                                                Command="cmd:OpenWindow.Settings"
+                                                Click="ShowSettingsWindow"
                                                 Header="{DynamicResource Settings}"
                                                 Icon="/Resources/Picture/setting.png" />
                                             <MenuItem Click="ShowPluginWindow" Header="{DynamicResource Plugin}" />

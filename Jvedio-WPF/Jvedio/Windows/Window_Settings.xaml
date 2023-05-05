@@ -720,10 +720,11 @@
                                 <CheckBox Content="{DynamicResource DataExistsIndexAfterScan}" IsChecked="{Binding DataExistsIndexAfterScan, Mode=TwoWay}" />
                                 <CheckBox Content="{DynamicResource ImageExistsIndexAfterScan}" IsChecked="{Binding ImageExistsIndexAfterScan, Mode=TwoWay}" />
                                 <CheckBox Content="{DynamicResource ImportNFOWhenScan}" IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                <StackPanel
+                                <!--<StackPanel
                                     Margin="20,0"
                                     Orientation="Vertical"
-                                    Visibility="{Binding ScanNfo, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+                                    Visibility="{Binding ScanNfo, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">-->
+                                <StackPanel Margin="20,0" Orientation="Vertical">
 
                                     <CheckBox Content="{DynamicResource OverriteImage}" IsChecked="{Binding CopyNFOOverriteImage}" />
                                     <CheckBox Content="{DynamicResource CopyPosterAndThumbnail}" IsChecked="{Binding CopyNFOPicture}" />
@@ -767,6 +768,48 @@
                                             Text="{Binding CopyNFOScreenShotPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                     </StackPanel>
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="NFO 属性对应" />
+                                    <Border
+                                        Margin="0,10"
+                                        Padding="5"
+                                        Style="{StaticResource InfoBorder}">
+                                        <ListBox
+                                            HorizontalContentAlignment="Stretch"
+                                            d:ItemsSource="{d:SampleData ItemCount=5}"
+                                            Background="Transparent"
+                                            ItemsSource="{Binding NfoParseRules}"
+                                            PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                            Style="{StaticResource NormalListBox}">
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Vertical" />
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock
+                                                            Grid.Column="0"
+                                                            Width="100"
+                                                            Style="{StaticResource BaseTextBlock}"
+                                                            Text="{Binding Name}"
+                                                            TextAlignment="Left" />
+                                                        <super:TagPanel Grid.Column="1" ItemsSource="{Binding ParseValues}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+
+                                    </Border>
+
                                 </StackPanel>
 
 

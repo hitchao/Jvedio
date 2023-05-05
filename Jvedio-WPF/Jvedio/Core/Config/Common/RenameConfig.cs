@@ -20,7 +20,7 @@ namespace Jvedio.Core.Config
 
         private static RenameConfig _instance = null;
 
-        public static RenameConfig createInstance()
+        public static RenameConfig CreateInstance()
         {
             if (_instance == null) _instance = new RenameConfig();
 

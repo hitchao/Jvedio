@@ -61,7 +61,7 @@ namespace Jvedio.Core.Global
                 }
                 catch (Exception ex2)
                 {
-                    MsgBox.Show("数据目录创建失败 => " + ex2.Message);
+                    new MsgBox("数据目录创建失败 => " + ex2.Message).ShowDialog();
                     App.Current.Shutdown();
                 }
             }

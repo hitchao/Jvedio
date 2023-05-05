@@ -18,7 +18,7 @@ namespace Jvedio.Core.Config
 
         private static FFmpegConfig _instance = null;
 
-        public static FFmpegConfig createInstance()
+        public static FFmpegConfig CreateInstance()
         {
             if (_instance == null) _instance = new FFmpegConfig();
 

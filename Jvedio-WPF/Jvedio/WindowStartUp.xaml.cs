@@ -5,7 +5,7 @@ using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Core.Global;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
@@ -32,7 +32,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static Jvedio.Core.Global.PathManager;
 using static Jvedio.MapperManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
@@ -122,7 +122,7 @@ namespace Jvedio
             if (ConfigManager.Main.FirstRun)
             {
                 Dialog_SetSkinLang skinLang =
-                    new Dialog_SetSkinLang(this);
+                    new Dialog_SetSkinLang();
                 skinLang.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex,
                     ConfigManager.ThemeConfig.ThemeID);
                 skinLang.InitThemes();
@@ -139,7 +139,7 @@ namespace Jvedio
                     ConfigManager.ThemeConfig.Save();
                 };
 
-                skinLang.ShowDialog();
+                skinLang.ShowDialog(this);
             }
 
 
@@ -442,7 +442,7 @@ namespace Jvedio
             }
 
             AppDatabase database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            MsgBox msgbox = new MsgBox(this,
+            MsgBox msgbox = new MsgBox(
                 $"{LangManager.GetValueByKey("IsToDelete")} {database.Name} {LangManager.GetValueByKey("And")} {database.Count} {LangManager.GetValueByKey("TagLabelAndOtherInfo")}");
             if (msgbox.ShowDialog() == true)
             {
@@ -450,7 +450,7 @@ namespace Jvedio
                 {
                     database.deleteByID(database.DBId);
                     RefreshDatabase();
-                    Main main = GetWindowByName("Main") as Main;
+                    Main main = GetWindowByName("Main", App.Current.Windows) as Main;
                     if (main != null)
                     {
                         // 重置当前
@@ -475,8 +475,8 @@ namespace Jvedio
 
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             string originName = info.Name;
-            DialogInput input = new DialogInput(this, SuperControls.Style.LangManager.GetValueByKey("Rename"), originName);
-            if (input.ShowDialog() == false) return;
+            DialogInput input = new DialogInput(SuperControls.Style.LangManager.GetValueByKey("Rename"), originName);
+            if (input.ShowDialog(this) == false) return;
             string targetName = input.Text;
             if (string.IsNullOrEmpty(targetName)) return;
             if (targetName == originName) return;
@@ -545,8 +545,8 @@ namespace Jvedio
             vieModel_StartUp.CurrentSearch = string.Empty;
             vieModel_StartUp.Sort = true;
             vieModel_StartUp.SortType = LangManager.GetValueByKey("CreatedDate");
-            DialogInput input = new DialogInput(this, SuperControls.Style.LangManager.GetValueByKey("NewLibrary"));
-            if (input.ShowDialog() == false) return;
+            DialogInput input = new DialogInput(SuperControls.Style.LangManager.GetValueByKey("NewLibrary"));
+            if (input.ShowDialog(this) == false) return;
             string targetName = input.Text;
             if (string.IsNullOrEmpty(targetName)) return;
 
@@ -618,7 +618,7 @@ namespace Jvedio
                     database = appDatabases.Where(arg => arg.DBId == id).FirstOrDefault();
             }
 
-            Main main = GetWindowByName("Main") as Main;
+            Main main = GetWindowByName("Main", App.Current.Windows) as Main;
             // 检测该 id 是否在数据库中存在
             if (database == null)
             {
@@ -705,7 +705,7 @@ namespace Jvedio
             }
             else
             {
-                //Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas") as Window_MetaDatas;
+                //Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas", App.Current.Windows) as Window_MetaDatas;
                 //if (metaData == null)
                 //{
                 //    metaData = new Window_MetaDatas();
@@ -800,7 +800,7 @@ namespace Jvedio
             ConfigManager.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? LangManager.GetValueByKey("Title") : vieModel_StartUp.SortType;
             ConfigManager.StartUp.Save();
 
-            Main main = GetWindowByName("Main") as Main;
+            Main main = GetWindowByName("Main", App.Current.Windows) as Main;
             if (main != null && !main.IsActive && !EnteringDataBase)
             {
                 Application.Current.Shutdown();
@@ -840,7 +840,7 @@ namespace Jvedio
 
         private async void RestoreDatabase(object sender, RoutedEventArgs e)
         {
-            if (new MsgBox(this, LangManager.GetValueByKey("IsToRestore")).ShowDialog() == true)
+            if (new MsgBox(LangManager.GetValueByKey("IsToRestore")).ShowDialog(this) == true)
             {
                 vieModel_StartUp.Restoring = true;
 

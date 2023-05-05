@@ -17,7 +17,7 @@ using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
 using System.Security.Cryptography;
 using SuperUtils.Common;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Core.Net
 {
@@ -25,7 +25,7 @@ namespace Jvedio.Core.Net
     {
         public DownLoadState State = DownLoadState.DownLoading;
 
-        private bool Canceld { get; set; }
+        private bool Canceled { get; set; }
 
         private CancellationToken cancellationToken { get; set; }
 
@@ -47,7 +47,7 @@ namespace Jvedio.Core.Net
         /// </summary>
         public void Cancel()
         {
-            Canceld = true;
+            Canceled = true;
             State = DownLoadState.Fail;
         }
 
@@ -138,7 +138,7 @@ namespace Jvedio.Core.Net
                 // 过滤器仅可使用的刮削器
                 try
                 {
-                    PluginInvoker invoker = new PluginInvoker(metaData.GetFilePath());
+                    PluginInvoker invoker = new PluginInvoker(metaData.GetDllPath());
                     object reasonObject = invoker.SetMethod("IsPluginAvailable").Invoke(new object[] { dataInfo });
                     string reason = reasonObject as string;
                     if (string.IsNullOrEmpty(reason))
@@ -167,7 +167,7 @@ namespace Jvedio.Core.Net
                     }
                     else
                     {
-                        Logger.Warning(reason);
+                        Logger.Warn(reason);
                     }
                 }
                 catch (Exception ex)

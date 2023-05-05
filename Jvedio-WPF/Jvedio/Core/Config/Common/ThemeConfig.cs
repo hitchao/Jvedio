@@ -12,7 +12,7 @@ namespace Jvedio.Core.Config
 
         private static ThemeConfig _instance = null;
 
-        public static ThemeConfig createInstance()
+        public static ThemeConfig CreateInstance()
         {
             if (_instance == null) _instance = new ThemeConfig();
 

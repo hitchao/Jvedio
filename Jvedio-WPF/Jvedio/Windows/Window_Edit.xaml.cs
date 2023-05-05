@@ -5,15 +5,17 @@ using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
+using SuperUtils.WPF.Entity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 
 namespace Jvedio
@@ -36,24 +38,13 @@ namespace Jvedio
             Init();
             vieModel = new VieModel_Edit(dataID);
             this.DataContext = vieModel;
-            ReLoad();
         }
 
         private void Init()
         {
-            main = GetWindowByName("Main") as Main;
-            windowDetails = GetWindowByName("Window_Details") as Window_Details;
+            main = GetWindowByName("Main", App.Current.Windows) as Main;
+            windowDetails = GetWindowByName("Window_Details", App.Current.Windows) as Window_Details;
             if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont; // 设置字体
-        }
-
-        public void ReLoad()
-        {
-            genreTagPanel.TagList = vieModel.CurrentVideo.GenreList;
-            genreTagPanel.Refresh();
-            labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
-            labelTagPanel.Refresh();
-            subSectionTagPanel.TagList = vieModel.CurrentVideo.SubSectionList;
-            subSectionTagPanel.Refresh();
         }
 
         private void SaveInfo(object sender, RoutedEventArgs e)
@@ -62,7 +53,6 @@ namespace Jvedio
             if (success)
             {
                 vieModel.Reset();
-                ReLoad();
 
                 // 更新到主界面和详情界面
                 main?.RefreshData(vieModel.CurrentVideo.DataID);
@@ -106,7 +96,6 @@ namespace Jvedio
                 }
 
                 vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
-                ReLoad();
             }
 
             calcSize();
@@ -128,65 +117,35 @@ namespace Jvedio
             ConfigManager.Edit.Save();
         }
 
-        private void NewGenre(object sender, RoutedEventArgs e)
+
+        private void GenreChanged(object sender, RoutedEventArgs eventArgs)
         {
-            DialogInput dialogInput = new DialogInput(this, LangManager.GetValueByKey("PleaseEnter"));
-            if (dialogInput.ShowDialog() == true)
-            {
-                string text = dialogInput.Text;
-                if (string.IsNullOrEmpty(text)) return;
-                if (vieModel.CurrentVideo.GenreList == null)
-                    vieModel.CurrentVideo.GenreList = new System.Collections.Generic.List<string>();
-                vieModel.CurrentVideo.GenreList.Add(text);
-                vieModel.CurrentVideo.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.GenreList);
-                genreTagPanel.TagList = null;
-                genreTagPanel.TagList = vieModel.CurrentVideo.GenreList;
-                genreTagPanel.Refresh();
-            }
+            List<string> list = new List<string>();
+            if (vieModel.CurrentVideo.GenreList != null)
+                list = vieModel.CurrentVideo.GenreList.Select(arg => arg.Value).ToList();
+            vieModel.CurrentVideo.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
+
+            windowDetails.RefreshGenre(vieModel.CurrentVideo.Label);
         }
 
-        private void NewLabel(object sender, RoutedEventArgs e)
+        private void LabelChanged(object sender, RoutedEventArgs eventArgs)
         {
-            DialogInput dialogInput = new DialogInput(this, LangManager.GetValueByKey("PleaseEnter"));
-            if (dialogInput.ShowDialog() == true)
-            {
-                string text = dialogInput.Text;
-                if (string.IsNullOrEmpty(text)) return;
-                addLabel(text);
-            }
+            List<string> list = new List<string>();
+            if (vieModel.CurrentVideo.LabelList != null)
+                list = vieModel.CurrentVideo.LabelList.Select(arg => arg.Value).ToList();
+            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
+            MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData());
+            windowDetails.RefreshLabel(vieModel.CurrentVideo.Label);
         }
 
-        private void addLabel(string label)
+        private void SubSectionChanged(object sender, RoutedEventArgs eventArgs)
         {
-            if (vieModel.CurrentVideo.LabelList == null)
-                vieModel.CurrentVideo.LabelList = new System.Collections.Generic.List<string>();
-            if (vieModel.CurrentVideo.LabelList.Contains(label)) return;
-            vieModel.CurrentVideo.LabelList.Add(label);
-            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.LabelList);
-            labelTagPanel.TagList = null;
-            labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
-            labelTagPanel.Refresh();
-        }
+            List<string> list = vieModel.CurrentVideo.SubSectionList;
+            if (list == null)
+                list = new List<string>();
+            vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
+            calcSize();
 
-        private void GenreChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
-        {
-            if (e != null && e.List != null)
-                vieModel.CurrentVideo.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-        }
-
-        private void LabelChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
-        {
-            if (e != null && e.List != null)
-                vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-        }
-
-        private void SubSectionChanged(object sender, SuperControls.Style.ListChangedEventArgs e)
-        {
-            if (e != null && e.List != null)
-            {
-                vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-                calcSize();
-            }
         }
 
         private void NewSubSection(object sender, RoutedEventArgs e)
@@ -196,10 +155,7 @@ namespace Jvedio
                 vieModel.CurrentVideo.SubSectionList = new System.Collections.Generic.List<string>();
             vieModel.CurrentVideo.SubSectionList.AddRange(fileNames);
             vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
-            subSectionTagPanel.TagList = null;
-            subSectionTagPanel.TagList = vieModel.CurrentVideo.SubSectionList;
             calcSize();
-            subSectionTagPanel.Refresh();
         }
 
         private void ChooseFile(object sender, MouseButtonEventArgs e)
@@ -358,8 +314,11 @@ namespace Jvedio
             Border border = sender as Border;
             TextBlock textBlock = border.Child as TextBlock;
             string text = textBlock.Text;
-            addLabel(text.Substring(0, text.IndexOf("(")));
+            string value = text.Substring(0, text.IndexOf("("));
+            vieModel.CurrentVideo.LabelList.Add(new ObservableString(value));
+            LabelChanged(null, null);
             searchLabelPopup.IsOpen = false;
         }
+
     }
 }

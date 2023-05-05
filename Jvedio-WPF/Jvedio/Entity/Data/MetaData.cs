@@ -5,6 +5,7 @@ using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Media;
 using SuperUtils.Time;
+using SuperUtils.WPF.Entity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -87,16 +88,26 @@ namespace Jvedio.Entity
             set
             {
                 _Genre = value;
-                GenreList = new List<string>();
+                GenreList = new ObservableCollection<ObservableString>();
                 if (!string.IsNullOrEmpty(value))
-                    GenreList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    foreach (var item in value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries))
+                        GenreList.Add(new ObservableString(item));
 
                 RaisePropertyChanged();
             }
         }
 
+        private ObservableCollection<ObservableString> _GenreList;
         [TableField(exist: false)]
-        public List<string> GenreList { get; set; }
+        public ObservableCollection<ObservableString> GenreList
+        {
+            get { return _GenreList; }
+            set
+            {
+                _GenreList = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public float Grade { get; set; }
 
@@ -110,15 +121,29 @@ namespace Jvedio.Entity
             set
             {
                 _Label = value;
-                LabelList = new List<string>();
+                LabelList = new ObservableCollection<ObservableString>();
                 if (!string.IsNullOrEmpty(value))
-                    LabelList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                {
+                    foreach (var item in value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries))
+                        LabelList.Add(new ObservableString(item));
+
+                }
                 RaisePropertyChanged();
             }
         }
 
+
+        private ObservableCollection<ObservableString> _LabelList;
         [TableField(exist: false)]
-        public List<string> LabelList { get; set; }
+        public ObservableCollection<ObservableString> LabelList
+        {
+            get { return _LabelList; }
+            set
+            {
+                _LabelList = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public string ViewDate { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.Logs;
+﻿using static Jvedio.LogManager;
 using SuperControls.Style;
 using System;
 
@@ -8,7 +8,7 @@ namespace Jvedio.Core.Exceptions
     {
         public SqlException(string sql, Exception ex) : base(LangManager.GetValueByKey("ExeSqlError"))
         {
-            Logger.Warning($"{LangManager.GetValueByKey("ExeSqlError")} => {sql}");
+            Logger.Warn($"{LangManager.GetValueByKey("ExeSqlError")} => {sql}");
             Logger.Error(ex);
         }
     }

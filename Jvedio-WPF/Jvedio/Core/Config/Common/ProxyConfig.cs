@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.Config.Base;
-using Jvedio.Core.Logs;
-using JvedioLib.Security;
+using static Jvedio.LogManager;
+using SuperUtils.Security;
 using MihaZupan;
 using SuperUtils.NetWork;
 using System;
@@ -21,7 +21,7 @@ namespace Jvedio.Core.Config
 
         private static ProxyConfig _instance = null;
 
-        public static ProxyConfig createInstance()
+        public static ProxyConfig CreateInstance()
         {
             if (_instance == null) _instance = new ProxyConfig();
 
@@ -89,7 +89,7 @@ namespace Jvedio.Core.Config
             {
                 try
                 {
-                    return Encrypt.AesDecrypt(Password, 0);
+                    return JvedioLib.Security.Encrypt.AesDecrypt(Password, 0);
                 }
                 catch (Exception ex)
                 {

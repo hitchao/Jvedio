@@ -1,6 +1,7 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using Jvedio.Mapper.BaseMapper;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,11 +62,18 @@ namespace Jvedio.Mapper
             return 0;
         }
 
-        public void SaveLabel(MetaData metaData, List<string> oldLabels)
+        public void SaveLabel(MetaData metaData)
         {
-            List<string> newLabels = metaData.LabelList;
-            if (oldLabels == null) oldLabels = new List<string>();
-            if (newLabels == null) newLabels = new List<string>();
+            string selectSql = $"select LabelName from metadata_to_label where DataID={metaData.DataID}";
+            List<Dictionary<string, object>> list = Select(selectSql);
+            List<string> labels = list.Select(arg => arg["LabelName"].ToString()).ToList();
+            List<string> oldLabels = new List<string>();
+            List<string> newLabels = new List<string>();
+            if (metaData.LabelList != null)
+                newLabels = metaData.LabelList.Select(arg => arg.Value).ToList();
+            if (labels != null)
+                oldLabels = labels.ToList();
+
             if (newLabels.SequenceEqual(oldLabels)) return;
 
             // 删除，新增

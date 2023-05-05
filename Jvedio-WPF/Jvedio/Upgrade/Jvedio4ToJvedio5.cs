@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;

@@ -26,7 +26,7 @@ namespace Jvedio.Core.WindowConfig
 
         private static Settings _instance = null;
 
-        public static Settings createInstance()
+        public static Settings CreateInstance()
         {
             if (_instance == null) _instance = new Settings();
 

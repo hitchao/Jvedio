@@ -36,7 +36,8 @@ namespace Jvedio.Core.Net
             public static int SMALL_IMAGE = 50;
         }
 
-        public DownLoadTask(Video video, bool downloadPreview = false, bool overrideInfo = false) : this(video.toMetaData())
+        public DownLoadTask(Video video, bool downloadPreview = false, bool overrideInfo = false) :
+            this(video.toMetaData())
         {
             Title = string.IsNullOrEmpty(video.VID) ? video.Title : video.VID;
             DownloadPreview = downloadPreview;
@@ -104,7 +105,7 @@ namespace Jvedio.Core.Net
             if (video == null || video.DataID <= 0)
             {
                 Message = $"不存在 DataID={DataID} 的资源";
-                logger.Error(Message);
+                Logger.Error(Message);
                 FinalizeWithCancel();
                 throw new Exception(Message);
             }
@@ -123,14 +124,14 @@ namespace Jvedio.Core.Net
                     {
                         // todo 显示到界面上
                         Message = ex.Message;
-                        logger.Error(Message);
+                        Logger.Error(Message);
                         FinalizeWithCancel();
                         throw ex;
                     }
                     catch (DllLoadFailedException ex)
                     {
                         Message = ex.Message;
-                        logger.Error(Message);
+                        Logger.Error(Message);
                         FinalizeWithCancel();
                         throw ex;
                     }
@@ -142,15 +143,15 @@ namespace Jvedio.Core.Net
                 }
 
                 // 等待了很久都没成功
-                logger.Info($"暂停 {DateHelper.ToReadableTime(Delay.INFO)}");
+                Logger.Info($"暂停 {DateHelper.ToReadableTime(Delay.INFO)}");
                 await Task.Delay(Delay.INFO);
                 return dict;
             }
             else
             {
                 Message = "该资源信息已同步，跳过信息下载";
-                logger.Info(Message);
-                logger.Info(LangManager.GetValueByKey("SkipDownLoadInfoAndDownloadImage"));
+                Logger.Info(Message);
+                Logger.Info(LangManager.GetValueByKey("SkipDownLoadInfoAndDownloadImage"));
                 return null;
             }
         }
@@ -170,7 +171,7 @@ namespace Jvedio.Core.Net
                     byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
                     {
                         if (!string.IsNullOrEmpty(error))
-                            logger.Error($"{imageUrl} => {error}");
+                            Logger.Error($"{imageUrl} => {error}");
                     });
                     if (fileByte != null && fileByte.Length > 0)
                     {
@@ -179,17 +180,17 @@ namespace Jvedio.Core.Net
                         return true;
                     }
                     else
-                        logger.Error($"同步海报图x失败x，获取字节大小为空");
+                        Logger.Error($"同步海报图x失败x，获取字节大小为空");
                     await Task.Delay(Delay.BIG_IMAGE);
                 }
                 else
                 {
-                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                    Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                 }
             }
             else
             {
-                logger.Error("同步海报图地址为空");
+                Logger.Error("同步海报图地址为空");
             }
             return false;
         }
@@ -210,7 +211,7 @@ namespace Jvedio.Core.Net
                     byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
                     {
                         if (!string.IsNullOrEmpty(error))
-                            logger.Error($"{imageUrl} => {error}");
+                            Logger.Error($"{imageUrl} => {error}");
                     });
                     if (fileByte != null && fileByte.Length > 0)
                     {
@@ -219,17 +220,17 @@ namespace Jvedio.Core.Net
                         return true;
                     }
                     else
-                        logger.Error($"同步缩略图x失败x，获取字节大小为空");
+                        Logger.Error($"同步缩略图x失败x，获取字节大小为空");
                     await Task.Delay(Delay.SMALL_IMAGE);
                 }
                 else
                 {
-                    logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                    Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                 }
             }
             else
             {
-                logger.Error("同步缩略图地址为空");
+                Logger.Error("同步缩略图地址为空");
             }
             return false;
         }
@@ -303,7 +304,7 @@ namespace Jvedio.Core.Net
                             byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
                             {
                                 if (!string.IsNullOrEmpty(error))
-                                    logger.Error($"{url} => {error}");
+                                    Logger.Error($"{url} => {error}");
                             });
                             if (fileByte != null && fileByte.Length > 0)
                             {
@@ -311,11 +312,11 @@ namespace Jvedio.Core.Net
                                 StatusText = $"{i + 1}/{actorCount}同步演员头像（{actorName}）成功";
                             }
                             else
-                                logger.Error($"{i + 1}/{actorCount}同步演员头像（{actorName}）x失败x，获取字节大小为空");
+                                Logger.Error($"{i + 1}/{actorCount}同步演员头像（{actorName}）x失败x，获取字节大小为空");
                         }
                         else
                         {
-                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                            Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                         }
                     }
                     return true;
@@ -336,7 +337,7 @@ namespace Jvedio.Core.Net
                     int imageCount = imageUrls.Count;
                     for (int i = 0; i < imageCount; i++)
                     {
-                        if (Canceld)
+                        if (Canceled)
                         {
                             FinalizeWithCancel();
                             return false;
@@ -353,7 +354,7 @@ namespace Jvedio.Core.Net
                             byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
                             {
                                 if (!string.IsNullOrEmpty(error))
-                                    logger.Error($"{url} => {error}");
+                                    Logger.Error($"{url} => {error}");
                             });
                             if (fileByte != null && fileByte.Length > 0)
                             {
@@ -364,14 +365,14 @@ namespace Jvedio.Core.Net
                             }
                             else
                             {
-                                logger.Error($"{i + 1}/{imageCount}同步预览图 x失败x，获取字节大小为空");
+                                Logger.Error($"{i + 1}/{imageCount}同步预览图 x失败x，获取字节大小为空");
                             }
 
                             await Task.Delay(Delay.EXTRA_IMAGE);
                         }
                         else
                         {
-                            logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
+                            Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                         }
                     }
                     return true;
@@ -380,7 +381,7 @@ namespace Jvedio.Core.Net
             else if (!DownloadPreview)
                 StatusText = LangManager.GetValueByKey("NotSetPreviewDownload");
             else
-                logger.Info("该资源无预览图");
+                Logger.Info("该资源无预览图");
             return false;
         }
 
@@ -395,12 +396,12 @@ namespace Jvedio.Core.Net
             if (dict != null && dict.ContainsKey("Error"))
             {
                 string statusCode = dict.Get("StatusCode", WRONG_STATUS_CODE).ToString();
-                logger.Info($"StatusCode: {statusCode}");
+                Logger.Info($"StatusCode: {statusCode}");
                 string error = dict["Error"].ToString();
                 if (!string.IsNullOrEmpty(error) && !error.Equals(HttpResult.DEFAULT_ERROR_MSG))
                 {
                     Message = error;
-                    logger.Error(error);
+                    Logger.Error(error);
                 }
                 success = dict.ContainsKey("Title") && !string.IsNullOrEmpty(dict["Title"].ToString());
             }
@@ -410,7 +411,7 @@ namespace Jvedio.Core.Net
                     Message = dict.Get("StatusCode", "-1").ToString();
                 if (int.TryParse(Message, out int status))
                     Message = StatusCodeToMessage(status);
-                logger.Error(Message);
+                Logger.Error(Message);
                 await Task.Delay(Delay.INFO);
                 // 发生了错误，停止下载
                 FinalizeWithCancel();
@@ -461,13 +462,13 @@ namespace Jvedio.Core.Net
             Task.Run(async () =>
             {
                 Progress = 0;
-                stopwatch.Start();
+                TimeWatch.Start();
                 if (DataType == DataType.Video)
                 {
                     Video video = videoMapper.SelectVideoByID(DataID);
                     RequestHeader header = null;
                     Dictionary<string, object> dict = null;
-                    VideoDownLoader downLoader = new VideoDownLoader(video, token);
+                    VideoDownLoader downLoader = new VideoDownLoader(video, Token);
                     StatusText = "1. 开始同步信息";
                     try
                     {
@@ -475,12 +476,12 @@ namespace Jvedio.Core.Net
                     }
                     catch (Exception ex)
                     {
-                        logger.Error(ex.Message);
+                        Logger.Error(ex.Message);
                         FinalizeWithCancel();
                         return;
                     }
                     if (dict != null && dict.ContainsKey("PluginID") && dict["PluginID"] is string PluginID)
-                        logger?.Info($"使用刮削器：{PluginID}");
+                        Logger?.Info($"使用刮削器：{PluginID}");
 
                     bool success = true;
                     Progress = 10f;
@@ -494,7 +495,7 @@ namespace Jvedio.Core.Net
                         return;
                     }
 
-                    if (Canceld)
+                    if (Canceled)
                     {
                         FinalizeWithCancel();
                         return;
@@ -511,7 +512,7 @@ namespace Jvedio.Core.Net
                     StatusText = "3. 开始同步海报图";
                     success = await DownloadPoster(video, dict, downLoader, header);
                     Progress = 66f;
-                    if (Canceld)
+                    if (Canceled)
                     {
                         FinalizeWithCancel();
                         return;
@@ -519,7 +520,7 @@ namespace Jvedio.Core.Net
                     StatusText = "4. 开始同步缩略图";
                     success = await DownloadThumnail(video, dict, downLoader, header);
                     Progress = 77f;
-                    if (Canceld)
+                    if (Canceled)
                     {
                         FinalizeWithCancel();
                         return;
@@ -530,7 +531,7 @@ namespace Jvedio.Core.Net
                     success = await DownloadActors(video, dict, downLoader, header);
 
                     Progress = 88f;
-                    if (Canceld)
+                    if (Canceled)
                     {
                         FinalizeWithCancel();
                         return;
@@ -543,9 +544,9 @@ namespace Jvedio.Core.Net
                 StatusText = "7. 同步所有内容完成";
                 Running = false;
                 Progress = 100.00f;
-                stopwatch.Stop();
-                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                logger.Info($"{LangManager.GetValueByKey("TotalCost")} {DateHelper.ToReadableTime(ElapsedMilliseconds)}");
+                TimeWatch.Stop();
+                ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
+                Logger.Info($"{LangManager.GetValueByKey("TotalCost")} {DateHelper.ToReadableTime(ElapsedMilliseconds)}");
             });
         }
 

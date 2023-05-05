@@ -25,7 +25,7 @@ namespace Jvedio.Core.Config
 
         private static ScanConfig _instance = null;
 
-        public static ScanConfig createInstance()
+        public static ScanConfig CreateInstance()
         {
             if (_instance == null) _instance = new ScanConfig();
 

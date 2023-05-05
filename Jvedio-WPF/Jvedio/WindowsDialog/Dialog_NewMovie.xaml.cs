@@ -19,7 +19,7 @@ namespace Jvedio
 
         public VideoType VideoType { get; set; }
 
-        public Dialog_NewMovie(Window owner) : base(owner)
+        public Dialog_NewMovie() : base(true)
         {
             InitializeComponent();
             VideoType = VideoType.Censored;

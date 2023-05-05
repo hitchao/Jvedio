@@ -1,10 +1,10 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Entity;
 using Jvedio.Mapper;
-using JvedioLib.Security;
+using SuperUtils.Security;
 using SuperControls.Style;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.Tasks;
@@ -100,8 +100,8 @@ namespace Jvedio.Core.Scan
         {
             Task.Run((Action)(() =>
            {
-               stopwatch.Start();
-               logger.Info(LangManager.GetValueByKey("BeginScan"));
+               TimeWatch.Start();
+               Logger.Info(LangManager.GetValueByKey("BeginScan"));
                if (ScanPaths.Count == 0 && FilePaths.Count != 0)
                {
                    string path = FilePaths[FilePaths.Count - 1];
@@ -114,12 +114,12 @@ namespace Jvedio.Core.Scan
                    IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) =>
                    {
                        // 发生异常
-                       logger.Error(ex.Message);
+                       Logger.Error(ex.Message);
                    }, (dir) =>
                    {
                        Message = dir;
                        onScanning?.Invoke(this, new MessageCallBackEventArgs(dir));
-                   }, tokenCTS);
+                   }, TokenCTS);
                    FilePaths.AddRange(paths);
                }
 
@@ -130,7 +130,7 @@ namespace Jvedio.Core.Scan
                }
                catch (TaskCanceledException ex)
                {
-                   logger.Error(ex.Message);
+                   Logger.Error(ex.Message);
                    Status = TaskStatus.Canceled;
                    Running = false;
                    return;
@@ -141,9 +141,9 @@ namespace Jvedio.Core.Scan
                try
                {
                    (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO) parseResult
-                    = scanHelper.ParseMovie(FilePaths, FileExt, token, Properties.Settings.Default.ScanNfo, callBack: (msg) =>
+                    = scanHelper.ParseMovie(FilePaths, FileExt, Token, Properties.Settings.Default.ScanNfo, callBack: (msg) =>
                     {
-                        logger.Error(msg);
+                        Logger.Error(msg);
                     });
 
                    ScanResult.TotalCount = parseResult.import.Count + parseResult.notImport.Count + parseResult.failNFO.Count;
@@ -153,7 +153,7 @@ namespace Jvedio.Core.Scan
                    }
                    catch (TaskCanceledException ex)
                    {
-                       logger.Error(ex.Message);
+                       Logger.Error(ex.Message);
                        base.FinalizeWithCancel();
                        base.OnCompleted(null);
                        return;
@@ -170,14 +170,13 @@ namespace Jvedio.Core.Scan
                }
                catch (Exception ex)
                {
-                   Logger.Error(ex);
-                   logger.Error(ex.Message);
+                   Logger.Error(ex.Message);
                    Success = false;
                }
 
                Running = false;
-               stopwatch.Stop();
-               ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+               TimeWatch.Stop();
+               ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
                ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
                Status = TaskStatus.RanToCompletion;
 
@@ -326,7 +325,7 @@ namespace Jvedio.Core.Scan
                 NotImportReason reason = notImport[key];
                 if (reason == NotImportReason.RepetitiveVID)
                 {
-                    string vid = Identify.GetVID(Path.GetFileNameWithoutExtension(key));
+                    string vid = JvedioLib.Security.Identify.GetVID(Path.GetFileNameWithoutExtension(key));
                     ScanResult.NotImport.Add(key, new ScanDetailInfo($"{ReasonToString[reason]} => {vid}"));
                 }
                 else
@@ -501,7 +500,7 @@ namespace Jvedio.Core.Scan
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex.Message);
+                    Logger.Error(ex.Message);
                 }
 
                 // 复制图片
@@ -611,7 +610,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
@@ -635,7 +634,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
@@ -684,9 +683,9 @@ namespace Jvedio.Core.Scan
         {
             if (Status == TaskStatus.Canceled)
             {
-                stopwatch.Stop();
+                TimeWatch.Stop();
                 Running = false;
-                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+                ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
                 throw new TaskCanceledException();
             }
         }

@@ -12,7 +12,7 @@ namespace Jvedio.Global
 
         static DownloadManager()
         {
-            Dispatcher = TaskDispatcher<DownLoadTask>.createInstance(taskDelay: 3000, enableLongTaskDelay: true);
+            Dispatcher = TaskDispatcher<DownLoadTask>.CreateInstance(taskDelay: 3000, enableLongTaskDelay: true);
             //start();
         }
 

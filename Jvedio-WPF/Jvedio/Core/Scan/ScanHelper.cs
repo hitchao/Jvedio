@@ -1,8 +1,8 @@
 ﻿using Jvedio.Core.Enums;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
-using JvedioLib.Security;
+using SuperUtils.Security;
 using QueryEngine;
 using SuperUtils.Common;
 using SuperUtils.IO;
@@ -208,11 +208,11 @@ namespace Jvedio
                         {
                             try
                             {
-                                return Identify.GetVID(new FileInfo(s).Name).ToUpper() == ID.ToUpper();
+                                return JvedioLib.Security.Identify.GetVID(new FileInfo(s).Name).ToUpper() == ID.ToUpper();
                             }
                             catch
                             {
-                                Logger.Warning($"错误路径：{s}");
+                                Logger.Warn($"错误路径：{s}");
                                 return false;
                             }
                         })
@@ -425,7 +425,7 @@ namespace Jvedio
                 if (!File.Exists(path)) continue;
                 string VID = string.Empty;
                 if (ConfigManager.ScanConfig.FetchVID)
-                    VID = Identify.GetVID(Path.GetFileNameWithoutExtension(path));
+                    VID = JvedioLib.Security.Identify.GetVID(Path.GetFileNameWithoutExtension(path));
                 if (string.IsNullOrEmpty(VID))
                 {
                     // 无识别码
@@ -469,7 +469,7 @@ namespace Jvedio
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warning("解析分段视频错误");
+                        Logger.Warn("解析分段视频错误");
                         Logger.Error(ex);
                     }
 
@@ -532,7 +532,7 @@ namespace Jvedio
                 Path = path,
                 VID = vID,
                 Size = fileInfo.Length,
-                VideoType = (VideoType)Identify.GetVideoType(vID),
+                VideoType = (VideoType)JvedioLib.Security.Identify.GetVideoType(vID),
                 FirstScanDate = DateHelper.Now(),
                 CreateDate = DateHelper.ToLocalDate(fileInfo.CreationTime),
             };

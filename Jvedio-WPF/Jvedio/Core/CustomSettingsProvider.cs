@@ -1,5 +1,5 @@
 ﻿using Jvedio.Core.Global;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

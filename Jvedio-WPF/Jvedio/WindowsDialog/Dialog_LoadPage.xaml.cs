@@ -19,7 +19,7 @@ namespace Jvedio
         public int StartPage = 1;
         public int EndPage = 500;
 
-        public Dialog_LoadPage(Window owner, bool showbutton) : base(owner, showbutton)
+        public Dialog_LoadPage(bool showbutton) : base(showbutton)
         {
             InitializeComponent();
             cb.ItemsSource = Properties.Settings.Default.WebSiteList.Split(';');

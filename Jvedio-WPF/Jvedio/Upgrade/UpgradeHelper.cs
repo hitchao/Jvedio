@@ -32,7 +32,7 @@ namespace Jvedio.Upgrade
 
         public static void CreateDialog_Upgrade()
         {
-            dialog_Upgrade = new Dialog_Upgrade(Window, Upgrader);
+            dialog_Upgrade = new Dialog_Upgrade(Upgrader);
             dialog_Upgrade.LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             dialog_Upgrade.OnSourceChanged += (s, e) =>
             {
@@ -63,7 +63,7 @@ namespace Jvedio.Upgrade
         public static async Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> GetUpgardeInfo()
         {
             if (Upgrader == null) return (null, null, null);
-            return await Upgrader.GetUpgardeInfo();
+            return await Upgrader.GetUpgradeInfo();
         }
 
         private static SuperUpgrader Upgrader { get; set; }

@@ -1,12 +1,10 @@
-﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Enums;
-using Jvedio.Core.Logs;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
 using Jvedio.Mapper;
-using JvedioLib.Security;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.IO;
+using SuperUtils.Security;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
@@ -74,7 +72,7 @@ namespace Jvedio.Core.Scan
         {
             Task.Run(() =>
             {
-                stopwatch.Start();
+                TimeWatch.Start();
                 foreach (string path in ScanPaths)
                 {
                     List<string> list = FileHelper.TryGetAllFiles(path, "*.*").ToList();
@@ -109,8 +107,8 @@ namespace Jvedio.Core.Scan
                 handleImport(import);
                 handleNotImport(notImport);
 
-                stopwatch.Stop();
-                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+                TimeWatch.Stop();
+                ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
                 ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
                 Status = System.Threading.Tasks.TaskStatus.RanToCompletion;
             });
@@ -199,7 +197,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
@@ -229,7 +227,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally

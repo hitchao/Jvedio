@@ -9,8 +9,6 @@
     MinWidth="600"
     MinHeight="450"
     Background="{DynamicResource Window.Background}"
-    CanMinimized="True"
-    CanResize="True"
     ContentRendered="BaseWindow_ContentRendered"
     Foreground="{DynamicResource Window.Title.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"

@@ -1,5 +1,5 @@
 ﻿using Jvedio.Core.Global;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Microsoft.VisualBasic.Logging;
 using SuperControls.Style;
 using SuperControls.Style.Windows;

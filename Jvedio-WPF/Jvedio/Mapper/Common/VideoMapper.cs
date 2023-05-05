@@ -58,9 +58,9 @@ namespace Jvedio.Mapper
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
 
             wrapper.Select(SelectFields).Eq("metadata.DataID", dataid);
-            string sql = $"{wrapper.toSelect(false)} FROM metadata_video " +
+            string sql = $"{wrapper.ToSelect(false)} FROM metadata_video " +
                         "JOIN metadata " +
-                        "on metadata.DataID=metadata_video.DataID " + wrapper.toWhere(false);
+                        "on metadata.DataID=metadata_video.DataID " + wrapper.ToWhere(false);
             List<Dictionary<string, object>> list = Select(sql);
             List<Video> videos = ToEntity<Video>(list, typeof(Video).GetProperties(), false);
             if (videos != null && videos.Count > 0)

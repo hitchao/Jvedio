@@ -1,5 +1,5 @@
 ﻿
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
 
 namespace Jvedio.ViewModel
@@ -29,7 +29,7 @@ namespace Jvedio.ViewModel
 
         public VieModel_Details()
         {
-            windowDetails = GetWindowByName("Window_Details") as Window_Details;
+            windowDetails = GetWindowByName("Window_Details", App.Current.Windows) as Window_Details;
         }
 
         private bool _TeenMode = ConfigManager.Settings.TeenMode;
@@ -108,19 +108,6 @@ namespace Jvedio.ViewModel
             set
             {
                 _VideoInfo = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<string> labellist;
-
-        public ObservableCollection<string> LabelList
-        {
-            get { return labellist; }
-
-            set
-            {
-                labellist = value;
                 RaisePropertyChanged();
             }
         }
@@ -267,7 +254,7 @@ namespace Jvedio.ViewModel
 
             string sql = VideoMapper.BASE_SQL;
 
-            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
+            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
 
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);

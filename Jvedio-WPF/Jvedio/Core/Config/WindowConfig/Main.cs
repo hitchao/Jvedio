@@ -19,7 +19,7 @@ namespace Jvedio.Core.WindowConfig
 
         private static Main _instance = null;
 
-        public static Main createInstance()
+        public static Main CreateInstance()
         {
             if (_instance == null) _instance = new Main();
 

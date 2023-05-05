@@ -13,7 +13,7 @@ namespace Jvedio
     {
         public string Message { get; set; }
 
-        public Dialog_Notice(Window owner, bool showbutton, string message) : base(owner, showbutton)
+        public Dialog_Notice(bool showbutton, string message) : base(showbutton)
         {
             InitializeComponent();
             Message = message;
@@ -22,7 +22,7 @@ namespace Jvedio
 
         public void RenderContent(object sender, EventArgs e)
         {
-            richTextBox.Document = MarkDown.parse(Message);
+            richTextBox.Document = MarkDown.Parse(Message);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

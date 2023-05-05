@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.FFmpeg;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
@@ -14,6 +14,7 @@ using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
 using SuperUtils.NetWork;
+using SuperUtils.WPF.Entity;
 using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.MapperManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 
@@ -41,7 +43,6 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Details : Window
     {
-        private List<string> oldLabels { get; set; }
 
         private VieModel_Details vieModel { get; set; }
 
@@ -62,7 +63,7 @@ namespace Jvedio
 
         static Window_Details()
         {
-            windowMain = GetWindowByName("Main") as Main;
+            windowMain = GetWindowByName("Main", App.Current.Windows) as Main;
         }
 
         public Window_Details(long dataID)
@@ -115,9 +116,6 @@ namespace Jvedio
 
         private void SetLabel()
         {
-            labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
-            labelTagPanel.Refresh();
-            oldLabels = vieModel.CurrentVideo.LabelList?.Select(arg => arg).ToList();
             vieModel.getLabels();
         }
 
@@ -126,7 +124,9 @@ namespace Jvedio
             Border border = sender as Border;
             TextBlock textBlock = border.Child as TextBlock;
             string text = textBlock.Text;
-            addLabel(text.Substring(0, text.IndexOf("(")));
+            string value = text.Substring(0, text.IndexOf("("));
+            vieModel.CurrentVideo.LabelList.Add(new ObservableString(value));
+            LabelChanged(null, null);
             searchLabelPopup.IsOpen = false;
         }
 
@@ -193,9 +193,9 @@ namespace Jvedio
             if (wrapper != null && !string.IsNullOrEmpty(sql))
             {
                 if (Properties.Settings.Default.DetialWindowShowAllMovie)
-                    sql = "select metadata.DataID" + sql + wrapper.toWhere(false) + wrapper.toOrder();
+                    sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder();
                 else
-                    sql = "select metadata.DataID" + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
+                    sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
                 List<Dictionary<string, object>> list = videoMapper.Select(sql);
                 if (list != null && list.Count > 0)
                     DataIDs = list.Select(arg => long.Parse(arg["DataID"].ToString())).ToList();
@@ -212,6 +212,15 @@ namespace Jvedio
         public void Refresh()
         {
             vieModel.Load(DataID);
+        }
+
+        public void RefreshLabel(string data)
+        {
+            vieModel.CurrentVideo.Label = data;
+        }
+        public void RefreshGenre(string data)
+        {
+            vieModel.CurrentVideo.Genre = data;
         }
 
         public void SetSkin()
@@ -631,7 +640,7 @@ namespace Jvedio
             ////检查是否已经翻译过，如有提示
             // if (!string.IsNullOrEmpty(dataBase.SelectByField("translate_title", "youdao", movie.id)))
             // {
-            //    if (new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("AlreadyTranslate")).ShowDialog() == false)
+            //    if (new MsgBox( SuperControls.Style.LangManager.GetValueByKey("AlreadyTranslate")).ShowDialog() == false)
             //    {
             //        IsTranslating = false;
             //        return;
@@ -1171,7 +1180,7 @@ namespace Jvedio
 
         private void DownLoadMagnets(object sender, RoutedEventArgs e)
         {
-            new MsgBox(this, "开发中").ShowDialog();
+            new MsgBox( "开发中").ShowDialog();
         }
 
         public void ShowSubsection(object sender)
@@ -1419,38 +1428,18 @@ namespace Jvedio
                 MessageNotify.Error("无信息！");
         }
 
-        private void NewLabel(object sender, RoutedEventArgs e)
+
+
+        private void LabelChanged(object sender, RoutedEventArgs eventArgs)
         {
-            DialogInput dialogInput = new DialogInput(this, LangManager.GetValueByKey("PleaseEnter"));
-            if (dialogInput.ShowDialog() == true)
-            {
-                string text = dialogInput.Text;
-                if (string.IsNullOrEmpty(text)) return;
-                addLabel(text);
-            }
+            List<string> list = new List<string>();
+            if (vieModel.CurrentVideo.LabelList != null)
+                list = vieModel.CurrentVideo.LabelList.Select(arg => arg.Value).ToList();
+            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
+            MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData());
         }
 
-        private void LabelChanged(object sender, ListChangedEventArgs e)
-        {
-            if (e != null && e.List != null)
-            {
-                vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, e.List);
-                MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
-            }
-        }
 
-        private void addLabel(string label)
-        {
-            if (vieModel.CurrentVideo.LabelList == null)
-                vieModel.CurrentVideo.LabelList = new System.Collections.Generic.List<string>();
-            if (vieModel.CurrentVideo.LabelList.Contains(label)) return;
-            vieModel.CurrentVideo.LabelList.Add(label);
-            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.LabelList);
-            labelTagPanel.TagList = null;
-            labelTagPanel.TagList = vieModel.CurrentVideo.LabelList;
-            labelTagPanel.Refresh();
-            MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData(), oldLabels);
-        }
 
         private void AddToLabel(object sender, RoutedEventArgs e)
         {

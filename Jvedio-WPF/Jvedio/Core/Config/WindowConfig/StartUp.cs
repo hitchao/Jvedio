@@ -15,7 +15,7 @@ namespace Jvedio.Core.WindowConfig
 
         private static StartUp _instance = null;
 
-        public static StartUp createInstance()
+        public static StartUp CreateInstance()
         {
             if (_instance == null) _instance = new StartUp();
 

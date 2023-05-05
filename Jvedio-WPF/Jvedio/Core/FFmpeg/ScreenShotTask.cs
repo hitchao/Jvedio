@@ -58,15 +58,15 @@ namespace Jvedio.Core.FFmpeg
             Task.Run(async () =>
             {
                 Progress = 0;
-                stopwatch.Start();
+                TimeWatch.Start();
                 Video video = videoMapper.SelectVideoByID(DataID);
                 if (video == null || video.DataID <= 0)
                 {
-                    logger.Error($"未找到 DataID={DataID} 的资源");
+                    Logger.Error($"未找到 DataID={DataID} 的资源");
                     return;
                 }
 
-                ScreenShot shot = new ScreenShot(video, token);
+                ScreenShot shot = new ScreenShot(video, Token);
                 shot.onProgress += (s, e) =>
                 {
                     ScreenShot screenShot = s as ScreenShot;
@@ -77,7 +77,7 @@ namespace Jvedio.Core.FFmpeg
                 {
                     MessageCallBackEventArgs arg = e as MessageCallBackEventArgs;
                     if (!string.IsNullOrEmpty(arg.Message))
-                        logger.Error(arg.Message);
+                        Logger.Error(arg.Message);
                 };
 
                 try
@@ -89,16 +89,16 @@ namespace Jvedio.Core.FFmpeg
                         outputs = await shot.AsyncScreenShot();
                     Success = true;
                     Status = TaskStatus.RanToCompletion;
-                    stopwatch.Stop();
-                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                    logger.Info($"{LangManager.GetValueByKey("TotalCost")} {DateHelper.ToReadableTime(ElapsedMilliseconds)}");
-                    logger.Info(LangManager.GetValueByKey("Detail"));
-                    logger.Info(outputs);
+                    TimeWatch.Stop();
+                    ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
+                    Logger.Info($"{LangManager.GetValueByKey("TotalCost")} {DateHelper.ToReadableTime(ElapsedMilliseconds)}");
+                    Logger.Info(LangManager.GetValueByKey("Detail"));
+                    Logger.Info(outputs);
                 }
                 catch (Exception ex)
                 {
                     StatusText = ex.Message;
-                    logger.Error(ex.Message);
+                    Logger.Error(ex.Message);
                     FinalizeWithCancel();
                 }
 

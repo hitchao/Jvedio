@@ -2,7 +2,7 @@
 using Jvedio.Core.Config.Base;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.WindowConfig;
 using Newtonsoft.Json;
 using SuperUtils.Common;
@@ -15,22 +15,22 @@ namespace Jvedio
     public static class ConfigManager
     {
         public const string RELEASE_DATE = "2023-03-26";
-        public static StartUp StartUp = StartUp.createInstance();
-        public static Core.WindowConfig.Main Main = Core.WindowConfig.Main.createInstance();
-        public static Filter Filter = Core.WindowConfig.Filter.createInstance();
-        public static Edit Edit = Edit.createInstance();
-        public static Detail Detail = Detail.createInstance();
-        public static MetaData MetaData = MetaData.createInstance();
-        public static Settings Settings = Settings.createInstance();
+        public static StartUp StartUp = StartUp.CreateInstance();
+        public static Core.WindowConfig.Main Main = Core.WindowConfig.Main.CreateInstance();
+        public static Filter Filter = Core.WindowConfig.Filter.CreateInstance();
+        public static Edit Edit = Edit.CreateInstance();
+        public static Detail Detail = Detail.CreateInstance();
+        public static MetaData MetaData = MetaData.CreateInstance();
+        public static Settings Settings = Settings.CreateInstance();
 
-        public static Jvedio.Core.Config.ServerConfig ServerConfig = Jvedio.Core.Config.ServerConfig.createInstance();
-        public static Jvedio.Core.Config.ProxyConfig ProxyConfig = Jvedio.Core.Config.ProxyConfig.createInstance();
-        public static Jvedio.Core.Config.ScanConfig ScanConfig = Jvedio.Core.Config.ScanConfig.createInstance();
-        public static Jvedio.Core.Config.FFmpegConfig FFmpegConfig = Jvedio.Core.Config.FFmpegConfig.createInstance();
-        public static Jvedio.Core.Config.RenameConfig RenameConfig = Jvedio.Core.Config.RenameConfig.createInstance();
-        public static Jvedio.Core.Config.PluginConfig PluginConfig = Jvedio.Core.Config.PluginConfig.createInstance();
-        public static Jvedio.Core.Config.ThemeConfig ThemeConfig = Jvedio.Core.Config.ThemeConfig.createInstance();
-        public static Jvedio.Core.Config.DownloadConfig DownloadConfig = Jvedio.Core.Config.DownloadConfig.createInstance();
+        public static Jvedio.Core.Config.ServerConfig ServerConfig = Jvedio.Core.Config.ServerConfig.CreateInstance();
+        public static Jvedio.Core.Config.ProxyConfig ProxyConfig = Jvedio.Core.Config.ProxyConfig.CreateInstance();
+        public static Jvedio.Core.Config.ScanConfig ScanConfig = Jvedio.Core.Config.ScanConfig.CreateInstance();
+        public static Jvedio.Core.Config.FFmpegConfig FFmpegConfig = Jvedio.Core.Config.FFmpegConfig.CreateInstance();
+        public static Jvedio.Core.Config.RenameConfig RenameConfig = Jvedio.Core.Config.RenameConfig.CreateInstance();
+        public static Jvedio.Core.Config.PluginConfig PluginConfig = Jvedio.Core.Config.PluginConfig.CreateInstance();
+        public static Jvedio.Core.Config.ThemeConfig ThemeConfig = Jvedio.Core.Config.ThemeConfig.CreateInstance();
+        public static Jvedio.Core.Config.DownloadConfig DownloadConfig = Jvedio.Core.Config.DownloadConfig.CreateInstance();
 
         public static void InitConfig(Action callback)
         {

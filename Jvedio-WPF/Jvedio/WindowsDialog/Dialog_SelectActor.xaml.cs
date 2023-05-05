@@ -23,7 +23,7 @@ namespace Jvedio
         public int EndPage = 500;
 
 #pragma warning disable CS0612 // “ActorSearch”已过时
-        public Dialog_SelectActor(Window owner, bool showbutton, List<ActorSearch> actorSearches) : base(owner, showbutton)
+        public Dialog_SelectActor(bool showbutton, List<ActorSearch> actorSearches) : base(showbutton)
 #pragma warning restore CS0612 // “ActorSearch”已过时
         {
             InitializeComponent();

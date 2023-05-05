@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
@@ -15,7 +15,7 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Filter : BaseWindow
     {
-        Main main = GetWindowByName("Main") as Main;
+        Main main = GetWindowByName("Main", App.Current.Windows) as Main;
 
         public Window_Filter()
         {

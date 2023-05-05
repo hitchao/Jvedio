@@ -7,7 +7,7 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_Logs : SuperControls.Style.BaseDialog
     {
-        public Dialog_Logs(Window owner, string text) : base(owner, false)
+        public Dialog_Logs(string text) : base(false)
         {
             InitializeComponent();
             textBox.Text = text;

@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.Config.Base;
-using Jvedio.Core.Logs;
-using JvedioLib.Security;
+using static Jvedio.LogManager;
+using SuperUtils.Security;
 using MihaZupan;
 using SuperUtils.NetWork;
 using System;
@@ -22,7 +22,7 @@ namespace Jvedio.Core.Config
 
         private static DownloadConfig _instance = null;
 
-        public static DownloadConfig createInstance()
+        public static DownloadConfig CreateInstance()
         {
             if (_instance == null) _instance = new DownloadConfig();
 

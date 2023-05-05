@@ -1381,7 +1381,7 @@
                                                         Grid.Column="0"
                                                         Grid.ColumnSpan="4"
                                                         AddButtonVerticalAlignment="Top"
-                                                        OnAddNewLabel="NewLabel"
+                                                        ItemsSource="{Binding CurrentVideo.LabelList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                         TagChanged="LabelChanged" />
 
                                                     <Popup

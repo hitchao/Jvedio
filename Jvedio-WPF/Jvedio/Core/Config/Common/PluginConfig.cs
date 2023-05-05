@@ -30,7 +30,7 @@ namespace Jvedio.Core.Config
 
         private static PluginConfig _instance = null;
 
-        public static PluginConfig createInstance()
+        public static PluginConfig CreateInstance()
         {
             if (_instance == null) _instance = new PluginConfig();
 

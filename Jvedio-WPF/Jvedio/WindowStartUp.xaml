@@ -12,7 +12,6 @@
     Height="400"
     MinWidth="500"
     Background="{DynamicResource Window.InnerDialog.Background}"
-    CanMinimized="True"
     CanResize="True"
     Closing="Window_StartUp_Closing"
     ContentRendered="Window_StartUp_ContentRendered"

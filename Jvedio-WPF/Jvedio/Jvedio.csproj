@@ -279,7 +279,6 @@
     <Compile Include="Core\Enums\AssociationType.cs" />
     <Compile Include="Core\Enums\DownLoadState.cs" />
     <Compile Include="Core\Enums\ImageType.cs" />
-    <Compile Include="Core\Enums\LogType.cs" />
     <Compile Include="Core\Exceptions\CrawlerNotFoundException.cs" />
     <Compile Include="Core\Exceptions\MediaCutOutOfRangeException.cs" />
     <Compile Include="Core\Exceptions\NotFoundException.cs" />
@@ -287,6 +286,7 @@
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\Config\PathManager.cs" />
     <Compile Include="Core\Lang\LangManager.cs" />
+    <Compile Include="Core\Logs\LogManager.cs" />
     <Compile Include="Core\Net\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
@@ -406,7 +406,6 @@
     </Compile>
     <Compile Include="Utils\Extern\Translate.cs" />
     <Compile Include="Entity\Common\MySqlite.cs" />
-    <Compile Include="Utils\VisualTools\WindowHelper.cs" />
     <Compile Include="Core\Net\VideoDownLoader.cs" />
     <Compile Include="Core\Media\ImageSlide.cs" />
     <Compile Include="Core\Logs\Logger.cs" />

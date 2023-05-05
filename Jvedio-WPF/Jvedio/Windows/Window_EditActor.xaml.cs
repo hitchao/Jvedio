@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using static Jvedio.MapperManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
 
 namespace Jvedio
@@ -26,7 +26,7 @@ namespace Jvedio
         private Window_EditActor()
         {
             InitializeComponent();
-            main = GetWindowByName("Main") as Main;
+            main = GetWindowByName("Main", App.Current.Windows) as Main;
         }
 
         public long ActorID { get; set; }
@@ -81,7 +81,7 @@ namespace Jvedio
                 bool insert = true;
                 if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName))
                 {
-                    insert = (bool)new MsgBox(this, $"{LangManager.GetValueByKey("LibraryAlreadyHas")} {actorInfo.ActorName} {LangManager.GetValueByKey("SameActorToAdd")}").ShowDialog();
+                    insert = (bool)new MsgBox( $"{LangManager.GetValueByKey("LibraryAlreadyHas")} {actorInfo.ActorName} {LangManager.GetValueByKey("SameActorToAdd")}").ShowDialog();
                 }
 
                 if (insert)
@@ -121,7 +121,7 @@ namespace Jvedio
             string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
             if (File.Exists(targetFileName))
             {
-                if (new MsgBox(this, LangManager.GetValueByKey("ActorImageExistsAndUseID")).ShowDialog() == true)
+                if (new MsgBox( LangManager.GetValueByKey("ActorImageExistsAndUseID")).ShowDialog() == true)
                 {
                     string dir = System.IO.Path.GetDirectoryName(targetFileName);
                     string ext = System.IO.Path.GetExtension(targetFileName);
@@ -179,7 +179,7 @@ namespace Jvedio
                         // 设置演员头像
                         string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
                         bool copy = true;
-                        if (File.Exists(targetFileName) && new MsgBox(this, LangManager.GetValueByKey("ExistsToOverrite")).ShowDialog() != true)
+                        if (File.Exists(targetFileName) && new MsgBox( LangManager.GetValueByKey("ExistsToOverrite")).ShowDialog() != true)
                         {
                             copy = false;
                         }

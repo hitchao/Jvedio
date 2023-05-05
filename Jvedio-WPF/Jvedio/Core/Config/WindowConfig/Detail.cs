@@ -10,7 +10,7 @@ namespace Jvedio.Core.WindowConfig
 
         private static Detail _instance = null;
 
-        public static Detail createInstance()
+        public static Detail CreateInstance()
         {
             if (_instance == null) _instance = new Detail();
 

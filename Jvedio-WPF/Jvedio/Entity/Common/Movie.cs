@@ -1,9 +1,9 @@
 ﻿
 using Jvedio.Core.Config;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Scan;
-using JvedioLib.Security;
+using SuperUtils.Security;
 using Newtonsoft.Json;
 using SuperControls.Style;
 using SuperUtils.Common;
@@ -317,7 +317,7 @@ namespace Jvedio.Entity
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warning($"{LangManager.GetValueByKey("ParseNfoInfoFailFromFile")} => {path}");
+                    Logger.Warn($"{LangManager.GetValueByKey("ParseNfoInfoFailFromFile")} => {path}");
                     Logger.Error(ex);
                     continue;
                 }
@@ -327,7 +327,7 @@ namespace Jvedio.Entity
             if (string.IsNullOrEmpty(movie.id)) return null;
 
             if (!string.IsNullOrEmpty(movie.id))
-                movie.vediotype = Identify.GetVideoType(movie.id);
+                movie.vediotype = JvedioLib.Security.Identify.GetVideoType(movie.id);
 
             // 扫描视频获得文件大小
             if (File.Exists(path))
@@ -347,7 +347,7 @@ namespace Jvedio.Entity
                     else
                     {
                         // 如果没扫到视频仍然导入
-                        Logger.Warning($"{LangManager.GetValueByKey("DataNotFoundWithNFO")} {path}");
+                        Logger.Warn($"{LangManager.GetValueByKey("DataNotFoundWithNFO")} {path}");
                         movie.filepath = path;      // nfo 路径视为该资源路径
                     }
                 }

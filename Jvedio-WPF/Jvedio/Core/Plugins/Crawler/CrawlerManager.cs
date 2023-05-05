@@ -1,4 +1,4 @@
-﻿using Jvedio.Core.Logs;
+﻿using static Jvedio.LogManager;
 using SuperControls.Style;
 using SuperControls.Style.Plugin;
 using SuperUtils.Common;
@@ -77,8 +77,8 @@ namespace Jvedio.Core.Plugins.Crawler
             if (!File.Exists(target)) return true;
 
             // 检查 Md5
-            string m1 = JvedioLib.Security.Encrypt.GetFileMD5(dllPath);
-            string m2 = JvedioLib.Security.Encrypt.GetFileMD5(target);
+            string m1 = SuperUtils.Security.Encrypt.TryGetFileMD5(dllPath);
+            string m2 = SuperUtils.Security.Encrypt.TryGetFileMD5(target);
             return !m1.Equals(m2);
         }
 

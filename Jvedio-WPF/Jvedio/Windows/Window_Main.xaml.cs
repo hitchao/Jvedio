@@ -5,7 +5,7 @@ using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Global;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Plugins.Crawler;
@@ -21,6 +21,7 @@ using SuperControls.Style.Plugin;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
+using SuperUtils.Framework.Logger;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -54,7 +55,7 @@ using System.Windows.Threading;
 using static Jvedio.Core.Global.UrlManager;
 using static Jvedio.Main.Msg;
 using static Jvedio.MapperManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static Jvedio.Window_Settings;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 
@@ -65,7 +66,7 @@ namespace Jvedio
     /// </summary>
     public partial class Main : SuperControls.Style.BaseWindowEx
     {
-
+        private static Jvedio.Core.Logs.Logger Logger = Jvedio.Core.Logs.Logger.Instance;
 
         public static int NOTICE_INTERVAL = 1800; // 30分钟检测一次
         public static Msg msgCard = new Msg();
@@ -176,7 +177,7 @@ namespace Jvedio
             {
                 //SideGridColumn.Width = new GridLength(200);
                 AnimatingSideGrid = true;
-                SideTopButton.Visibility = Visibility.Collapsed;
+                ButtonSideTop.Visibility = Visibility.Collapsed;
                 await Task.Run(async () =>
                 {
                     for (int i = 0; i <= 200; i += 10)
@@ -208,16 +209,8 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            SuperUtils.Handler.ExceptionHandler.OnError += (ex) =>
-            {
-                App.Current.Dispatcher.Invoke(() =>
-                {
-#if DEBUG
-                    MessageCard.Error(ex.Message);
-#endif
-                    Logger.Error(ex);
-                });
-            };
+            SuperUtils.Handler.LogHandler.Logger = Jvedio.Core.Logs.Logger.Instance;
+            SuperControls.Style.Handler.LogHandler.Logger = Jvedio.Core.Logs.Logger.Instance;
 
             AdjustWindow(); // 还原窗口为上一次状态
             ConfigFirstRun();
@@ -242,19 +235,19 @@ namespace Jvedio
             OpenListen();
 
             //OpenWindowByName("Window_Settings");
-            // new MsgBox(this, "demo").ShowDialog();
+            // new MsgBox( "demo").ShowDialog();
             InitUpgrade();
             //ShowPluginWindow(null, null);
         }
 
         public void InitThemeSelector()
         {
-            DefaultThemeSelector.AddTransParentColor("TabItem.Background");
-            DefaultThemeSelector.AddTransParentColor("ListBoxItem.Background");
-            DefaultThemeSelector.AddTransParentColor("Window.Side.Background");
-            DefaultThemeSelector.AddTransParentColor("Window.Side.Hover.Background");
-            DefaultThemeSelector.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
-            DefaultThemeSelector.onThemeChanged += (ThemeIdx, ThemeID) =>
+            ThemeSelectorDefault.AddTransParentColor("TabItem.Background");
+            ThemeSelectorDefault.AddTransParentColor("ListBoxItem.Background");
+            ThemeSelectorDefault.AddTransParentColor("Window.Side.Background");
+            ThemeSelectorDefault.AddTransParentColor("Window.Side.Hover.Background");
+            ThemeSelectorDefault.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
+            ThemeSelectorDefault.onThemeChanged += (ThemeIdx, ThemeID) =>
             {
                 ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;
                 ConfigManager.ThemeConfig.ThemeID = ThemeID;
@@ -263,22 +256,22 @@ namespace Jvedio
                 ActorSetSelected();
                 windowDetails?.SetSkin();
             };
-            DefaultThemeSelector.onBackGroundImageChanged += (image) =>
+            ThemeSelectorDefault.onBackGroundImageChanged += (image) =>
             {
-                DefaultBgImage.Source = image;
+                ImageBackground.Source = image;
                 StyleManager.BackgroundImage = image;
             };
-            DefaultThemeSelector.onSetBgColorTransparent += () =>
+            ThemeSelectorDefault.onSetBgColorTransparent += () =>
             {
-                DefaultTitleBorder.Background = Brushes.Transparent;
+                BorderTitle.Background = Brushes.Transparent;
             };
 
-            DefaultThemeSelector.onReSetBgColorBinding += () =>
+            ThemeSelectorDefault.onReSetBgColorBinding += () =>
             {
-                DefaultTitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+                BorderTitle.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
             };
 
-            DefaultThemeSelector.InitThemes();
+            ThemeSelectorDefault.InitThemes();
         }
 
 
@@ -556,7 +549,7 @@ namespace Jvedio
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success)
                 {
-                    MsgBox.Show(SuperControls.Style.LangManager.GetValueByKey("HotKeyConflict"));
+                    new MsgBox(SuperControls.Style.LangManager.GetValueByKey("HotKeyConflict")).ShowDialog(this);
                 }
             }
         }
@@ -865,7 +858,7 @@ namespace Jvedio
                                         // 弹窗提示
                                         this.Dispatcher.Invoke((Action)delegate ()
                                         {
-                                            new Dialog_Notice(this, false, message).ShowDialog();
+                                            new Dialog_Notice(false, message).ShowDialog(this);
                                         });
                                     }
                                     else
@@ -881,7 +874,7 @@ namespace Jvedio
                         }
                     }
 
-                    Logger.Warning(LangManager.GetValueByKey("ParseNoticeError"));
+                    Logger.Warn(LangManager.GetValueByKey("ParseNoticeError"));
                 }
                 else
                 {
@@ -1112,7 +1105,7 @@ namespace Jvedio
                     local = local.Substring(0, local.Length - ".0.0".Length);
                     if (local.CompareTo(remote) < 0)
                     {
-                        bool opened = (bool)new MsgBox(this,
+                        bool opened = (bool)new MsgBox(
                             $"存在新版本\n版本：{remote}\n日期：{ReleaseDate}").ShowDialog();
                         if (opened)
                             UpgradeHelper.OpenWindow();
@@ -2079,7 +2072,7 @@ namespace Jvedio
 
             if (logs.Count > 0)
             {
-                new Dialog_Logs(this, string.Join(Environment.NewLine, logs)).ShowDialog();
+                new Dialog_Logs(string.Join(Environment.NewLine, logs)).ShowDialog(this);
             }
         }
 
@@ -2323,7 +2316,7 @@ namespace Jvedio
         public void DeleteFile(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode && new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
+            if (Properties.Settings.Default.EditMode && new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
             {
                 return;
             }
@@ -2418,7 +2411,7 @@ namespace Jvedio
             videoMapper.deleteVideoByIds(to_delete.Select(arg => arg.DataID.ToString()).ToList());
 
             // 关闭详情窗口
-            if (!fromDetailWindow && GetWindowByName("Window_Details") is Window window)
+            if (!fromDetailWindow && GetWindowByName("Window_Details", App.Current.Windows) is Window window)
             {
                 Window_Details windowDetails = (Window_Details)window;
                 foreach (var item in to_delete)
@@ -2448,7 +2441,7 @@ namespace Jvedio
         public void DeleteID(object sender, RoutedEventArgs e)
         {
             handleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode && new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
+            if (Properties.Settings.Default.EditMode && new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
             {
                 return;
             }
@@ -2462,7 +2455,7 @@ namespace Jvedio
             handleMenuSelected(sender);
 
             // 超过 3 个网页，询问是否继续
-            if (vieModel.SelectedVideo.Count >= 3 && new MsgBox(this,
+            if (vieModel.SelectedVideo.Count >= 3 && new MsgBox(
                 $"{LangManager.GetValueByKey("ReadyToOpenReadyToOpen")} {vieModel.SelectedVideo.Count} {LangManager.GetValueByKey("SomeWebSite")}").ShowDialog() == false) return;
 
             foreach (Video video in vieModel.SelectedVideo)
@@ -3680,8 +3673,8 @@ namespace Jvedio
                 TagStamp tagStamp = new TagStamp()
                 {
                     TagName = name,
-                    Foreground = VisualHelper.SerilizeBrush(ForegroundBrush),
-                    Background = VisualHelper.SerilizeBrush(backgroundBrush),
+                    Foreground = VisualHelper.SerializeBrush(ForegroundBrush),
+                    Background = VisualHelper.SerializeBrush(backgroundBrush),
                 };
                 tagStampMapper.Insert(tagStamp);
                 InitTagStamp();
@@ -3724,8 +3717,8 @@ namespace Jvedio
                 SolidColorBrush backgroundBrush = window_TagStamp.BackgroundBrush;
                 SolidColorBrush ForegroundBrush = window_TagStamp.ForegroundBrush;
                 tagStamp.TagName = name;
-                tagStamp.Background = VisualHelper.SerilizeBrush(backgroundBrush);
-                tagStamp.Foreground = VisualHelper.SerilizeBrush(ForegroundBrush);
+                tagStamp.Background = VisualHelper.SerializeBrush(backgroundBrush);
+                tagStamp.Foreground = VisualHelper.SerializeBrush(ForegroundBrush);
                 tagStampMapper.UpdateById(tagStamp);
                 InitTagStamp();
                 RefreshTagStamps(id);// 刷新标记
@@ -3747,7 +3740,7 @@ namespace Jvedio
             }
 
 
-            if (new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true)
+            if (new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true)
             {
                 tagStampMapper.DeleteById(id);
 
@@ -3969,13 +3962,13 @@ namespace Jvedio
             if (SideGridColumn.ActualWidth <= 100 && !AnimatingSideGrid)
             {
                 SideGridColumn.Width = new GridLength(0);
-                if (SideTopButton != null)
-                    SideTopButton.Visibility = Visibility.Visible;
+                if (ButtonSideTop != null)
+                    ButtonSideTop.Visibility = Visibility.Visible;
             }
             else
             {
-                if (SideTopButton != null)
-                    SideTopButton.Visibility = Visibility.Collapsed;
+                if (ButtonSideTop != null)
+                    ButtonSideTop.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -4116,7 +4109,7 @@ namespace Jvedio
             string dataID = (sender as Button).Tag.ToString();
             DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
             if (task == null) return;
-            new Dialog_Logs(this, string.Join(Environment.NewLine, task.Logs)).ShowDialog();
+            new Dialog_Logs(string.Join(Environment.NewLine, task.Logs)).ShowDialog(this);
         }
 
         private void ShowScreenShotDetail(object sender, RoutedEventArgs e)
@@ -4124,14 +4117,14 @@ namespace Jvedio
             string dataID = (sender as Button).Tag.ToString();
             ScreenShotTask task = vieModel.ScreenShotTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
             if (task == null) return;
-            new Dialog_Logs(this, string.Join(Environment.NewLine, task.Logs)).ShowDialog();
+            new Dialog_Logs(string.Join(Environment.NewLine, task.Logs)).ShowDialog(this);
         }
 
         private void GoToStartUp(object sender, MouseButtonEventArgs e)
         {
             Main.ClickGoBackToStartUp = true;
             SetWindowVisualStatus(false); // 隐藏所有窗体
-            WindowStartUp windowStartUp = GetWindowByName("WindowStartUp") as WindowStartUp;
+            WindowStartUp windowStartUp = GetWindowByName("WindowStartUp", App.Current.Windows) as WindowStartUp;
             if (windowStartUp == null) windowStartUp = new WindowStartUp();
             Application.Current.MainWindow = windowStartUp;
             windowStartUp.Show();
@@ -4476,8 +4469,8 @@ namespace Jvedio
                     return;
                 }
 
-                bool ok = MsgBox.Show(
-                    $"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotExists")}");
+                bool ok = (bool)new MsgBox($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotExists")}")
+                            .ShowDialog(this);
                 if (ok)
                 {
                     videoMapper.deleteVideoByIds(toDelete);
@@ -4555,7 +4548,8 @@ namespace Jvedio
                     return;
                 }
 
-                bool ok = MsgBox.Show($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotInScanStatupDir")}");
+                bool ok = (bool)new MsgBox($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotInScanStatupDir")}")
+                        .ShowDialog(this);
                 if (ok)
                 {
                     videoMapper.deleteVideoByIds(toDelete);
@@ -4850,7 +4844,7 @@ namespace Jvedio
 
         private void DeleteActors(object sender, RoutedEventArgs e)
         {
-            if (new MsgBox(this, "即将删除演员信息，是否继续？").ShowDialog() == true)
+            if (new MsgBox("即将删除演员信息，是否继续？").ShowDialog() == true)
             {
                 MenuItem mnu = sender as MenuItem;
                 ContextMenu contextMenu = mnu.Parent as ContextMenu;
@@ -4919,7 +4913,7 @@ namespace Jvedio
         {
             handleMenuSelected(sender);
             if (Properties.Settings.Default.EditMode &&
-                new MsgBox(this, SuperControls.Style.LangManager.GetValueByKey("IsToDelete"))
+                new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete"))
                 .ShowDialog() == false)
                 return;
             CleanDataInfo(vieModel.SelectedVideo);
@@ -5036,7 +5030,7 @@ namespace Jvedio
                     PluginType pluginType = data.PluginType;
                     if (pluginType == PluginType.Theme)
                     {
-                        DefaultThemeSelector.InitThemes();
+                        ThemeSelectorDefault.InitThemes();
                     }
                     else if (pluginType == PluginType.Crawler)
                     {
@@ -5054,7 +5048,7 @@ namespace Jvedio
                     PluginType pluginType = data.PluginType;
                     if (pluginType == PluginType.Theme)
                     {
-                        DefaultThemeSelector.InitThemes();
+                        ThemeSelectorDefault.InitThemes();
                     }
                     else if (pluginType == PluginType.Crawler)
                     {
@@ -5070,6 +5064,11 @@ namespace Jvedio
             window_Plugin.Activate();
         }
 
+        private void ShowSettingsWindow(object sender, RoutedEventArgs e)
+        {
+            Window_Settings window_Settings = new Window_Settings();
+            window_Settings.Show();
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 ﻿
 using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Interfaces;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Newtonsoft.Json;
 using SuperUtils.Common;
 using System;

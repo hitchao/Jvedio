@@ -3,13 +3,13 @@ using Jvedio.Core;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
-using JvedioLib.Security;
+using SuperUtils.Security;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Utils;
@@ -30,7 +30,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
 
 namespace Jvedio.ViewModel
@@ -93,7 +93,7 @@ namespace Jvedio.ViewModel
             PreviousPage = 1;
             pageQueue = new Queue<int>();
             ActorPageQueue = new Queue<int>();
-            main = GetWindowByName("Main") as Main;
+            main = GetWindowByName("Main", App.Current.Windows) as Main;
             label_join_sql = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
             ActorSortDict = new Dictionary<int, string>();
             for (int i = 0; i < ActorSortDictList.Count; i++)
@@ -1259,8 +1259,8 @@ namespace Jvedio.ViewModel
 
         private void AddSingleMovie()
         {
-            Dialog_NewMovie dialog_NewMovie = new Dialog_NewMovie(main);
-            if ((bool)dialog_NewMovie.ShowDialog())
+            Dialog_NewMovie dialog_NewMovie = new Dialog_NewMovie();
+            if ((bool)dialog_NewMovie.ShowDialog(main))
             {
                 NewVideoDialogResult result = dialog_NewMovie.Result;
                 if (!string.IsNullOrEmpty(result.Text))
@@ -1270,7 +1270,7 @@ namespace Jvedio.ViewModel
                     string sql = VideoMapper.BASE_SQL;
                     IWrapper<Video> wrapper = new SelectWrapper<Video>();
                     wrapper.Select("VID").Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0).In("VID", vidList);
-                    sql = wrapper.toSelect() + sql + wrapper.toWhere(false);
+                    sql = wrapper.ToSelect() + sql + wrapper.ToWhere(false);
                     List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
                     List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), true);
 
@@ -1348,7 +1348,7 @@ namespace Jvedio.ViewModel
                 SelectWrapper<Video> selectWrapper = getWrapper(searchType);
                 if (selectWrapper != null) wrapper.Join(selectWrapper);
 
-                string condition_sql = wrapper.toWhere(false) + wrapper.toOrder()
+                string condition_sql = wrapper.ToWhere(false) + wrapper.ToOrder()
                             + $" LIMIT 0,{Properties.Settings.Default.SearchCandidateMaxCount}";
 
                 string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
@@ -1787,17 +1787,17 @@ namespace Jvedio.ViewModel
 
             ActorTotalCount = actorMapper.SelectCount(count_sql);
 
-            string sql = $"{wrapper.Select(ActorSelectedField).toSelect(false)} FROM actor_info " +
+            string sql = $"{wrapper.Select(ActorSelectedField).ToSelect(false)} FROM actor_info " +
                 $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                 $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                 $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                 $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
                 $"GROUP BY actor_info.ActorID " +
                 "UNION " +
-                $"{wrapper.Select(ActorSelectedField).toSelect(false)} FROM actor_info " +
+                $"{wrapper.Select(ActorSelectedField).ToSelect(false)} FROM actor_info " +
                 "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
                 $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
-                wrapper.toOrder() + ActorToLimit();
+                wrapper.ToOrder() + ActorToLimit();
 
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { main.actorPagination.Total = ActorTotalCount; });
@@ -1864,7 +1864,7 @@ namespace Jvedio.ViewModel
             {
                 case SearchField.VID:
 
-                    string vid = Identify.GetVID(formatSearch);
+                    string vid = JvedioLib.Security.Identify.GetVID(formatSearch);
                     if (string.IsNullOrEmpty(vid)) searchContent = formatSearch;
                     else searchContent = vid;
                     wrapper.Like("VID", searchContent);
@@ -1946,7 +1946,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public void toLimit<T>(IWrapper<T> wrapper)
+        public void ToLimit<T>(IWrapper<T> wrapper)
         {
             int row_count = PageSize;
             long offset = PageSize * (CurrentPage - 1);
@@ -2028,7 +2028,7 @@ namespace Jvedio.ViewModel
 
             setSortOrder(wrapper, random);
 
-            toLimit(wrapper);
+            ToLimit(wrapper);
             wrapper.Select(SelectFields);
             if (extraWrapper != null) wrapper.Join(extraWrapper);
 
@@ -2102,14 +2102,14 @@ namespace Jvedio.ViewModel
                 {
                     int idx1 = allMenus.IndexOf(checkedMenus[0]);
                     int idx2 = allMenus.IndexOf(checkedMenus[1]);
-                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).RightBacket();
+                    wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).RightBracket();
                 }
                 else if (checkedMenus.Count == 3)
                 {
                     int idx1 = allMenus.IndexOf(checkedMenus[0]);
                     int idx2 = allMenus.IndexOf(checkedMenus[1]);
                     int idx3 = allMenus.IndexOf(checkedMenus[2]);
-                    wrapper.Eq("VideoType", idx1).LeftBacket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBacket();
+                    wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBracket();
                 }
             }
 
@@ -2127,7 +2127,7 @@ namespace Jvedio.ViewModel
             if (ConfigManager.Settings.PlayableIndexCreated && DataExistIndex > 0)
                 wrapper.Eq("metadata.PathExist", DataExistIndex - 1);
 
-            string count_sql = "select count(DISTINCT metadata.DataID) " + sql + wrapper.toWhere(false);
+            string count_sql = "select count(DISTINCT metadata.DataID) " + sql + wrapper.ToWhere(false);
             TotalCount = metaDataMapper.SelectCount(count_sql);
 
             WrapperEventArg<Video> arg = new WrapperEventArg<Video>();
@@ -2135,7 +2135,7 @@ namespace Jvedio.ViewModel
             arg.SQL = sql;
             RenderSqlChanged?.Invoke(null, arg);
 
-            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
+            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
 
             // 只能手动设置页码，很奇怪
             App.Current.Dispatcher.Invoke(() => { main.pagination.Total = TotalCount; });
@@ -2255,7 +2255,7 @@ namespace Jvedio.ViewModel
 
             string sql = VideoMapper.BASE_SQL;
 
-            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
+            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
 
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
@@ -2312,21 +2312,21 @@ namespace Jvedio.ViewModel
             }
 
             SelectWrapper<Video> wrapper = Video.InitWrapper();
-            wrapper.Like("Title", searchText).LeftBacket()
+            wrapper.Like("Title", searchText).LeftBracket()
                 .Or().Like("Path", searchText)
                 .Or().Like("VID", searchText)
-                .RightBacket();
+                .RightBracket();
 
             toAssoSearchLimit(wrapper);
             wrapper.Select(SelectFields);
 
             string sql = VideoMapper.BASE_SQL;
 
-            string count_sql = "select count(*) " + sql + wrapper.toWhere(false);
+            string count_sql = "select count(*) " + sql + wrapper.ToWhere(false);
             AssoSearchTotalCount = metaDataMapper.SelectCount(count_sql);
             main.assoPagination.Total = AssoSearchTotalCount;
 
-            sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false) + wrapper.toOrder() + wrapper.toLimit();
+            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
 
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
@@ -2374,7 +2374,7 @@ namespace Jvedio.ViewModel
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
                 wrapper.Select("VID", "metadata.DataID", "Title", "MVID").In("metadata.DataID", set.Select(x => x.ToString()));
                 string sql = VideoMapper.BASE_SQL;
-                sql = wrapper.toSelect(false) + sql + wrapper.toWhere(false);
+                sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
                 List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
                 CurrentExistAssoData = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
                 if (CurrentExistAssoData != null)

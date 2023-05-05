@@ -1,5 +1,4 @@
-﻿using Jvedio.Core.Logs;
-using Jvedio.Core.Scan;
+﻿using Jvedio.Core.Scan;
 using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.IO;
@@ -12,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using static Jvedio.LogManager;
 
 
 namespace Jvedio
@@ -161,7 +161,7 @@ namespace Jvedio
                     if (!path.ToLower().EndsWith(".csv")) path += ".csv";
                     File.WriteAllText(path, GenerateOutput());
                     MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
-                    FileHelper.TryOpenSelectPathEx(path);
+                    FileHelper.TryOpenSelectPath(path);
                 }
                 catch (Exception ex)
                 {
@@ -207,7 +207,7 @@ namespace Jvedio
 
         private void ShowExceptions(object sender, RoutedEventArgs e)
         {
-            new Dialog_Logs(this, string.Join(Environment.NewLine, ScanResult.Logs)).ShowDialog();
+            new Dialog_Logs(string.Join(Environment.NewLine, ScanResult.Logs)).ShowDialog(this);
         }
 
         private void ShowDetail(object sender, RoutedEventArgs e)
@@ -219,7 +219,7 @@ namespace Jvedio
                 {
                     ScanDetail scanDetail = details.FirstOrDefault(arg => arg.ID == id);
                     if (scanDetail != null)
-                        new Dialog_Logs(this, string.Join(Environment.NewLine, scanDetail.Details)).ShowDialog();
+                        new Dialog_Logs(string.Join(Environment.NewLine, scanDetail.Details)).ShowDialog(this);
                 }
             }
         }

@@ -1,9 +1,9 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Scan;
 using Jvedio.Entity.CommonSQL;
-using JvedioLib.Security;
+using SuperUtils.Security;
 using Newtonsoft.Json;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Attributes;
@@ -655,7 +655,7 @@ namespace Jvedio.Entity
             }
 
             // 替换掉特殊字符
-            foreach (char item in FileHelper.BANFILECHAR)
+            foreach (char item in System.IO.Path.GetInvalidFileNameChars())
             {
                 newName = newName.Replace(item.ToString(), string.Empty);
             }
@@ -667,7 +667,7 @@ namespace Jvedio.Entity
                 string[] result = new string[SubSectionList.Count];
                 for (int i = 0; i < SubSectionList.Count; i++)
                 {
-                    if (addTag && Identify.IsCHS(Path))
+                    if (addTag && JvedioLib.Security.Identify.IsCHS(Path))
                         result[i] = System.IO.Path.Combine(dir, $"{newName}-{i + 1}_{SuperControls.Style.LangManager.GetValueByKey("Translated")}{ext}");
                     else
                         result[i] = System.IO.Path.Combine(dir, $"{newName}-{i + 1}{ext}");
@@ -677,7 +677,7 @@ namespace Jvedio.Entity
             }
             else
             {
-                if (addTag && Identify.IsCHS(Path))
+                if (addTag && JvedioLib.Security.Identify.IsCHS(Path))
                     return new string[] { System.IO.Path.Combine(dir, $"{newName}_{SuperControls.Style.LangManager.GetValueByKey("Translated")}{ext}") };
                 else
                     return new string[] { System.IO.Path.Combine(dir, $"{newName}{ext}") };
@@ -746,13 +746,13 @@ namespace Jvedio.Entity
 
         public bool IsHDV()
         {
-            return Identify.IsHDV(Size) || Identify.IsHDV(Path) || Genre?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
+            return JvedioLib.Security.Identify.IsHDV(Size) || JvedioLib.Security.Identify.IsHDV(Path) || Genre?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
                     Series?.IndexOfAnyString(Main.TagStrings_HD) >= 0 || Label?.IndexOfAnyString(Main.TagStrings_HD) >= 0;
         }
 
         public bool IsCHS()
         {
-            return Identify.IsCHS(Path) || Genre?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
+            return JvedioLib.Security.Identify.IsCHS(Path) || Genre?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
                      Series?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 || Label?.IndexOfAnyString(Main.TagStrings_Translated) >= 0;
         }
 
@@ -939,6 +939,14 @@ namespace Jvedio.Entity
                     }
                 }
             }
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -485885450;
+            hashCode = hashCode * -1521134295 + base.GetHashCode();
+            hashCode = hashCode * -1521134295 + DataID.GetHashCode();
+            return hashCode;
         }
     }
 }

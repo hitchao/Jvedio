@@ -10,7 +10,7 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_Thanks : SuperControls.Style.BaseDialog
     {
-        public Dialog_Thanks(Window owner) : base(owner, false)
+        public Dialog_Thanks() : base(false)
         {
             InitializeComponent();
         }

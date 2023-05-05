@@ -1,9 +1,9 @@
 ﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Entity;
 using Jvedio.Entity.Data;
 using Jvedio.Mapper;
-using JvedioLib.Security;
+using SuperUtils.Security;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.IO;
 using SuperUtils.Time;
@@ -40,7 +40,7 @@ namespace Jvedio.Core.Scan
                 game.Title = Path.GetFileName(path);
                 game.Path = getRealExe(list);
                 game.Size = DirHelper.getDirSize(new DirectoryInfo(path));
-                game.Hash = Encrypt.GetFileMD5(game.Path); // 计算哈希
+                game.Hash = Encrypt.TryGetFileMD5(game.Path); // 计算哈希
                 import.Add(game);
             }
 
@@ -56,7 +56,7 @@ namespace Jvedio.Core.Scan
         {
             Task.Run(() =>
             {
-                stopwatch.Start();
+                TimeWatch.Start();
                 foreach (string path in ScanPaths)
                 {
                     List<string> list = FileHelper.TryGetAllFiles(path, "*.exe").ToList();
@@ -91,8 +91,8 @@ namespace Jvedio.Core.Scan
                 handleImport(import);
                 handleNotImport(notImport);
 
-                stopwatch.Stop();
-                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+                TimeWatch.Stop();
+                ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
                 ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
                 Status = System.Threading.Tasks.TaskStatus.RanToCompletion;
             });
@@ -177,7 +177,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally
@@ -199,7 +199,7 @@ namespace Jvedio.Core.Scan
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
             }
             finally

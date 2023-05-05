@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using SuperUtils.Framework.ORM.Mapper;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;

@@ -1,5 +1,6 @@
-﻿using JvedioLib.Security;
+﻿
 using SuperControls.Style.Plugin;
+using SuperUtils.Security;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -45,7 +46,7 @@ namespace Jvedio.Core.Plugins
             set
             {
                 _Path = value;
-                FileHash = Encrypt.GetFileMD5(value);
+                FileHash = Encrypt.TryGetFileMD5(value);
             }
         }
 

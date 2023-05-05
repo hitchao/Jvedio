@@ -3,13 +3,13 @@ using SuperUtils.NetWork;
 using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using Jvedio.ViewModel;
-using JvedioLib.Security;
+using SuperUtils.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SuperControls.Style;
@@ -41,7 +41,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.Core.Global.UrlManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 using SuperControls.Style.Windows;
 using SuperControls.Style.Plugin;
 using Jvedio.Core.Global;
@@ -145,7 +145,7 @@ namespace Jvedio
         {
             InitializeComponent();
 
-            windowMain = GetWindowByName("Main") as Main;
+            windowMain = GetWindowByName("Main", App.Current.Windows) as Main;
             if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont;
             vieModel = new VieModel_Settings();
             this.DataContext = vieModel;
@@ -256,7 +256,7 @@ namespace Jvedio
                     bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, fsModifiers, VK);
                     if (!success)
                     {
-                        MsgBox.Show(LangManager.GetValueByKey("HotKeyConflict"));
+                        new MsgBox(LangManager.GetValueByKey("HotKeyConflict")).ShowDialog(this);
                     }
 
                     {
@@ -660,7 +660,7 @@ namespace Jvedio
             passwordBox.PasswordChanged += (s, ev) =>
             {
                 if (!string.IsNullOrEmpty(passwordBox.Password))
-                    vieModel.ProxyPwd = Encrypt.AesEncrypt(passwordBox.Password, 0);
+                    vieModel.ProxyPwd = JvedioLib.Security.Encrypt.AesEncrypt(passwordBox.Password, 0);
             };
 
             // 设置语言
@@ -1311,8 +1311,8 @@ namespace Jvedio
         {
             SearchBox searchBox = sender as SearchBox;
             string cookies = searchBox.Text;
-            DialogInput dialogInput = new DialogInput(this, $"{LangManager.GetValueByKey("PleaseEnter")} cookie", cookies);
-            if (dialogInput.ShowDialog() == true)
+            DialogInput dialogInput = new DialogInput($"{LangManager.GetValueByKey("PleaseEnter")} cookie", cookies);
+            if (dialogInput.ShowDialog(this) == true)
             {
                 searchBox.Text = dialogInput.Text;
             }
@@ -1518,7 +1518,7 @@ namespace Jvedio
 
         private async void CreatePictureIndex(object sender, RoutedEventArgs e)
         {
-            if (new MsgBox(this, $"{LangManager.GetValueByKey("CurrentImageType")} {((PathType)ConfigManager.Settings.PicPathMode).ToString()}，{LangManager.GetValueByKey("TakeEffectToCurrent")}")
+            if (new MsgBox($"{LangManager.GetValueByKey("CurrentImageType")} {((PathType)ConfigManager.Settings.PicPathMode).ToString()}，{LangManager.GetValueByKey("TakeEffectToCurrent")}")
                 .ShowDialog() == false)
             {
                 return;
@@ -1532,7 +1532,7 @@ namespace Jvedio
                 string sql = VideoMapper.BASE_SQL;
                 IWrapper<Video> wrapper = new SelectWrapper<Video>();
                 wrapper.Select("metadata.DataID", "Path", "VID", "Hash");
-                sql = wrapper.toSelect(false) + sql;
+                sql = wrapper.ToSelect(false) + sql;
                 List<Dictionary<string, object>> temp = MapperManager.metaDataMapper.Select(sql);
                 List<Video> videos = MapperManager.metaDataMapper.ToEntity<Video>(temp, typeof(Video).GetProperties(), true);
                 total = videos.Count;
@@ -1608,6 +1608,19 @@ namespace Jvedio
         {
             // 保存插件启用情况
             vieModel.CurrentPlugin?.SaveConfig();
+        }
+
+        private void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
+            }
         }
     }
 }

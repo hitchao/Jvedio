@@ -80,9 +80,9 @@ namespace Jvedio.Mapper
             SelectWrapper<Comic> wrapper = new SelectWrapper<Comic>();
 
             wrapper.Select(SelectAllFields).Eq("metadata.DataID", dataid);
-            string sql = $"{wrapper.toSelect(false)} FROM metadata_comic " +
+            string sql = $"{wrapper.ToSelect(false)} FROM metadata_comic " +
                         "JOIN metadata " +
-                        "on metadata.DataID=metadata_comic.DataID " + wrapper.toWhere(false);
+                        "on metadata.DataID=metadata_comic.DataID " + wrapper.ToWhere(false);
             List<Dictionary<string, object>> list = Select(sql);
             List<Comic> comics = ToEntity<Comic>(list, typeof(Comic).GetProperties(), false);
             if (comics != null && comics.Count > 0)

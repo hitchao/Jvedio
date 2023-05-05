@@ -1,5 +1,6 @@
-﻿using Jvedio.Core.Logs;
+﻿using static Jvedio.LogManager;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -124,5 +125,25 @@ namespace Jvedio.Entity
                 }
             }
         }
+
+
+    }
+
+    public class NfoParse
+    {
+        public NfoParse()
+        {
+        }
+        public NfoParse(string name, string prop, List<string> values)
+        {
+            this.Name = name;
+            this.Prop = prop;
+            this.ParseValues = new List<string>();
+            if (values != null)
+                this.ParseValues.AddRange(values);
+        }
+        public string Name { get; set; }
+        public string Prop { get; set; }
+        public List<string> ParseValues { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.DataBase.Tables;
-using Jvedio.Core.Logs;
+using static Jvedio.LogManager;
 using Jvedio.Mapper;
 using System;
 

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
-using static Jvedio.VisualTools.WindowHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio.ViewModel
 {
@@ -25,7 +25,7 @@ namespace Jvedio.ViewModel
 
         public VieModel_Edit(long dataid)
         {
-            windowEdit = GetWindowByName("Window_Edit") as Window_Edit;
+            windowEdit = GetWindowByName("Window_Edit", App.Current.Windows) as Window_Edit;
             if (dataid <= 0) return;
             DataID = dataid;
             Reset();
@@ -248,7 +248,7 @@ namespace Jvedio.ViewModel
         {
             CurrentVideo = null;
             CurrentVideo = MapperManager.videoMapper.SelectVideoByID(DataID);
-            oldLabels = CurrentVideo.LabelList?.Select(arg => arg).ToList();
+            oldLabels = CurrentVideo.LabelList?.Select(arg => arg.Value).ToList();
             ViewActors = new ObservableCollection<ActorInfo>();
             foreach (ActorInfo info in CurrentVideo.ActorInfos)
                 ViewActors.Add(info);
@@ -310,7 +310,7 @@ namespace Jvedio.ViewModel
             int update2 = MapperManager.videoMapper.UpdateById(CurrentVideo);
 
             // 标签
-            MapperManager.metaDataMapper.SaveLabel(data, oldLabels);
+            MapperManager.metaDataMapper.SaveLabel(data);
 
             // 演员
             MapperManager.videoMapper.SaveActor(CurrentVideo, ViewActors.ToList());
@@ -375,21 +375,21 @@ namespace Jvedio.ViewModel
             ActorTotalCount = actorMapper.SelectCount(count_sql);
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
 
-            // string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
+            // string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).ToSelect(false)} FROM actor_info " +
             //    $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
             //    $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
             //    $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
             //    like_sql +
             //    $"GROUP BY actor_info.ActorID ORDER BY Count DESC"
             //    + ActorToLimit();
-            string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
+            string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).ToSelect(false)} FROM actor_info " +
                         $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                         $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                        $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
                         $"GROUP BY actor_info.ActorID " +
                         "UNION " +
-                       $"{wrapper.Select(VieModel_Main.ActorSelectedField).toSelect(false)} FROM actor_info " +
+                       $"{wrapper.Select(VieModel_Main.ActorSelectedField).ToSelect(false)} FROM actor_info " +
                         "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
                          $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} "
                          + ActorToLimit();

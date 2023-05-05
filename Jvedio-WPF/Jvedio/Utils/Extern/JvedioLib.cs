@@ -55,48 +55,6 @@ namespace JvedioLib.Security
             object result = InvokeMethod(new object[] { str, key }, "AesDecryptByIndex");
             return result == null ? string.Empty : result.ToString();
         }
-
-        public static string CalculateMD5Hash(string input)
-        {
-            object result = InvokeMethod(new object[] { input });
-            return result == null ? string.Empty : result.ToString();
-        }
-
-        public static string GetFileMD5(string filename)
-        {
-            object result = InvokeMethod(new object[] { filename });
-            return result == null ? string.Empty : result.ToString();
-        }
-
-        public static string FasterMd5(string filePath)
-        {
-            object result = InvokeMethod(new object[] { filePath });
-            return result == null ? string.Empty : result.ToString();
-        }
-
-        public static string FasterDirMD5(List<string> filePathsInOneDir)
-        {
-            object result = InvokeMethod(new object[] { filePathsInOneDir });
-            return result == null ? string.Empty : result.ToString();
-        }
-
-        public static string GetFilesMD5(string[] files)
-        {
-            object result = InvokeMethod(new object[] { files });
-            return result == null ? string.Empty : result.ToString();
-        }
-
-        public static string GetDirectorySize(string folderPath)
-        {
-            object result = InvokeMethod(new object[] { folderPath });
-            return result == null ? string.Empty : result.ToString();
-        }
-
-        public static string GetDirectoryMD5(string folderPath)
-        {
-            object result = InvokeMethod(new object[] { folderPath });
-            return result == null ? string.Empty : result.ToString();
-        }
     }
 
     public static class Identify
