@@ -21,7 +21,7 @@ namespace Jvedio.Core.Global
 
         public static List<string> UpgradeSourceKeys = UpgradeSourceDict.Keys.ToList();
         private static int RemoteIndex = (int)ConfigManager.Settings.RemoteIndex; // 用户切换源的时候存储起来
-        private static string DonateJsonBasePath = "SuperSudio-Donate";
+        private static string DonateJsonBasePath = "SuperStudio-Donate";
 
         public static int GetRemoteIndex()
         {

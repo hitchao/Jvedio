@@ -17,7 +17,7 @@ namespace Jvedio.Core.FFmpeg
 
         static ScreenShotTask()
         {
-            STATUS_TO_TEXT_DICT[TaskStatus.Running] = $"{LangManager.GetValueByKey("ScreenShoting")}...";
+            STATUS_TO_TEXT_DICT[TaskStatus.Running] = $"{LangManager.GetValueByKey("ScreenShotting")}...";
         }
 
         public ScreenShotTask(Video video, bool gif = false) : this(video.toMetaData())
@@ -84,7 +84,7 @@ namespace Jvedio.Core.FFmpeg
                 {
                     string outputs = string.Empty;
                     if (Gif)
-                        outputs = await shot.AsyncGenrateGif();
+                        outputs = await shot.AsyncGenerateGif();
                     else
                         outputs = await shot.AsyncScreenShot();
                     Success = true;

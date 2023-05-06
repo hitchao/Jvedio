@@ -195,7 +195,7 @@ namespace Jvedio.Core.Net
             return false;
         }
 
-        public async Task<bool> DownloadThumnail(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
+        public async Task<bool> DownloadThumbnail(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
             if (!ConfigManager.DownloadConfig.DownloadThumbNail)
                 return true;
@@ -344,10 +344,10 @@ namespace Jvedio.Core.Net
                         }
                         string url = imageUrls[i];
                         // 下载图片
-                        string saveFiledir = video.getExtraImage();
-                        if (!Directory.Exists(saveFiledir))
-                            Directory.CreateDirectory(saveFiledir);
-                        string saveFileName = Path.Combine(saveFiledir, Path.GetFileName(url));
+                        string saveDir = video.getExtraImage();
+                        if (!Directory.Exists(saveDir))
+                            Directory.CreateDirectory(saveDir);
+                        string saveFileName = Path.Combine(saveDir, Path.GetFileName(url));
                         if (!File.Exists(saveFileName))
                         {
                             StatusText = $"{LangManager.GetValueByKey("Preview")} {i + 1}/{imageCount}";
@@ -518,7 +518,7 @@ namespace Jvedio.Core.Net
                         return;
                     }
                     StatusText = "4. 开始同步缩略图";
-                    success = await DownloadThumnail(video, dict, downLoader, header);
+                    success = await DownloadThumbnail(video, dict, downLoader, header);
                     Progress = 77f;
                     if (Canceled)
                     {

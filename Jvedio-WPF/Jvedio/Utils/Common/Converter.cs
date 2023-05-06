@@ -31,7 +31,7 @@ namespace Jvedio
         }
     }
 
-    public class VidioTypeToIntConverter : IValueConverter
+    public class VideoTypeToIntConverter : IValueConverter
     {
         public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

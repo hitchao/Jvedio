@@ -23,11 +23,11 @@ namespace Jvedio.ViewModel
 
         private bool loadingLabel { get; set; }
 
-        public VieModel_Edit(long dataid)
+        public VieModel_Edit(long dataId)
         {
             windowEdit = GetWindowByName("Window_Edit", App.Current.Windows) as Window_Edit;
-            if (dataid <= 0) return;
-            DataID = dataid;
+            if (dataId <= 0) return;
+            DataID = dataId;
             Reset();
         }
 
@@ -164,15 +164,15 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int currentactorpage = 1;
+        private int _CurrentActorPage = 1;
 
         public int CurrentActorPage
         {
-            get { return currentactorpage; }
+            get { return _CurrentActorPage; }
 
             set
             {
-                currentactorpage = value;
+                _CurrentActorPage = value;
                 RaisePropertyChanged();
             }
         }

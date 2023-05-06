@@ -75,11 +75,11 @@ namespace Jvedio.Mapper
             { 7, "Rating" },
         };
 
-        public Picture SelectByID(long dataid)
+        public Picture SelectByID(long dataId)
         {
             SelectWrapper<Picture> wrapper = new SelectWrapper<Picture>();
 
-            wrapper.Select(SelectAllFields).Eq("metadata.DataID", dataid);
+            wrapper.Select(SelectAllFields).Eq("metadata.DataID", dataId);
             string sql = $"{wrapper.ToSelect(false)} FROM metadata_picture " +
                         "JOIN metadata " +
                         "on metadata.DataID=metadata_picture.DataID " + wrapper.ToWhere(false);

@@ -17,9 +17,9 @@ namespace Jvedio
         private string baseDir = PathManager.CurrentUserFolder;
         private string filepath = Path.Combine(PathManager.oldDataPath, "ScanPathConfig");
 
-        public ScanPathConfig(string databasename)
+        public ScanPathConfig(string databaseName)
         {
-            if (!string.IsNullOrEmpty(databasename)) DataBase = databasename;
+            if (!string.IsNullOrEmpty(databaseName)) DataBase = databaseName;
             if (!Directory.Exists(baseDir)) Directory.CreateDirectory(baseDir);
         }
 

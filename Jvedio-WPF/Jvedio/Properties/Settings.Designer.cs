@@ -890,12 +890,12 @@ namespace Jvedio.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string VedioPlayerPath {
+        public string VideoPlayerPath {
             get {
-                return ((string)(this["VedioPlayerPath"]));
+                return ((string)(this["VideoPlayerPath"]));
             }
             set {
-                this["VedioPlayerPath"] = value;
+                this["VideoPlayerPath"] = value;
             }
         }
         
@@ -1202,12 +1202,12 @@ namespace Jvedio.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DetialWindowShowAllMovie {
+        public bool DetailWindowShowAllMovie {
             get {
-                return ((bool)(this["DetialWindowShowAllMovie"]));
+                return ((bool)(this["DetailWindowShowAllMovie"]));
             }
             set {
-                this["DetialWindowShowAllMovie"] = value;
+                this["DetailWindowShowAllMovie"] = value;
             }
         }
         

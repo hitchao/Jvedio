@@ -539,7 +539,7 @@ namespace Jvedio.Upgrade
                 translation.Platform = Jvedio.Core.Enums.TranslationPlatform.youdao.ToString();
                 mapper.Insert(translation);
                 string sql = "insert into metadata_to_translation(DataID,FieldType,TransaltionID) " +
-                    $"values ({i + 1},'Title',{translation.TransaltionID})";
+                    $"values ({i + 1},'Title',{translation.TranslationID})";
                 metaDataMapper.ExecuteNonQuery(sql);
             }
         }
@@ -956,7 +956,7 @@ namespace Jvedio.Upgrade
                 return;
             }
 
-            if (translation != null) l = translation.TransaltionID;
+            if (translation != null) l = translation.TranslationID;
 
             List<Translation> translations = new List<Translation>();
             HashSet<string> set = new HashSet<string>();

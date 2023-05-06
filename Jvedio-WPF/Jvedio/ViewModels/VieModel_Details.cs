@@ -242,7 +242,7 @@ namespace Jvedio.ViewModel
             QueryCompleted?.Invoke(this, new EventArgs());
         }
 
-        public void LoadViewAssoData()
+        public void LoadViewAssocData()
         {
             if (ViewAssociationDatas == null) ViewAssociationDatas = new ObservableCollection<Video>();
             ViewAssociationDatas.Clear();
@@ -287,7 +287,7 @@ namespace Jvedio.ViewModel
                         }
                     }
                 }
-                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
+                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssocVideoDelegate(LoadViewAssocVideo), video, i);
             }
 
             // 清除
@@ -297,9 +297,9 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
+        private delegate void LoadViewAssocVideoDelegate(Video video, int idx);
 
-        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
+        private void LoadViewAssocVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
         public async void getLabels()
         {

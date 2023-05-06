@@ -218,7 +218,7 @@
     <Setting Name="ToolsIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="VedioPlayerPath" Type="System.String" Scope="User">
+    <Setting Name="VideoPlayerPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DataBasePath" Type="System.String" Scope="User">
@@ -296,7 +296,7 @@
     <Setting Name="OnlyShowSubSection" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DetialWindowShowAllMovie" Type="System.Boolean" Scope="User">
+    <Setting Name="DetailWindowShowAllMovie" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DelRenameTitleSpace" Type="System.Boolean" Scope="User">

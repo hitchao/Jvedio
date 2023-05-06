@@ -105,9 +105,9 @@ namespace Jvedio
         private void RemoveNewAddTag()
         {
             if (vieModel.CurrentVideo != null && vieModel.CurrentVideo.TagStamp != null &&
-                vieModel.CurrentVideo.TagStamp.Any(arg => arg.TagID == TagStamp.TAGID_NEW_ADD))
+                vieModel.CurrentVideo.TagStamp.Any(arg => arg.TagID == TagStamp.TAG_ID_NEW_ADD))
             {
-                string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAGID_NEW_ADD}' and DataID='{DataID}'";
+                string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAG_ID_NEW_ADD}' and DataID='{DataID}'";
                 tagStampMapper.ExecuteNonQuery(sql);
                 windowMain?.InitTagStamp();
                 windowMain?.RefreshData(DataID);
@@ -192,7 +192,7 @@ namespace Jvedio
             string sql = windowMain?.CurrentSQL;
             if (wrapper != null && !string.IsNullOrEmpty(sql))
             {
-                if (Properties.Settings.Default.DetialWindowShowAllMovie)
+                if (Properties.Settings.Default.DetailWindowShowAllMovie)
                     sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder();
                 else
                     sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
@@ -242,17 +242,17 @@ namespace Jvedio
             Video video = vieModel.CurrentVideo;
             if (video == null || video.DataID <= 0) return;
             DownLoadTask task = new DownLoadTask(video, true, ConfigManager.Settings.OverrideInfo); // 详情页面下载预览图
-            long dataid = video.DataID;
+            long dataId = video.DataID;
             task.onDownloadSuccess += (s, ev) =>
             {
                 DownLoadTask t = s as DownLoadTask;
                 Dispatcher.Invoke(() =>
                 {
-                    if (dataid.Equals(vieModel.CurrentVideo.DataID))
-                        vieModel.Load(dataid);
+                    if (dataId.Equals(vieModel.CurrentVideo.DataID))
+                        vieModel.Load(dataId);
 
                     // 通知主界面刷新
-                    windowMain?.RefreshData(dataid);
+                    windowMain?.RefreshData(dataId);
                 });
             };
             task.onDownloadPreview += (s, ev) =>
@@ -261,7 +261,7 @@ namespace Jvedio
                 PreviewImageEventArgs arg = ev as PreviewImageEventArgs;
                 Dispatcher.Invoke(() =>
                 {
-                    if (dataid.Equals(vieModel.CurrentVideo.DataID) && !vieModel.ShowScreenShot)
+                    if (dataId.Equals(vieModel.CurrentVideo.DataID) && !vieModel.ShowScreenShot)
                     {
                         // 加入到列表
                         if (vieModel.CurrentVideo.PreviewImagePathList == null) vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
@@ -295,14 +295,14 @@ namespace Jvedio
         {
             Video video = vieModel.CurrentVideo;
             ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo); // 详情页面下载预览图
-            long dataid = video.DataID;
+            long dataId = video.DataID;
             task.onCompleted += (s, ev) =>
             {
                 ScreenShotTask t = s as ScreenShotTask;
                 PreviewImageEventArgs arg = ev as PreviewImageEventArgs;
                 Dispatcher.Invoke(async () =>
                {
-                   if (vieModel.ShowScreenShot && dataid.Equals(vieModel.CurrentVideo.DataID))
+                   if (vieModel.ShowScreenShot && dataId.Equals(vieModel.CurrentVideo.DataID))
                    {
                        // 加入到列表
                        if (vieModel.CurrentVideo.PreviewImagePathList == null) vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
@@ -698,7 +698,7 @@ namespace Jvedio
             else if (e.Key == Key.Right)
                 NextMovie(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             else if (e.Key == Key.Space || e.Key == Key.Enter || e.Key == Key.P)
-                PlayVedio(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+                PlayVideo(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             else if (e.Key == Key.E)
                 EditInfo(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             else if (e.Key == Key.D)
@@ -1161,26 +1161,12 @@ namespace Jvedio
 
         private void GetPlot(object sender, RoutedEventArgs e)
         {
-            // if (JvedioServers.DMM.Url.IsProperUrl())
-            // {
-            //    Task.Run(async () =>
-            //    {
-            //        HttpResult httpResult = await new FANZACrawler(vieModel.CurrentVideo.id, true).Crawl();
-            //        if (this.Dispatcher != null)
-            //        {
-            //            Dispatcher.Invoke((Action)delegate
-            //            {
-            //                RefreshCurrent();
-            //            });
-            //        }
-            //    });
 
-            // }
         }
 
         private void DownLoadMagnets(object sender, RoutedEventArgs e)
         {
-            new MsgBox( "开发中").ShowDialog();
+            new MsgBox("开发中").ShowDialog();
         }
 
         public void ShowSubsection(object sender)
@@ -1200,7 +1186,7 @@ namespace Jvedio
             contextMenu.Visibility = Visibility.Visible;
         }
 
-        private void PlayVedio(object sender, MouseButtonEventArgs e)
+        private void PlayVideo(object sender, MouseButtonEventArgs e)
         {
             if (vieModel.CurrentVideo.HasSubSection)
                 ShowSubsection(sender);
@@ -1269,18 +1255,18 @@ namespace Jvedio
             }
         }
 
-        private void ViewAssoDatas(object sender, RoutedEventArgs e)
+        private void ViewAssocDatas(object sender, RoutedEventArgs e)
         {
             AssoDataPopup.IsOpen = true;
-            vieModel.LoadViewAssoData();
+            vieModel.LoadViewAssocData();
         }
 
-        private void HideAssoPopup(object sender, RoutedEventArgs e)
+        private void HideAssocPopup(object sender, RoutedEventArgs e)
         {
             AssoDataPopup.IsOpen = false;
         }
 
-        private void ShowAssoSubSection(object sender, RoutedEventArgs e)
+        private void ShowAssocSubSection(object sender, RoutedEventArgs e)
         {
             if (vieModel.ViewAssociationDatas == null) return;
 
@@ -1307,14 +1293,14 @@ namespace Jvedio
             }
         }
 
-        private void PlayAssoVideo(object sender, MouseButtonEventArgs e)
+        private void PlayAssocVideo(object sender, MouseButtonEventArgs e)
         {
             AssoDataPopup.IsOpen = false;
             FrameworkElement el = sender as FrameworkElement;
 
-            long dataid = getDataID(el);
-            if (dataid <= 0) return;
-            Video video = getAssoVideo(dataid);
+            long dataId = getDataID(el);
+            if (dataId <= 0) return;
+            Video video = getAssocVideo(dataId);
             if (video == null)
             {
                 MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
@@ -1324,7 +1310,7 @@ namespace Jvedio
             windowMain?.PlayVideoWithPlayer(video.Path, DataID);
         }
 
-        private Video getAssoVideo(long dataID)
+        private Video getAssocVideo(long dataID)
         {
             if (dataID <= 0 || vieModel?.ViewAssociationDatas?.Count <= 0) return null;
             Video video = vieModel.ViewAssociationDatas.Where(item => item.DataID == dataID).First();
@@ -1373,8 +1359,8 @@ namespace Jvedio
 
         private void ShowDetails(object sender, MouseButtonEventArgs e)
         {
-            long dataid = getDataID(sender as FrameworkElement);
-            vieModel.Load(dataid);
+            long dataId = getDataID(sender as FrameworkElement);
+            vieModel.Load(dataId);
             AssoDataPopup.IsOpen = false;
         }
 
@@ -1392,7 +1378,7 @@ namespace Jvedio
             return -1;
         }
 
-        private void AssoDataRate_ValueChanged(object sender, EventArgs e)
+        private void AssocDataRate_ValueChanged(object sender, EventArgs e)
         {
             if (!CanRateChange) return;
             Rating rate = (Rating)sender;

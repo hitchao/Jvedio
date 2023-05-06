@@ -351,7 +351,7 @@
     <Compile Include="Entity\Common\DetailMovie.cs" />
     <Compile Include="Entity\Common\Message.cs" />
     <Compile Include="Entity\Common\Movie.cs" />
-    <Compile Include="Entity\Common\Serilizable.cs" />
+    <Compile Include="Entity\Common\Serializable.cs" />
     <Compile Include="Core\Crawler\CrawlerServer.cs" />
     <Compile Include="Entity\Common\Server.cs" />
     <Compile Include="Entity\CommonSQL\Magnet.cs" />

@@ -26,7 +26,7 @@
 
 
 
-        <local:VidioTypeToIntConverter x:Key="VidioTypeToIntConverter" />
+        <local:VideoTypeToIntConverter x:Key="VideoTypeToIntConverter" />
 
 
         <Style x:Key="HoverCanvas" TargetType="{x:Type Canvas}">
@@ -191,7 +191,7 @@
                         VerticalAlignment="Center"
                         super:CommonExt.CornerRadius="5"
                         super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
-                        Click="HideAssoPopup"
+                        Click="HideAssocPopup"
                         Style="{StaticResource FlatButton}">
                         <Viewbox
                             Width="12"
@@ -298,7 +298,7 @@
                                                     Padding="5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Bottom"
-                                                    Click="ShowAssoSubSection"
+                                                    Click="ShowAssocSubSection"
                                                     Cursor="Hand"
                                                     IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                     Style="{StaticResource RoundNormalButton}"
@@ -323,7 +323,7 @@
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Cursor="Hand"
-                                                    MouseLeftButtonUp="PlayAssoVideo"
+                                                    MouseLeftButtonUp="PlayAssocVideo"
                                                     Opacity="0.5"
                                                     Style="{StaticResource HoverCanvas}"
                                                     ToolTip="{Binding id, Mode=OneWay}">
@@ -467,7 +467,7 @@
                                                     RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
                                                     StarHeight="15"
                                                     StarMargin="3 0"
-                                                    ValueChanged="AssoDataRate_ValueChanged"
+                                                    ValueChanged="AssocDataRate_ValueChanged"
                                                     Value="{Binding Grade, Mode=TwoWay}" />
                                             </StackPanel>
 
@@ -722,7 +722,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Panel.ZIndex="19"
-                            Click="ViewAssoDatas"
+                            Click="ViewAssocDatas"
                             Cursor="Hand"
                             IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                             Style="{StaticResource RoundNormalButton}"
@@ -740,7 +740,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Panel.ZIndex="10"
-                            PreviewMouseLeftButtonUp="PlayVedio">
+                            PreviewMouseLeftButtonUp="PlayVideo">
                             <Grid.ContextMenu>
                                 <ContextMenu
                                     Width="100"
@@ -1246,7 +1246,7 @@
                                                         MinWidth="100"
                                                         Margin="5"
                                                         HorizontalAlignment="Stretch"
-                                                        SelectedIndex="{Binding CurrentVideo.VideoType, Converter={StaticResource VidioTypeToIntConverter}, Mode=TwoWay}"
+                                                        SelectedIndex="{Binding CurrentVideo.VideoType, Converter={StaticResource VideoTypeToIntConverter}, Mode=TwoWay}"
                                                         SelectionChanged="ComboBox_SelectionChanged"
                                                         Style="{StaticResource BorderComboBox}">
                                                         <ComboBoxItem Content="{DynamicResource Normal}" />

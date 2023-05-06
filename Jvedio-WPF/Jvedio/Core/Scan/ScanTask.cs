@@ -442,7 +442,7 @@ namespace Jvedio.Core.Scan
                             + Path.GetExtension(originPath));
                         FileHelper.TryCopyFile(originPath, targetImagePath, true);
                     }
-                    else if (ConfigManager.ScanConfig.CopyNFOOverriteImage)
+                    else if (ConfigManager.ScanConfig.CopyNFOOverwriteImage)
                     {
                         FileHelper.TryCopyFile(originPath, targetImagePath, true);
                     }
@@ -475,7 +475,7 @@ namespace Jvedio.Core.Scan
                 foreach (var path in list)
                 {
                     string targetFilePath = Path.Combine(targetPath, Path.GetFileName(path));
-                    FileHelper.TryCopyFile(path, targetFilePath, ConfigManager.ScanConfig.CopyNFOOverriteImage);
+                    FileHelper.TryCopyFile(path, targetFilePath, ConfigManager.ScanConfig.CopyNFOOverwriteImage);
                 }
 
             }

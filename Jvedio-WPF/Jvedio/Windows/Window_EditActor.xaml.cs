@@ -117,7 +117,7 @@ namespace Jvedio
                     imageFileName = filename;
             }
 
-            bool copyed = false;
+            bool copied = false;
             string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
             if (File.Exists(targetFileName))
             {
@@ -127,16 +127,16 @@ namespace Jvedio
                     string ext = System.IO.Path.GetExtension(targetFileName);
                     targetFileName = System.IO.Path.Combine(dir, $"{CurrentActorInfo.ActorID}_{CurrentActorInfo.ActorName}{ext}");
                     FileHelper.TryCopyFile(imageFileName, targetFileName, true);
-                    copyed = true;
+                    copied = true;
                 }
             }
             else
             {
                 FileHelper.TryCopyFile(imageFileName, targetFileName);
-                copyed = true;
+                copied = true;
             }
 
-            if (copyed)
+            if (copied)
             {
                 // 设置图片
                 CurrentActorInfo.SmallImage = null;
@@ -179,7 +179,7 @@ namespace Jvedio
                         // 设置演员头像
                         string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
                         bool copy = true;
-                        if (File.Exists(targetFileName) && new MsgBox( LangManager.GetValueByKey("ExistsToOverrite")).ShowDialog() != true)
+                        if (File.Exists(targetFileName) && new MsgBox( LangManager.GetValueByKey("ExistsToOverwrite")).ShowDialog() != true)
                         {
                             copy = false;
                         }

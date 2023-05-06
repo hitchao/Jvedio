@@ -4,7 +4,7 @@ namespace Jvedio.Core.Config
 {
     public class ScanConfig : AbstractConfig
     {
-        private const double DEFAULT_MINFILESIZE = 1;       // 1 MB
+        private const double DEFAULT_MIN_FILE_SIZE = 1;       // 1 MB
 
         private ScanConfig() : base("ScanConfig")
         {
@@ -32,7 +32,7 @@ namespace Jvedio.Core.Config
             return _instance;
         }
 
-        public double _MinFileSize = DEFAULT_MINFILESIZE;
+        public double _MinFileSize = DEFAULT_MIN_FILE_SIZE;
 
         public double MinFileSize
         {
@@ -44,7 +44,7 @@ namespace Jvedio.Core.Config
             set
             {
                 if (value < 0)
-                    _MinFileSize = DEFAULT_MINFILESIZE;
+                    _MinFileSize = DEFAULT_MIN_FILE_SIZE;
                 else
                     _MinFileSize = value;
             }
@@ -52,7 +52,7 @@ namespace Jvedio.Core.Config
 
         public bool ScanOnStartUp { get; set; }
 
-        public bool CopyNFOOverriteImage { get; set; }
+        public bool CopyNFOOverwriteImage { get; set; }
         public bool CopyNFOPicture { get; set; }
         public bool CopyNFOActorPicture { get; set; }
         public bool CopyNFOPreview { get; set; }

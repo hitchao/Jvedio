@@ -118,24 +118,24 @@ namespace SuperUtils.External
 
         public static (Dictionary<string, string>, Int32Rect) Parse(string json)
         {
-            Dictionary<string, string> dicresult = null;
+            Dictionary<string, string> dictResult = null;
             Int32Rect int32Rect = Int32Rect.Empty;
             FaceJson = json;
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Dictionary<string, object> dict = serializer.DeserializeObject(FaceJson) as Dictionary<string, object>;
-            uint facenum = 0;
+            uint faceNum = 0;
             if (dict.ContainsKey("result"))
             {
                 Dictionary<string, object> result = dict["result"] as Dictionary<string, object>;
                 try
                 {
-                    if ((bool)result?.ContainsKey("face_num")) facenum = uint.Parse(result["face_num"].ToString());
+                    if ((bool)result?.ContainsKey("face_num")) faceNum = uint.Parse(result["face_num"].ToString());
                 }
                 catch
                 {
                 }
 
-                if (facenum > 0)
+                if (faceNum > 0)
                 {
                     object[] face_list_object = result["face_list"] as object[];
                     foreach (Dictionary<string, object> item in face_list_object)
@@ -150,24 +150,24 @@ namespace SuperUtils.External
                         var race = item["race"] as Dictionary<string, object>;
                         var emotion = item["emotion"] as Dictionary<string, object>;
                         var mask = item["mask"] as Dictionary<string, object>;
-                        dicresult = new Dictionary<string, string>();
-                        dicresult.Add("age", age);
-                        dicresult.Add("beauty", beauty);
-                        dicresult.Add("expression", expression["type"].ToString());
-                        dicresult.Add("face_shape", face_shape["type"].ToString());
-                        dicresult.Add("gender", gender["type"].ToString());
-                        dicresult.Add("glasses", glasses["type"].ToString());
-                        dicresult.Add("race", race["type"].ToString());
-                        dicresult.Add("emotion", emotion["type"].ToString());
-                        dicresult.Add("mask", mask["type"].ToString());
+                        dictResult = new Dictionary<string, string>();
+                        dictResult.Add("age", age);
+                        dictResult.Add("beauty", beauty);
+                        dictResult.Add("expression", expression["type"].ToString());
+                        dictResult.Add("face_shape", face_shape["type"].ToString());
+                        dictResult.Add("gender", gender["type"].ToString());
+                        dictResult.Add("glasses", glasses["type"].ToString());
+                        dictResult.Add("race", race["type"].ToString());
+                        dictResult.Add("emotion", emotion["type"].ToString());
+                        dictResult.Add("mask", mask["type"].ToString());
 
                         int32Rect = new Int32Rect((int)float.Parse(location["left"].ToString()), (int)float.Parse(location["top"].ToString()), (int)float.Parse(location["width"].ToString()), (int)float.Parse(location["height"].ToString()));
-                        return (dicresult, int32Rect);
+                        return (dictResult, int32Rect);
                     }
                 }
             }
 
-            return (dicresult, int32Rect);
+            return (dictResult, int32Rect);
         }
 
         public static void ShowDic(Dictionary<string, object> dict)

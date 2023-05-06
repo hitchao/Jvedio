@@ -190,7 +190,7 @@
                                 <CheckBox Content="{DynamicResource TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay}" />
 
 
-                                <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetialWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetailWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
                                 <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
@@ -198,7 +198,7 @@
                                     <CheckBox Content="{DynamicResource ShowHistory}" IsChecked="{Binding ShowSearchHistory, Mode=TwoWay}" />
                                     <Button Click="ViewSearchHistory" Content="{DynamicResource ViewHistory}" />
                                 </WrapPanel>
-                                <StackPanel Orientation="Horizontal" Visibility="{Binding MainWindowVisiblie, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding MainWindowVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <CheckBox
                                         MinWidth="95"
                                         VerticalContentAlignment="Center"
@@ -284,7 +284,7 @@
                                 <super:SearchBox
                                     Width="410"
                                     Margin="9,0"
-                                    Text="{Binding VedioPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                    Text="{Binding VideoPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                 <Button
                                     Margin="10,0"
                                     BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
@@ -726,7 +726,7 @@
                                     Visibility="{Binding ScanNfo, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">-->
                                 <StackPanel Margin="20,0" Orientation="Vertical">
 
-                                    <CheckBox Content="{DynamicResource OverriteImage}" IsChecked="{Binding CopyNFOOverriteImage}" />
+                                    <CheckBox Content="{DynamicResource OverwriteImage}" IsChecked="{Binding CopyNFOOverwriteImage}" />
                                     <CheckBox Content="{DynamicResource CopyPosterAndThumbnail}" IsChecked="{Binding CopyNFOPicture}" />
                                     <StackPanel Orientation="Horizontal">
                                         <CheckBox
@@ -901,7 +901,7 @@
                                                 HorizontalAlignment="Left"
                                                 Click="SelectNfoPath"
                                                 Content="{DynamicResource ChooseDir}" />
-                                            <CheckBox Content="{DynamicResource overwrite}" IsChecked="{Binding OverriteNFO, Mode=TwoWay}" />
+                                            <CheckBox Content="{DynamicResource overwrite}" IsChecked="{Binding OverwriteNFO, Mode=TwoWay}" />
 
                                         </StackPanel>
 
@@ -2283,7 +2283,7 @@
                                 Grid.Column="1"
                                 Margin="5,0"
                                 Orientation="Vertical"
-                                Visibility="{Binding MainWindowVisiblie, Converter={StaticResource BoolToVisibilityConverter}}">
+                                Visibility="{Binding MainWindowVisible, Converter={StaticResource BoolToVisibilityConverter}}">
 
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource SetLibraryAsso}" />

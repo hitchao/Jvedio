@@ -521,15 +521,15 @@ namespace Jvedio.ViewModel
 
         #region "扫描"
 
-        private bool _CopyNFOOverriteImage = ConfigManager.ScanConfig.CopyNFOOverriteImage;
+        private bool _CopyNFOOverwriteImage = ConfigManager.ScanConfig.CopyNFOOverwriteImage;
 
-        public bool CopyNFOOverriteImage
+        public bool CopyNFOOverwriteImage
         {
-            get { return _CopyNFOOverriteImage; }
+            get { return _CopyNFOOverwriteImage; }
 
             set
             {
-                _CopyNFOOverriteImage = value;
+                _CopyNFOOverwriteImage = value;
                 RaisePropertyChanged();
             }
         }
@@ -765,15 +765,15 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _MainWindowVisiblie;
+        private bool _MainWindowVisible;
 
-        public bool MainWindowVisiblie
+        public bool MainWindowVisible
         {
-            get { return _MainWindowVisiblie; }
+            get { return _MainWindowVisible; }
 
             set
             {
-                _MainWindowVisiblie = value;
+                _MainWindowVisible = value;
                 RaisePropertyChanged();
             }
         }
@@ -821,15 +821,15 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _OverriteNFO = ConfigManager.Settings.OverriteNFO;
+        private bool _OverwriteNFO = ConfigManager.Settings.OverwriteNFO;
 
-        public bool OverriteNFO
+        public bool OverwriteNFO
         {
-            get { return _OverriteNFO; }
+            get { return _OverwriteNFO; }
 
             set
             {
-                _OverriteNFO = value;
+                _OverwriteNFO = value;
                 RaisePropertyChanged();
             }
         }

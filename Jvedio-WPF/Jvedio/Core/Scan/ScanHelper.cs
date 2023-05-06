@@ -21,6 +21,7 @@ namespace Jvedio
 {
     public class ScanHelper
     {
+        private static string CHARACTERS = "abcdefghijklmn";
         public static double MinFileSize { get; set; } // 最小文件大小（B）
 
         public static string SubSectionFeature { get; set; }
@@ -352,9 +353,9 @@ namespace Jvedio
                         builder.Append(re.ToString());
                 matchesName = builder.ToString().ToLower();
 
-                string characters = "abcdefghijklmn";
-                for (int i = 0; i < Math.Min(filePathList.Count, characters.Length); i++)
-                    isSubSection &= matchesName.IndexOf(characters[i]) >= 0;
+
+                for (int i = 0; i < Math.Min(filePathList.Count, CHARACTERS.Length); i++)
+                    isSubSection &= matchesName.IndexOf(CHARACTERS[i]) >= 0;
             }
 
             // 排序文件名
@@ -437,8 +438,8 @@ namespace Jvedio
                     // 检查分段的视频
                     if (!vIDDict.ContainsKey(VID))
                     {
-                        List<string> pathlist = new List<string> { path };
-                        vIDDict.Add(VID, pathlist);
+                        List<string> pathList = new List<string> { path };
+                        vIDDict.Add(VID, pathList);
                     }
                     else
                     {
@@ -487,14 +488,14 @@ namespace Jvedio
                         // 1、不是分段视频，但是几个视频的识别码一致，检测一下 hash，判断是否重复
                         // 2、仅导入最大的视频
                         int maxIndex = 0;
-                        long maxLenght = 0;
+                        long maxLength = 0;
                         for (int i = 0; i < notSubSection.Count; i++)
                         {
                             string path = notSubSection[i];
                             long len = FileHelper.TryGetFileLength(path);
-                            if (len > maxLenght)
+                            if (len > maxLength)
                             {
-                                maxLenght = len;
+                                maxLength = len;
                                 maxIndex = i;
                             }
                         }

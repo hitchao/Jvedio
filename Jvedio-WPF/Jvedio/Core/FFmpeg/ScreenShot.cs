@@ -97,7 +97,7 @@ namespace Jvedio.Core.FFmpeg
             StringBuilder cmd = new StringBuilder();
             cmd.AppendLine();
             cmd.AppendLine();
-            cmd.Append($"#### ffmpeg commads ####{Environment.NewLine}");
+            cmd.Append($"#### ffmpeg commands ####{Environment.NewLine}");
             foreach (var item in ffmpegParams)
                 cmd.Append($"ffmpeg {item}{Environment.NewLine}");
             cmd.AppendLine();
@@ -173,7 +173,7 @@ namespace Jvedio.Core.FFmpeg
             }
         }
 
-        public async Task<string> AsyncGenrateGif()
+        public async Task<string> AsyncGenerateGif()
         {
             if (!File.Exists(FFmpegPath))
                 throw new NotFoundException("ffmpeg.exe");
@@ -202,8 +202,8 @@ namespace Jvedio.Core.FFmpeg
                 throw new DirCreateFailedException(outputDir);
             });
 
-            string cutofftime = cutoffArray[new Random().Next(cutoffArray.Length - 1)];
-            if (string.IsNullOrEmpty(cutofftime))
+            string time = cutoffArray[new Random().Next(cutoffArray.Length - 1)];
+            if (string.IsNullOrEmpty(time))
                 throw new MediaCutOutOfRangeException();
 
             int duration = (int)ConfigManager.FFmpegConfig.GifDuration;
@@ -221,10 +221,10 @@ namespace Jvedio.Core.FFmpeg
             if (height <= 0) height = DEFAULT_GIF_HEIGHT;
             if (duration <= 0) duration = DEFAULT_DURATION;
 
-            string ffmpegParam = $"-y -t {duration} -ss {cutofftime} -i \"{originPath}\" -s {width}x{height}  \"{saveFileName}\"";
+            string ffmpegParam = $"-y -t {duration} -ss {time} -i \"{originPath}\" -s {width}x{height}  \"{saveFileName}\"";
             TotalCount = 1;
 
-            outputs.Append($"{Environment.NewLine}#### ffmpeg commads ####{Environment.NewLine}");
+            outputs.Append($"{Environment.NewLine}#### ffmpeg commands ####{Environment.NewLine}");
             outputs.Append($"ffmpeg {ffmpegParam}{Environment.NewLine}");
             outputs.Append($"{Environment.NewLine}{Environment.NewLine}");
 

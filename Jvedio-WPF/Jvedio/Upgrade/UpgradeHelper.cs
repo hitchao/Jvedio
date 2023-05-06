@@ -60,7 +60,7 @@ namespace Jvedio.Upgrade
 
         }
 
-        public static async Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> GetUpgardeInfo()
+        public static async Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> GetUpgradeInfo()
         {
             if (Upgrader == null) return (null, null, null);
             return await Upgrader.GetUpgradeInfo();

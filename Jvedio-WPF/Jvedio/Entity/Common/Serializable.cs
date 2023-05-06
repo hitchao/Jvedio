@@ -2,7 +2,7 @@
 
 namespace Jvedio.Entity
 {
-    public class Serilizable
+    public class Serializable
     {
         public override string ToString()
         {

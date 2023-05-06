@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 namespace Jvedio.Entity
 {
     [Table(tableName: "app_databases")]
-    public class AppDatabase : Serilizable, INotifyPropertyChanged
+    public class AppDatabase : Serializable, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

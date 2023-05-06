@@ -1203,7 +1203,7 @@
                         VerticalAlignment="Center"
                         super:CommonExt.CornerRadius="5"
                         super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
-                        Click="HideAssoPopup"
+                        Click="HideAssocPopup"
                         Style="{StaticResource FlatButton}">
                         <Viewbox
                             Width="12"
@@ -1342,7 +1342,7 @@
                                                     Padding="5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Bottom"
-                                                    Click="ShowAssoSubSection"
+                                                    Click="ShowAssocSubSection"
                                                     Cursor="Hand"
                                                     IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                     Style="{StaticResource RoundNormalButton}"
@@ -1367,7 +1367,7 @@
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Cursor="Hand"
-                                                    MouseLeftButtonUp="PlayAssoVideo"
+                                                    MouseLeftButtonUp="PlayAssocVideo"
                                                     Opacity="0.5"
                                                     Style="{StaticResource HoverCanvas}"
                                                     ToolTip="{Binding DataID, Mode=OneWay}">
@@ -3035,7 +3035,7 @@
                                                                             Height="auto"
                                                                             Margin="5"
                                                                             Padding="5"
-                                                                            Click="ViewAssoDatas"
+                                                                            Click="ViewAssocDatas"
                                                                             Cursor="Hand"
                                                                             IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                                             Style="{StaticResource RoundNormalButton}"

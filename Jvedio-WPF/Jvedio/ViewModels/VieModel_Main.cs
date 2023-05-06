@@ -43,7 +43,7 @@ namespace Jvedio.ViewModel
 
         public event EventHandler RenderSqlChanged;
 
-        public event EventHandler LoadAssoMetaDataCompleted;
+        public event EventHandler LoadAssocMetaDataCompleted;
 
         public bool IsFlipOvering { get; set; }
 
@@ -73,7 +73,7 @@ namespace Jvedio.ViewModel
 
         public List<Movie> MovieList { get; set; }
 
-        private List<Video> CurrentExistAssoData { get; set; }
+        private List<Video> CurrentExistAssocData { get; set; }
 
         #region "RelayCommand"
         public RelayCommand<object> SelectCommand { get; set; }
@@ -107,7 +107,7 @@ namespace Jvedio.ViewModel
         public VieModel_Main()
         {
             ClickFilterType = string.Empty;
-            CurrentExistAssoData = new List<Video>();
+            CurrentExistAssocData = new List<Video>();
 
             SelectCommand = new RelayCommand<object>(t => GenerateSelect(t));
             ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
@@ -563,15 +563,15 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<string> studiollist;
+        private ObservableCollection<string> studioList;
 
         public ObservableCollection<string> StudioList
         {
-            get { return studiollist; }
+            get { return studioList; }
 
             set
             {
-                studiollist = value;
+                studioList = value;
                 RaisePropertyChanged();
             }
         }
@@ -843,15 +843,15 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public int totalpage = 1;
+        private int _TotalPage = 1;
 
         public int TotalPage
         {
-            get { return totalpage; }
+            get { return _TotalPage; }
 
             set
             {
-                totalpage = value;
+                _TotalPage = value;
                 RaisePropertyChanged();
             }
         }
@@ -882,15 +882,15 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int currentactorpage = 1;
+        private int _CurrentActorPage = 1;
 
         public int CurrentActorPage
         {
-            get { return currentactorpage; }
+            get { return _CurrentActorPage; }
 
             set
             {
-                currentactorpage = value;
+                _CurrentActorPage = value;
 
                 RaisePropertyChanged();
             }
@@ -1007,28 +1007,28 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public long _AssoSearchTotalCount;
+        public long _AssocSearchTotalCount;
 
         public long AssoSearchTotalCount
         {
-            get { return _AssoSearchTotalCount; }
+            get { return _AssocSearchTotalCount; }
 
             set
             {
-                _AssoSearchTotalCount = value;
+                _AssocSearchTotalCount = value;
                 RaisePropertyChanged();
             }
         }
 
-        public int _AssoSearchPageSize = 20;
+        public int _AssocSearchPageSize = 20;
 
         public int AssoSearchPageSize
         {
-            get { return _AssoSearchPageSize; }
+            get { return _AssocSearchPageSize; }
 
             set
             {
-                _AssoSearchPageSize = value;
+                _AssocSearchPageSize = value;
                 RaisePropertyChanged();
             }
         }
@@ -1871,7 +1871,7 @@ namespace Jvedio.ViewModel
                     break;
 
                 // case SearchType.Title:
-                //    wrapper.Like("Title", searchContent).LeftBacket().Or().Like("Path", searchContent).RightBacket();
+                //    wrapper.Like("Title", searchContent).LeftBracket().Or().Like("Path", searchContent).RightBracket();
                 // break;
                 default:
                     wrapper.Like(searchType.ToString(), searchContent);
@@ -1934,9 +1934,9 @@ namespace Jvedio.ViewModel
         public void setSortOrder<T>(IWrapper<T> wrapper, bool random = false)
         {
             if (wrapper == null) return;
-            int.TryParse(Properties.Settings.Default.SortType, out int sortindex);
-            if (sortindex < 0 || sortindex >= SortDict.Count) sortindex = 0;
-            string sortField = SortDict[sortindex];
+            int.TryParse(Properties.Settings.Default.SortType, out int sortIndex);
+            if (sortIndex < 0 || sortIndex >= SortDict.Count) sortIndex = 0;
+            string sortField = SortDict[sortIndex];
             if (random)
                 wrapper.Asc("RANDOM()");
             else
@@ -2352,7 +2352,7 @@ namespace Jvedio.ViewModel
                 AssociationDatas.RemoveAt(i);
             }
 
-            LoadAssoMetaDataCompleted?.Invoke(null, null);
+            LoadAssocMetaDataCompleted?.Invoke(null, null);
         }
 
         public void toAssoSearchLimit<T>(IWrapper<T> wrapper)
@@ -2365,7 +2365,7 @@ namespace Jvedio.ViewModel
         public void LoadExistAssociationDatas(long dataID)
         {
             ExistAssociationDatas = new ObservableCollection<Video>();
-            CurrentExistAssoData = new List<Video>();
+            CurrentExistAssocData = new List<Video>();
 
             // 遍历邻接表，找到所有关联的 id
             HashSet<long> set = associationMapper.GetAssociationDatas(dataID);
@@ -2376,11 +2376,11 @@ namespace Jvedio.ViewModel
                 string sql = VideoMapper.BASE_SQL;
                 sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
                 List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-                CurrentExistAssoData = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
-                if (CurrentExistAssoData != null)
-                    CurrentExistAssoData.ForEach(t => ExistAssociationDatas.Add(t));
+                CurrentExistAssocData = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
+                if (CurrentExistAssocData != null)
+                    CurrentExistAssocData.ForEach(t => ExistAssociationDatas.Add(t));
                 else
-                    CurrentExistAssoData = new List<Video>();
+                    CurrentExistAssocData = new List<Video>();
             }
         }
 
@@ -2411,7 +2411,7 @@ namespace Jvedio.ViewModel
             }
 
             // 删除
-            List<long> list = CurrentExistAssoData.Select(arg => arg.DataID).Except(dataList).ToList();
+            List<long> list = CurrentExistAssocData.Select(arg => arg.DataID).Except(dataList).ToList();
             foreach (long id in list)
                 toDelete.Add(id);
 

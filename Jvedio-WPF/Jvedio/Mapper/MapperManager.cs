@@ -26,16 +26,16 @@ namespace Jvedio
         public static UrlCodeMapper urlCodeMapper = new UrlCodeMapper();
         public static AssociationMapper associationMapper = new AssociationMapper();
 
-        private static bool Inited = false;
+        private static bool Initialized { get; set; }
 
         public static void ResetInitState()
         {
-            Inited = false;
+            Initialized = false;
         }
 
         public static void Init()
         {
-            if (Inited) return;
+            if (Initialized) return;
 
             // todo 泛型似乎无法使用多态进行反射加载
 
@@ -91,7 +91,7 @@ namespace Jvedio
                 }
             }
 
-            Inited = true;
+            Initialized = true;
         }
 
         public static void Dispose()

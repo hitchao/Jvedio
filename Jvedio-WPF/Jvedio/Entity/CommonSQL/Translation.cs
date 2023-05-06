@@ -2,11 +2,11 @@
 
 namespace Jvedio.Entity
 {
-    [Table(tableName: "common_transaltions")]
-    public class Translation : Serilizable
+    [Table(tableName: "common_translations")]
+    public class Translation : Serializable
     {
         [TableId(IdType.AUTO)]
-        public int TransaltionID { get; set; }
+        public int TranslationID { get; set; }
 
         public string SourceLang { get; set; }
 

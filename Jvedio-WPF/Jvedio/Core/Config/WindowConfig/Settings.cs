@@ -80,7 +80,7 @@ namespace Jvedio.Core.WindowConfig
 
         public bool SaveInfoToNFO { get; set; }
 
-        public bool OverriteNFO { get; set; }
+        public bool OverwriteNFO { get; set; }
 
         public string NFOSavePath { get; set; }
 

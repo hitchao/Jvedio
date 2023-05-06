@@ -4,7 +4,7 @@ using SuperUtils.Framework.ORM.Attributes;
 namespace Jvedio.Entity
 {
     [Table(tableName: "common_images")]
-    public class CommonImage : Serilizable
+    public class CommonImage : Serializable
     {
         [TableId(IdType.AUTO)]
         public long ImageID { get; set; }

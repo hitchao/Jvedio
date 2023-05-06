@@ -137,7 +137,7 @@ namespace Jvedio
                 Country = SuperControls.Style.LangManager.GetValueByKey("SampleMovie_Country"),
             };
 
-            SupportVideoFormat = $"{SuperControls.Style.LangManager.GetValueByKey("NormalVedio")}(*.avi, *.mp4, *.mkv, *.mpg, *.rmvb)| *.avi; *.mp4; *.mkv; *.mpg; *.rmvb|{SuperControls.Style.LangManager.GetValueByKey("OtherVedio")}((*.rm, *.mov, *.mpeg, *.flv, *.wmv, *.m4v)| *.rm; *.mov; *.mpeg; *.flv; *.wmv; *.m4v|{SuperControls.Style.LangManager.GetValueByKey("AllFile")} (*.*)|*.*";
+            SupportVideoFormat = $"{SuperControls.Style.LangManager.GetValueByKey("NormalVideo")}(*.avi, *.mp4, *.mkv, *.mpg, *.rmvb)| *.avi; *.mp4; *.mkv; *.mpg; *.rmvb|{SuperControls.Style.LangManager.GetValueByKey("OtherVedio")}((*.rm, *.mov, *.mpeg, *.flv, *.wmv, *.m4v)| *.rm; *.mov; *.mpeg; *.flv; *.wmv; *.m4v|{SuperControls.Style.LangManager.GetValueByKey("AllFile")} (*.*)|*.*";
             SupportPictureFormat = $"图片(*.bmp, *.jpe, *.jpeg, *.jpg, *.png)|*.bmp;*.jpe;*.jpeg;*.jpg;*.png";
         }
 
@@ -156,7 +156,7 @@ namespace Jvedio
                 item.Click += AddToRename;
             }
 
-            vieModel.MainWindowVisiblie = windowMain != null;
+            vieModel.MainWindowVisible = windowMain != null;
         }
 
         #region "热键"
@@ -463,7 +463,7 @@ namespace Jvedio
             {
                 string exePath = openFileDialog1.FileName;
                 if (File.Exists(exePath))
-                    Properties.Settings.Default.VedioPlayerPath = exePath;
+                    Properties.Settings.Default.VideoPlayerPath = exePath;
             }
         }
 
@@ -1044,9 +1044,9 @@ namespace Jvedio
             ShowViewRename(vieModel.FormatString);
         }
 
-        private char getSplit(string formatstring)
+        private char getSplit(string formatString)
         {
-            int idx = vieModel.FormatString.IndexOf(formatstring);
+            int idx = vieModel.FormatString.IndexOf(formatString);
             if (idx > 0)
                 return vieModel.FormatString[idx - 1];
             else
@@ -1125,7 +1125,7 @@ namespace Jvedio
             ConfigManager.Settings.CurrentLanguage = vieModel.CurrentLanguage;
             ConfigManager.Settings.SaveInfoToNFO = vieModel.SaveInfoToNFO;
             ConfigManager.Settings.NFOSavePath = vieModel.NFOSavePath;
-            ConfigManager.Settings.OverriteNFO = vieModel.OverriteNFO;
+            ConfigManager.Settings.OverwriteNFO = vieModel.OverwriteNFO;
             ConfigManager.Settings.AutoHandleHeader = vieModel.AutoHandleHeader;
 
             ConfigManager.Settings.PicPathMode = vieModel.PicPathMode;
@@ -1151,7 +1151,7 @@ namespace Jvedio
             ConfigManager.ScanConfig.DataExistsIndexAfterScan = vieModel.DataExistsIndexAfterScan;
             ConfigManager.ScanConfig.ImageExistsIndexAfterScan = vieModel.ImageExistsIndexAfterScan;
             ConfigManager.ScanConfig.ScanOnStartUp = vieModel.ScanOnStartUp;
-            ConfigManager.ScanConfig.CopyNFOOverriteImage = vieModel.CopyNFOOverriteImage;
+            ConfigManager.ScanConfig.CopyNFOOverwriteImage = vieModel.CopyNFOOverwriteImage;
             ConfigManager.ScanConfig.CopyNFOPicture = vieModel.CopyNFOPicture;
             ConfigManager.ScanConfig.CopyNFOActorPicture = vieModel.CopyNFOActorPicture;
             ConfigManager.ScanConfig.CopyNFOPreview = vieModel.CopyNFOPreview;

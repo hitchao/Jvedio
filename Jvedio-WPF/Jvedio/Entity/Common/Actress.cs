@@ -19,7 +19,7 @@ namespace Jvedio.Entity
         }
 
 
-        public static DateTime DEFAULT_DATETIME = new DateTime(1970, 01, 01);
+        public static DateTime DEFAULT_DATE_TIME = new DateTime(1970, 01, 01);
 
         public Actress() : this(string.Empty)
         {
@@ -88,7 +88,7 @@ namespace Jvedio.Entity
             set
             {
                 // 验证数据
-                DateTime dateTime = DEFAULT_DATETIME;
+                DateTime dateTime = DEFAULT_DATE_TIME;
                 if (DateTime.TryParse(value, out dateTime))
                     _birthday = dateTime.ToString("yyyy-MM-dd");
                 else _birthday = string.Empty;

@@ -72,7 +72,7 @@ namespace Jvedio.Core
             // collection that will be returned.
             SettingsPropertyValueCollection values = new SettingsPropertyValueCollection();
 
-            // itterate thought the properties we get from the designer, checking to see if the setting is in the dictionary
+            // iterate thought the properties we get from the designer, checking to see if the setting is in the dictionary
             foreach (SettingsProperty setting in collection)
             {
                 SettingsPropertyValue value = new SettingsPropertyValue(setting);
@@ -155,7 +155,7 @@ namespace Jvedio.Core
             // get all of the <setting name="..." serializeAs="..."> elements.
             var settingElements = configXml.Element(CONFIG).Element(USER_SETTINGS).Element(typeof(Properties.Settings).FullName).Elements(SETTING);
 
-            // iterate through, adding them to the dictionary, (checking for nulls, xml no likey nulls)
+            // iterate through, adding them to the dictionary, (checking for nulls, xml no liked nulls)
             // using "String" as default serializeAs...just in case, no real good reason.
             foreach (var element in settingElements)
             {

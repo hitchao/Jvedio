@@ -53,11 +53,11 @@ namespace Jvedio.Mapper
             "WebUrl",
         };
 
-        public Video SelectVideoByID(long dataid)
+        public Video SelectVideoByID(long dataId)
         {
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
 
-            wrapper.Select(SelectFields).Eq("metadata.DataID", dataid);
+            wrapper.Select(SelectFields).Eq("metadata.DataID", dataId);
             string sql = $"{wrapper.ToSelect(false)} FROM metadata_video " +
                         "JOIN metadata " +
                         "on metadata.DataID=metadata_video.DataID " + wrapper.ToWhere(false);
@@ -69,7 +69,7 @@ namespace Jvedio.Mapper
                 string actor_sql = "select actor_info.* from actor_info " +
                     "JOIN metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                     "join metadata_video on metadata_video.DataID=metadata_to_actor.DataID " +
-                    $"where metadata_video.DataID={dataid};";
+                    $"where metadata_video.DataID={dataId};";
                 List<Dictionary<string, object>> actor_list = Select(actor_sql);
                 List<ActorInfo> actorInfos = ToEntity<ActorInfo>(actor_list, typeof(ActorInfo).GetProperties());
                 video.ActorInfos = actorInfos;

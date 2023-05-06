@@ -42,7 +42,7 @@ namespace Jvedio
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
             if (!createNew)
             {
-                new MsgBox(null, $"Jvedio {LangManager.GetValueByKey("Running")}").ShowDialog();
+                new MsgBox($"Jvedio {LangManager.GetValueByKey("Running")}").ShowDialog();
                 App.Current.Shutdown();
                 Environment.Exit(0);
             }

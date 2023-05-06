@@ -332,8 +332,8 @@ namespace Jvedio.Entity
             // 扫描视频获得文件大小
             if (File.Exists(path))
             {
-                string fatherpath = new FileInfo(path).DirectoryName;
-                List<string> files = DirHelper.GetFileList(fatherpath)?.ToList();
+                string fatherPath = new FileInfo(path).DirectoryName;
+                List<string> files = DirHelper.GetFileList(fatherPath)?.ToList();
                 if (files != null && files.Count > 0)
                 {
                     var list = files.Where(arg => ScanTask.VIDEO_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
@@ -418,16 +418,16 @@ namespace Jvedio.Entity
 
             // fanart
             XmlNodeList fanartNodes = TrySelectNode(doc, "/movie/fanart/thumb");
-            List<string> extraimageurls = new List<string>();
+            List<string> extraImageUrls = new List<string>();
             if (fanartNodes != null && fanartNodes.Count > 0)
             {
                 foreach (XmlNode item in fanartNodes)
                 {
                     if (!string.IsNullOrEmpty(item.InnerText))
-                        extraimageurls.Add(item.InnerText);
+                        extraImageUrls.Add(item.InnerText);
                 }
 
-                movie.extraimageurl = string.Join(sep, extraimageurls);
+                movie.extraimageurl = string.Join(sep, extraImageUrls);
             }
 
             // 检查一下视频是否为空
