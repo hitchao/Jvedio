@@ -1,10 +1,14 @@
 ﻿using Jvedio.Core.Config.Base;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Jvedio.Core.WindowConfig
 {
     public class Settings : AbstractConfig
     {
+        public const int DEFAULT_BACKUP_PERIOD_INDEX = 1;
+
+
         private Settings() : base($"WindowConfig.Settings")
         {
             PicPathMode = 1; // 相对路径
@@ -14,12 +18,10 @@ namespace Jvedio.Core.WindowConfig
             TeenMode = true;
             AutoAddPrefix = true;
             Prefix = string.Empty;
-            AutoBackupPeriodIndex = 0;
             AutoBackup = true;
-            DetailShowBg = true;
             CurrentLanguage = "zh-CN";
-            DownloadWhenTitleNull = true;
-            IgnoreCertVal = true;
+
+
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
@@ -39,7 +41,7 @@ namespace Jvedio.Core.WindowConfig
 
         public string PicPathJson { get; set; }
 
-        public Dictionary<string, object> PicPaths;
+        public Dictionary<string, object> PicPaths { get; set; }
 
         public string PluginEnabledJson { get; set; }
 
@@ -48,10 +50,13 @@ namespace Jvedio.Core.WindowConfig
         public bool DownloadPreviewImage { get; set; }
 
         public bool SkipExistImage { get; set; }
+
+        [DefaultValue(true)]
         public bool DownloadWhenTitleNull { get; set; }
 
         public bool OverrideInfo { get; set; }
 
+        [DefaultValue(true)]
         public bool IgnoreCertVal { get; set; }
 
         public bool AutoHandleHeader { get; set; }
@@ -92,6 +97,7 @@ namespace Jvedio.Core.WindowConfig
 
         public bool AutoBackup { get; set; }
 
+        [DefaultValue(DEFAULT_BACKUP_PERIOD_INDEX)]
         public long AutoBackupPeriodIndex { get; set; }
 
         // 是否建立可播放索引
@@ -99,7 +105,7 @@ namespace Jvedio.Core.WindowConfig
 
         public bool PictureIndexCreated { get; set; }
 
-
+        [DefaultValue(true)]
         public bool DetailShowBg { get; set; }
 
         // 端口

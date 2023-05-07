@@ -5,6 +5,7 @@ using MihaZupan;
 using SuperUtils.NetWork;
 using System;
 using System.Net;
+using System.ComponentModel;
 
 namespace Jvedio.Core.Config
 {
@@ -13,11 +14,7 @@ namespace Jvedio.Core.Config
 
         private DownloadConfig() : base("DownloadConfig")
         {
-            DownloadInfo = true;
-            DownloadThumbNail = true;
-            DownloadPoster = true;
-            DownloadPreviewImage = false;
-            DownloadActor = true;
+
         }
 
         private static DownloadConfig _instance = null;
@@ -28,11 +25,17 @@ namespace Jvedio.Core.Config
 
             return _instance;
         }
-
+        [DefaultValue(true)]
         public bool DownloadInfo { get; set; }
+        [DefaultValue(true)]
         public bool DownloadThumbNail { get; set; }
+        [DefaultValue(true)]
         public bool DownloadPoster { get; set; }
+
+        [DefaultValue(false)]
         public bool DownloadPreviewImage { get; set; }
+
+        [DefaultValue(true)]
         public bool DownloadActor { get; set; }
 
     }

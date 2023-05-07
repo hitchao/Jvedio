@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Config.Base;
+using System.ComponentModel;
 
 namespace Jvedio.Core.Config
 {
@@ -11,10 +12,11 @@ namespace Jvedio.Core.Config
             DEFAULT_NULL_STRING = "NULL";
         }
 
+        public const string DEFAULT_OUT_SPLIT = "[null]";
+        public const string DEFAULT_IN_SPLIT = DEFAULT_OUT_SPLIT;
+
         private RenameConfig() : base("RenameConfig")
         {
-            OutSplit = "[null]";
-            InSplit = "[null]";
             FormatString = string.Empty;
         }
 
@@ -31,8 +33,12 @@ namespace Jvedio.Core.Config
 
         public bool AddRenameTag { get; set; }
 
+        [DefaultValue(DEFAULT_OUT_SPLIT)]
+
         public string OutSplit { get; set; }
 
+
+        [DefaultValue(DEFAULT_IN_SPLIT)]
         public string InSplit { get; set; }
 
         public string FormatString { get; set; }

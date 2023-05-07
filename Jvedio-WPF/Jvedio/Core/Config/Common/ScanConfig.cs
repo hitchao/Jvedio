@@ -1,26 +1,14 @@
 ﻿using Jvedio.Core.Config.Base;
+using System.ComponentModel;
 
 namespace Jvedio.Core.Config
 {
     public class ScanConfig : AbstractConfig
     {
-        private const double DEFAULT_MIN_FILE_SIZE = 1;       // 1 MB
+        public const double DEFAULT_MIN_FILE_SIZE = 1;       // 1 MB
 
         private ScanConfig() : base("ScanConfig")
         {
-            CopyNFOPicture = true;
-            CopyNFOPreview = true;
-            CopyNFOActorPicture = true;
-            CopyNFOScreenShot = true;
-
-            CopyNFOActorPath = ".actor";
-            CopyNFOPreviewPath = ".preview";
-            CopyNFOScreenShotPath = ".screenshot";
-
-            FetchVID = true;
-            LoadDataAfterScan = true;
-            DataExistsIndexAfterScan = true;
-            ImageExistsIndexAfterScan = true;
         }
 
         private static ScanConfig _instance = null;
@@ -53,17 +41,40 @@ namespace Jvedio.Core.Config
         public bool ScanOnStartUp { get; set; }
 
         public bool CopyNFOOverwriteImage { get; set; }
+
+        [DefaultValue(true)]
         public bool CopyNFOPicture { get; set; }
+
+        [DefaultValue(true)]
         public bool CopyNFOActorPicture { get; set; }
+
+        [DefaultValue(true)]
         public bool CopyNFOPreview { get; set; }
+
+        [DefaultValue(true)]
         public bool CopyNFOScreenShot { get; set; }
+
+        [DefaultValue(".actor")]
         public string CopyNFOActorPath { get; set; }
+
+
+        [DefaultValue(".screenshot")]
         public string CopyNFOScreenShotPath { get; set; }
+
+        [DefaultValue(".preview")]
         public string CopyNFOPreviewPath { get; set; }
 
+        [DefaultValue(true)]
         public bool FetchVID { get; set; }
+
+        [DefaultValue(true)]
         public bool LoadDataAfterScan { get; set; }
+
+        [DefaultValue(true)]
         public bool DataExistsIndexAfterScan { get; set; }
+
+        [DefaultValue(true)]
         public bool ImageExistsIndexAfterScan { get; set; }
+        public string NFOParseConfig { get; set; }
     }
 }
