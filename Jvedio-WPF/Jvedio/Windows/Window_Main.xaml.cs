@@ -1,11 +1,8 @@
-﻿
-using Jvedio.Core;
-using Jvedio.Core.Crawler;
+﻿using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Global;
-using static Jvedio.LogManager;
 using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Plugins.Crawler;
@@ -21,13 +18,11 @@ using SuperControls.Style.Plugin;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
-using SuperUtils.Framework.Logger;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.Tasks;
 using SuperUtils.IO;
-using SuperUtils.Media;
 using SuperUtils.NetWork;
 using SuperUtils.NetWork.Entity;
 using SuperUtils.Time;
@@ -55,9 +50,9 @@ using System.Windows.Threading;
 using static Jvedio.Core.Global.UrlManager;
 using static Jvedio.Main.Msg;
 using static Jvedio.MapperManager;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static Jvedio.Window_Settings;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
@@ -234,7 +229,9 @@ namespace Jvedio
             vieModel.Reset();           // 加载数据
             OpenListen();
 
-            //OpenWindowByName("Window_Settings");
+            //Window_Settings window_Settings = new Window_Settings();
+            //window_Settings.Owner = this;
+            //window_Settings.ShowDialog();
             // new MsgBox( "demo").ShowDialog();
             InitUpgrade();
             //ShowPluginWindow(null, null);

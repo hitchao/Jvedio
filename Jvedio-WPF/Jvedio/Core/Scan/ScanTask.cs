@@ -194,6 +194,10 @@ namespace Jvedio.Core.Scan
 
         private void HandleImport(List<Video> import)
         {
+            if (import == null || import.Count == 0)
+            {
+                return;
+            }
             // 分为 2 部分，有识别码和无识别码
             List<Video> noVidList = import.Where(arg => string.IsNullOrEmpty(arg.VID)).ToList();
             List<Video> vidList = import.Where(arg => !string.IsNullOrEmpty(arg.VID)).ToList();
@@ -308,9 +312,11 @@ namespace Jvedio.Core.Scan
             toInsert.AddRange(noVidList);
 
             // 1.更新
-            videoMapper.UpdateBatch(toUpdate, "SubSection"); // 分段视频
+            if (toUpdate?.Count > 0)
+                videoMapper.UpdateBatch(toUpdate, "SubSection"); // 分段视频
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
-            metaDataMapper.UpdateBatch(toUpdateData, "Path", "LastScanDate", "PathExist");
+            if (toUpdateData?.Count > 0)
+                metaDataMapper.UpdateBatch(toUpdateData, "Path", "LastScanDate", "PathExist");
             AddTags(toUpdate);
 
             // 2.导入
@@ -483,7 +489,8 @@ namespace Jvedio.Core.Scan
 
         private void HandleImportNFO(List<Video> import)
         {
-            if (import?.Count <= 0) return;
+            if (import == null || import.Count <= 0)
+                return;
 
             existVideos = GetExistVideos();
             existActors = actorMapper.SelectList();
@@ -545,9 +552,11 @@ namespace Jvedio.Core.Scan
 
             import.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID)).Any());
 
-            videoMapper.UpdateBatch(toUpdate, NFOUpdateVideoProps);
+            if (toUpdate?.Count > 0)
+                videoMapper.UpdateBatch(toUpdate, NFOUpdateVideoProps);
             List<MetaData> toUpdateData = toUpdate.Select(arg => arg.toMetaData()).ToList();
-            metaDataMapper.UpdateBatch(toUpdateData, NFOUpdateMetaProps);
+            if (toUpdateData?.Count > 0)
+                metaDataMapper.UpdateBatch(toUpdateData, NFOUpdateMetaProps);
 
             // 2. 剩下的都是需要导入的
             InsertData(import);

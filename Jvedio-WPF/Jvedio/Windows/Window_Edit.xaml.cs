@@ -125,7 +125,7 @@ namespace Jvedio
                 list = vieModel.CurrentVideo.GenreList.Select(arg => arg.Value).ToList();
             vieModel.CurrentVideo.Genre = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
 
-            windowDetails.RefreshGenre(vieModel.CurrentVideo.Label);
+            windowDetails?.RefreshGenre(vieModel.CurrentVideo.Genre);
         }
 
         private void LabelChanged(object sender, RoutedEventArgs eventArgs)
@@ -135,7 +135,17 @@ namespace Jvedio
                 list = vieModel.CurrentVideo.LabelList.Select(arg => arg.Value).ToList();
             vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
             MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData());
-            windowDetails.RefreshLabel(vieModel.CurrentVideo.Label);
+            windowDetails?.RefreshLabel(vieModel.CurrentVideo.Label);
+        }
+
+        private void SeriesChanged(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+            if (vieModel.CurrentVideo.SeriesList != null)
+                list = vieModel.CurrentVideo.SeriesList.Select(arg => arg.Value).ToList();
+            vieModel.CurrentVideo.Series = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
+
+            windowDetails?.RefreshSeries(vieModel.CurrentVideo.Series);
         }
 
         private void SubSectionChanged(object sender, RoutedEventArgs eventArgs)
@@ -319,6 +329,7 @@ namespace Jvedio
             LabelChanged(null, null);
             searchLabelPopup.IsOpen = false;
         }
+
 
     }
 }

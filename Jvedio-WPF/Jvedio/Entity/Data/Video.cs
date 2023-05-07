@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
+using SuperUtils.WPF.Entity;
 
 namespace Jvedio.Entity
 {
@@ -86,7 +87,38 @@ namespace Jvedio.Entity
 #pragma warning restore CS0108 // “Video.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
         public string VID { get; set; }
 
-        public string Series { get; set; }
+
+        private string _Series;
+
+        public string Series
+        {
+            get { return _Series; }
+
+            set
+            {
+                _Series = value;
+                SeriesList = new ObservableCollection<ObservableString>();
+                if (!string.IsNullOrEmpty(value))
+                    foreach (var item in value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries))
+                        SeriesList.Add(new ObservableString(item));
+
+                RaisePropertyChanged();
+            }
+        }
+
+        private ObservableCollection<ObservableString> _SeriesList;
+        [TableField(exist: false)]
+        public ObservableCollection<ObservableString> SeriesList
+        {
+            get { return _SeriesList; }
+            set
+            {
+                _SeriesList = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
 
         private VideoType _VideoType;
 

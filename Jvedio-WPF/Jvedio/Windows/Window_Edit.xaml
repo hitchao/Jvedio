@@ -637,8 +637,16 @@
 
 
                                 <DockPanel>
-                                    <Label Content="{DynamicResource Tag}" Style="{StaticResource BaseInfoLabel}" />
-                                    <super:SearchBox Margin="5" Text="{Binding CurrentVideo.Series, Mode=TwoWay}" />
+                                    <Label
+                                        Margin="0,5,0,0"
+                                        VerticalAlignment="Top"
+                                        Content="{DynamicResource Tag}"
+                                        Style="{StaticResource BaseInfoLabel}" />
+                                    <!--<super:SearchBox Margin="5" Text="{Binding CurrentVideo.Series, Mode=TwoWay}" />-->
+                                    <super:TagPanel
+                                        AddButtonVerticalAlignment="Top"
+                                        ItemsSource="{Binding CurrentVideo.SeriesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        TagChanged="SeriesChanged" />
                                 </DockPanel>
 
                                 <DockPanel>

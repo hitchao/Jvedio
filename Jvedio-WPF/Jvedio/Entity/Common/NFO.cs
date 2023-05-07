@@ -3,6 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
+using SuperUtils.WPF.Entity;
+using SuperUtils.Common;
+using Newtonsoft.Json.Linq;
+using SuperControls.Style;
 
 namespace Jvedio.Entity
 {
@@ -129,21 +136,4 @@ namespace Jvedio.Entity
 
     }
 
-    public class NfoParse
-    {
-        public NfoParse()
-        {
-        }
-        public NfoParse(string name, string prop, List<string> values)
-        {
-            this.Name = name;
-            this.Prop = prop;
-            this.ParseValues = new List<string>();
-            if (values != null)
-                this.ParseValues.AddRange(values);
-        }
-        public string Name { get; set; }
-        public string Prop { get; set; }
-        public List<string> ParseValues { get; set; }
-    }
 }

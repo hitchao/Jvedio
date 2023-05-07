@@ -13,6 +13,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
+using static Jvedio.LogManager;
+using Jvedio.Entity.Common;
+using System.ComponentModel;
 
 namespace Jvedio.ViewModel
 {
@@ -28,31 +31,20 @@ namespace Jvedio.ViewModel
             LoadNfoParseData();
         }
 
-        public static List<NfoParse> DEFAULT_NFO_PARSE = new List<NfoParse>
-        {
-            new NfoParse("识别码","id",new List<string>(){"id","num"}),
-            new NfoParse("标题","title",new List<string>(){"title"}),
-            new NfoParse("发行日期","releasedate",new List<string>(){"release","releasedate"}),
-            new NfoParse("导演","director",new List<string>(){"director"}),
-            new NfoParse("发行商","studio",new List<string>(){"studio"}),
-            new NfoParse("评分","rating",new List<string>(){"rating"}),
-            new NfoParse("摘要","plot",new List<string>(){"plot"}),
-            new NfoParse("大纲","outline",new List<string>(){"outline"}),
-            new NfoParse("年份","year",new List<string>(){"year"}),
-            new NfoParse("时长","runtime",new List<string>(){"runtime"}),
-            new NfoParse("国家","country",new List<string>(){"country"}),
-            new NfoParse("网址","sourceurl",new List<string>(){"source"}),
-            new NfoParse("系列","tag",new List<string>(){"set"}),
-        };
+
 
 
 
         public void LoadNfoParseData()
         {
-            NfoParseRules = new List<NfoParse>();
-            NfoParseRules.AddRange(DEFAULT_NFO_PARSE);
+            NfoParseRules = NfoParse.LoadData();
         }
 
+
+        public void SaveNFOParseData()
+        {
+            NfoParse.SaveData(NfoParseRules);
+        }
 
 
         public void LoadScanPath(AppDatabase db)
@@ -620,9 +612,9 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private List<NfoParse> _NfoParseRules;
+        private Dictionary<string, NfoParse> _NfoParseRules;
 
-        public List<NfoParse> NfoParseRules
+        public Dictionary<string, NfoParse> NfoParseRules
         {
             get { return _NfoParseRules; }
 
@@ -683,7 +675,7 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private bool _DataExistsIndexAfterScan = ConfigManager.ScanConfig.LoadDataAfterScan;
+        private bool _DataExistsIndexAfterScan = ConfigManager.ScanConfig.DataExistsIndexAfterScan;
 
         public bool DataExistsIndexAfterScan
         {

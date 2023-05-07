@@ -46,6 +46,7 @@ using SuperControls.Style.Windows;
 using SuperControls.Style.Plugin;
 using Jvedio.Core.Global;
 using Jvedio.Core.Config;
+using Jvedio.Entity.Common;
 
 namespace Jvedio
 {
@@ -469,6 +470,12 @@ namespace Jvedio
 
         private void SaveSettings(object sender, RoutedEventArgs e)
         {
+            ApplySettings(null, null);
+            this.Close();
+        }
+
+        private void ApplySettings(object sender, RoutedEventArgs e)
+        {
             // if (Properties.Settings.Default.Opacity_Main >= 0.5)
             //    App.Current.Windows[0].Opacity = Properties.Settings.Default.Opacity_Main;
             // else
@@ -495,9 +502,9 @@ namespace Jvedio
             }
 
             bool success = vieModel.SaveServers((msg) =>
-             {
-                 MessageCard.Error(msg);
-             });
+            {
+                MessageCard.Error(msg);
+            });
             if (success)
             {
                 ScanHelper.InitSearchPattern();
@@ -507,6 +514,18 @@ namespace Jvedio
                 SuperControls.Style.MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             }
             UtilsManager.OnUtilSettingChange();
+
+
+            SaveNFOParseValues();
+        }
+
+
+        /// <summary>
+        /// 保存 NFO 解析
+        /// </summary>
+        public void SaveNFOParseValues()
+        {
+            vieModel.SaveNFOParseData();
         }
 
         private void SetListenStatus()
@@ -1620,6 +1639,122 @@ namespace Jvedio
                 eventArg.Source = sender;
                 var parent = ((Control)sender).Parent as UIElement;
                 parent.RaiseEvent(eventArg);
+            }
+        }
+
+        private void RestoreDefault(object sender, RoutedEventArgs e)
+        {
+            if ((bool)new MsgBox(LangManager.GetValueByKey("Restore") + "?").ShowDialog(this))
+            {
+
+                // 基本
+                vieModel.OpenDataBaseDefault = false;
+                vieModel.ScanOnStartUp = false;
+                vieModel.CloseToTaskBar = false;
+                vieModel.TeenMode = true;
+                Properties.Settings.Default.DetailWindowShowAllMovie = true;
+                Properties.Settings.Default.DelInfoAfterDelFile = true;
+                Properties.Settings.Default.HotKey_Enable = false;
+                Properties.Settings.Default.HotKey_String = "";
+                langComboBox.SelectedIndex = 0;
+                Properties.Settings.Default.VideoPlayerPath = "";
+
+                // 图片
+                vieModel.AutoGenScreenShot = true;
+                Properties.Settings.Default.MainImageAutoMode = true;
+                ImageSelectComboBox.SelectedIndex = 0;
+                vieModel.BasePicPath = Path.Combine(PathManager.CurrentUserFolder, "pic");
+
+                // 扫描与导入
+                vieModel.FetchVID = true;
+                vieModel.LoadDataAfterScan = true;
+                vieModel.MinFileSize = ScanConfig.DEFAULT_MIN_FILE_SIZE;
+                vieModel.DataExistsIndexAfterScan = true;
+                Properties.Settings.Default.ScanNfo = false;
+                vieModel.CopyNFOOverwriteImage = false;
+                vieModel.CopyNFOPicture = true;
+                vieModel.CopyNFOActorPicture = true;
+                vieModel.CopyNFOActorPath = ".actor";
+                vieModel.CopyNFOPreview = true;
+                vieModel.CopyNFOPreviewPath = ".preview";
+
+                vieModel.CopyNFOScreenShot = true;
+                vieModel.CopyNFOScreenShotPath = ".screenshot";
+
+                // NFO 解析规则
+                NfoParse.RestoreDefault();
+                NfoParse.SaveData(NfoParse.CurrentNFOParse);
+                vieModel.LoadNfoParseData();
+
+                // 网络
+                vieModel.IgnoreCertVal = true;
+                vieModel.HttpTimeout = ProxyConfig.DEFAULT_TIMEOUT;
+                vieModel.DownloadWhenTitleNull = true;
+                vieModel.SkipExistImage = false;
+                vieModel.OverrideInfo = false;
+                vieModel.SaveInfoToNFO = false;
+
+                ConfigManager.DownloadConfig.DownloadThumbNail = true;
+                ConfigManager.DownloadConfig.DownloadPoster = true;
+                ConfigManager.DownloadConfig.DownloadPreviewImage = false;
+                ConfigManager.DownloadConfig.DownloadActor = true;
+                ConfigManager.DownloadConfig.Save();
+
+                ConfigManager.ProxyConfig.ProxyMode = (int)ProxyConfig.DEFAULT_PROXY_MODE;
+                ConfigManager.ProxyConfig.ProxyType = (int)ProxyConfig.DEFAULT_PROXY_TYPE;
+                ConfigManager.ProxyConfig.Save();
+
+                // 显示
+                Properties.Settings.Default.DisplaySearchBox = true;
+                Properties.Settings.Default.DisplayPage = true;
+                Properties.Settings.Default.PaginationCombobox = true;
+                Properties.Settings.Default.DisplayStatusBar = true;
+                Properties.Settings.Default.DisplayFunBar = true;
+                Properties.Settings.Default.DisplayNavigation = true;
+
+                Properties.Settings.Default.ShowFilter = false;
+                vieModel.DetailShowBg = true;
+                Properties.Settings.Default.ScrollSpeedFactor = 1.5;
+
+                Properties.Settings.Default.DisplayID = true;
+                Properties.Settings.Default.DisplayTitle = true;
+                Properties.Settings.Default.DisplayDate = true;
+                Properties.Settings.Default.DisplayStamp = true;
+                Properties.Settings.Default.DisplayFavorites = true;
+                Properties.Settings.Default.ShowFileNameIfTitleEmpty = true;
+                Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty = true;
+                Properties.Settings.Default.MovieOpacity = 1;
+
+                // 视频处理
+                vieModel.FFMPEG_Path = "";
+                vieModel.ScreenShot_ThreadNum = FFmpegConfig.DEFAULT_THREAD_NUM;
+                vieModel.SkipExistScreenShot = true;
+                vieModel.ScreenShotAfterImport = true;
+                vieModel.ScreenShotNum = FFmpegConfig.DEFAULT_SCREEN_SHOT_NUM;
+                vieModel.ScreenShotIgnoreStart = FFmpegConfig.DEFAULT_SCREEN_SHOT_IGNORE_START;
+                vieModel.ScreenShotIgnoreEnd = FFmpegConfig.DEFAULT_SCREEN_SHOT_IGNORE_END;
+                vieModel.SkipExistGif = false;
+                vieModel.GifWidth = FFmpegConfig.DEFAULT_GIF_WIDTH;
+                vieModel.GifHeight = FFmpegConfig.DEFAULT_GIF_HEIGHT;
+                vieModel.GifAutoHeight = true;
+                vieModel.GifDuration = FFmpegConfig.DEFAULT_GIF_DURATION;
+
+                // 重命名
+                vieModel.RemoveTitleSpace = false;
+                vieModel.AddRenameTag = false;
+                ConfigManager.RenameConfig.OutSplit = RenameConfig.DEFAULT_OUT_SPLIT;
+                ConfigManager.RenameConfig.InSplit = RenameConfig.DEFAULT_IN_SPLIT;
+                vieModel.FormatString = "";
+                ConfigManager.RenameConfig.Save();
+
+                // 库
+                vieModel.AutoBackup = true;
+                vieModel.AutoBackupPeriodIndex = Jvedio.Core.WindowConfig.Settings.DEFAULT_BACKUP_PERIOD_INDEX;
+
+
+                Properties.Settings.Default.Save();
+                ApplySettings(null, null);
+
             }
         }
     }

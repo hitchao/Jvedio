@@ -309,6 +309,7 @@
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\Scan\ScanDetailInfo.cs" />
+    <Compile Include="Entity\Common\NFOParse.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
     <Compile Include="CustomStyle\StyleManager.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
@@ -755,12 +756,6 @@
     <Content Include="Reference\MediaInfoNET.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Jvedio.Style\Jvedio.Style.csproj">
-      <Project>{c398561c-9e61-4258-a9a0-1692832a6a95}</Project>
-      <Name>Jvedio.Style</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
@@ -785,7 +780,7 @@ XCOPY "D:\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll" "$(Project
 
 XCOPY "D:\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll" "$(ProjectDir)Reference"    /Y /i
 
-</PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>XCOPY  "$(ProjectDir)Data\config.ini"  "$(ProjectDir)bin\Debug"   /Y /i

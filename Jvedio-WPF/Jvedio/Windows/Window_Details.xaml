@@ -1218,10 +1218,27 @@
                                                 </StackPanel>
 
 
-                                                <StackPanel Style="{StaticResource InfoStackPanel}" Tag="{Binding CurrentVideo.Series}">
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Tag}" />
-                                                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                                    <Border
+                                                <!--<StackPanel Style="{StaticResource InfoStackPanel}" Tag="{Binding CurrentVideo.Series}">-->
+
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock
+                                                        Grid.Column="0"
+                                                        Margin="0,5,0,0"
+                                                        VerticalAlignment="Top"
+                                                        Style="{StaticResource BaseTextBlock}"
+                                                        Text="{DynamicResource Tag}" />
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Margin="0,5,0,0"
+                                                        VerticalAlignment="Top"
+                                                        Style="{StaticResource BaseTextBlock}"
+                                                        Text="：" />
+                                                    <!--<Border
                                                         MaxWidth="250"
                                                         Margin="2"
                                                         MouseLeftButtonUp="ShowSameSeries"
@@ -1231,8 +1248,40 @@
                                                             Text="{Binding CurrentVideo.Series}"
                                                             TextTrimming="WordEllipsis"
                                                             TextWrapping="NoWrap" />
-                                                    </Border>
-                                                </StackPanel>
+                                                    </Border>-->
+                                                    <ItemsControl
+                                                        Grid.Column="2"
+                                                        Height="auto"
+                                                        Margin="5,3"
+                                                        VerticalAlignment="Top"
+                                                        Background="Transparent"
+                                                        ItemsSource="{Binding CurrentVideo.SeriesList}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel Orientation="Horizontal" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border
+                                                                    Margin="5,0"
+                                                                    Padding="5,2"
+                                                                    super:CommonExt.HoverBackground="{DynamicResource Window.Title.Background}"
+                                                                    CornerRadius="3"
+                                                                    Cursor="Hand"
+                                                                    MouseLeftButtonUp="ShowSameSeries"
+                                                                    Style="{StaticResource HoverBorder}">
+                                                                    <TextBlock
+                                                                        Style="{StaticResource BaseTextBlock}"
+                                                                        Text="{Binding Value}"
+                                                                        ToolTip="{x:Null}" />
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Grid>
+                                                <!--</StackPanel>-->
 
                                                 <StackPanel
                                                     Margin="0,5,0,5"
@@ -1333,7 +1382,7 @@
                                                                     Style="{StaticResource HoverBorder}">
                                                                     <TextBlock
                                                                         Style="{StaticResource BaseTextBlock}"
-                                                                        Text="{Binding}"
+                                                                        Text="{Binding Value}"
                                                                         ToolTip="{x:Null}" />
                                                                 </Border>
                                                             </DataTemplate>

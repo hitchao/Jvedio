@@ -16,6 +16,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Xml;
+using Jvedio.Entity.Common;
+using System.Windows.Controls;
+using SuperUtils.Values;
 
 namespace Jvedio.Entity
 {
@@ -32,7 +35,7 @@ namespace Jvedio.Entity
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private const int DEFAULT_RELEASE_YEAR = 1970;
+
 
         public Movie(string id)
         {
@@ -190,6 +193,10 @@ namespace Jvedio.Entity
 
         public string genre { get; set; }
 
+
+        /// <summary>
+        /// 系列
+        /// </summary>
         public string tag { get; set; }
 
         public string actor { get; set; }
@@ -293,34 +300,9 @@ namespace Jvedio.Entity
             Movie movie = new Movie();
             foreach (XmlNode node in rootNode.ChildNodes)
             {
-                try
-                {
-                    switch (node.Name)
-                    {
-                        case "id": movie.id = string.IsNullOrEmpty(node.InnerText) ? string.Empty : node.InnerText.ToUpper(); break;
-                        case "num": movie.id = string.IsNullOrEmpty(node.InnerText) ? string.Empty : node.InnerText.ToUpper(); break;
-                        case "title": movie.title = node.InnerText; break;
-                        case "release": movie.releasedate = node.InnerText; break;
-                        case "releasedate": movie.releasedate = node.InnerText; break;
-                        case "director": movie.director = node.InnerText; break;
-                        case "studio": movie.studio = node.InnerText; break;
-                        case "rating": movie.rating = string.IsNullOrEmpty(node.InnerText) ? 0.0f : float.Parse(node.InnerText); break;
-                        case "plot": movie.plot = node.InnerText; break;
-                        case "outline": movie.outline = node.InnerText; break;
-                        case "year": movie.year = string.IsNullOrEmpty(node.InnerText) ? DEFAULT_RELEASE_YEAR : int.Parse(node.InnerText); break;
-                        case "runtime": movie.runtime = string.IsNullOrEmpty(node.InnerText) ? 0 : int.Parse(node.InnerText); break;
-                        case "country": movie.country = node.InnerText; break;
-                        case "source": movie.sourceurl = node.InnerText; break;
-                        case "set": movie.tag = node.InnerText; break;
-                        default: break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn($"{LangManager.GetValueByKey("ParseNfoInfoFailFromFile")} => {path}");
-                    Logger.Error(ex);
+                if (node == null || string.IsNullOrEmpty(node.Name))
                     continue;
-                }
+                NfoParse.Parse(ref movie, node.Name, node.InnerText);
             }
 
             // 对于 NFO ，只要没有 VID，就不导入
@@ -330,6 +312,34 @@ namespace Jvedio.Entity
                 movie.vediotype = JvedioLib.Security.Identify.GetVideoType(movie.id);
 
             // 扫描视频获得文件大小
+            SetFileSize(path, ref movie);
+
+            // 系列 tag
+            string tagString = GetTagList(doc, "tag");
+            if (movie.id.IndexOf("FC2") >= 0)
+                movie.genre = tagString;
+            else
+                movie.tag = tagString;
+
+            // 类别 genre
+            movie.genre = GetTagList(doc, "genre");
+
+            // 演员 actor
+            movie.actor = FindAndJoinData(doc, new List<string>() { "actor/name" });
+
+            // 演员头像地址
+            movie.actressimageurl = FindAndJoinData(doc, new List<string>() { "actor/thumb" }, RenameConfig.DEFAULT_NULL_STRING);
+
+            // fanart
+            movie.extraimageurl = FindAndJoinData(doc, new List<string>() { "fanart/thumb" }, RenameConfig.DEFAULT_NULL_STRING);
+
+            // 检查一下视频是否为空
+            if (movie.isNullMovie()) return null;
+            return movie;
+        }
+
+        public static void SetFileSize(string path, ref Movie movie)
+        {
             if (File.Exists(path))
             {
                 string fatherPath = new FileInfo(path).DirectoryName;
@@ -352,87 +362,42 @@ namespace Jvedio.Entity
                     }
                 }
             }
+        }
 
-            string sep = SuperUtils.Values.ConstValues.SeparatorString;
+        public static string GetTagList(XmlDocument doc, string tagName)
+        {
+            if (!NfoParse.CurrentNFOParse.ContainsKey(tagName))
+                return "";
+            NfoParse nfoParse = NfoParse.CurrentNFOParse[tagName];
+            List<string> list = nfoParse.ParseValues.Select(arg => arg.Value).ToList();
+            if (list == null || list.Count == 0)
+                return "";
 
-            // tag
-            XmlNodeList tagNodes = TrySelectNode(doc, "/movie/tag");
-            List<string> tags = new List<string>();
-            if (tagNodes != null && tagNodes.Count > 0)
+            return FindAndJoinData(doc, list);
+        }
+
+        public static string FindAndJoinData(XmlDocument doc, List<string> list, string addNull = "")
+        {
+            List<string> result = new List<string>();
+            string value = "";
+            foreach (string name in list)
             {
-                foreach (XmlNode item in tagNodes)
+                XmlNodeList nodes = TrySelectNode(doc, $"/movie/{name}");
+                if (nodes != null && nodes.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(item.InnerText))
-                        tags.Add(item.InnerText.Replace(" ", string.Empty));
+                    foreach (XmlNode node in nodes)
+                    {
+                        value = node.InnerText.Trim();
+
+                        if (!string.IsNullOrEmpty(addNull) && string.IsNullOrEmpty(value))
+                            value = addNull;
+                        if (string.IsNullOrEmpty(value))
+                            continue;
+                        result.Add(value);
+                    }
                 }
-
-                if (movie.id.IndexOf("FC2") >= 0)
-                    movie.genre = string.Join(sep, tags);
-                else
-                    movie.tag = string.Join(sep, tags);
             }
-
-            // genre
-            XmlNodeList genreNodes = TrySelectNode(doc, "/movie/genre");
-            List<string> genres = new List<string>();
-            if (genreNodes != null && genreNodes.Count > 0)
-            {
-                foreach (XmlNode item in genreNodes)
-                {
-                    if (!string.IsNullOrEmpty(item.InnerText))
-                        genres.Add(item.InnerText);
-                }
-
-                movie.genre = string.Join(sep, genres);
-            }
-
-            // actor
-            XmlNodeList actorNodes = TrySelectNode(doc, "/movie/actor/name");
-            List<string> actors = new List<string>();
-            if (actorNodes != null && actorNodes.Count > 0)
-            {
-                foreach (XmlNode item in actorNodes)
-                {
-                    if (!string.IsNullOrEmpty(item.InnerText))
-                        actors.Add(item.InnerText);
-                }
-
-                movie.actor = string.Join(sep, actors);
-            }
-
-            // 演员头像地址
-            XmlNodeList thumbNodes = TrySelectNode(doc, "/movie/actor/thumb");
-            List<string> thumbs = new List<string>();
-            if (thumbNodes?.Count > 0)
-            {
-                foreach (XmlNode item in thumbNodes)
-                {
-                    if (!string.IsNullOrEmpty(item.InnerText))
-                        thumbs.Add(item.InnerText);
-                    else
-                        thumbs.Add(RenameConfig.DEFAULT_NULL_STRING);
-                }
-
-                movie.actressimageurl = string.Join(sep, thumbs);
-            }
-
-            // fanart
-            XmlNodeList fanartNodes = TrySelectNode(doc, "/movie/fanart/thumb");
-            List<string> extraImageUrls = new List<string>();
-            if (fanartNodes != null && fanartNodes.Count > 0)
-            {
-                foreach (XmlNode item in fanartNodes)
-                {
-                    if (!string.IsNullOrEmpty(item.InnerText))
-                        extraImageUrls.Add(item.InnerText);
-                }
-
-                movie.extraimageurl = string.Join(sep, extraImageUrls);
-            }
-
-            // 检查一下视频是否为空
-            if (movie.isNullMovie()) return null;
-            return movie;
+            return string.Join(ConstValues.SeparatorString, result);
         }
 
         public MetaData toMetaData()

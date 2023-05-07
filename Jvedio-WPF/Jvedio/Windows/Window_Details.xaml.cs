@@ -222,6 +222,10 @@ namespace Jvedio
         {
             vieModel.CurrentVideo.Genre = data;
         }
+        public void RefreshSeries(string data)
+        {
+            vieModel.CurrentVideo.Series = data;
+        }
 
         public void SetSkin()
         {
