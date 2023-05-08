@@ -5,6 +5,10 @@ namespace Jvedio.Core.WindowConfig
 {
     public class Settings : AbstractConfig
     {
+        public const int DEFAULT_BACKUP_PERIOD_INDEX = 1;
+
+
+
         private Settings() : base($"WindowConfig.Settings")
         {
             PicPathMode = 1; // 相对路径
@@ -14,7 +18,7 @@ namespace Jvedio.Core.WindowConfig
             TeenMode = true;
             AutoAddPrefix = true;
             Prefix = string.Empty;
-            AutoBackupPeriodIndex = 0;
+            AutoBackupPeriodIndex = DEFAULT_BACKUP_PERIOD_INDEX;
             AutoBackup = true;
             DetailShowBg = true;
             CurrentLanguage = "zh-CN";

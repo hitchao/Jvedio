@@ -8,14 +8,43 @@ using System.Net;
 
 namespace Jvedio.Core.Config
 {
+    public enum ProxyModeEnum
+    {
+        /// <summary>
+        /// 无代理
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// 系统代理
+        /// </summary>
+        System,
+
+        /// <summary>
+        /// 自定义代理
+        /// </summary>
+        Custom
+    }
+
+
+    public enum ProxyTypeEnum
+    {
+        HTTP,
+        SOCKS,
+    }
+
     public class ProxyConfig : AbstractConfig
     {
-        private const int DEFAULT_TIMEOUT = 10;
+        public const int DEFAULT_TIMEOUT = 10;
+
+        public const ProxyModeEnum DEFAULT_PROXY_MODE = ProxyModeEnum.System;
+        public const ProxyTypeEnum DEFAULT_PROXY_TYPE = ProxyTypeEnum.SOCKS;
+
 
         private ProxyConfig() : base("ProxyConfig")
         {
-            ProxyMode = 1;
-            ProxyType = 1;
+            ProxyMode = (int)DEFAULT_PROXY_MODE;
+            ProxyType = (int)DEFAULT_PROXY_TYPE;
             HttpTimeout = DEFAULT_TIMEOUT;
         }
 

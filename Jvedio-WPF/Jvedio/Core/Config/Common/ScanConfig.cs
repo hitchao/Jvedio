@@ -4,7 +4,7 @@ namespace Jvedio.Core.Config
 {
     public class ScanConfig : AbstractConfig
     {
-        private const double DEFAULT_MIN_FILE_SIZE = 1;       // 1 MB
+        public const double DEFAULT_MIN_FILE_SIZE = 0;       // 1 MB
 
         private ScanConfig() : base("ScanConfig")
         {
@@ -65,5 +65,7 @@ namespace Jvedio.Core.Config
         public bool LoadDataAfterScan { get; set; }
         public bool DataExistsIndexAfterScan { get; set; }
         public bool ImageExistsIndexAfterScan { get; set; }
+        public string NFOParseConfig { get; set; }
+
     }
 }

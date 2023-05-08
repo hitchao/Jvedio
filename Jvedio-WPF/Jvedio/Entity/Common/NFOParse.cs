@@ -52,8 +52,8 @@ namespace Jvedio.Entity.Common
             { "sourceurl", new NfoParse(LangManager.GetValueByKey("Url"),"",ParseType.Str, new List<string>() { "source" })},
             
             // 多个
-            { "tag",new NfoParse(LangManager.GetValueByKey("Tag"),null,ParseType.None, new List<string>() { "set" })},
-            { "genre",new NfoParse(LangManager.GetValueByKey("Genre"),null,ParseType.None, new List<string>() { "genre","tag" })},
+            { "tag",new NfoParse(LangManager.GetValueByKey("Tag"),null,ParseType.None, new List<string>() { "set","tag"  })},
+            { "genre",new NfoParse(LangManager.GetValueByKey("Genre"),null,ParseType.None, new List<string>() { "genre"})},
 
         };
 

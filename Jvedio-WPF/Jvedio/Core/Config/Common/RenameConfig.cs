@@ -4,6 +4,11 @@ namespace Jvedio.Core.Config
 {
     public class RenameConfig : AbstractConfig
     {
+
+        public const string DEFAULT_OUT_SPLIT = "[null]";
+        public const string DEFAULT_IN_SPLIT = DEFAULT_OUT_SPLIT;
+
+
         public static string DEFAULT_NULL_STRING { get; set; }
 
         static RenameConfig()
@@ -13,8 +18,8 @@ namespace Jvedio.Core.Config
 
         private RenameConfig() : base("RenameConfig")
         {
-            OutSplit = "[null]";
-            InSplit = "[null]";
+            OutSplit = DEFAULT_OUT_SPLIT;
+            InSplit = DEFAULT_IN_SPLIT;
             FormatString = string.Empty;
         }
 

@@ -4,14 +4,24 @@ namespace Jvedio.Core.Config
 {
     public class FFmpegConfig : AbstractConfig
     {
+        public const int DEFAULT_THREAD_NUM = 2;
+        public const int DEFAULT_SCREEN_SHOT_NUM = 5;
+        public const int DEFAULT_SCREEN_SHOT_IGNORE_START = 1;
+        public const int DEFAULT_SCREEN_SHOT_IGNORE_END = 1;
+        public const int DEFAULT_GIF_WIDTH = 300;
+        public const int DEFAULT_GIF_HEIGHT = 168;
+        public const int DEFAULT_GIF_DURATION = 3;
+
         private FFmpegConfig() : base("FFmpegConfig")
         {
-            ThreadNum = 2;
-            ScreenShotNum = 5;
-            ScreenShotIgnoreStart = 1;
-            ScreenShotIgnoreEnd = 1;
+            ThreadNum = DEFAULT_THREAD_NUM;
+            ScreenShotNum = DEFAULT_SCREEN_SHOT_NUM;
+            ScreenShotIgnoreStart = DEFAULT_SCREEN_SHOT_IGNORE_START;
+            ScreenShotIgnoreEnd = DEFAULT_SCREEN_SHOT_IGNORE_END;
             GifAutoHeight = true;
-            GifWidth = 300;
+            GifWidth = DEFAULT_GIF_WIDTH;
+            GifHeight = DEFAULT_GIF_HEIGHT;
+            GifDuration = DEFAULT_GIF_DURATION;
             SkipExistScreenShot = true;
             ScreenShotAfterImport = true;
         }
