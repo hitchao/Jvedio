@@ -5,46 +5,17 @@ using MihaZupan;
 using SuperUtils.NetWork;
 using System;
 using System.Net;
-using System.ComponentModel;
 
 namespace Jvedio.Core.Config
 {
-
-    public enum ProxyModeEnum
-    {
-        /// <summary>
-        /// 无代理
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// 系统代理
-        /// </summary>
-        System,
-
-        /// <summary>
-        /// 自定义代理
-        /// </summary>
-        Custom
-    }
-
-
-    public enum ProxyTypeEnum
-    {
-        HTTP,
-        SOCKS,
-    }
-
-
     public class ProxyConfig : AbstractConfig
     {
-        public const int DEFAULT_TIMEOUT = 10;
-
-        public const ProxyModeEnum DEFAULT_PROXY_MODE = ProxyModeEnum.System;
-        public const ProxyTypeEnum DEFAULT_PROXY_TYPE = ProxyTypeEnum.SOCKS;
+        private const int DEFAULT_TIMEOUT = 10;
 
         private ProxyConfig() : base("ProxyConfig")
         {
+            ProxyMode = 1;
+            ProxyType = 1;
             HttpTimeout = DEFAULT_TIMEOUT;
         }
 
@@ -57,11 +28,13 @@ namespace Jvedio.Core.Config
             return _instance;
         }
 
-        [DefaultValue((int)DEFAULT_PROXY_MODE)]
+        /// <summary>
+        /// 0-无代理 1-系统代理 2-自定义代理
+        /// </summary>
         public long ProxyMode { get; set; }
 
-        [DefaultValue((int)DEFAULT_PROXY_TYPE)]
-        public long ProxyType { get; set; }
+        // 自定义代理配置
+        public long ProxyType { get; set; } // 0-HTTP 1-SOCKS
 
         public string Server { get; set; }
 
