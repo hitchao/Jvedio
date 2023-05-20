@@ -2521,27 +2521,39 @@ namespace Jvedio
 
         private void LoadImageAfterScreenShort(Video video)
         {
+            if (video == null)
+                return;
             for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
             {
-                if (!video.DataID.Equals(vieModel.CurrentVideoList[i].DataID))
+                if (vieModel.CurrentVideoList[i] == null)
                     continue;
-                if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage)
+                try
                 {
-                    // 检查有无截图
-                    Video currentVideo = vieModel.CurrentVideoList[i];
-                    string path = currentVideo.GetScreenShot();
-                    if (Directory.Exists(path))
+                    if (!video.DataID.Equals(vieModel.CurrentVideoList[i].DataID))
+                        continue;
+                    if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage)
                     {
-                        string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
-                        if (array.Length > 0)
+                        // 检查有无截图
+                        Video currentVideo = vieModel.CurrentVideoList[i];
+                        string path = currentVideo.GetScreenShot();
+                        if (Directory.Exists(path))
                         {
-                            Video.SetImage(ref currentVideo, array[array.Length / 2]);
-                            vieModel.CurrentVideoList[i].BigImage = null;
-                            vieModel.CurrentVideoList[i].BigImage = currentVideo.ViewImage;
-                            // 更新索引
-                            UpdateImageIndex(video, false, true);
+                            string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+                            if (array.Length > 0)
+                            {
+                                Video.SetImage(ref currentVideo, array[array.Length / 2]);
+                                vieModel.CurrentVideoList[i].BigImage = null;
+                                vieModel.CurrentVideoList[i].BigImage = currentVideo.ViewImage;
+                                // 更新索引
+                                UpdateImageIndex(video, false, true);
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                    continue;
                 }
                 break;
             }

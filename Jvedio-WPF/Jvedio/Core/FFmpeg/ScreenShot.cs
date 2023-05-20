@@ -65,7 +65,7 @@ namespace Jvedio.Core.FFmpeg
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
             string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); // 获得需要截图的视频进度
-            if (cutoffArray.Length == 0)
+            if (cutoffArray == null || cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
             int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum; // 截图线程
             if (threadNum > MAX_THREAD_NUM || threadNum <= 0) threadNum = DEFAULT_THREAD_NUM;
