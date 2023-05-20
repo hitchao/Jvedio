@@ -1079,21 +1079,18 @@
 
                                             </StackPanel>
 
-                                            <StackPanel
-                                                Width="auto"
-                                                Margin="0,20"
-                                                HorizontalAlignment="Left"
+
+                                            <super:Rating
+                                                Margin="5,10"
                                                 Cursor="Hand"
-                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                <super:Rating
-                                                    FocusVisualStyle="{x:Null}"
-                                                    Half="True"
-                                                    RateBackground="{DynamicResource Window.Title.Background}"
-                                                    RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                    StarMargin="3 0"
-                                                    ValueChanged="Rate_ValueChanged"
-                                                    Value="{Binding CurrentVideo.Grade, Mode=TwoWay}" />
-                                            </StackPanel>
+                                                FocusVisualStyle="{x:Null}"
+                                                Half="True"
+                                                RateBackground="{DynamicResource Window.Title.Background}"
+                                                RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                StarMargin="3 0"
+                                                ValueChanged="Rate_ValueChanged"
+                                                Value="{Binding CurrentVideo.Grade, Mode=TwoWay}" />
+
                                         </StackPanel>
 
 

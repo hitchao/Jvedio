@@ -36,10 +36,10 @@ namespace Jvedio
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //#if DEBUG
+#if DEBUG
             Console.WriteLine("***************OnStartup***************");
             Console.WriteLine("Debug 不捕获未处理异常");
-            //#else
+#else
             bool createNew;
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
             if (!createNew)
@@ -75,7 +75,7 @@ namespace Jvedio
             // 非UI线程未捕获异常处理事件
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(Window_ErrorMsg.CurrentDomain_UnhandledException);
 
-            //#endif
+#endif
             base.OnStartup(e);
         }
 

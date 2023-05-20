@@ -59,7 +59,7 @@ namespace Jvedio
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : SuperControls.Style.BaseWindowEx
+    public partial class Main : SuperControls.Style.BaseWindow
     {
         private static Jvedio.Core.Logs.Logger Logger = Jvedio.Core.Logs.Logger.Instance;
 
@@ -1220,7 +1220,7 @@ namespace Jvedio
                 if (presenter == null) continue;
                 Border border = FindElementByName<Border>(presenter, "rootBorder");
                 if (border == null) continue;
-                long actorID = getDataID(border);
+                long actorID = GetDataID(border);
                 if (border != null && actorID > 0)
                 {
                     border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
@@ -1255,7 +1255,7 @@ namespace Jvedio
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
             if (Properties.Settings.Default.ActorEditMode && grid != null)
             {
-                long actorID = getDataID(element);
+                long actorID = GetDataID(element);
                 Border border = grid.Children[0] as Border;
                 if (actorID <= 0 || border == null || vieModel.SelectedActors == null) return;
                 if (vieModel.SelectedActors.Where(arg => arg.ActorID == actorID).Any())
@@ -1269,7 +1269,7 @@ namespace Jvedio
         public void SelectActor(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
-            long actorID = getDataID(element);
+            long actorID = GetDataID(element);
             if (actorID <= 0) return;
             if (Properties.Settings.Default.ActorEditMode && vieModel.CurrentActorList != null)
             {
@@ -1325,7 +1325,7 @@ namespace Jvedio
             AssoDataPopup.IsOpen = false;
             if (Resizing || !canShowDetails) return;
             FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
-            long iD = getDataID(element);
+            long iD = GetDataID(element);
             if (iD <= 0) return;
             if (Properties.Settings.Default.EditMode && vieModel.CurrentVideoList != null)
             {
@@ -1410,7 +1410,7 @@ namespace Jvedio
                 if (presenter == null) continue;
                 Border border = FindElementByName<Border>(presenter, "rootBorder");
                 if (border == null) continue;
-                long dataID = getDataID(border);
+                long dataID = GetDataID(border);
                 if (border != null && dataID > 0)
                 {
                     border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
@@ -1558,7 +1558,7 @@ namespace Jvedio
         public void PlayVideo(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement el = sender as FrameworkElement;
-            long dataId = getDataID(el);
+            long dataId = GetDataID(el);
             if (dataId <= 0) return;
             Video video = getVideo(dataId);
             if (video == null)
@@ -1577,7 +1577,7 @@ namespace Jvedio
         {
             AssoDataPopup.IsOpen = false;
             FrameworkElement el = sender as FrameworkElement;
-            long dataId = getDataID(el);
+            long dataId = GetDataID(el);
             if (dataId <= 0) return;
             Video video = getAssocVideo(dataId);
             if (video == null)
@@ -2477,8 +2477,8 @@ namespace Jvedio
                 contextMenu = _mnu.Parent as ContextMenu;
             }
 
-            GifImage gifImage = contextMenu.PlacementTarget as GifImage;
-            return getDataID(gifImage);
+            FrameworkElement ele = contextMenu.PlacementTarget as FrameworkElement;
+            return GetDataID(ele, false);
         }
 
         public void downloadVideo(Video video)
@@ -2772,16 +2772,21 @@ namespace Jvedio
             ActorSetSelected();
         }
 
-        private long getDataID(UIElement o)
+        private long GetDataID(UIElement o, bool findParent = true)
         {
             FrameworkElement element = o as FrameworkElement;
-            if (element == null) return -1;
-            Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            if (grid != null && grid.Tag != null)
-            {
-                long.TryParse(grid.Tag.ToString(), out long result);
-                return result;
-            }
+            if (element == null)
+                return -1;
+
+            FrameworkElement target = element;
+            if (findParent)
+                target = element.FindParentOfType<SimplePanel>("rootGrid");
+
+            if (target != null &&
+                target.Tag != null &&
+                target.Tag.ToString() is string tag &&
+                long.TryParse(target.Tag.ToString(), out long id))
+                return id;
 
             return -1;
         }
@@ -2807,7 +2812,7 @@ namespace Jvedio
         {
             if (vieModel.VideoList == null || vieModel.VideoList.Count <= 0) return;
             Button button = sender as Button;
-            long dataID = getDataID(button);
+            long dataID = GetDataID(button);
             if (dataID <= 0) return;
             ContextMenu contextMenu = button.ContextMenu;
             contextMenu.Items.Clear();
@@ -2835,7 +2840,7 @@ namespace Jvedio
         {
             if (vieModel.ViewAssociationDatas == null) return;
             Button button = sender as Button;
-            long dataID = getDataID(button);
+            long dataID = GetDataID(button);
             if (dataID <= 0) return;
 
             ContextMenu contextMenu = button.ContextMenu;
@@ -3218,7 +3223,7 @@ namespace Jvedio
             Rating rate = (Rating)sender;
             if (rate == null) return;
             StackPanel stackPanel = rate.Parent as StackPanel;
-            long id = getDataID(stackPanel);
+            long id = GetDataID(stackPanel);
             if (id <= 0) return;
             metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), id);
             vieModel.Statistic();
@@ -3380,12 +3385,17 @@ namespace Jvedio
             }
 
             // 标记
-            GifImage gifImage = e.Source as GifImage;
-            if (gifImage == null) return;
-            long dataID = getDataID(gifImage);
-            if (dataID <= 0) return;
-            ContextMenu contextMenu = gifImage.ContextMenu;
-            if (contextMenu == null) return;
+            FrameworkElement ele = sender as FrameworkElement;
+            if (ele == null)
+                return;
+            long dataID = GetDataID(ele, false);
+
+            if (dataID <= 0)
+                return;
+
+            ContextMenu contextMenu = ele.ContextMenu;
+            if (contextMenu == null)
+                return;
 
             Video video = vieModel.CurrentVideoList.Where(arg => arg.DataID == dataID).FirstOrDefault();
             if (video == null) return;
@@ -4389,7 +4399,7 @@ namespace Jvedio
             if (Properties.Settings.Default.EditMode)
             {
                 GifImage image = sender as GifImage;
-                Grid grid = image.FindParentOfType<Grid>("rootGrid");
+                SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
                 Border border = grid.Children[0] as Border;
                 border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
             }
@@ -4400,8 +4410,8 @@ namespace Jvedio
             if (Properties.Settings.Default.EditMode)
             {
                 GifImage image = sender as GifImage;
-                long dataID = getDataID(image);
-                Grid grid = image.FindParentOfType<Grid>("rootGrid");
+                long dataID = GetDataID(image);
+                SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
                 Border border = grid.Children[0] as Border;
                 if (vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
                 {
@@ -4624,8 +4634,11 @@ namespace Jvedio
 
         private void CopyVID(object sender, MouseButtonEventArgs e)
         {
-            string vid = (sender as Border).Tag.ToString();
-            ClipBoard.TrySetDataObject(vid);
+            string text = (sender as TextBlock).Text;
+            if (string.IsNullOrEmpty(text))
+                return;
+            ClipBoard.TrySetDataObject(text);
+            MessageNotify.Success($"已复制：{text}");
         }
 
         private void AddDataAssociation(object sender, RoutedEventArgs e)
@@ -4704,7 +4717,7 @@ namespace Jvedio
 
         private void AddToAssociation(object sender, MouseButtonEventArgs e)
         {
-            long dataID = getDataID(sender as FrameworkElement);
+            long dataID = GetDataID(sender as FrameworkElement);
             Video video = vieModel.AssociationDatas.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
             if (vieModel.ExistAssociationDatas.Contains(video) || dataID.Equals(CurrentAssocDataID))
                 return;
@@ -4724,7 +4737,7 @@ namespace Jvedio
                 if (border == null) continue;
                 Grid grid = border.Parent as Grid;
                 if (grid == null) continue;
-                long dataID = getDataID(border);
+                long dataID = GetDataID(border);
                 border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
                 border.BorderBrush = Brushes.Transparent;
                 if (dataID > 0 && vieModel.AssociationSelectedDatas?.Count > 0)
@@ -4741,7 +4754,7 @@ namespace Jvedio
         public void AssoBorderMouseEnter(object sender, MouseEventArgs e)
         {
             GifImage image = sender as GifImage;
-            Grid grid = image.FindParentOfType<Grid>("rootGrid");
+            SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
             if (grid == null || grid.Children.Count <= 0) return;
             Border border = grid.Children[0] as Border;
             if (border != null)
@@ -4752,8 +4765,8 @@ namespace Jvedio
         {
             GifImage image = sender as GifImage;
             if (image == null) return;
-            long dataID = getDataID(image);
-            Grid grid = image.FindParentOfType<Grid>("rootGrid");
+            long dataID = GetDataID(image);
+            SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
             if (grid == null || grid.Children.Count <= 0) return;
             Border border = grid.Children[0] as Border;
             if (border == null || vieModel.AssociationSelectedDatas == null) return;
@@ -4791,7 +4804,7 @@ namespace Jvedio
         private void ViewAssocDatas(object sender, RoutedEventArgs e)
         {
             AssoDataPopup.IsOpen = true;
-            long dataID = getDataID(sender as FrameworkElement);
+            long dataID = GetDataID(sender as FrameworkElement);
             if (dataID <= 0) return;
             vieModel.LoadViewAssoData(dataID);
         }
