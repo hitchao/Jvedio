@@ -105,7 +105,7 @@ namespace Jvedio.ViewModel
                 if (crawlerServers == null || crawlerServers.Count <= 0) continue;
                 foreach (CrawlerServer server in crawlerServers)
                 {
-                    if (!server.isHeaderProper())
+                    if (!server.IsHeaderProper())
                     {
                         string format = "{\"UserAgent\":\"value\",...}";
                         callback?.Invoke($"【{key}】 刮削器处地址为 {server.Url} 的 Headers 不合理，格式必须为：{format}");

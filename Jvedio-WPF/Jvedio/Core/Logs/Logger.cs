@@ -39,7 +39,7 @@ namespace Jvedio.Core.Logs
             string filepath = System.IO.Path.Combine(FilePath, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
             lock (LogLock)
             {
-                FileHelper.TryAppendToFile(FilePath, str);
+                FileHelper.TryAppendToFile(filepath, str);
             }
         }
 

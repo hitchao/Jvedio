@@ -823,7 +823,7 @@ namespace Jvedio
             ObservableCollection<CrawlerServer> list = vieModel.CrawlerServers[pluginID];
             CrawlerServer server = list[idx];
 
-            if (!server.isHeaderProper())
+            if (!server.IsHeaderProper())
             {
                 MessageNotify.Error(LangManager.GetValueByKey("HeaderNotProper"));
                 return;

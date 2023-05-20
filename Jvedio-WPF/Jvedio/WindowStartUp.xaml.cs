@@ -38,6 +38,12 @@ namespace Jvedio
 {
     public partial class WindowStartUp : SuperControls.Style.BaseWindow
     {
+
+        private static string[] FILE_DEPEND = {
+            Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"x64\SQLite.Interop.dll") ,
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"x86\SQLite.Interop.dll")
+        };
+
         private CancellationTokenSource cts;
         private CancellationToken ct;
         private VieModel_StartUp vieModel_StartUp;
@@ -426,11 +432,15 @@ namespace Jvedio
 
         public void EnsureFileExists()
         {
-            if (!File.Exists(@"x64\SQLite.Interop.dll") || !File.Exists(@"x86\SQLite.Interop.dll"))
+            foreach (var file in FILE_DEPEND)
             {
-                MsgBox.Show($"{SuperControls.Style.LangManager.GetValueByKey("Missing")} SQLite.Interop.dll");
-                this.Close();
+                if (!File.Exists(file))
+                {
+                    MsgBox.Show($"{SuperControls.Style.LangManager.GetValueByKey("Missing")} {file}");
+                    Application.Current.Shutdown();
+                }
             }
+
         }
 
         private void DelSqlite(object sender, RoutedEventArgs e)
@@ -877,10 +887,7 @@ namespace Jvedio
             UpgradeHelper.OpenWindow();
         }
 
-        private void Window_StartUp_ContentRendered(object sender, EventArgs e)
-        {
 
-        }
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {

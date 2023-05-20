@@ -121,12 +121,14 @@ namespace Jvedio.Core.Crawler
             }
         }
 
-        public bool isHeaderProper()
+        public bool IsHeaderProper()
         {
-            if (string.IsNullOrEmpty(Headers)) return true;
+            if (string.IsNullOrEmpty(Headers))
+                return true;
             try
             {
-                Dictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Headers);
+                Dictionary<string, string> dictionary =
+                    JsonConvert.DeserializeObject<Dictionary<string, string>>(Headers);
                 return true;
             }
             catch (Exception ex)

@@ -14,7 +14,6 @@
     Background="{DynamicResource Window.InnerDialog.Background}"
     CanResize="True"
     Closing="Window_StartUp_Closing"
-    ContentRendered="Window_StartUp_ContentRendered"
     Foreground="{DynamicResource Window.Title.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     Loaded="Window_Loaded"
@@ -442,6 +441,7 @@
                                     <Button
                                         Width="auto"
                                         MinWidth="100"
+                                        AutomationProperties.AutomationId="newDataBaseButton"
                                         Click="NewDatabase"
                                         Content="{DynamicResource CreateNew}"
                                         Style="{StaticResource ButtonPrimary}" />

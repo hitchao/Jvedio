@@ -10,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Jvedio
 {
@@ -34,17 +36,34 @@ namespace Jvedio
 
         protected override void OnStartup(StartupEventArgs e)
         {
-#if DEBUG
+            //#if DEBUG
             Console.WriteLine("***************OnStartup***************");
             Console.WriteLine("Debug 不捕获未处理异常");
-#else
+            //#else
             bool createNew;
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
             if (!createNew)
             {
-                new MsgBox($"Jvedio {LangManager.GetValueByKey("Running")}").ShowDialog();
-                App.Current.Shutdown();
-                Environment.Exit(0);
+                //new MsgBox($"Jvedio {LangManager.GetValueByKey("Running")}").ShowDialog();
+                //App.Current.Shutdown();
+                //Environment.Exit(0);
+
+                var current = Process.GetCurrentProcess();
+
+                foreach (var process in Process.GetProcessesByName(current.ProcessName))
+                {
+                    if (process.Id != current.Id)
+                    {
+                        IntPtr hWnd = IntPtr.Zero;
+                        hWnd = process.MainWindowHandle;
+                        SuperUtils.Systems.Win32Helper.ShowWindowAsync(new HandleRef(null, hWnd), SuperUtils.Systems.Win32Helper.SW_RESTORE);
+                        SuperUtils.Systems.Win32Helper.SetForegroundWindow(process.MainWindowHandle);
+
+                        //SuperUtils.Systems.Win32Helper.SetForegroundWindow(process.MainWindowHandle);
+                        break;
+                    }
+                }
+                Shutdown();
             }
 
             // UI线程未捕获异常处理事件
@@ -56,7 +75,7 @@ namespace Jvedio
             // 非UI线程未捕获异常处理事件
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(Window_ErrorMsg.CurrentDomain_UnhandledException);
 
-#endif
+            //#endif
             base.OnStartup(e);
         }
 
