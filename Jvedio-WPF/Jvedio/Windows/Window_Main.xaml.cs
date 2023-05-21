@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Crawler;
+﻿using Jvedio.Core.Config;
+using Jvedio.Core.Crawler;
 using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
@@ -2707,17 +2708,18 @@ namespace Jvedio
             ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
 
             ConfigManager.Main.Save();
+
+            Properties.Settings.Default.EditMode = false;
+            Properties.Settings.Default.ActorEditMode = false;
+            Properties.Settings.Default.Save();
+
+
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
             SetConfigValue();
-            Properties.Settings.Default.EditMode = false;
-            Properties.Settings.Default.ActorEditMode = false;
-            Properties.Settings.Default.Save();
-            ConfigManager.Main?.Save();
-            ConfigManager.Settings?.Save();
 
             //if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
             //{
@@ -5013,7 +5015,7 @@ namespace Jvedio
         {
             if (window_Plugin == null || window_Plugin.IsClosed)
             {
-                PluginConfig config = new PluginConfig();
+                SuperControls.Style.Plugin.PluginConfig config = new SuperControls.Style.Plugin.PluginConfig();
                 config.PluginBaseDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
                 config.RemoteUrl = UrlManager.GetPluginUrl();
                 window_Plugin = new SuperControls.Style.Plugin.Window_Plugin();
@@ -5090,6 +5092,11 @@ namespace Jvedio
         {
             Window_Settings window_Settings = new Window_Settings();
             window_Settings.Show();
+        }
+
+        private void ExprtToNFO(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 

@@ -1136,7 +1136,6 @@ namespace Jvedio
             ConfigManager.Settings.TabControlSelectedIndex = vieModel.TabControlSelectedIndex;
             ConfigManager.Settings.OpenDataBaseDefault = vieModel.OpenDataBaseDefault;
             ConfigManager.Settings.AutoGenScreenShot = vieModel.AutoGenScreenShot;
-            ConfigManager.Settings.TeenMode = vieModel.TeenMode;
             ConfigManager.Settings.CloseToTaskBar = vieModel.CloseToTaskBar;
             //if (windowMain != null)
             //    windowMain.CloseToTaskBar = ConfigManager.Settings.CloseToTaskBar;
@@ -1647,11 +1646,12 @@ namespace Jvedio
             if ((bool)new MsgBox(LangManager.GetValueByKey("Restore") + "?").ShowDialog(this))
             {
 
+                ConfigManager.Restore();
+
                 // 基本
                 vieModel.OpenDataBaseDefault = false;
                 vieModel.ScanOnStartUp = false;
                 vieModel.CloseToTaskBar = false;
-                vieModel.TeenMode = true;
                 Properties.Settings.Default.DetailWindowShowAllMovie = true;
                 Properties.Settings.Default.DelInfoAfterDelFile = true;
                 Properties.Settings.Default.HotKey_Enable = false;

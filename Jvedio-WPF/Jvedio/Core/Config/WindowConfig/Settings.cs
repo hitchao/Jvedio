@@ -88,7 +88,18 @@ namespace Jvedio.Core.WindowConfig
 
         public string NFOSavePath { get; set; }
 
-        public bool TeenMode { get; set; }
+
+
+        private bool _TeenMode = true;
+        public bool TeenMode
+        {
+            get { return _TeenMode; }
+            set
+            {
+                _TeenMode = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public bool AutoAddPrefix { get; set; }
 

@@ -15,28 +15,81 @@ namespace Jvedio
     public static class ConfigManager
     {
         public const string RELEASE_DATE = "2023-03-26";
-        public static StartUp StartUp = StartUp.CreateInstance();
-        public static Core.WindowConfig.Main Main = Core.WindowConfig.Main.CreateInstance();
-        public static Filter Filter = Core.WindowConfig.Filter.CreateInstance();
-        public static Edit Edit = Edit.CreateInstance();
-        public static Detail Detail = Detail.CreateInstance();
-        public static MetaData MetaData = MetaData.CreateInstance();
-        public static Settings Settings = Settings.CreateInstance();
 
-        public static Jvedio.Core.Config.ServerConfig ServerConfig = Jvedio.Core.Config.ServerConfig.CreateInstance();
-        public static Jvedio.Core.Config.ProxyConfig ProxyConfig = Jvedio.Core.Config.ProxyConfig.CreateInstance();
-        public static Jvedio.Core.Config.ScanConfig ScanConfig = Jvedio.Core.Config.ScanConfig.CreateInstance();
-        public static Jvedio.Core.Config.FFmpegConfig FFmpegConfig = Jvedio.Core.Config.FFmpegConfig.CreateInstance();
-        public static Jvedio.Core.Config.RenameConfig RenameConfig = Jvedio.Core.Config.RenameConfig.CreateInstance();
-        public static Jvedio.Core.Config.PluginConfig PluginConfig = Jvedio.Core.Config.PluginConfig.CreateInstance();
-        public static Jvedio.Core.Config.ThemeConfig ThemeConfig = Jvedio.Core.Config.ThemeConfig.CreateInstance();
-        public static Jvedio.Core.Config.DownloadConfig DownloadConfig = Jvedio.Core.Config.DownloadConfig.CreateInstance();
+        public static bool Loaded = false;
 
-        public static void InitConfig(Action callback)
+
+        public static StartUp StartUp { get; set; }
+        public static Core.WindowConfig.Main Main { get; set; }
+        public static Filter Filter { get; set; }
+        public static Edit Edit { get; set; }
+        public static Detail Detail { get; set; }
+        public static MetaData MetaData { get; set; }
+        public static Settings Settings { get; set; }
+
+        public static Jvedio.Core.Config.ServerConfig ServerConfig { get; set; }
+        public static Jvedio.Core.Config.ProxyConfig ProxyConfig { get; set; }
+        public static Jvedio.Core.Config.ScanConfig ScanConfig { get; set; }
+        public static Jvedio.Core.Config.FFmpegConfig FFmpegConfig { get; set; }
+        public static Jvedio.Core.Config.RenameConfig RenameConfig { get; set; }
+        public static Jvedio.Core.Config.PluginConfig PluginConfig { get; set; }
+        public static Jvedio.Core.Config.ThemeConfig ThemeConfig { get; set; }
+        public static Jvedio.Core.Config.DownloadConfig DownloadConfig { get; set; }
+
+        static ConfigManager()
         {
-            System.Reflection.FieldInfo[] fieldInfos = typeof(ConfigManager).GetFields();
+            StartUp = StartUp.CreateInstance();
+            Main = Core.WindowConfig.Main.CreateInstance();
+            Filter = Core.WindowConfig.Filter.CreateInstance();
+            Edit = Edit.CreateInstance();
+            Detail = Detail.CreateInstance();
+            MetaData = MetaData.CreateInstance();
+            Settings = Settings.CreateInstance();
 
-            foreach (var item in fieldInfos)
+
+            ServerConfig = Jvedio.Core.Config.ServerConfig.CreateInstance();
+            ProxyConfig = Jvedio.Core.Config.ProxyConfig.CreateInstance();
+            ScanConfig = Jvedio.Core.Config.ScanConfig.CreateInstance();
+            FFmpegConfig = Jvedio.Core.Config.FFmpegConfig.CreateInstance();
+            RenameConfig = Jvedio.Core.Config.RenameConfig.CreateInstance();
+            PluginConfig = Jvedio.Core.Config.PluginConfig.CreateInstance();
+            ThemeConfig = Jvedio.Core.Config.ThemeConfig.CreateInstance();
+            DownloadConfig = Jvedio.Core.Config.DownloadConfig.CreateInstance();
+
+            ReadConfig();
+        }
+
+        public static void SaveAll()
+        {
+            StartUp.Save();
+            Main.Save();
+            Filter.Save();
+            Edit.Save();
+            Detail.Save();
+            MetaData.Save();
+            Settings.Save();
+
+
+            ServerConfig.Save();
+            ProxyConfig.Save();
+            ScanConfig.Save();
+            FFmpegConfig.Save();
+            RenameConfig.Save();
+            PluginConfig.Save();
+            ThemeConfig.Save();
+            DownloadConfig.Save();
+        }
+
+        public static void Restore()
+        {
+            Settings.TeenMode = true;
+        }
+
+        public static void ReadConfig()
+        {
+            System.Reflection.PropertyInfo[] propertyInfos = typeof(ConfigManager).GetProperties();
+
+            foreach (var item in propertyInfos)
             {
                 AbstractConfig config = item.GetValue(null) as AbstractConfig;
                 if (config == null)
@@ -46,20 +99,23 @@ namespace Jvedio
                 }
 
                 config.Read();
-                if (item.Name.Equals("Settings"))
-                    callback?.Invoke();
             }
         }
 
-        public static void Init()
+        public static void Init(Action callBack)
         {
+            if (Loaded)
+                return;
+
             // 配置 ffmpeg 路径
             if (!File.Exists(ConfigManager.FFmpegConfig.Path) && File.Exists("ffmpeg.exe"))
-            {
                 ConfigManager.FFmpegConfig.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");
-            }
 
+            EnsurePicPaths();
 
+            callBack?.Invoke();
+
+            Loaded = true;
         }
 
         public static void EnsurePicPaths()

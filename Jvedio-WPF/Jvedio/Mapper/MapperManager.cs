@@ -35,7 +35,8 @@ namespace Jvedio
 
         public static void Init()
         {
-            if (Initialized) return;
+            if (Initialized)
+                return;
 
             // todo 泛型似乎无法使用多态进行反射加载
 

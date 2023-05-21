@@ -565,7 +565,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Content Include="Reference\CommonNet.dll" />
-    <Resource Include="Resources\Picture\star.png" />
     <Resource Include="Resources\Picture\update.png" />
     <Resource Include="Resources\Picture\setting.png" />
     <Resource Include="Resources\Picture\about.png" />

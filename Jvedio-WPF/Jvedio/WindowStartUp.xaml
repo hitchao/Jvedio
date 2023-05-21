@@ -602,7 +602,10 @@
                                         Click="ShowAbout"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                         Header="{DynamicResource About}" />
-                                    <MenuItem Command="cmd:OpenWindow.Settings" Header="{DynamicResource Settings}" />
+                                    <MenuItem
+                                        Command="cmd:OpenWindow.Settings"
+                                        Header="{DynamicResource Settings}"
+                                        Visibility="Collapsed" />
                                     <MenuItem
                                         Click="ShowUpgradeWindow"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"

@@ -844,7 +844,7 @@
                                     <MenuItem
                                         x:Name="CopyMagnetsMenuItem"
                                         Header="{DynamicResource CopyMagnets}"
-                                        Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
+                                        Visibility="{Binding TeenMode, Source={x:Static local:ConfigManager.Settings}, Mode=OneWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
 
                                     <MenuItem Click="CopyFile" Header="{DynamicResource Menu_CopyFile}" />
 
@@ -1284,7 +1284,7 @@
                                                     Margin="0,5,0,5"
                                                     Style="{StaticResource InfoStackPanel}"
                                                     Tag="{Binding CurrentVideo.VideoType}"
-                                                    Visibility="{Binding TeenMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=OneWay}">
+                                                    Visibility="{Binding TeenMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=OneWay, Source={x:Static local:ConfigManager.Settings}}">
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Censored}" />
                                                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
                                                     <ComboBox

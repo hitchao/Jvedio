@@ -81,7 +81,7 @@ namespace Jvedio
             EnsureSettings();           // 修复设置错误
             EnsureFileExists();         // 判断文件是否存在
             EnsureDirExists();          // 创建文件夹
-            ConfigManager.Init();        // 初始化全局配置
+
             try
             {
                 MapperManager.Init();    // 初始化数据库连接
@@ -92,15 +92,11 @@ namespace Jvedio
                 App.Current.Shutdown();
             }
 
-            ConfigManager.InitConfig(() =>
-            {
-                SetLang();
-            });
-            ConfigManager.EnsurePicPaths();
+            ConfigManager.Init(() => { SetLang(); });
 
             await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
-            // if (GlobalFont != null)
-            //    this.FontFamily = GlobalFont;
+                                            // if (GlobalFont != null)
+                                            //    this.FontFamily = GlobalFont;
             InitAppData();      // 初始化应用数据
             DeleteLogs();       // 清理日志
 
@@ -163,6 +159,7 @@ namespace Jvedio
                 vieModel_StartUp.Loading = false;
                 //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
             }
+
         }
 
 
@@ -393,26 +390,6 @@ namespace Jvedio
             catch (Exception ex)
             {
                 MsgBox.Show(ex.Message);
-                Logger.Error(ex);
-            }
-
-            try
-            {
-                // TODO
-                // if (!Enum.IsDefined(typeof(Skin), Properties.Settings.Default.Themes))
-                // {
-                //    Properties.Settings.Default.Themes = Skin.黑色.ToString();
-                //    Properties.Settings.Default.Save();
-                // }
-
-                // if (!Enum.IsDefined(typeof(MyLanguage), Properties.Settings.Default.Language))
-                // {
-                //    Properties.Settings.Default.Language = MyLanguage.中文.ToString();
-                //    Properties.Settings.Default.Save();
-                // }
-            }
-            catch (Exception ex)
-            {
                 Logger.Error(ex);
             }
         }

@@ -187,7 +187,7 @@
                                 Margin="5"
                                 Orientation="Vertical">
                                 <CheckBox Content="{DynamicResource CloseToBar}" IsChecked="{Binding CloseToTaskBar, Mode=TwoWay}" />
-                                <CheckBox Content="{DynamicResource TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay}" />
+                                <CheckBox Content="{DynamicResource TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
 
                                 <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetailWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
@@ -2211,9 +2211,7 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Orientation="Vertical">
-                                <CheckBox
-                                    Content="{DynamicResource AutoBackLibrary}"
-                                    IsChecked="{Binding AutoBackup, Mode=TwoWay}" />
+                                <CheckBox Content="{DynamicResource AutoBackLibrary}" IsChecked="{Binding AutoBackup, Mode=TwoWay}" />
                                 <StackPanel
                                     Margin="5"
                                     Orientation="Horizontal"

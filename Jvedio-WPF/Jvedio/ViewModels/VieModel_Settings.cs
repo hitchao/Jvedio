@@ -730,18 +730,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _TeenMode = ConfigManager.Settings.TeenMode;
-
-        public bool TeenMode
-        {
-            get { return _TeenMode; }
-
-            set
-            {
-                _TeenMode = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private bool _CloseToTaskBar = ConfigManager.Settings.CloseToTaskBar;
 

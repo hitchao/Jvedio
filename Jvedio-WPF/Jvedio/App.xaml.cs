@@ -79,9 +79,18 @@ namespace Jvedio
             base.OnStartup(e);
         }
 
+        private void SaveConfig()
+        {
+            Jvedio.Properties.Settings.Default.EditMode = false;
+            Jvedio.Properties.Settings.Default.ActorEditMode = false;
+            Jvedio.Properties.Settings.Default.Save();
+            ConfigManager.SaveAll();
+        }
+
         protected override void OnExit(ExitEventArgs e)
         {
             Console.WriteLine("***************OnExit***************");
+            SaveConfig();
             base.OnExit(e);
         }
     }

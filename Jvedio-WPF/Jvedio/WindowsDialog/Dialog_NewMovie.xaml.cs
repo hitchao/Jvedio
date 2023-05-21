@@ -3,6 +3,11 @@ using SuperControls.Style;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using Jvedio.Core.Config;
+using System.Linq;
+using System.Collections.Generic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using System.Windows.Media;
 
 namespace Jvedio
 {
@@ -11,34 +16,36 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_NewMovie : SuperControls.Style.BaseDialog
     {
+
+
+        public bool AutoAddPrefix { get; set; } = ConfigManager.Settings.AutoAddPrefix;
+
+        public string Prefix { get; set; } = ConfigManager.Settings.Prefix;
+
+        public VideoType VideoType { get; set; } = VideoType.Normal;
+
         public NewVideoDialogResult Result { get; private set; }
 
-        public bool AutoAddPrefix { get; set; }
-
-        public string Prefix { get; set; }
-
-        public VideoType VideoType { get; set; }
 
         public Dialog_NewMovie() : base(true)
         {
             InitializeComponent();
-            VideoType = VideoType.Censored;
-            autoPrefix.IsChecked = AutoAddPrefix;
-            PrefixTextBox.Text = Prefix;
-            if (!ConfigManager.Settings.TeenMode)
-            {
-                videoTypeWrapPanel.Visibility = Visibility.Visible;
-            }
-
-            autoPrefix.IsChecked = ConfigManager.Settings.AutoAddPrefix;
-            PrefixTextBox.Text = ConfigManager.Settings.Prefix;
-
-            AutoAddPrefix = ConfigManager.Settings.AutoAddPrefix;
-            Prefix = ConfigManager.Settings.Prefix;
+            this.DataContext = this;
         }
 
         protected override void Confirm(object sender, RoutedEventArgs e)
         {
+            List<RadioButton> radioButtons = videoTypeStackPanel.Children.OfType<RadioButton>().ToList();
+
+            for (int i = 0; i < radioButtons.Count; i++)
+            {
+                if ((bool)radioButtons[i].IsChecked)
+                {
+                    VideoType = (VideoType)i;
+                    break;
+                }
+            }
+
             Result = new NewVideoDialogResult(AddMovieTextBox.Text, AutoAddPrefix ? Prefix : string.Empty, VideoType);
             base.Confirm(sender, e);
         }
@@ -50,25 +57,6 @@ namespace Jvedio
             AddMovieTextBox.Focus();
         }
 
-        private void SetChecked(object sender, RoutedEventArgs e)
-        {
-            AutoAddPrefix = (bool)(sender as CheckBox).IsChecked;
-        }
-
-        private void PrefixTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Prefix = (sender as SearchBox).Text;
-        }
-
-        private void PrefixTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Prefix = (sender as SearchBox).Text;
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            VideoType = (VideoType)(sender as ComboBox).SelectedIndex;
-        }
 
         private void BaseDialog_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -80,6 +68,8 @@ namespace Jvedio
 
         private void AddMovieTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
+            ((sender as TextBox).Parent as Border).BorderBrush = Brushes.Transparent;
+
             if (string.IsNullOrEmpty(AddMovieTextBox.Text))
                 placeHolderTextBlock.Visibility = Visibility.Visible;
         }
@@ -95,6 +85,11 @@ namespace Jvedio
                 placeHolderTextBlock.Visibility = Visibility.Visible;
             else
                 placeHolderTextBlock.Visibility = Visibility.Collapsed;
+        }
+
+        private void AddMovieTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((sender as TextBox).Parent as Border).BorderBrush = (SolidColorBrush)Application.Current.Resources["Button.Selected.BorderBrush"];
         }
     }
 

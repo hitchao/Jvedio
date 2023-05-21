@@ -1948,9 +1948,9 @@
                                                 <MenuItem Click="DeleteNotExistVideo" Header="{DynamicResource DeleteMovieNotExist}" />
                                                 <MenuItem Click="DeleteNotInScanPath" Header="{DynamicResource DeleteMovieNotInScan}" />
                                                 <MenuItem
-                                                    Click="ExportToNFO"
+                                                    Click="ExprtToNFO"
                                                     Header="{DynamicResource exportnfo}"
-                                                    IsEnabled="False" />
+                                                    Visibility="Collapsed" />
                                             </MenuItem>
 
                                             <MenuItem
@@ -2277,7 +2277,7 @@
                                                     Padding="20,10"
                                                     Command="{Binding AddNewMovie}"
                                                     Style="{StaticResource ButtonMain}"
-                                                    Visibility="{Binding TeenMode, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                                                    Visibility="{Binding Path=TeenMode, Source={x:Static config:ConfigManager.Settings}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <Image
                                                             Height="13"
@@ -2878,7 +2878,7 @@
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <!--  影片加载动画  -->
-                                                        <!--<DataTemplate.Triggers>
+                                                        <DataTemplate.Triggers>
                                                             <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
@@ -2892,7 +2892,7 @@
                                                                     </Storyboard>
                                                                 </BeginStoryboard>
                                                             </EventTrigger>
-                                                        </DataTemplate.Triggers>-->
+                                                        </DataTemplate.Triggers>
                                                         <super:SimplePanel
                                                             Name="rootGrid"
                                                             Width="{Binding GlobalImageWidth, Source={x:Static p:Settings.Default}, Mode=OneWay}"
@@ -3098,7 +3098,8 @@
                                                                             Height="20"
                                                                             MaxWidth="150"
                                                                             Margin="0,7"
-                                                                            Padding="10,0,0,0"
+                                                                            Padding="12,0,0,0"
+                                                                            HorizontalAlignment="Left"
                                                                             Cursor="Hand"
                                                                             FontSize="15"
                                                                             MouseLeftButtonDown="CopyVID"
