@@ -955,18 +955,6 @@ namespace Jvedio.ViewModel
         }
 
 
-        private bool _RunningLongTask = false;
-
-        public bool RunningLongTask
-        {
-            get { return _RunningLongTask; }
-
-            set
-            {
-                _RunningLongTask = value;
-                RaisePropertyChanged();
-            }
-        }
 
         // 影片关联
         public ObservableCollection<Video> _AssociationDatas;

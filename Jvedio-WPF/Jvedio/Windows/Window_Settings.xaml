@@ -2289,7 +2289,7 @@
                                 </StackPanel>
                                 <ProgressBar
                                     Name="indexCreatingProgressBar"
-                                    Width="200"
+                                    Width="300"
                                     Height="10"
                                     Margin="5,0"
                                     HorizontalAlignment="Left"

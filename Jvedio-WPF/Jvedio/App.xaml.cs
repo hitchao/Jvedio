@@ -20,6 +20,9 @@ namespace Jvedio
     /// </summary>
     public partial class App : Application
     {
+
+        public static Jvedio.Core.Logs.Logger Logger = Jvedio.Core.Logs.Logger.Instance;
+
         public EventWaitHandle ProgramStarted { get; set; }
 
         static App()
@@ -36,6 +39,8 @@ namespace Jvedio
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            SuperUtils.Handler.LogHandler.Logger = Logger;
+            SuperControls.Style.Handler.LogHandler.Logger = Logger;
 #if DEBUG
             Console.WriteLine("***************OnStartup***************");
             Console.WriteLine("Debug 不捕获未处理异常");

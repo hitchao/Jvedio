@@ -1,0 +1,71 @@
+﻿<super:BaseWindow
+    x:Class="Jvedio.Window_DataBase"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
+    Title="库管理"
+    Width="800"
+    Height="600"
+    Background="{DynamicResource Window.Background}"
+    Foreground="{DynamicResource Window.Foreground}"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Margin="10"
+                IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
+                Orientation="Horizontal">
+                <Button Click="DeleteNotExistVideo" Content="{DynamicResource DeleteMovieNotExist}" />
+                <Button Click="DeleteNotInScanPath" Content="{DynamicResource DeleteMovieNotInScan}" />
+                <Button
+                    Click="ExportToNFO"
+                    Content="{DynamicResource exportnfo}"
+                    IsEnabled="False" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Row="1"
+                Margin="20,10"
+                Orientation="Horizontal"
+                Visibility="{Binding Running, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                <super:LoadingCircle
+                    Width="30"
+                    Height="30"
+                    Foreground="{DynamicResource Window.Foreground}" />
+                <ProgressBar
+                    Width="300"
+                    Height="15"
+                    Margin="30,10"
+                    Style="{StaticResource NormalStaticProgressBar}"
+                    Value="{Binding RunProgress}" />
+            </StackPanel>
+
+            <Border
+                Grid.Row="2"
+                Margin="10"
+                Padding="10"
+                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                BorderThickness="1"
+                Style="{StaticResource InfoBorder}">
+                <TextBox
+                    Name="logTextBox"
+                    Margin="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    VerticalContentAlignment="top"
+                    AcceptsReturn="True"
+                    Style="{StaticResource ReadOnlyWrapTextBox}"
+                    TextAlignment="Left" />
+            </Border>
+        </Grid>
+    </Grid>
+</super:BaseWindow>

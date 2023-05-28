@@ -54,6 +54,7 @@ using static Jvedio.MapperManager;
 using static Jvedio.Window_Settings;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
+using static Jvedio.App;
 
 namespace Jvedio
 {
@@ -62,7 +63,6 @@ namespace Jvedio
     /// </summary>
     public partial class Main : SuperControls.Style.BaseWindow
     {
-        private static Jvedio.Core.Logs.Logger Logger = Jvedio.Core.Logs.Logger.Instance;
 
         public static int NOTICE_INTERVAL = 1800; // 30分钟检测一次
         public static Msg msgCard = new Msg();
@@ -205,8 +205,6 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            SuperUtils.Handler.LogHandler.Logger = Jvedio.Core.Logs.Logger.Instance;
-            SuperControls.Style.Handler.LogHandler.Logger = Jvedio.Core.Logs.Logger.Instance;
 
             AdjustWindow(); // 还原窗口为上一次状态
             ConfigFirstRun();
@@ -4454,143 +4452,6 @@ namespace Jvedio
             }
         }
 
-        private void DeleteNotExistVideo(object sender, RoutedEventArgs e)
-        {
-            if (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0)
-            {
-                MessageNotify.Error(LangManager.GetValueByKey("NeedToClearTask"));
-                return;
-            }
-
-            vieModel.RunningLongTask = true;
-            Task.Run(async () =>
-            {
-                List<string> toDelete = new List<string>();
-                SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-                wrapper.Select("DataID", "Path").Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", 0);
-                List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
-                if (metaDatas?.Count <= 0)
-                {
-                    vieModel.RunningLongTask = false;
-                    return;
-                }
-
-                foreach (MetaData data in metaDatas)
-                {
-                    if (!File.Exists(data.Path)) toDelete.Add(data.DataID.ToString());
-                }
-
-                if (toDelete.Count <= 0)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        MessageNotify.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
-                    });
-                    vieModel.RunningLongTask = false;
-                    return;
-                }
-
-                bool ok = (bool)new MsgBox($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotExists")}")
-                            .ShowDialog(this);
-                if (ok)
-                {
-                    videoMapper.deleteVideoByIds(toDelete);
-                    await Task.Delay(5000); // todo
-                    vieModel.Statistic();
-                    vieModel.LoadData();
-                }
-
-                vieModel.RunningLongTask = false;
-            });
-        }
-
-        private void DeleteNotInScanPath(object sender, RoutedEventArgs e)
-        {
-            if (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0)
-            {
-                MessageNotify.Error(LangManager.GetValueByKey("NeedToClearTask"));
-                return;
-            }
-
-            string scanPath = vieModel.CurrentAppDataBase.ScanPath;
-            if (string.IsNullOrEmpty(scanPath))
-            {
-                MessageNotify.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
-                return;
-            }
-
-            List<string> scanPaths = JsonUtils.TryDeserializeObject<List<string>>(scanPath).Where(arg => !string.IsNullOrEmpty(arg)).ToList();
-            if (scanPaths == null || scanPaths.Count <= 0)
-            {
-                MessageNotify.Error(LangManager.GetValueByKey("LibraryNotSetPath"));
-                return;
-            }
-
-            vieModel.RunningLongTask = true;
-            Task.Run(async () =>
-            {
-                List<string> toDelete = new List<string>();
-                SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-                wrapper.Select("DataID", "Path").Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", 0);
-                List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
-                if (metaDatas?.Count <= 0)
-                {
-                    vieModel.RunningLongTask = false;
-                    return;
-                }
-
-                foreach (MetaData data in metaDatas)
-                {
-                    string path = data.Path;
-                    if (string.IsNullOrEmpty(path))
-                    {
-                        toDelete.Add(data.DataID.ToString());
-                        continue;
-                    }
-
-                    foreach (string dir in scanPaths)
-                    {
-                        if (string.IsNullOrEmpty(dir) || string.IsNullOrEmpty(dir)) continue;
-                        if (path.IndexOf(dir) < 0)
-                        {
-                            toDelete.Add(data.DataID.ToString());
-                            break;
-                        }
-                    }
-                }
-
-                if (toDelete.Count <= 0)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        MessageNotify.Info(LangManager.GetValueByKey("AllDataExistsNoOperation"));
-                    });
-                    vieModel.RunningLongTask = false;
-                    return;
-                }
-
-                bool ok = (bool)new MsgBox($"{LangManager.GetValueByKey("IsToDeleteFromLibrary")} {toDelete.Count} {LangManager.GetValueByKey("VideoNotInScanStatupDir")}")
-                        .ShowDialog(this);
-                if (ok)
-                {
-                    videoMapper.deleteVideoByIds(toDelete);
-                    await Task.Delay(5000); // todo
-                    vieModel.Statistic();
-                    vieModel.LoadData();
-                }
-
-                vieModel.RunningLongTask = false;
-            });
-        }
-
-        private void ExportToNFO(object sender, RoutedEventArgs e)
-        {
-            if (vieModel.DownLoadTasks.Count > 0 || vieModel.ScanTasks.Count > 0 || vieModel.ScreenShotTasks.Count > 0)
-            {
-                MessageNotify.Error(LangManager.GetValueByKey("NeedToClearTask"));
-                return;
-            }
-        }
 
         private void ShowStatistic(object sender, RoutedEventArgs e)
         {
@@ -5094,9 +4955,25 @@ namespace Jvedio
             window_Settings.Show();
         }
 
-        private void ExprtToNFO(object sender, RoutedEventArgs e)
-        {
 
+
+        private void ManageDataBase(object sender, RoutedEventArgs e)
+        {
+            Window_DataBase dataBase = new Window_DataBase();
+            dataBase.Owner = this;
+
+            dataBase.OnDataChanged += () =>
+            {
+                vieModel.Statistic();
+                vieModel.LoadData();
+            };
+
+            dataBase.ShowDialog();
+        }
+
+        public bool IsTaskRunning()
+        {
+            return (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0);
         }
     }
 

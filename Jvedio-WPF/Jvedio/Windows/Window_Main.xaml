@@ -1462,36 +1462,6 @@
 
     </super:BaseWindow.Resources>
     <Grid AllowDrop="True">
-        <!--  长任务遮罩  -->
-        <Grid Panel.ZIndex="99" Visibility="{Binding RunningLongTask, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
-
-            <Border Background="{DynamicResource Window.Background}" Opacity="0.5" />
-            <Border
-                MinWidth="200"
-                MinHeight="100"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="{DynamicResource Window.Title.Background}"
-                CornerRadius="10">
-                <StackPanel Orientation="Horizontal">
-                    <super:LoadingCircle
-                        Width="40"
-                        Height="40"
-                        Margin="30,5"
-                        VerticalAlignment="Center"
-                        DotInterval="10"
-                        DotSize="7"
-                        Foreground="{DynamicResource Window.Foreground}" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="20"
-                        Text="{DynamicResource Running}" />
-                </StackPanel>
-            </Border>
-        </Grid>
-
-
-
         <!--  托盘图标  -->
 
         <Popup
@@ -2277,15 +2247,7 @@
                                                 <MenuItem Click="ImportVideoByPaths" Header="{DynamicResource ScanMultiDir}" />
                                                 <MenuItem Click="ImportVideo" Header="{DynamicResource ScanNas}" />
                                             </MenuItem>
-                                            <MenuItem Header="{DynamicResource MovieManagement}">
-                                                <MenuItem Click="DeleteNotExistVideo" Header="{DynamicResource DeleteMovieNotExist}" />
-                                                <MenuItem Click="DeleteNotInScanPath" Header="{DynamicResource DeleteMovieNotInScan}" />
-                                                <MenuItem
-                                                    Click="ExprtToNFO"
-                                                    Header="{DynamicResource exportnfo}"
-                                                    Visibility="Collapsed" />
-                                            </MenuItem>
-
+                                            <MenuItem Click="ManageDataBase" Header="{DynamicResource MovieManagement}" />
                                             <MenuItem
                                                 Click="ShowStatistic"
                                                 Header="{DynamicResource Statistic}"
