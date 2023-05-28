@@ -109,7 +109,16 @@ namespace Jvedio.Entity
             }
         }
 
-        public float Grade { get; set; }
+        private float _Grade;
+        public float Grade
+        {
+            get { return _Grade; }
+            set
+            {
+                _Grade = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private string _Label;
 

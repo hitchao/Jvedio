@@ -3222,10 +3222,10 @@ namespace Jvedio
         private void Rate_ValueChanged(object sender, EventArgs e)
         {
             if (!CanRateChange) return;
-            Rating rate = (Rating)sender;
-            if (rate == null) return;
-            StackPanel stackPanel = rate.Parent as StackPanel;
-            long id = GetDataID(stackPanel);
+            Rate rate = (Rate)sender;
+            if (rate == null)
+                return;
+            long id = GetDataID(rate);
             if (id <= 0) return;
             metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), id);
             vieModel.Statistic();
@@ -3493,7 +3493,7 @@ namespace Jvedio
 
         private void ActorRate_ValueChanged(object sender, EventArgs e)
         {
-            Rating rate = (Rating)sender;
+            Rate rate = (Rate)sender;
             actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), vieModel.CurrentActorInfo.ActorID);
         }
 
@@ -4029,7 +4029,7 @@ namespace Jvedio
 
         private void SideActorRate_ValueChanged(object sender, EventArgs e)
         {
-            Rating rate = sender as Rating;
+            Rate rate = sender as Rate;
             if (rate.Tag == null) return;
             long.TryParse(rate.Tag.ToString(), out long actorID);
             if (actorID <= 0) return;

@@ -233,14 +233,17 @@
 
 
                         </StackPanel>
-                        <super:Rating
+
+                        <!--  演员星标  -->
+                        <super:Rate
                             Grid.Row="1"
                             Margin="5"
                             VerticalAlignment="Center"
-                            Half="True"
-                            RateBackground="{DynamicResource Window.Background}"
-                            RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
-                            StarMargin="3 0"
+                            AllowHalf="True"
+                            Background="{DynamicResource Window.Background}"
+                            Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                            ItemHeight="20"
+                            ItemMargin="3 0"
                             Tag="{Binding ActorID, Mode=OneWay}"
                             ToolTip="{DynamicResource DoubleClickToCancel}"
                             ValueChanged="SideActorRate_ValueChanged"
@@ -636,12 +639,829 @@
         </Style>
 
 
+        <!--  影片 template  -->
+        <DataTemplate x:Key="VideoDataTemplate">
+            <!--  影片加载动画  -->
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                FillBehavior="Stop"
+                                Storyboard.TargetName="rootGrid"
+                                Storyboard.TargetProperty="(UIElement.Opacity)"
+                                From="0"
+                                To="1"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </DataTemplate.Triggers>
+            <super:SimplePanel
+                Name="rootGrid"
+                Width="{Binding GlobalImageWidth, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                Margin="10"
+                ContextMenuOpening="ContextMenu_ContextMenuOpening"
+                Tag="{Binding DataID, Mode=OneWay}">
+                <super:SimplePanel.ContextMenu>
+                    <ContextMenu Opacity="0.9" PreviewKeyUp="ContextMenu_PreviewKeyUp">
+                        <MenuItem Click="DownLoadSelectMovie" Header="{DynamicResource SyncInfo}" />
+                        <MenuItem
+                            Click="DownLoadWithUrl"
+                            Header="{DynamicResource Menu_CustomUrl}"
+                            Visibility="Collapsed" />
+                        <MenuItem
+                            Click="EditInfo"
+                            Header="{DynamicResource Menu_EditInfo}"
+                            Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                        <MenuItem Click="AddToPlayerList" Header="{DynamicResource AddToPlayList}" />
+                        <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
+                        <MenuItem Header="{DynamicResource Menu_Advance}">
+                            <MenuItem Click="AddDataAssociation" Header="{DynamicResource DataAsso}" />
+                            <MenuItem Click="GenerateScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
+                            <MenuItem Click="GenerateGif" Header="{DynamicResource Menu_GenerateGif}" />
+                            <MenuItem
+                                Click="TranslateMovie"
+                                Header="{DynamicResource Menu_Translate}"
+                                Visibility="Collapsed" />
+                            <MenuItem
+                                Click="GenerateSmallImage"
+                                Header="{DynamicResource Menu_GenerateThumbnail}"
+                                Visibility="Collapsed" />
+                            <MenuItem
+                                Click="GenerateActor"
+                                Header="{DynamicResource Menu_GenerateActressImage}"
+                                Visibility="Collapsed" />
+                            <MenuItem Click="RenameFile" Header="{DynamicResource Menu_RenameFile}" />
+                            <MenuItem
+                                Click="ReMoveZero"
+                                Header="{DynamicResource Menu_RemoveZero}"
+                                Visibility="Collapsed" />
+                            <MenuItem
+                                Click="DeleteDownloadInfo"
+                                Header="{DynamicResource ClearDownloadInfo}"
+                                Visibility="Collapsed" />
+
+                        </MenuItem>
+
+
+                        <Separator />
+                        <MenuItem
+                            Click="OpenWeb"
+                            Header="{DynamicResource ViewWebsite}"
+                            Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
+
+                        <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                            <MenuItem
+                                Command="cmd:File.OpenSelectFile"
+                                CommandParameter="{Binding Path}"
+                                Header="{DynamicResource Movie}" />
+                            <MenuItem Click="OpenPath" Header="{DynamicResource Poster}" />
+                            <MenuItem Click="OpenPath" Header="{DynamicResource Thumbnail}" />
+                            <MenuItem Click="OpenPath" Header="{DynamicResource Preview}" />
+                            <MenuItem Click="OpenPath" Header="{DynamicResource ScreenShot}" />
+                            <MenuItem Click="OpenPath" Header="GIF" />
+
+                        </MenuItem>
+
+                        <MenuItem Click="CopyFile" Header="{DynamicResource Menu_CopyFile}" />
+                        <MenuItem Click="CutFile" Header="{DynamicResource CutX}" />
+
+                        <Separator />
+                        <MenuItem
+                            Click="DeleteID"
+                            Header="{DynamicResource Menu_DeleteInfo}"
+                            ToolTip="{DynamicResource ToolTip_DeleteInfo}" />
+                        <MenuItem
+                            Click="DeleteFile"
+                            Header="{DynamicResource Menu_DeleteFile}"
+                            Icon="pack://application:,,,/Resources/menuitem/clear.png"
+                            ToolTip="{DynamicResource ToolTip_DeleteFile}" />
+
+
+
+                    </ContextMenu>
+
+                </super:SimplePanel.ContextMenu>
+                <Border
+                    Name="rootBorder"
+                    MinWidth="200"
+                    Margin="0"
+                    Background="{DynamicResource ListBoxItem.Background}"
+                    BorderThickness="2"
+                    CornerRadius="3"
+                    Effect="{StaticResource BlueDropShadowEffect}"
+                    Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}}"
+                    Style="{StaticResource SimpleBorder}" />
+
+                <StackPanel Margin="0" Tag="{Binding DataID, Mode=OneWay}">
+                    <!--  图片  -->
+                    <super:SimplePanel Grid.Row="0">
+                        <media:GifImage
+                            x:Name="GifImage"
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BigImageSource="{Binding BigImage, Mode=OneWay}"
+                            Cursor="Hand"
+                            GifSource="{Binding GifUri, Mode=OneWay}"
+                            MouseEnter="BorderMouseEnter"
+                            MouseLeave="BorderMouseLeave"
+                            MouseLeftButtonDown="CanShowDetails"
+                            MouseLeftButtonUp="ShowDetails"
+                            RenderOptions.BitmapScalingMode="LowQuality"
+                            SmallImageSource="{Binding SmallImage, Mode=OneWay}"
+                            Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
+                            Style="{StaticResource GifImageStyle}" />
+
+                        <!--  分段视频  -->
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Panel.ZIndex="3"
+                            Orientation="Horizontal">
+                            <Button
+                                Height="auto"
+                                Margin="5"
+                                Padding="5"
+                                Click="ViewAssocDatas"
+                                Cursor="Hand"
+                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                Style="{StaticResource RoundNormalButton}"
+                                Tag="{DynamicResource Button.Hover.Background}"
+                                Visibility="{Binding HasAssociation, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+
+                                <Image
+                                    Width="20"
+                                    Height="20"
+                                    Source="/Resources/Picture/asso.png" />
+                            </Button>
+                            <Button
+                                Height="auto"
+                                Margin="0,5,5,5"
+                                Padding="5"
+                                Click="ShowSubSection"
+                                Cursor="Hand"
+                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                Style="{StaticResource RoundNormalButton}"
+                                Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <Button.ContextMenu>
+                                    <ContextMenu HorizontalOffset="-50" VerticalOffset="10" />
+                                </Button.ContextMenu>
+                                <Image
+                                    Width="20"
+                                    Height="20"
+                                    Source="/Resources/Picture/subsection1.png" />
+                            </Button>
+
+                        </StackPanel>
+
+                        <!--  播放按钮  -->
+                        <Image
+                            Height="40"
+                            Margin="10,0,10,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Cursor="Hand"
+                            MouseLeftButtonUp="PlayVideo"
+                            Opacity="0.8"
+                            Source="/Resources/Picture/Jvedio.png"
+                            ToolTip="{Binding Title, Mode=OneWay}">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="False" />
+                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type super:SimplePanel}, Mode=FindAncestor}}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                        <DataTrigger Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="True">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+
+
+                    </super:SimplePanel>
+
+
+                    <!--  标签戳+ID  -->
+                    <Grid Grid.Row="1" IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock
+                                Height="20"
+                                MaxWidth="150"
+                                Margin="0,7"
+                                Padding="12,0,0,0"
+                                HorizontalAlignment="Left"
+                                Cursor="Hand"
+                                FontSize="15"
+                                MouseLeftButtonDown="CopyVID"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="{Binding VID, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis"
+                                Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+                            <!--  日期  -->
+
+                            <TextBlock
+                                Height="20"
+                                MaxWidth="150"
+                                Margin="0,5"
+                                Padding="12,0,0,0"
+                                HorizontalAlignment="Left"
+                                Cursor="Hand"
+                                FontSize="15"
+                                MouseLeftButtonDown="CopyVID"
+                                Opacity="0.5"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="{Binding ReleaseDate, Mode=OneWay}"
+                                TextAlignment="Left"
+                                TextTrimming="WordEllipsis"
+                                Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+                        </StackPanel>
+
+
+                        <!--  标签戳  -->
+
+                        <ItemsControl
+                            Grid.Column="1"
+                            Margin="0,5,5,0"
+                            HorizontalAlignment="Right"
+                            ItemsSource="{Binding TagStamp}"
+                            Tag="{Binding DataID}"
+                            Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="2"
+                                        Padding="4"
+                                        Background="{Binding BackgroundBrush}"
+                                        BorderThickness="0"
+                                        CornerRadius="3"
+                                        Tag="{Binding TagID}">
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
+
+                                        <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
+                                    </Border>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+
+                    </Grid>
+
+                    <!--  主界面影片星级  -->
+                    <super:Rate
+                        Margin="15,2"
+                        AllowHalf="True"
+                        Background="{DynamicResource Window.Title.Background}"
+                        Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        ItemHeight="20"
+                        ItemMargin="3 0"
+                        PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
+                        ValueChanged="Rate_ValueChanged"
+                        Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                        Value="{Binding Grade, Mode=TwoWay}" />
+
+
+                    <TextBlock
+                        Height="40"
+                        Margin="0,5"
+                        Padding="10,0"
+                        HorizontalAlignment="Left"
+                        Cursor="Hand"
+                        FontSize="14"
+                        IsEnabled="{Binding EditMode, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        MouseLeftButtonDown="CopyVID"
+                        Opacity="0.5"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="{Binding Title, Mode=OneWay}"
+                        TextAlignment="Left"
+                        TextTrimming="CharacterEllipsis"
+                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                        Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+                </StackPanel>
+            </super:SimplePanel>
+        </DataTemplate>
+
+
+        <DataTemplate x:Key="AssoSearchVideoDataTemplate">
+            <!--  影片加载动画  -->
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                FillBehavior="Stop"
+                                Storyboard.TargetName="rootGrid"
+                                Storyboard.TargetProperty="(UIElement.Opacity)"
+                                From="0"
+                                To="1"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </DataTemplate.Triggers>
+
+            <Grid
+                Name="rootGrid"
+                Width="200"
+                Margin="10"
+                Tag="{Binding DataID, Mode=OneWay}">
+                <Border Name="rootBorder">
+                    <Border.Style>
+                        <Style BasedOn="{StaticResource SimpleBorder}" TargetType="Border">
+                            <Setter Property="Effect" Value="{StaticResource BlueDropShadowEffect}" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="CornerRadius" Value="3" />
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="MinWidth" Value="200" />
+                            <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=gifImage, Path=IsMouseOver}" Value="True">
+                                    <!--<Setter Property="Background" Value="{DynamicResource Common.HighLight.Background}" />-->
+                                    <Setter Property="BorderBrush" Value="{DynamicResource Common.HighLight.BorderBrush}" />
+
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <!--  图片  -->
+                    <Grid Grid.Row="0">
+                        <media:GifImage
+                            x:Name="gifImage"
+                            Width="200"
+                            Height="136"
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BigImageSource="{Binding BigImage, Mode=OneWay}"
+                            Cursor="Hand"
+                            MouseEnter="AssoBorderMouseEnter"
+                            MouseLeave="AssoBorderMouseLeave"
+                            MouseLeftButtonDown="AddToAssociation"
+                            RenderOptions.BitmapScalingMode="LowQuality"
+                            SourceType="BigImage"
+                            Stretch="UniformToFill" />
+
+                    </Grid>
+
+
+                    <!--  ID  -->
+                    <Grid
+                        Name="idGrid"
+                        Grid.Row="1"
+                        Width="auto"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            Grid.Column="0"
+                            Width="auto"
+                            Margin="0,5"
+                            Padding="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontFamily="微软雅黑"
+                            FontSize="15"
+                            Foreground="{DynamicResource Window.Foreground}"
+                            Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                            Text="{Binding VID, Mode=OneWay}"
+                            TextAlignment="Left" />
+                        <Border
+                            Grid.Column="1"
+                            Margin="0"
+                            MouseLeftButtonDown="CopyVID"
+                            Tag="{Binding VID}">
+                            <Border.Style>
+                                <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay, diag:PresentationTraceSources.TraceLevel=High}" Value="true" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Hidden" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <DataTrigger Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+
+                            <Viewbox Width="auto" Height="13">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                        </Border>
+                    </Grid>
+
+
+                    <TextBox
+                        Grid.Row="4"
+                        Width="200"
+                        Height="35"
+                        Margin="10"
+                        Padding="10,0"
+                        HorizontalAlignment="Center"
+                        Background="Transparent"
+                        FontSize="14"
+                        Foreground="{DynamicResource Window.Foreground}"
+                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        Opacity="0.5"
+                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                        Text="{Binding Title, Mode=OneWay}"
+                        TextAlignment="Left"
+                        TextWrapping="Wrap"
+                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                        Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+                </Grid>
+            </Grid>
+
+        </DataTemplate>
+
+        <DataTemplate x:Key="AssoVideoDataTemplate">
+            <!--  影片加载动画  -->
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                FillBehavior="Stop"
+                                Storyboard.TargetName="rootGrid"
+                                Storyboard.TargetProperty="(UIElement.Opacity)"
+                                From="0"
+                                To="1"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </DataTemplate.Triggers>
+
+            <Grid
+                Name="rootGrid"
+                Margin="10"
+                Tag="{Binding DataID, Mode=OneWay}">
+                <Border Name="rootBorder">
+                    <Border.Style>
+                        <Style BasedOn="{StaticResource SimpleBorder}" TargetType="Border">
+                            <Setter Property="Effect" Value="{StaticResource BlueDropShadowEffect}" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="CornerRadius" Value="3" />
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="MinWidth" Value="200" />
+                            <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
+
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Grid Margin="0" Tag="{Binding DataID, Mode=OneWay}">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <!--  图片  -->
+                    <Grid Grid.Row="0">
+
+                        <media:GifImage
+                            x:Name="gifImage"
+                            Width="{Binding BigImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                            Height="{Binding BigImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BigImageSource="{Binding BigImage, Mode=OneWay}"
+                            ContextMenuOpening="ContextMenu_ContextMenuOpening"
+                            Cursor="Hand"
+                            MouseLeftButtonDown="CanShowDetails"
+                            MouseLeftButtonUp="ShowDetails"
+                            RenderOptions.BitmapScalingMode="LowQuality"
+                            SourceType="BigImage"
+                            Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}">
+                            <Image.ContextMenu>
+                                <ContextMenu Opacity="0.9">
+                                    <MenuItem
+                                        Click="EditInfo"
+                                        Header="{DynamicResource Menu_EditInfo}"
+                                        Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                    <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
+                                    <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                                        <MenuItem
+                                            Command="cmd:File.OpenSelectFile"
+                                            CommandParameter="{Binding Path}"
+                                            Header="{DynamicResource Movie}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource Poster}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource Thumbnail}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource Preview}" />
+                                        <MenuItem Click="OpenPath" Header="{DynamicResource ScreenShot}" />
+                                        <MenuItem Click="OpenPath" Header="GIF" />
+
+                                    </MenuItem>
+
+
+
+
+
+
+
+                                </ContextMenu>
+                            </Image.ContextMenu>
+                        </media:GifImage>
+
+                        <Button
+                            Height="auto"
+                            Margin="0,5,5,5"
+                            Padding="5"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Click="ShowAssocSubSection"
+                            Cursor="Hand"
+                            IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                            Style="{StaticResource RoundNormalButton}"
+                            Tag="{DynamicResource Button.Hover.Background}"
+                            Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                            <Button.ContextMenu>
+                                <ContextMenu
+                                    Width="100"
+                                    HorizontalOffset="-50"
+                                    VerticalOffset="10" />
+                            </Button.ContextMenu>
+                            <Image
+                                Width="20"
+                                Height="20"
+                                Source="/Resources/Picture/subsection1.png" />
+                        </Button>
+
+                        <Canvas
+                            Width="40"
+                            Height="40"
+                            Margin="10,0,10,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Cursor="Hand"
+                            MouseLeftButtonUp="PlayAssocVideo"
+                            Opacity="0.5"
+                            Style="{StaticResource HoverCanvas}"
+                            ToolTip="{Binding DataID, Mode=OneWay}">
+                            <Ellipse
+                                Canvas.Left="3"
+                                Canvas.Top="3"
+                                Width="40"
+                                Height="40"
+                                Fill="#DD744C" />
+                            <Polygon
+                                Cursor="Hand"
+                                Fill="#F6F7F7"
+                                Points="15,38 35,25 15,10"
+                                Stroke="{DynamicResource Menu.Background}" />
+                        </Canvas>
+
+                    </Grid>
+
+
+                    <!--  ID  -->
+
+                    <!--  标签戳+ID  -->
+                    <Grid
+                        Name="idGrid"
+                        Grid.Row="1"
+                        Width="auto"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            Grid.Column="0"
+                            Width="auto"
+                            Margin="0,5"
+                            Padding="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontFamily="微软雅黑"
+                            FontSize="15"
+                            Foreground="{DynamicResource Window.Foreground}"
+                            Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                            Text="{Binding VID, Mode=OneWay}"
+                            TextAlignment="Left"
+                            Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                        <Border
+                            Grid.Column="1"
+                            MouseLeftButtonDown="CopyVID"
+                            Tag="{Binding VID}">
+                            <Border.Style>
+                                <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay, diag:PresentationTraceSources.TraceLevel=High}" Value="true" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
+                                                <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Hidden" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <DataTrigger Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+
+                            <Viewbox Width="auto" Height="13">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            </Viewbox>
+                        </Border>
+
+
+                        <!--  标签戳  -->
+
+                        <ItemsControl
+                            Grid.Column="2"
+                            Margin="5,5"
+                            HorizontalAlignment="Right"
+                            ItemsSource="{Binding TagStamp}"
+                            Tag="{Binding DataID}"
+                            Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="2,0"
+                                        Padding="4"
+                                        Background="{Binding BackgroundBrush}"
+                                        BorderThickness="0"
+                                        CornerRadius="3"
+                                        Tag="{Binding TagID}">
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
+
+                                        <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
+                                    </Border>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </Grid>
+
+                    <!--  日期  -->
+                    <TextBox
+                        Grid.Row="2"
+                        Margin="0,0"
+                        Padding="10,5"
+                        HorizontalAlignment="Left"
+                        Background="Transparent"
+                        FontSize="15"
+                        Foreground="{DynamicResource Window.Foreground}"
+                        Opacity="0.5"
+                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                        Text="{Binding ReleaseDate, Mode=OneWay}"
+                        TextAlignment="Left"
+                        Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+                    <!--  影片关联评分  -->
+                    <StackPanel
+                        Grid.Row="3"
+                        Width="auto"
+                        Margin="15,5,0,10"
+                        HorizontalAlignment="Left"
+                        Cursor="Hand"
+                        PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
+                        Tag="{Binding DataID, Mode=OneWay}"
+                        Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                        <super:Rate
+                            AllowHalf="True"
+                            Background="{DynamicResource Window.Title.Background}"
+                            Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                            ItemHeight="20"
+                            ItemMargin="3 0"
+                            ValueChanged="Rate_ValueChanged"
+                            Value="{Binding Grade, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <TextBox
+                        Grid.Row="4"
+                        Width="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, Converter={StaticResource BiggerWidthConverter}, Mode=OneWay}"
+                        Height="35"
+                        Margin="0,5,0,15"
+                        Padding="10,0"
+                        HorizontalAlignment="Center"
+                        Background="Transparent"
+                        FontSize="14"
+                        Foreground="{DynamicResource Window.Foreground}"
+                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        MouseLeftButtonDown="CopyText"
+                        Opacity="0.5"
+                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                        Text="{Binding Title, Mode=OneWay}"
+                        TextAlignment="Left"
+                        TextWrapping="Wrap"
+                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                        Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+                </Grid>
+            </Grid>
+
+        </DataTemplate>
+
     </super:BaseWindow.Resources>
-
-
     <Grid AllowDrop="True">
-
-
         <!--  长任务遮罩  -->
         <Grid Panel.ZIndex="99" Visibility="{Binding RunningLongTask, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
 
@@ -939,6 +1759,7 @@
                                 Name="assoSearchItemsControl"
                                 Margin="5,5,5,5"
                                 Background="Transparent"
+                                ItemTemplate="{StaticResource AssoSearchVideoDataTemplate}"
                                 ItemsSource="{Binding AssociationDatas}"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <ItemsControl.ItemsPanel>
@@ -946,179 +1767,7 @@
                                         <WrapPanel />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <!--  影片加载动画  -->
-                                        <DataTemplate.Triggers>
-                                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation
-                                                            FillBehavior="Stop"
-                                                            Storyboard.TargetName="rootGrid"
-                                                            Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                            From="0"
-                                                            To="1"
-                                                            Duration="0:0:0.3" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger>
-                                        </DataTemplate.Triggers>
 
-                                        <Grid
-                                            Name="rootGrid"
-                                            Width="200"
-                                            Margin="10"
-                                            Tag="{Binding DataID, Mode=OneWay}">
-                                            <Border Name="rootBorder">
-                                                <Border.Style>
-                                                    <Style BasedOn="{StaticResource SimpleBorder}" TargetType="Border">
-                                                        <Setter Property="Effect" Value="{StaticResource BlueDropShadowEffect}" />
-                                                        <Setter Property="BorderThickness" Value="2" />
-                                                        <Setter Property="CornerRadius" Value="3" />
-                                                        <Setter Property="Margin" Value="0" />
-                                                        <Setter Property="MinWidth" Value="200" />
-                                                        <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ElementName=gifImage, Path=IsMouseOver}" Value="True">
-                                                                <!--<Setter Property="Background" Value="{DynamicResource Common.HighLight.Background}" />-->
-                                                                <Setter Property="BorderBrush" Value="{DynamicResource Common.HighLight.BorderBrush}" />
-
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                            </Border>
-                                            <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
-
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="auto" />
-                                                    <RowDefinition Height="auto" />
-                                                    <RowDefinition Height="auto" />
-                                                    <RowDefinition Height="auto" />
-                                                    <RowDefinition Height="auto" />
-                                                </Grid.RowDefinitions>
-                                                <!--  图片  -->
-                                                <Grid Grid.Row="0">
-                                                    <media:GifImage
-                                                        x:Name="gifImage"
-                                                        Width="200"
-                                                        Height="136"
-                                                        Margin="2"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        BigImageSource="{Binding BigImage, Mode=OneWay}"
-                                                        Cursor="Hand"
-                                                        MouseEnter="AssoBorderMouseEnter"
-                                                        MouseLeave="AssoBorderMouseLeave"
-                                                        MouseLeftButtonDown="AddToAssociation"
-                                                        RenderOptions.BitmapScalingMode="LowQuality"
-                                                        SourceType="BigImage"
-                                                        Stretch="UniformToFill" />
-
-                                                </Grid>
-
-
-                                                <!--  ID  -->
-                                                <Grid
-                                                    Name="idGrid"
-                                                    Grid.Row="1"
-                                                    Width="auto"
-                                                    HorizontalAlignment="Stretch"
-                                                    Background="Transparent"
-                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                    Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="auto" />
-                                                        <ColumnDefinition Width="auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <TextBox
-                                                        Grid.Column="0"
-                                                        Width="auto"
-                                                        Margin="0,5"
-                                                        Padding="10,0,0,0"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        FontFamily="微软雅黑"
-                                                        FontSize="15"
-                                                        Foreground="{DynamicResource Window.Foreground}"
-                                                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                                        Text="{Binding VID, Mode=OneWay}"
-                                                        TextAlignment="Left" />
-                                                    <Border
-                                                        Grid.Column="1"
-                                                        Margin="0"
-                                                        MouseLeftButtonDown="CopyVID"
-                                                        Tag="{Binding VID}">
-                                                        <Border.Style>
-                                                            <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
-                                                                <Setter Property="Visibility" Value="Hidden" />
-                                                                <Style.Triggers>
-                                                                    <MultiDataTrigger>
-                                                                        <MultiDataTrigger.Conditions>
-                                                                            <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
-                                                                            <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay, diag:PresentationTraceSources.TraceLevel=High}" Value="true" />
-                                                                        </MultiDataTrigger.Conditions>
-                                                                        <MultiDataTrigger.Setters>
-                                                                            <Setter Property="Visibility" Value="Visible" />
-                                                                        </MultiDataTrigger.Setters>
-                                                                    </MultiDataTrigger>
-                                                                    <MultiDataTrigger>
-                                                                        <MultiDataTrigger.Conditions>
-                                                                            <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
-                                                                            <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false" />
-                                                                        </MultiDataTrigger.Conditions>
-                                                                        <MultiDataTrigger.Setters>
-                                                                            <Setter Property="Visibility" Value="Hidden" />
-                                                                        </MultiDataTrigger.Setters>
-                                                                    </MultiDataTrigger>
-
-                                                                    <DataTrigger Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false">
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                    </DataTrigger>
-
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-
-                                                        <Viewbox Width="auto" Height="13">
-                                                            <Path
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
-                                                                Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                                        </Viewbox>
-                                                    </Border>
-                                                </Grid>
-
-
-                                                <TextBox
-                                                    Grid.Row="4"
-                                                    Width="200"
-                                                    Height="35"
-                                                    Margin="10"
-                                                    Padding="10,0"
-                                                    HorizontalAlignment="Center"
-                                                    Background="Transparent"
-                                                    FontSize="14"
-                                                    Foreground="{DynamicResource Window.Foreground}"
-                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                    Opacity="0.5"
-                                                    Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                                    Text="{Binding Title, Mode=OneWay}"
-                                                    TextAlignment="Left"
-                                                    TextWrapping="Wrap"
-                                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                                                    Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-
-
-                                            </Grid>
-                                        </Grid>
-
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
                     </Grid>
@@ -1158,10 +1807,9 @@
         <!--  影片关联弹框  -->
         <Popup
             x:Name="AssoDataPopup"
-            Width="690"
+            Width="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}"
             Height="auto"
             AllowsTransparency="True"
-            HorizontalOffset="-5"
             Placement="MousePoint"
             PopupAnimation="Fade"
             StaysOpen="True"
@@ -1236,6 +1884,7 @@
                             Name="assoItemsControl"
                             Margin="5,5,5,5"
                             Background="Transparent"
+                            ItemTemplate="{StaticResource VideoDataTemplate}"
                             ItemsSource="{Binding ViewAssociationDatas}"
                             ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <ItemsControl.ItemsPanel>
@@ -1243,323 +1892,7 @@
                                     <StackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <!--  影片加载动画  -->
-                                    <DataTemplate.Triggers>
-                                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation
-                                                        FillBehavior="Stop"
-                                                        Storyboard.TargetName="rootGrid"
-                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                        From="0"
-                                                        To="1"
-                                                        Duration="0:0:0.3" />
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </DataTemplate.Triggers>
 
-                                    <Grid
-                                        Name="rootGrid"
-                                        Margin="10"
-                                        Tag="{Binding DataID, Mode=OneWay}">
-                                        <Border Name="rootBorder">
-                                            <Border.Style>
-                                                <Style BasedOn="{StaticResource SimpleBorder}" TargetType="Border">
-                                                    <Setter Property="Effect" Value="{StaticResource BlueDropShadowEffect}" />
-                                                    <Setter Property="BorderThickness" Value="2" />
-                                                    <Setter Property="CornerRadius" Value="3" />
-                                                    <Setter Property="Margin" Value="0" />
-                                                    <Setter Property="MinWidth" Value="200" />
-                                                    <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
-
-                                                </Style>
-                                            </Border.Style>
-                                        </Border>
-                                        <Grid Margin="0" Tag="{Binding DataID, Mode=OneWay}">
-
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="auto" />
-                                                <RowDefinition Height="auto" />
-                                                <RowDefinition Height="auto" />
-                                                <RowDefinition Height="auto" />
-                                                <RowDefinition Height="auto" />
-                                            </Grid.RowDefinitions>
-                                            <!--  图片  -->
-                                            <Grid Grid.Row="0">
-
-                                                <media:GifImage
-                                                    x:Name="gifImage"
-                                                    Width="{Binding BigImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}"
-                                                    Height="{Binding BigImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}"
-                                                    Margin="2"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    BigImageSource="{Binding BigImage, Mode=OneWay}"
-                                                    ContextMenuOpening="ContextMenu_ContextMenuOpening"
-                                                    Cursor="Hand"
-                                                    MouseLeftButtonDown="CanShowDetails"
-                                                    MouseLeftButtonUp="ShowDetails"
-                                                    RenderOptions.BitmapScalingMode="LowQuality"
-                                                    SourceType="BigImage"
-                                                    Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}">
-                                                    <Image.ContextMenu>
-                                                        <ContextMenu Opacity="0.9">
-                                                            <MenuItem
-                                                                Click="EditInfo"
-                                                                Header="{DynamicResource Menu_EditInfo}"
-                                                                Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                                            <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
-                                                            <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
-                                                                <MenuItem
-                                                                    Command="cmd:File.OpenSelectFile"
-                                                                    CommandParameter="{Binding Path}"
-                                                                    Header="{DynamicResource Movie}" />
-                                                                <MenuItem Click="OpenPath" Header="{DynamicResource Poster}" />
-                                                                <MenuItem Click="OpenPath" Header="{DynamicResource Thumbnail}" />
-                                                                <MenuItem Click="OpenPath" Header="{DynamicResource Preview}" />
-                                                                <MenuItem Click="OpenPath" Header="{DynamicResource ScreenShot}" />
-                                                                <MenuItem Click="OpenPath" Header="GIF" />
-
-                                                            </MenuItem>
-
-
-
-
-
-
-
-                                                        </ContextMenu>
-                                                    </Image.ContextMenu>
-                                                </media:GifImage>
-
-                                                <Button
-                                                    Height="auto"
-                                                    Margin="0,5,5,5"
-                                                    Padding="5"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Bottom"
-                                                    Click="ShowAssocSubSection"
-                                                    Cursor="Hand"
-                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                    Style="{StaticResource RoundNormalButton}"
-                                                    Tag="{DynamicResource Button.Hover.Background}"
-                                                    Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                                                    <Button.ContextMenu>
-                                                        <ContextMenu
-                                                            Width="100"
-                                                            HorizontalOffset="-50"
-                                                            VerticalOffset="10" />
-                                                    </Button.ContextMenu>
-                                                    <Image
-                                                        Width="20"
-                                                        Height="20"
-                                                        Source="/Resources/Picture/subsection1.png" />
-                                                </Button>
-
-                                                <Canvas
-                                                    Width="40"
-                                                    Height="40"
-                                                    Margin="10,0,10,0"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Cursor="Hand"
-                                                    MouseLeftButtonUp="PlayAssocVideo"
-                                                    Opacity="0.5"
-                                                    Style="{StaticResource HoverCanvas}"
-                                                    ToolTip="{Binding DataID, Mode=OneWay}">
-                                                    <Ellipse
-                                                        Canvas.Left="3"
-                                                        Canvas.Top="3"
-                                                        Width="40"
-                                                        Height="40"
-                                                        Fill="#DD744C" />
-                                                    <Polygon
-                                                        Cursor="Hand"
-                                                        Fill="#F6F7F7"
-                                                        Points="15,38 35,25 15,10"
-                                                        Stroke="{DynamicResource Menu.Background}" />
-                                                </Canvas>
-
-                                            </Grid>
-
-
-                                            <!--  ID  -->
-
-                                            <!--  标签戳+ID  -->
-                                            <Grid
-                                                Name="idGrid"
-                                                Grid.Row="1"
-                                                Width="auto"
-                                                HorizontalAlignment="Stretch"
-                                                Background="Transparent"
-                                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto" />
-                                                    <ColumnDefinition Width="auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <TextBox
-                                                    Grid.Column="0"
-                                                    Width="auto"
-                                                    Margin="0,5"
-                                                    Padding="10,0,0,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    FontFamily="微软雅黑"
-                                                    FontSize="15"
-                                                    Foreground="{DynamicResource Window.Foreground}"
-                                                    Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                                    Text="{Binding VID, Mode=OneWay}"
-                                                    TextAlignment="Left"
-                                                    Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-                                                <Border
-                                                    Grid.Column="1"
-                                                    MouseLeftButtonDown="CopyVID"
-                                                    Tag="{Binding VID}">
-                                                    <Border.Style>
-                                                        <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
-                                                            <Setter Property="Visibility" Value="Hidden" />
-                                                            <Style.Triggers>
-                                                                <MultiDataTrigger>
-                                                                    <MultiDataTrigger.Conditions>
-                                                                        <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
-                                                                        <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay, diag:PresentationTraceSources.TraceLevel=High}" Value="true" />
-                                                                    </MultiDataTrigger.Conditions>
-                                                                    <MultiDataTrigger.Setters>
-                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                    </MultiDataTrigger.Setters>
-                                                                </MultiDataTrigger>
-                                                                <MultiDataTrigger>
-                                                                    <MultiDataTrigger.Conditions>
-                                                                        <Condition Binding="{Binding ElementName=idGrid, Path=IsMouseOver}" Value="true" />
-                                                                        <Condition Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false" />
-                                                                    </MultiDataTrigger.Conditions>
-                                                                    <MultiDataTrigger.Setters>
-                                                                        <Setter Property="Visibility" Value="Hidden" />
-                                                                    </MultiDataTrigger.Setters>
-                                                                </MultiDataTrigger>
-
-                                                                <DataTrigger Binding="{Binding Path=DisplayID, Source={x:Static p:Settings.Default}, Mode=OneWay}" Value="false">
-                                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                                </DataTrigger>
-
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-
-                                                    <Viewbox Width="auto" Height="13">
-                                                        <Path
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
-                                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                                    </Viewbox>
-                                                </Border>
-
-
-                                                <!--  标签戳  -->
-
-                                                <ItemsControl
-                                                    Grid.Column="2"
-                                                    Margin="5,5"
-                                                    HorizontalAlignment="Right"
-                                                    ItemsSource="{Binding TagStamp}"
-                                                    Tag="{Binding DataID}"
-                                                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <WrapPanel Orientation="Horizontal" />
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Border
-                                                                Margin="2,0"
-                                                                Padding="4"
-                                                                Background="{Binding BackgroundBrush}"
-                                                                BorderThickness="0"
-                                                                CornerRadius="3"
-                                                                Tag="{Binding TagID}">
-                                                                <Border.ContextMenu>
-                                                                    <ContextMenu>
-                                                                        <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
-                                                                    </ContextMenu>
-                                                                </Border.ContextMenu>
-
-                                                                <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
-                                                            </Border>
-
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-
-                                            </Grid>
-
-                                            <!--  日期  -->
-                                            <TextBox
-                                                Grid.Row="2"
-                                                Margin="0,0"
-                                                Padding="10,5"
-                                                HorizontalAlignment="Left"
-                                                Background="Transparent"
-                                                FontSize="15"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                Opacity="0.5"
-                                                Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                                Text="{Binding ReleaseDate, Mode=OneWay}"
-                                                TextAlignment="Left"
-                                                Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-
-                                            <!--  评分  -->
-                                            <StackPanel
-                                                Grid.Row="3"
-                                                Width="auto"
-                                                Margin="15,5,0,10"
-                                                HorizontalAlignment="Left"
-                                                Cursor="Hand"
-                                                PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
-                                                Tag="{Binding DataID, Mode=OneWay}"
-                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                <super:Rating
-                                                    Half="True"
-                                                    RateBackground="{DynamicResource Window.Title.Background}"
-                                                    RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                    StarMargin="3 0"
-                                                    ValueChanged="Rate_ValueChanged"
-                                                    Value="{Binding Grade, Mode=TwoWay}" />
-                                            </StackPanel>
-
-                                            <TextBox
-                                                Grid.Row="4"
-                                                Width="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, Converter={StaticResource BiggerWidthConverter}, Mode=OneWay}"
-                                                Height="35"
-                                                Margin="0,5,0,15"
-                                                Padding="10,0"
-                                                HorizontalAlignment="Center"
-                                                Background="Transparent"
-                                                FontSize="14"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                MouseLeftButtonDown="CopyText"
-                                                Opacity="0.5"
-                                                Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                                Text="{Binding Title, Mode=OneWay}"
-                                                TextAlignment="Left"
-                                                TextWrapping="Wrap"
-                                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                                                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-
-
-                                        </Grid>
-                                    </Grid>
-
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
 
@@ -2645,14 +2978,15 @@
 
                                                 </StackPanel>
 
-                                                <super:Rating
+                                                <super:Rate
                                                     Grid.Row="2"
                                                     Margin="5"
                                                     VerticalAlignment="Center"
-                                                    Half="True"
-                                                    RateBackground="{DynamicResource Window.Side.Background}"
-                                                    RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                    StarMargin="2 0"
+                                                    AllowHalf="True"
+                                                    Background="{DynamicResource Window.Side.Background}"
+                                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                                                    ItemHeight="20"
+                                                    ItemMargin="3 0"
                                                     ToolTip="{DynamicResource DoubleClickToCancel}"
                                                     ValueChanged="ActorRate_ValueChanged"
                                                     Visibility="Visible"
@@ -2840,6 +3174,7 @@
                                                 x:Name="MovieItemsControl"
                                                 Background="Transparent"
                                                 FocusVisualStyle="{x:Null}"
+                                                ItemTemplate="{StaticResource VideoDataTemplate}"
                                                 ItemsSource="{Binding CurrentVideoList}"
                                                 PreviewMouseWheel="MovieItemsControl_PreviewMouseWheel"
                                                 ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
@@ -2873,364 +3208,12 @@
                                                             <ItemsPresenter />
                                                         </ScrollViewer>-->
                                                     </ControlTemplate>
+
+
                                                 </ItemsControl.Template>
 
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <!--  影片加载动画  -->
-                                                        <DataTemplate.Triggers>
-                                                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation
-                                                                            FillBehavior="Stop"
-                                                                            Storyboard.TargetName="rootGrid"
-                                                                            Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                            From="0"
-                                                                            To="1"
-                                                                            Duration="0:0:0.3" />
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </EventTrigger>
-                                                        </DataTemplate.Triggers>
-                                                        <super:SimplePanel
-                                                            Name="rootGrid"
-                                                            Width="{Binding GlobalImageWidth, Source={x:Static p:Settings.Default}, Mode=OneWay}"
-                                                            Margin="10"
-                                                            ContextMenuOpening="ContextMenu_ContextMenuOpening"
-                                                            Tag="{Binding DataID, Mode=OneWay}">
-                                                            <super:SimplePanel.ContextMenu>
-                                                                <ContextMenu Opacity="0.9" PreviewKeyUp="ContextMenu_PreviewKeyUp">
-                                                                    <MenuItem Click="DownLoadSelectMovie" Header="{DynamicResource SyncInfo}" />
-                                                                    <MenuItem
-                                                                        Click="DownLoadWithUrl"
-                                                                        Header="{DynamicResource Menu_CustomUrl}"
-                                                                        Visibility="Collapsed" />
-                                                                    <MenuItem
-                                                                        Click="EditInfo"
-                                                                        Header="{DynamicResource Menu_EditInfo}"
-                                                                        Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                                                    <MenuItem Click="AddToPlayerList" Header="{DynamicResource AddToPlayList}" />
-                                                                    <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
-                                                                    <MenuItem Header="{DynamicResource Menu_Advance}">
-                                                                        <MenuItem Click="AddDataAssociation" Header="{DynamicResource DataAsso}" />
-                                                                        <MenuItem Click="GenerateScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
-                                                                        <MenuItem Click="GenerateGif" Header="{DynamicResource Menu_GenerateGif}" />
-                                                                        <MenuItem
-                                                                            Click="TranslateMovie"
-                                                                            Header="{DynamicResource Menu_Translate}"
-                                                                            Visibility="Collapsed" />
-                                                                        <MenuItem
-                                                                            Click="GenerateSmallImage"
-                                                                            Header="{DynamicResource Menu_GenerateThumbnail}"
-                                                                            Visibility="Collapsed" />
-                                                                        <MenuItem
-                                                                            Click="GenerateActor"
-                                                                            Header="{DynamicResource Menu_GenerateActressImage}"
-                                                                            Visibility="Collapsed" />
-                                                                        <MenuItem Click="RenameFile" Header="{DynamicResource Menu_RenameFile}" />
-                                                                        <MenuItem
-                                                                            Click="ReMoveZero"
-                                                                            Header="{DynamicResource Menu_RemoveZero}"
-                                                                            Visibility="Collapsed" />
-                                                                        <MenuItem
-                                                                            Click="DeleteDownloadInfo"
-                                                                            Header="{DynamicResource ClearDownloadInfo}"
-                                                                            Visibility="Collapsed" />
-
-                                                                    </MenuItem>
 
 
-                                                                    <Separator />
-                                                                    <MenuItem
-                                                                        Click="OpenWeb"
-                                                                        Header="{DynamicResource ViewWebsite}"
-                                                                        Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
-
-                                                                    <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
-                                                                        <MenuItem
-                                                                            Command="cmd:File.OpenSelectFile"
-                                                                            CommandParameter="{Binding Path}"
-                                                                            Header="{DynamicResource Movie}" />
-                                                                        <MenuItem Click="OpenPath" Header="{DynamicResource Poster}" />
-                                                                        <MenuItem Click="OpenPath" Header="{DynamicResource Thumbnail}" />
-                                                                        <MenuItem Click="OpenPath" Header="{DynamicResource Preview}" />
-                                                                        <MenuItem Click="OpenPath" Header="{DynamicResource ScreenShot}" />
-                                                                        <MenuItem Click="OpenPath" Header="GIF" />
-
-                                                                    </MenuItem>
-
-                                                                    <MenuItem Click="CopyFile" Header="{DynamicResource Menu_CopyFile}" />
-                                                                    <MenuItem Click="CutFile" Header="{DynamicResource CutX}" />
-
-                                                                    <Separator />
-                                                                    <MenuItem
-                                                                        Click="DeleteID"
-                                                                        Header="{DynamicResource Menu_DeleteInfo}"
-                                                                        ToolTip="{DynamicResource ToolTip_DeleteInfo}" />
-                                                                    <MenuItem
-                                                                        Click="DeleteFile"
-                                                                        Header="{DynamicResource Menu_DeleteFile}"
-                                                                        Icon="pack://application:,,,/Resources/menuitem/clear.png"
-                                                                        ToolTip="{DynamicResource ToolTip_DeleteFile}" />
-
-
-
-                                                                </ContextMenu>
-
-                                                            </super:SimplePanel.ContextMenu>
-                                                            <Border
-                                                                Name="rootBorder"
-                                                                MinWidth="200"
-                                                                Margin="0"
-                                                                Background="{DynamicResource ListBoxItem.Background}"
-                                                                BorderThickness="2"
-                                                                CornerRadius="3"
-                                                                Effect="{StaticResource BlueDropShadowEffect}"
-                                                                Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}}"
-                                                                Style="{StaticResource SimpleBorder}" />
-
-                                                            <StackPanel Margin="0" Tag="{Binding DataID, Mode=OneWay}">
-                                                                <!--  图片  -->
-                                                                <super:SimplePanel Grid.Row="0">
-                                                                    <media:GifImage
-                                                                        x:Name="GifImage"
-                                                                        Margin="2"
-                                                                        HorizontalAlignment="Center"
-                                                                        VerticalAlignment="Center"
-                                                                        BigImageSource="{Binding BigImage, Mode=OneWay}"
-                                                                        Cursor="Hand"
-                                                                        GifSource="{Binding GifUri, Mode=OneWay}"
-                                                                        MouseEnter="BorderMouseEnter"
-                                                                        MouseLeave="BorderMouseLeave"
-                                                                        MouseLeftButtonDown="CanShowDetails"
-                                                                        MouseLeftButtonUp="ShowDetails"
-                                                                        RenderOptions.BitmapScalingMode="LowQuality"
-                                                                        SmallImageSource="{Binding SmallImage, Mode=OneWay}"
-                                                                        Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
-                                                                        Style="{StaticResource GifImageStyle}" />
-
-                                                                    <!--  分段视频  -->
-                                                                    <StackPanel
-                                                                        HorizontalAlignment="Right"
-                                                                        VerticalAlignment="Bottom"
-                                                                        Panel.ZIndex="3"
-                                                                        Orientation="Horizontal">
-                                                                        <Button
-                                                                            Height="auto"
-                                                                            Margin="5"
-                                                                            Padding="5"
-                                                                            Click="ViewAssocDatas"
-                                                                            Cursor="Hand"
-                                                                            IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                                            Style="{StaticResource RoundNormalButton}"
-                                                                            Tag="{DynamicResource Button.Hover.Background}"
-                                                                            Visibility="{Binding HasAssociation, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-
-                                                                            <Image
-                                                                                Width="20"
-                                                                                Height="20"
-                                                                                Source="/Resources/Picture/asso.png" />
-                                                                        </Button>
-                                                                        <Button
-                                                                            Height="auto"
-                                                                            Margin="0,5,5,5"
-                                                                            Padding="5"
-                                                                            Click="ShowSubSection"
-                                                                            Cursor="Hand"
-                                                                            IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                                            Style="{StaticResource RoundNormalButton}"
-                                                                            Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                                                                            <Button.ContextMenu>
-                                                                                <ContextMenu HorizontalOffset="-50" VerticalOffset="10" />
-                                                                            </Button.ContextMenu>
-                                                                            <Image
-                                                                                Width="20"
-                                                                                Height="20"
-                                                                                Source="/Resources/Picture/subsection1.png" />
-                                                                        </Button>
-
-                                                                    </StackPanel>
-
-                                                                    <!--  播放按钮  -->
-                                                                    <Image
-                                                                        Height="40"
-                                                                        Margin="10,0,10,0"
-                                                                        HorizontalAlignment="Center"
-                                                                        VerticalAlignment="Center"
-                                                                        Cursor="Hand"
-                                                                        MouseLeftButtonUp="PlayVideo"
-                                                                        Opacity="0.8"
-                                                                        Source="/Resources/Picture/Jvedio.png"
-                                                                        ToolTip="{Binding Title, Mode=OneWay}">
-                                                                        <Image.Style>
-                                                                            <Style TargetType="Image">
-                                                                                <Setter Property="Visibility" Value="Hidden" />
-                                                                                <Style.Triggers>
-                                                                                    <MultiDataTrigger>
-                                                                                        <MultiDataTrigger.Conditions>
-                                                                                            <Condition Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="False" />
-                                                                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type super:SimplePanel}, Mode=FindAncestor}}" Value="True" />
-                                                                                        </MultiDataTrigger.Conditions>
-                                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                                    </MultiDataTrigger>
-                                                                                    <DataTrigger Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="True">
-                                                                                        <Setter Property="Visibility" Value="Hidden" />
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </Image.Style>
-                                                                    </Image>
-
-
-                                                                </super:SimplePanel>
-
-
-                                                                <!--  标签戳+ID  -->
-                                                                <Grid Grid.Row="1" IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
-                                                                    <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition Width="auto" />
-                                                                        <ColumnDefinition Width="*" />
-                                                                    </Grid.ColumnDefinitions>
-
-                                                                    <StackPanel Orientation="Vertical">
-                                                                        <TextBlock
-                                                                            Height="20"
-                                                                            MaxWidth="150"
-                                                                            Margin="0,7"
-                                                                            Padding="12,0,0,0"
-                                                                            HorizontalAlignment="Left"
-                                                                            Cursor="Hand"
-                                                                            FontSize="15"
-                                                                            MouseLeftButtonDown="CopyVID"
-                                                                            Style="{StaticResource BaseTextBlock}"
-                                                                            Text="{Binding VID, Mode=OneWay}"
-                                                                            TextTrimming="CharacterEllipsis"
-                                                                            Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-
-
-                                                                        <!--  日期  -->
-
-                                                                        <TextBlock
-                                                                            Height="20"
-                                                                            MaxWidth="150"
-                                                                            Margin="0,5"
-                                                                            Padding="12,0,0,0"
-                                                                            HorizontalAlignment="Left"
-                                                                            Cursor="Hand"
-                                                                            FontSize="15"
-                                                                            MouseLeftButtonDown="CopyVID"
-                                                                            Opacity="0.5"
-                                                                            Style="{StaticResource BaseTextBlock}"
-                                                                            Text="{Binding ReleaseDate, Mode=OneWay}"
-                                                                            TextAlignment="Left"
-                                                                            TextTrimming="WordEllipsis"
-                                                                            Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-
-                                                                    </StackPanel>
-
-
-                                                                    <!--  标签戳  -->
-
-                                                                    <ItemsControl
-                                                                        Grid.Column="1"
-                                                                        Margin="0,5,5,0"
-                                                                        HorizontalAlignment="Right"
-                                                                        ItemsSource="{Binding TagStamp}"
-                                                                        Tag="{Binding DataID}"
-                                                                        Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
-                                                                        <ItemsControl.ItemsPanel>
-                                                                            <ItemsPanelTemplate>
-                                                                                <WrapPanel Orientation="Horizontal" />
-                                                                            </ItemsPanelTemplate>
-                                                                        </ItemsControl.ItemsPanel>
-                                                                        <ItemsControl.ItemTemplate>
-                                                                            <DataTemplate>
-                                                                                <Border
-                                                                                    Margin="2"
-                                                                                    Padding="4"
-                                                                                    Background="{Binding BackgroundBrush}"
-                                                                                    BorderThickness="0"
-                                                                                    CornerRadius="3"
-                                                                                    Tag="{Binding TagID}">
-                                                                                    <Border.ContextMenu>
-                                                                                        <ContextMenu>
-                                                                                            <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
-                                                                                        </ContextMenu>
-                                                                                    </Border.ContextMenu>
-
-                                                                                    <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
-                                                                                </Border>
-
-                                                                            </DataTemplate>
-                                                                        </ItemsControl.ItemTemplate>
-                                                                    </ItemsControl>
-
-
-                                                                </Grid>
-
-                                                                <!--  星级  -->
-                                                                <ItemsControl
-                                                                    Margin="10,5"
-                                                                    HorizontalAlignment="Left"
-                                                                    VerticalAlignment="Bottom"
-                                                                    ItemsSource="{Binding Grade, Mode=OneWay, Converter={StaticResource Num2ItemsSourceConverter}}">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <StackPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Viewbox
-                                                                                Width="15"
-                                                                                Height="auto"
-                                                                                Margin="3,0"
-                                                                                VerticalAlignment="Center"
-                                                                                Cursor="Hand">
-                                                                                <Path
-                                                                                    Data="M508.3392 883.712C200.7296 1100.2112 101.2224 1023.6928 209.792 654.1056c-292.9408-237.4912-253.7472-359.6544 117.5808-366.3872 126.5152-363.3408 250.2912-362.2656 371.2 3.0976 371.0976 12.9792 408.448 135.8336 111.8976 368.384C913.2032 1030.5024 812.4928 1105.408 508.3392 883.712L508.3392 883.712zM508.3392 883.712"
-                                                                                    Fill="{DynamicResource Common.HighLight.Deep.Background}"
-                                                                                    RenderTransformOrigin="0.5,0.5" />
-                                                                            </Viewbox>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                                <!--<super:Rating
-                                                                    Margin="10,5"
-                                                                    Half="True"
-                                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                                    PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
-                                                                    RateBackground="{DynamicResource Window.Title.Background}"
-                                                                    RateForeground="{DynamicResource Common.HighLight.Deep.Background}"
-                                                                    StarMargin="3 0"
-                                                                    ValueChanged="Rate_ValueChanged"
-                                                                    Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}"
-                                                                    Value="{Binding Grade, Mode=TwoWay}" />-->
-
-
-                                                                <TextBlock
-                                                                    Height="40"
-                                                                    Margin="0,5"
-                                                                    Padding="10,0"
-                                                                    HorizontalAlignment="Left"
-                                                                    Cursor="Hand"
-                                                                    FontSize="14"
-                                                                    IsEnabled="{Binding EditMode, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
-                                                                    MouseLeftButtonDown="CopyVID"
-                                                                    Opacity="0.5"
-                                                                    Style="{StaticResource BaseTextBlock}"
-                                                                    Text="{Binding Title, Mode=OneWay}"
-                                                                    TextAlignment="Left"
-                                                                    TextTrimming="CharacterEllipsis"
-                                                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                                                                    Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-
-
-                                                            </StackPanel>
-                                                        </super:SimplePanel>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
                                             </ItemsControl>
 
                                             <!--  去到顶部/底部  -->
