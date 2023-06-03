@@ -73,7 +73,7 @@ namespace Jvedio.ViewModel
 
         public List<Movie> MovieList { get; set; }
 
-        private List<Video> CurrentExistAssocData { get; set; }
+
 
         #region "RelayCommand"
         public RelayCommand<object> SelectCommand { get; set; }
@@ -107,7 +107,6 @@ namespace Jvedio.ViewModel
         public VieModel_Main()
         {
             ClickFilterType = string.Empty;
-            CurrentExistAssocData = new List<Video>();
 
             SelectCommand = new RelayCommand<object>(t => GenerateSelect(t));
             ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
@@ -132,6 +131,38 @@ namespace Jvedio.ViewModel
         //        ColorThemes.Add(item);
         //    }
         //}
+
+
+        public ObservableCollection<Video> _ViewAssociationDatas;
+
+        public ObservableCollection<Video> ViewAssociationDatas
+        {
+            get { return _ViewAssociationDatas; }
+
+            set
+            {
+                _ViewAssociationDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        // 影片关联
+        public ObservableCollection<Video> _AssociationDatas;
+
+        public ObservableCollection<Video> AssociationDatas
+        {
+            get { return _AssociationDatas; }
+
+            set
+            {
+                _AssociationDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
+
 
         public void InitBinding()
         {
@@ -159,6 +190,19 @@ namespace Jvedio.ViewModel
         }
 
         #region "界面显示属性"
+
+        private int _RenderProgress;
+
+        public int RenderProgress
+        {
+            get { return _RenderProgress; }
+
+            set
+            {
+                _RenderProgress = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private Visibility _ShowFirstRun = Visibility.Collapsed;
 
@@ -956,110 +1000,13 @@ namespace Jvedio.ViewModel
 
 
 
-        // 影片关联
-        public ObservableCollection<Video> _AssociationDatas;
 
-        public ObservableCollection<Video> AssociationDatas
-        {
-            get { return _AssociationDatas; }
 
-            set
-            {
-                _AssociationDatas = value;
-                RaisePropertyChanged();
-            }
-        }
 
-        public ObservableCollection<Video> _ViewAssociationDatas;
 
-        public ObservableCollection<Video> ViewAssociationDatas
-        {
-            get { return _ViewAssociationDatas; }
 
-            set
-            {
-                _ViewAssociationDatas = value;
-                RaisePropertyChanged();
-            }
-        }
 
-        public long _AssocSearchTotalCount;
 
-        public long AssoSearchTotalCount
-        {
-            get { return _AssocSearchTotalCount; }
-
-            set
-            {
-                _AssocSearchTotalCount = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int _AssocSearchPageSize = 20;
-
-        public int AssoSearchPageSize
-        {
-            get { return _AssocSearchPageSize; }
-
-            set
-            {
-                _AssocSearchPageSize = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _CurrentAssoSearchPage = 1;
-
-        public int CurrentAssoSearchPage
-        {
-            get { return _CurrentAssoSearchPage; }
-
-            set
-            {
-                _CurrentAssoSearchPage = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string _AssoSearchText = string.Empty;
-
-        public string AssoSearchText
-        {
-            get { return _AssoSearchText; }
-
-            set
-            {
-                _AssoSearchText = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public ObservableCollection<Video> _AssociationSelectedDatas = new ObservableCollection<Video>();
-
-        public ObservableCollection<Video> AssociationSelectedDatas
-        {
-            get { return _AssociationSelectedDatas; }
-
-            set
-            {
-                _AssociationSelectedDatas = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public ObservableCollection<Video> _ExistAssociationDatas = new ObservableCollection<Video>();
-
-        public ObservableCollection<Video> ExistAssociationDatas
-        {
-            get { return _ExistAssociationDatas; }
-
-            set
-            {
-                _ExistAssociationDatas = value;
-                RaisePropertyChanged();
-            }
-        }
         public bool _SideDefaultExpanded = ConfigManager.Main.SideDefaultExpanded;
 
         public bool SideDefaultExpanded
@@ -1442,29 +1389,6 @@ namespace Jvedio.ViewModel
                     CurrentVideoList[idx] = null;
                     CurrentVideoList[idx] = video;
                 }
-            }
-        }
-
-        private delegate void LoadAssoVideoDelegate(Video video, int idx);
-
-        private void LoadAssoVideo(Video video, int idx)
-        {
-            if (AssociationDatas.Count < main.assoPagination.PageSize)
-            {
-                if (idx < AssociationDatas.Count)
-                {
-                    AssociationDatas[idx] = null;
-                    AssociationDatas[idx] = video;
-                }
-                else
-                {
-                    AssociationDatas.Add(video);
-                }
-            }
-            else
-            {
-                AssociationDatas[idx] = null;
-                AssociationDatas[idx] = video;
             }
         }
 
@@ -1871,7 +1795,16 @@ namespace Jvedio.ViewModel
 
         #region "影片"
 
-        public bool rendering { get; set; }
+        private bool _rendering;
+        public bool Rendering
+        {
+            get { return _rendering; }
+            set
+            {
+                _rendering = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public SelectWrapper<Video> extraWrapper { get; set; }
 
@@ -1988,7 +1921,7 @@ namespace Jvedio.ViewModel
             }
 
             // 当前有视频在渲染的时候，打断渲染，等待结束
-            while (rendering)
+            while (Rendering)
             {
                 renderVideoCTS?.Cancel(); // 取消加载
                 await Task.Delay(100);
@@ -2148,12 +2081,12 @@ namespace Jvedio.ViewModel
                     break;
                 }
 
-                rendering = true;
+                Rendering = true;
                 Video video = VideoList[i];
                 if (video == null) continue;
                 Video.SetImage(ref video, imageMode);
                 Video.setTagStamps(ref video); // 设置标签戳
-                Video.handleEmpty(ref video); // 设置标题和发行日期
+                Video.HandleEmpty(ref video); // 设置标题和发行日期
 
                 // 设置关联
                 HashSet<long> set = associationMapper.GetAssociationDatas(video.DataID);
@@ -2164,6 +2097,7 @@ namespace Jvedio.ViewModel
                 }
 
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
+                RenderProgress = (int)(100 * (i + 1) / (float)VideoList.Count);
             }
 
             // 清除
@@ -2174,7 +2108,7 @@ namespace Jvedio.ViewModel
 
             if (renderVideoCT.IsCancellationRequested)
                 RefreshVideoRenderToken();
-            rendering = false;
+            Rendering = false;
 
             // if (pageQueue.Count > 0) pageQueue.Dequeue();
             PageChangedCompleted?.Invoke(this, null);
@@ -2241,14 +2175,15 @@ namespace Jvedio.ViewModel
             for (int i = 0; i < videos.Count; i++)
             {
                 Video video = videos[i];
-                if (video == null) continue;
+                if (video == null)
+                    continue;
                 BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 BitmapImage bigimage = ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.setTagStamps(ref video); // 设置标签戳
-                Video.handleEmpty(ref video); // 设置标题和发行日期
+                Video.HandleEmpty(ref video); // 设置标题和发行日期
 
                 if (ConfigManager.Settings.AutoGenScreenShot)
                 {
@@ -2273,149 +2208,6 @@ namespace Jvedio.ViewModel
             {
                 ViewAssociationDatas.RemoveAt(i);
             }
-        }
-
-        public void LoadAssoMetaData()
-        {
-            string searchText = AssoSearchText.ToProperSql();
-
-            if (AssociationDatas == null) AssociationDatas = new ObservableCollection<Video>();
-
-            if (string.IsNullOrEmpty(searchText))
-            {
-                AssoSearchTotalCount = 0;
-                return;
-            }
-
-            SelectWrapper<Video> wrapper = Video.InitWrapper();
-            wrapper.Like("Title", searchText).LeftBracket()
-                .Or().Like("Path", searchText)
-                .Or().Like("VID", searchText)
-                .RightBracket();
-
-            toAssoSearchLimit(wrapper);
-            wrapper.Select(SelectFields);
-
-            string sql = VideoMapper.BASE_SQL;
-
-            string count_sql = "select count(*) " + sql + wrapper.ToWhere(false);
-            AssoSearchTotalCount = metaDataMapper.SelectCount(count_sql);
-            main.assoPagination.Total = AssoSearchTotalCount;
-
-            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
-
-            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
-
-            if (videos == null) return;
-
-            for (int i = 0; i < videos.Count; i++)
-            {
-                Video video = videos[i];
-                if (video == null) continue;
-                BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
-                if (bigimage == null) bigimage = smallimage;
-                video.BigImage = bigimage;
-                Video.handleEmpty(ref video); // 设置标题和发行日期
-                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadAssoVideoDelegate(LoadAssoVideo), video, i);
-            }
-
-            // 清除
-            for (int i = AssociationDatas.Count - 1; i > videos.Count - 1; i--)
-            {
-                AssociationDatas.RemoveAt(i);
-            }
-
-            LoadAssocMetaDataCompleted?.Invoke(null, null);
-        }
-
-        public void toAssoSearchLimit<T>(IWrapper<T> wrapper)
-        {
-            int row_count = AssoSearchPageSize;
-            long offset = AssoSearchPageSize * (CurrentAssoSearchPage - 1);
-            wrapper.Limit(offset, row_count);
-        }
-
-        public void LoadExistAssociationDatas(long dataID)
-        {
-            ExistAssociationDatas = new ObservableCollection<Video>();
-            CurrentExistAssocData = new List<Video>();
-
-            // 遍历邻接表，找到所有关联的 id
-            HashSet<long> set = associationMapper.GetAssociationDatas(dataID);
-            if (set?.Count > 0)
-            {
-                SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-                wrapper.Select("VID", "metadata.DataID", "Title", "MVID").In("metadata.DataID", set.Select(x => x.ToString()));
-                string sql = VideoMapper.BASE_SQL;
-                sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
-                List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-                CurrentExistAssocData = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
-                if (CurrentExistAssocData != null)
-                    CurrentExistAssocData.ForEach(t => ExistAssociationDatas.Add(t));
-                else
-                    CurrentExistAssocData = new List<Video>();
-            }
-        }
-
-
-        /// <summary>
-        /// 保存关联关系，并返回被删除的关联
-        /// </summary>
-        /// <param name="dataID"></param>
-        /// <returns></returns>
-        public List<long> SaveAssociation(long dataID)
-        {
-            List<Association> toInsert = new List<Association>();
-            List<long> toDelete = new List<long>(); // 删除比较特殊，要删除所有该 id 的
-            List<long> dataList = new List<long>();
-            if (ExistAssociationDatas != null && ExistAssociationDatas.Count > 0)
-            {
-                dataList = AssociationSelectedDatas.Union(ExistAssociationDatas).ToHashSet().Select(arg => arg.DataID).ToList();
-                foreach (long id in dataList)
-                    toInsert.Add(new Association(dataID, id));
-            }
-            else
-            {
-                if (AssociationSelectedDatas.Count > 0)
-                {
-                    foreach (Video item in AssociationSelectedDatas)
-                        toInsert.Add(new Association(dataID, item.DataID));
-                }
-            }
-
-            // 删除
-            List<long> list = CurrentExistAssocData.Select(arg => arg.DataID).Except(dataList).ToList();
-            foreach (long id in list)
-                toDelete.Add(id);
-
-            if (toInsert.Count > 0)
-                associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
-            if (toDelete.Count > 0)
-            {
-                foreach (long id in toDelete)
-                {
-                    string sql = $"delete from common_association where MainDataID='{id}' or SubDataID='{id}'";
-                    associationMapper.ExecuteNonQuery(sql);
-                }
-            }
-
-            return toDelete;
-        }
-
-
-        public bool SaveAssociations(List<Video> videoList)
-        {
-            if (videoList.Count == 1)
-                return false;
-            List<Association> toInsert = new List<Association>();
-            long baseId = videoList[0].DataID;
-            foreach (Video item in videoList)
-                toInsert.Add(new Association(baseId, item.DataID));
-            int count = associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
-            return count > 0;
         }
     }
 }

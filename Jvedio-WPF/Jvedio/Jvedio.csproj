@@ -412,6 +412,10 @@
     <Compile Include="Core\Logs\Logger.cs" />
     <Compile Include="Entity\Common\NFO.cs" />
     <Compile Include="Core\Scan\ScanHelper.cs" />
+    <Compile Include="Windows\Dialog\VieModels\VieModel_SearchAsso.cs" />
+    <Compile Include="Windows\Dialog\Window_SearchAsso.xaml.cs">
+      <DependentUpon>Window_SearchAsso.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Window_DataBase.xaml.cs">
       <DependentUpon>Window_DataBase.xaml</DependentUpon>
     </Compile>
@@ -498,6 +502,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="WindowsDialog\Dialog_Thanks.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Dialog\Window_SearchAsso.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

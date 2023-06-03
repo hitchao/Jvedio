@@ -68,7 +68,7 @@ namespace Jvedio.Entity
             }
         }
 
-        public static void handleEmpty(ref Video video)
+        public static void HandleEmpty(ref Video video)
         {
             if (Properties.Settings.Default.ShowFileNameIfTitleEmpty
                 && !string.IsNullOrEmpty(video.Path) && string.IsNullOrEmpty(video.Title))

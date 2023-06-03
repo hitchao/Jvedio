@@ -211,7 +211,7 @@ namespace Jvedio.ViewModel
             metaDataMapper.IncreaseFieldById("ViewCount", dataID); // 访问次数+1
             Video video = videoMapper.SelectVideoByID(dataID);
             Video.setTagStamps(ref video); // 设置标签戳
-            Video.handleEmpty(ref video);
+            Video.HandleEmpty(ref video);
 
             // 设置关联
             HashSet<long> set = associationMapper.GetAssociationDatas(video.DataID);
@@ -271,7 +271,7 @@ namespace Jvedio.ViewModel
                 if (bigimage == null) bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.setTagStamps(ref video); // 设置标签戳
-                Video.handleEmpty(ref video); // 设置标题和发行日期
+                Video.HandleEmpty(ref video); // 设置标题和发行日期
 
                 if (ConfigManager.Settings.AutoGenScreenShot)
                 {
