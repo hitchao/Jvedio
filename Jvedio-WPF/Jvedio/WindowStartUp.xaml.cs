@@ -679,7 +679,7 @@ namespace Jvedio
                 else
                 {
                     main.setDataBases();
-                    main.setComboboxID();
+                    main.SetComboboxID();
                 }
 
                 main.Show();

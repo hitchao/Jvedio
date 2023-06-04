@@ -1,0 +1,222 @@
+﻿<Page
+    x:Class="Jvedio.Pages.ActorInfoPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Jvedio.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
+    Title="ActorInfoPage"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style
+            x:Key="ActorTextBox"
+            BasedOn="{StaticResource ReadOnlyWrapTextBox}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EnableEditActress}" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
+                    <Setter Property="IsReadOnly" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style
+            x:Key="ActorInfoTextBlock"
+            BasedOn="{StaticResource BaseTextBlock}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="10,10" />
+        </Style>
+
+
+    </Page.Resources>
+
+    <super:SimplePanel Margin="10">
+        <Border
+            Margin="5"
+            Background="{DynamicResource Window.Title.Background}"
+            CornerRadius="5"
+            Effect="{StaticResource NormalDropShadowEffect}" />
+
+        <Border
+            Width="24"
+            Height="24"
+            Margin="10"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Panel.ZIndex="5"
+            CornerRadius="5"
+            Cursor="Hand"
+            MouseLeftButtonUp="HideActressGrid"
+            Style="{StaticResource CloseBorderStyle}">
+            <Viewbox
+                Width="12"
+                Height="auto"
+                VerticalAlignment="Center">
+                <Path
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
+                    Fill="{DynamicResource Window.Foreground}" />
+            </Viewbox>
+        </Border>
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Image
+                    Width="120"
+                    Margin="0,20"
+                    VerticalAlignment="Top"
+                    AllowDrop="True"
+                    DragOver="Image_DragOver"
+                    Drop="Image_Drop"
+                    Source="{Binding CurrentActorInfo.SmallImage}"
+                    Tag="{Binding CurrentActorInfo.ActorID, Mode=OneWay}">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Click="OpenActorPath" Header="{DynamicResource OpenPath}" />
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
+                <TextBox
+                    Width="auto"
+                    MaxWidth="200"
+                    MaxHeight="50"
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    ContextMenu="{StaticResource CopyContextMenu}"
+                    FontSize="20"
+                    FontWeight="Normal"
+                    Foreground="{DynamicResource Window.Foreground}"
+                    IsReadOnly="True"
+                    Style="{StaticResource ActorTextBox}"
+                    Text="{Binding CurrentActorInfo.ActorName, Mode=OneWay}"
+                    TextAlignment="Center" />
+
+
+            </StackPanel>
+
+
+
+            <StackPanel
+                Grid.Row="1"
+                IsEnabled="False"
+                Orientation="Horizontal"
+                Visibility="Collapsed">
+                <Border MouseLeftButtonUp="EditActress">
+                    <Image
+                        Height="15"
+                        Margin="5"
+                        Source="pack://application:,,,/Resources/Picture/edit.png" />
+                </Border>
+                <Border MouseLeftButtonUp="BeginDownLoadActress">
+                    <Image
+                        Height="20"
+                        Margin="5"
+                        Source="pack://application:,,,/Resources/Picture/download.png" />
+                </Border>
+                <Border
+                    PreviewMouseLeftButtonUp="LoadActorOtherMovie"
+                    Tag="{Binding CurrentActorInfo.ActorName, Mode=OneWay}"
+                    ToolTip="{DynamicResource LoadActorOtherMovie}"
+                    Visibility="Visible">
+                    <Image
+                        Height="17"
+                        Margin="5"
+                        Source="pack://application:,,,/Resources/Picture/其他.png" />
+                </Border>
+
+            </StackPanel>
+
+            <super:Rate
+                Grid.Row="2"
+                Margin="5"
+                VerticalAlignment="Center"
+                AllowHalf="True"
+                Background="{DynamicResource Window.Side.Background}"
+                Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                ItemHeight="20"
+                ItemMargin="3 0"
+                ToolTip="{DynamicResource DoubleClickToCancel}"
+                ValueChanged="ActorRate_ValueChanged"
+                Visibility="Visible"
+                Value="{Binding CurrentActorInfo.Grade, Mode=TwoWay}" />
+
+
+
+            <ScrollViewer
+                Grid.Row="3"
+                Margin="0,5"
+                VerticalScrollBarVisibility="Visible">
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Birthday}" />
+                        <TextBox
+                            Style="{StaticResource ActorTextBox}"
+                            Text="{Binding CurrentActorInfo.Birthday, Mode=TwoWay}"
+                            ToolTip="【0000-00-00】" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Age}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Age, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Birthplace}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.BirthPlace, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Height}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Cup}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Chest}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Chest, Mode=TwoWay}" />
+                    </StackPanel>
+
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Waist}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Waist, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Hipline}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Hipline, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource ActorInfoTextBlock}" Text="{DynamicResource Actress_Hobby}" />
+                        <TextBox Style="{StaticResource ActorTextBox}" Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}" />
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </super:SimplePanel>
+
+</Page>

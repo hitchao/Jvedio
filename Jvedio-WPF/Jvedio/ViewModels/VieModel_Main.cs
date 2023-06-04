@@ -191,6 +191,18 @@ namespace Jvedio.ViewModel
 
         #region "界面显示属性"
 
+        private bool _MainDataChecked;
+
+        public bool MainDataChecked
+        {
+            get { return _MainDataChecked; }
+
+            set
+            {
+                _MainDataChecked = value;
+                RaisePropertyChanged();
+            }
+        }
         private int _RenderProgress;
 
         public int RenderProgress
@@ -217,9 +229,9 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private Visibility _ShowActorGrid = Visibility.Collapsed;
+        private bool _ShowActorGrid;
 
-        public Visibility ShowActorGrid
+        public bool ShowActorGrid
         {
             get { return _ShowActorGrid; }
 
@@ -230,28 +242,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        // private Visibility _GoToTopCanvas = Visibility.Collapsed;
-
-        // public Visibility GoToTopCanvas
-        // {
-        //    get { return _GoToTopCanvas; }
-        //    set
-        //    {
-        //        _GoToTopCanvas = value;
-        //        RaisePropertyChanged();
-        //    }
-        // }
-        // private Visibility _GoToBottomCanvas = Visibility.Visible;
-
-        // public Visibility GoToBottomCanvas
-        // {
-        //    get { return _GoToBottomCanvas; }
-        //    set
-        //    {
-        //        _GoToBottomCanvas = value;
-        //        RaisePropertyChanged();
-        //    }
-        // }
         private Visibility _ActorProgressBarVisibility = Visibility.Collapsed;
 
         public Visibility ActorProgressBarVisibility
@@ -473,6 +463,19 @@ namespace Jvedio.ViewModel
             set
             {
                 _DataBases = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _CurrentDbId;
+
+        public int CurrentDbId
+        {
+            get { return _CurrentDbId; }
+
+            set
+            {
+                _CurrentDbId = value;
                 RaisePropertyChanged();
             }
         }
@@ -794,18 +797,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public bool _IsScanning = false;
 
-        public bool IsScanning
-        {
-            get { return _IsScanning; }
-
-            set
-            {
-                _IsScanning = value;
-                RaisePropertyChanged();
-            }
-        }
 
         public bool _EnableEditActress = false;
 
@@ -955,18 +947,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ActorInfo _CurrentActorInfo;
 
-        public ActorInfo CurrentActorInfo
-        {
-            get { return _CurrentActorInfo; }
-
-            set
-            {
-                _CurrentActorInfo = value;
-                RaisePropertyChanged();
-            }
-        }
 
         #endregion
 
@@ -1904,7 +1885,7 @@ namespace Jvedio.ViewModel
 
             main.pagination.CurrentPage = 1;
             ClickFilterType = string.Empty;
-            ShowActorGrid = Visibility.Collapsed;
+            ShowActorGrid = false;
             //Select();
         }
 

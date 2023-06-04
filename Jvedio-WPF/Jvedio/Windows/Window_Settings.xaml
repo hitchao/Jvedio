@@ -1275,10 +1275,7 @@
                                     <CheckBox Content="{DynamicResource PageDropMenu}" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                     <CheckBox Content="{DynamicResource StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                     <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox
-                                        Content="{DynamicResource Navigation}"
-                                        IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
-                                        IsEnabled="False" />
+                                    <CheckBox Content="{DynamicResource Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                 </WrapPanel>
                                 <CheckBox
                                     Content="{DynamicResource Filter}"

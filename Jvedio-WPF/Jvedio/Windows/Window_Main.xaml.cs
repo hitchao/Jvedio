@@ -56,6 +56,7 @@ using static SuperUtils.WPF.VisualTools.VisualHelper;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static Jvedio.App;
 using System.Security.Cryptography.X509Certificates;
+using Jvedio.Pages;
 
 namespace Jvedio
 {
@@ -211,7 +212,6 @@ namespace Jvedio
             InitThemeSelector();
             //SetSkin(); // 设置主题颜色
             InitNotice(); // 初始化公告
-            SetLoadingStatus(false); // todo 删除该行
 
             setDataBases(); // 设置当前下拉数据库
             setRecentWatched(); // 显示最近播放
@@ -222,7 +222,7 @@ namespace Jvedio
             // await vieModel.InitLettersNavigation(); // todo
             BindingEventAfterRender(); // render 后才绑定的事件
             InitTagStamp();
-            AllRadioButton.IsChecked = true;
+            vieModel.MainDataChecked = true;
 
 
             vieModel.Reset();           // 加载数据
@@ -356,8 +356,7 @@ namespace Jvedio
                 vieModel.LoadData();
             };
 
-            setComboboxID();
-            DatabaseComboBox.SelectionChanged += DatabaseComboBox_SelectionChanged;
+            SetComboboxID();
 
             // 搜索框事件
             searchBox.TextChanged += RefreshCandidate;
@@ -461,13 +460,26 @@ namespace Jvedio
                 int.TryParse(message, out int value);
                 vieModel.DownloadLongTaskDelay = value / 1000;
             };
+
+
+
+
+            // 此处参考：https://social.msdn.microsoft.com/Forums/vstudio/en-US/cefcfaa5-cb86-426f-b57a-b31a3ea5fcdd/how-to-add-eventsetter-by-code?forum=wpf
+            SearchBoxListItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
+            EventSetter eventSetter = new EventSetter()
+            {
+                Event = ListBoxItem.MouseDoubleClickEvent,
+                Handler = new MouseButtonEventHandler(ListBoxItem_MouseDoubleClick)
+            };
+            SearchBoxListItemContainerStyle.Setters.Add(eventSetter);
         }
 
-        public void setComboboxID()
+        private static Style SearchBoxListItemContainerStyle { get; set; }
+
+
+        public void SetComboboxID()
         {
-            int idx = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == ConfigManager.Main.CurrentDBId);
-            if (idx < 0 || idx > DatabaseComboBox.Items.Count) idx = 0;
-            DatabaseComboBox.SelectedIndex = idx;
+            vieModel.CurrentDbId = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == ConfigManager.Main.CurrentDBId);
         }
 
         private async void RefreshCandidate(object sender, TextChangedEventArgs e)
@@ -475,10 +487,10 @@ namespace Jvedio
             List<string> list = await vieModel.GetSearchCandidate();
             int idx = (int)ConfigManager.Main.SearchSelectedIndex;
             TabItem tabItem = searchTabControl.Items[idx] as TabItem;
-            addOrRefreshItem(tabItem, list);
+            AddOrRefreshItem(tabItem, list);
         }
 
-        private void addOrRefreshItem(TabItem tabItem, List<string> list)
+        private void AddOrRefreshItem(TabItem tabItem, List<string> list)
         {
             ListBox listBox;
             if (tabItem.Content == null)
@@ -493,7 +505,7 @@ namespace Jvedio
 
             listBox.Margin = new Thickness(0, 0, 0, 5);
             listBox.Style = (System.Windows.Style)App.Current.Resources["NormalListBox"];
-            listBox.ItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
+            listBox.ItemContainerStyle = SearchBoxListItemContainerStyle;
             listBox.Background = Brushes.Transparent;
             listBox.ItemsSource = list;
             if (vieModel.TabSelectedIndex == 0 && !string.IsNullOrEmpty(vieModel.SearchText))
@@ -752,11 +764,6 @@ namespace Jvedio
             }
         }
 
-        public void SetLoadingStatus(bool loading)
-        {
-            vieModel.IsLoadingMovie = loading;
-            vieModel.IsFlipOvering = loading;
-        }
 
         private void ResizingTimer_Tick(object sender, EventArgs e)
         {
@@ -785,99 +792,30 @@ namespace Jvedio
             window.BeginAnimation(UIElement.OpacityProperty, anim);
         }
 
+
+
+
         public void InitNotice()
         {
-            NoticeTimer.Tick += (s, e) => ShowNotice();
-            NoticeTimer.Interval = TimeSpan.FromSeconds(NOTICE_INTERVAL);
-            NoticeTimer.Start();
-            ShowNotice();
-        }
-
-        void ShowNotice()
-        {
-            Task.Run((Func<Task>)(async () =>
+            noticeViewer.SetConfig(UrlManager.NoticeUrl, ConfigManager.Main.LatestNotice);
+            noticeViewer.onError += (error) =>
             {
-                string configName = "Notice";
+                App.Logger?.Error(error);
+            };
 
-                // 获取本地的公告
-                string notices = string.Empty;
-                SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
-                wrapper.Eq("ConfigName", configName);
-                AppConfig appConfig = appConfigMapper.SelectOne(wrapper);
-                if (appConfig != null && !string.IsNullOrEmpty(appConfig.ConfigValue))
-                    notices = appConfig.ConfigValue;
-                HttpResult httpResult = null;
-                try
-                {
-                    httpResult = await HttpClient.Get(NoticeUrl, CrawlerHeader.GitHub, SuperUtils.NetWork.Enums.HttpMode.String);
+            noticeViewer.onShowMarkdown += (markdown) =>
+            {
+                //MessageCard.Info(markdown);
+            };
+            noticeViewer.onNewNotice += (newNotice) =>
+            {
+                ConfigManager.Main.LatestNotice = newNotice;
+                ConfigManager.Main.Save();
+            };
 
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                // 判断公告是否内容不同
-                if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && !SqlStringFormat.HandleNewLine(httpResult.SourceCode).Equals(notices))
-                {
-                    // 覆盖原有公告
-                    string json = httpResult.SourceCode;
-                    appConfig.ConfigValue = SqlStringFormat.HandleNewLine(httpResult.SourceCode);
-                    appConfig.ConfigName = configName;
-                    appConfigMapper.Insert(appConfig, InsertMode.Replace);
-
-                    Dictionary<string, object> dictionary = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(json);
-                    if (dictionary != null && dictionary.ContainsKey("Date") && dictionary.ContainsKey("Data"))
-                    {
-                        string date = dictionary["Date"].ToString();
-                        List<Dictionary<string, string>> data = null;
-                        try
-                        {
-                            data = ((JArray)dictionary["Data"]).ToObject<List<Dictionary<string, string>>>();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex);
-                        }
-
-                        if (data != null && data.Count > 0)
-                        {
-                            vieModel.Notices = new ObservableCollection<Notice>();
-                            foreach (var dict in data)
-                            {
-                                if (dict.ContainsKey("Type") && dict.ContainsKey("Message") && dict["Type"] != null && dict["Message"] != null)
-                                {
-                                    string type = dict["Type"].ToString();
-                                    string message = dict["Message"].ToString();
-                                    Enum.TryParse(type, out NoticeType noticeType);
-                                    if (noticeType == NoticeType.MarkDown)
-                                    {
-                                        // 弹窗提示
-                                        this.Dispatcher.Invoke((Action)delegate ()
-                                        {
-                                            new Dialog_Notice(false, message).ShowDialog(this);
-                                        });
-                                    }
-                                    else
-                                    {
-                                        Notice notice = new Notice();
-                                        notice.NoticeType = noticeType;
-                                        notice.Message = message;
-                                        notice.Date = date;
-                                        vieModel.Notices.Add(notice);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    Logger.Warn(LangManager.GetValueByKey("ParseNoticeError"));
-                }
-                else
-                {
-                    Console.WriteLine("公告相同无需提示");
-                }
-            }));
+            noticeViewer.BeginCheckNotice();
         }
+
 
         public void SelectAll(object sender, RoutedEventArgs e)
         {
@@ -1542,17 +1480,14 @@ namespace Jvedio
             }
         }
 
-        public void GotoTop(object sender, MouseButtonEventArgs e)
+        public void GotoTop(object sender, RoutedEventArgs e)
         {
-            //dataScrollViewer?.AnimateScroll(0, true);
             dataScrollViewer?.ScrollToTop();
         }
 
-        private void GotoBottom(object sender, MouseButtonEventArgs e)
+        private void GotoBottom(object sender, RoutedEventArgs e)
         {
             dataScrollViewer?.ScrollToBottom();
-            //dataScrollViewer?.AnimateScroll(dataScrollViewer.ScrollableHeight, true);
-            //dataScrollViewer?.ScrollToTop();
         }
 
         public void PlayVideo(object sender, MouseButtonEventArgs e)
@@ -3154,7 +3089,12 @@ namespace Jvedio
         // todo DatabaseComboBox_SelectionChanged
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
+            ComboBox comboBox = sender as ComboBox;
+            if (!comboBox.IsLoaded)
+                return;
+
+            if (e.AddedItems.Count == 0 || vieModel.CurrentAppDataBase == null)
+                return;
 
             // AppDatabase database =
             vieModel.CurrentAppDataBase = (AppDatabase)e.AddedItems[0];
@@ -3170,7 +3110,7 @@ namespace Jvedio
 
             // vieModel.InitLettersNavigation();
             // vieModel.GetFilterInfo();
-            AllRadioButton.IsChecked = true;
+            vieModel.MainDataChecked = true;
         }
 
         private void RandomDisplay(object sender, MouseButtonEventArgs e)
@@ -3180,10 +3120,11 @@ namespace Jvedio
 
         private void ShowFilterGrid(object sender, MouseButtonEventArgs e)
         {
-            if (windowFilter == null) windowFilter = new Window_Filter();
-            windowFilter.Show();
-            windowFilter.BringIntoView();
-            windowFilter.Activate();
+            MessageNotify.Info("开发中");
+            //if (windowFilter == null) windowFilter = new Window_Filter();
+            //windowFilter.Show();
+            //windowFilter.BringIntoView();
+            //windowFilter.Activate();
         }
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
@@ -3568,17 +3509,11 @@ namespace Jvedio
                 vieModel.SelectedVideo.Clear();
         }
 
-        private void ActorRate_ValueChanged(object sender, EventArgs e)
-        {
-            Rate rate = (Rate)sender;
-            actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), vieModel.CurrentActorInfo.ActorID);
-        }
+
 
         private void HideActressGrid(object sender, MouseButtonEventArgs e)
         {
-            var anim = new DoubleAnimation(1, 0, (Duration)FadeInterval, FillBehavior.Stop);
-            anim.Completed += (s, _) => vieModel.ShowActorGrid = Visibility.Collapsed;
-            ActorInfoGrid.BeginAnimation(UIElement.OpacityProperty, anim);
+            vieModel.ShowActorGrid = false;
         }
 
         private void ClearActressInfo(object sender, RoutedEventArgs e)
@@ -3596,14 +3531,6 @@ namespace Jvedio
             vieModel.ShowFirstRun = Visibility.Hidden;
         }
 
-        private void OpenActorPath(object sender, RoutedEventArgs e)
-        {
-            ActorInfo info = vieModel.CurrentActorInfo;
-            if (info != null)
-            {
-                FileHelper.TryOpenSelectPath(info.GetImagePath());
-            }
-        }
 
         private void OpenWebsite(object sender, RoutedEventArgs e)
         {
@@ -3635,44 +3562,14 @@ namespace Jvedio
 
         private void InitLoadSearch(string notice)
         {
-            LoadSearchWaitingPanel.Visibility = Visibility.Visible;
-            LoadSearchWaitingPanel.ShowProgressBar = Visibility.Collapsed;
-            LoadSearchWaitingPanel.NoticeText = notice;
-            LoadSearchWaitingPanel.ShowCancelButton = Visibility.Collapsed;
-            LoadSearchWaitingPanel.NoticeExtraText = string.Empty;
-            LoadSearchWaitingPanel.ShowExtraText = Visibility.Collapsed;
-            LoadSearchCTS = new CancellationTokenSource();
-            LoadSearchCTS.Token.Register(() =>
-            {
-                Console.WriteLine("取消任务");
-                this.Cursor = Cursors.Arrow;
-            });
-            LoadSearchCT = LoadSearchCTS.Token;
+
         }
 
         private void LoadActorOtherMovie(object sender, MouseButtonEventArgs e)
         {
-            Border border = sender as Border;
-            string name = border.Tag.ToString();
-            InitLoadSearch(SuperControls.Style.LangManager.GetValueByKey("SearchActor"));
 
-            // LoadActor(name);
         }
 
-        private void CancelLoadActor(object sender, RoutedEventArgs e)
-        {
-            LoadSearchWaitingPanel.Visibility = Visibility.Hidden;
-
-            try
-            {
-                LoadSearchCTS.Cancel();
-                LoadSearchCTS?.Dispose();
-            }
-            catch (ObjectDisposedException ex)
-            {
-                Logger.Error(ex);
-            }
-        }
 
         private void ShowContextMenu(object sender, MouseButtonEventArgs e)
         {
@@ -4049,6 +3946,7 @@ namespace Jvedio
             doSearch(null, null);
         }
 
+
         private void PathCheckButton_Click(object sender, RoutedEventArgs e)
         {
             // 获得当前所有标记状态
@@ -4099,9 +3997,9 @@ namespace Jvedio
             vieModel.LoadData();
             ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
             ActorInfo.SetImage(ref actorInfo);
-            vieModel.CurrentActorInfo = actorInfo;
-            vieModel.ShowActorGrid = Visibility.Visible;
+            vieModel.ShowActorGrid = true;
             pagination.CurrentPageChange += Pagination_CurrentPageChange;
+            ActorNavigator.Navigate("/Pages/ActorInfoPage.xaml", actorInfo);
         }
 
         private void SideActorRate_ValueChanged(object sender, EventArgs e)
@@ -4783,6 +4681,7 @@ namespace Jvedio
                 {
                     imageSizeSlider.Value -= imageSizeSlider.LargeChange;
                 }
+                e.Handled = true;
 
             }
         }

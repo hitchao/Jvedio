@@ -59,7 +59,8 @@
     <ApplicationIcon>Resources\Jvedio.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Jvedio.App</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -327,6 +328,10 @@
     <Compile Include="Core\Config\WindowConfig\Main.cs" />
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
+    <Compile Include="Pages\ActorInfoPage.xaml.cs">
+      <DependentUpon>ActorInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Navigator.cs" />
     <Compile Include="Upgrade\UpgradeHelper.cs" />
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
@@ -481,6 +486,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\ActorInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WindowsDialog\Dialog_Logs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -580,6 +589,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Content Include="Reference\CommonNet.dll" />
+    <Resource Include="Resources\Picture\导入_128.png" />
     <Resource Include="Resources\Picture\update.png" />
     <Resource Include="Resources\Picture\setting.png" />
     <Resource Include="Resources\Picture\about.png" />
@@ -774,6 +784,7 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>mkdir "$(ProjectDir)bin\Debug"

@@ -49,5 +49,7 @@ namespace Jvedio.Core.WindowConfig
         public bool ShowSearchHistory { get; set; }
         public bool SideDefaultExpanded { get; set; }
         public bool SideTagStampExpanded { get; set; }
+
+        public string LatestNotice { get; set; }
     }
 }
