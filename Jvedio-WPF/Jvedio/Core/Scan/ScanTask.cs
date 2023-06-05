@@ -431,11 +431,15 @@ namespace Jvedio.Core.Scan
 
             foreach (Video item in import)
             {
-                if (string.IsNullOrEmpty(item.Path)) continue;
+                if (string.IsNullOrEmpty(item.Path))
+                    continue;
                 string dir = Path.GetDirectoryName(item.Path);
-                if (!Directory.Exists(dir)) continue;
-                List<string> list = FileHelper.TryGetAllFiles(dir, "*.*").ToList();
-                if (list?.Count <= 0) continue;
+                if (!Directory.Exists(dir))
+                    continue;
+                string[] arr = FileHelper.TryGetAllFiles(dir, "*.*");
+                if (arr == null || arr.Length == 0)
+                    continue;
+                List<string> list = arr.ToList();
                 list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
                 string filename = Path.GetFileName(dirName);
                 string originPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(filename) >= 0).FirstOrDefault();
@@ -467,9 +471,12 @@ namespace Jvedio.Core.Scan
                     dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(item.Path), ConfigManager.ScanConfig.CopyNFOScreenShotPath));
                 else if (type == ImageType.Actor)
                     dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(item.Path), ConfigManager.ScanConfig.CopyNFOActorPath));
-                if (!Directory.Exists(dir)) continue;
-                List<string> list = FileHelper.TryGetAllFiles(dir, "*.*").ToList();
-                if (list?.Count <= 0) continue;
+                if (!Directory.Exists(dir))
+                    continue;
+                string[] arr = FileHelper.TryGetAllFiles(dir, "*.*");
+                if (arr == null || arr.Length == 0)
+                    continue;
+                List<string> list = arr.ToList();
                 list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
                 // 预览图目录
                 string targetPath = item.getExtraImage();

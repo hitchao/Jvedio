@@ -693,6 +693,22 @@ namespace Jvedio.ViewModel
 
         #region "Variable"
 
+
+
+        private string _StatusText;
+
+        public string StatusText
+        {
+            get { return _StatusText; }
+
+            set
+            {
+                _StatusText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
         private string _ScanStatus;
 
         public string ScanStatus

@@ -129,6 +129,29 @@
             <Setter Property="FontSize" Value="14" />
         </Style>
 
+        <Style
+            x:Key="ActorBorder"
+            BasedOn="{StaticResource SimpleBorder}"
+            TargetType="{x:Type Border}">
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="True" />
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="True" />
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
         <!--  ContainerStyle  -->
         <DataTemplate x:Key="StackTemplate">
             <Grid
@@ -382,7 +405,8 @@
                     Background="{DynamicResource ListBoxItem.Background}"
                     BorderThickness="2"
                     CornerRadius="0 0 2 2 "
-                    Effect="{StaticResource BlueDropShadowEffect}" />
+                    Effect="{StaticResource BlueDropShadowEffect}"
+                    Style="{StaticResource ActorBorder}" />
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -597,20 +621,6 @@
         </Style>
 
 
-        <Style
-            x:Key="ActorBorder"
-            BasedOn="{StaticResource SimpleBorder}"
-            TargetType="{x:Type Border}">
-            <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="True" />
-                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="BorderBrush" Value="{DynamicResource Selected_BorderBrush}" />
-                </MultiDataTrigger>
-            </Style.Triggers>
-        </Style>
 
         <Style x:Key="HoverCanvas" TargetType="{x:Type Canvas}">
             <Setter Property="Visibility" Value="Hidden" />
@@ -764,7 +774,7 @@
                             Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
                             Style="{StaticResource GifImageStyle}" />
 
-                        <!--  分段视频  -->
+                        <!--  关联视频 + 分段视频  -->
                         <StackPanel
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
@@ -923,7 +933,7 @@
 
                     <!--  主界面影片星级  -->
                     <super:Rate
-                        Margin="15,2"
+                        Margin="12,2,15,5"
                         AllowHalf="True"
                         Background="{DynamicResource Window.Title.Background}"
                         Foreground="{DynamicResource Common.HighLight.Deep.Background}"
@@ -1084,7 +1094,7 @@
         <!--  影片关联弹框  -->
         <Popup
             x:Name="AssoDataPopup"
-            Width="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}"
+            Width="{x:Static SystemParameters.PrimaryScreenWidth}"
             Height="auto"
             AllowsTransparency="True"
             Placement="MousePoint"
@@ -1178,7 +1188,7 @@
             </Grid>
         </Popup>
 
-        <Grid Margin="0">
+        <Grid Margin="0" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
@@ -1556,7 +1566,7 @@
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
                             SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}"
-                            Style="{StaticResource FlatTabControl}">
+                            Style="{StaticResource HeaderHideTabControlStyle}">
                             <TabItem Header="{DynamicResource Movie}">
                                 <!--  影片  -->
                                 <Grid HorizontalAlignment="Stretch">
@@ -2044,14 +2054,11 @@
                             </TabItem>
                             <TabItem Header="{DynamicResource Actor}">
                                 <Grid>
-
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="auto" />
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
-
-
                                     <!--  工具栏  -->
                                     <Grid
                                         Grid.Row="0"
@@ -2062,8 +2069,7 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
-                                        <Grid Grid.Row="0">
-
+                                        <super:SimplePanel Grid.Row="0">
                                             <Button
                                                 Margin="10,5"
                                                 HorizontalAlignment="Left"
@@ -2077,19 +2083,13 @@
                                                     Background="{DynamicResource Window.Side.Background}"
                                                     CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
                                                     Click="SetActorSelectMode"
-                                                    IsChecked="{Binding ActorEditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-
-
-
+                                                    IsChecked="{Binding ActorEditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                                    Visibility="Collapsed" />
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource BaseTextBlock}"
-                                                    Text="{DynamicResource MultiSelect}" />
-
-
-
-
-
+                                                    Text="{DynamicResource MultiSelect}"
+                                                    Visibility="Collapsed" />
                                                 <Border
                                                     VerticalAlignment="Center"
                                                     Background="{DynamicResource Window.Side.Background}"
@@ -2146,38 +2146,25 @@
                                                 </Border>
 
                                             </StackPanel>
-
-
-                                        </Grid>
-
-
-
-
-
+                                        </super:SimplePanel>
                                     </Grid>
                                     <!--  演员展示  -->
 
                                     <Grid Grid.Row="1">
-
                                         <Grid.ContextMenu>
                                             <ContextMenu>
-
                                                 <MenuItem
                                                     Click="SelectAllActor"
                                                     Header="{DynamicResource SelectAll}"
                                                     Icon="pack://application:,,,/Resources/menuitem/selectall.png" />
                                             </ContextMenu>
                                         </Grid.ContextMenu>
-
-
                                         <ScrollViewer
                                             x:Name="ActorScrollViewer"
                                             CanContentScroll="True"
                                             FocusVisualStyle="{x:Null}"
                                             IsDeferredScrollingEnabled="False"
                                             VerticalScrollBarVisibility="Auto">
-
-
                                             <ItemsControl
                                                 x:Name="ActorItemsControl"
                                                 Margin="5,5,5,5"
@@ -2586,7 +2573,7 @@
                         VerticalContentAlignment="Center"
                         FontSize="12"
                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                        Text="" />
+                        Text="{Binding StatusText, Mode=OneWay}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="2"
@@ -2915,6 +2902,7 @@
                         </Popup>
                     </super:SimplePanel>
                     <super:SimplePanel>
+
                         <Border
                             Name="msgScan"
                             Width="30"
@@ -2991,7 +2979,6 @@
                             </Path>
 
                         </Viewbox>
-
                         <Popup
                             x:Name="scanStatusPopup"
                             Width="400"
@@ -3221,7 +3208,58 @@
                                 </Grid>
                             </Grid>
                         </Popup>
+                        <Popup
+                            AllowsTransparency="True"
+                            HorizontalOffset="-260"
+                            Placement="Top"
+                            PlacementTarget="{Binding ElementName=msgScan}"
+                            PopupAnimation="Fade"
+                            VerticalOffset="0">
+                            <Popup.Style>
+                                <Style TargetType="Popup">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ScanStatus}" Value="Scanning">
+                                            <Setter Property="IsOpen" Value="True" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Popup.Style>
+                            <super:SimplePanel Margin="5">
+                                <Border
+                                    Width="300"
+                                    Height="80"
+                                    Margin="0,0,0,15"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background="{DynamicResource Window.Title.Background}"
+                                    CornerRadius="5"
+                                    Effect="{StaticResource PopupDropShadowEffect}">
+                                    <Viewbox
+                                        Width="40"
+                                        Height="auto"
+                                        Margin="0,0,10,-12"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom">
+                                        <Path
+                                            Data="M 10 10 L 50 10 30 40 Z"
+                                            Fill="{DynamicResource Window.Title.Background}"
+                                            Stroke="{DynamicResource Window.Title.Background}"
+                                            StrokeLineJoin="Round"
+                                            StrokeThickness="5" />
+                                    </Viewbox>
+                                </Border>
 
+
+                                <Grid Margin="5">
+                                    <TextBlock
+                                        Margin="25"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="扫描任务已添加" />
+                                </Grid>
+                            </super:SimplePanel>
+                        </Popup>
                     </super:SimplePanel>
                     <super:SimplePanel>
                         <super:PathMsg

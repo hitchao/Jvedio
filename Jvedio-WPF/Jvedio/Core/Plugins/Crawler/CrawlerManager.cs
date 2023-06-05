@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Org.BouncyCastle.Utilities;
 
 namespace Jvedio.Core.Plugins.Crawler
 {
@@ -49,7 +50,8 @@ namespace Jvedio.Core.Plugins.Crawler
                         DirHelper.TryMoveDir(tempPath, crawler_dir, true);
                 }
                 string[] arr = FileHelper.TryGetAllFiles(crawler_dir, "*.dll");
-                if (arr.Length <= 0) continue;
+                if (arr == null || arr.Length <= 0)
+                    continue;
                 string dllPath = arr[0];
 
                 // 校验

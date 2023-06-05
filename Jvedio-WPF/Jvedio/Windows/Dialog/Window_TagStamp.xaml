@@ -58,9 +58,20 @@
                 Margin="25,10"
                 HorizontalAlignment="Left"
                 Background="Orange"
+                BorderThickness="2"
                 CornerRadius="5"
                 Cursor="Hand"
-                MouseLeftButtonDown="border_MouseLeftButtonDown" />
+                MouseLeftButtonDown="border_MouseLeftButtonDown">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
 
             <Popup
                 x:Name="colorPopup"
@@ -129,9 +140,20 @@
                 Margin="25,10"
                 HorizontalAlignment="Left"
                 Background="#F7F8F8"
+                BorderThickness="2"
                 CornerRadius="5"
                 Cursor="Hand"
-                MouseLeftButtonDown="border2_MouseLeftButtonDown" />
+                MouseLeftButtonDown="border2_MouseLeftButtonDown">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
 
         </Grid>
     </Grid>

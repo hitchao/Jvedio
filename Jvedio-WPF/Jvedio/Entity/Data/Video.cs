@@ -384,11 +384,16 @@ namespace Jvedio.Entity
             return video != null && (video.DataID == this.DataID || video.MVID == this.MVID);
         }
 
-        private static string parseRelativeImageFileName(string path)
+        private static string ParseRelativeImageFileName(string path)
         {
             string dirName = System.IO.Path.GetDirectoryName(path);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(path).ToLower();
-            List<string> list = FileHelper.TryGetAllFiles(dirName, "*.*").ToList();
+
+            string[] arr = FileHelper.TryGetAllFiles(dirName, "*.*");
+            if (arr == null || arr.Length == 0)
+                return "";
+            List<string> list = arr.ToList();
+
             list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
 
             foreach (string item in list)
@@ -424,7 +429,7 @@ namespace Jvedio.Entity
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string smallPath = System.IO.Path.Combine(basePicPath, dict["SmallImagePath"]);
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
-                smallImagePath = parseRelativeImageFileName(smallPath);
+                smallImagePath = ParseRelativeImageFileName(smallPath);
             }
 
             // 替换成其他扩展名
@@ -444,7 +449,7 @@ namespace Jvedio.Entity
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string bigPath = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["BigImagePath"]));
                 if (string.IsNullOrEmpty(System.IO.Path.GetExtension(bigPath))) bigPath += ext;
-                bigImagePath = parseRelativeImageFileName(bigPath);
+                bigImagePath = ParseRelativeImageFileName(bigPath);
             }
 
             // 替换成其他扩展名

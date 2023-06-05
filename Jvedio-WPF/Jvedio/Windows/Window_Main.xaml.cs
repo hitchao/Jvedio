@@ -57,6 +57,7 @@ using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static Jvedio.App;
 using System.Security.Cryptography.X509Certificates;
 using Jvedio.Pages;
+using SuperUtils.Systems;
 
 namespace Jvedio
 {
@@ -73,7 +74,6 @@ namespace Jvedio
 
         private DispatcherTimer ResizingTimer { get; set; }
 
-        private DispatcherTimer NoticeTimer { get; set; }
 
         private List<Actress> SelectedActress { get; set; }
 
@@ -157,7 +157,6 @@ namespace Jvedio
         public void Init()
         {
             ResizingTimer = new DispatcherTimer();
-            NoticeTimer = new DispatcherTimer();
             SelectedActress = new List<Actress>();
             ClickFilterDict = new List<string>() { "Genre", "Series", "Studio", "Director", };
 
@@ -472,6 +471,22 @@ namespace Jvedio
                 Handler = new MouseButtonEventHandler(ListBoxItem_MouseDoubleClick)
             };
             SearchBoxListItemContainerStyle.Setters.Add(eventSetter);
+
+
+            Main.OnRecvWinMsg += (str) =>
+            {
+                Logger.Info($"recv win msg: {str}");
+                switch (str)
+                {
+                    case Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW:
+                        SetWindowVisualStatus(true, true);
+                        break;
+                    default:
+                        break;
+                }
+
+            };
+
         }
 
         private static Style SearchBoxListItemContainerStyle { get; set; }
@@ -640,7 +655,6 @@ namespace Jvedio
         {
             _source.RemoveHook(HwndHook);
             UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消热键
-            NoticeTimer.Stop();
             windowFilter?.Close();
             base.OnClosed(e);
         }
@@ -1110,6 +1124,7 @@ namespace Jvedio
             if (string.IsNullOrEmpty(text) || text.IndexOf("(") <= 0) return;
             string labelName = text.Substring(0, text.IndexOf("("));
             ShowSameLabel(labelName);
+            vieModel.StatusText = labelName;
         }
 
         public void ShowSameLabel(string label)
@@ -1145,6 +1160,7 @@ namespace Jvedio
             if (string.IsNullOrEmpty(text) || text.IndexOf("(") <= 0) return;
             string labelName = text.Substring(0, text.IndexOf("("));
             ShowSameString(labelName);
+            vieModel.StatusText = labelName;
         }
 
         public void ActorSetSelected()
@@ -1490,12 +1506,24 @@ namespace Jvedio
             dataScrollViewer?.ScrollToBottom();
         }
 
+        public Video GetVideoFromChildEle(FrameworkElement ele, long dataID)
+        {
+            if (ele == null) return null;
+            ItemsControl itemsControl = VisualHelper.FindParentOfType<ItemsControl>(ele);
+            if (itemsControl == null) return null;
+            ObservableCollection<Video> videos = itemsControl.ItemsSource as ObservableCollection<Video>;
+            if (videos == null)
+                return null;
+            return videos.FirstOrDefault(arg => arg.DataID == dataID);
+        }
+
         public void PlayVideo(object sender, MouseButtonEventArgs e)
         {
+            AssoDataPopup.IsOpen = false;
             FrameworkElement el = sender as FrameworkElement;
             long dataId = GetDataID(el);
             if (dataId <= 0) return;
-            Video video = getVideo(dataId);
+            Video video = GetVideoFromChildEle(el, dataId);
             if (video == null)
             {
                 MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
@@ -2289,7 +2317,7 @@ namespace Jvedio
         /// 将点击的该项也加入到选中列表中
         /// </summary>
         /// <param name="dataID"></param>
-        private void HandleMenuSelected(object sender, int depth = 0)
+        private ObservableCollection<Video> HandleMenuSelected(object sender, int depth = 0)
         {
             long dataID = GetIDFromMenuItem(sender, depth);
             if (!Properties.Settings.Default.EditMode)
@@ -2299,9 +2327,10 @@ namespace Jvedio
 
             Video currentVideo = videos.FirstOrDefault(arg => arg.DataID == dataID);
             if (currentVideo == null)
-                return;
+                return null;
             if (!vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any())
                 vieModel.SelectedVideo.Add(currentVideo);
+            return videos;
         }
 
         // todo 异步删除
@@ -2436,12 +2465,11 @@ namespace Jvedio
 
         public void DeleteID(object sender, RoutedEventArgs e)
         {
-            HandleMenuSelected(sender);
+            ObservableCollection<Video> videos = HandleMenuSelected(sender);
             if (Properties.Settings.Default.EditMode &&
                 new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
                 return;
 
-            ObservableCollection<Video> videos = GetVideosByMenu(sender as MenuItem, 0);
             DeleteIDs(videos, vieModel.SelectedVideo, false);
         }
 
@@ -2791,14 +2819,6 @@ namespace Jvedio
             return -1;
         }
 
-        // todo 库界面双击会导致提前播放视频触发异常(VideoList 未初始化)
-        private Video getVideo(long dataID)
-        {
-            if (dataID <= 0 || vieModel?.VideoList?.Count <= 0) return null;
-            Video video = vieModel.VideoList.Where(item => item.DataID == dataID).FirstOrDefault();
-            if (video != null && video.DataID > 0) return video;
-            return null;
-        }
 
         private Video getAssocVideo(long dataID)
         {
@@ -2810,14 +2830,16 @@ namespace Jvedio
 
         public void ShowSubSection(object sender, RoutedEventArgs e)
         {
-            if (vieModel.VideoList == null || vieModel.VideoList.Count <= 0) return;
             Button button = sender as Button;
+
             long dataID = GetDataID(button);
-            if (dataID <= 0) return;
+            if (dataID <= 0)
+                return;
+
             ContextMenu contextMenu = button.ContextMenu;
             contextMenu.Items.Clear();
 
-            Video video = vieModel.VideoList.Where(arg => arg.DataID == dataID).FirstOrDefault();
+            Video video = GetVideoFromChildEle(button, dataID);
             if (video != null && video.SubSectionList?.Count > 0)
             {
                 for (int i = 0; i < video.SubSectionList.Count; i++)
@@ -3023,6 +3045,7 @@ namespace Jvedio
                 vieModel.ShowFirstRun = Visibility.Visible;
                 ConfigManager.Main.FirstRun = false;
             }
+            this.ButtonSideTop.Visibility = Visibility.Visible;
         }
         // todo
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -4000,6 +4023,7 @@ namespace Jvedio
             vieModel.ShowActorGrid = true;
             pagination.CurrentPageChange += Pagination_CurrentPageChange;
             ActorNavigator.Navigate("/Pages/ActorInfoPage.xaml", actorInfo);
+            vieModel.StatusText = actorInfo.ActorName;
         }
 
         private void SideActorRate_ValueChanged(object sender, EventArgs e)
@@ -4856,6 +4880,11 @@ namespace Jvedio
             long dataID = GetDataID(sender as FrameworkElement);
             if (dataID <= 0) return;
             vieModel.LoadViewAssoData(dataID);
+        }
+
+        private void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AssoDataPopup.IsOpen = false;
         }
     }
 

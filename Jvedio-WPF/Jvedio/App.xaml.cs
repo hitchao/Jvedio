@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using SuperUtils.Systems;
+using System.Windows.Interop;
 
 namespace Jvedio
 {
@@ -20,6 +22,7 @@ namespace Jvedio
     /// </summary>
     public partial class App : Application
     {
+
 
         public static Jvedio.Core.Logs.Logger Logger = Jvedio.Core.Logs.Logger.Instance;
 
@@ -61,10 +64,15 @@ namespace Jvedio
                     {
                         IntPtr hWnd = IntPtr.Zero;
                         hWnd = process.MainWindowHandle;
+
+                        // todo 最小化到任务栏后，无法打开窗体
+                        // Win32Helper.SendArgs(hWnd, Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW);
+
                         SuperUtils.Systems.Win32Helper.ShowWindowAsync(new HandleRef(null, hWnd), SuperUtils.Systems.Win32Helper.SW_RESTORE);
                         SuperUtils.Systems.Win32Helper.SetForegroundWindow(process.MainWindowHandle);
 
-                        //SuperUtils.Systems.Win32Helper.SetForegroundWindow(process.MainWindowHandle);
+
+
                         break;
                     }
                 }
@@ -84,6 +92,7 @@ namespace Jvedio
             base.OnStartup(e);
         }
 
+
         private void SaveConfig()
         {
             Jvedio.Properties.Settings.Default.EditMode = false;
@@ -98,5 +107,9 @@ namespace Jvedio
             SaveConfig();
             base.OnExit(e);
         }
+
+
+
+
     }
 }

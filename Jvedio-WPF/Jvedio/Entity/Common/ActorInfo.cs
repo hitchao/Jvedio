@@ -158,14 +158,19 @@ namespace Jvedio.Entity
                 string basePath = System.IO.Path.GetDirectoryName(dataPath);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePath, dict["ActorImagePath"]));
-                List<string> list = FileHelper.TryGetAllFiles(path, "*.*").ToList();
-                list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
-
-                foreach (string item in list)
+                string[] arr = FileHelper.TryGetAllFiles(path, "*.*");
+                if (arr != null && arr.Length > 0)
                 {
-                    if (System.IO.Path.GetFileNameWithoutExtension(item).ToLower().Equals(ActorName))
-                        return item;
+                    List<string> list = arr.ToList();
+                    list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
+
+                    foreach (string item in list)
+                    {
+                        if (System.IO.Path.GetFileNameWithoutExtension(item).ToLower().Equals(ActorName))
+                            return item;
+                    }
                 }
+
             }
 
             // 替换成其他扩展名
