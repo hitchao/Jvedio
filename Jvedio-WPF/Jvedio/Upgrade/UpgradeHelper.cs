@@ -46,6 +46,12 @@ namespace Jvedio.Upgrade
             {
                 WindowClosed = true;
             };
+
+            dialog_Upgrade.OnExitApp += () =>
+            {
+                Application.Current.Shutdown();
+            };
+
             WindowClosed = false;
         }
 

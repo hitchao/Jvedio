@@ -1,0 +1,76 @@
+﻿
+using Jvedio.Core.Global;
+using Jvedio.Core.Logs;
+using SuperControls.Style.Plugin.Crawler;
+using SuperUtils.CustomEventArgs;
+using SuperUtils.IO;
+using SuperUtils.NetWork;
+using SuperUtils.NetWork.Entity;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using static Jvedio.App;
+using static Jvedio.Window_Server;
+
+namespace Jvedio.Core.Server
+{
+    public static class ServerManager
+    {
+
+        public static string ServerFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "jvedio-server.jar");
+        public static string ServerLibPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "lib");
+        public static string ServerConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "config.json");
+
+        private static void WriteFile(byte[] filebyte, string savepath)
+        {
+            FileInfo fileInfo = new FileInfo(savepath);
+            DirHelper.TryCreateDirectory(fileInfo.Directory.FullName, (ex) =>
+            {
+                throw ex;
+            });
+            try
+            {
+                using (var fs = new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write))
+                {
+                    fs.Write(filebyte, 0, filebyte.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<ServerStatus> CheckStatus()
+        {
+            string url = $"http://localhost:{ConfigManager.JavaServerConfig.Port}/status/current";
+            HttpResult result = await HttpClient.Get(url, null, SuperUtils.NetWork.Enums.HttpMode.Header);
+            if (result != null && result.StatusCode == HttpStatusCode.OK)
+                return ServerStatus.Ready;
+
+            return ServerStatus.UnReady;
+        }
+
+        public static async Task<bool> DownloadJar()
+        {
+            try
+            {
+                HttpResult streamResult = await HttpHelper.AsyncDownLoadFile(UrlManager.ServerUrl, CrawlerHeader.GitHub);
+                // 写入本地
+                if (streamResult.FileByte != null)
+                    WriteFile(streamResult.FileByte, ServerFilePath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                App.Logger.Info(ex.Message);
+            }
+            return false;
+        }
+
+    }
+}

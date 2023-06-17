@@ -8,10 +8,13 @@ namespace Jvedio.Core.Global
     public static class UrlManager
     {
 
-        public static readonly string ProjectUrl = "https://github.com/hitchao/Jvedio";
-        public static readonly string WebPage = "https://hitchao.github.io/JvedioWebPage/";
-        public static readonly string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
-        public static readonly string UpgradeSource = "https://hitchao.github.io/";
+        public const string ServerHelpUrl = "https://github.com/hitchao/Jvedio/wiki";
+
+        public const string ProjectUrl = "https://github.com/hitchao/Jvedio";
+        public const string WebPage = "https://hitchao.github.io/JvedioWebPage/";
+        public const string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
+        public const string UpgradeSource = "https://hitchao.github.io/";
+        public const string ServerUrl = "https://hitchao.github.io/hitchao/jvedio-server/jvedio-server.jar";
         public static Dictionary<string, UpgradeSource> UpgradeSourceDict = new Dictionary<string, UpgradeSource>()
         {
             {"Github",new UpgradeSource(UpgradeSource,ReleaseUrl,"jvedioupdate") },

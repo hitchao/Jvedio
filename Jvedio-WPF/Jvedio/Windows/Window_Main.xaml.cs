@@ -58,6 +58,8 @@ using static Jvedio.App;
 using System.Security.Cryptography.X509Certificates;
 using Jvedio.Pages;
 using SuperUtils.Systems;
+using SuperUtils.Windows.WindowCmd;
+using Jvedio.Core.Server;
 
 namespace Jvedio
 {
@@ -233,6 +235,13 @@ namespace Jvedio
             // new MsgBox( "demo").ShowDialog();
             InitUpgrade();
             //ShowPluginWindow(null, null);
+
+            CheckServerStatus();
+        }
+
+        public async void CheckServerStatus()
+        {
+            vieModel.ServerStatus = await ServerManager.CheckStatus();
         }
 
         public void InitThemeSelector()
@@ -1761,7 +1770,7 @@ namespace Jvedio
             List<Video> videos = videoMapper.SelectList();
             foreach (Video video in videos)
             {
-                downloadVideo(video);
+                DownloadVideo(video);
             }
 
             if (!Global.DownloadManager.Dispatcher.Working)
@@ -2508,7 +2517,7 @@ namespace Jvedio
             return GetDataID(ele, false);
         }
 
-        public void downloadVideo(Video video)
+        public void DownloadVideo(Video video)
         {
             DownLoadTask task = new DownLoadTask(video, ConfigManager.Settings.DownloadPreviewImage, ConfigManager.Settings.OverrideInfo);
             long vid = video.DataID;
@@ -2618,7 +2627,8 @@ namespace Jvedio
             }
             else
             {
-                DownLoadTask downLoadTask = vieModel.DownLoadTasks.Where(arg => arg.DataID == task.DataID).FirstOrDefault();
+                DownLoadTask downLoadTask =
+                    vieModel.DownLoadTasks.FirstOrDefault(arg => arg.DataID == task.DataID);
                 if (!downLoadTask.Running)
                 {
                     downLoadTask.Restart();
@@ -2651,7 +2661,7 @@ namespace Jvedio
             vieModel.DownloadStatus = "Downloading";
             foreach (Video video in vieModel.SelectedVideo)
             {
-                downloadVideo(video);
+                DownloadVideo(video);
             }
 
             if (!Global.DownloadManager.Dispatcher.Working)
@@ -4885,6 +4895,29 @@ namespace Jvedio
         private void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             AssoDataPopup.IsOpen = false;
+        }
+
+        private Window_Server window_Server;
+
+        private void OpenServer(object sender, RoutedEventArgs e)
+        {
+            if (window_Server != null)
+                window_Server.Close();
+            window_Server = new Window_Server();
+
+            window_Server.OnServerStatusChanged += (status) =>
+            {
+                vieModel.ServerStatus = status;
+            };
+
+            window_Server.Owner = this;
+            window_Server.ShowDialog();
+
+        }
+
+        private void OpenServerWindow(object sender, MouseButtonEventArgs e)
+        {
+            OpenServer(null, null);
         }
     }
 

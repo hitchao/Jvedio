@@ -32,6 +32,7 @@ using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
+using static Jvedio.Window_Server;
 
 namespace Jvedio.ViewModel
 {
@@ -132,6 +133,20 @@ namespace Jvedio.ViewModel
         //    }
         //}
 
+
+
+        public ServerStatus _ServerStatus;
+
+        public ServerStatus ServerStatus
+        {
+            get { return _ServerStatus; }
+
+            set
+            {
+                _ServerStatus = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public ObservableCollection<Video> _ViewAssociationDatas;
 

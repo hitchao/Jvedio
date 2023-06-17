@@ -253,6 +253,7 @@
     <Compile Include="Core\Config\Base\AbstractConfig.cs" />
     <Compile Include="Core\Config\Base\IConfig.cs" />
     <Compile Include="Core\Config\Common\DownloadConfig.cs" />
+    <Compile Include="Core\Config\Common\JavaServerConfig.cs" />
     <Compile Include="Core\Config\Common\ThemeConfig.cs" />
     <Compile Include="Core\Config\UtilsManager.cs" />
     <Compile Include="Core\DataBase\SqlManager.cs" />
@@ -310,6 +311,7 @@
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\Scan\ScanDetailInfo.cs" />
+    <Compile Include="Core\Server\ServerManager.cs" />
     <Compile Include="Entity\Common\NFOParse.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
     <Compile Include="CustomStyle\StyleManager.cs" />
@@ -444,6 +446,9 @@
     <Compile Include="Windows\Window_Edit.xaml.cs">
       <DependentUpon>Window_Edit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Window_Server.xaml.cs">
+      <DependentUpon>Window_Server.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Window_Settings.xaml.cs">
       <DependentUpon>Window_Settings.xaml</DependentUpon>
     </Compile>
@@ -555,6 +560,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Window_Main.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_Server.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

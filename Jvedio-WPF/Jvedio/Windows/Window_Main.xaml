@@ -982,7 +982,11 @@
                 <MenuItem Click="ImportVideoByPaths" Header="{DynamicResource ScanMultiDir}" />
                 <MenuItem Click="ImportVideo" Header="{DynamicResource ScanNas}" />
             </MenuItem>
-            <MenuItem Click="ManageDataBase" Header="{DynamicResource MovieManagement}" />
+
+            <MenuItem Header="高级">
+                <MenuItem Click="ManageDataBase" Header="{DynamicResource MovieManagement}" />
+                <MenuItem Click="OpenServer" Header="后台服务管理" />
+            </MenuItem>
             <MenuItem
                 Click="ShowStatistic"
                 Header="{DynamicResource Statistic}"
@@ -2579,7 +2583,63 @@
                     Grid.Column="2"
                     Margin="5,0"
                     Orientation="Horizontal">
-                    <super:SimplePanel>
+                    <Grid Width="30" MouseLeftButtonUp="OpenServerWindow">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource Window.StatusBar.Hover.Background}" />
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding ServerStatus}" Value="UnReady">
+                                        <Setter Property="ToolTip" Value="后台服务未就绪" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ServerStatus}" Value="Starting">
+                                        <Setter Property="ToolTip" Value="后台服务启动中" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ServerStatus}" Value="Ready">
+                                        <Setter Property="ToolTip" Value="后台服务已就绪" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+                        <Viewbox
+                            Width="20"
+                            Height="18"
+                            VerticalAlignment="Center">
+                            <Path Data="M896 767H129c-35.3 0-64-28.7-64-64V128.3c0-35.3 28.7-64 64-64h767c35.3 0 64 28.7 64 64V703c0 35.3-28.7 64-64 64z m-766.9-64H896l0.1-0.1V128.4l-0.1-0.1H129.1l-0.1 0.1 0.1 574.6c-0.1 0-0.1 0 0 0z M383.1 592h-0.1c-27.5-0.1-41.8-27.8-48.8-41.2-8.1-15.6-16.4-35.9-24.5-55.5-6.4-15.6-13.1-31.7-19.3-44.7-2.3-4.8-4.2-8.6-5.9-11.6-4.8 3.8-11.3 9.9-19.8 19.4-11.8 13.2-20.5 25.3-20.6 25.4-10.3 14.4-30.3 17.7-44.6 7.4-14.4-10.3-17.7-30.3-7.4-44.6 0.5-0.7 12.8-17.9 28.9-35.2 26.7-28.8 49.1-42.2 70.3-42.4h0.3c13.1 0 25 6.2 35.3 18.4 5.1 6.1 10.3 14.1 15.7 24.5 8.8 16.8 17.7 38.3 26.2 59 3.7 9 8.9 21.6 14.1 33.3 8.3-17.2 17.6-38.2 24.5-53.5C451.2 352.3 473.9 305 511.6 305c34.4 0 63 34.2 105.9 90.5 7.4 9.7 17.3 22.7 24.9 31.6 11.1-9.8 33-32.8 72.2-85.5 32.6-43.8 60.5-85.9 60.8-86.3 9.7-14.7 29.6-18.8 44.3-9 14.7 9.7 18.8 29.6 9 44.3-1.3 2-32.7 49.4-69.2 97.7-21.7 28.8-40.8 52-56.5 68.7-26.8 28.5-45.3 40.1-63.9 40.1-17.9 0-31.3-12.5-43.2-25.9-8.9-10.1-18.8-23.1-29.4-37-11.9-15.6-24.2-31.8-35.9-44.9-6.2-7-11-11.7-14.5-14.8-3.8 5.6-9.1 14.6-16.3 28.8-11 21.6-22.7 47.9-34 73.3-11.5 25.8-22.3 50.1-32 68.8-5.8 11.2-10.7 19.3-15.3 25.6-3.8 5.3-15.5 21-35.4 21z m249.8-157.7z m-338.7-1.6z m213.5-64.3zM512.1 846.7c-38 0-74.1-7.6-101.7-21.4-33.1-16.5-51.3-40.5-51.3-67.6 0-13.8 11.2-25 25-25s25 11.2 25 25c0 13.7 39.1 38.9 103 38.9s103-25.2 103-38.9c0-13.8 11.2-25 25-25s25 11.2 25 25c0 27-18.2 51-51.3 67.6-27.6 13.8-63.7 21.4-101.7 21.4zM161 960c-17.7 0-32-14.3-32-32s14.3-32 32-32l703.4-0.7c17.7 0 32 14.3 32 32s-14.3 32-32 32L161 960z" Fill="{DynamicResource Window.Foreground}" />
+                        </Viewbox>
+
+                        <Border
+                            Width="10"
+                            Height="10"
+                            Margin="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            CornerRadius="5">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="Gray" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ServerStatus}" Value="UnReady">
+                                            <Setter Property="Background" Value="Gray" />
+
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ServerStatus}" Value="Starting">
+                                            <Setter Property="Background" Value="{DynamicResource Common.HighLight.Deep.Background}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ServerStatus}" Value="Ready">
+                                            <Setter Property="Background" Value="{DynamicResource CheckBox.Checked.Background}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                        </Border>
+
+                    </Grid>
+                    <Grid>
                         <super:PathMsg
                             Name="screenShotPathMsg"
                             MouseLeftButtonUp="ShowScreenShotPopup"
@@ -2900,8 +2960,8 @@
                                 </Grid>
                             </Grid>
                         </Popup>
-                    </super:SimplePanel>
-                    <super:SimplePanel>
+                    </Grid>
+                    <Grid>
 
                         <Border
                             Name="msgScan"
@@ -3260,8 +3320,8 @@
                                 </Grid>
                             </super:SimplePanel>
                         </Popup>
-                    </super:SimplePanel>
-                    <super:SimplePanel>
+                    </Grid>
+                    <Grid>
                         <super:PathMsg
                             Name="downloadPathMsg"
                             MouseLeftButtonUp="ShowDownloadPopup"
@@ -3587,8 +3647,8 @@
                                 </Grid>
                             </Grid>
                         </Popup>
-                    </super:SimplePanel>
-                    <super:SimplePanel>
+                    </Grid>
+                    <Grid>
                         <super:PathMsg
                             Name="msgPathMsg"
                             MouseLeftButtonUp="ShowMessage"
@@ -3702,7 +3762,7 @@
                                 </Grid>
                             </Grid>
                         </Popup>
-                    </super:SimplePanel>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Grid>

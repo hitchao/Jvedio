@@ -35,6 +35,7 @@ namespace Jvedio
         public static Jvedio.Core.Config.PluginConfig PluginConfig { get; set; }
         public static Jvedio.Core.Config.ThemeConfig ThemeConfig { get; set; }
         public static Jvedio.Core.Config.DownloadConfig DownloadConfig { get; set; }
+        public static Jvedio.Core.Config.JavaServerConfig JavaServerConfig { get; set; }
 
         static ConfigManager()
         {
@@ -55,6 +56,7 @@ namespace Jvedio
             PluginConfig = Jvedio.Core.Config.PluginConfig.CreateInstance();
             ThemeConfig = Jvedio.Core.Config.ThemeConfig.CreateInstance();
             DownloadConfig = Jvedio.Core.Config.DownloadConfig.CreateInstance();
+            JavaServerConfig = Jvedio.Core.Config.JavaServerConfig.CreateInstance();
 
             ReadConfig();
         }
