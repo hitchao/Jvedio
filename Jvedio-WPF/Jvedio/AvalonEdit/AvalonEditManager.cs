@@ -1,0 +1,52 @@
+﻿using ICSharpCode.AvalonEdit.Highlighting;
+using SuperControls.Style;
+using SuperUtils.IO;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using static Jvedio.App;
+
+namespace Jvedio.AvalonEdit
+{
+    public static class AvalonEditManager
+    {
+        public static string HighLightPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                 "AvalonEdit", "Highlighting");
+
+        public static void Init()
+        {
+            HighlightingManager.Instance.Clear();
+            string[] xshd_list = FileHelper.TryGetAllFiles(HighLightPath, "*.xshd");
+            foreach (var xshdPath in xshd_list)
+            {
+                try
+                {
+                    IHighlightingDefinition customHighlighting;
+                    using (Stream s = File.OpenRead(xshdPath))
+                    {
+                        if (s == null)
+                            throw new InvalidOperationException("Could not find embedded resource");
+                        using (XmlReader reader = new XmlTextReader(s))
+                        {
+                            customHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.
+                                HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                        }
+                    }
+                    // 检查是否在数据库中存在
+                    string name = customHighlighting.Name;
+                    HighlightingManager.Instance.RegisterHighlighting(name, null, customHighlighting);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                    continue;
+                }
+
+            }
+        }
+    }
+}

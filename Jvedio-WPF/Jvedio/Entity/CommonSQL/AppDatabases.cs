@@ -3,6 +3,7 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Core.Global;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Media;
 using System;
 using System.Collections.Generic;

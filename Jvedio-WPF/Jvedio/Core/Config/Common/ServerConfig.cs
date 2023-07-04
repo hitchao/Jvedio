@@ -5,6 +5,7 @@ using Jvedio.Entity.CommonSQL;
 using Newtonsoft.Json;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using System.Collections.Generic;
 using System.Linq;

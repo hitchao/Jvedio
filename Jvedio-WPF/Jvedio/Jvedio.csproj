@@ -116,6 +116,10 @@
     <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.1.0.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Reference\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="K4os.Compression.LZ4, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
       <HintPath>..\packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
     </Reference>
@@ -250,6 +254,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AvalonEdit\AvalonEditManager.cs" />
     <Compile Include="Core\Config\Base\AbstractConfig.cs" />
     <Compile Include="Core\Config\Base\IConfig.cs" />
     <Compile Include="Core\Config\Common\DownloadConfig.cs" />
@@ -467,6 +472,10 @@
     <Compile Include="Windows\Dialog\Window_TagStamp.xaml.cs">
       <DependentUpon>Window_TagStamp.xaml</DependentUpon>
     </Compile>
+    <Page Include="AvalonEdit\SearchPanel\SearchPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Core\Lang\en-US.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -610,6 +619,7 @@
     <Resource Include="Resources\Picture\新增.png" />
     <Resource Include="Resources\Picture\导入.png" />
     <Content Include="Reference\HtmlAgilityPack.dll" />
+    <Content Include="Reference\ICSharpCode.AvalonEdit.dll" />
     <Content Include="Reference\JvedioLib.dll" />
     <Resource Include="Resources\Picture\asso.png" />
     <Content Include="Data\Sql\app_cache.sql" />
@@ -617,6 +627,11 @@
     <Content Include="Data\Sql\single_db_game.sql" />
     <Content Include="Data\Sql\single_db_picture.sql" />
     <Resource Include="Resources\Picture\plugin.png" />
+    <None Include="AvalonEdit\Highlighting\LogRule.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AvalonEdit\Highlighting\JSON\JsonDeep.xshd" />
+    <None Include="AvalonEdit\Highlighting\JSON\JsonLight.xshd" />
     <None Include="Data\config.ini" />
     <Resource Include="Resources\Picture\Empty.png" />
     <Content Include="Data\Sql\app_configs.sql" />

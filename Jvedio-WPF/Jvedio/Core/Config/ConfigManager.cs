@@ -80,6 +80,7 @@ namespace Jvedio
             PluginConfig.Save();
             ThemeConfig.Save();
             DownloadConfig.Save();
+            JavaServerConfig.Save();
         }
 
         public static void Restore()

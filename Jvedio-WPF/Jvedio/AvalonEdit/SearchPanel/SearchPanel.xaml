@@ -1,0 +1,270 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:search="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:super="https://github.com/SuperStudio/SuperControls">
+    <Style TargetType="{x:Type search:SearchPanel}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type search:SearchPanel}">
+                    <Grid
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Cursor="Arrow">
+                        <Border
+                            Background="{DynamicResource Window.Title.Background}"
+                            BorderBrush="{DynamicResource Window.Background}"
+                            BorderThickness="4,0,0,0"
+                            CornerRadius="1"
+                            Effect="{StaticResource PopupDropShadowEffect}" />
+                        <Grid Margin="5,3,3,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <TextBox
+                                Name="PART_searchTextBox"
+                                Grid.Column="0"
+                                Width="300"
+                                Height="auto"
+                                Margin="3"
+                                Padding="4,0,95,0"
+                                AcceptsReturn="False"
+                                Background="{DynamicResource Window.Background}"
+                                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                                BorderThickness="1"
+                                ContextMenu="{DynamicResource TextBoxContextMenu}"
+                                Focusable="True"
+                                Style="{StaticResource BaseTextBox}"
+                                TextAlignment="Left"
+                                TextWrapping="NoWrap">
+                                <TextBox.Text>
+                                    <Binding
+                                        Path="SearchPattern"
+                                        RelativeSource="{RelativeSource TemplatedParent}"
+                                        UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <ExceptionValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <StackPanel
+                                Grid.Column="0"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <ToggleButton
+                                    Width="28"
+                                    Margin="1,8"
+                                    Padding="4"
+                                    Background="Transparent"
+                                    Content="Aa"
+                                    IsChecked="{Binding MatchCase, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Style="{StaticResource FlatToggleButton}"
+                                    ToolTip="大小写" />
+                                <ToggleButton
+                                    Width="28"
+                                    Margin="1,8"
+                                    Padding="4"
+                                    Background="Transparent"
+                                    IsChecked="{Binding WholeWords, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Style="{StaticResource FlatToggleButton}"
+                                    ToolTip="全字匹配">
+                                    <Canvas>
+                                        <TextBlock
+                                            Canvas.Left="-6"
+                                            Canvas.Top="-7"
+                                            FontSize="10">
+                                            ab
+                                        </TextBlock>
+
+                                        <Rectangle
+                                            Canvas.Left="-9"
+                                            Canvas.Top="5"
+                                            Width="18"
+                                            Height="1"
+                                            Fill="{DynamicResource Window.Foreground}" />
+                                        <Rectangle
+                                            Canvas.Left="8"
+                                            Canvas.Top="1"
+                                            Width="1"
+                                            Height="4"
+                                            Fill="{DynamicResource Window.Foreground}" />
+                                        <Rectangle
+                                            Canvas.Left="-9"
+                                            Canvas.Top="1"
+                                            Width="1"
+                                            Height="4"
+                                            Fill="{DynamicResource Window.Foreground}" />
+                                    </Canvas>
+                                </ToggleButton>
+                                <ToggleButton
+                                    Width="28"
+                                    Margin="1,8,6,8"
+                                    Padding="4"
+                                    Background="Transparent"
+                                    Content=".*"
+                                    IsChecked="{Binding UseRegex, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Style="{StaticResource FlatToggleButton}"
+                                    ToolTip="正则" />
+
+                            </StackPanel>
+                            <TextBlock
+                                x:Name="SearchResultTextBlock"
+                                Grid.Column="1"
+                                Margin="10,0"
+                                Foreground="{DynamicResource Window.Sub.Foreground}"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="-" />
+
+                            <Grid Grid.Column="2" Visibility="Collapsed">
+                                <Button
+                                    x:Name="SearchAllButton"
+                                    Width="32"
+                                    Height="auto"
+                                    Margin="1,4"
+                                    Padding="5"
+                                    VerticalAlignment="Stretch"
+                                    super:CommonExt.CornerRadius="4"
+                                    super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                    Style="{StaticResource FlatButton}">
+                                    <Canvas>
+                                        <Rectangle
+                                            Canvas.Left="-4"
+                                            Canvas.Top="-8"
+                                            Width="11"
+                                            Height="11"
+                                            RadiusX="10"
+                                            RadiusY="10"
+                                            Stroke="{DynamicResource Window.Foreground}"
+                                            StrokeThickness="2" />
+
+                                        <Rectangle
+                                            Canvas.Left="4"
+                                            Canvas.Top="0"
+                                            Width="2"
+                                            Height="8"
+                                            Fill="{DynamicResource Window.Foreground}"
+                                            RenderTransformOrigin="0.5,0.5">
+                                            <Rectangle.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform />
+                                                    <SkewTransform />
+                                                    <RotateTransform Angle="-32.022" />
+                                                    <TranslateTransform />
+                                                </TransformGroup>
+                                            </Rectangle.RenderTransform>
+                                        </Rectangle>
+                                        <TextBlock
+                                            Canvas.Left="-10"
+                                            Canvas.Top="4"
+                                            Panel.ZIndex="5"
+                                            FontSize="7"
+                                            FontWeight="Bold"
+                                            Foreground="{DynamicResource Window.Sub.Foreground}"
+                                            Text="All" />
+                                    </Canvas>
+                                </Button>
+
+                            </Grid>
+
+                            <super:LoadingLine
+                                x:Name="loadingLine"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="6"
+                                Width="200"
+                                Height="10"
+                                VerticalAlignment="Bottom"
+                                DotInterval="3"
+                                DotSize="4"
+                                Foreground="{DynamicResource Window.Sub.Foreground}"
+                                Visibility="{Binding LoadingVisibility, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                            <Button
+                                Grid.Column="3"
+                                Width="32"
+                                Height="auto"
+                                Margin="1,4"
+                                Padding="5"
+                                VerticalAlignment="Stretch"
+                                super:CommonExt.CornerRadius="4"
+                                super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                Command="search:SearchCommands.FindPrevious"
+                                Style="{StaticResource FlatButton}">
+                                <Canvas>
+                                    <Polygon
+                                        Fill="{DynamicResource Window.Foreground}"
+                                        Points="-3,0 3,0, 0,-5"
+                                        Stroke="{DynamicResource Window.Foreground}" />
+                                    <Rectangle
+                                        Canvas.Left="-1.5"
+                                        Width="3"
+                                        Height="6"
+                                        Fill="{DynamicResource Window.Foreground}" />
+                                </Canvas>
+                            </Button>
+
+                            <Button
+                                Grid.Column="4"
+                                Width="32"
+                                Height="auto"
+                                Margin="1,4"
+                                Padding="5"
+                                VerticalAlignment="Stretch"
+                                super:CommonExt.CornerRadius="4"
+                                super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                Command="search:SearchCommands.FindNext"
+                                Style="{StaticResource FlatButton}">
+                                <Canvas>
+                                    <Polygon
+                                        Canvas.Top="1"
+                                        Fill="{DynamicResource Window.Foreground}"
+                                        Points="-3,0 3,0, 0,5"
+                                        Stroke="{DynamicResource Window.Foreground}" />
+                                    <Rectangle
+                                        Canvas.Left="-1.5"
+                                        Canvas.Top="-5"
+                                        Width="3"
+                                        Height="6"
+                                        Fill="{DynamicResource Window.Foreground}" />
+                                </Canvas>
+                            </Button>
+
+                            <Button
+                                Grid.Column="5"
+                                Width="32"
+                                Margin="1,4"
+                                Padding="0"
+                                VerticalAlignment="Stretch"
+                                super:CommonExt.CornerRadius="4"
+                                super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
+                                Command="search:SearchCommands.CloseSearchPanel"
+                                Style="{StaticResource FlatButton}">
+                                <Viewbox
+                                    Width="12"
+                                    Height="auto"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
+                                        Fill="{DynamicResource Window.Foreground}" />
+                                </Viewbox>
+                            </Button>
+                        </Grid>
+
+                    </Grid>
+
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

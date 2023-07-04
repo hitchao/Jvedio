@@ -34,6 +34,7 @@ using Jvedio.Entity.CommonSQL;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.IO;
 using System.IO;
+using SuperUtils.Framework.ORM.Enums;
 
 namespace Jvedio.ViewModel
 {

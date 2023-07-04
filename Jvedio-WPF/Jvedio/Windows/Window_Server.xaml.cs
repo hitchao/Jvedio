@@ -16,6 +16,15 @@ using System.Collections.Generic;
 using Jvedio.Core.DataBase;
 using SuperUtils.Common;
 using SuperUtils.IO;
+using ICSharpCode.AvalonEdit;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using Jvedio.AvalonEdit;
+using ICSharpCode.AvalonEdit.Highlighting;
+using System.Text;
+using SuperUtils.Time;
 
 namespace Jvedio
 {
@@ -24,6 +33,8 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Server : BaseWindow
     {
+
+        private static StringBuilder LogCache = new StringBuilder();
         public enum ServerStatus
         {
             UnReady,
@@ -102,10 +113,27 @@ namespace Jvedio
 
 
 
+        static Window_Server()
+        {
+            AvalonEditManager.Init();
+        }
+
+
+
         private async void BaseWindow_ContentRendered(object sender, System.EventArgs e)
         {
             Init();
             CurrentStatus = await ServerManager.CheckStatus();
+            TextEditorOptions textEditorOptions = new TextEditorOptions();
+            textEditorOptions.HighlightCurrentLine = true;
+            logTextBox.Options = textEditorOptions;
+
+            // 设置语法高亮
+            logTextBox.SyntaxHighlighting = HighlightingManager.Instance.HighlightingDefinitions[0];
+
+            if (LogCache.Length > 0)
+                logTextBox.Text = LogCache.ToString();
+
         }
 
         public void Init()
@@ -134,19 +162,9 @@ namespace Jvedio
 
         private async void StartServer()
         {
-            // 0.将配置写入
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            dict.Add("SqliteDataPath", SqlManager.DEFAULT_SQLITE_PATH);
-            dict.Add("SqliteDataConfigPath", SqlManager.DEFAULT_SQLITE_CONFIG_PATH);
-            string configString = JsonUtils.TrySerializeObject(dict);
-            FileHelper.TryWriteToFile(ServerManager.ServerConfigPath, configString);
-            Log("写入配置成功");
-
-
-            await Task.Delay(300);
             ClearLog();
             Starting = true;
-            Log("检查文件...");
+            LogMsg("检查文件...");
             // 1. 检查文件是否存在
             if (!File.Exists(ServerManager.ServerFilePath) && !await ServerManager.DownloadJar())
             {
@@ -155,13 +173,28 @@ namespace Jvedio
                 return;
             }
 
-            Log("文件最新");
-            Log("开始启动服务");
+            LogMsg("文件最新");
+            LogMsg("开始启动服务");
+
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            // 需要去掉目录末尾的 /，否则 java 运行不对
+            if (baseDir.EndsWith("\\") || baseDir.EndsWith("/"))
+                baseDir = baseDir.Substring(0, baseDir.Length - 2);
 
             // 2. 启动服务端
-            string cmdParams = $"-Xmx2048m -Dserver.port={ConfigManager.JavaServerConfig.Port} -Dloader.path=\"{ServerManager.ServerLibPath}\" -jar \"{ServerManager.ServerFilePath}\"";
-            Logger.Info($"run server with arg: {cmdParams}");
-            Log(cmdParams);
+            string cmdParams = $"-Xmx2048m -Dfile.encoding=UTF-8" +
+                $" -Dloader.path=\"{ServerManager.ServerLibPath}\"" +
+                $" -jar" +
+                $" -Dserver.port={ConfigManager.JavaServerConfig.Port}" +
+                $" -DSQLITE_DATA_FILE_NAME=\"{SqlManager.DEFAULT_SQLITE_PATH}\"" +
+                $" -DSQLITE_DATA_PATH=\"{PathManager.CurrentUserFolder}\"" +
+                $" -DSQLITE_CONFIG_PATH=\"{SqlManager.DEFAULT_SQLITE_CONFIG_PATH}\"" +
+                $" -DEXE_PATH=\"{baseDir}\"" +
+                $" \"{ServerManager.ServerFilePath}\"";
+
+
+            Logger.Info($"run server with arg: java {cmdParams}");
+            LogMsg("java " + cmdParams);
 
             bool success = true;
             await Task.Run(() =>
@@ -198,7 +231,7 @@ namespace Jvedio
                     success = ProcessManager.KillByPort((int)ConfigManager.JavaServerConfig.Port);
                     if (success)
                     {
-                        Log("关闭进程成功！");
+                        LogMsg("关闭进程成功！");
                         await Task.Delay(1000);
                         StartServer();
                     }
@@ -219,22 +252,28 @@ namespace Jvedio
         public void StopServer()
         {
 
-            Log("停止当前服务");
+            LogMsg("停止当前服务");
             CurrentProcess?.Close();
             bool success = ProcessManager.KillByPort((int)ConfigManager.JavaServerConfig.Port);
             if (success)
             {
-                Log("关闭进程成功");
+                LogMsg("关闭进程成功");
                 CurrentStatus = ServerStatus.UnReady;
             }
             else
-                Log("关闭进程失败");
+                LogMsg("关闭进程失败");
 
         }
 
         private void StopServer(object sender, System.Windows.RoutedEventArgs e)
         {
             StopServer();
+        }
+
+        private void LogMsg(string msg)
+        {
+            string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " [INFO ] => " + msg;
+            Log(str);
         }
 
         private void Log(string msg)
@@ -245,9 +284,12 @@ namespace Jvedio
                 Logger.Info(msg);
                 logTextBox.ScrollToEnd();
             });
+            Console.WriteLine(msg);
+            LogCache.AppendLine(msg);
         }
         private void ClearLog()
         {
+            LogCache.Clear();
             App.Current.Dispatcher.Invoke(() =>
             {
                 logTextBox.Clear();
@@ -262,6 +304,24 @@ namespace Jvedio
         private void ShowHelp(object sender, System.Windows.RoutedEventArgs e)
         {
             FileHelper.TryOpenUrl(UrlManager.ServerHelpUrl);
+        }
+
+        private void textBox_GotFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            TextEditor textEditor = sender as TextEditor;
+            if (textEditor == null || textEditor.Parent == null)
+                return;
+            Border border = textEditor.Parent as Border;
+            if (border == null)
+                return;
+            border.BorderBrush = (SolidColorBrush)Application.Current.Resources["Button.Selected.BorderBrush"];
+        }
+
+        private void textBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextEditor textEditor = sender as TextEditor;
+            if (textEditor != null && textEditor.Parent is Border border)
+                border.BorderBrush = Brushes.Transparent;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.WPF.VisualTools;
 using System.Collections.Generic;
 using System.ComponentModel;

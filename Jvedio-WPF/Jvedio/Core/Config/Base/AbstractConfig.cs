@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;

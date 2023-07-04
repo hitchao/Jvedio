@@ -1,4 +1,5 @@
 ﻿using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 
 namespace Jvedio.Entity.Data
 {

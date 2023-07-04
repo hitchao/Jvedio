@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="日志高亮" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	<RuleSet >
+		<Rule foreground="#FF6D6D6D">\d\d\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d</Rule>
+		<Keywords fontWeight="bold" foreground="#FF6D6D6D">
+			<Word>=></Word>
+		</Keywords>
+
+		<Rule foreground="#FF72B677">\{.+\}</Rule>
+		<Keywords foreground="#FF008080">
+			<Word>INFO</Word>
+		</Keywords>
+
+		<Rule fontWeight="bold" foreground="#FFF47C02">WARN</Rule>
+		<Rule fontWeight="bold" foreground="#FFA31516">ERROR</Rule>
+		<Keywords fontWeight="bold" foreground="#FF00FF00">
+			<Word>jvedio server start ok</Word>
+		</Keywords>
+
+		<Keywords fontWeight="bold" foreground="#FFFFFF00">
+			<Word>JVEDIO-SERVER</Word>
+		</Keywords>
+
+		<Keywords fontWeight="bold" foreground="#FF04A9F2">
+			<Word>select</Word>
+		</Keywords>
+
+		<Keywords fontWeight="bold" foreground="#FF04A9F2">
+			<Word>where</Word>
+		</Keywords>
+
+	</RuleSet>
+</SyntaxDefinition>

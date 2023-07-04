@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Enums;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 
 namespace Jvedio.Entity.CommonSQL
 {

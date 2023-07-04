@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.MapperManager;
+using SuperUtils.Framework.ORM.Enums;
 
 namespace Jvedio.Upgrade
 {

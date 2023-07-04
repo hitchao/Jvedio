@@ -2,6 +2,7 @@
 using Jvedio.Core.Enums;
 using Jvedio.Entity.CommonSQL;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Media;
 using SuperUtils.Time;

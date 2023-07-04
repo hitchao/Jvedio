@@ -158,6 +158,10 @@
                         <Label Content="{DynamicResource Actress_Height}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
                     </DockPanel>
+                    <DockPanel>
+                        <Label Content="{DynamicResource Actress_Weight}" Style="{StaticResource BaseInfoLabel}" />
+                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Weight, Mode=TwoWay}" />
+                    </DockPanel>
 
                     <DockPanel Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}">
                         <Label Content="{DynamicResource Actress_Cup}" Style="{StaticResource BaseInfoLabel}" />

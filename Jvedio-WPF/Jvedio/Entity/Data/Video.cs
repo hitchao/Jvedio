@@ -21,6 +21,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using SuperUtils.WPF.Entity;
+using SuperUtils.Framework.ORM.Enums;
 
 namespace Jvedio.Entity
 {
