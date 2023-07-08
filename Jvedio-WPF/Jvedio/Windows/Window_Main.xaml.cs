@@ -1780,7 +1780,7 @@ namespace Jvedio
                 if (newVideo.HasSubSection) {
                     bool success = false;
                     bool changed = false;
-                    string[] oldPaths = newVideo.SubSectionList.ToArray();
+                    string[] oldPaths = newVideo.SubSectionList.Select(arg => arg.Value).ToArray();
 
                     // 判断是否改变了文件名
                     for (int i = 0; i < newPath.Length; i++) {
@@ -1803,7 +1803,7 @@ namespace Jvedio
                         }
 
                         try {
-                            File.Move(video.SubSectionList[i], newPath[i]);
+                            File.Move(video.SubSectionList[i].ToString(), newPath[i]);
                             success = true;
                         } catch (Exception ex) {
                             logger.Error(ex.Message);
@@ -2048,7 +2048,7 @@ namespace Jvedio
                     continue;
                 if (video.SubSectionList != null && video.SubSectionList.Count > 0) {
                     total += video.SubSectionList.Count;
-                    foreach (var path in video.SubSectionList) {
+                    foreach (var path in video.SubSectionList.Select(arg => arg.Value)) {
                         if (File.Exists(path)) {
                             paths.Add(path);
                             count++;
@@ -2086,7 +2086,7 @@ namespace Jvedio
             foreach (var video in vieModel.SelectedVideo) {
                 if (video.SubSectionList?.Count > 0) {
                     total += video.SubSectionList.Count;
-                    foreach (var path in video.SubSectionList) {
+                    foreach (var path in video.SubSectionList.Select(arg => arg.Value)) {
                         if (File.Exists(path)) {
                             paths.Add(path);
                             count++;
@@ -2124,7 +2124,7 @@ namespace Jvedio
             foreach (var video in vieModel.SelectedVideo) {
                 if (video.SubSectionList?.Count > 0) {
                     total += video.SubSectionList.Count;
-                    foreach (var path in video.SubSectionList) {
+                    foreach (var path in video.SubSectionList.Select(arg => arg.Value)) {
                         if (File.Exists(path)) {
                             paths.Add(path);
                             count++;
@@ -2189,7 +2189,7 @@ namespace Jvedio
                     totalCount += arg.SubSectionList.Count - 1;
 
                     // 分段视频
-                    foreach (var path in arg.SubSectionList) {
+                    foreach (var path in arg.SubSectionList.Select(t => t.Value)) {
                         if (File.Exists(path)) {
                             try {
                                 FileSystem.DeleteFile(path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
@@ -2628,7 +2628,7 @@ namespace Jvedio
             Video video = GetVideoFromChildEle(button, dataID);
             if (video != null && video.SubSectionList?.Count > 0) {
                 for (int i = 0; i < video.SubSectionList.Count; i++) {
-                    string filepath = video.SubSectionList[i]; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
+                    string filepath = video.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
                     MenuItem menuItem = new MenuItem();
                     menuItem.Header = i + 1;
                     menuItem.Click += (s, _) => {

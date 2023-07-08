@@ -139,8 +139,17 @@ namespace Jvedio.Entity
 
         public int Duration { get; set; }
 
+
+        private ObservableCollection<ObservableString> _SubSectionList { get; set; }
+
         [TableField(exist: false)]
-        public List<string> SubSectionList { get; set; }
+        public ObservableCollection<ObservableString> SubSectionList {
+            get { return _SubSectionList; }
+            set {
+                _SubSectionList = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private string _SubSection = string.Empty;
 
@@ -149,7 +158,11 @@ namespace Jvedio.Entity
 
             set {
                 _SubSection = value;
-                SubSectionList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                SubSectionList = new ObservableCollection<ObservableString>();
+                if (!string.IsNullOrEmpty(value))
+                    foreach (var item in value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries))
+                        SubSectionList.Add(new ObservableString(item));
+
                 if (SubSectionList.Count >= 2)
                     HasSubSection = true;
                 RaisePropertyChanged();

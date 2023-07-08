@@ -7,6 +7,7 @@ using SuperUtils.IO;
 using SuperUtils.WPF.Entity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -80,12 +81,13 @@ namespace Jvedio
             } else {
                 vieModel.CurrentVideo.Path = dragdropFiles[0];
                 if (vieModel.CurrentVideo.SubSectionList == null)
-                    vieModel.CurrentVideo.SubSectionList = new System.Collections.Generic.List<string>();
+                    vieModel.CurrentVideo.SubSectionList = new ObservableCollection<ObservableString>();
                 foreach (var file in dragdropFiles) {
-                    if (vieModel.CurrentVideo.SubSectionList.Contains(file))
+                    ObservableString str = new ObservableString(file);
+                    if (vieModel.CurrentVideo.SubSectionList.Contains(str))
                         continue;
                     if (FileHelper.IsFile(file) && ScanHelper.IsProperMovie(file)) {
-                        vieModel.CurrentVideo.SubSectionList.Add(file);
+                        vieModel.CurrentVideo.SubSectionList.Add(str);
                     }
                 }
 
@@ -143,9 +145,9 @@ namespace Jvedio
 
         private void SubSectionChanged(object sender, RoutedEventArgs eventArgs)
         {
-            List<string> list = vieModel.CurrentVideo.SubSectionList;
-            if (list == null)
-                list = new List<string>();
+            List<string> list = new List<string>();
+            if (vieModel.CurrentVideo.SubSectionList != null)
+                list = vieModel.CurrentVideo.SubSectionList.Select(arg => arg.Value).ToList();
             vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
             calcSize();
 
@@ -155,9 +157,16 @@ namespace Jvedio
         {
             List<string> fileNames = SelectVideo(string.Empty, true);
             if (vieModel.CurrentVideo.SubSectionList == null)
-                vieModel.CurrentVideo.SubSectionList = new System.Collections.Generic.List<string>();
-            vieModel.CurrentVideo.SubSectionList.AddRange(fileNames);
-            vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
+                vieModel.CurrentVideo.SubSectionList = new ObservableCollection<ObservableString>();
+
+            foreach (var item in fileNames) {
+                vieModel.CurrentVideo.SubSectionList.Add(new ObservableString(item));
+            }
+
+            vieModel.CurrentVideo.SubSection =
+                string.Join(SuperUtils.Values.ConstValues.SeparatorString,
+                vieModel.CurrentVideo.SubSectionList.Select(arg => arg.Value));
+
             calcSize();
         }
 
@@ -167,7 +176,7 @@ namespace Jvedio
         {
             long total = 0;
             if (vieModel.CurrentVideo.SubSectionList != null && vieModel.CurrentVideo.SubSectionList.Count > 0) {
-                foreach (var item in vieModel.CurrentVideo.SubSectionList) {
+                foreach (var item in vieModel.CurrentVideo.SubSectionList.Select(arg => arg.Value)) {
                     if (File.Exists(item))
                         total += new FileInfo(item).Length;
                 }

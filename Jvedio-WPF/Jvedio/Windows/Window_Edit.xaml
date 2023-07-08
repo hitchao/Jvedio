@@ -61,6 +61,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch">
                         <DockPanel>
+
                             <Label Content="{DynamicResource ID}" Style="{StaticResource BaseInfoLabel}" />
                             <super:SearchBox Margin="5" Text="{Binding CurrentVideo.VID, Mode=TwoWay}" />
                         </DockPanel>
@@ -533,7 +534,7 @@
                                 Style="{StaticResource BaseInfoLabel}" />
                             <super:TagPanel
                                 AddButtonVerticalAlignment="Top"
-                                ItemsSource="{Binding CurrentVideo.SubSectionList}"
+                                ItemsSource="{Binding CurrentVideo.SubSectionList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 OnAddNewLabel="NewSubSection"
                                 TagChanged="SubSectionChanged" />
 

@@ -556,7 +556,7 @@ namespace Jvedio
             Video video = vieModel.CurrentVideo;
             if (video.SubSectionList?.Count > 0) {
                 // 分段视频
-                foreach (var path in video.SubSectionList) {
+                foreach (var path in video.SubSectionList.Select(arg => arg.Value)) {
                     if (File.Exists(path)) {
                         try {
                             FileSystem.DeleteFile(path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
@@ -1125,7 +1125,7 @@ namespace Jvedio
             ContextMenu contextMenu = (sender as Grid).ContextMenu;
             contextMenu.Items.Clear();
             for (int i = 0; i < vieModel.CurrentVideo.SubSectionList?.Count; i++) {
-                string filepath = vieModel.CurrentVideo.SubSectionList[i]; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
+                string filepath = vieModel.CurrentVideo.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
                 MenuItem menuItem = new MenuItem();
                 menuItem.Header = i + 1;
                 menuItem.Click += (s, _) => windowMain?.PlayVideoWithPlayer(filepath, DataID);
@@ -1223,7 +1223,7 @@ namespace Jvedio
             Video video = vieModel.ViewAssociationDatas.Where(arg => arg.DataID == dataID).FirstOrDefault();
             if (video != null) {
                 for (int i = 0; i < video.SubSectionList?.Count; i++) {
-                    string filepath = video.SubSectionList[i]; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
+                    string filepath = video.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
                     MenuItem menuItem = new MenuItem();
                     menuItem.Header = i + 1;
                     menuItem.Click += (s, _) => windowMain?.PlayVideoWithPlayer(filepath, dataID);
