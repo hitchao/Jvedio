@@ -767,7 +767,8 @@ namespace Jvedio
             //about.ShowDialog();
             Dialog_About about = new Dialog_About();
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            local = local.Substring(0, local.Length - ".0.0".Length);
+            if (local.EndsWith(".0.0"))
+                local = local.Substring(0, local.Length - ".0.0".Length);
             about.AppName = "Jvedio";
             about.AppSubName = "本地视频管理软件";
             about.Version = local;

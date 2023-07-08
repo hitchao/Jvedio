@@ -980,7 +980,7 @@ namespace Jvedio
                 string ReleaseDate = result.ReleaseDate;
                 if (!string.IsNullOrEmpty(remote)) {
                     string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                    local = local.Substring(0, local.Length - ".0.0".Length);
+                    //local = local.Substring(0, local.Length - ".0.0".Length);
                     if (local.CompareTo(remote) < 0) {
                         bool opened = (bool)new MsgBox(
                             $"存在新版本\n版本：{remote}\n日期：{ReleaseDate}").ShowDialog();
@@ -4296,7 +4296,8 @@ namespace Jvedio
         {
             Dialog_About about = new Dialog_About();
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            local = local.Substring(0, local.Length - ".0.0".Length);
+            if (local.EndsWith(".0.0"))
+                local = local.Substring(0, local.Length - ".0.0".Length);
             about.AppName = "Jvedio";
             about.AppSubName = "本地视频管理软件";
             about.Version = local;
@@ -4449,6 +4450,9 @@ namespace Jvedio
 
         private void OpenServer(object sender, RoutedEventArgs e)
         {
+            MessageNotify.Info("开发中");
+            return;
+
             if (window_Server != null)
                 window_Server.Close();
             window_Server = new Window_Server();

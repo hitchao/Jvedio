@@ -4,6 +4,13 @@ using SuperUtils.IO;
 using System;
 using System.Threading;
 using System.Windows;
+#if DEBUG
+#else
+using System.Diagnostics;
+using System.Windows.Threading;
+using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+#endif
 
 namespace Jvedio
 {
@@ -38,18 +45,15 @@ namespace Jvedio
 #else
             bool createNew;
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
-            if (!createNew)
-            {
+            if (!createNew) {
                 //new MsgBox($"Jvedio {LangManager.GetValueByKey("Running")}").ShowDialog();
                 //App.Current.Shutdown();
                 //Environment.Exit(0);
 
                 var current = Process.GetCurrentProcess();
 
-                foreach (var process in Process.GetProcessesByName(current.ProcessName))
-                {
-                    if (process.Id != current.Id)
-                    {
+                foreach (var process in Process.GetProcessesByName(current.ProcessName)) {
+                    if (process.Id != current.Id) {
                         IntPtr hWnd = IntPtr.Zero;
                         hWnd = process.MainWindowHandle;
 
