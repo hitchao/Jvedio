@@ -1,13 +1,12 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
-using static Jvedio.LogManager;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using Jvedio.Windows;
 using Newtonsoft.Json;
 using SuperControls.Style.Windows;
-using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Time;
@@ -18,9 +17,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+using static Jvedio.LogManager;
 using static Jvedio.MapperManager;
-using SuperUtils.Framework.ORM.Enums;
 
 namespace Jvedio.Upgrade
 {
@@ -30,56 +28,51 @@ namespace Jvedio.Upgrade
         public static void MoveScanPathConfig(string[] files)
         {
             string scanPathConfig = Path.Combine(PathManager.oldDataPath, "ScanPathConfig");
-            if (!File.Exists(scanPathConfig)) return;
+            if (!File.Exists(scanPathConfig))
+                return;
 
             Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
-            foreach (string file in files)
-            {
-                if (string.IsNullOrEmpty(file)) continue;
+            foreach (string file in files) {
+                if (string.IsNullOrEmpty(file))
+                    continue;
                 string name = Path.GetFileNameWithoutExtension(file);
                 System.Collections.Specialized.StringCollection collection = null;
-                try
-                {
+                try {
                     collection = new ScanPathConfig(name).Read();
-                    if (collection == null || collection.Count == 0) continue;
+                    if (collection == null || collection.Count == 0)
+                        continue;
                     List<string> list = collection.Cast<string>().ToList();
                     dict.Add(name, list);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     continue;
                 }
             }
 
             List<AppDatabase> appDatabases = null;
-            try
-            {
+            try {
                 appDatabases = appDatabaseMapper.SelectList();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
                 return;
             }
 
-            foreach (string name in dict.Keys)
-            {
-                if (string.IsNullOrEmpty(name) || dict[name].Count <= 0) continue;
+            foreach (string name in dict.Keys) {
+                if (string.IsNullOrEmpty(name) || dict[name].Count <= 0)
+                    continue;
                 AppDatabase db = appDatabases.Where(arg => !string.IsNullOrEmpty(arg.Name) &&
                     name.ToLower().Equals(arg.Name.ToLower())).FirstOrDefault();
-                if (db == null) continue;
+                if (db == null)
+                    continue;
 
                 List<string> list = dict[name];
-                if (list == null || list.Count <= 0) continue;
+                if (list == null || list.Count <= 0)
+                    continue;
                 string json = JsonConvert.SerializeObject(list);
                 db.ScanPath = json;
-                try
-                {
+                try {
                     appDatabaseMapper.UpdateById(db);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     continue;
                 }
@@ -89,25 +82,22 @@ namespace Jvedio.Upgrade
         public static void MoveRecentWatch()
         {
             string recentWatchPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentWatch");
-            if (!File.Exists(recentWatchPath)) return;
+            if (!File.Exists(recentWatchPath))
+                return;
             RecentWatchedConfig recentWatchedConfig = new RecentWatchedConfig();
             Dictionary<DateTime, List<string>> dict = null;
-            try
-            {
+            try {
                 dict = recentWatchedConfig.Read();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (dict == null || dict.Count <= 0) return;
+            if (dict == null || dict.Count <= 0)
+                return;
 
-            foreach (DateTime key in dict.Keys)
-            {
+            foreach (DateTime key in dict.Keys) {
                 List<string> list = dict[key];
-                if (list != null && list.Count > 0)
-                {
+                if (list != null && list.Count > 0) {
                     string sql = $"update metadata set ViewDate = '{key.ToLocalDate()}' " +
                                 "where DataID in (select DataID from metadata_video " +
                                 $"where VID in ('{string.Join("','", list)}')); ";
@@ -118,10 +108,8 @@ namespace Jvedio.Upgrade
 
         private static void setProgress(float current, string logText)
         {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                if (window_Progress != null)
-                {
+            App.Current.Dispatcher.Invoke(() => {
+                if (window_Progress != null) {
                     window_Progress.MainProgress = current;
                     window_Progress.LogText = logText;
                 }
@@ -132,18 +120,18 @@ namespace Jvedio.Upgrade
 
         public static async Task<bool> MoveDatabases(string[] files)
         {
-            if (files == null || files.Length == 0) return true;
+            if (files == null || files.Length == 0)
+                return true;
             bool result = false;
             window_Progress = new Window_Progress("迁移数据", logText: string.Empty);
 
             // 不等待
             Task.Run(() => { App.Current.Dispatcher.Invoke(() => { window_Progress.ShowDialog(); }); });
-            for (int i = 0; i < files.Length; i++)
-            {
+            for (int i = 0; i < files.Length; i++) {
                 string file = files[i];
-                if (!File.Exists(file)) continue;
-                result = await MoveOldData(file, (err) =>
-                {
+                if (!File.Exists(file))
+                    continue;
+                result = await MoveOldData(file, (err) => {
                     MsgBox.Show(err);
                 });
                 setProgress((100 * (float)i + 1) / (float)files.Length, $"迁移数据：{Path.GetFileName(file)}");
@@ -162,49 +150,38 @@ namespace Jvedio.Upgrade
         /// <returns></returns>
         public static async Task<bool> MoveOldData(string origin, Action<string> errorCallBack = null)
         {
-            return await Task.Run(() =>
-            {
+            return await Task.Run(() => {
                 MySqlite oldSqlite = null;
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
                 Logger.Info($"=======开始迁移数据：{Path.GetFileName(origin)}=========");
                 string dbName = "ja";
-                try
-                {
+                try {
                     oldSqlite = new MySqlite(origin);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     return false;
                 }
 
-                if (oldSqlite == null) return false;
+                if (oldSqlite == null)
+                    return false;
 
                 // 1. 迁移 Code
                 dbName += "vdb";
                 bool dbExist = oldSqlite.IsTableExist(dbName);
-                if (dbExist)
-                {
+                if (dbExist) {
                     System.Data.SQLite.SQLiteDataReader db = null;
-                    try
-                    {
+                    try {
                         db = oldSqlite.RunSql("select * from " + dbName);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Logger.Error(ex);
                     }
 
-                    if (db != null)
-                    {
+                    if (db != null) {
                         List<UrlCode> urlCodes = new List<UrlCode>();
-                        while (db.Read())
-                        {
-                            try
-                            {
-                                UrlCode urlCode = new UrlCode()
-                                {
+                        while (db.Read()) {
+                            try {
+                                UrlCode urlCode = new UrlCode() {
                                     // todo 列可能不存在
                                     LocalValue = db["id"].ToString(),
                                     RemoteValue = db["code"].ToString(),
@@ -212,9 +189,7 @@ namespace Jvedio.Upgrade
                                     ValueType = "video",
                                 };
                                 urlCodes.Add(urlCode);
-                            }
-                            catch (Exception ex)
-                            {
+                            } catch (Exception ex) {
                                 Logger.Error(ex);
                                 continue;
                             }
@@ -227,36 +202,26 @@ namespace Jvedio.Upgrade
                 }
 
                 dbExist = oldSqlite.IsTableExist("library");
-                if (dbExist)
-                {
+                if (dbExist) {
                     System.Data.SQLite.SQLiteDataReader library = null;
-                    try
-                    {
+                    try {
                         library = oldSqlite.RunSql("select * from library");
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Logger.Error(ex);
                     }
 
-                    if (library != null)
-                    {
+                    if (library != null) {
                         List<UrlCode> urlCodes = new List<UrlCode>();
-                        while (library.Read())
-                        {
-                            try
-                            {
-                                UrlCode urlCode = new UrlCode()
-                                {
+                        while (library.Read()) {
+                            try {
+                                UrlCode urlCode = new UrlCode() {
                                     LocalValue = library["id"].ToString(),
                                     RemoteValue = library["code"].ToString(),
                                     WebType = "library",
                                     ValueType = "video",
                                 };
                                 urlCodes.Add(urlCode);
-                            }
-                            catch (Exception ex)
-                            {
+                            } catch (Exception ex) {
                                 Logger.Error(ex);
                                 continue;
                             }
@@ -273,25 +238,18 @@ namespace Jvedio.Upgrade
 
                 // 2. 迁移 actress
                 dbExist = oldSqlite.IsTableExist("actress");
-                if (dbExist)
-                {
+                if (dbExist) {
                     System.Data.SQLite.SQLiteDataReader actressReader = null;
-                    try
-                    {
+                    try {
                         actressReader = oldSqlite.RunSql("select * from actress");
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Logger.Error(ex);
                     }
 
-                    if (actressReader != null)
-                    {
+                    if (actressReader != null) {
                         List<ActorInfo> actressList = new List<ActorInfo>();
-                        while (actressReader.Read())
-                        {
-                            try
-                            {
+                        while (actressReader.Read()) {
+                            try {
                                 Actress actress = new Actress();
                                 actress.birthday = actressReader["birthday"].ToString();
                                 actress.id = actressReader["id"].ToString();
@@ -315,9 +273,7 @@ namespace Jvedio.Upgrade
                                 actress.imageurl = actressReader["imageurl"].ToString();
                                 ActorInfo actorInfo = actress.toActorInfo();
                                 actressList.Add(actorInfo);
-                            }
-                            catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 Logger.Error(e);
                                 continue;
                             }
@@ -335,8 +291,7 @@ namespace Jvedio.Upgrade
                 // 3. 迁移 movie
                 dbExist = oldSqlite.IsTableExist("movie");
                 List<Video> videos = new List<Video>();
-                if (dbExist)
-                {
+                if (dbExist) {
                     double total_count = oldSqlite.SelectCountByTable("movie");
 
                     // 新建库
@@ -344,12 +299,9 @@ namespace Jvedio.Upgrade
                     appDatabase.Name = Path.GetFileNameWithoutExtension(origin);
                     appDatabase.Count = (long)total_count;
                     appDatabase.DataType = DataType.Video;
-                    try
-                    {
+                    try {
                         appDatabaseMapper.Insert(appDatabase);
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         // 库创建失败了
                         errorCallBack?.Invoke($"库 {appDatabase.Name} 创建失败");
                         Logger.Error(e);
@@ -357,24 +309,17 @@ namespace Jvedio.Upgrade
                     }
 
                     System.Data.SQLite.SQLiteDataReader sr = null;
-                    try
-                    {
+                    try {
                         sr = oldSqlite.RunSql("select * from movie");
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Logger.Error(ex);
                     }
 
-                    if (sr != null)
-                    {
+                    if (sr != null) {
                         List<DetailMovie> detailMovies = new List<DetailMovie>();
-                        while (sr.Read())
-                        {
-                            try
-                            {
-                                DetailMovie detailMovie = new DetailMovie()
-                                {
+                        while (sr.Read()) {
+                            try {
+                                DetailMovie detailMovie = new DetailMovie() {
                                     id = sr["id"].ToString(),
                                     title = sr["title"].ToString(),
                                     filepath = sr["filepath"].ToString(),
@@ -420,31 +365,23 @@ namespace Jvedio.Upgrade
                                 detailMovie.countrycode = countrycode;
                                 detailMovie.runtime = runtime;
                                 detailMovies.Add(detailMovie);
-                            }
-                            catch (Exception ex)
-                            {
+                            } catch (Exception ex) {
                                 Logger.Error(ex);
                                 continue;
                             }
                         }
 
                         long before = 0;
-                        try
-                        {
+                        try {
                             before = metaDataMapper.SelectCount();
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             Logger.Error(ex);
                             return false;
                         }
 
-                        try
-                        {
+                        try {
                             metaDataMapper.InsertBatch(detailMovies.Select(item => item.toMetaData()).ToList());
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             Logger.Error(ex);
                             return false;
                         }
@@ -452,8 +389,7 @@ namespace Jvedio.Upgrade
                         Logger.Info($"metaDataMapper 用时：{watch.ElapsedMilliseconds} ms");
 
                         watch.Restart();
-                        detailMovies.ForEach(arg =>
-                        {
+                        detailMovies.ForEach(arg => {
                             before++;
                             Video video = arg.toVideo();
                             video.DataID = before;
@@ -467,12 +403,9 @@ namespace Jvedio.Upgrade
                             videos.Add(video);
                         });
 
-                        try
-                        {
+                        try {
                             videoMapper.InsertBatch(videos);
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             Logger.Error(ex);
                             return false;
                         }
@@ -480,14 +413,11 @@ namespace Jvedio.Upgrade
                         Logger.Info($"videoMapper 用时：{watch.ElapsedMilliseconds} ms");
                         watch.Restart();
 
-                        try
-                        {
+                        try {
                             handleChinesetitle(detailMovies);
                             handleActor(videos);
                             handleLabel(videos);
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             Logger.Error(ex);
                         }
 
@@ -502,8 +432,7 @@ namespace Jvedio.Upgrade
 
                 watch.Stop();
                 List<string> list = new List<string>();
-                foreach (Video video in videos)
-                {
+                foreach (Video video in videos) {
                     // 高清
                     if (video.IsHDV())
                         list.Add($"({video.DataID},1)");
@@ -513,8 +442,7 @@ namespace Jvedio.Upgrade
                         list.Add($"({video.DataID},2)");
                 }
 
-                if (list.Count > 0)
-                {
+                if (list.Count > 0) {
                     string sql = $"insert into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
 
                     videoMapper.ExecuteNonQuery(sql);
@@ -526,11 +454,11 @@ namespace Jvedio.Upgrade
 
         private static void handleChinesetitle(List<DetailMovie> list)
         {
-            for (int i = 0; i < list.Count; i++)
-            {
+            for (int i = 0; i < list.Count; i++) {
                 string chinesetitle = list[i].chinesetitle;
                 string title = list[i].title;
-                if (string.IsNullOrEmpty(chinesetitle) || string.IsNullOrEmpty(title)) continue;
+                if (string.IsNullOrEmpty(chinesetitle) || string.IsNullOrEmpty(title))
+                    continue;
                 TranslationMapper mapper = new TranslationMapper();
                 Translation translation = new Translation();
                 translation.SourceLang = Jvedio.Core.Enums.Language.Japanese.ToString();
@@ -550,28 +478,26 @@ namespace Jvedio.Upgrade
             StringBuilder builder = new StringBuilder();
             HashSet<string> labelSet = new HashSet<string>();
             Dictionary<long, List<string>> label_dict = new Dictionary<long, List<string>>();
-            foreach (Video video in list)
-            {
+            foreach (Video video in list) {
                 string lab = video.Label;
-                if (string.IsNullOrEmpty(lab)) continue;
+                if (string.IsNullOrEmpty(lab))
+                    continue;
                 List<string> labels = lab.Split(new char[] { ' ', SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).Select(arg => arg.Trim()).ToList();
-                if (labels.Count <= 0) continue;
+                if (labels.Count <= 0)
+                    continue;
                 labelSet.UnionWith(labels);
                 label_dict.Add(video.DataID, labels);
             }
 
             List<string> dataId_to_LabelID = new List<string>();
-            foreach (long dataID in label_dict.Keys)
-            {
+            foreach (long dataID in label_dict.Keys) {
                 List<string> labels = label_dict[dataID];
-                foreach (string label in labels)
-                {
+                foreach (string label in labels) {
                     dataId_to_LabelID.Add($"({dataID},'{label}')");
                 }
             }
 
-            if (dataId_to_LabelID.Count > 0)
-            {
+            if (dataId_to_LabelID.Count > 0) {
                 string insert_sql =
                 $"insert or replace into metadata_to_label(DataID,LabelName) values {string.Join(",", dataId_to_LabelID)}";
                 metaDataMapper.ExecuteNonQuery(insert_sql);
@@ -584,15 +510,13 @@ namespace Jvedio.Upgrade
             List<ActorInfo> actorInfos = actorMapper.SelectList();
             HashSet<string> names = list.Select(x => x.ActorNames).ToHashSet(); // 演员名字
             HashSet<string> to_insert = new HashSet<string>();
-            foreach (string name in names)
-            {
+            foreach (string name in names) {
                 to_insert.UnionWith(name.Split(new char[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries).ToHashSet());
             }
 
             HashSet<string> hashSet = actorInfos.Select(x => x.ActorName).ToHashSet();
             to_insert.ExceptWith(hashSet);
-            if (to_insert.Count > 0)
-            {
+            if (to_insert.Count > 0) {
                 string sql = $"insert into actor_info(WebType,Gender,ActorName) values ('bus',1,'{string.Join("'),('bus',1,'", to_insert)}')";
                 actorMapper.ExecuteNonQuery(sql);
             }
@@ -605,21 +529,20 @@ namespace Jvedio.Upgrade
 
             List<string> insert_list = new List<string>();
             long count = metaDataMapper.SelectCount();
-            for (int i = 0; i < list.Count; i++)
-            {
+            for (int i = 0; i < list.Count; i++) {
                 string actor = list[i].ActorNames; // 演员A 演员B 演员C
                 string actorid = list[i].OldActorIDs;
-                if (string.IsNullOrEmpty(actor)) continue;
+                if (string.IsNullOrEmpty(actor))
+                    continue;
                 UrlCode urlCode = new UrlCode();
                 string[] actorNames = actor.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 string[] actorIds = list[i].OldActorIDs.Split(new char[] { '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (actorIds.Length == actorNames.Length)
-                {
+                if (actorIds.Length == actorNames.Length) {
                     // 如果 id 和名字数量一样，插入  urlCode
-                    for (int j = 0; j < actorNames.Length; j++)
-                    {
+                    for (int j = 0; j < actorNames.Length; j++) {
                         string actorName = actorNames[j];
-                        if (string.IsNullOrEmpty(actorName)) continue;
+                        if (string.IsNullOrEmpty(actorName))
+                            continue;
                         urlCode.LocalValue = actorName;
                         urlCode.RemoteValue = actorIds[j];
                         urlCode.WebType = list[i].WebType;
@@ -628,18 +551,17 @@ namespace Jvedio.Upgrade
                     }
                 }
 
-                for (int j = 0; j < actorNames.Length; j++)
-                {
+                for (int j = 0; j < actorNames.Length; j++) {
                     string actorName = actorNames[j];
-                    if (!dict.ContainsKey(actorName)) continue;
+                    if (!dict.ContainsKey(actorName))
+                        continue;
                     insert_list.Add($"({dict[actorName]},{list[i].DataID})");
                 }
             }
 
             urlCodeMapper.InsertBatch(urlCodes, InsertMode.Ignore);
 
-            if (insert_list.Count > 0)
-            {
+            if (insert_list.Count > 0) {
                 string sql = $"insert or ignore into metadata_to_actor(ActorID,DataID) " +
                     $"values {string.Join(",", insert_list)};";
                 metaDataMapper.ExecuteNonQuery(sql);
@@ -649,27 +571,23 @@ namespace Jvedio.Upgrade
         public static void MoveAI()
         {
             string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AI.sqlite");
-            if (!File.Exists(origin)) return;
+            if (!File.Exists(origin))
+                return;
             MySqlite oldSqlite = null;
             System.Data.SQLite.SQLiteDataReader sr = null;
-            try
-            {
+            try {
                 oldSqlite = new MySqlite(origin);
                 sr = oldSqlite.RunSql("select * from baidu");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (oldSqlite == null || sr == null) return;
+            if (oldSqlite == null || sr == null)
+                return;
             List<AIFaceInfo> list = new List<AIFaceInfo>();
-            while (sr.Read())
-            {
-                try
-                {
-                    AIFaceInfo faceInfo = new AIFaceInfo()
-                    {
+            while (sr.Read()) {
+                try {
+                    AIFaceInfo faceInfo = new AIFaceInfo() {
                         Expression = sr["expression"]?.ToString(),
                         FaceShape = sr["face_shape"]?.ToString(),
                         Race = sr["race"]?.ToString(),
@@ -690,20 +608,15 @@ namespace Jvedio.Upgrade
                     faceInfo.Mask = mask != 0;
                     faceInfo.Platform = "baidu";
                     list.Add(faceInfo);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     continue;
                 }
             }
 
-            try
-            {
+            try {
                 aIFaceMapper.InsertBatch(list);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
@@ -714,30 +627,26 @@ namespace Jvedio.Upgrade
         public static void MoveMagnets()
         {
             string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Magnets.sqlite");
-            if (!File.Exists(origin)) return;
+            if (!File.Exists(origin))
+                return;
             MySqlite oldSqlite = null;
             System.Data.SQLite.SQLiteDataReader sr = null;
 
-            try
-            {
+            try {
                 oldSqlite = new MySqlite(origin);
                 sr = oldSqlite.RunSql("select * from magnets");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (oldSqlite == null || sr == null) return;
+            if (oldSqlite == null || sr == null)
+                return;
 
             List<Magnet> magnets = new List<Magnet>();
             HashSet<string> set = new HashSet<string>();
-            while (sr.Read())
-            {
-                try
-                {
-                    Magnet magnet = new Magnet()
-                    {
+            while (sr.Read()) {
+                try {
+                    Magnet magnet = new Magnet() {
                         MagnetLink = sr["link"].ToString(),
                         Title = sr["title"].ToString(),
                         Releasedate = sr["releasedate"].ToString(),
@@ -748,9 +657,7 @@ namespace Jvedio.Upgrade
                     float.TryParse(sr["size"].ToString(), out float size);
                     magnet.Size = (long)(size * 1024 * 1024);
                     magnets.Add(magnet);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     continue;
                 }
@@ -759,38 +666,29 @@ namespace Jvedio.Upgrade
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Select("VID", "DataID").In("VID", set);
             List<Video> videos = null;
-            try
-            {
+            try {
                 videos = videoMapper.SelectList(wrapper);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
             Dictionary<string, long> dict = new Dictionary<string, long>();
-            try
-            {
+            try {
                 if (videos != null && videos.Count > 0)
                     dict = videos.ToLookup(x => x.VID, y => y.DataID).ToDictionary(x => x.Key, x => x.First());
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            for (int i = 0; i < magnets.Count; i++)
-            {
+            for (int i = 0; i < magnets.Count; i++) {
                 string vid = magnets[i].VID;
-                if (dict.ContainsKey(vid)) magnets[i].DataID = dict[vid];
+                if (dict.ContainsKey(vid))
+                    magnets[i].DataID = dict[vid];
             }
 
-            try
-            {
+            try {
                 magnetsMapper.InsertBatch(magnets);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
@@ -826,53 +724,44 @@ namespace Jvedio.Upgrade
         public static void MoveMyList()
         {
             string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mylist.sqlite");
-            if (!File.Exists(origin)) return;
+            if (!File.Exists(origin))
+                return;
             MySqlite oldSqlite = null;
             System.Data.SQLite.SQLiteDataReader sr = null;
-            try
-            {
+            try {
                 oldSqlite = new MySqlite(origin);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (oldSqlite == null) return;
+            if (oldSqlite == null)
+                return;
 
             List<string> tables = oldSqlite.GetAllTable();
 
             Dictionary<string, List<string>> datas = new Dictionary<string, List<string>>();
-            foreach (string table in tables)
-            {
-                if (string.IsNullOrEmpty(table)) continue;
+            foreach (string table in tables) {
+                if (string.IsNullOrEmpty(table))
+                    continue;
                 List<string> list = new List<string>();
-                try
-                {
+                try {
                     sr = oldSqlite.RunSql($"select * from {table}");
-                    if (sr == null) continue;
-                    while (sr.Read())
-                    {
-                        try
-                        {
+                    if (sr == null)
+                        continue;
+                    while (sr.Read()) {
+                        try {
                             list.Add(sr.GetString(0));
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             Logger.Error(ex);
                             continue;
                         }
                     }
 
                     datas.Add(table, list);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     continue;
-                }
-                finally
-                {
+                } finally {
                     sr?.Close();
                     sr = null;
                 }
@@ -881,8 +770,7 @@ namespace Jvedio.Upgrade
             oldSqlite.CloseDB();
 
             HashSet<string> set = new HashSet<string>();
-            foreach (string key in datas.Keys)
-            {
+            foreach (string key in datas.Keys) {
                 set.UnionWith(datas[key]);
             }
 
@@ -890,29 +778,25 @@ namespace Jvedio.Upgrade
             selectWrapper.Select("VID", "DataID").In("VID", set);
             List<Video> videos = null;
             Dictionary<string, long> dict = new Dictionary<string, long>();
-            try
-            {
+            try {
                 videos = videoMapper.SelectList(selectWrapper);
                 if (videos != null && videos.Count > 0)
                     dict = videos.ToLookup(t => t.VID, t => t.DataID).ToDictionary(t => t.Key, t => t.First());
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (dict.Count > 0)
-            {
-                foreach (string key in datas.Keys)
-                {
+            if (dict.Count > 0) {
+                foreach (string key in datas.Keys) {
                     List<string> id_list = datas[key];
                     string labelName = key;
                     List<string> values = new List<string>();
-                    foreach (string vID in id_list)
-                    {
-                        if (string.IsNullOrEmpty(vID) || !dict.ContainsKey(vID)) continue;
+                    foreach (string vID in id_list) {
+                        if (string.IsNullOrEmpty(vID) || !dict.ContainsKey(vID))
+                            continue;
                         long dataID = dict[vID];
-                        if (dataID <= 0) continue;
+                        if (dataID <= 0)
+                            continue;
                         values.Add($"('{SqlStringFormat.Format(labelName)}',{SqlStringFormat.Format(dataID)})");
                     }
 
@@ -926,47 +810,41 @@ namespace Jvedio.Upgrade
         public static void MoveTranslate()
         {
             string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translate.sqlite");
-            if (!File.Exists(origin)) return;
+            if (!File.Exists(origin))
+                return;
 
             MySqlite oldSqlite = null;
             System.Data.SQLite.SQLiteDataReader sr = null;
-            try
-            {
+            try {
                 oldSqlite = new MySqlite(origin);
                 sr = oldSqlite.RunSql("select * from youdao");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (oldSqlite == null || sr == null) return;
+            if (oldSqlite == null || sr == null)
+                return;
 
             // 先获得当前 transaltion 表的最大 id
             SelectWrapper<Translation> wrapper = new SelectWrapper<Translation>();
             wrapper.Select("MAX(TransaltionID) as TransaltionID");
             long l = 0;
             Translation translation = null;
-            try
-            {
+            try {
                 translation = translationMapper.SelectOne(wrapper);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
                 return;
             }
 
-            if (translation != null) l = translation.TranslationID;
+            if (translation != null)
+                l = translation.TranslationID;
 
             List<Translation> translations = new List<Translation>();
             HashSet<string> set = new HashSet<string>();
-            while (sr.Read())
-            {
-                try
-                {
-                    Translation title = new Translation()
-                    {
+            while (sr.Read()) {
+                try {
+                    Translation title = new Translation() {
                         SourceText = sr["title"].ToString(),
                         TargetText = sr["translate_title"].ToString(),
                         SourceLang = Jvedio.Core.Enums.Language.Japanese.ToString(),
@@ -974,8 +852,7 @@ namespace Jvedio.Upgrade
                         Platform = TranslationPlatform.youdao.ToString(),
                         VID = sr["id"].ToString(),
                     };
-                    Translation plot = new Translation()
-                    {
+                    Translation plot = new Translation() {
                         SourceText = sr["plot"].ToString(),
                         TargetText = sr["translate_plot"].ToString(),
                         SourceLang = Jvedio.Core.Enums.Language.Japanese.ToString(),
@@ -986,21 +863,16 @@ namespace Jvedio.Upgrade
                     set.Add(title.VID);
                     translations.Add(title);
                     translations.Add(plot);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     continue;
                 }
             }
 
             l += 1;     // 在原基础上 +1
-            try
-            {
+            try {
                 translationMapper.InsertBatch(translations);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
                 return;
             }
@@ -1009,25 +881,22 @@ namespace Jvedio.Upgrade
             selectWrapper.Select("VID", "DataID").In("VID", set);
             List<Video> videos = null;
             Dictionary<string, long> dict = new Dictionary<string, long>();
-            try
-            {
+            try {
                 videos = videoMapper.SelectList(selectWrapper);
                 if (videos != null && videos.Count > 0)
                     dict = videos.ToLookup(x => x.VID, y => y.DataID).ToDictionary(x => x.Key, x => x.First());
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (dict != null && dict.Count > 0)
-            {
-                for (int i = 0; i < translations.Count; i++)
-                {
+            if (dict != null && dict.Count > 0) {
+                for (int i = 0; i < translations.Count; i++) {
                     long dataID = -1;
                     Translation trans = translations[i];
-                    if (!string.IsNullOrEmpty(trans.VID) && dict.ContainsKey(trans.VID)) dataID = dict[trans.VID];
-                    if (dataID <= 0) continue;
+                    if (!string.IsNullOrEmpty(trans.VID) && dict.ContainsKey(trans.VID))
+                        dataID = dict[trans.VID];
+                    if (dataID <= 0)
+                        continue;
                     string fieldType = i % 2 == 0 ? "Title" : "Plot";
                     string sql = "insert or replace into metadata_to_translation(DataID,FieldType,TransaltionID) " +
                                 $"values ({dataID},'{fieldType}',{i + l})";

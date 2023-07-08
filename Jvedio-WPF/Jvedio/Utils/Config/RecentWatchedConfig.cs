@@ -22,37 +22,27 @@ namespace Jvedio
 
         public bool InitXML()
         {
-            try
-            {
-                if (string.IsNullOrEmpty(Date)) return false;
+            try {
+                if (string.IsNullOrEmpty(Date))
+                    return false;
                 XmlDocument xmlDoc = new XmlDocument();
                 string Root = "RecentWatch";
                 bool CreateRoot = false;
-                if (File.Exists(filepath))
-                {
-                    try
-                    {
+                if (File.Exists(filepath)) {
+                    try {
                         xmlDoc.Load(filepath);
-                    }
-                    catch
-                    {
+                    } catch {
                         CreateRoot = true;
                     }
-                }
-                else
-                {
+                } else {
                     CreateRoot = true;
                 }
 
-                if (CreateRoot)
-                {
-                    try
-                    {
+                if (CreateRoot) {
+                    try {
                         XmlNode header = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
                         xmlDoc.AppendChild(header);
-                    }
-                    catch
-                    {
+                    } catch {
                     }
 
                     // 生成根节点
@@ -62,8 +52,7 @@ namespace Jvedio
 
                 XmlElement rootElement = xmlDoc.DocumentElement;
                 XmlNode node = xmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{Date}']");
-                if (node == null)
-                {
+                if (node == null) {
                     // 不存在该节点
                     XmlElement XE = xmlDoc.CreateElement("Date");
                     XE.SetAttribute("Name", Date);
@@ -72,9 +61,7 @@ namespace Jvedio
 
                 xmlDoc.Save(filepath);
                 return true;
-            }
-            catch
-            {
+            } catch {
                 return false;
             }
         }
@@ -86,16 +73,13 @@ namespace Jvedio
             xmlDoc.Load(filepath);
             XmlNode pathNodes = xmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{Date}']");
             XmlNodeList xmlNodeList = xmlDoc.SelectNodes($"/RecentWatch/Date[@Name='{Date}']/ID");
-            if (xmlNodeList != null && xmlNodeList.Count > 0)
-            {
-                foreach (XmlNode item in xmlNodeList)
-                {
+            if (xmlNodeList != null && xmlNodeList.Count > 0) {
+                foreach (XmlNode item in xmlNodeList) {
                     pathNodes.RemoveChild(item);
                 }
             }
 
-            foreach (string path in iDs)
-            {
+            foreach (string path in iDs) {
                 XmlElement xe = xmlDoc.CreateElement("ID");
                 xe.InnerText = path;
                 pathNodes.AppendChild(xe);
@@ -106,17 +90,15 @@ namespace Jvedio
 
         public bool Clear()
         {
-            if (!File.Exists(filepath)) InitXML();
+            if (!File.Exists(filepath))
+                InitXML();
             XmlDocument xmlDoc = new XmlDocument();
-            try
-            {
+            try {
                 xmlDoc.Load(filepath);
                 XmlElement root = xmlDoc.DocumentElement;
                 root.RemoveAll();
                 xmlDoc.Save(filepath);
-            }
-            catch
-            {
+            } catch {
                 return false;
             }
 
@@ -126,32 +108,29 @@ namespace Jvedio
         public Dictionary<DateTime, List<string>> Read()
         {
             Dictionary<DateTime, List<string>> result = new Dictionary<DateTime, List<string>>();
-            if (!File.Exists(filepath)) InitXML();
+            if (!File.Exists(filepath))
+                InitXML();
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(filepath);
             XmlNodeList dateNodes = xmlDoc.SelectNodes($"/RecentWatch/Date");
 
-            if (dateNodes != null && dateNodes.Count > 0)
-            {
-                foreach (XmlNode xmlNode in dateNodes)
-                {
+            if (dateNodes != null && dateNodes.Count > 0) {
+                foreach (XmlNode xmlNode in dateNodes) {
                     string date = xmlNode.Attributes[0].Value;
-                    if (!string.IsNullOrEmpty(date))
-                    {
+                    if (!string.IsNullOrEmpty(date)) {
                         XmlNodeList IDNodes = xmlDoc.SelectNodes($"/RecentWatch/Date[@Name='{date}']/ID");
-                        if (IDNodes != null && IDNodes.Count > 0)
-                        {
+                        if (IDNodes != null && IDNodes.Count > 0) {
                             DateTime dateTime;
                             bool success = DateTime.TryParse(date, out dateTime);
                             List<string> id = new List<string>();
-                            foreach (XmlNode item in IDNodes)
-                            {
-                                if (!id.Contains(item.InnerText)) id.Add(item.InnerText);
+                            foreach (XmlNode item in IDNodes) {
+                                if (!id.Contains(item.InnerText))
+                                    id.Add(item.InnerText);
                             }
 
-                            if (success)
-                            {
-                                if (!result.ContainsKey(dateTime)) result.Add(dateTime, id);
+                            if (success) {
+                                if (!result.ContainsKey(dateTime))
+                                    result.Add(dateTime, id);
                             }
                         }
                     }
@@ -169,8 +148,7 @@ namespace Jvedio
 
             XmlNode root = xmlDoc.SelectSingleNode($"/RecentWatch");
             XmlNode node = xmlDoc.SelectSingleNode($"/RecentWatch/Date[@Name='{dateTime.ToString("yyyy-MM-dd")}']");
-            if (root != null && node != null)
-            {
+            if (root != null && node != null) {
                 root.RemoveChild(node);
             }
 

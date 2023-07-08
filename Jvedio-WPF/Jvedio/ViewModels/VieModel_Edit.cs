@@ -4,7 +4,6 @@ using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Media;
 using SuperUtils.WPF.VieModel;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,19 +25,18 @@ namespace Jvedio.ViewModel
         public VieModel_Edit(long dataId)
         {
             windowEdit = GetWindowByName("Window_Edit", App.Current.Windows) as Window_Edit;
-            if (dataId <= 0) return;
+            if (dataId <= 0)
+                return;
             DataID = dataId;
             Reset();
         }
 
         public Video _CurrentVideo;
 
-        public Video CurrentVideo
-        {
+        public Video CurrentVideo {
             get { return _CurrentVideo; }
 
-            set
-            {
+            set {
                 _CurrentVideo = value;
                 RaisePropertyChanged();
             }
@@ -46,12 +44,10 @@ namespace Jvedio.ViewModel
 
         public bool _MoreExpanded = ConfigManager.Edit.MoreExpanded;
 
-        public bool MoreExpanded
-        {
+        public bool MoreExpanded {
             get { return _MoreExpanded; }
 
-            set
-            {
+            set {
                 _MoreExpanded = value;
                 RaisePropertyChanged();
             }
@@ -59,12 +55,10 @@ namespace Jvedio.ViewModel
 
         public long _DataID;
 
-        public long DataID
-        {
+        public long DataID {
             get { return _DataID; }
 
-            set
-            {
+            set {
                 _DataID = value;
                 RaisePropertyChanged();
             }
@@ -72,12 +66,10 @@ namespace Jvedio.ViewModel
 
         private List<ActorInfo> actorlist;
 
-        public List<ActorInfo> ActorList
-        {
+        public List<ActorInfo> ActorList {
             get { return actorlist; }
 
-            set
-            {
+            set {
                 actorlist = value;
                 RaisePropertyChanged();
             }
@@ -85,12 +77,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<ActorInfo> _CurrentActorList;
 
-        public ObservableCollection<ActorInfo> CurrentActorList
-        {
+        public ObservableCollection<ActorInfo> CurrentActorList {
             get { return _CurrentActorList; }
 
-            set
-            {
+            set {
                 _CurrentActorList = value;
                 RaisePropertyChanged();
             }
@@ -98,12 +88,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<string> _CurrentLabelList;
 
-        public ObservableCollection<string> CurrentLabelList
-        {
+        public ObservableCollection<string> CurrentLabelList {
             get { return _CurrentLabelList; }
 
-            set
-            {
+            set {
                 _CurrentLabelList = value;
                 RaisePropertyChanged();
             }
@@ -114,12 +102,10 @@ namespace Jvedio.ViewModel
         /// <summary>
         /// 用户可见的 ActorLIst
         /// </summary>
-        public ObservableCollection<ActorInfo> ViewActors
-        {
+        public ObservableCollection<ActorInfo> ViewActors {
             get { return _ViewActors; }
 
-            set
-            {
+            set {
                 _ViewActors = value;
                 RaisePropertyChanged();
             }
@@ -127,12 +113,10 @@ namespace Jvedio.ViewModel
 
         private int _ActorPageSize = 10;
 
-        public int ActorPageSize
-        {
+        public int ActorPageSize {
             get { return _ActorPageSize; }
 
-            set
-            {
+            set {
                 _ActorPageSize = value;
                 RaisePropertyChanged();
             }
@@ -140,12 +124,10 @@ namespace Jvedio.ViewModel
 
         public int _CurrentActorCount = 0;
 
-        public int CurrentActorCount
-        {
+        public int CurrentActorCount {
             get { return _CurrentActorCount; }
 
-            set
-            {
+            set {
                 _CurrentActorCount = value;
                 RaisePropertyChanged();
             }
@@ -153,12 +135,10 @@ namespace Jvedio.ViewModel
 
         private long _ActorTotalCount = 0;
 
-        public long ActorTotalCount
-        {
+        public long ActorTotalCount {
             get { return _ActorTotalCount; }
 
-            set
-            {
+            set {
                 _ActorTotalCount = value;
                 RaisePropertyChanged();
             }
@@ -166,12 +146,10 @@ namespace Jvedio.ViewModel
 
         private int _CurrentActorPage = 1;
 
-        public int CurrentActorPage
-        {
+        public int CurrentActorPage {
             get { return _CurrentActorPage; }
 
-            set
-            {
+            set {
                 _CurrentActorPage = value;
                 RaisePropertyChanged();
             }
@@ -179,12 +157,10 @@ namespace Jvedio.ViewModel
 
         private string _SearchText = string.Empty;
 
-        public string SearchText
-        {
+        public string SearchText {
             get { return _SearchText; }
 
-            set
-            {
+            set {
                 _SearchText = value;
                 RaisePropertyChanged();
                 SelectActor();
@@ -193,12 +169,10 @@ namespace Jvedio.ViewModel
 
         private string _LabelText = string.Empty;
 
-        public string LabelText
-        {
+        public string LabelText {
             get { return _LabelText; }
 
-            set
-            {
+            set {
                 _LabelText = value;
                 RaisePropertyChanged();
                 getLabels();
@@ -207,12 +181,10 @@ namespace Jvedio.ViewModel
 
         private string _ActorName = string.Empty;
 
-        public string ActorName
-        {
+        public string ActorName {
             get { return _ActorName; }
 
-            set
-            {
+            set {
                 _ActorName = value;
                 RaisePropertyChanged();
             }
@@ -220,12 +192,10 @@ namespace Jvedio.ViewModel
 
         private long _ActorID;
 
-        public long ActorID
-        {
+        public long ActorID {
             get { return _ActorID; }
 
-            set
-            {
+            set {
                 _ActorID = value;
                 RaisePropertyChanged();
             }
@@ -233,12 +203,10 @@ namespace Jvedio.ViewModel
 
         private BitmapSource _CurrentImage;
 
-        public BitmapSource CurrentImage
-        {
+        public BitmapSource CurrentImage {
             get { return _CurrentImage; }
 
-            set
-            {
+            set {
                 _CurrentImage = value;
                 RaisePropertyChanged();
             }
@@ -258,7 +226,8 @@ namespace Jvedio.ViewModel
 
         public async void getLabels()
         {
-            if (loadingLabel) return;
+            if (loadingLabel)
+                return;
             loadingLabel = true;
             string like_sql = string.Empty;
 
@@ -272,12 +241,11 @@ namespace Jvedio.ViewModel
                 $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            if (list != null)
-            {
-                foreach (Dictionary<string, object> item in list)
-                {
+            if (list != null) {
+                foreach (Dictionary<string, object> item in list) {
                     if (!item.ContainsKey("LabelName") || !item.ContainsKey("Count") ||
-                        item["LabelName"] == null || item["Count"] == null) continue;
+                        item["LabelName"] == null || item["Count"] == null)
+                        continue;
                     string labelName = item["LabelName"].ToString();
                     long.TryParse(item["Count"].ToString(), out long count);
                     labels.Add($"{labelName}({count})");
@@ -285,8 +253,7 @@ namespace Jvedio.ViewModel
             }
 
             CurrentLabelList = new ObservableCollection<string>();
-            for (int i = 0; i < labels.Count; i++)
-            {
+            for (int i = 0; i < labels.Count; i++) {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
             }
 
@@ -300,7 +267,8 @@ namespace Jvedio.ViewModel
         // todo 演员
         public bool Save()
         {
-            if (CurrentVideo == null) return false;
+            if (CurrentVideo == null)
+                return false;
             MetaData data = CurrentVideo.toMetaData();
             if (data == null)
                 return false;
@@ -322,20 +290,14 @@ namespace Jvedio.ViewModel
 
         private void LoadActor(ActorInfo actor, int idx)
         {
-            if (CurrentActorList.Count < ActorPageSize)
-            {
-                if (idx < CurrentActorList.Count)
-                {
+            if (CurrentActorList.Count < ActorPageSize) {
+                if (idx < CurrentActorList.Count) {
                     CurrentActorList[idx] = null;
                     CurrentActorList[idx] = actor;
-                }
-                else
-                {
+                } else {
                     CurrentActorList.Add(actor);
                 }
-            }
-            else
-            {
+            } else {
                 CurrentActorList[idx] = null;
                 CurrentActorList[idx] = actor;
             }
@@ -400,32 +362,32 @@ namespace Jvedio.ViewModel
             List<Dictionary<string, object>> list = actorMapper.Select(sql);
             List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
             ActorList = new List<ActorInfo>();
-            if (actors == null) actors = new List<ActorInfo>();
+            if (actors == null)
+                actors = new List<ActorInfo>();
             ActorList.AddRange(actors);
 
-            if (CurrentActorList == null) CurrentActorList = new ObservableCollection<ActorInfo>();
-            for (int i = 0; i < ActorList.Count; i++)
-            {
+            if (CurrentActorList == null)
+                CurrentActorList = new ObservableCollection<ActorInfo>();
+            for (int i = 0; i < ActorList.Count; i++) {
                 ActorInfo actorInfo = ActorList[i];
 
                 // 加载图片
                 PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
                 BitmapImage smallimage = null;
-                if (pathType != PathType.RelativeToData)
-                {
+                if (pathType != PathType.RelativeToData) {
                     // 如果是相对于影片格式的，则不设置图片
                     string smallImagePath = actorInfo.GetImagePath();
                     smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
                 }
 
-                if (smallimage == null) smallimage = MetaData.DefaultActorImage;
+                if (smallimage == null)
+                    smallimage = MetaData.DefaultActorImage;
                 actorInfo.SmallImage = smallimage;
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
             }
 
             // 清除
-            for (int i = CurrentActorList.Count - 1; i > ActorList.Count - 1; i--)
-            {
+            for (int i = CurrentActorList.Count - 1; i > ActorList.Count - 1; i--) {
                 CurrentActorList.RemoveAt(i);
             }
         }

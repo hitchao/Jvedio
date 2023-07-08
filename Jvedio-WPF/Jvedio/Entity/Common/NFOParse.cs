@@ -1,6 +1,4 @@
-﻿using MySqlX.XDevAPI.Common;
-using Newtonsoft.Json.Linq;
-using SuperControls.Style;
+﻿using SuperControls.Style;
 using SuperUtils.Common;
 using SuperUtils.WPF.Entity;
 using System;
@@ -9,8 +7,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 using static Jvedio.LogManager;
 
@@ -83,10 +79,8 @@ namespace Jvedio.Entity.Common
             this.DefaultValue = data.DefaultValue;
             this.Name = data.Name;
             this.ParseValues = new ObservableCollection<ObservableString>();
-            if (data.ParseValues?.Count > 0)
-            {
-                foreach (var item in data.ParseValues)
-                {
+            if (data.ParseValues?.Count > 0) {
+                foreach (var item in data.ParseValues) {
                     this.ParseValues.Add(new ObservableString(item.Value));
                 }
             }
@@ -97,10 +91,8 @@ namespace Jvedio.Entity.Common
             this.ParseType = type;
             this.Name = name;
             this.ParseValues = new ObservableCollection<ObservableString>();
-            if (values != null)
-            {
-                foreach (var item in values)
-                {
+            if (values != null) {
+                foreach (var item in values) {
                     this.ParseValues.Add(new ObservableString(item));
                 }
             }
@@ -110,11 +102,9 @@ namespace Jvedio.Entity.Common
 
 
         private ParseType _ParseType;
-        public ParseType ParseType
-        {
+        public ParseType ParseType {
             get { return _ParseType; }
-            set
-            {
+            set {
                 _ParseType = value;
                 RaisePropertyChanged();
             }
@@ -122,11 +112,9 @@ namespace Jvedio.Entity.Common
 
 
         private object _DefaultValue;
-        public object DefaultValue
-        {
+        public object DefaultValue {
             get { return _DefaultValue; }
-            set
-            {
+            set {
                 _DefaultValue = value;
                 RaisePropertyChanged();
             }
@@ -135,22 +123,18 @@ namespace Jvedio.Entity.Common
 
 
         private string _Name;
-        public string Name
-        {
+        public string Name {
             get { return _Name; }
-            set
-            {
+            set {
                 _Name = value;
                 RaisePropertyChanged();
             }
         }
 
         private ObservableCollection<ObservableString> _ParseValues;
-        public ObservableCollection<ObservableString> ParseValues
-        {
+        public ObservableCollection<ObservableString> ParseValues {
             get { return _ParseValues; }
-            set
-            {
+            set {
                 _ParseValues = value;
                 RaisePropertyChanged();
             }
@@ -172,8 +156,7 @@ namespace Jvedio.Entity.Common
                 return;
 
             // 读取数据
-            foreach (var item in list)
-            {
+            foreach (var item in list) {
                 string key = item.Key;
 
                 CurrentNFOParse[key].ParseValues = new ObservableCollection<ObservableString>();
@@ -182,8 +165,7 @@ namespace Jvedio.Entity.Common
                 if (!CurrentNFOParse.ContainsKey(key) || values.Count == 0)
                     continue;
 
-                foreach (var value in values)
-                {
+                foreach (var value in values) {
                     CurrentNFOParse[key].ParseValues.Add(new ObservableString(value));
                 }
 
@@ -202,8 +184,7 @@ namespace Jvedio.Entity.Common
         {
             if (string.IsNullOrEmpty(target) || CurrentNFOParse == null)
                 return (null, null);
-            foreach (var item in CurrentNFOParse)
-            {
+            foreach (var item in CurrentNFOParse) {
                 NfoParse parse = item.Value;
                 ObservableCollection<ObservableString> parseValues = parse.ParseValues;
                 if (parseValues != null && parseValues.Count > 0 && parseValues.Any(arg => arg.Value.Equals(target)))
@@ -235,8 +216,7 @@ namespace Jvedio.Entity.Common
             ParseType parseType = nfoParse.ParseType;
             object defaultValue = nfoParse.DefaultValue;
             value = value.Trim();
-            switch (parseType)
-            {
+            switch (parseType) {
                 case ParseType.Str:
                     propertyInfo.SetValue(movie, value);
                     break;
@@ -270,8 +250,7 @@ namespace Jvedio.Entity.Common
         {
             CurrentNFOParse = new Dictionary<string, NfoParse>();
 
-            foreach (var item in DEFAULT_NFO_PARSE)
-            {
+            foreach (var item in DEFAULT_NFO_PARSE) {
                 NfoParse origin = item.Value;
                 NfoParse nfoParse = new NfoParse(origin);
                 CurrentNFOParse.Add(item.Key, nfoParse);
@@ -293,8 +272,7 @@ namespace Jvedio.Entity.Common
 
             // 构造
             Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
-            foreach (var item in CurrentNFOParse)
-            {
+            foreach (var item in CurrentNFOParse) {
                 data.Add(item.Key, item.Value.ParseValues.Select(arg => arg.Value).ToList());
             }
 

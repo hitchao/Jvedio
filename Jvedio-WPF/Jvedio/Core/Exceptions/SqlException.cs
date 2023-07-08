@@ -1,6 +1,6 @@
-﻿using static Jvedio.LogManager;
-using SuperControls.Style;
+﻿using SuperControls.Style;
 using System;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Core.Exceptions
 {

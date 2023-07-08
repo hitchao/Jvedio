@@ -18,8 +18,7 @@ namespace Jvedio
         private void OpenUrl(object sender, RoutedEventArgs e)
         {
             Hyperlink hyperlink = sender as Hyperlink;
-            FileHelper.TryOpenUrl(hyperlink.NavigateUri.ToString(), (err) =>
-            {
+            FileHelper.TryOpenUrl(hyperlink.NavigateUri.ToString(), (err) => {
                 MessageCard.Error(err);
             });
         }

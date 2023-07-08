@@ -2,21 +2,19 @@
 using Jvedio.Entity;
 using Jvedio.ViewModel;
 using SuperControls.Style;
-using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.WPF.Entity;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
@@ -44,23 +42,21 @@ namespace Jvedio
         {
             main = GetWindowByName("Main", App.Current.Windows) as Main;
             windowDetails = GetWindowByName("Window_Details", App.Current.Windows) as Window_Details;
-            if (StyleManager.GlobalFont != null) this.FontFamily = StyleManager.GlobalFont; // 设置字体
+            if (StyleManager.GlobalFont != null)
+                this.FontFamily = StyleManager.GlobalFont; // 设置字体
         }
 
         private void SaveInfo(object sender, RoutedEventArgs e)
         {
             bool success = vieModel.Save();
-            if (success)
-            {
+            if (success) {
                 vieModel.Reset();
 
                 // 更新到主界面和详情界面
                 main?.RefreshData(vieModel.CurrentVideo.DataID);
                 windowDetails?.Refresh();
                 SuperControls.Style.MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
-            }
-            else
-            {
+            } else {
                 SuperControls.Style.MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_Fail"));
             }
         }
@@ -74,23 +70,21 @@ namespace Jvedio
         private void ChoseMovieBorder_Drop(object sender, DragEventArgs e)
         {
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (dragdropFiles == null || dragdropFiles.Length == 0) return;
+            if (dragdropFiles == null || dragdropFiles.Length == 0)
+                return;
 
-            if (dragdropFiles.Length == 1)
-            {
+            if (dragdropFiles.Length == 1) {
                 string path = dragdropFiles[0];
-                if (ScanHelper.IsProperMovie(path)) vieModel.CurrentVideo.Path = path;
-            }
-            else
-            {
+                if (ScanHelper.IsProperMovie(path))
+                    vieModel.CurrentVideo.Path = path;
+            } else {
                 vieModel.CurrentVideo.Path = dragdropFiles[0];
                 if (vieModel.CurrentVideo.SubSectionList == null)
                     vieModel.CurrentVideo.SubSectionList = new System.Collections.Generic.List<string>();
-                foreach (var file in dragdropFiles)
-                {
-                    if (vieModel.CurrentVideo.SubSectionList.Contains(file)) continue;
-                    if (FileHelper.IsFile(file) && ScanHelper.IsProperMovie(file))
-                    {
+                foreach (var file in dragdropFiles) {
+                    if (vieModel.CurrentVideo.SubSectionList.Contains(file))
+                        continue;
+                    if (FileHelper.IsFile(file) && ScanHelper.IsProperMovie(file)) {
                         vieModel.CurrentVideo.SubSectionList.Add(file);
                     }
                 }
@@ -105,8 +99,7 @@ namespace Jvedio
         {
             DateTime date = DateTime.Now;
             bool success = DateTime.TryParse((sender as SearchBox).Text, out date);
-            if (success)
-            {
+            if (success) {
                 this.vieModel.CurrentVideo.ReleaseDate = date.ToString("yyyy-MM-dd ");
             }
         }
@@ -173,15 +166,12 @@ namespace Jvedio
         public void calcSize()
         {
             long total = 0;
-            if (vieModel.CurrentVideo.SubSectionList != null && vieModel.CurrentVideo.SubSectionList.Count > 0)
-            {
-                foreach (var item in vieModel.CurrentVideo.SubSectionList)
-                {
-                    if (File.Exists(item)) total += new FileInfo(item).Length;
+            if (vieModel.CurrentVideo.SubSectionList != null && vieModel.CurrentVideo.SubSectionList.Count > 0) {
+                foreach (var item in vieModel.CurrentVideo.SubSectionList) {
+                    if (File.Exists(item))
+                        total += new FileInfo(item).Length;
                 }
-            }
-            else
-            {
+            } else {
                 total = File.Exists(vieModel.CurrentVideo.Path) ? new FileInfo(vieModel.CurrentVideo.Path).Length : 0;
             }
 
@@ -220,7 +210,8 @@ namespace Jvedio
             searchActorPopup.IsOpen = false;
 
             long actorID = vieModel.ActorID;
-            if (actorID <= 0) return;
+            if (actorID <= 0)
+                return;
             if (vieModel.CurrentVideo.ActorNameList == null)
                 vieModel.CurrentVideo.ActorNameList = new System.Collections.Generic.List<string>();
             if (vieModel.CurrentVideo.ActorInfos == null)
@@ -247,10 +238,10 @@ namespace Jvedio
         private long getDataID(UIElement o)
         {
             FrameworkElement element = o as FrameworkElement;
-            if (element == null) return -1;
+            if (element == null)
+                return -1;
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            if (grid != null && grid.Tag != null)
-            {
+            if (grid != null && grid.Tag != null) {
                 long.TryParse(grid.Tag.ToString(), out long result);
                 return result;
             }
@@ -262,8 +253,7 @@ namespace Jvedio
         {
             long actorID = getDataID(sender as FrameworkElement);
             ActorInfo actorInfo = vieModel.CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
-            if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName))
-            {
+            if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName)) {
                 vieModel.ActorName = actorInfo.ActorName;
                 vieModel.ActorID = actorInfo.ActorID;
                 vieModel.CurrentImage = actorInfo.SmallImage;
@@ -310,10 +300,8 @@ namespace Jvedio
         {
             long actorID = getDataID(sender as FrameworkElement);
 
-            for (int i = vieModel.ViewActors.Count - 1; i >= 0; i--)
-            {
-                if (vieModel.ViewActors[i].ActorID == actorID)
-                {
+            for (int i = vieModel.ViewActors.Count - 1; i >= 0; i--) {
+                if (vieModel.ViewActors[i].ActorID == actorID) {
                     vieModel.ViewActors.RemoveAt(i);
                     break;
                 }
@@ -323,8 +311,7 @@ namespace Jvedio
         private void ChooseFile(object sender, RoutedEventArgs e)
         {
             List<string> fileNames = SelectVideo(vieModel.CurrentVideo.Path);
-            if (fileNames.Count > 0)
-            {
+            if (fileNames.Count > 0) {
                 vieModel.CurrentVideo.Path = fileNames[0];
                 calcSize();
             }

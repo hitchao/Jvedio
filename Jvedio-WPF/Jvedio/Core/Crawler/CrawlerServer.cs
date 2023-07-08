@@ -1,16 +1,16 @@
 ﻿
-using SuperUtils.NetWork.Entity;
 using Jvedio.Core.Interfaces;
-using static Jvedio.LogManager;
+using Jvedio.Entity;
 using Newtonsoft.Json;
+using SuperControls.Style.Plugin;
 using SuperUtils.Common;
+using SuperUtils.NetWork.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Jvedio.Entity;
-using SuperControls.Style.Plugin;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Core.Crawler
 {
@@ -38,15 +38,12 @@ namespace Jvedio.Core.Crawler
 
         private string _Url;
 
-        public string Url
-        {
-            get
-            {
+        public string Url {
+            get {
                 return _Url;
             }
 
-            set
-            {
+            set {
                 _Url = value;
                 RaisePropertyChanged();
             }
@@ -54,15 +51,12 @@ namespace Jvedio.Core.Crawler
 
         private bool _Enabled;
 
-        public bool Enabled
-        {
-            get
-            {
+        public bool Enabled {
+            get {
                 return _Enabled;
             }
 
-            set
-            {
+            set {
                 _Enabled = value;
                 RaisePropertyChanged();
             }
@@ -73,15 +67,12 @@ namespace Jvedio.Core.Crawler
         /// </summary>
         private int _Available;
 
-        public int Available
-        {
-            get
-            {
+        public int Available {
+            get {
                 return _Available;
             }
 
-            set
-            {
+            set {
                 _Available = value;
                 RaisePropertyChanged();
             }
@@ -91,15 +82,12 @@ namespace Jvedio.Core.Crawler
 
         private string _Cookies;
 
-        public string Cookies
-        {
-            get
-            {
+        public string Cookies {
+            get {
                 return _Cookies;
             }
 
-            set
-            {
+            set {
                 _Cookies = value;
                 RaisePropertyChanged();
             }
@@ -107,15 +95,12 @@ namespace Jvedio.Core.Crawler
 
         private string _Headers { get; set; }
 
-        public string Headers
-        {
-            get
-            {
+        public string Headers {
+            get {
                 return _Headers;
             }
 
-            set
-            {
+            set {
                 _Headers = value;
                 RaisePropertyChanged();
             }
@@ -125,14 +110,11 @@ namespace Jvedio.Core.Crawler
         {
             if (string.IsNullOrEmpty(Headers))
                 return true;
-            try
-            {
+            try {
                 Dictionary<string, string> dictionary =
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(Headers);
                 return true;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
                 return false;
             }
@@ -140,15 +122,16 @@ namespace Jvedio.Core.Crawler
 
         public static RequestHeader ParseHeader(CrawlerServer server)
         {
-            if (server == null) return CrawlerHeader.Default;
+            if (server == null)
+                return CrawlerHeader.Default;
             RequestHeader result = new RequestHeader();
             result.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
             result.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
             string header = server.Headers;
-            if (string.IsNullOrEmpty(header)) return CrawlerHeader.Default;
+            if (string.IsNullOrEmpty(header))
+                return CrawlerHeader.Default;
             Dictionary<string, string> dict = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(header);
-            if (dict != null && dict.Count > 0)
-            {
+            if (dict != null && dict.Count > 0) {
                 if (!dict.ContainsKey("cookie") && !string.IsNullOrEmpty(server.Cookies))
                     dict.Add("cookie", server.Cookies);
                 dict["Cache-Control"] = "no-cache";   // 不缓存
@@ -159,12 +142,14 @@ namespace Jvedio.Core.Crawler
 
         public bool HasAllKeys(Dictionary<object, object> dict)
         {
-            if (dict == null || dict.Count == 0) return false;
+            if (dict == null || dict.Count == 0)
+                return false;
             PropertyInfo[] propertyInfos = this.GetType().GetProperties();
-            foreach (var item in propertyInfos)
-            {
-                if (!dict.ContainsKey(item.Name)) return false;
-                if (dict[item.Name] == null) return false;
+            foreach (var item in propertyInfos) {
+                if (!dict.ContainsKey(item.Name))
+                    return false;
+                if (dict[item.Name] == null)
+                    return false;
             }
 
             return true;

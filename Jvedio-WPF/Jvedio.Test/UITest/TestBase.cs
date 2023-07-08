@@ -4,12 +4,8 @@ using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jvedio.Test.UITest
 {
@@ -92,14 +88,12 @@ namespace Jvedio.Test.UITest
         public void Cleanup()
         {
             // Close the session
-            if (AppSession != null)
-            {
+            if (AppSession != null) {
                 AppSession.Close();
                 AppSession.Quit();
             }
             // Close the desktopSession
-            if (DesktopSession != null)
-            {
+            if (DesktopSession != null) {
                 DesktopSession.Close();
                 DesktopSession.Quit();
             }
@@ -107,10 +101,8 @@ namespace Jvedio.Test.UITest
         public static void StopWinappDriver()
         {
             // Stop the WinAppDriverProcess
-            if (winAppDriverProcess != null)
-            {
-                foreach (var process in Process.GetProcessesByName("WinAppDriver"))
-                {
+            if (winAppDriverProcess != null) {
+                foreach (var process in Process.GetProcessesByName("WinAppDriver")) {
                     process.Kill();
                 }
             }

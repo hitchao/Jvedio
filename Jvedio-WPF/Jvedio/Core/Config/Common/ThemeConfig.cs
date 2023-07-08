@@ -14,7 +14,8 @@ namespace Jvedio.Core.Config
 
         public static ThemeConfig CreateInstance()
         {
-            if (_instance == null) _instance = new ThemeConfig();
+            if (_instance == null)
+                _instance = new ThemeConfig();
 
             return _instance;
         }

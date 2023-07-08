@@ -1,15 +1,7 @@
-﻿using static Jvedio.LogManager;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Xml;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Collections.ObjectModel;
-using SuperUtils.WPF.Entity;
-using SuperUtils.Common;
-using Newtonsoft.Json.Linq;
-using SuperControls.Style;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Entity
 {
@@ -25,8 +17,7 @@ namespace Jvedio.Entity
         public NFO(string fP, string rootNodeName)
         {
             FilePath = fP;
-            try
-            {
+            try {
                 XmlNode header = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
                 XmlDoc.AppendChild(header);
                 var xm = XmlDoc.CreateElement(rootNodeName);
@@ -49,9 +40,7 @@ namespace Jvedio.Entity
                 CreateNewNode("id");
                 CreateNewNode("num");
                 XmlDoc.Save(fP);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
         }
@@ -68,8 +57,7 @@ namespace Jvedio.Entity
 
         public void AppendNewNode(string nodeName, string nodeText = "", string nodeID = "", string nodeIDValue = "")
         {
-            try
-            {
+            try {
                 XmlDoc.Load(FilePath);
                 var root = XmlDoc.DocumentElement;
                 XmlElement xE = null;
@@ -79,17 +67,14 @@ namespace Jvedio.Entity
                 xE.InnerText = nodeText;
                 root.AppendChild(xE);
                 XmlDoc.Save(FilePath);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
         }
 
         public void AppendNodeToNode(string fatherNode, string nodeName, string nodeText = "", string nodeID = "", string nodeIDValue = "")
         {
-            if (File.Exists(FilePath) && !string.IsNullOrEmpty(nodeName) && !string.IsNullOrEmpty(fatherNode))
-            {
+            if (File.Exists(FilePath) && !string.IsNullOrEmpty(nodeName) && !string.IsNullOrEmpty(fatherNode)) {
                 XmlDoc.Load(FilePath);
                 var xE = XmlDoc.CreateElement(nodeName);
                 if (!string.IsNullOrEmpty(nodeID))
@@ -104,29 +89,24 @@ namespace Jvedio.Entity
 
         public string ReadNodeFromXML(string nodeName)
         {
-            if (File.Exists(FilePath) && !string.IsNullOrEmpty(nodeName))
-            {
+            if (File.Exists(FilePath) && !string.IsNullOrEmpty(nodeName)) {
                 XmlDoc.Load(FilePath);
                 var xN = XmlDoc.GetElementsByTagName(nodeName)[0];
                 if (xN is object)
                     return xN.InnerText;
                 else
                     return string.Empty;
-            }
-            else
-            {
+            } else {
                 return string.Empty;
             }
         }
 
         public void SetNodeText(string nodeName, string nodeText)
         {
-            if (File.Exists(FilePath) && !string.IsNullOrEmpty(nodeName))
-            {
+            if (File.Exists(FilePath) && !string.IsNullOrEmpty(nodeName)) {
                 XmlDoc.Load(FilePath);
                 var xN = XmlDoc.GetElementsByTagName(nodeName)[0];
-                if (xN is object)
-                {
+                if (xN is object) {
                     xN.InnerText = nodeText;
                     XmlDoc.Save(FilePath);
                 }

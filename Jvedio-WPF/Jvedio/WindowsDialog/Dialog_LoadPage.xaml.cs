@@ -68,14 +68,14 @@ namespace Jvedio
 
         private List<string> StringToList(string str)
         {
-            if (str.Length == 0) return new List<string>();
-            if (str.IndexOf(";") < 0 && str.Length > 0) return new List<string>() { str };
+            if (str.Length == 0)
+                return new List<string>();
+            if (str.IndexOf(";") < 0 && str.Length > 0)
+                return new List<string>() { str };
 
             List<string> result = new List<string>();
-            foreach (var item in str.Split(';'))
-            {
-                if (item.Length > 0)
-                {
+            foreach (var item in str.Split(';')) {
+                if (item.Length > 0) {
                     result.Add(item.Replace(" ", string.Empty));
                 }
             }
@@ -85,7 +85,8 @@ namespace Jvedio
 
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
+            if (e.AddedItems.Count == 0)
+                return;
             tb.Text = e.AddedItems[0].ToString();
         }
     }

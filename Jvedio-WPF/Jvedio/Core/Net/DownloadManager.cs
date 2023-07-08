@@ -18,10 +18,8 @@ namespace Jvedio.Global
 
         public static void start()
         {
-            Task.Run(async () =>
-            {
-                while (true)
-                {
+            Task.Run(async () => {
+                while (true) {
 
 
                     await Task.Delay(1000);

@@ -1,5 +1,4 @@
-﻿using SuperControls.Style;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Jvedio.Core.DataBase.Tables
 {

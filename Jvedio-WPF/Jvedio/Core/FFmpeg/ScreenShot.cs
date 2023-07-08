@@ -1,5 +1,4 @@
-﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Exceptions;
+﻿using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
 using SuperControls.Style;
 using SuperUtils.CustomEventArgs;
@@ -68,28 +67,27 @@ namespace Jvedio.Core.FFmpeg
             if (cutoffArray == null || cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
             int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum; // 截图线程
-            if (threadNum > MAX_THREAD_NUM || threadNum <= 0) threadNum = DEFAULT_THREAD_NUM;
+            if (threadNum > MAX_THREAD_NUM || threadNum <= 0)
+                threadNum = DEFAULT_THREAD_NUM;
 
             string outputDir = CurrentVideo.GetScreenShot();
-            if (SkipExistScreenShot && Directory.Exists(outputDir))
-            {
+            if (SkipExistScreenShot && Directory.Exists(outputDir)) {
                 outputs.Append($"{LangManager.GetValueByKey("SkipScreenShotForDirExists")} => {outputDir}");
                 return outputs.ToString();
             }
 
-            DirHelper.TryCreateDirectory(outputDir, (ex) =>
-            {
+            DirHelper.TryCreateDirectory(outputDir, (ex) => {
                 throw new DirCreateFailedException(outputDir);
             });
 
             // 生成截图命令
             List<string> ffmpegParams = new List<string>();
-            for (int i = 0; i < cutoffArray.Count(); i++)
-            {
+            for (int i = 0; i < cutoffArray.Count(); i++) {
                 string saveFileName = Path.Combine(outputDir, $"ScreenShot-{i.ToString().PadLeft(2, '0')}.jpg");
                 saveFileNames.Add(saveFileName);
                 string cutoffTime = cutoffArray[i];
-                if (string.IsNullOrEmpty(cutoffTime)) continue;
+                if (string.IsNullOrEmpty(cutoffTime))
+                    continue;
                 string ffmpegParam = $"-y -threads 1 -ss {cutoffTime} -i \"{originPath}\" -f image2 -frames:v 1 \"{saveFileName}\"";
                 ffmpegParams.Add(ffmpegParam);
             }
@@ -107,17 +105,16 @@ namespace Jvedio.Core.FFmpeg
             // 放到线程池里运行
             TotalTaskCount = ffmpegParams.Count;
             ThreadPool.SetMaxThreads(threadNum, threadNum);
-            for (int i = 0; i < TotalTaskCount; i++)
-            {
+            for (int i = 0; i < TotalTaskCount; i++) {
                 ThreadPool.QueueUserWorkItem(new WaitCallback(RunFFmpeg), ffmpegParams[i]);
             }
 
             // 等待所有任务完成
-            while (CurrentTaskCount < TotalTaskCount)
-            {
+            while (CurrentTaskCount < TotalTaskCount) {
                 await Task.Delay(50);
                 Console.WriteLine("等待截图完成");
-                if (Token.IsCancellationRequested) break;
+                if (Token.IsCancellationRequested)
+                    break;
             }
 
             return outputs.ToString();
@@ -126,10 +123,8 @@ namespace Jvedio.Core.FFmpeg
         public void RunFFmpeg(object ffmpegParam)
         {
             StringBuilder currentOutput = new StringBuilder();
-            Process process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
+            Process process = new Process {
+                StartInfo = new ProcessStartInfo {
                     FileName = FFmpegPath,
                     Arguments = ffmpegParam.ToString(),
                     CreateNoWindow = true,
@@ -141,31 +136,23 @@ namespace Jvedio.Core.FFmpeg
                 },
                 EnableRaisingEvents = true,
             };
-            try
-            {
+            try {
                 process.Start();
                 string processOutput = string.Empty;
-                while ((processOutput = process.StandardError.ReadLine()) != null)
-                {
+                while ((processOutput = process.StandardError.ReadLine()) != null) {
                     currentOutput.Append(processOutput);
                     currentOutput.AppendLine();
                 }
 
                 if (Token.IsCancellationRequested)
                     throw new TaskCanceledException();
-            }
-            catch (Exception ex)
-            {
-                lock (ErrorLock)
-                {
+            } catch (Exception ex) {
+                lock (ErrorLock) {
                     onError?.Invoke(this, new MessageCallBackEventArgs(ex.Message));
                 }
-            }
-            finally
-            {
+            } finally {
                 process.Dispose();
-                lock (TaskCountLock)
-                {
+                lock (TaskCountLock) {
                     CurrentTaskCount++;
                     onProgress?.Invoke(this, null);
                     outputs.Append(currentOutput.ToString());
@@ -190,15 +177,13 @@ namespace Jvedio.Core.FFmpeg
             if (string.IsNullOrEmpty(saveFileName))
                 throw new NotFoundException(saveFileName);
 
-            if (ConfigManager.FFmpegConfig.SkipExistGif && File.Exists(saveFileName))
-            {
+            if (ConfigManager.FFmpegConfig.SkipExistGif && File.Exists(saveFileName)) {
                 outputs.Append($"{LangManager.GetValueByKey("SkipGif")} {saveFileName}");
                 return outputs.ToString();
             }
 
             string outputDir = Path.GetDirectoryName(saveFileName);
-            DirHelper.TryCreateDirectory(outputDir, (ex) =>
-            {
+            DirHelper.TryCreateDirectory(outputDir, (ex) => {
                 throw new DirCreateFailedException(outputDir);
             });
 
@@ -209,17 +194,21 @@ namespace Jvedio.Core.FFmpeg
             int duration = (int)ConfigManager.FFmpegConfig.GifDuration;
             int width = (int)ConfigManager.FFmpegConfig.GifWidth;
             int height = (int)ConfigManager.FFmpegConfig.GifHeight;
-            if (width <= 0) width = DEFAULT_GIF_WIDTH;
+            if (width <= 0)
+                width = DEFAULT_GIF_WIDTH;
 
-            if (ConfigManager.FFmpegConfig.GifAutoHeight)
-            {
+            if (ConfigManager.FFmpegConfig.GifAutoHeight) {
                 (double w, double h) = MediaParse.GetWidthHeight(originPath);
-                if (w != 0) height = (int)(h / w * (double)width);
+                if (w != 0)
+                    height = (int)(h / w * (double)width);
             }
 
-            if (width <= 0) width = DEFAULT_GIF_WIDTH;
-            if (height <= 0) height = DEFAULT_GIF_HEIGHT;
-            if (duration <= 0) duration = DEFAULT_DURATION;
+            if (width <= 0)
+                width = DEFAULT_GIF_WIDTH;
+            if (height <= 0)
+                height = DEFAULT_GIF_HEIGHT;
+            if (duration <= 0)
+                duration = DEFAULT_DURATION;
 
             string ffmpegParam = $"-y -t {duration} -ss {time} -i \"{originPath}\" -s {width}x{height}  \"{saveFileName}\"";
             TotalCount = 1;
@@ -229,11 +218,11 @@ namespace Jvedio.Core.FFmpeg
             outputs.Append($"{Environment.NewLine}{Environment.NewLine}");
 
             RunFFmpeg(ffmpegParam);
-            while (CurrentTaskCount < TotalTaskCount)
-            {
+            while (CurrentTaskCount < TotalTaskCount) {
                 await Task.Delay(50);
                 Console.WriteLine("等待 gif 生成");
-                if (Token.IsCancellationRequested) break;
+                if (Token.IsCancellationRequested)
+                    break;
             }
 
             return outputs.ToString();

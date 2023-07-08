@@ -35,12 +35,10 @@ namespace Jvedio.Entity
 
         public string _Name;
 
-        public string Name
-        {
+        public string Name {
             get { return _Name; }
 
-            set
-            {
+            set {
                 _Name = value;
                 RaisePropertyChanged();
             }
@@ -48,15 +46,14 @@ namespace Jvedio.Entity
 
         public string _ImagePath = string.Empty;
 
-        public string ImagePath
-        {
+        public string ImagePath {
             get { return _ImagePath; }
 
-            set
-            {
+            set {
                 _ImagePath = value;
                 string actual_path = Path.Combine(PathManager.ProjectImagePath, ImagePath);
-                if (File.Exists(actual_path)) Image = ImageHelper.BitmapImageFromFile(actual_path);
+                if (File.Exists(actual_path))
+                    Image = ImageHelper.BitmapImageFromFile(actual_path);
                 RaisePropertyChanged();
             }
         }
@@ -64,12 +61,10 @@ namespace Jvedio.Entity
         private BitmapSource _image;
 
         [TableField(exist: false)]
-        public BitmapSource Image
-        {
+        public BitmapSource Image {
             get { return _image; }
 
-            set
-            {
+            set {
                 _image = value;
                 RaisePropertyChanged();
             }
@@ -83,12 +78,10 @@ namespace Jvedio.Entity
 
         public string _CreateDate;
 
-        public string CreateDate
-        {
+        public string CreateDate {
             get { return _CreateDate; }
 
-            set
-            {
+            set {
                 _CreateDate = value;
                 RaisePropertyChanged();
             }
@@ -105,9 +98,11 @@ namespace Jvedio.Entity
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
+            if (obj == null)
+                return false;
             AppDatabase o = obj as AppDatabase;
-            if (o == null) return false;
+            if (o == null)
+                return false;
             return o.DataType == this.DataType && o.Name == this.Name;
         }
 
@@ -135,13 +130,10 @@ namespace Jvedio.Entity
             builder.Append($"delete from metadata_to_translation where DataID in( SELECT DataID FROM metadata where DBId ='{id}');");
             builder.Append($"delete from metadata where DBId ='{id}';");
             builder.Append("commit;");
-            try
-            {
+            try {
                 MapperManager.appDatabaseMapper.ExecuteNonQuery(builder.ToString());
                 MapperManager.appDatabaseMapper.DeleteById(id);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new SqlException(builder.ToString(), ex);
             }
         }

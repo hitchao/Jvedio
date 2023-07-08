@@ -4,8 +4,6 @@ using Jvedio.Core.Global;
 using SuperControls.Style.Upgrade;
 using SuperUtils.NetWork;
 using SuperUtils.NetWork.Crawler;
-using SuperUtils.WPF.VieModel;
-using SuperUtils.WPF.VisualTools;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -34,21 +32,18 @@ namespace Jvedio.Upgrade
         {
             dialog_Upgrade = new Dialog_Upgrade(Upgrader);
             dialog_Upgrade.LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            dialog_Upgrade.OnSourceChanged += (s, e) =>
-            {
+            dialog_Upgrade.OnSourceChanged += (s, e) => {
                 // 保存当前选择的地址
                 int index = e.NewValue;
                 UrlManager.SetRemoteIndex(index);
                 ConfigManager.Settings.RemoteIndex = index;
                 ConfigManager.Settings.Save();
             };
-            dialog_Upgrade.Closed += (s, e) =>
-            {
+            dialog_Upgrade.Closed += (s, e) => {
                 WindowClosed = true;
             };
 
-            dialog_Upgrade.OnExitApp += () =>
-            {
+            dialog_Upgrade.OnExitApp += () => {
                 Application.Current.Shutdown();
             };
 
@@ -68,7 +63,8 @@ namespace Jvedio.Upgrade
 
         public static async Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> GetUpgradeInfo()
         {
-            if (Upgrader == null) return (null, null, null);
+            if (Upgrader == null)
+                return (null, null, null);
             return await Upgrader.GetUpgradeInfo();
         }
 

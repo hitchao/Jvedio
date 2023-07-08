@@ -1,30 +1,23 @@
-﻿using Jvedio.Core.Global;
+﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Highlighting;
+using Jvedio.AvalonEdit;
+using Jvedio.Core.DataBase;
+using Jvedio.Core.Global;
 using Jvedio.Core.Server;
 using SuperControls.Style;
-using System;
-using System.IO;
-using System.Net.Sockets;
-using System.Net;
-using static Jvedio.App;
+using SuperControls.Style.Windows;
+using SuperUtils.IO;
 using SuperUtils.NetWork;
 using SuperUtils.Windows.WindowCmd;
-using System.Threading.Tasks;
+using System;
 using System.Diagnostics;
-using SuperControls.Style.Windows;
-using SuperUtils.NetWork.Entity;
-using System.Collections.Generic;
-using Jvedio.Core.DataBase;
-using SuperUtils.Common;
-using SuperUtils.IO;
-using ICSharpCode.AvalonEdit;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-using Jvedio.AvalonEdit;
-using ICSharpCode.AvalonEdit.Highlighting;
-using System.Text;
-using SuperUtils.Time;
+using static Jvedio.App;
 
 namespace Jvedio
 {
@@ -45,22 +38,18 @@ namespace Jvedio
         public Action<ServerStatus> OnServerStatusChanged;
 
         private string _LocalIp;
-        public string LocalIp
-        {
+        public string LocalIp {
             get { return _LocalIp; }
-            set
-            {
+            set {
                 _LocalIp = value;
                 RaisePropertyChanged();
             }
         }
 
         private bool _Starting;
-        public bool Starting
-        {
+        public bool Starting {
             get { return _Starting; }
-            set
-            {
+            set {
                 _Starting = value;
                 RaisePropertyChanged();
                 if (Starting)
@@ -68,32 +57,26 @@ namespace Jvedio
             }
         }
         private ServerStatus _CurrentStatus;
-        public ServerStatus CurrentStatus
-        {
+        public ServerStatus CurrentStatus {
             get { return _CurrentStatus; }
-            set
-            {
+            set {
                 _CurrentStatus = value;
                 RaisePropertyChanged();
                 OnServerStatusChanged?.Invoke(value);
             }
         }
         private bool _DownLoading;
-        public bool DownLoading
-        {
+        public bool DownLoading {
             get { return _DownLoading; }
-            set
-            {
+            set {
                 _DownLoading = value;
                 RaisePropertyChanged();
             }
         }
         private int _Progress;
-        public int Progress
-        {
+        public int Progress {
             get { return _Progress; }
-            set
-            {
+            set {
                 _Progress = value;
                 RaisePropertyChanged();
             }
@@ -139,12 +122,9 @@ namespace Jvedio
         public void Init()
         {
             // 获取本地 IP
-            try
-            {
+            try {
                 LocalIp = NetUtils.GetLocalIPAddress();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 MessageCard.Error(ex.Message);
             }
 
@@ -166,8 +146,7 @@ namespace Jvedio
             Starting = true;
             LogMsg("检查文件...");
             // 1. 检查文件是否存在
-            if (!File.Exists(ServerManager.ServerFilePath) && !await ServerManager.DownloadJar())
-            {
+            if (!File.Exists(ServerManager.ServerFilePath) && !await ServerManager.DownloadJar()) {
                 MessageCard.Error($"下载文件失败，请前往手动下载：{UrlManager.ServerUrl}");
                 Starting = false;
                 return;
@@ -197,46 +176,33 @@ namespace Jvedio
             LogMsg("java " + cmdParams);
 
             bool success = true;
-            await Task.Run(() =>
-            {
-                CmdHelper.Run("java", cmdParams, (msg) =>
-                {
+            await Task.Run(() => {
+                CmdHelper.Run("java", cmdParams, (msg) => {
                     Log(msg);
-                    if (msg.IndexOf("was already in use") >= 0)
-                    {
+                    if (msg.IndexOf("was already in use") >= 0) {
                         success = false;
                         return;
-                    }
-                    else if (msg.IndexOf("jvedio server start ok!") >= 0)
-                    {
+                    } else if (msg.IndexOf("jvedio server start ok!") >= 0) {
                         Starting = false;
                         CurrentStatus = ServerStatus.Ready;
                     }
-                }, (err) =>
-                {
+                }, (err) => {
                     Log(err);
-                }, (ex) =>
-                {
+                }, (ex) => {
                     Log(ex.Message);
                     MessageCard.Error(ex.Message);
-                }, onCreated: (p) =>
-                {
+                }, onCreated: (p) => {
                     CurrentProcess = p;
                 });
             });
-            if (!success)
-            {
-                if ((bool)new MsgBox($"端口 {ConfigManager.JavaServerConfig.Port} 被占用，是否关闭对应进程并重启？").ShowDialog(this))
-                {
+            if (!success) {
+                if ((bool)new MsgBox($"端口 {ConfigManager.JavaServerConfig.Port} 被占用，是否关闭对应进程并重启？").ShowDialog(this)) {
                     success = ProcessManager.KillByPort((int)ConfigManager.JavaServerConfig.Port);
-                    if (success)
-                    {
+                    if (success) {
                         LogMsg("关闭进程成功！");
                         await Task.Delay(1000);
                         StartServer();
-                    }
-                    else
-                    {
+                    } else {
                         MessageNotify.Error($"关闭端口 {ConfigManager.JavaServerConfig.Port} 对应的进程失败");
                     }
                 }
@@ -255,12 +221,10 @@ namespace Jvedio
             LogMsg("停止当前服务");
             CurrentProcess?.Close();
             bool success = ProcessManager.KillByPort((int)ConfigManager.JavaServerConfig.Port);
-            if (success)
-            {
+            if (success) {
                 LogMsg("关闭进程成功");
                 CurrentStatus = ServerStatus.UnReady;
-            }
-            else
+            } else
                 LogMsg("关闭进程失败");
 
         }
@@ -278,8 +242,7 @@ namespace Jvedio
 
         private void Log(string msg)
         {
-            App.Current.Dispatcher.Invoke(() =>
-            {
+            App.Current.Dispatcher.Invoke(() => {
                 logTextBox.AppendText(msg + Environment.NewLine);
                 Logger.Info(msg);
                 logTextBox.ScrollToEnd();
@@ -290,8 +253,7 @@ namespace Jvedio
         private void ClearLog()
         {
             LogCache.Clear();
-            App.Current.Dispatcher.Invoke(() =>
-            {
+            App.Current.Dispatcher.Invoke(() => {
                 logTextBox.Clear();
             });
         }

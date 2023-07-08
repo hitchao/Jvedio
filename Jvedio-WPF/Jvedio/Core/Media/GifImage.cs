@@ -22,8 +22,7 @@ namespace Jvedio.Core.Media
         private static bool ShowGif = false;
 
         #region "DependencyProperty"
-        public int FrameIndex
-        {
+        public int FrameIndex {
             get { return (int)GetValue(FrameIndexProperty); }
             set { SetValue(FrameIndexProperty, value); }
         }
@@ -54,8 +53,7 @@ namespace Jvedio.Core.Media
         //    if ((bool)e.NewValue)
         //        (sender as GifImage).StartAnimation();
         // }
-        public string GifSource
-        {
+        public string GifSource {
             get { return (string)GetValue(GifSourceProperty); }
             set { SetValue(GifSourceProperty, value); }
         }
@@ -72,8 +70,7 @@ namespace Jvedio.Core.Media
         public static readonly DependencyProperty SmallImageSourceProperty =
             DependencyProperty.Register("SmallImageSource", typeof(ImageSource), typeof(GifImage), new UIPropertyMetadata(null, ImageSourcePropertyChanged));
 
-        public ImageSource SmallImageSource
-        {
+        public ImageSource SmallImageSource {
             get { return (ImageSource)GetValue(SmallImageSourceProperty); }
             set { SetValue(SmallImageSourceProperty, value); }
         }
@@ -87,8 +84,7 @@ namespace Jvedio.Core.Media
         public static readonly DependencyProperty BigImageSourceProperty =
             DependencyProperty.Register("BigImageSource", typeof(ImageSource), typeof(GifImage), new UIPropertyMetadata(null, ImageSourcePropertyChanged));
 
-        public ImageSource BigImageSource
-        {
+        public ImageSource BigImageSource {
             get { return (ImageSource)GetValue(BigImageSourceProperty); }
             set { SetValue(BigImageSourceProperty, value); }
         }
@@ -104,8 +100,7 @@ namespace Jvedio.Core.Media
         public static readonly DependencyProperty SourceTypeProperty =
             DependencyProperty.Register("SourceType", typeof(ViewSourceType), typeof(GifImage), new UIPropertyMetadata(ViewSourceType.None, SourceTypePropertyChanged));
 
-        public ViewSourceType SourceType
-        {
+        public ViewSourceType SourceType {
             get { return (ViewSourceType)GetValue(SourceTypeProperty); }
             set { SetValue(SourceTypeProperty, value); }
         }
@@ -133,19 +128,13 @@ namespace Jvedio.Core.Media
         private void Initialize()
         {
             this.Source = null; // 移除之前绑定的 Image
-            if (SourceType == ViewSourceType.SmallImage)
-            {
+            if (SourceType == ViewSourceType.SmallImage) {
                 Source = SmallImageSource;
-            }
-            else if (SourceType == ViewSourceType.BigImage)
-            {
+            } else if (SourceType == ViewSourceType.BigImage) {
                 Source = BigImageSource;
-            }
-            else if (SourceType == ViewSourceType.Gif)
-            {
+            } else if (SourceType == ViewSourceType.Gif) {
                 ShowGif = true;
-                if (File.Exists(GifSource))
-                {
+                if (File.Exists(GifSource)) {
                     gif = new Gif(this.GifSource);
                     var decoder = gif.GetDecoder();
                     _animation = new Int32Animation(0, decoder.Frames.Count - 1, gif.GetTotalDuration());
@@ -153,9 +142,7 @@ namespace Jvedio.Core.Media
                     this.Source = null;
                     this.Source = gif.GetFirstFrame();
                     _isInitialized = true;
-                }
-                else
-                {
+                } else {
                     this.Source = MetaData.DefaultBigImage;
                 }
             }
@@ -163,10 +150,11 @@ namespace Jvedio.Core.Media
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
-            if (ShowGif && gif != null)
-            {
-                if (bitmapImages == null) bitmapImages = gif.GetAllFrame().BitmapSources;
-                if (bitmapImages != null && bitmapImages.Count > 0) this.StartAnimation();
+            if (ShowGif && gif != null) {
+                if (bitmapImages == null)
+                    bitmapImages = gif.GetAllFrame().BitmapSources;
+                if (bitmapImages != null && bitmapImages.Count > 0)
+                    this.StartAnimation();
             }
 
             base.OnMouseEnter(e);
@@ -174,8 +162,7 @@ namespace Jvedio.Core.Media
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
-            if (ShowGif && gif != null)
-            {
+            if (ShowGif && gif != null) {
                 stop();
             }
 

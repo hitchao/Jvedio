@@ -1,13 +1,8 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 
 namespace Jvedio.Core.Extensions
 {
@@ -20,8 +15,7 @@ namespace Jvedio.Core.Extensions
                                         typeof(WheelSpeedScrollViewer),
                                         new PropertyMetadata(3.0));
 
-        public Double SpeedFactor
-        {
+        public Double SpeedFactor {
             get { return (Double)GetValue(SpeedFactorProperty); }
             set { SetValue(SpeedFactorProperty, value); }
         }
@@ -30,8 +24,7 @@ namespace Jvedio.Core.Extensions
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
             if (ScrollInfo is ScrollContentPresenter scp &&
-                ComputedVerticalScrollBarVisibility == Visibility.Visible)
-            {
+                ComputedVerticalScrollBarVisibility == Visibility.Visible) {
                 scp.SetVerticalOffset(VerticalOffset - e.Delta * SpeedFactor);
                 e.Handled = true;
             }

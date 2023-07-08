@@ -27,22 +27,20 @@ namespace Jvedio.Core.Config
 
         public static ScanConfig CreateInstance()
         {
-            if (_instance == null) _instance = new ScanConfig();
+            if (_instance == null)
+                _instance = new ScanConfig();
 
             return _instance;
         }
 
         public double _MinFileSize = DEFAULT_MIN_FILE_SIZE;
 
-        public double MinFileSize
-        {
-            get
-            {
+        public double MinFileSize {
+            get {
                 return _MinFileSize;
             }
 
-            set
-            {
+            set {
                 if (value < 0)
                     _MinFileSize = DEFAULT_MIN_FILE_SIZE;
                 else

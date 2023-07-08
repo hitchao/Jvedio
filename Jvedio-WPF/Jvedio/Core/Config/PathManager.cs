@@ -1,7 +1,6 @@
 ﻿using SuperControls.Style.Windows;
 using System;
 using System.IO;
-using System.Windows;
 
 namespace Jvedio.Core.Global
 {
@@ -47,20 +46,14 @@ namespace Jvedio.Core.Global
         public static void Init()
         {
             CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);
-            try
-            {
+            try {
                 Directory.CreateDirectory(CurrentUserFolder);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
                 CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
-                try
-                {
+                try {
                     Directory.CreateDirectory(CurrentUserFolder);
-                }
-                catch (Exception ex2)
-                {
+                } catch (Exception ex2) {
                     new MsgBox("数据目录创建失败 => " + ex2.Message).ShowDialog();
                     App.Current.Shutdown();
                 }

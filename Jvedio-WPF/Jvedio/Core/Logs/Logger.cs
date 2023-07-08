@@ -1,12 +1,7 @@
-﻿using Jvedio.Core.Enums;
-using SuperUtils.Framework.Logger;
+﻿using SuperUtils.Framework.Logger;
 using SuperUtils.IO;
-using SuperUtils.Time;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
-using static SuperUtils.Framework.Logger.AbstractLogger;
 
 namespace Jvedio.Core.Logs
 {
@@ -37,8 +32,7 @@ namespace Jvedio.Core.Logs
             if (!Directory.Exists(FilePath))
                 SuperUtils.IO.DirHelper.TryCreateDirectory(FilePath);
             string filepath = System.IO.Path.Combine(FilePath, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
-            lock (LogLock)
-            {
+            lock (LogLock) {
                 FileHelper.TryAppendToFile(filepath, str);
             }
         }

@@ -35,16 +35,13 @@ namespace Jvedio.Entity
 
         private string _Tag;
 
-        public string Tag
-        {
+        public string Tag {
             get => _Tag;
 
-            set
-            {
+            set {
                 _Tag = value;
                 Tags = new List<string>();
-                if (!string.IsNullOrEmpty(value))
-                {
+                if (!string.IsNullOrEmpty(value)) {
                     Tags.AddRange(value.Split(new char[] { ' ', SuperUtils.Values.ConstValues.Separator },
                         StringSplitOptions.RemoveEmptyEntries));
                 }

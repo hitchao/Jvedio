@@ -43,16 +43,12 @@ namespace SuperUtils.External
         {
             string result = string.Empty; // 解析失败的默认返回值
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            try
-            {
+            try {
                 Dictionary<string, object> obj_json = serializer.DeserializeObject(json) as Dictionary<string, object>;
-                if (obj_json.ContainsKey(key))
-                {
+                if (obj_json.ContainsKey(key)) {
                     result = serializer.Serialize(obj_json[key]);
                 }
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
             }
 
             return result;
@@ -71,7 +67,8 @@ namespace SuperUtils.External
             request.Method = "post";
             request.KeepAlive = true;
             string base64Str = ImageHelper.ImageToBase64(bitmap);
-            if (base64Str == null) return string.Empty;
+            if (base64Str == null)
+                return string.Empty;
 
             // Console.WriteLine(base64Str);
             string str = "{\"image\":\"" + base64Str + "\",\"image_type\":\"BASE64\",\"face_field\":\"age,beauty,expression,face_shape,gender,glasses,landmark,landmark150,race,quality,eye_status,emotion,face_type,mask,spoofing\",\"max_face_num\":1,\"face_type\":\"LIVE\",\"liveness_control\":\"NONE\"}";
@@ -124,22 +121,17 @@ namespace SuperUtils.External
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Dictionary<string, object> dict = serializer.DeserializeObject(FaceJson) as Dictionary<string, object>;
             uint faceNum = 0;
-            if (dict.ContainsKey("result"))
-            {
+            if (dict.ContainsKey("result")) {
                 Dictionary<string, object> result = dict["result"] as Dictionary<string, object>;
-                try
-                {
-                    if ((bool)result?.ContainsKey("face_num")) faceNum = uint.Parse(result["face_num"].ToString());
-                }
-                catch
-                {
+                try {
+                    if ((bool)result?.ContainsKey("face_num"))
+                        faceNum = uint.Parse(result["face_num"].ToString());
+                } catch {
                 }
 
-                if (faceNum > 0)
-                {
+                if (faceNum > 0) {
                     object[] face_list_object = result["face_list"] as object[];
-                    foreach (Dictionary<string, object> item in face_list_object)
-                    {
+                    foreach (Dictionary<string, object> item in face_list_object) {
                         var location = item["location"] as Dictionary<string, object>;
                         var age = item["age"].ToString();
                         var beauty = item["beauty"].ToString();
@@ -172,8 +164,7 @@ namespace SuperUtils.External
 
         public static void ShowDic(Dictionary<string, object> dict)
         {
-            foreach (KeyValuePair<string, object> keyValuePair in dict)
-            {
+            foreach (KeyValuePair<string, object> keyValuePair in dict) {
                 Console.WriteLine(keyValuePair.Key + "：" + keyValuePair.Value);
             }
         }

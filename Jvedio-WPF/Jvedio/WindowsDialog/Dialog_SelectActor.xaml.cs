@@ -36,7 +36,8 @@ namespace Jvedio
         {
             Image image = sender as Image;
             int.TryParse(image.Tag.ToString(), out int id);
-            if (SelectedActor.Contains(id)) return;
+            if (SelectedActor.Contains(id))
+                return;
             StackPanel stackPanel = image.Parent as StackPanel;
             Border border = ((Grid)stackPanel.Parent).Children[0] as Border;
 
@@ -50,8 +51,7 @@ namespace Jvedio
             int.TryParse(image.Tag.ToString(), out int id);
             StackPanel stackPanel = image.Parent as StackPanel;
             Border border = ((Grid)stackPanel.Parent).Children[0] as Border;
-            if (!SelectedActor.Contains(id))
-            {
+            if (!SelectedActor.Contains(id)) {
                 border.BorderBrush = Brushes.Transparent;
                 border.Background = (SolidColorBrush)Application.Current.Resources["Window.Side.Background"];
             }

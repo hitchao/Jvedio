@@ -90,8 +90,7 @@ namespace Jvedio.Mapper
                         "on metadata.DataID=metadata_game.DataID " + wrapper.ToWhere(false);
             List<Dictionary<string, object>> list = Select(sql);
             List<Game> games = ToEntity<Game>(list, typeof(Game).GetProperties(), false);
-            if (games != null && games.Count > 0)
-            {
+            if (games != null && games.Count > 0) {
                 return games[0];
             }
 

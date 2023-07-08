@@ -1,7 +1,5 @@
 ﻿using SuperUtils.NetWork;
 using SuperUtils.WPF.VieModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace Jvedio.Entity
 {
@@ -26,55 +24,43 @@ namespace Jvedio.Entity
         private string name = string.Empty;
         private string lastRefreshDate = string.Empty;
 
-        public bool IsEnable
-        {
-            get => isEnable; set
-            {
+        public bool IsEnable {
+            get => isEnable; set {
                 isEnable = value;
                 RaisePropertyChanged();
             }
         }
 
-        public string Url
-        {
-            get => url; set
-            {
+        public string Url {
+            get => url; set {
                 url = value.ToString().ToProperUrl();
                 RaisePropertyChanged();
             }
         }
 
-        public string Cookie
-        {
-            get => cookie; set
-            {
+        public string Cookie {
+            get => cookie; set {
                 cookie = value;
                 RaisePropertyChanged();
             }
         }
 
-        public int Available
-        {
-            get => available; set
-            {
+        public int Available {
+            get => available; set {
                 available = value;
                 RaisePropertyChanged();
             }
         }
 
-        public string Name
-        {
-            get => name; set
-            {
+        public string Name {
+            get => name; set {
                 name = value;
                 RaisePropertyChanged();
             }
         }
 
-        public string LastRefreshDate
-        {
-            get => lastRefreshDate; set
-            {
+        public string LastRefreshDate {
+            get => lastRefreshDate; set {
                 lastRefreshDate = value;
                 RaisePropertyChanged();
             }

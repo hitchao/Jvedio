@@ -1,10 +1,8 @@
 ﻿using Jvedio.Core.Config.Base;
-using static Jvedio.LogManager;
-using SuperUtils.Security;
-using MihaZupan;
 using SuperUtils.NetWork;
 using System;
 using System.Net;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Core.Config
 {
@@ -52,7 +50,8 @@ namespace Jvedio.Core.Config
 
         public static ProxyConfig CreateInstance()
         {
-            if (_instance == null) _instance = new ProxyConfig();
+            if (_instance == null)
+                _instance = new ProxyConfig();
 
             return _instance;
         }
@@ -75,15 +74,12 @@ namespace Jvedio.Core.Config
 
         private long _HttpTimeout = DEFAULT_TIMEOUT;
 
-        public long HttpTimeout
-        {
-            get
-            {
+        public long HttpTimeout {
+            get {
                 return _HttpTimeout;
             }
 
-            set
-            {
+            set {
                 if (value <= 0)
                     _HttpTimeout = DEFAULT_TIMEOUT;
                 else
@@ -94,13 +90,10 @@ namespace Jvedio.Core.Config
         public IWebProxy GetWebProxy()
         {
             SuperWebProxy webProxy = new SuperWebProxy();
-            if (ProxyMode == 1)
-            {
+            if (ProxyMode == 1) {
                 webProxy.ProxyMode = SuperUtils.NetWork.Enums.ProxyMode.System;
                 return webProxy.GetWebProxy();
-            }
-            else if (ProxyMode == 2)
-            {
+            } else if (ProxyMode == 2) {
                 webProxy.ProxyMode = SuperUtils.NetWork.Enums.ProxyMode.Custom;
                 webProxy.ProxyProtocol = ProxyType == 0 ? SuperUtils.NetWork.Enums.ProxyProtocol.HTTP : SuperUtils.NetWork.Enums.ProxyProtocol.SOCKS;
                 webProxy.Server = Server;
@@ -114,14 +107,10 @@ namespace Jvedio.Core.Config
 
         public string GetRealPwd()
         {
-            if (!string.IsNullOrEmpty(Password))
-            {
-                try
-                {
+            if (!string.IsNullOrEmpty(Password)) {
+                try {
                     return JvedioLib.Security.Encrypt.AesDecrypt(Password, 0);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                 }
             }

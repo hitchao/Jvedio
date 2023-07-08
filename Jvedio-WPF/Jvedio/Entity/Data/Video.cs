@@ -1,17 +1,17 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
-using static Jvedio.LogManager;
 using Jvedio.Core.Scan;
 using Jvedio.Entity.CommonSQL;
-using SuperUtils.Security;
 using Newtonsoft.Json;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
 using SuperUtils.Reflections;
 using SuperUtils.Time;
+using SuperUtils.WPF.Entity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,8 +20,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
-using SuperUtils.WPF.Entity;
-using SuperUtils.Framework.ORM.Enums;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Entity
 {
@@ -59,10 +58,10 @@ namespace Jvedio.Entity
 
         public static void setTagStamps(ref Video video)
         {
-            if (video == null || string.IsNullOrEmpty(video.TagIDs)) return;
+            if (video == null || string.IsNullOrEmpty(video.TagIDs))
+                return;
             List<long> list = video.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
-            if (list != null && list.Count > 0)
-            {
+            if (list != null && list.Count > 0) {
                 video.TagStamp = new ObservableCollection<TagStamp>();
                 foreach (var item in Main.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
                     video.TagStamp.Add(item);
@@ -91,12 +90,10 @@ namespace Jvedio.Entity
 
         private string _Series;
 
-        public string Series
-        {
+        public string Series {
             get { return _Series; }
 
-            set
-            {
+            set {
                 _Series = value;
                 SeriesList = new ObservableCollection<ObservableString>();
                 if (!string.IsNullOrEmpty(value))
@@ -109,11 +106,9 @@ namespace Jvedio.Entity
 
         private ObservableCollection<ObservableString> _SeriesList;
         [TableField(exist: false)]
-        public ObservableCollection<ObservableString> SeriesList
-        {
+        public ObservableCollection<ObservableString> SeriesList {
             get { return _SeriesList; }
-            set
-            {
+            set {
                 _SeriesList = value;
                 RaisePropertyChanged();
             }
@@ -123,12 +118,10 @@ namespace Jvedio.Entity
 
         private VideoType _VideoType;
 
-        public VideoType VideoType
-        {
+        public VideoType VideoType {
             get { return _VideoType; }
 
-            set
-            {
+            set {
                 _VideoType = value;
                 RaisePropertyChanged();
             }
@@ -151,15 +144,14 @@ namespace Jvedio.Entity
 
         private string _SubSection = string.Empty;
 
-        public string SubSection
-        {
+        public string SubSection {
             get { return _SubSection; }
 
-            set
-            {
+            set {
                 _SubSection = value;
                 SubSectionList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                if (SubSectionList.Count >= 2) HasSubSection = true;
+                if (SubSectionList.Count >= 2)
+                    HasSubSection = true;
                 RaisePropertyChanged();
             }
         }
@@ -184,12 +176,10 @@ namespace Jvedio.Entity
         private BitmapSource _smallimage;
 
         [TableField(exist: false)]
-        public BitmapSource SmallImage
-        {
+        public BitmapSource SmallImage {
             get { return _smallimage; }
 
-            set
-            {
+            set {
                 _smallimage = value;
                 RaisePropertyChanged();
             }
@@ -198,12 +188,10 @@ namespace Jvedio.Entity
         private BitmapSource _bigimage;
 
         [TableField(exist: false)]
-        public BitmapSource BigImage
-        {
+        public BitmapSource BigImage {
             get { return _bigimage; }
 
-            set
-            {
+            set {
                 _bigimage = value;
                 RaisePropertyChanged();
             }
@@ -212,12 +200,10 @@ namespace Jvedio.Entity
         private Uri _GifUri;
 
         [TableField(exist: false)]
-        public Uri GifUri
-        {
+        public Uri GifUri {
             get { return _GifUri; }
 
-            set
-            {
+            set {
                 _GifUri = value;
                 RaisePropertyChanged();
             }
@@ -236,12 +222,10 @@ namespace Jvedio.Entity
         private string _ActorNames;
 
         [TableField(exist: false)]
-        public string ActorNames
-        {
+        public string ActorNames {
             get { return _ActorNames; }
 
-            set
-            {
+            set {
                 _ActorNames = value;
                 if (!string.IsNullOrEmpty(value))
                     ActorNameList = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -262,15 +246,12 @@ namespace Jvedio.Entity
         private List<ActorInfo> _ActorInfos;
 
         [TableField(exist: false)]
-        public List<ActorInfo> ActorInfos
-        {
+        public List<ActorInfo> ActorInfos {
             get { return _ActorInfos; }
 
-            set
-            {
+            set {
                 _ActorInfos = value;
-                if (value != null)
-                {
+                if (value != null) {
                     ActorNames = string.Join(SuperUtils.Values.ConstValues.SeparatorString,
                         value.Select(arg => arg.ActorName).ToList());
                 }
@@ -294,8 +275,7 @@ namespace Jvedio.Entity
 
         public bool toDownload()
         {
-            if (ConfigManager.Settings.DownloadWhenTitleNull)
-            {
+            if (ConfigManager.Settings.DownloadWhenTitleNull) {
                 return string.IsNullOrEmpty(Title);
             }
             return string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(WebUrl) || string.IsNullOrEmpty(ImageUrls);
@@ -312,8 +292,7 @@ namespace Jvedio.Entity
             string result = string.Empty;
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             string basePicPath = ConfigManager.Settings.PicPaths[pathType.ToString()].ToString();
-            if (pathType != PathType.RelativeToData)
-            {
+            if (pathType != PathType.RelativeToData) {
                 if (pathType == PathType.RelativeToApp)
                     basePicPath = System.IO.Path.Combine(PathManager.CurrentUserFolder, basePicPath);
                 string saveDir = string.Empty;
@@ -327,19 +306,17 @@ namespace Jvedio.Entity
                     saveDir = System.IO.Path.Combine(basePicPath, "ScreenShot");
                 else if (imageType == ImageType.Gif)
                     saveDir = System.IO.Path.Combine(basePicPath, "Gif");
-                else if (imageType == ImageType.Actor)
-                {
+                else if (imageType == ImageType.Actor) {
                     saveDir = System.IO.Path.Combine(basePicPath, "Actresses");
                     return System.IO.Path.GetFullPath(saveDir);
                 }
-                if (!Directory.Exists(saveDir)) FileHelper.TryCreateDir(saveDir);
+                if (!Directory.Exists(saveDir))
+                    FileHelper.TryCreateDir(saveDir);
                 if (!string.IsNullOrEmpty(VID))
                     result = System.IO.Path.Combine(saveDir, $"{VID}{(string.IsNullOrEmpty(ext) ? string.Empty : ext)}");
                 else
                     result = System.IO.Path.Combine(saveDir, $"{Hash}{(string.IsNullOrEmpty(ext) ? string.Empty : ext)}");
-            }
-            else
-            {
+            } else {
                 // todo
             }
 
@@ -365,12 +342,11 @@ namespace Jvedio.Entity
             List<string> fields = new List<string> { "VideoType", "DataID", "VID", "Size", "Path", "Hash", "DataType" };
             Dictionary<string, object> dict = new Dictionary<string, object>();
             PropertyInfo[] propertyInfos = this.GetType().GetProperties();
-            foreach (PropertyInfo info in propertyInfos)
-            {
-                if (fields.Contains(info.Name))
-                {
+            foreach (PropertyInfo info in propertyInfos) {
+                if (fields.Contains(info.Name)) {
                     object value = info.GetValue(this);
-                    if (value == null) value = string.Empty;
+                    if (value == null)
+                        value = string.Empty;
                     dict.Add(info.Name, value);
                 }
             }
@@ -380,7 +356,8 @@ namespace Jvedio.Entity
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
+            if (obj == null)
+                return false;
             Video video = obj as Video;
             return video != null && (video.DataID == this.DataID || video.MVID == this.MVID);
         }
@@ -397,8 +374,7 @@ namespace Jvedio.Entity
 
             list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
 
-            foreach (string item in list)
-            {
+            foreach (string item in list) {
                 if (System.IO.Path.GetFileNameWithoutExtension(item).ToLower().IndexOf(fileName) >= 0)
                     return item;
             }
@@ -411,8 +387,7 @@ namespace Jvedio.Entity
             string rootDir = System.IO.Path.GetDirectoryName(path);
             List<string> list = DirHelper.TryGetDirList(rootDir).ToList();
             string dirName = System.IO.Path.GetFileName(path);
-            foreach (string item in list)
-            {
+            foreach (string item in list) {
                 if (System.IO.Path.GetFileName(item).ToLower().IndexOf(dirName.ToLower()) >= 0)
                     return item;
             }
@@ -424,12 +399,12 @@ namespace Jvedio.Entity
         {
             string smallImagePath = GetImagePath(ImageType.Small, ext);
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
-            {
+            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path)) {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string smallPath = System.IO.Path.Combine(basePicPath, dict["SmallImagePath"]);
-                if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath))) smallPath += ext;
+                if (string.IsNullOrEmpty(System.IO.Path.GetExtension(smallPath)))
+                    smallPath += ext;
                 smallImagePath = ParseRelativeImageFileName(smallPath);
             }
 
@@ -444,12 +419,12 @@ namespace Jvedio.Entity
             string bigImagePath = GetImagePath(ImageType.Big, ext);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
-            {
+            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path)) {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string bigPath = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["BigImagePath"]));
-                if (string.IsNullOrEmpty(System.IO.Path.GetExtension(bigPath))) bigPath += ext;
+                if (string.IsNullOrEmpty(System.IO.Path.GetExtension(bigPath)))
+                    bigPath += ext;
                 bigImagePath = ParseRelativeImageFileName(bigPath);
             }
 
@@ -464,8 +439,7 @@ namespace Jvedio.Entity
             string imagePath = GetImagePath(ImageType.Preview);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
-            {
+            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path)) {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["PreviewImagePath"]));
@@ -479,8 +453,7 @@ namespace Jvedio.Entity
             string imagePath = GetImagePath(ImageType.Actor);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
-            {
+            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path)) {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["ActorImagePath"]));
@@ -495,8 +468,7 @@ namespace Jvedio.Entity
             string imagePath = GetImagePath(ImageType.ScreenShot);
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
-            {
+            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path)) {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["ScreenShotPath"]));
@@ -511,8 +483,7 @@ namespace Jvedio.Entity
             string imagePath = GetImagePath(ImageType.Gif, ".gif");
 
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path))
-            {
+            if (pathType == PathType.RelativeToData && !string.IsNullOrEmpty(Path) && File.Exists(Path)) {
                 string basePicPath = System.IO.Path.GetDirectoryName(Path);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
                 string path = FileHelper.TryGetFullPath(System.IO.Path.Combine(basePicPath, dict["Gif"]));
@@ -526,26 +497,20 @@ namespace Jvedio.Entity
 
         public bool ParseDictInfo(Dictionary<string, object> dict)
         {
-            if (dict == null || dict.Count == 0) return false;
+            if (dict == null || dict.Count == 0)
+                return false;
             PropertyInfo[] propertyInfos = this.GetType().GetProperties();
-            foreach (PropertyInfo info in propertyInfos)
-            {
-                if (dict.ContainsKey(info.Name))
-                {
+            foreach (PropertyInfo info in propertyInfos) {
+                if (dict.ContainsKey(info.Name)) {
                     object value = dict[info.Name];
-                    if (value == null) continue;
-                    if (value is List<string> list)
-                    {
+                    if (value == null)
+                        continue;
+                    if (value is List<string> list) {
                         info.SetValue(this, string.Join(SuperUtils.Values.ConstValues.SeparatorString, list));
-                    }
-                    else if (value is string str)
-                    {
-                        if (info.PropertyType == typeof(string))
-                        {
+                    } else if (value is string str) {
+                        if (info.PropertyType == typeof(string)) {
                             info.SetValue(this, str);
-                        }
-                        else if (info.PropertyType == typeof(int))
-                        {
+                        } else if (info.PropertyType == typeof(int)) {
                             int.TryParse(str, out int val);
                             info.SetValue(this, val);
                         }
@@ -560,25 +525,34 @@ namespace Jvedio.Entity
 
         private string ParseImageUrlFromDict(Dictionary<string, object> dict)
         {
-            if (dict == null || dict.Count == 0) return string.Empty;
+            if (dict == null || dict.Count == 0)
+                return string.Empty;
             Dictionary<string, object> result = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(ImageUrls);
-            if (result == null) result = new Dictionary<string, object>();
-            if (dict.ContainsKey("SmallImageUrl")) result["SmallImageUrl"] = dict["SmallImageUrl"];
-            if (dict.ContainsKey("BigImageUrl")) result["BigImageUrl"] = dict["BigImageUrl"];
-            if (dict.ContainsKey("ExtraImageUrl")) result["ExtraImageUrl"] = dict["ExtraImageUrl"];
-            if (dict.ContainsKey("ActressImageUrl")) result["ActressImageUrl"] = dict["ActressImageUrl"];
-            if (dict.ContainsKey("ActorNames")) result["ActorNames"] = dict["ActorNames"];
+            if (result == null)
+                result = new Dictionary<string, object>();
+            if (dict.ContainsKey("SmallImageUrl"))
+                result["SmallImageUrl"] = dict["SmallImageUrl"];
+            if (dict.ContainsKey("BigImageUrl"))
+                result["BigImageUrl"] = dict["BigImageUrl"];
+            if (dict.ContainsKey("ExtraImageUrl"))
+                result["ExtraImageUrl"] = dict["ExtraImageUrl"];
+            if (dict.ContainsKey("ActressImageUrl"))
+                result["ActressImageUrl"] = dict["ActressImageUrl"];
+            if (dict.ContainsKey("ActorNames"))
+                result["ActorNames"] = dict["ActorNames"];
             return JsonConvert.SerializeObject(result);
         }
 
         public void SaveNfo()
         {
-            if (!ConfigManager.Settings.SaveInfoToNFO) return;
+            if (!ConfigManager.Settings.SaveInfoToNFO)
+                return;
             string dir = ConfigManager.Settings.NFOSavePath;
             bool overrideInfo = ConfigManager.Settings.OverrideInfo;
 
             string saveName = $"{VID.ToProperFileName()}.nfo";
-            if (string.IsNullOrEmpty(VID)) saveName = $"{System.IO.Path.GetFileNameWithoutExtension(Path)}.nfo";
+            if (string.IsNullOrEmpty(VID))
+                saveName = $"{System.IO.Path.GetFileNameWithoutExtension(Path)}.nfo";
 
             string saveFileName = string.Empty;
 
@@ -589,76 +563,49 @@ namespace Jvedio.Entity
             if (!Directory.Exists(dir) && File.Exists(Path))
                 saveFileName = System.IO.Path.Combine(new FileInfo(Path).DirectoryName, saveName);
 
-            if (string.IsNullOrEmpty(saveFileName)) return;
+            if (string.IsNullOrEmpty(saveFileName))
+                return;
             if (overrideInfo || !File.Exists(saveFileName))
                 SaveToNFO(this, saveFileName);
         }
 
         public static string ToSqlField(string content)
         {
-            if (content == SuperControls.Style.LangManager.GetValueByKey("ID"))
-            {
+            if (content == SuperControls.Style.LangManager.GetValueByKey("ID")) {
                 return "VID";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Title"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Title")) {
                 return "Title";
             }
 
-            // else if (content == SuperControls.Style.LangManager.GetValueByKey("TranslatedTitle"))
-            // {
-            //    return "chinesetitle";
-            // }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("VideoType"))
-            {
+              // else if (content == SuperControls.Style.LangManager.GetValueByKey("TranslatedTitle"))
+              // {
+              //    return "chinesetitle";
+              // }
+              else if (content == SuperControls.Style.LangManager.GetValueByKey("VideoType")) {
                 return "VideoType";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Tag"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Tag")) {
                 return "Series";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("ReleaseDate"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("ReleaseDate")) {
                 return "ReleaseDate";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Year"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Year")) {
                 return "ReleaseYear";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Duration"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Duration")) {
                 return "Duration";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Country"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Country")) {
                 return "Country";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Director"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Director")) {
                 return "Director";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Genre"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Genre")) {
                 return "Genre";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Label"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Label")) {
                 return "Label";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Actor"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Actor")) {
                 return "ActorNames";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Studio"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Studio")) {
                 return "Studio";
-            }
-            else if (content == SuperControls.Style.LangManager.GetValueByKey("Rating"))
-            {
+            } else if (content == SuperControls.Style.LangManager.GetValueByKey("Rating")) {
                 return "Rating";
-            }
-            else
-            {
+            } else {
                 return content;
             }
         }
@@ -675,36 +622,29 @@ namespace Jvedio.Entity
             MatchCollection matches = Regex.Matches(formatString, "\\{[a-zA-Z]+\\}");
             PropertyInfo[] propertyList = this.GetType().GetProperties();
 
-            if (matches != null && matches.Count > 0)
-            {
+            if (matches != null && matches.Count > 0) {
                 newName = formatString;
-                foreach (Match match in matches)
-                {
+                foreach (Match match in matches) {
                     string property = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
-                    try
-                    {
+                    try {
                         ReplaceWithValue(ref newName, property, propertyList);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         throw ex;
                     }
                 }
             }
 
             // 替换掉特殊字符
-            foreach (char item in System.IO.Path.GetInvalidFileNameChars())
-            {
+            foreach (char item in System.IO.Path.GetInvalidFileNameChars()) {
                 newName = newName.Replace(item.ToString(), string.Empty);
             }
 
-            if (ConfigManager.RenameConfig.RemoveTitleSpace) newName = newName.Trim();
+            if (ConfigManager.RenameConfig.RemoveTitleSpace)
+                newName = newName.Trim();
 
-            if (HasSubSection)
-            {
+            if (HasSubSection) {
                 string[] result = new string[SubSectionList.Count];
-                for (int i = 0; i < SubSectionList.Count; i++)
-                {
+                for (int i = 0; i < SubSectionList.Count; i++) {
                     if (addTag && JvedioLib.Security.Identify.IsCHS(Path))
                         result[i] = System.IO.Path.Combine(dir, $"{newName}-{i + 1}_{SuperControls.Style.LangManager.GetValueByKey("Translated")}{ext}");
                     else
@@ -712,9 +652,7 @@ namespace Jvedio.Entity
                 }
 
                 return result;
-            }
-            else
-            {
+            } else {
                 if (addTag && JvedioLib.Security.Identify.IsCHS(Path))
                     return new string[] { System.IO.Path.Combine(dir, $"{newName}_{SuperControls.Style.LangManager.GetValueByKey("Translated")}{ext}") };
                 else
@@ -725,21 +663,17 @@ namespace Jvedio.Entity
         private void ReplaceWithValue(ref string result, string property, PropertyInfo[] propertyList)
         {
             string inSplit = ConfigManager.RenameConfig.InSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.InSplit;
-            foreach (PropertyInfo item in propertyList)
-            {
+            foreach (PropertyInfo item in propertyList) {
                 string name = item.Name;
-                if (name == property)
-                {
+                if (name == property) {
                     object o = item.GetValue(this);
-                    if (o != null)
-                    {
+                    if (o != null) {
                         string value = o.ToString();
 
                         if (property == "ActorNames" || property == "Genre" || property == "Label")
                             value = value.Replace(SuperUtils.Values.ConstValues.SeparatorString, inSplit);
 
-                        if (property == "VideoType")
-                        {
+                        if (property == "VideoType") {
                             int v = 0;
                             int.TryParse(value, out v);
                             if (v == 1)
@@ -750,25 +684,19 @@ namespace Jvedio.Entity
                                 value = SuperControls.Style.LangManager.GetValueByKey("Europe");
                         }
 
-                        if (string.IsNullOrEmpty(value))
-                        {
+                        if (string.IsNullOrEmpty(value)) {
                             // 如果值为空，则删掉前面的分隔符
                             int idx = result.IndexOf("{" + property + "}");
-                            if (idx >= 1)
-                            {
+                            if (idx >= 1) {
                                 result = result.Remove(idx - 1, 1);
                             }
 
                             result = result.Replace("{" + property + "}", string.Empty);
-                        }
-                        else
+                        } else
                             result = result.Replace("{" + property + "}", value);
-                    }
-                    else
-                    {
+                    } else {
                         int idx = result.IndexOf("{" + property + "}");
-                        if (idx >= 1)
-                        {
+                        if (idx >= 1) {
                             result = result.Remove(idx - 1);
                         }
 
@@ -796,24 +724,25 @@ namespace Jvedio.Entity
 
         public static void SetImage(ref Video video, string imgPath)
         {
-            if (video == null) return;
+            if (video == null)
+                return;
             BitmapImage image = ImageHelper.ReadImageFromFile(imgPath, Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-            if (image == null) image = MetaData.DefaultBigImage;
+            if (image == null)
+                image = MetaData.DefaultBigImage;
             video.ViewImage = image;
         }
         public static void SetImage(ref Video video, int imageMode = 0)
         {
-            if (imageMode < 2)
-            {
+            if (imageMode < 2) {
                 BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
-                if (bigimage == null) bigimage = MetaData.DefaultBigImage;
+                if (smallimage == null)
+                    smallimage = MetaData.DefaultSmallImage;
+                if (bigimage == null)
+                    bigimage = MetaData.DefaultBigImage;
                 video.SmallImage = smallimage;
                 video.BigImage = bigimage;
-            }
-            else if (imageMode == 2)
-            {
+            } else if (imageMode == 2) {
                 // string gifpath = Video.parseImagePath(video.GifImagePath);
                 // if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
             }
@@ -825,11 +754,9 @@ namespace Jvedio.Entity
         public static VideoInfo GetMediaInfo(string videoPath)
         {
             VideoInfo videoInfo = new VideoInfo();
-            if (File.Exists(videoPath))
-            {
+            if (File.Exists(videoPath)) {
                 MediaInfo mI = null;
-                try
-                {
+                try {
                     mI = new MediaInfo();
                     mI.Open(videoPath);
 
@@ -867,8 +794,7 @@ namespace Jvedio.Entity
                     string audioInfo = mI.Get(StreamKind.Audio, 0, "Inform") + mI.Get(StreamKind.Audio, 1, "Inform") + mI.Get(StreamKind.Audio, 2, "Inform") + mI.Get(StreamKind.Audio, 3, "Inform");
                     string vi = mI.Get(StreamKind.Video, 0, "Inform");
 
-                    videoInfo = new VideoInfo()
-                    {
+                    videoInfo = new VideoInfo() {
                         Format = format,
                         BitRate = vBitRate,
                         Duration = duration,
@@ -887,20 +813,16 @@ namespace Jvedio.Entity
                         AudioSamplingRate = samplingRate,
                         Channel = channel,
                     };
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
-                }
-                finally
-                {
+                } finally {
                     mI?.Close();
                 }
             }
 
-            if (!string.IsNullOrEmpty(videoInfo.Width) && !string.IsNullOrEmpty(videoInfo.Height)) videoInfo.Resolution = videoInfo.Width + "x" + videoInfo.Height;
-            if (!string.IsNullOrEmpty(videoPath))
-            {
+            if (!string.IsNullOrEmpty(videoInfo.Width) && !string.IsNullOrEmpty(videoInfo.Height))
+                videoInfo.Resolution = videoInfo.Width + "x" + videoInfo.Height;
+            if (!string.IsNullOrEmpty(videoPath)) {
                 videoInfo.Extension = System.IO.Path.GetExtension(videoPath)?.ToUpper().Replace(".", string.Empty);
                 videoInfo.FileName = System.IO.Path.GetFileNameWithoutExtension(videoPath);
             }
@@ -932,45 +854,36 @@ namespace Jvedio.Entity
             nfo.SetNodeText("num", video.VID);
 
             // 类别
-            foreach (var item in video.Genre?.Split(SuperUtils.Values.ConstValues.Separator))
-            {
-                if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("genre", item);
+            foreach (var item in video.Genre?.Split(SuperUtils.Values.ConstValues.Separator)) {
+                if (!string.IsNullOrEmpty(item))
+                    nfo.AppendNewNode("genre", item);
             }
 
             // 系列
-            foreach (var item in video.Series?.Split(SuperUtils.Values.ConstValues.Separator))
-            {
-                if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("tag", item);
+            foreach (var item in video.Series?.Split(SuperUtils.Values.ConstValues.Separator)) {
+                if (!string.IsNullOrEmpty(item))
+                    nfo.AppendNewNode("tag", item);
             }
 
-            try
-            {
+            try {
                 Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(video.ImageUrls);
-                if (dict != null && dict.ContainsKey("ExtraImageUrl"))
-                {
+                if (dict != null && dict.ContainsKey("ExtraImageUrl")) {
                     List<string> imageUrls = JsonUtils.TryDeserializeObject<List<string>>(dict["ExtraImageUrl"].ToString());
-                    if (imageUrls != null && imageUrls.Count > 0)
-                    {
+                    if (imageUrls != null && imageUrls.Count > 0) {
                         nfo.AppendNewNode("fanart");
-                        foreach (var item in imageUrls)
-                        {
+                        foreach (var item in imageUrls) {
                             if (!string.IsNullOrEmpty(item))
                                 nfo.AppendNodeToNode("fanart", "thumb", item, "preview", item);
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
 
-            if (video.ActorInfos != null && video.ActorInfos.Count > 0)
-            {
-                foreach (ActorInfo info in video.ActorInfos)
-                {
-                    if (!string.IsNullOrEmpty(info.ActorName))
-                    {
+            if (video.ActorInfos != null && video.ActorInfos.Count > 0) {
+                foreach (ActorInfo info in video.ActorInfos) {
+                    if (!string.IsNullOrEmpty(info.ActorName)) {
                         nfo.AppendNewNode("actor");
                         nfo.AppendNodeToNode("actor", "name", info.ActorName);
                         nfo.AppendNodeToNode("actor", "type", "Actor");

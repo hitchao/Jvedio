@@ -1,8 +1,8 @@
 ﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.DataBase.Tables;
-using static Jvedio.LogManager;
 using Jvedio.Mapper;
 using System;
+using static Jvedio.LogManager;
 
 namespace Jvedio
 {
@@ -48,15 +48,13 @@ namespace Jvedio
             tagStampMapper.Init();
             searchHistoryMapper.Init();
 
-            foreach (string key in Sqlite.AppData.TABLES.Keys)
-            {
+            foreach (string key in Sqlite.AppData.TABLES.Keys) {
                 appDatabaseMapper.CreateTable(key, Sqlite.AppData.TABLES[key]);
             }
 
             appConfigMapper.InitSqlite(SqlManager.DEFAULT_SQLITE_CONFIG_PATH);
 
-            foreach (string key in Sqlite.AppConfig.TABLES.Keys)
-            {
+            foreach (string key in Sqlite.AppConfig.TABLES.Keys) {
                 appConfigMapper.CreateTable(key, Sqlite.AppConfig.TABLES[key]);
             }
 
@@ -69,25 +67,19 @@ namespace Jvedio
             urlCodeMapper.Init();
             associationMapper.Init();
 
-            foreach (string key in Sqlite.Actor.TABLES.Keys)
-            {
+            foreach (string key in Sqlite.Actor.TABLES.Keys) {
                 actorMapper.CreateTable(key, Sqlite.Actor.TABLES[key]);
             }
 
-            foreach (string key in Sqlite.Data.TABLES.Keys)
-            {
+            foreach (string key in Sqlite.Data.TABLES.Keys) {
                 metaDataMapper.CreateTable(key, Sqlite.Data.TABLES[key]);
             }
 
             // 新增列
-            foreach (string sql in Sqlite.SQL.SqlCommands)
-            {
-                try
-                {
+            foreach (string sql in Sqlite.SQL.SqlCommands) {
+                try {
                     metaDataMapper.ExecuteNonQuery(sql);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                 }
             }

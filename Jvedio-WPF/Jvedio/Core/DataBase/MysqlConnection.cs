@@ -1,5 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
 
 namespace Jvedio.Core.DataBase
 {
@@ -32,8 +31,7 @@ namespace Jvedio.Core.DataBase
 
         public bool IsConnect()
         {
-            if (Connection == null)
-            {
+            if (Connection == null) {
                 if (string.IsNullOrEmpty(DatabaseName))
                     return false;
                 string connectString = string.Format("server={0};port={1}; database={2}; user={3}; password={4}", Server, Port, DatabaseName, UserName, Password);

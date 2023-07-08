@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Jvedio
+﻿namespace Jvedio
 {
     /// <summary>
     /// Settings.xaml 的交互逻辑

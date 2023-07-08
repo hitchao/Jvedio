@@ -6,7 +6,6 @@ using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel
@@ -25,12 +24,10 @@ namespace Jvedio.ViewModel
         /// <summary>
         /// 是否平铺
         /// </summary>
-        public bool Tile
-        {
+        public bool Tile {
             get { return _Tile; }
 
-            set
-            {
+            set {
                 _Tile = value;
                 RaisePropertyChanged();
             }
@@ -38,12 +35,10 @@ namespace Jvedio.ViewModel
 
         private bool _Loading = true;
 
-        public bool Loading
-        {
+        public bool Loading {
             get { return _Loading; }
 
-            set
-            {
+            set {
                 _Loading = value;
                 RaisePropertyChanged();
             }
@@ -56,12 +51,10 @@ namespace Jvedio.ViewModel
         /// <summary>
         /// 是否平铺
         /// </summary>
-        public bool ShowHideItem
-        {
+        public bool ShowHideItem {
             get { return _ShowHideItem; }
 
-            set
-            {
+            set {
                 _ShowHideItem = value;
                 RaisePropertyChanged();
             }
@@ -69,12 +62,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<AppDatabase> _Databases;
 
-        public ObservableCollection<AppDatabase> Databases
-        {
+        public ObservableCollection<AppDatabase> Databases {
             get { return _Databases; }
 
-            set
-            {
+            set {
                 _Databases = value;
                 RaisePropertyChanged();
             }
@@ -82,12 +73,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<AppDatabase> _CurrentDatabases;
 
-        public ObservableCollection<AppDatabase> CurrentDatabases
-        {
+        public ObservableCollection<AppDatabase> CurrentDatabases {
             get { return _CurrentDatabases; }
 
-            set
-            {
+            set {
                 _CurrentDatabases = value;
                 RaisePropertyChanged();
             }
@@ -95,36 +84,30 @@ namespace Jvedio.ViewModel
 
         private string _LoadingText;
 
-        public string LoadingText
-        {
+        public string LoadingText {
             get { return _LoadingText; }
 
-            set
-            {
+            set {
                 _LoadingText = value;
                 RaisePropertyChanged();
             }
         }
         private string _Version;
 
-        public string Version
-        {
+        public string Version {
             get { return _Version; }
 
-            set
-            {
+            set {
                 _Version = value;
                 RaisePropertyChanged();
             }
         }
         private bool _Restoring = false;
 
-        public bool Restoring
-        {
+        public bool Restoring {
             get { return _Restoring; }
 
-            set
-            {
+            set {
                 _Restoring = value;
                 RaisePropertyChanged();
             }
@@ -147,7 +130,8 @@ namespace Jvedio.ViewModel
             SelectWrapper<AppDatabase> wrapper = new SelectWrapper<AppDatabase>();
             wrapper.Eq("DataType", ConfigManager.StartUp.SideIdx);
             appDatabases = appDatabaseMapper.SelectList(wrapper);
-            if (appDatabases == null) return;
+            if (appDatabases == null)
+                return;
             appDatabases.ForEach(item => Databases.Add(item));
             Search();
         }
@@ -160,27 +144,22 @@ namespace Jvedio.ViewModel
         public void Search()
         {
             CurrentDatabases = null;
-            if (Databases == null || Databases.Count == 0)
-            {
+            if (Databases == null || Databases.Count == 0) {
                 CurrentDatabases = new ObservableCollection<AppDatabase>();
                 return;
             }
 
-            if (string.IsNullOrEmpty(CurrentSearch))
-            {
+            if (string.IsNullOrEmpty(CurrentSearch)) {
                 CurrentSearch = string.Empty;
                 CurrentDatabases = Databases;
             }
 
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
-            if (!ShowHideItem)
-            {
+            if (!ShowHideItem) {
                 Databases.ToList().Where(item => item.Hide == 0).Where(item => !string.IsNullOrEmpty(item.Name) &&
                     item.Name.IndexOf(CurrentSearch) >= 0).ToList().ForEach
                 (item => temp.Add(item));
-            }
-            else
-            {
+            } else {
                 Databases.ToList().Where(item => item.Hide >= 0).Where(item => !string.IsNullOrEmpty(item.Name) &&
                     item.Name.IndexOf(CurrentSearch) >= 0).ToList().ForEach
                 (item => temp.Add(item));
@@ -192,35 +171,29 @@ namespace Jvedio.ViewModel
 
         public void SortDataBase()
         {
-            if (Databases == null || Databases.Count == 0)
-            {
+            if (Databases == null || Databases.Count == 0) {
                 CurrentDatabases = new ObservableCollection<AppDatabase>();
                 return;
             }
 
-            if (CurrentDatabases == null) CurrentDatabases = Databases;
+            if (CurrentDatabases == null)
+                CurrentDatabases = Databases;
             List<AppDatabase> infos = CurrentDatabases.ToList();
             CurrentDatabases = null;
 
-            if (SortType.Equals(LangManager.GetValueByKey("Title")))
-            {
+            if (SortType.Equals(LangManager.GetValueByKey("Title"))) {
                 infos = infos.OrderBy(x => x.Name).ToList();
-            }
-            else if (SortType.Equals(LangManager.GetValueByKey("CreatedDate")))
-            {
+            } else if (SortType.Equals(LangManager.GetValueByKey("CreatedDate"))) {
                 infos = infos.OrderBy(x => x.CreateDate).ToList();
-            }
-            else if (SortType.Equals(LangManager.GetValueByKey("Number")))
-            {
+            } else if (SortType.Equals(LangManager.GetValueByKey("Number"))) {
                 infos = infos.OrderBy(x => x.Count).ToList();
-            }
-            else if (SortType.Equals(LangManager.GetValueByKey("ViewNumber")))
-            {
+            } else if (SortType.Equals(LangManager.GetValueByKey("ViewNumber"))) {
                 infos = infos.OrderBy(x => x.ViewCount).ToList();
             }
 
             ObservableCollection<AppDatabase> temp = new ObservableCollection<AppDatabase>();
-            if (Sort) infos.Reverse();
+            if (Sort)
+                infos.Reverse();
             infos.ForEach(item => temp.Add(item));
             CurrentDatabases = temp;
         }

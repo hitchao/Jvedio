@@ -63,8 +63,7 @@ namespace Jvedio.Mapper
                         "on metadata.DataID=metadata_video.DataID " + wrapper.ToWhere(false);
             List<Dictionary<string, object>> list = Select(sql);
             List<Video> videos = ToEntity<Video>(list, typeof(Video).GetProperties(), false);
-            if (videos != null && videos.Count > 0)
-            {
+            if (videos != null && videos.Count > 0) {
                 Video video = videos[0];
                 string actor_sql = "select actor_info.* from actor_info " +
                     "JOIN metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
@@ -82,9 +81,12 @@ namespace Jvedio.Mapper
         public void SaveActor(Video video, List<ActorInfo> newActorInfos)
         {
             List<ActorInfo> oldActorInfos = video.ActorInfos;
-            if (oldActorInfos == null) oldActorInfos = new List<ActorInfo>();
-            if (newActorInfos == null) newActorInfos = new List<ActorInfo>();
-            if (newActorInfos.SequenceEqual(oldActorInfos)) return;
+            if (oldActorInfos == null)
+                oldActorInfos = new List<ActorInfo>();
+            if (newActorInfos == null)
+                newActorInfos = new List<ActorInfo>();
+            if (newActorInfos.SequenceEqual(oldActorInfos))
+                return;
 
             // 删除，新增
             oldActorInfos = oldActorInfos.OrderBy(arg => arg.ActorID).ToList();
@@ -93,8 +95,7 @@ namespace Jvedio.Mapper
             List<ActorInfo> to_create = newActorInfos.Except(oldActorInfos).ToList();
 
             // 删除
-            if (to_delete.Count > 0)
-            {
+            if (to_delete.Count > 0) {
                 // ('1','2','3')
                 string sql = $"delete from metadata_to_actor " +
                     $"where DataID={video.DataID} " +
@@ -103,11 +104,9 @@ namespace Jvedio.Mapper
             }
 
             // 新增
-            if (to_create.Count > 0)
-            {
+            if (to_create.Count > 0) {
                 List<string> create = new List<string>();
-                to_create.ForEach(arg =>
-                {
+                to_create.ForEach(arg => {
                     create.Add($"({video.DataID},{arg.ActorID})");
                 });
 
@@ -119,7 +118,8 @@ namespace Jvedio.Mapper
 
         public void deleteVideoByIds(List<string> idList)
         {
-            if (idList == null || idList.Count == 0) return;
+            if (idList == null || idList.Count == 0)
+                return;
             StringBuilder builder = new StringBuilder();
             string ids = string.Join(",", idList);
             builder.Append("begin;");

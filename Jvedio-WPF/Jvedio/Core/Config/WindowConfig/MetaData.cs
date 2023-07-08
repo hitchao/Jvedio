@@ -12,7 +12,8 @@ namespace Jvedio.Core.WindowConfig
 
         public static MetaData CreateInstance()
         {
-            if (_instance == null) _instance = new MetaData();
+            if (_instance == null)
+                _instance = new MetaData();
 
             return _instance;
         }

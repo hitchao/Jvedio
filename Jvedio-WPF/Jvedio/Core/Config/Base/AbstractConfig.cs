@@ -1,7 +1,6 @@
 ﻿using Jvedio.Entity.CommonSQL;
 using Newtonsoft.Json;
 using SuperUtils.Common;
-using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
@@ -44,22 +43,22 @@ namespace Jvedio.Core.Config.Base
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", ConfigName);
             AppConfig appConfig = MapperManager.appConfigMapper.SelectOne(wrapper);
-            if (appConfig == null || appConfig.ConfigId == 0) return;
+            if (appConfig == null || appConfig.ConfigId == 0)
+                return;
             Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(appConfig.ConfigValue);
-            if (dict == null) return;
+            if (dict == null)
+                return;
             Type type = this.GetType();
-            foreach (string key in dict.Keys)
-            {
-                if (string.IsNullOrEmpty(key)) continue;
+            foreach (string key in dict.Keys) {
+                if (string.IsNullOrEmpty(key))
+                    continue;
                 object value = dict[key];
                 var prop = type.GetProperty(key);
-                if (prop == null || value == null) continue;
-                try
-                {
+                if (prop == null || value == null)
+                    continue;
+                try {
                     prop.SetValue(this, value, null);
-                }
-                catch
-                {
+                } catch {
                     continue;
                 }
             }
@@ -68,7 +67,8 @@ namespace Jvedio.Core.Config.Base
         public virtual void Save()
         {
             System.Reflection.PropertyInfo[] propertyInfos = this.GetType().GetProperties();
-            if (propertyInfos == null) return;
+            if (propertyInfos == null)
+                return;
             Dictionary<string, object> dictionary = propertyInfos.ToList().ToDictionary(x => x.Name, x => x.GetValue(this));
             AppConfig appConfig = new AppConfig();
             appConfig.ConfigName = ConfigName;

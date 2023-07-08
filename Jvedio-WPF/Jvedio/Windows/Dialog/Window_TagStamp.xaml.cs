@@ -15,16 +15,14 @@ namespace Jvedio
     {
         public SolidColorBrush _BackgroundBrush = Brushes.Orange;
 
-        public SolidColorBrush BackgroundBrush
-        {
+        public SolidColorBrush BackgroundBrush {
             get { return _BackgroundBrush; }
             set { _BackgroundBrush = value; }
         }
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
 
-        public SolidColorBrush ForegroundBrush
-        {
+        public SolidColorBrush ForegroundBrush {
             get { return _ForegroundBrush; }
             set { _ForegroundBrush = value; }
         }
@@ -67,8 +65,7 @@ namespace Jvedio
 
         private void textBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
+            if (e.Key == Key.Enter) {
                 this.DialogResult = true;
                 this.Close();
             }
@@ -95,13 +92,10 @@ namespace Jvedio
         private void ConfirmColorPicker(object sender, RoutedEventArgs e)
         {
             colorPopup.IsOpen = false;
-            if (idx == 0)
-            {
+            if (idx == 0) {
                 border.Background = new SolidColorBrush(colorPicker.SelectedColor);
                 BackgroundBrush = new SolidColorBrush(colorPicker.SelectedColor);
-            }
-            else
-            {
+            } else {
                 border2.Background = new SolidColorBrush(colorPicker.SelectedColor);
                 ForegroundBrush = new SolidColorBrush(colorPicker.SelectedColor);
             }

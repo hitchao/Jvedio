@@ -85,8 +85,7 @@ namespace Jvedio.Mapper
                         "on metadata.DataID=metadata_comic.DataID " + wrapper.ToWhere(false);
             List<Dictionary<string, object>> list = Select(sql);
             List<Comic> comics = ToEntity<Comic>(list, typeof(Comic).GetProperties(), false);
-            if (comics != null && comics.Count > 0)
-            {
+            if (comics != null && comics.Count > 0) {
                 return comics[0];
             }
 

@@ -1,6 +1,5 @@
 ﻿using Jvedio.Core.Scan;
 using SuperControls.Style;
-using SuperControls.Style.Windows;
 using SuperUtils.IO;
 using SuperUtils.Reflections;
 using SuperUtils.Time;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using static Jvedio.LogManager;
@@ -57,7 +55,8 @@ namespace Jvedio
 
         private string getExtension(string path)
         {
-            if (string.IsNullOrEmpty(path)) return string.Empty;
+            if (string.IsNullOrEmpty(path))
+                return string.Empty;
             return System.IO.Path.GetExtension(path).ToLower().Replace(".", string.Empty);
         }
 
@@ -66,10 +65,8 @@ namespace Jvedio
         {
             details = new List<ScanDetail>();
             long idx = 0;
-            foreach (var item in ScanResult.FailNFO)
-            {
-                ScanDetail detail = new ScanDetail()
-                {
+            foreach (var item in ScanResult.FailNFO) {
+                ScanDetail detail = new ScanDetail() {
                     Handle = LangManager.GetValueByKey("NotImport"),
                     FilePath = item,
                     Extension = getExtension(item),
@@ -79,10 +76,8 @@ namespace Jvedio
                 details.Add(detail);
             }
 
-            foreach (var key in ScanResult.NotImport.Keys)
-            {
-                ScanDetail detail = new ScanDetail()
-                {
+            foreach (var key in ScanResult.NotImport.Keys) {
+                ScanDetail detail = new ScanDetail() {
                     Handle = LangManager.GetValueByKey("NotImport"),
                     FilePath = key,
                     Extension = getExtension(key),
@@ -94,10 +89,8 @@ namespace Jvedio
                 details.Add(detail);
             }
 
-            foreach (var key in ScanResult.Update.Keys)
-            {
-                ScanDetail detail = new ScanDetail()
-                {
+            foreach (var key in ScanResult.Update.Keys) {
+                ScanDetail detail = new ScanDetail() {
                     Handle = LangManager.GetValueByKey("Update"),
                     FilePath = key,
                     Extension = getExtension(key),
@@ -107,10 +100,8 @@ namespace Jvedio
                 details.Add(detail);
             }
 
-            foreach (var item in ScanResult.Import)
-            {
-                ScanDetail detail = new ScanDetail()
-                {
+            foreach (var item in ScanResult.Import) {
+                ScanDetail detail = new ScanDetail() {
                     Handle = LangManager.GetValueByKey("Import"),
                     FilePath = item,
                     Extension = getExtension(item),
@@ -153,18 +144,15 @@ namespace Jvedio
             saveFileDialog.RestoreDirectory = true;
             saveFileDialog.FileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
 
-            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                try
-                {
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                try {
                     string path = saveFileDialog.FileName;
-                    if (!path.ToLower().EndsWith(".csv")) path += ".csv";
+                    if (!path.ToLower().EndsWith(".csv"))
+                        path += ".csv";
                     File.WriteAllText(path, GenerateOutput());
                     MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
                     FileHelper.TryOpenSelectPath(path);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     MessageCard.Error(ex.Message);
                 }
@@ -196,8 +184,7 @@ namespace Jvedio
 
             List<ScanDetail> datas = new List<ScanDetail>();
 
-            for (int i = 0; i < dataGrid.Items.Count; i++)
-            {
+            for (int i = 0; i < dataGrid.Items.Count; i++) {
                 ScanDetail detail = (ScanDetail)dataGrid.Items[i];
                 datas.Add(detail);
             }
@@ -212,11 +199,9 @@ namespace Jvedio
 
         private void ShowDetail(object sender, RoutedEventArgs e)
         {
-            if (details != null && details.Count > 0)
-            {
+            if (details != null && details.Count > 0) {
                 if (sender is Button button && button.Tag != null &&
-                    long.TryParse(button.Tag.ToString(), out long id))
-                {
+                    long.TryParse(button.Tag.ToString(), out long id)) {
                     ScanDetail scanDetail = details.FirstOrDefault(arg => arg.ID == id);
                     if (scanDetail != null)
                         new Dialog_Logs(string.Join(Environment.NewLine, scanDetail.Details)).ShowDialog(this);

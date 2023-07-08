@@ -1,9 +1,8 @@
-﻿using Jvedio.Core;
-using Jvedio.Core.Crawler;
+﻿using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
+using Jvedio.Entity.Common;
 using SuperControls.Style.Plugin;
 using SuperUtils.Common;
 using SuperUtils.WPF.VieModel;
@@ -12,10 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
-using static Jvedio.LogManager;
-using Jvedio.Entity.Common;
-using System.ComponentModel;
 
 namespace Jvedio.ViewModel
 {
@@ -56,7 +51,8 @@ namespace Jvedio.ViewModel
             if (list != null && list.Count > 0)
                 list.ForEach(arg => ScanPath.Add(arg));
 
-            if (ScanPath.Count == 0) ScanPath = null;
+            if (ScanPath.Count == 0)
+                ScanPath = null;
             Servers = new ObservableCollection<Server>();
         }
 
@@ -65,21 +61,18 @@ namespace Jvedio.ViewModel
         public void SetServers()
         {
             CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
-            foreach (PluginMetaData plugin in CrawlerManager.PluginMetaDatas)
-            {
+            foreach (PluginMetaData plugin in CrawlerManager.PluginMetaDatas) {
                 string pluginID = plugin.PluginID;
-                if (string.IsNullOrEmpty(pluginID)) continue;
+                if (string.IsNullOrEmpty(pluginID))
+                    continue;
                 string name = plugin.PluginName;
                 CrawlerServer crawlerServer = ConfigManager.ServerConfig.CrawlerServers
                     .Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
-                if (crawlerServer == null)
-                {
+                if (crawlerServer == null) {
                     crawlerServer = new CrawlerServer();
                     crawlerServer.PluginID = pluginID;
                     CrawlerServers.Add(pluginID, null);
-                }
-                else
-                {
+                } else {
                     ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
                     ConfigManager.ServerConfig.CrawlerServers.Where(arg => arg.PluginID.Equals(pluginID)).
                         ToList().ForEach(t => crawlers.Add(t));
@@ -89,8 +82,7 @@ namespace Jvedio.ViewModel
             }
 
             DisplayCrawlerServers = new ObservableCollection<string>();
-            foreach (string key in CrawlerServers.Keys)
-            {
+            foreach (string key in CrawlerServers.Keys) {
                 int len = PluginType.Crawler.ToString().Length + 1;
                 DisplayCrawlerServers.Add(key.Substring(len));
             }
@@ -99,20 +91,19 @@ namespace Jvedio.ViewModel
         public bool SaveServers(Action<string> callback = null)
         {
             List<CrawlerServer> list = new List<CrawlerServer>();
-            foreach (string key in CrawlerServers.Keys)
-            {
+            foreach (string key in CrawlerServers.Keys) {
                 List<CrawlerServer> crawlerServers = CrawlerServers[key]?.ToList();
-                if (crawlerServers == null || crawlerServers.Count <= 0) continue;
-                foreach (CrawlerServer server in crawlerServers)
-                {
-                    if (!server.IsHeaderProper())
-                    {
+                if (crawlerServers == null || crawlerServers.Count <= 0)
+                    continue;
+                foreach (CrawlerServer server in crawlerServers) {
+                    if (!server.IsHeaderProper()) {
                         string format = "{\"UserAgent\":\"value\",...}";
                         callback?.Invoke($"【{key}】 刮削器处地址为 {server.Url} 的 Headers 不合理，格式必须为：{format}");
                         return false;
                     }
 
-                    if (server.Headers == null) server.Headers = string.Empty;
+                    if (server.Headers == null)
+                        server.Headers = string.Empty;
                     list.Add(server);
                 }
             }
@@ -141,12 +132,10 @@ namespace Jvedio.ViewModel
 
         private int _TabControlSelectedIndex = (int)ConfigManager.Settings.TabControlSelectedIndex;
 
-        public int TabControlSelectedIndex
-        {
+        public int TabControlSelectedIndex {
             get { return _TabControlSelectedIndex; }
 
-            set
-            {
+            set {
                 _TabControlSelectedIndex = value;
                 RaisePropertyChanged();
             }
@@ -154,12 +143,10 @@ namespace Jvedio.ViewModel
 
         private string _ViewRenameFormat;
 
-        public string ViewRenameFormat
-        {
+        public string ViewRenameFormat {
             get { return _ViewRenameFormat; }
 
-            set
-            {
+            set {
                 _ViewRenameFormat = value;
                 RaisePropertyChanged();
             }
@@ -167,12 +154,10 @@ namespace Jvedio.ViewModel
 
         private bool _AutoHandleHeader = ConfigManager.Settings.AutoHandleHeader;
 
-        public bool AutoHandleHeader
-        {
+        public bool AutoHandleHeader {
             get { return _AutoHandleHeader; }
 
-            set
-            {
+            set {
                 _AutoHandleHeader = value;
                 RaisePropertyChanged();
             }
@@ -180,12 +165,10 @@ namespace Jvedio.ViewModel
 
         private bool _ShowSearchHistory = ConfigManager.Main.ShowSearchHistory;
 
-        public bool ShowSearchHistory
-        {
+        public bool ShowSearchHistory {
             get { return _ShowSearchHistory; }
 
-            set
-            {
+            set {
                 _ShowSearchHistory = value;
                 RaisePropertyChanged();
             }
@@ -194,12 +177,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<Server> _Servers;
 
-        public ObservableCollection<Server> Servers
-        {
+        public ObservableCollection<Server> Servers {
             get { return _Servers; }
 
-            set
-            {
+            set {
                 _Servers = value;
                 RaisePropertyChanged();
             }
@@ -207,12 +188,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<string> _ScanPath;
 
-        public ObservableCollection<string> ScanPath
-        {
+        public ObservableCollection<string> ScanPath {
             get { return _ScanPath; }
 
-            set
-            {
+            set {
                 _ScanPath = value;
                 RaisePropertyChanged();
             }
@@ -220,12 +199,10 @@ namespace Jvedio.ViewModel
 
         private int _PicPathMode = (int)ConfigManager.Settings.PicPathMode;
 
-        public int PicPathMode
-        {
+        public int PicPathMode {
             get { return _PicPathMode; }
 
-            set
-            {
+            set {
                 _PicPathMode = value;
                 RaisePropertyChanged();
             }
@@ -233,15 +210,12 @@ namespace Jvedio.ViewModel
 
         private string _BasePicPath = string.Empty;
 
-        public string BasePicPath
-        {
+        public string BasePicPath {
             get { return _BasePicPath; }
 
-            set
-            {
+            set {
                 _BasePicPath = value;
-                if (value != null)
-                {
+                if (value != null) {
                     PathType type = (PathType)PicPathMode;
                     if (type != PathType.RelativeToData)
                         PicPaths[type.ToString()] = value;
@@ -253,12 +227,10 @@ namespace Jvedio.ViewModel
 
         private string _BigImagePath = string.Empty;
 
-        public string BigImagePath
-        {
+        public string BigImagePath {
             get { return _BigImagePath; }
 
-            set
-            {
+            set {
                 _BigImagePath = value;
                 RaisePropertyChanged();
             }
@@ -266,12 +238,10 @@ namespace Jvedio.ViewModel
 
         private string _SmallImagePath = string.Empty;
 
-        public string SmallImagePath
-        {
+        public string SmallImagePath {
             get { return _SmallImagePath; }
 
-            set
-            {
+            set {
                 _SmallImagePath = value;
                 RaisePropertyChanged();
             }
@@ -279,12 +249,10 @@ namespace Jvedio.ViewModel
 
         private string _PreviewImagePath = string.Empty;
 
-        public string PreviewImagePath
-        {
+        public string PreviewImagePath {
             get { return _PreviewImagePath; }
 
-            set
-            {
+            set {
                 _PreviewImagePath = value;
                 RaisePropertyChanged();
             }
@@ -292,12 +260,10 @@ namespace Jvedio.ViewModel
 
         private string _ScreenShotPath = string.Empty;
 
-        public string ScreenShotPath
-        {
+        public string ScreenShotPath {
             get { return _ScreenShotPath; }
 
-            set
-            {
+            set {
                 _ScreenShotPath = value;
                 RaisePropertyChanged();
             }
@@ -305,12 +271,10 @@ namespace Jvedio.ViewModel
 
         private string _ActorImagePath = string.Empty;
 
-        public string ActorImagePath
-        {
+        public string ActorImagePath {
             get { return _ActorImagePath; }
 
-            set
-            {
+            set {
                 _ActorImagePath = value;
                 RaisePropertyChanged();
             }
@@ -318,12 +282,10 @@ namespace Jvedio.ViewModel
 
         private bool _DownloadPreviewImage = ConfigManager.Settings.DownloadPreviewImage;
 
-        public bool DownloadPreviewImage
-        {
+        public bool DownloadPreviewImage {
             get { return _DownloadPreviewImage; }
 
-            set
-            {
+            set {
                 _DownloadPreviewImage = value;
                 RaisePropertyChanged();
             }
@@ -331,24 +293,20 @@ namespace Jvedio.ViewModel
 
         private bool _SkipExistImage = ConfigManager.Settings.SkipExistImage;
 
-        public bool SkipExistImage
-        {
+        public bool SkipExistImage {
             get { return _SkipExistImage; }
 
-            set
-            {
+            set {
                 _SkipExistImage = value;
                 RaisePropertyChanged();
             }
         }
         private bool _DownloadWhenTitleNull = ConfigManager.Settings.DownloadWhenTitleNull;
 
-        public bool DownloadWhenTitleNull
-        {
+        public bool DownloadWhenTitleNull {
             get { return _DownloadWhenTitleNull; }
 
-            set
-            {
+            set {
                 _DownloadWhenTitleNull = value;
                 RaisePropertyChanged();
             }
@@ -356,12 +314,10 @@ namespace Jvedio.ViewModel
 
         private bool _OverrideInfo = ConfigManager.Settings.OverrideInfo;
 
-        public bool OverrideInfo
-        {
+        public bool OverrideInfo {
             get { return _OverrideInfo; }
 
-            set
-            {
+            set {
                 _OverrideInfo = value;
                 RaisePropertyChanged();
             }
@@ -369,12 +325,10 @@ namespace Jvedio.ViewModel
 
         private bool _IgnoreCertVal = ConfigManager.Settings.IgnoreCertVal;
 
-        public bool IgnoreCertVal
-        {
+        public bool IgnoreCertVal {
             get { return _IgnoreCertVal; }
 
-            set
-            {
+            set {
                 _IgnoreCertVal = value;
                 RaisePropertyChanged();
             }
@@ -382,24 +336,20 @@ namespace Jvedio.ViewModel
 
         private Dictionary<string, ObservableCollection<CrawlerServer>> _CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
 
-        public Dictionary<string, ObservableCollection<CrawlerServer>> CrawlerServers
-        {
+        public Dictionary<string, ObservableCollection<CrawlerServer>> CrawlerServers {
             get { return _CrawlerServers; }
 
-            set
-            {
+            set {
                 _CrawlerServers = value;
                 RaisePropertyChanged();
             }
         }
         private PluginMetaData _CurrentPlugin;
 
-        public PluginMetaData CurrentPlugin
-        {
+        public PluginMetaData CurrentPlugin {
             get { return _CurrentPlugin; }
 
-            set
-            {
+            set {
                 _CurrentPlugin = value;
                 RaisePropertyChanged();
             }
@@ -407,24 +357,20 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<string> _DisplayCrawlerServers = new ObservableCollection<string>();
 
-        public ObservableCollection<string> DisplayCrawlerServers
-        {
+        public ObservableCollection<string> DisplayCrawlerServers {
             get { return _DisplayCrawlerServers; }
 
-            set
-            {
+            set {
                 _DisplayCrawlerServers = value;
                 RaisePropertyChanged();
             }
         }
         private bool _ShowCurrentPlugin = false;
 
-        public bool ShowCurrentPlugin
-        {
+        public bool ShowCurrentPlugin {
             get { return _ShowCurrentPlugin; }
 
-            set
-            {
+            set {
                 _ShowCurrentPlugin = value;
                 RaisePropertyChanged();
             }
@@ -432,12 +378,10 @@ namespace Jvedio.ViewModel
 
         private string _ProxyServer = ConfigManager.ProxyConfig.Server;
 
-        public string ProxyServer
-        {
+        public string ProxyServer {
             get { return _ProxyServer; }
 
-            set
-            {
+            set {
                 _ProxyServer = value;
                 RaisePropertyChanged();
             }
@@ -445,12 +389,10 @@ namespace Jvedio.ViewModel
 
         private int _ProxyPort = (int)ConfigManager.ProxyConfig.Port;
 
-        public int ProxyPort
-        {
+        public int ProxyPort {
             get { return _ProxyPort; }
 
-            set
-            {
+            set {
                 _ProxyPort = value;
                 RaisePropertyChanged();
             }
@@ -458,12 +400,10 @@ namespace Jvedio.ViewModel
 
         private string _ProxyUserName = ConfigManager.ProxyConfig.UserName;
 
-        public string ProxyUserName
-        {
+        public string ProxyUserName {
             get { return _ProxyUserName; }
 
-            set
-            {
+            set {
                 _ProxyUserName = value;
                 RaisePropertyChanged();
             }
@@ -471,15 +411,12 @@ namespace Jvedio.ViewModel
 
         private string _ProxyPwd = ConfigManager.ProxyConfig.Password;
 
-        public string ProxyPwd
-        {
-            get
-            {
+        public string ProxyPwd {
+            get {
                 return _ProxyPwd;
             }
 
-            set
-            {
+            set {
                 _ProxyPwd = value;
                 RaisePropertyChanged();
             }
@@ -487,12 +424,10 @@ namespace Jvedio.ViewModel
 
         private TaskStatus _TestProxyStatus;
 
-        public TaskStatus TestProxyStatus
-        {
+        public TaskStatus TestProxyStatus {
             get { return _TestProxyStatus; }
 
-            set
-            {
+            set {
                 _TestProxyStatus = value;
                 RaisePropertyChanged();
             }
@@ -500,12 +435,10 @@ namespace Jvedio.ViewModel
 
         private int _HttpTimeout = (int)ConfigManager.ProxyConfig.HttpTimeout;
 
-        public int HttpTimeout
-        {
+        public int HttpTimeout {
             get { return _HttpTimeout; }
 
-            set
-            {
+            set {
                 _HttpTimeout = value;
                 RaisePropertyChanged();
             }
@@ -515,60 +448,50 @@ namespace Jvedio.ViewModel
 
         private bool _CopyNFOOverwriteImage = ConfigManager.ScanConfig.CopyNFOOverwriteImage;
 
-        public bool CopyNFOOverwriteImage
-        {
+        public bool CopyNFOOverwriteImage {
             get { return _CopyNFOOverwriteImage; }
 
-            set
-            {
+            set {
                 _CopyNFOOverwriteImage = value;
                 RaisePropertyChanged();
             }
         }
         private bool _CopyNFOPicture = ConfigManager.ScanConfig.CopyNFOPicture;
 
-        public bool CopyNFOPicture
-        {
+        public bool CopyNFOPicture {
             get { return _CopyNFOPicture; }
 
-            set
-            {
+            set {
                 _CopyNFOPicture = value;
                 RaisePropertyChanged();
             }
         }
         private bool _CopyNFOActorPicture = ConfigManager.ScanConfig.CopyNFOActorPicture;
 
-        public bool CopyNFOActorPicture
-        {
+        public bool CopyNFOActorPicture {
             get { return _CopyNFOActorPicture; }
 
-            set
-            {
+            set {
                 _CopyNFOActorPicture = value;
                 RaisePropertyChanged();
             }
         }
         private bool _CopyNFOScreenShot = ConfigManager.ScanConfig.CopyNFOScreenShot;
 
-        public bool CopyNFOScreenShot
-        {
+        public bool CopyNFOScreenShot {
             get { return _CopyNFOScreenShot; }
 
-            set
-            {
+            set {
                 _CopyNFOScreenShot = value;
                 RaisePropertyChanged();
             }
         }
         private bool _CopyNFOPreview = ConfigManager.ScanConfig.CopyNFOPreview;
 
-        public bool CopyNFOPreview
-        {
+        public bool CopyNFOPreview {
             get { return _CopyNFOPreview; }
 
-            set
-            {
+            set {
                 _CopyNFOPreview = value;
                 RaisePropertyChanged();
             }
@@ -578,48 +501,40 @@ namespace Jvedio.ViewModel
 
         private string _CopyNFOActorPath = ConfigManager.ScanConfig.CopyNFOActorPath;
 
-        public string CopyNFOActorPath
-        {
+        public string CopyNFOActorPath {
             get { return _CopyNFOActorPath; }
 
-            set
-            {
+            set {
                 _CopyNFOActorPath = value;
                 RaisePropertyChanged();
             }
         }
         private string _CopyNFOScreenShotPath = ConfigManager.ScanConfig.CopyNFOScreenShotPath;
 
-        public string CopyNFOScreenShotPath
-        {
+        public string CopyNFOScreenShotPath {
             get { return _CopyNFOScreenShotPath; }
 
-            set
-            {
+            set {
                 _CopyNFOScreenShotPath = value;
                 RaisePropertyChanged();
             }
         }
         private string _CopyNFOPreviewPath = ConfigManager.ScanConfig.CopyNFOPreviewPath;
 
-        public string CopyNFOPreviewPath
-        {
+        public string CopyNFOPreviewPath {
             get { return _CopyNFOPreviewPath; }
 
-            set
-            {
+            set {
                 _CopyNFOPreviewPath = value;
                 RaisePropertyChanged();
             }
         }
         private Dictionary<string, NfoParse> _NfoParseRules;
 
-        public Dictionary<string, NfoParse> NfoParseRules
-        {
+        public Dictionary<string, NfoParse> NfoParseRules {
             get { return _NfoParseRules; }
 
-            set
-            {
+            set {
                 _NfoParseRules = value;
                 RaisePropertyChanged();
             }
@@ -627,12 +542,10 @@ namespace Jvedio.ViewModel
 
         private double _MinFileSize = ConfigManager.ScanConfig.MinFileSize;
 
-        public double MinFileSize
-        {
+        public double MinFileSize {
             get { return _MinFileSize; }
 
-            set
-            {
+            set {
                 _MinFileSize = value;
                 RaisePropertyChanged();
             }
@@ -640,12 +553,10 @@ namespace Jvedio.ViewModel
 
         private bool _ScanOnStartUp = ConfigManager.ScanConfig.ScanOnStartUp;
 
-        public bool ScanOnStartUp
-        {
+        public bool ScanOnStartUp {
             get { return _ScanOnStartUp; }
 
-            set
-            {
+            set {
                 _ScanOnStartUp = value;
                 RaisePropertyChanged();
             }
@@ -653,48 +564,40 @@ namespace Jvedio.ViewModel
 
         private bool _FetchVID = ConfigManager.ScanConfig.FetchVID;
 
-        public bool FetchVID
-        {
+        public bool FetchVID {
             get { return _FetchVID; }
 
-            set
-            {
+            set {
                 _FetchVID = value;
                 RaisePropertyChanged();
             }
         }
         private bool _LoadDataAfterScan = ConfigManager.ScanConfig.LoadDataAfterScan;
 
-        public bool LoadDataAfterScan
-        {
+        public bool LoadDataAfterScan {
             get { return _LoadDataAfterScan; }
 
-            set
-            {
+            set {
                 _LoadDataAfterScan = value;
                 RaisePropertyChanged();
             }
         }
         private bool _DataExistsIndexAfterScan = ConfigManager.ScanConfig.DataExistsIndexAfterScan;
 
-        public bool DataExistsIndexAfterScan
-        {
+        public bool DataExistsIndexAfterScan {
             get { return _DataExistsIndexAfterScan; }
 
-            set
-            {
+            set {
                 _DataExistsIndexAfterScan = value;
                 RaisePropertyChanged();
             }
         }
         private bool _ImageExistsIndexAfterScan = ConfigManager.ScanConfig.ImageExistsIndexAfterScan;
 
-        public bool ImageExistsIndexAfterScan
-        {
+        public bool ImageExistsIndexAfterScan {
             get { return _ImageExistsIndexAfterScan; }
 
-            set
-            {
+            set {
                 _ImageExistsIndexAfterScan = value;
                 RaisePropertyChanged();
             }
@@ -706,12 +609,10 @@ namespace Jvedio.ViewModel
 
         private bool _AutoGenScreenShot = ConfigManager.Settings.AutoGenScreenShot;
 
-        public bool AutoGenScreenShot
-        {
+        public bool AutoGenScreenShot {
             get { return _AutoGenScreenShot; }
 
-            set
-            {
+            set {
                 _AutoGenScreenShot = value;
                 RaisePropertyChanged();
             }
@@ -719,12 +620,10 @@ namespace Jvedio.ViewModel
 
         private bool _OpenDataBaseDefault = ConfigManager.Settings.OpenDataBaseDefault;
 
-        public bool OpenDataBaseDefault
-        {
+        public bool OpenDataBaseDefault {
             get { return _OpenDataBaseDefault; }
 
-            set
-            {
+            set {
                 _OpenDataBaseDefault = value;
                 RaisePropertyChanged();
             }
@@ -733,12 +632,10 @@ namespace Jvedio.ViewModel
 
         private bool _CloseToTaskBar = ConfigManager.Settings.CloseToTaskBar;
 
-        public bool CloseToTaskBar
-        {
+        public bool CloseToTaskBar {
             get { return _CloseToTaskBar; }
 
-            set
-            {
+            set {
                 _CloseToTaskBar = value;
 
                 RaisePropertyChanged();
@@ -747,12 +644,10 @@ namespace Jvedio.ViewModel
 
         private bool _MainWindowVisible;
 
-        public bool MainWindowVisible
-        {
+        public bool MainWindowVisible {
             get { return _MainWindowVisible; }
 
-            set
-            {
+            set {
                 _MainWindowVisible = value;
                 RaisePropertyChanged();
             }
@@ -760,12 +655,10 @@ namespace Jvedio.ViewModel
 
         private string _CurrentLanguage = ConfigManager.Settings.CurrentLanguage;
 
-        public string CurrentLanguage
-        {
+        public string CurrentLanguage {
             get { return _CurrentLanguage; }
 
-            set
-            {
+            set {
                 _CurrentLanguage = value;
                 RaisePropertyChanged();
             }
@@ -774,12 +667,10 @@ namespace Jvedio.ViewModel
 
         private bool _DetailShowBg = ConfigManager.Settings.DetailShowBg;
 
-        public bool DetailShowBg
-        {
+        public bool DetailShowBg {
             get { return _DetailShowBg; }
 
-            set
-            {
+            set {
                 _DetailShowBg = value;
                 RaisePropertyChanged();
             }
@@ -790,12 +681,10 @@ namespace Jvedio.ViewModel
         #region "nfo"
         private bool _SaveInfoToNFO = ConfigManager.Settings.SaveInfoToNFO;
 
-        public bool SaveInfoToNFO
-        {
+        public bool SaveInfoToNFO {
             get { return _SaveInfoToNFO; }
 
-            set
-            {
+            set {
                 _SaveInfoToNFO = value;
                 RaisePropertyChanged();
             }
@@ -803,12 +692,10 @@ namespace Jvedio.ViewModel
 
         private bool _OverwriteNFO = ConfigManager.Settings.OverwriteNFO;
 
-        public bool OverwriteNFO
-        {
+        public bool OverwriteNFO {
             get { return _OverwriteNFO; }
 
-            set
-            {
+            set {
                 _OverwriteNFO = value;
                 RaisePropertyChanged();
             }
@@ -816,12 +703,10 @@ namespace Jvedio.ViewModel
 
         private string _NFOSavePath = ConfigManager.Settings.NFOSavePath;
 
-        public string NFOSavePath
-        {
+        public string NFOSavePath {
             get { return _NFOSavePath; }
 
-            set
-            {
+            set {
                 _NFOSavePath = value;
                 RaisePropertyChanged();
             }
@@ -832,12 +717,10 @@ namespace Jvedio.ViewModel
         #region "ffmpeg"
         private string _FFMPEG_Path = ConfigManager.FFmpegConfig.Path;
 
-        public string FFMPEG_Path
-        {
+        public string FFMPEG_Path {
             get { return _FFMPEG_Path; }
 
-            set
-            {
+            set {
                 _FFMPEG_Path = value;
                 RaisePropertyChanged();
             }
@@ -845,12 +728,10 @@ namespace Jvedio.ViewModel
 
         private int _ScreenShot_ThreadNum = (int)ConfigManager.FFmpegConfig.ThreadNum;
 
-        public int ScreenShot_ThreadNum
-        {
+        public int ScreenShot_ThreadNum {
             get { return _ScreenShot_ThreadNum; }
 
-            set
-            {
+            set {
                 _ScreenShot_ThreadNum = value;
                 RaisePropertyChanged();
             }
@@ -858,12 +739,10 @@ namespace Jvedio.ViewModel
 
         private int _ScreenShot_TimeOut = (int)ConfigManager.FFmpegConfig.TimeOut;
 
-        public int ScreenShot_TimeOut
-        {
+        public int ScreenShot_TimeOut {
             get { return _ScreenShot_TimeOut; }
 
-            set
-            {
+            set {
                 _ScreenShot_TimeOut = value;
                 RaisePropertyChanged();
             }
@@ -871,26 +750,24 @@ namespace Jvedio.ViewModel
 
         private int _ScreenShotNum = (int)ConfigManager.FFmpegConfig.ScreenShotNum;
 
-        public int ScreenShotNum
-        {
+        public int ScreenShotNum {
             get { return _ScreenShotNum; }
 
-            set
-            {
-                if (value <= 0 || value > 30) _ScreenShotNum = 10;
-                else _ScreenShotNum = value;
+            set {
+                if (value <= 0 || value > 30)
+                    _ScreenShotNum = 10;
+                else
+                    _ScreenShotNum = value;
                 RaisePropertyChanged();
             }
         }
 
         private int _ScreenShotIgnoreStart = (int)ConfigManager.FFmpegConfig.ScreenShotIgnoreStart;
 
-        public int ScreenShotIgnoreStart
-        {
+        public int ScreenShotIgnoreStart {
             get { return _ScreenShotIgnoreStart; }
 
-            set
-            {
+            set {
                 _ScreenShotIgnoreStart = value;
                 RaisePropertyChanged();
             }
@@ -898,12 +775,10 @@ namespace Jvedio.ViewModel
 
         private int _ScreenShotIgnoreEnd = (int)ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd;
 
-        public int ScreenShotIgnoreEnd
-        {
+        public int ScreenShotIgnoreEnd {
             get { return _ScreenShotIgnoreEnd; }
 
-            set
-            {
+            set {
                 _ScreenShotIgnoreEnd = value;
                 RaisePropertyChanged();
             }
@@ -911,12 +786,10 @@ namespace Jvedio.ViewModel
 
         private bool _SkipExistGif = ConfigManager.FFmpegConfig.SkipExistGif;
 
-        public bool SkipExistGif
-        {
+        public bool SkipExistGif {
             get { return _SkipExistGif; }
 
-            set
-            {
+            set {
                 _SkipExistGif = value;
                 RaisePropertyChanged();
             }
@@ -924,24 +797,20 @@ namespace Jvedio.ViewModel
 
         private bool _SkipExistScreenShot = ConfigManager.FFmpegConfig.SkipExistScreenShot;
 
-        public bool SkipExistScreenShot
-        {
+        public bool SkipExistScreenShot {
             get { return _SkipExistScreenShot; }
 
-            set
-            {
+            set {
                 _SkipExistScreenShot = value;
                 RaisePropertyChanged();
             }
         }
         private bool _ScreenShotAfterImport = ConfigManager.FFmpegConfig.ScreenShotAfterImport;
 
-        public bool ScreenShotAfterImport
-        {
+        public bool ScreenShotAfterImport {
             get { return _ScreenShotAfterImport; }
 
-            set
-            {
+            set {
                 _ScreenShotAfterImport = value;
                 RaisePropertyChanged();
             }
@@ -949,12 +818,10 @@ namespace Jvedio.ViewModel
 
         private bool _GifAutoHeight = ConfigManager.FFmpegConfig.GifAutoHeight;
 
-        public bool GifAutoHeight
-        {
+        public bool GifAutoHeight {
             get { return _GifAutoHeight; }
 
-            set
-            {
+            set {
                 _GifAutoHeight = value;
                 RaisePropertyChanged();
             }
@@ -962,12 +829,10 @@ namespace Jvedio.ViewModel
 
         private int _GifWidth = (int)ConfigManager.FFmpegConfig.GifWidth;
 
-        public int GifWidth
-        {
+        public int GifWidth {
             get { return _GifWidth; }
 
-            set
-            {
+            set {
                 _GifWidth = value;
                 RaisePropertyChanged();
             }
@@ -975,12 +840,10 @@ namespace Jvedio.ViewModel
 
         private int _GifHeight = (int)ConfigManager.FFmpegConfig.GifHeight;
 
-        public int GifHeight
-        {
+        public int GifHeight {
             get { return _GifHeight; }
 
-            set
-            {
+            set {
                 _GifHeight = value;
                 RaisePropertyChanged();
             }
@@ -988,12 +851,10 @@ namespace Jvedio.ViewModel
 
         private int _GifDuration = (int)ConfigManager.FFmpegConfig.GifDuration;
 
-        public int GifDuration
-        {
+        public int GifDuration {
             get { return _GifDuration; }
 
-            set
-            {
+            set {
                 _GifDuration = value;
                 RaisePropertyChanged();
             }
@@ -1005,12 +866,10 @@ namespace Jvedio.ViewModel
 
         private bool _RemoveTitleSpace = ConfigManager.RenameConfig.RemoveTitleSpace;
 
-        public bool RemoveTitleSpace
-        {
+        public bool RemoveTitleSpace {
             get { return _RemoveTitleSpace; }
 
-            set
-            {
+            set {
                 _RemoveTitleSpace = value;
                 RaisePropertyChanged();
             }
@@ -1018,12 +877,10 @@ namespace Jvedio.ViewModel
 
         private bool _AddRenameTag = ConfigManager.RenameConfig.AddRenameTag;
 
-        public bool AddRenameTag
-        {
+        public bool AddRenameTag {
             get { return _AddRenameTag; }
 
-            set
-            {
+            set {
                 _AddRenameTag = value;
                 RaisePropertyChanged();
             }
@@ -1031,12 +888,10 @@ namespace Jvedio.ViewModel
 
         private string _FormatString = ConfigManager.RenameConfig.FormatString;
 
-        public string FormatString
-        {
+        public string FormatString {
             get { return _FormatString; }
 
-            set
-            {
+            set {
                 _FormatString = value;
                 RaisePropertyChanged();
             }
@@ -1047,12 +902,10 @@ namespace Jvedio.ViewModel
         #region "库"
         private bool _AutoBackup = ConfigManager.Settings.AutoBackup;
 
-        public bool AutoBackup
-        {
+        public bool AutoBackup {
             get { return _AutoBackup; }
 
-            set
-            {
+            set {
                 _AutoBackup = value;
                 RaisePropertyChanged();
             }
@@ -1060,12 +913,10 @@ namespace Jvedio.ViewModel
 
         private int _AutoBackupPeriodIndex = (int)ConfigManager.Settings.AutoBackupPeriodIndex;
 
-        public int AutoBackupPeriodIndex
-        {
+        public int AutoBackupPeriodIndex {
             get { return _AutoBackupPeriodIndex; }
 
-            set
-            {
+            set {
                 _AutoBackupPeriodIndex = value;
                 RaisePropertyChanged();
             }
@@ -1074,12 +925,10 @@ namespace Jvedio.ViewModel
 
         private bool _IndexCreating;
 
-        public bool IndexCreating
-        {
+        public bool IndexCreating {
             get { return _IndexCreating; }
 
-            set
-            {
+            set {
                 _IndexCreating = value;
                 RaisePropertyChanged();
             }
@@ -1091,12 +940,10 @@ namespace Jvedio.ViewModel
 
         private bool _ListenEnabled = ConfigManager.Settings.ListenEnabled;
 
-        public bool ListenEnabled
-        {
+        public bool ListenEnabled {
             get { return _ListenEnabled; }
 
-            set
-            {
+            set {
                 _ListenEnabled = value;
                 RaisePropertyChanged();
             }
@@ -1104,12 +951,10 @@ namespace Jvedio.ViewModel
 
         private string _ListenPort = ConfigManager.Settings.ListenPort;
 
-        public string ListenPort
-        {
+        public string ListenPort {
             get { return _ListenPort; }
 
-            set
-            {
+            set {
                 _ListenPort = value;
                 RaisePropertyChanged();
             }

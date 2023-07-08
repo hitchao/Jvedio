@@ -15,16 +15,14 @@ namespace Jvedio
     {
         public SolidColorBrush _BackgroundBrush = Brushes.Red;
 
-        public SolidColorBrush BackgroundBrush
-        {
+        public SolidColorBrush BackgroundBrush {
             get { return _BackgroundBrush; }
             set { _BackgroundBrush = value; }
         }
 
         public SolidColorBrush _ForegroundBrush = Brushes.White;
 
-        public SolidColorBrush ForegroundBrush
-        {
+        public SolidColorBrush ForegroundBrush {
             get { return _ForegroundBrush; }
             set { _ForegroundBrush = value; }
         }
@@ -59,10 +57,8 @@ namespace Jvedio
         private void PathListBox_Drop(object sender, DragEventArgs e)
         {
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var item in dragdropFiles)
-            {
-                if (!FileHelper.IsFile(item))
-                {
+            foreach (var item in dragdropFiles) {
+                if (!FileHelper.IsFile(item)) {
                     if (!Folders.Contains(item) && !Folders.IsIntersectWith(item))
                         Folders.Add(item);
                     else
@@ -76,8 +72,7 @@ namespace Jvedio
         public void AddPath(object sender, RoutedEventArgs e)
         {
             var path = FileHelper.SelectPath(this);
-            if (Directory.Exists(path))
-            {
+            if (Directory.Exists(path)) {
                 if (!Folders.Contains(path) && !Folders.IsIntersectWith(path))
                     Folders.Add(path);
                 else
@@ -89,10 +84,8 @@ namespace Jvedio
 
         public void DelPath(object sender, RoutedEventArgs e)
         {
-            if (PathListBox.SelectedIndex >= 0)
-            {
-                for (int i = PathListBox.SelectedItems.Count - 1; i >= 0; i--)
-                {
+            if (PathListBox.SelectedIndex >= 0) {
+                for (int i = PathListBox.SelectedItems.Count - 1; i >= 0; i--) {
                     Folders.Remove(PathListBox.SelectedItems[i].ToString());
                 }
             }

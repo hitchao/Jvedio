@@ -1,12 +1,9 @@
 ﻿using Jvedio.Core.Enums;
-using SuperControls.Style;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Jvedio.Core.Config;
-using System.Linq;
-using System.Collections.Generic;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using System.Windows.Media;
 
 namespace Jvedio
@@ -37,10 +34,8 @@ namespace Jvedio
         {
             List<RadioButton> radioButtons = videoTypeStackPanel.Children.OfType<RadioButton>().ToList();
 
-            for (int i = 0; i < radioButtons.Count; i++)
-            {
-                if ((bool)radioButtons[i].IsChecked)
-                {
+            for (int i = 0; i < radioButtons.Count; i++) {
+                if ((bool)radioButtons[i].IsChecked) {
                     VideoType = (VideoType)i;
                     break;
                 }

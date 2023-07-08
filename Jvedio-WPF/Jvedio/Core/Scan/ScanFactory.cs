@@ -7,15 +7,16 @@ namespace Jvedio.Core.Scan
     {
         public static ScanTask ProduceScanner(DataType dataType, List<string> scanPaths, List<string> filePaths, IEnumerable<string> fileExt = null)
         {
-            switch (dataType)
-            {
+            switch (dataType) {
                 case DataType.Video:
                     return CreateVideoScanner(scanPaths, filePaths, fileExt);
                 case DataType.Picture:
-                    if (fileExt == null) fileExt = ScanTask.PICTURE_EXTENSIONS_LIST;
+                    if (fileExt == null)
+                        fileExt = ScanTask.PICTURE_EXTENSIONS_LIST;
                     return CreatePicScanner(scanPaths, filePaths, fileExt);
                 case DataType.Comics:
-                    if (fileExt == null) fileExt = ScanTask.PICTURE_EXTENSIONS_LIST;
+                    if (fileExt == null)
+                        fileExt = ScanTask.PICTURE_EXTENSIONS_LIST;
                     return CreateComicScanner(scanPaths, filePaths, fileExt);
                 case DataType.Game:
                     return CreateGameScanner(scanPaths, filePaths, fileExt);

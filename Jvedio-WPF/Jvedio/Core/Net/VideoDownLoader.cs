@@ -1,22 +1,20 @@
-﻿using SuperUtils.NetWork;
-using SuperUtils.NetWork.Entity;
-using Jvedio.Core.Crawler;
+﻿using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
-using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
+using SuperControls.Style;
+using SuperControls.Style.Plugin;
+using SuperUtils.Common;
+using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.NetWork;
+using SuperUtils.NetWork.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using SuperControls.Style.Plugin;
-using SuperControls.Style;
-using SuperUtils.Framework.ORM.Wrapper;
-using System.Security.Cryptography;
-using SuperUtils.Common;
 using static Jvedio.LogManager;
 
 namespace Jvedio.Core.Net
@@ -59,21 +57,17 @@ namespace Jvedio.Core.Net
             // 获得所有可用服务器源
             Dictionary<PluginMetaData, List<CrawlerServer>> crawlers = GetCrawlerServer(dataInfo);
 
-            foreach (var key in crawlers.Keys)
-            {
+            foreach (var key in crawlers.Keys) {
                 List<CrawlerServer> crawlerServers = crawlers[key];
-                foreach (CrawlerServer server in crawlerServers)
-                {
+                foreach (CrawlerServer server in crawlerServers) {
                     if (server.Invoker == null)
                         continue;
                     server.AttachToDict(dataInfo);
                     // Header 传递代理配置进去
                     object o = await server.Invoker.SetMethod("GetInfo").InvokeAsync(new object[] { Header, dataInfo });
-                    if (o is Dictionary<string, object> d)
-                    {
+                    if (o is Dictionary<string, object> d) {
                         // 成功一个立即返回，否则使用下一个
-                        if (d.ContainsKey("Header") && d["Header"] is Dictionary<string, string> dict)
-                        {
+                        if (d.ContainsKey("Header") && d["Header"] is Dictionary<string, string> dict) {
                             server.Headers = JsonUtils.TrySerializeObject(dict);
                             Header.Headers = dict;
                         }
@@ -123,8 +117,7 @@ namespace Jvedio.Core.Net
                 throw new CrawlerNotFoundException();
             Dictionary<PluginMetaData, List<CrawlerServer>> result =
                 new Dictionary<PluginMetaData, List<CrawlerServer>>();
-            for (int i = 0; i < pluginMetaDatas.Count; i++)
-            {
+            for (int i = 0; i < pluginMetaDatas.Count; i++) {
                 // 一组支持刮削的网址列表
                 PluginMetaData metaData = pluginMetaDatas[i];
                 List<CrawlerServer> crawlerServers = ConfigManager.ServerConfig.CrawlerServers
@@ -136,13 +129,11 @@ namespace Jvedio.Core.Net
                     continue;
 
                 // 过滤器仅可使用的刮削器
-                try
-                {
+                try {
                     PluginInvoker invoker = new PluginInvoker(metaData.GetDllPath());
                     object reasonObject = invoker.SetMethod("IsPluginAvailable").Invoke(new object[] { dataInfo });
                     string reason = reasonObject as string;
-                    if (string.IsNullOrEmpty(reason))
-                    {
+                    if (string.IsNullOrEmpty(reason)) {
 
                         object webTypeObject = invoker.SetMethod("GetWebType").Invoke(null);
                         string webType = "";
@@ -155,23 +146,17 @@ namespace Jvedio.Core.Net
                             wrapper.Eq("WebType", webType);
                         wrapper.Eq("LocalValue", CurrentVideo.VID);
                         UrlCode urlCode = MapperManager.urlCodeMapper.SelectOne(wrapper);
-                        foreach (var item in crawlerServers)
-                        {
+                        foreach (var item in crawlerServers) {
                             item.UrlCode = urlCode;
                         }
-                        foreach (var item in crawlerServers)
-                        {
+                        foreach (var item in crawlerServers) {
                             item.Invoker = invoker;
                         }
                         result[metaData] = crawlerServers;
-                    }
-                    else
-                    {
+                    } else {
                         Logger.Warn(reason);
                     }
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     MessageCard.Error($"插件 {metaData.PluginName} 发生了异常：" + ex.Message);
                     continue;
                 }
@@ -188,13 +173,10 @@ namespace Jvedio.Core.Net
 
         public async Task<byte[]> DownloadImage(string url, RequestHeader header, Action<string> onError = null)
         {
-            try
-            {
+            try {
                 HttpResult httpResult = await HttpHelper.AsyncDownLoadFile(url, header);
                 return httpResult.FileByte;
-            }
-            catch (WebException ex)
-            {
+            } catch (WebException ex) {
                 onError?.Invoke(ex.Message);
             }
 

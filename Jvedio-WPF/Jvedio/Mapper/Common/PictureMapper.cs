@@ -85,8 +85,7 @@ namespace Jvedio.Mapper
                         "on metadata.DataID=metadata_picture.DataID " + wrapper.ToWhere(false);
             List<Dictionary<string, object>> list = Select(sql);
             List<Picture> pictures = ToEntity<Picture>(list, typeof(Picture).GetProperties(), false);
-            if (pictures != null && pictures.Count > 0)
-            {
+            if (pictures != null && pictures.Count > 0) {
                 return pictures[0];
             }
 

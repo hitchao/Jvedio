@@ -1,7 +1,6 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using Jvedio.Mapper.BaseMapper;
-using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +12,16 @@ namespace Jvedio.Mapper
     {
         public int deleteDataByIds(List<string> idList)
         {
-            if (idList == null || idList.Count == 0) return 0;
+            if (idList == null || idList.Count == 0)
+                return 0;
             int c1 = MapperManager.metaDataMapper.DeleteByIds(idList);
             int c2 = 0;
             DataType dataType = Main.CurrentDataType;
-            if (dataType == DataType.Picture)
-            {
+            if (dataType == DataType.Picture) {
                 c2 = MapperManager.pictureMapper.DeleteByIds(idList);
-            }
-            else if (dataType == DataType.Comics)
-            {
+            } else if (dataType == DataType.Comics) {
                 c2 = MapperManager.comicMapper.DeleteByIds(idList);
-            }
-            else if (dataType == DataType.Game)
-            {
+            } else if (dataType == DataType.Game) {
                 c2 = MapperManager.gameMapper.DeleteByIds(idList);
             }
 
@@ -40,22 +35,17 @@ namespace Jvedio.Mapper
             builder.Append($"delete from metadata_to_translation where DataID in ({ids});");
             builder.Append("commit;");
 
-            if (dataType == DataType.Picture)
-            {
+            if (dataType == DataType.Picture) {
                 MapperManager.pictureMapper.ExecuteNonQuery(builder.ToString());
-            }
-            else if (dataType == DataType.Comics)
-            {
+            } else if (dataType == DataType.Comics) {
                 MapperManager.comicMapper.ExecuteNonQuery(builder.ToString());
-            }
-            else if (dataType == DataType.Game)
-            {
+            } else if (dataType == DataType.Game) {
                 MapperManager.gameMapper.ExecuteNonQuery(builder.ToString());
             }
 
-            if (c1 == c2 && idList.Count == c1) return c1;
-            else
-            {
+            if (c1 == c2 && idList.Count == c1)
+                return c1;
+            else {
                 // todo 日志
             }
 
@@ -74,7 +64,8 @@ namespace Jvedio.Mapper
             if (labels != null)
                 oldLabels = labels.ToList();
 
-            if (newLabels.SequenceEqual(oldLabels)) return;
+            if (newLabels.SequenceEqual(oldLabels))
+                return;
 
             // 删除，新增
             oldLabels = oldLabels.OrderBy(arg => arg).ToList();
@@ -83,8 +74,7 @@ namespace Jvedio.Mapper
             List<string> to_create = newLabels.Except(oldLabels).ToList();
 
             // 删除
-            if (to_delete.Count > 0)
-            {
+            if (to_delete.Count > 0) {
                 // ('1','2','3')
                 string sql = $"delete from metadata_to_label " +
                     $"where DataID={metaData.DataID} " +
@@ -93,11 +83,9 @@ namespace Jvedio.Mapper
             }
 
             // 新增
-            if (to_create.Count > 0)
-            {
+            if (to_create.Count > 0) {
                 List<string> create = new List<string>();
-                to_create.ForEach(arg =>
-                {
+                to_create.ForEach(arg => {
                     create.Add($"({metaData.DataID},'{arg}')");
                 });
 

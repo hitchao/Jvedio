@@ -37,15 +37,12 @@ namespace Jvedio.Entity
 
         private List<string> _labellist;
 
-        public List<string> labellist
-        {
-            get
-            {
+        public List<string> labellist {
+            get {
                 return _labellist;
             }
 
-            set
-            {
+            set {
                 _labellist = value;
                 RaisePropertyChanged();
             }

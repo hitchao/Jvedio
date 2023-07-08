@@ -2,13 +2,13 @@
 using Jvedio.Core.Config.Base;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
-using static Jvedio.LogManager;
 using Jvedio.Core.WindowConfig;
 using Newtonsoft.Json;
 using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using static Jvedio.LogManager;
 
 namespace Jvedio
 {
@@ -92,11 +92,9 @@ namespace Jvedio
         {
             System.Reflection.PropertyInfo[] propertyInfos = typeof(ConfigManager).GetProperties();
 
-            foreach (var item in propertyInfos)
-            {
+            foreach (var item in propertyInfos) {
                 AbstractConfig config = item.GetValue(null) as AbstractConfig;
-                if (config == null)
-                {
+                if (config == null) {
                     Logger.Error(new Exception("无法识别的 AbstractConfig"));
                     continue;
                 }
@@ -123,8 +121,7 @@ namespace Jvedio
 
         public static void EnsurePicPaths()
         {
-            if (string.IsNullOrEmpty(Settings.PicPathJson))
-            {
+            if (string.IsNullOrEmpty(Settings.PicPathJson)) {
                 Dictionary<string, object> dict = new Dictionary<string, object>();
                 dict.Add(PathType.Absolute.ToString(), PathManager.PicPath);
                 dict.Add(PathType.RelativeToApp.ToString(), "./Pic");
@@ -138,11 +135,10 @@ namespace Jvedio
                 dict.Add(PathType.RelativeToData.ToString(), d);
                 Settings.PicPathJson = JsonConvert.SerializeObject(dict);
                 Settings.PicPaths = dict;
-            }
-            else
-            {
+            } else {
                 Dictionary<string, object> dictionary = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(Settings.PicPathJson);
-                if (dictionary == null) return;
+                if (dictionary == null)
+                    return;
                 string str = dictionary[PathType.RelativeToData.ToString()].ToString();
                 dictionary[PathType.RelativeToData.ToString()] = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(str);
                 Settings.PicPaths = dictionary;

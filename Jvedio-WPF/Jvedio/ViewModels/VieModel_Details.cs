@@ -1,5 +1,4 @@
 ﻿
-using static Jvedio.LogManager;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
@@ -13,9 +12,10 @@ using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using static Jvedio.LogManager;
 using static Jvedio.MapperManager;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio.ViewModel
 {
@@ -34,12 +34,10 @@ namespace Jvedio.ViewModel
 
         private bool _TeenMode = ConfigManager.Settings.TeenMode;
 
-        public bool TeenMode
-        {
+        public bool TeenMode {
             get { return _TeenMode; }
 
-            set
-            {
+            set {
                 _TeenMode = value;
                 RaisePropertyChanged();
             }
@@ -47,12 +45,10 @@ namespace Jvedio.ViewModel
 
         private int _SelectImageIndex = 0;
 
-        public int SelectImageIndex
-        {
+        public int SelectImageIndex {
             get { return _SelectImageIndex; }
 
-            set
-            {
+            set {
                 _SelectImageIndex = value;
                 RaisePropertyChanged();
             }
@@ -60,12 +56,10 @@ namespace Jvedio.ViewModel
 
         private int _InfoSelectedIndex = (int)ConfigManager.Detail.InfoSelectedIndex;
 
-        public int InfoSelectedIndex
-        {
+        public int InfoSelectedIndex {
             get { return _InfoSelectedIndex; }
 
-            set
-            {
+            set {
                 _InfoSelectedIndex = value;
                 if (value == 1 && VideoInfo == null)
                     LoadVideoInfo();
@@ -75,12 +69,10 @@ namespace Jvedio.ViewModel
 
         private bool _ShowScreenShot = ConfigManager.Detail.ShowScreenShot;
 
-        public bool ShowScreenShot
-        {
+        public bool ShowScreenShot {
             get { return _ShowScreenShot; }
 
-            set
-            {
+            set {
                 _ShowScreenShot = value;
                 RaisePropertyChanged();
             }
@@ -88,12 +80,10 @@ namespace Jvedio.ViewModel
 
         private Video _CurrentVideo;
 
-        public Video CurrentVideo
-        {
+        public Video CurrentVideo {
             get { return _CurrentVideo; }
 
-            set
-            {
+            set {
                 _CurrentVideo = value;
                 RaisePropertyChanged();
             }
@@ -101,12 +91,10 @@ namespace Jvedio.ViewModel
 
         private VideoInfo _VideoInfo;
 
-        public VideoInfo VideoInfo
-        {
+        public VideoInfo VideoInfo {
             get { return _VideoInfo; }
 
-            set
-            {
+            set {
                 _VideoInfo = value;
                 RaisePropertyChanged();
             }
@@ -114,12 +102,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<ActorInfo> _CurrentActorList = new ObservableCollection<ActorInfo>();
 
-        public ObservableCollection<ActorInfo> CurrentActorList
-        {
+        public ObservableCollection<ActorInfo> CurrentActorList {
             get { return _CurrentActorList; }
 
-            set
-            {
+            set {
                 _CurrentActorList = value;
                 RaisePropertyChanged();
             }
@@ -127,12 +113,10 @@ namespace Jvedio.ViewModel
 
         public ObservableCollection<Video> _ViewAssociationDatas;
 
-        public ObservableCollection<Video> ViewAssociationDatas
-        {
+        public ObservableCollection<Video> ViewAssociationDatas {
             get { return _ViewAssociationDatas; }
 
-            set
-            {
+            set {
                 _ViewAssociationDatas = value;
                 RaisePropertyChanged();
             }
@@ -140,12 +124,10 @@ namespace Jvedio.ViewModel
 
         private ObservableCollection<string> _CurrentLabelList;
 
-        public ObservableCollection<string> CurrentLabelList
-        {
+        public ObservableCollection<string> CurrentLabelList {
             get { return _CurrentLabelList; }
 
-            set
-            {
+            set {
                 _CurrentLabelList = value;
                 RaisePropertyChanged();
             }
@@ -153,12 +135,10 @@ namespace Jvedio.ViewModel
 
         private string _LabelText = string.Empty;
 
-        public string LabelText
-        {
+        public string LabelText {
             get { return _LabelText; }
 
-            set
-            {
+            set {
                 _LabelText = value;
                 RaisePropertyChanged();
                 getLabels();
@@ -185,20 +165,16 @@ namespace Jvedio.ViewModel
         public void Load(long dataID)
         {
             // 释放图片内存
-            if (CurrentVideo != null)
-            {
+            if (CurrentVideo != null) {
                 CurrentVideo.SmallImage = null;
                 CurrentVideo.BigImage = null;
-                for (int i = 0; i < CurrentVideo.PreviewImageList.Count; i++)
-                {
+                for (int i = 0; i < CurrentVideo.PreviewImageList.Count; i++) {
                     CurrentVideo.PreviewImageList[i] = null;
                 }
             }
 
-            if (CurrentActorList != null)
-            {
-                for (int i = 0; i < CurrentActorList.Count; i++)
-                {
+            if (CurrentActorList != null) {
+                for (int i = 0; i < CurrentActorList.Count; i++) {
                     CurrentActorList[i].SmallImage = null;
                 }
             }
@@ -221,33 +197,33 @@ namespace Jvedio.ViewModel
 
             // 磁力
             List<Magnet> magnets = magnetsMapper.SelectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
-            if (magnets?.Count > 0)
-            {
-                try
-                {
+            if (magnets?.Count > 0) {
+                try {
                     CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size)
                         .ThenByDescending(arg => arg.Releasedate)
                         .ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList();
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                 }
             }
 
             BitmapImage image = BitmapImageFromFile(CurrentVideo.GetBigImage());
-            if (image == null) image = MetaData.DefaultBigImage;
+            if (image == null)
+                image = MetaData.DefaultBigImage;
             CurrentVideo.BigImage = image;
-            if (InfoSelectedIndex == 1) LoadVideoInfo();
+            if (InfoSelectedIndex == 1)
+                LoadVideoInfo();
             QueryCompleted?.Invoke(this, new EventArgs());
         }
 
         public void LoadViewAssocData()
         {
-            if (ViewAssociationDatas == null) ViewAssociationDatas = new ObservableCollection<Video>();
+            if (ViewAssociationDatas == null)
+                ViewAssociationDatas = new ObservableCollection<Video>();
             ViewAssociationDatas.Clear();
             GC.Collect();
-            if (CurrentVideo.AssociationList == null || CurrentVideo.AssociationList.Count <= 0) return;
+            if (CurrentVideo.AssociationList == null || CurrentVideo.AssociationList.Count <= 0)
+                return;
             SelectWrapper<Video> wrapper = Video.InitWrapper();
             wrapper.In("metadata.DataID", CurrentVideo.AssociationList.Select(arg => arg.ToString()));
             wrapper.Select(VieModel_Main.SelectFields);
@@ -259,28 +235,28 @@ namespace Jvedio.ViewModel
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
             List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
-            if (videos == null) return;
+            if (videos == null)
+                return;
 
-            for (int i = 0; i < videos.Count; i++)
-            {
+            for (int i = 0; i < videos.Count; i++) {
                 Video video = videos[i];
-                if (video == null) continue;
+                if (video == null)
+                    continue;
                 BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage());
                 BitmapImage bigimage = ReadImageFromFile(video.GetBigImage());
-                if (smallimage == null) smallimage = MetaData.DefaultSmallImage;
-                if (bigimage == null) bigimage = smallimage;
+                if (smallimage == null)
+                    smallimage = MetaData.DefaultSmallImage;
+                if (bigimage == null)
+                    bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.setTagStamps(ref video); // 设置标签戳
                 Video.HandleEmpty(ref video); // 设置标题和发行日期
 
-                if (ConfigManager.Settings.AutoGenScreenShot)
-                {
+                if (ConfigManager.Settings.AutoGenScreenShot) {
                     string path = video.GetScreenShot();
-                    if (Directory.Exists(path))
-                    {
+                    if (Directory.Exists(path)) {
                         string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
-                        if (array.Length > 0)
-                        {
+                        if (array.Length > 0) {
                             Video.SetImage(ref video, array[array.Length / 2]);
                             video.BigImage = null;
                             video.BigImage = video.ViewImage;
@@ -291,8 +267,7 @@ namespace Jvedio.ViewModel
             }
 
             // 清除
-            for (int i = ViewAssociationDatas.Count - 1; i > videos.Count - 1; i--)
-            {
+            for (int i = ViewAssociationDatas.Count - 1; i > videos.Count - 1; i--) {
                 ViewAssociationDatas.RemoveAt(i);
             }
         }
@@ -303,7 +278,8 @@ namespace Jvedio.ViewModel
 
         public async void getLabels()
         {
-            if (loadingLabel) return;
+            if (loadingLabel)
+                return;
             loadingLabel = true;
             string like_sql = string.Empty;
 
@@ -317,12 +293,11 @@ namespace Jvedio.ViewModel
                 $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}" + like_sql +
                 $" GROUP BY LabelName ORDER BY Count DESC";
             List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            if (list != null)
-            {
-                foreach (Dictionary<string, object> item in list)
-                {
+            if (list != null) {
+                foreach (Dictionary<string, object> item in list) {
                     if (!item.ContainsKey("LabelName") || !item.ContainsKey("Count") ||
-                        item["LabelName"] == null || item["Count"] == null) continue;
+                        item["LabelName"] == null || item["Count"] == null)
+                        continue;
                     string labelName = item["LabelName"].ToString();
                     long.TryParse(item["Count"].ToString(), out long count);
                     labels.Add($"{labelName}({count})");
@@ -330,8 +305,7 @@ namespace Jvedio.ViewModel
             }
 
             CurrentLabelList = new ObservableCollection<string>();
-            for (int i = 0; i < labels.Count; i++)
-            {
+            for (int i = 0; i < labels.Count; i++) {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
             }
 

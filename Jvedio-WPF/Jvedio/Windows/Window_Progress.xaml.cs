@@ -18,11 +18,9 @@ namespace Jvedio.Windows
 
         private string _MainText = string.Empty;
 
-        public string MainText
-        {
+        public string MainText {
             get => _MainText;
-            set
-            {
+            set {
                 _MainText = value;
                 RaisePropertyChanged();
             }
@@ -30,11 +28,9 @@ namespace Jvedio.Windows
 
         private string _SubText = string.Empty;
 
-        public string SubText
-        {
+        public string SubText {
             get => _SubText;
-            set
-            {
+            set {
                 _SubText = value;
                 RaisePropertyChanged();
             }
@@ -42,11 +38,9 @@ namespace Jvedio.Windows
 
         private float _MainProgress = 50;
 
-        public float MainProgress
-        {
+        public float MainProgress {
             get => _MainProgress;
-            set
-            {
+            set {
                 _MainProgress = value;
                 RaisePropertyChanged();
             }
@@ -54,11 +48,9 @@ namespace Jvedio.Windows
 
         private float _SubProgress = 50;
 
-        public float SubProgress
-        {
+        public float SubProgress {
             get => _SubProgress;
-            set
-            {
+            set {
                 _MainProgress = value;
                 RaisePropertyChanged();
             }
@@ -66,11 +58,9 @@ namespace Jvedio.Windows
 
         private string _LogText = string.Empty;
 
-        public string LogText
-        {
+        public string LogText {
             get => _LogText;
-            set
-            {
+            set {
                 _LogText = value;
                 RaisePropertyChanged();
             }
@@ -78,11 +68,9 @@ namespace Jvedio.Windows
 
         private bool _HideSub = false;
 
-        public bool HideSub
-        {
+        public bool HideSub {
             get => _HideSub;
-            set
-            {
+            set {
                 _HideSub = value;
                 RaisePropertyChanged();
             }
@@ -96,7 +84,8 @@ namespace Jvedio.Windows
 
         public Window_Progress(string title = "", string mainText = "总进度", string subText = "次进度", float mainProgress = 0, float subProgress = 0, string logText = "日志") : this()
         {
-            if (!string.IsNullOrEmpty(title)) Title = title;
+            if (!string.IsNullOrEmpty(title))
+                Title = title;
             MainText = mainText;
             SubText = subText;
             MainProgress = mainProgress;

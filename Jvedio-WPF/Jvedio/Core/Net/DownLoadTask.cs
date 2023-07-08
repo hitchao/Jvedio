@@ -1,22 +1,21 @@
-﻿using SuperUtils.NetWork.Entity;
-using Jvedio.Core.CustomEventArgs;
+﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
 using SuperControls.Style;
 using SuperUtils.Common;
-using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Framework.Tasks;
 using SuperUtils.IO;
+using SuperUtils.NetWork.Entity;
+using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static Jvedio.MapperManager;
-using SuperUtils.Framework.Tasks;
-using SuperUtils.Time;
-using SuperUtils.Framework.ORM.Enums;
 
 namespace Jvedio.Core.Net
 {
@@ -58,7 +57,8 @@ namespace Jvedio.Core.Net
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
+            if (obj == null)
+                return false;
             if (obj is DownLoadTask other)
                 return other.DataID.Equals(DataID);
             return false;
@@ -81,12 +81,9 @@ namespace Jvedio.Core.Net
 
         public string StatusCodeToMessage(int status)
         {
-            if (STATUS_DICT.ContainsKey(status))
-            {
+            if (STATUS_DICT.ContainsKey(status)) {
                 return STATUS_DICT[status];
-            }
-            else
-            {
+            } else {
                 return status.ToString();
             }
         }
@@ -103,8 +100,7 @@ namespace Jvedio.Core.Net
         public async Task<Dictionary<string, object>> GetDataInfo(Video video, VideoDownLoader downLoader, RequestHeader header, Action<RequestHeader> headerCallBack)
         {
             Dictionary<string, object> dict = null;
-            if (video == null || video.DataID <= 0)
-            {
+            if (video == null || video.DataID <= 0) {
                 Message = $"不存在 DataID={DataID} 的资源";
                 Logger.Error(Message);
                 FinalizeWithCancel();
@@ -112,33 +108,24 @@ namespace Jvedio.Core.Net
             }
 
             // 判断是否需要下载，自动跳过已下载的信息
-            if (video.toDownload() || OverrideInfo)
-            {
-                if (!string.IsNullOrEmpty(video.VID))
-                {
+            if (video.toDownload() || OverrideInfo) {
+                if (!string.IsNullOrEmpty(video.VID)) {
                     // 有 VID 的
-                    try
-                    {
+                    try {
                         dict = await downLoader.GetInfo((h) => { headerCallBack?.Invoke(h); });
-                    }
-                    catch (CrawlerNotFoundException ex)
-                    {
+                    } catch (CrawlerNotFoundException ex) {
                         // todo 显示到界面上
                         Message = ex.Message;
                         Logger.Error(Message);
                         FinalizeWithCancel();
                         throw ex;
-                    }
-                    catch (DllLoadFailedException ex)
-                    {
+                    } catch (DllLoadFailedException ex) {
                         Message = ex.Message;
                         Logger.Error(Message);
                         FinalizeWithCancel();
                         throw ex;
                     }
-                }
-                else
-                {
+                } else {
                     // 无 VID 的
                     throw new Exception("同步信息需要 VID");
                 }
@@ -147,9 +134,7 @@ namespace Jvedio.Core.Net
                 Logger.Info($"暂停 {DateHelper.ToReadableTime(Delay.INFO)}");
                 await Task.Delay(Delay.INFO);
                 return dict;
-            }
-            else
-            {
+            } else {
                 Message = "该资源信息已同步，跳过信息下载";
                 Logger.Info(Message);
                 Logger.Info(LangManager.GetValueByKey("SkipDownLoadInfoAndDownloadImage"));
@@ -163,34 +148,25 @@ namespace Jvedio.Core.Net
                 return true;
             object o = GetInfoFromExist("BigImageUrl", video, dict);
             string imageUrl = o != null ? o.ToString() : string.Empty;
-            if (!string.IsNullOrEmpty(imageUrl))
-            {
+            if (!string.IsNullOrEmpty(imageUrl)) {
                 // todo 原来的 domain 可能没法用，得替换 domain
                 string saveFileName = video.GetBigImage(Path.GetExtension(imageUrl), false);
-                if (!File.Exists(saveFileName))
-                {
-                    byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
-                    {
+                if (!File.Exists(saveFileName)) {
+                    byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) => {
                         if (!string.IsNullOrEmpty(error))
                             Logger.Error($"{imageUrl} => {error}");
                     });
-                    if (fileByte != null && fileByte.Length > 0)
-                    {
+                    if (fileByte != null && fileByte.Length > 0) {
                         FileHelper.ByteArrayToFile(fileByte, saveFileName);
                         StatusText = "3.1 同步海报图成功";
                         return true;
-                    }
-                    else
+                    } else
                         Logger.Error($"同步海报图x失败x，获取字节大小为空");
                     await Task.Delay(Delay.BIG_IMAGE);
-                }
-                else
-                {
+                } else {
                     Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                 }
-            }
-            else
-            {
+            } else {
                 Logger.Error("同步海报图地址为空");
             }
             return false;
@@ -204,33 +180,24 @@ namespace Jvedio.Core.Net
             string imageUrl = o != null ? o.ToString() : string.Empty;
 
             // 2. 小图
-            if (!string.IsNullOrEmpty(imageUrl))
-            {
+            if (!string.IsNullOrEmpty(imageUrl)) {
                 string saveFileName = video.GetSmallImage(Path.GetExtension(imageUrl), false);
-                if (!File.Exists(saveFileName))
-                {
-                    byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) =>
-                    {
+                if (!File.Exists(saveFileName)) {
+                    byte[] fileByte = await downLoader.DownloadImage(imageUrl, header, (error) => {
                         if (!string.IsNullOrEmpty(error))
                             Logger.Error($"{imageUrl} => {error}");
                     });
-                    if (fileByte != null && fileByte.Length > 0)
-                    {
+                    if (fileByte != null && fileByte.Length > 0) {
                         FileHelper.ByteArrayToFile(fileByte, saveFileName);
                         StatusText = "4.1 同步缩略图成功";
                         return true;
-                    }
-                    else
+                    } else
                         Logger.Error($"同步缩略图x失败x，获取字节大小为空");
                     await Task.Delay(Delay.SMALL_IMAGE);
-                }
-                else
-                {
+                } else {
                     Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                 }
-            }
-            else
-            {
+            } else {
                 Logger.Error("同步缩略图地址为空");
             }
             return false;
@@ -238,15 +205,12 @@ namespace Jvedio.Core.Net
 
         public void SaveActorNames(object names, Video video)
         {
-            if (names is List<string> actorNames && actorNames.Count > 0)
-            {
+            if (names is List<string> actorNames && actorNames.Count > 0) {
                 int actorCount = actorNames.Count;
-                for (int i = 0; i < actorCount; i++)
-                {
+                for (int i = 0; i < actorCount; i++) {
                     string actorName = actorNames[i];
                     ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
-                    if (actorInfo == null || actorInfo.ActorID <= 0)
-                    {
+                    if (actorInfo == null || actorInfo.ActorID <= 0) {
                         actorInfo = new ActorInfo();
                         actorInfo.ActorName = actorName;
                         actorMapper.Insert(actorInfo);
@@ -269,25 +233,20 @@ namespace Jvedio.Core.Net
             if (names == null)
                 return false;
 
-            if (urls == null)
-            {
+            if (urls == null) {
                 SaveActorNames(names, video);
                 return true;
             }
 
             // 必须要有演员头像才能导入
-            if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl)
-            {
-                if (actorNames != null && ActressImageUrl != null && actorNames.Count == ActressImageUrl.Count)
-                {
+            if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl) {
+                if (actorNames != null && ActressImageUrl != null && actorNames.Count == ActressImageUrl.Count) {
                     int actorCount = actorNames.Count;
-                    for (int i = 0; i < actorCount; i++)
-                    {
+                    for (int i = 0; i < actorCount; i++) {
                         string actorName = actorNames[i];
                         string url = ActressImageUrl[i];
                         ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
-                        if (actorInfo == null || actorInfo.ActorID <= 0)
-                        {
+                        if (actorInfo == null || actorInfo.ActorID <= 0) {
                             actorInfo = new ActorInfo();
                             actorInfo.ActorName = actorName;
                             actorInfo.ImageUrl = url;
@@ -300,23 +259,17 @@ namespace Jvedio.Core.Net
                         StatusText = $"{i + 1}/{actorCount} 成功保存演员信息：{actorName}";
                         // 下载图片
                         string saveFileName = actorInfo.GetImagePath(video.Path, Path.GetExtension(url), false);
-                        if (!File.Exists(saveFileName))
-                        {
-                            byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
-                            {
+                        if (!File.Exists(saveFileName)) {
+                            byte[] fileByte = await downLoader.DownloadImage(url, header, (error) => {
                                 if (!string.IsNullOrEmpty(error))
                                     Logger.Error($"{url} => {error}");
                             });
-                            if (fileByte != null && fileByte.Length > 0)
-                            {
+                            if (fileByte != null && fileByte.Length > 0) {
                                 FileHelper.ByteArrayToFile(fileByte, saveFileName);
                                 StatusText = $"{i + 1}/{actorCount}同步演员头像（{actorName}）成功";
-                            }
-                            else
+                            } else
                                 Logger.Error($"{i + 1}/{actorCount}同步演员头像（{actorName}）x失败x，获取字节大小为空");
-                        }
-                        else
-                        {
+                        } else {
                             Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                         }
                     }
@@ -331,15 +284,11 @@ namespace Jvedio.Core.Net
             if (!ConfigManager.DownloadConfig.DownloadPreviewImage)
                 return true;
             object urls = GetInfoFromExist("ExtraImageUrl", video, dict);
-            if (DownloadPreview && urls != null && urls is List<string> imageUrls)
-            {
-                if (imageUrls != null && imageUrls.Count > 0)
-                {
+            if (DownloadPreview && urls != null && urls is List<string> imageUrls) {
+                if (imageUrls != null && imageUrls.Count > 0) {
                     int imageCount = imageUrls.Count;
-                    for (int i = 0; i < imageCount; i++)
-                    {
-                        if (Canceled)
-                        {
+                    for (int i = 0; i < imageCount; i++) {
+                        if (Canceled) {
                             FinalizeWithCancel();
                             return false;
                         }
@@ -349,37 +298,29 @@ namespace Jvedio.Core.Net
                         if (!Directory.Exists(saveDir))
                             Directory.CreateDirectory(saveDir);
                         string saveFileName = Path.Combine(saveDir, Path.GetFileName(url));
-                        if (!File.Exists(saveFileName))
-                        {
+                        if (!File.Exists(saveFileName)) {
                             StatusText = $"{LangManager.GetValueByKey("Preview")} {i + 1}/{imageCount}";
-                            byte[] fileByte = await downLoader.DownloadImage(url, header, (error) =>
-                            {
+                            byte[] fileByte = await downLoader.DownloadImage(url, header, (error) => {
                                 if (!string.IsNullOrEmpty(error))
                                     Logger.Error($"{url} => {error}");
                             });
-                            if (fileByte != null && fileByte.Length > 0)
-                            {
+                            if (fileByte != null && fileByte.Length > 0) {
                                 FileHelper.ByteArrayToFile(fileByte, saveFileName);
                                 PreviewImageEventArgs arg = new PreviewImageEventArgs(saveFileName, fileByte);
                                 onDownloadPreview?.Invoke(this, arg);
                                 StatusText = $"{i + 1}/{imageCount}同步预览图 成功";
-                            }
-                            else
-                            {
+                            } else {
                                 Logger.Error($"{i + 1}/{imageCount}同步预览图 x失败x，获取字节大小为空");
                             }
 
                             await Task.Delay(Delay.EXTRA_IMAGE);
-                        }
-                        else
-                        {
+                        } else {
                             Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                         }
                     }
                     return true;
                 }
-            }
-            else if (!DownloadPreview)
+            } else if (!DownloadPreview)
                 StatusText = LangManager.GetValueByKey("NotSetPreviewDownload");
             else
                 Logger.Info("该资源无预览图");
@@ -389,25 +330,21 @@ namespace Jvedio.Core.Net
         public async Task<bool> CheckDataInfo(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
             // 只有同步了信息才需要校验信息
-            if (!(video.toDownload() || OverrideInfo))
-            {
+            if (!(video.toDownload() || OverrideInfo)) {
                 return true;
             }
             bool success = false;
-            if (dict != null && dict.ContainsKey("Error"))
-            {
+            if (dict != null && dict.ContainsKey("Error")) {
                 string statusCode = dict.Get("StatusCode", WRONG_STATUS_CODE).ToString();
                 Logger.Info($"StatusCode: {statusCode}");
                 string error = dict["Error"].ToString();
-                if (!string.IsNullOrEmpty(error) && !error.Equals(HttpResult.DEFAULT_ERROR_MSG))
-                {
+                if (!string.IsNullOrEmpty(error) && !error.Equals(HttpResult.DEFAULT_ERROR_MSG)) {
                     Message = error;
                     Logger.Error(error);
                 }
                 success = dict.ContainsKey("Title") && !string.IsNullOrEmpty(dict["Title"].ToString());
             }
-            if (!success)
-            {
+            if (!success) {
                 if (string.IsNullOrEmpty(Message))
                     Message = dict.Get("StatusCode", "-1").ToString();
                 if (int.TryParse(Message, out int status))
@@ -419,23 +356,19 @@ namespace Jvedio.Core.Net
                 // 但是已经请求了网址，所以视为完成，并加入到长时间等待队列
                 Status = TaskStatus.Canceled;
                 return false;
-            }
-            else
-            {
+            } else {
                 StatusText = "2.1 成功同步信息";
             }
 
             bool downloadInfo = video.ParseDictInfo(dict); // 是否从网络上刮削了信息
-            if (downloadInfo)
-            {
+            if (downloadInfo) {
                 StatusText = LangManager.GetValueByKey("SaveToLibrary");
                 // 并发锁
                 videoMapper.UpdateById(video);
                 metaDataMapper.UpdateById(video.toMetaData());
 
                 // 保存 dataCode
-                if (dict.ContainsKey("DataCode") && dict.ContainsKey("WebType"))
-                {
+                if (dict.ContainsKey("DataCode") && dict.ContainsKey("WebType")) {
                     UrlCode urlCode = new UrlCode();
                     urlCode.LocalValue = video.VID;
                     urlCode.RemoteValue = dict["DataCode"].ToString();
@@ -451,32 +384,25 @@ namespace Jvedio.Core.Net
                     StatusText = "2.3 成功保存 NFO";
                 onDownloadSuccess?.Invoke(this, null);
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
 
         public override void DoWork()
         {
-            Task.Run(async () =>
-            {
+            Task.Run(async () => {
                 Progress = 0;
                 TimeWatch.Start();
-                if (DataType == DataType.Video)
-                {
+                if (DataType == DataType.Video) {
                     Video video = videoMapper.SelectVideoByID(DataID);
                     RequestHeader header = null;
                     Dictionary<string, object> dict = null;
                     VideoDownLoader downLoader = new VideoDownLoader(video, Token);
                     StatusText = "1. 开始同步信息";
-                    try
-                    {
+                    try {
                         dict = await GetDataInfo(video, downLoader, header, (h) => { header = h; });
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Logger.Error(ex.Message);
                         FinalizeWithCancel();
                         return;
@@ -488,23 +414,20 @@ namespace Jvedio.Core.Net
                     Progress = 10f;
                     StatusText = "2. 校验信息";
                     success = await CheckDataInfo(video, dict, downLoader, header);
-                    if (!success)
-                    {
+                    if (!success) {
                         dict = null;
                         StatusText = "2.1. 校验信息不通过";
                         FinalizeWithCancel();
                         return;
                     }
 
-                    if (Canceled)
-                    {
+                    if (Canceled) {
                         FinalizeWithCancel();
                         return;
                     }
 
                     // 可能刮削了信息，但是没刮削图片
-                    if (header == null)
-                    {
+                    if (header == null) {
                         header = new RequestHeader();
                         header.WebProxy = ConfigManager.ProxyConfig.GetWebProxy();
                         header.TimeOut = ConfigManager.ProxyConfig.HttpTimeout * 1000; // 转为 ms
@@ -513,16 +436,14 @@ namespace Jvedio.Core.Net
                     StatusText = "3. 开始同步海报图";
                     success = await DownloadPoster(video, dict, downLoader, header);
                     Progress = 66f;
-                    if (Canceled)
-                    {
+                    if (Canceled) {
                         FinalizeWithCancel();
                         return;
                     }
                     StatusText = "4. 开始同步缩略图";
                     success = await DownloadThumbnail(video, dict, downLoader, header);
                     Progress = 77f;
-                    if (Canceled)
-                    {
+                    if (Canceled) {
                         FinalizeWithCancel();
                         return;
                     }
@@ -532,8 +453,7 @@ namespace Jvedio.Core.Net
                     success = await DownloadActors(video, dict, downLoader, header);
 
                     Progress = 88f;
-                    if (Canceled)
-                    {
+                    if (Canceled) {
                         FinalizeWithCancel();
                         return;
                     }
@@ -553,12 +473,9 @@ namespace Jvedio.Core.Net
 
         private object GetInfoFromExist(string type, Video video, Dictionary<string, object> dict)
         {
-            if (dict != null && dict.Count > 0)
-            {
-                if (dict.ContainsKey(type))
-                {
-                    if (dict[type].GetType() == typeof(Newtonsoft.Json.Linq.JArray))
-                    {
+            if (dict != null && dict.Count > 0) {
+                if (dict.ContainsKey(type)) {
+                    if (dict[type].GetType() == typeof(Newtonsoft.Json.Linq.JArray)) {
                         Newtonsoft.Json.Linq.JArray jArray = Newtonsoft.Json.Linq.JArray.Parse(dict[type].ToString());
                         return jArray.Select(x => x.ToString()).ToList();
                     }
@@ -567,14 +484,12 @@ namespace Jvedio.Core.Net
                 }
 
                 return null;
-            }
-            else if (video != null)
-            {
+            } else if (video != null) {
                 string imageUrls = video.ImageUrls;
-                if (!string.IsNullOrEmpty(imageUrls))
-                {
+                if (!string.IsNullOrEmpty(imageUrls)) {
                     Dictionary<string, object> dic = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(imageUrls);
-                    if (dic == null) return null;
+                    if (dic == null)
+                        return null;
                     return GetInfoFromExist(type, null, dic); // 递归调用
                 }
             }

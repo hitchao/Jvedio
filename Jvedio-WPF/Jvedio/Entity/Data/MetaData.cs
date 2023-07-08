@@ -4,7 +4,6 @@ using Jvedio.Entity.CommonSQL;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.Media;
 using SuperUtils.Time;
 using SuperUtils.WPF.Entity;
 using System;
@@ -37,12 +36,10 @@ namespace Jvedio.Entity
 
         private long _Size;
 
-        public long Size
-        {
+        public long Size {
             get { return _Size; }
 
-            set
-            {
+            set {
                 _Size = value;
                 RaisePropertyChanged();
             }
@@ -50,12 +47,10 @@ namespace Jvedio.Entity
 
         private string _Path;
 
-        public string Path
-        {
+        public string Path {
             get { return _Path; }
 
-            set
-            {
+            set {
                 _Path = value;
 
                 RaisePropertyChanged();
@@ -82,12 +77,10 @@ namespace Jvedio.Entity
 
         private string _Genre;
 
-        public string Genre
-        {
+        public string Genre {
             get { return _Genre; }
 
-            set
-            {
+            set {
                 _Genre = value;
                 GenreList = new ObservableCollection<ObservableString>();
                 if (!string.IsNullOrEmpty(value))
@@ -100,22 +93,18 @@ namespace Jvedio.Entity
 
         private ObservableCollection<ObservableString> _GenreList;
         [TableField(exist: false)]
-        public ObservableCollection<ObservableString> GenreList
-        {
+        public ObservableCollection<ObservableString> GenreList {
             get { return _GenreList; }
-            set
-            {
+            set {
                 _GenreList = value;
                 RaisePropertyChanged();
             }
         }
 
         private float _Grade;
-        public float Grade
-        {
+        public float Grade {
             get { return _Grade; }
-            set
-            {
+            set {
                 _Grade = value;
                 RaisePropertyChanged();
             }
@@ -124,16 +113,13 @@ namespace Jvedio.Entity
         private string _Label;
 
         [TableField(exist: false)]
-        public string Label
-        {
+        public string Label {
             get { return _Label; }
 
-            set
-            {
+            set {
                 _Label = value;
                 LabelList = new ObservableCollection<ObservableString>();
-                if (!string.IsNullOrEmpty(value))
-                {
+                if (!string.IsNullOrEmpty(value)) {
                     foreach (var item in value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries))
                         LabelList.Add(new ObservableString(item));
 
@@ -145,11 +131,9 @@ namespace Jvedio.Entity
 
         private ObservableCollection<ObservableString> _LabelList;
         [TableField(exist: false)]
-        public ObservableCollection<ObservableString> LabelList
-        {
+        public ObservableCollection<ObservableString> LabelList {
             get { return _LabelList; }
-            set
-            {
+            set {
                 _LabelList = value;
                 RaisePropertyChanged();
             }
@@ -159,12 +143,10 @@ namespace Jvedio.Entity
 
         public string _FirstScanDate;
 
-        public string FirstScanDate
-        {
+        public string FirstScanDate {
             get { return _FirstScanDate; }
 
-            set
-            {
+            set {
                 _FirstScanDate = value;
                 RaisePropertyChanged();
             }
@@ -172,12 +154,10 @@ namespace Jvedio.Entity
 
         private string _LastScanDate;
 
-        public string LastScanDate
-        {
+        public string LastScanDate {
             get { return _LastScanDate; }
 
-            set
-            {
+            set {
                 _LastScanDate = value;
                 RaisePropertyChanged();
             }
@@ -191,12 +171,10 @@ namespace Jvedio.Entity
         private BitmapSource _ViewImage;
 
         [TableField(exist: false)]
-        public BitmapSource ViewImage
-        {
+        public BitmapSource ViewImage {
             get { return _ViewImage; }
 
-            set
-            {
+            set {
                 _ViewImage = value;
                 RaisePropertyChanged();
             }
@@ -234,7 +212,8 @@ namespace Jvedio.Entity
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
+            if (obj == null)
+                return false;
             MetaData metaData = obj as MetaData;
             return metaData != null && metaData.DataID == this.DataID;
         }
@@ -254,7 +233,8 @@ namespace Jvedio.Entity
 
         public static void handleEmpty(ref MetaData data)
         {
-            if (data == null) return;
+            if (data == null)
+                return;
             if (Properties.Settings.Default.ShowFileNameIfTitleEmpty
               && !string.IsNullOrEmpty(data.Path) && string.IsNullOrEmpty(data.Title))
                 data.Title = System.IO.Path.GetFileName(data.Path);
@@ -265,11 +245,11 @@ namespace Jvedio.Entity
 
         public static void setTagStamps(ref MetaData data)
         {
-            if (data == null || string.IsNullOrEmpty(data.TagIDs)) return;
+            if (data == null || string.IsNullOrEmpty(data.TagIDs))
+                return;
             List<long> list = data.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
 
-            if (list != null && list.Count > 0)
-            {
+            if (list != null && list.Count > 0) {
                 data.TagStamp = new ObservableCollection<TagStamp>();
                 foreach (var item in Main.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
                     data.TagStamp.Add(item);

@@ -1,10 +1,7 @@
-﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.DataBase;
+﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
-using static Jvedio.LogManager;
 using Jvedio.Entity;
 using Jvedio.Mapper;
-using SuperUtils.Security;
 using SuperControls.Style;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.Tasks;
@@ -72,13 +69,12 @@ namespace Jvedio.Core.Scan
                 ScanPaths = scanPaths.Where(arg => Directory.Exists(arg)).ToList();
             if (filePaths != null && filePaths.Count > 0)
                 FilePaths = filePaths.Where(arg => File.Exists(arg)).ToList();
-            if (fileExt != null)
-            {
+            if (fileExt != null) {
                 FileExt = new List<string>();
-                foreach (var item in fileExt)
-                {
+                foreach (var item in fileExt) {
                     string ext = item.Trim();
-                    if (string.IsNullOrEmpty(ext)) continue;
+                    if (string.IsNullOrEmpty(ext))
+                        continue;
                     if (!item.StartsWith("."))
                         FileExt.Add("." + ext);
                     else
@@ -86,9 +82,12 @@ namespace Jvedio.Core.Scan
                 }
             }
 
-            if (ScanPaths == null) ScanPaths = new List<string>();
-            if (FilePaths == null) FilePaths = new List<string>();
-            if (FileExt == null) FileExt = VIDEO_EXTENSIONS_LIST; // 默认导入视频
+            if (ScanPaths == null)
+                ScanPaths = new List<string>();
+            if (FilePaths == null)
+                FilePaths = new List<string>();
+            if (FileExt == null)
+                FileExt = VIDEO_EXTENSIONS_LIST; // 默认导入视频
             ScanResult = new ScanResult();
         }
 
@@ -98,90 +97,75 @@ namespace Jvedio.Core.Scan
 
         public override void DoWork()
         {
-            Task.Run((Action)(() =>
-           {
-               TimeWatch.Start();
-               Logger.Info(LangManager.GetValueByKey("BeginScan"));
-               if (ScanPaths.Count == 0 && FilePaths.Count != 0)
-               {
-                   string path = FilePaths[FilePaths.Count - 1];
-                   Message = path;
-                   onScanning?.Invoke(this, new MessageCallBackEventArgs(path));
-               }
+            Task.Run((Action)(() => {
+                TimeWatch.Start();
+                Logger.Info(LangManager.GetValueByKey("BeginScan"));
+                if (ScanPaths.Count == 0 && FilePaths.Count != 0) {
+                    string path = FilePaths[FilePaths.Count - 1];
+                    Message = path;
+                    onScanning?.Invoke(this, new MessageCallBackEventArgs(path));
+                }
 
-               foreach (string path in ScanPaths)
-               {
-                   IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) =>
-                   {
-                       // 发生异常
-                       Logger.Error(ex.Message);
-                   }, (dir) =>
-                   {
-                       Message = dir;
-                       onScanning?.Invoke(this, new MessageCallBackEventArgs(dir));
-                   }, TokenCTS);
-                   FilePaths.AddRange(paths);
-               }
+                foreach (string path in ScanPaths) {
+                    IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) => {
+                        // 发生异常
+                        Logger.Error(ex.Message);
+                    }, (dir) => {
+                        Message = dir;
+                        onScanning?.Invoke(this, new MessageCallBackEventArgs(dir));
+                    }, TokenCTS);
+                    FilePaths.AddRange(paths);
+                }
 
 
-               try
-               {
-                   CheckStatus();
-               }
-               catch (TaskCanceledException ex)
-               {
-                   Logger.Error(ex.Message);
-                   Status = TaskStatus.Canceled;
-                   Running = false;
-                   return;
-               }
+                try {
+                    CheckStatus();
+                } catch (TaskCanceledException ex) {
+                    Logger.Error(ex.Message);
+                    Status = TaskStatus.Canceled;
+                    Running = false;
+                    return;
+                }
 
-               ScanHelper scanHelper = new ScanHelper();
+                ScanHelper scanHelper = new ScanHelper();
 
-               try
-               {
-                   (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO) parseResult
-                    = scanHelper.ParseMovie(FilePaths, FileExt, Token, Properties.Settings.Default.ScanNfo, callBack: (msg) =>
-                    {
-                        Logger.Error(msg);
-                    });
+                try {
+                    (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO) parseResult
+                     = scanHelper.ParseMovie(FilePaths, FileExt, Token, Properties.Settings.Default.ScanNfo, callBack: (msg) => {
+                         Logger.Error(msg);
+                     });
 
-                   ScanResult.TotalCount = parseResult.import.Count + parseResult.notImport.Count + parseResult.failNFO.Count;
-                   try
-                   {
-                       CheckStatus();
-                   }
-                   catch (TaskCanceledException ex)
-                   {
-                       Logger.Error(ex.Message);
-                       base.FinalizeWithCancel();
-                       base.OnCompleted(null);
-                       return;
-                   }
+                    ScanResult.TotalCount = parseResult.import.Count + parseResult.notImport.Count + parseResult.failNFO.Count;
+                    try {
+                        CheckStatus();
+                    } catch (TaskCanceledException ex) {
+                        Logger.Error(ex.Message);
+                        base.FinalizeWithCancel();
+                        base.OnCompleted(null);
+                        return;
+                    }
 
-                   // 将 NFO 提取出来
-                   List<Video> importNFO = parseResult.import.Where(arg => arg.Path.ToLower().EndsWith(".nfo")).ToList();
-                   parseResult.import.RemoveAll(arg => arg.Path.ToLower().EndsWith(".nfo"));
-                   HandleImport(parseResult.import);
-                   HandleImportNFO(importNFO);          // 导入视频后再导入 NFO
-                   HandleNotImport(parseResult.notImport);
-                   HandleFailNFO(parseResult.failNFO);
-                   Success = true;
-               }
-               catch (Exception ex)
-               {
-                   Logger.Error(ex.Message);
-                   Success = false;
-               }
+                    // 将 NFO 提取出来
+                    List<Video> importNFO = parseResult.import.Where(arg => arg.Path.ToLower().EndsWith(".nfo")).ToList();
+                    parseResult.import.RemoveAll(arg => arg.Path.ToLower().EndsWith(".nfo"));
+                    HandleImport(parseResult.import);
+                    HandleImportNFO(importNFO);          // 导入视频后再导入 NFO
+                    HandleNotImport(parseResult.notImport);
+                    HandleFailNFO(parseResult.failNFO);
+                    Success = true;
+                } catch (Exception ex) {
+                    Logger.Error(ex.Message);
+                    Success = false;
+                }
 
-               Running = false;
-               TimeWatch.Stop();
-               ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
-               ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
-               Status = TaskStatus.RanToCompletion;
+                Running = false;
+                TimeWatch.Stop();
+                ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
+                ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
+                Status = TaskStatus.RanToCompletion;
 
-               base.OnCompleted(null);
-           }));
+                base.OnCompleted(null);
+            }));
         }
 
         private List<Video> GetExistVideos()
@@ -194,8 +178,7 @@ namespace Jvedio.Core.Scan
 
         private void HandleImport(List<Video> import)
         {
-            if (import == null || import.Count == 0)
-            {
+            if (import == null || import.Count == 0) {
                 return;
             }
             // 分为 2 部分，有识别码和无识别码
@@ -207,8 +190,7 @@ namespace Jvedio.Core.Scan
             // 1. 处理有识别码的
             // 1.1 不需要导入
             // 存在同路径、相同大小的影片
-            foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.Path.Equals(t.Path)).Any()))
-            {
+            foreach (var item in vidList.Where(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.Path.Equals(t.Path)).Any())) {
                 ScanResult.NotImport.Add(item.Path, new ScanDetailInfo(LangManager.GetValueByKey("SamePathFileSize")));
             }
 
@@ -217,8 +199,7 @@ namespace Jvedio.Core.Scan
             // 存在不同路径、相同大小、相同 VID、且原路径也存在的影片
             foreach (var item in vidList.Where(arg => existVideos
                 .Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path))
-                .Any()))
-            {
+                .Any())) {
                 ScanDetailInfo scanDetailInfo = new ScanDetailInfo(LangManager.GetValueByKey("NotSamePathSameFileSize"));
                 StringBuilder builder = new StringBuilder($"和 {item.Path} 存在重复：");
                 builder.AppendLine();
@@ -236,8 +217,7 @@ namespace Jvedio.Core.Scan
             // 存在不同路径，相同 VID，不同大小，且原路径存在（可能是剪辑的视频）
             foreach (var item in vidList
                 .Where(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path))
-                .Any()))
-            {
+                .Any())) {
                 ScanDetailInfo scanDetailInfo = new ScanDetailInfo(LangManager.GetValueByKey("SamePathNotSameFileSize"));
                 StringBuilder builder = new StringBuilder($"和 {item.Path} 存在重复：");
                 builder.AppendLine();
@@ -255,11 +235,9 @@ namespace Jvedio.Core.Scan
             // 1.2 需要 update 路径
             // VID 相同，原路径不同
             List<Video> toUpdate = new List<Video>();
-            foreach (Video video in vidList)
-            {
+            foreach (Video video in vidList) {
                 Video existVideo = existVideos.Where(t => video.VID.Equals(t.VID) && !video.Path.Equals(t.Path)).FirstOrDefault();
-                if (existVideo != null)
-                {
+                if (existVideo != null) {
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
@@ -276,8 +254,7 @@ namespace Jvedio.Core.Scan
 
             // 2. 处理无识别码的
             // 存在相同 HASH ，相同路径的影片
-            foreach (var item in noVidList.Where(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any()))
-            {
+            foreach (var item in noVidList.Where(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any())) {
                 ScanDetailInfo scanDetailInfo = new ScanDetailInfo(LangManager.GetValueByKey("SameHashSamePath"));
                 StringBuilder builder = new StringBuilder($"和 {item.Path} 存在重复：");
                 builder.AppendLine();
@@ -293,11 +270,9 @@ namespace Jvedio.Core.Scan
             noVidList.RemoveAll(arg => existVideos.Where(t => arg.Hash.Equals(t.Hash) && arg.Path.Equals(t.Path)).Any());
 
             // hash 相同，原路径不同则需要更新
-            foreach (Video video in noVidList)
-            {
+            foreach (Video video in noVidList) {
                 Video existVideo = existVideos.Where(t => video.Hash.Equals(t.Hash) && !video.Path.Equals(t.Path)).FirstOrDefault();
-                if (existVideo != null)
-                {
+                if (existVideo != null) {
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     video.LastScanDate = DateHelper.Now();
@@ -325,17 +300,14 @@ namespace Jvedio.Core.Scan
 
         private void HandleNotImport(Dictionary<string, NotImportReason> notImport)
         {
-            foreach (var key in notImport.Keys)
-            {
-                if (ScanResult.NotImport.ContainsKey(key)) continue;
+            foreach (var key in notImport.Keys) {
+                if (ScanResult.NotImport.ContainsKey(key))
+                    continue;
                 NotImportReason reason = notImport[key];
-                if (reason == NotImportReason.RepetitiveVID)
-                {
+                if (reason == NotImportReason.RepetitiveVID) {
                     string vid = JvedioLib.Security.Identify.GetVID(Path.GetFileNameWithoutExtension(key));
                     ScanResult.NotImport.Add(key, new ScanDetailInfo($"{ReasonToString[reason]} => {vid}"));
-                }
-                else
-                {
+                } else {
                     ScanResult.NotImport.Add(key, new ScanDetailInfo(ReasonToString[reason]));
                 }
             }
@@ -375,21 +347,19 @@ namespace Jvedio.Core.Scan
 
         private void CopyNfoImage(Dictionary<string, string> dict, List<Video> import, ImageType imageType)
         {
-            if (dict == null) return;
+            if (dict == null)
+                return;
 
-            switch (imageType)
-            {
+            switch (imageType) {
                 case ImageType.Big:
-                    if (dict.ContainsKey("BigImagePath") && !string.IsNullOrEmpty(dict["BigImagePath"]))
-                    {
+                    if (dict.ContainsKey("BigImagePath") && !string.IsNullOrEmpty(dict["BigImagePath"])) {
                         string path = dict["BigImagePath"];
                         string dirname = path.ToLower();
                         CopyImage(import, dirname, imageType);
                     }
                     break;
                 case ImageType.Small:
-                    if (dict.ContainsKey("SmallImagePath") && !string.IsNullOrEmpty(dict["SmallImagePath"]))
-                    {
+                    if (dict.ContainsKey("SmallImagePath") && !string.IsNullOrEmpty(dict["SmallImagePath"])) {
                         string path = dict["SmallImagePath"];
                         string dirname = path.ToLower();
                         CopyImage(import, dirname, imageType);
@@ -409,8 +379,7 @@ namespace Jvedio.Core.Scan
 
         private string GetImagePathByType(Video video, ImageType type)
         {
-            switch (type)
-            {
+            switch (type) {
                 case ImageType.Big:
                     return video.GetBigImage();
                 case ImageType.Small:
@@ -427,10 +396,10 @@ namespace Jvedio.Core.Scan
 
         private void CopyImage(List<Video> import, string dirName, ImageType imageType)
         {
-            if (string.IsNullOrEmpty(dirName)) return;
+            if (string.IsNullOrEmpty(dirName))
+                return;
 
-            foreach (Video item in import)
-            {
+            foreach (Video item in import) {
                 if (string.IsNullOrEmpty(item.Path))
                     continue;
                 string dir = Path.GetDirectoryName(item.Path);
@@ -443,17 +412,13 @@ namespace Jvedio.Core.Scan
                 list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
                 string filename = Path.GetFileName(dirName);
                 string originPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(filename) >= 0).FirstOrDefault();
-                if (File.Exists(originPath))
-                {
+                if (File.Exists(originPath)) {
                     string targetImagePath = GetImagePathByType(item, imageType);
-                    if (!File.Exists(targetImagePath))
-                    {
+                    if (!File.Exists(targetImagePath)) {
                         targetImagePath = Path.Combine(Path.GetDirectoryName(targetImagePath), Path.GetFileNameWithoutExtension(targetImagePath)
                             + Path.GetExtension(originPath));
                         FileHelper.TryCopyFile(originPath, targetImagePath, true);
-                    }
-                    else if (ConfigManager.ScanConfig.CopyNFOOverwriteImage)
-                    {
+                    } else if (ConfigManager.ScanConfig.CopyNFOOverwriteImage) {
                         FileHelper.TryCopyFile(originPath, targetImagePath, true);
                     }
 
@@ -463,9 +428,9 @@ namespace Jvedio.Core.Scan
 
         private void CopyImages(List<Video> import, ImageType type)
         {
-            foreach (Video item in import)
-            {
-                if (string.IsNullOrEmpty(item.Path)) continue;
+            foreach (Video item in import) {
+                if (string.IsNullOrEmpty(item.Path))
+                    continue;
                 string dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(item.Path), ConfigManager.ScanConfig.CopyNFOPreviewPath));
                 if (type == ImageType.ScreenShot)
                     dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(item.Path), ConfigManager.ScanConfig.CopyNFOScreenShotPath));
@@ -485,8 +450,7 @@ namespace Jvedio.Core.Scan
                 else if (type == ImageType.Actor)
                     targetPath = item.getActorPath();
                 DirHelper.TryCreateDirectory(targetPath);
-                foreach (var path in list)
-                {
+                foreach (var path in list) {
                     string targetFilePath = Path.Combine(targetPath, Path.GetFileName(path));
                     FileHelper.TryCopyFile(path, targetFilePath, ConfigManager.ScanConfig.CopyNFOOverwriteImage);
                 }
@@ -505,21 +469,16 @@ namespace Jvedio.Core.Scan
             // 解析图片路径
 
             Dictionary<string, object> picPaths = ConfigManager.Settings.PicPaths;
-            if (picPaths != null && picPaths.ContainsKey(PathType.RelativeToData.ToString()))
-            {
+            if (picPaths != null && picPaths.ContainsKey(PathType.RelativeToData.ToString())) {
                 Dictionary<string, string> dict = null;
-                try
-                {
+                try {
                     dict = (Dictionary<string, string>)picPaths[PathType.RelativeToData.ToString()];
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex.Message);
                 }
 
                 // 复制图片
-                if (ConfigManager.ScanConfig.CopyNFOPicture)
-                {
+                if (ConfigManager.ScanConfig.CopyNFOPicture) {
                     CopyNfoImage(dict, import, ImageType.Big);
                     CopyNfoImage(dict, import, ImageType.Small);
                 }
@@ -541,11 +500,9 @@ namespace Jvedio.Core.Scan
 
             // 1. 需要更新的
             List<Video> toUpdate = new List<Video>();
-            foreach (Video video in import)
-            {
+            foreach (Video video in import) {
                 Video existVideo = existVideos.Where(t => video.VID.Equals(t.VID)).FirstOrDefault();
-                if (existVideo != null)
-                {
+                if (existVideo != null) {
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
                     ScanResult.Update.Add(video.Path, LangManager.GetValueByKey("UpdateNFO"));
@@ -572,25 +529,20 @@ namespace Jvedio.Core.Scan
         private void HandleActor(Video video)
         {
             // 更新演员
-            if (!string.IsNullOrEmpty(video.ActorNames))
-            {
+            if (!string.IsNullOrEmpty(video.ActorNames)) {
                 List<string> list = video.ActorNames.Split(SuperUtils.Values.ConstValues.Separator).ToList();
                 List<string> urls = video.ActorThumbs;
-                for (int i = 0; i < list.Count; i++)
-                {
+                for (int i = 0; i < list.Count; i++) {
                     string name = list[i];
                     string url = i < urls.Count ? urls[i] : string.Empty;
                     ActorInfo actorInfo = existActors?.Where(arg => arg.ActorName.Equals(name)).FirstOrDefault();
-                    if (actorInfo == null || actorInfo.ActorID <= 0)
-                    {
+                    if (actorInfo == null || actorInfo.ActorID <= 0) {
                         actorInfo = new ActorInfo();
                         actorInfo.ActorName = name;
                         actorInfo.ImageUrl = url;
                         actorMapper.Insert(actorInfo);
                         existActors.Add(actorInfo);
-                    }
-                    else
-                    {
+                    } else {
                         actorInfo.ImageUrl = url;
                         actorMapper.UpdateFieldById("ImageUrl", url, actorInfo.ActorID);
                     }
@@ -604,8 +556,7 @@ namespace Jvedio.Core.Scan
 
         private void InsertData(ICollection<Video> toInsert)
         {
-            foreach (Video video in toInsert)
-            {
+            foreach (Video video in toInsert) {
                 video.DBId = ConfigManager.Main.CurrentDBId;
                 video.FirstScanDate = DateHelper.Now();
                 video.LastScanDate = DateHelper.Now();
@@ -614,47 +565,37 @@ namespace Jvedio.Core.Scan
             }
 
             List<MetaData> toInsertData = toInsert.Select(arg => arg.toMetaData()).ToList();
-            if (toInsertData.Count <= 0) return;
+            if (toInsertData.Count <= 0)
+                return;
             long.TryParse(metaDataMapper.InsertAndGetID(toInsertData[0]).ToString(), out long before);
             toInsertData.RemoveAt(0);
 
-            try
-            {
+            try {
                 metaDataMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 metaDataMapper.InsertBatch(toInsertData);
                 SqlManager.DataBaseBusy = true;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
-            }
-            finally
-            {
+            } finally {
                 metaDataMapper.ExecuteNonQuery("END TRANSACTION;");
                 SqlManager.DataBaseBusy = false;
             }
 
             // 处理 DataID
-            foreach (Video video in toInsert)
-            {
+            foreach (Video video in toInsert) {
                 video.DataID = before;
                 before++;
             }
 
-            try
-            {
+            try {
                 videoMapper.ExecuteNonQuery("BEGIN TRANSACTION;"); // 开启事务，这样子其他线程就不能更新
                 SqlManager.DataBaseBusy = true;
                 videoMapper.InsertBatch(toInsert);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex.Message);
                 OnError(new MessageCallBackEventArgs(ex.Message));
-            }
-            finally
-            {
+            } finally {
                 videoMapper.ExecuteNonQuery("END TRANSACTION;");
                 SqlManager.DataBaseBusy = false;
             }
@@ -673,8 +614,7 @@ namespace Jvedio.Core.Scan
         {
             // 处理标记
             List<string> list = new List<string>();
-            foreach (Video video in videos)
-            {
+            foreach (Video video in videos) {
                 // 高清
                 if (video.IsHDV())
                     list.Add($"({video.DataID},1)");
@@ -688,8 +628,7 @@ namespace Jvedio.Core.Scan
                 list.Add($"({video.DataID},10000)");
             }
 
-            if (list.Count > 0)
-            {
+            if (list.Count > 0) {
                 string sql = $"insert or ignore into metadata_to_tagstamp (DataID,TagID) values {string.Join(",", list)}";
                 videoMapper.ExecuteNonQuery(sql);
             }
@@ -697,8 +636,7 @@ namespace Jvedio.Core.Scan
 
         public void CheckStatus()
         {
-            if (Status == TaskStatus.Canceled)
-            {
+            if (Status == TaskStatus.Canceled) {
                 TimeWatch.Stop();
                 Running = false;
                 ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;

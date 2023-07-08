@@ -66,12 +66,10 @@ namespace Jvedio.Entity
 
         private BitmapSource _smallimage;
 
-        public BitmapSource smallimage
-        {
+        public BitmapSource smallimage {
             get { return _smallimage; }
 
-            set
-            {
+            set {
                 _smallimage = value;
                 RaisePropertyChanged();
             }
@@ -81,31 +79,29 @@ namespace Jvedio.Entity
 
         private string _birthday;
 
-        public string birthday
-        {
+        public string birthday {
             get { return _birthday; }
 
-            set
-            {
+            set {
                 // 验证数据
                 DateTime dateTime = DEFAULT_DATE_TIME;
                 if (DateTime.TryParse(value, out dateTime))
                     _birthday = dateTime.ToString("yyyy-MM-dd");
-                else _birthday = string.Empty;
+                else
+                    _birthday = string.Empty;
                 RaisePropertyChanged();
             }
         }
 
         private int _age;
 
-        public int age
-        {
+        public int age {
             get { return _age; }
 
-            set
-            {
+            set {
                 int.TryParse(value.ToString(), out int a);
-                if (a < 0 || a > 200) a = 0;
+                if (a < 0 || a > 200)
+                    a = 0;
                 _age = a;
                 RaisePropertyChanged();
             }
@@ -113,14 +109,13 @@ namespace Jvedio.Entity
 
         private int _height;
 
-        public int height
-        {
+        public int height {
             get { return _height; }
 
-            set
-            {
+            set {
                 int.TryParse(value.ToString(), out int a);
-                if (a < 0 || a > 300) a = 0;
+                if (a < 0 || a > 300)
+                    a = 0;
                 _height = a;
                 RaisePropertyChanged();
             }
@@ -128,12 +123,10 @@ namespace Jvedio.Entity
 
         private string _cup;
 
-        public string cup
-        {
+        public string cup {
             get { return _cup; }
 
-            set
-            {
+            set {
                 if (string.IsNullOrEmpty(value))
                     _cup = string.Empty;
                 else
@@ -144,14 +137,13 @@ namespace Jvedio.Entity
 
         private int _hipline;
 
-        public int hipline
-        {
+        public int hipline {
             get { return _hipline; }
 
-            set
-            {
+            set {
                 int.TryParse(value.ToString(), out int a);
-                if (a < 0 || a > 500) a = 0;
+                if (a < 0 || a > 500)
+                    a = 0;
                 _hipline = a;
                 RaisePropertyChanged();
             }
@@ -159,14 +151,13 @@ namespace Jvedio.Entity
 
         private int _waist;
 
-        public int waist
-        {
+        public int waist {
             get { return _waist; }
 
-            set
-            {
+            set {
                 int.TryParse(value.ToString(), out int a);
-                if (a < 0 || a > 500) a = 0;
+                if (a < 0 || a > 500)
+                    a = 0;
                 _waist = a;
                 RaisePropertyChanged();
             }
@@ -174,14 +165,13 @@ namespace Jvedio.Entity
 
         private int _chest;
 
-        public int chest
-        {
+        public int chest {
             get { return _chest; }
 
-            set
-            {
+            set {
                 int.TryParse(value.ToString(), out int a);
-                if (a < 0 || a > 500) a = 0;
+                if (a < 0 || a > 500)
+                    a = 0;
                 _chest = a;
             }
         }
@@ -201,8 +191,7 @@ namespace Jvedio.Entity
 
         public ActorInfo toActorInfo()
         {
-            ActorInfo info = new ActorInfo()
-            {
+            ActorInfo info = new ActorInfo() {
                 ActorName = name,
                 Country = "Japan",
                 Nation = string.Empty,

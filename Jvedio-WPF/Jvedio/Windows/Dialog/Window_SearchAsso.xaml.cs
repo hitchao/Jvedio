@@ -1,7 +1,5 @@
-﻿using Jvedio.Core.Enums;
-using Jvedio.Core.Media;
+﻿using Jvedio.Core.Media;
 using Jvedio.Entity;
-using Jvedio.Mapper;
 using Jvedio.ViewModel;
 using SuperControls.Style;
 using SuperUtils.IO;
@@ -9,7 +7,6 @@ using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -53,8 +50,7 @@ namespace Jvedio
 
             if (videos != null)
                 vieModel.SelectedVideo = videos;
-            if (vieModel.SelectedVideo.Count > 0)
-            {
+            if (vieModel.SelectedVideo.Count > 0) {
                 CurrentAssocDataID = vieModel.SelectedVideo[0].DataID;
                 vieModel.LoadExistAssociationDatas(vieModel.SelectedVideo[0].DataID);
             }
@@ -72,12 +68,13 @@ namespace Jvedio
         private void RemoveAssociation(object sender, RoutedEventArgs e)
         {
             Grid grid = (sender as FrameworkElement).Parent as Grid;
-            if (grid == null || grid.Tag == null) return;
+            if (grid == null || grid.Tag == null)
+                return;
             long.TryParse(grid.Tag.ToString(), out long dataID);
-            if (dataID <= 0) return;
+            if (dataID <= 0)
+                return;
             Video video = vieModel.AssociationSelectedDatas.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
-            if (video != null)
-            {
+            if (video != null) {
                 vieModel.AssociationSelectedDatas.Remove(video);
                 SetAssocSelected();
             }
@@ -86,9 +83,11 @@ namespace Jvedio
         private void RemoveExistAssociation(object sender, RoutedEventArgs e)
         {
             Grid grid = (sender as FrameworkElement).Parent as Grid;
-            if (grid == null || grid.Tag == null) return;
+            if (grid == null || grid.Tag == null)
+                return;
             long.TryParse(grid.Tag.ToString(), out long dataID);
-            if (dataID <= 0) return;
+            if (dataID <= 0)
+                return;
             Video video = vieModel.ExistAssociationDatas.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
             if (video != null)
                 vieModel.ExistAssociationDatas.Remove(video);
@@ -99,12 +98,9 @@ namespace Jvedio
         {
             MenuItem mnu = sender as MenuItem;
             ContextMenu contextMenu = null;
-            if (depth == 0)
-            {
+            if (depth == 0) {
                 contextMenu = mnu.Parent as ContextMenu;
-            }
-            else
-            {
+            } else {
                 MenuItem _mnu = mnu.Parent as MenuItem;
                 contextMenu = _mnu.Parent as ContextMenu;
             }
@@ -116,22 +112,19 @@ namespace Jvedio
 
         private void AddDataAssociation(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.EditMode && vieModel.SelectedVideo.Count > 0)
-            {
+            if (Properties.Settings.Default.EditMode && vieModel.SelectedVideo.Count > 0) {
                 // 多选关联
                 vieModel.SaveAssociations(vieModel.SelectedVideo);
-                foreach (var item in vieModel.SelectedVideo)
-                {
+                foreach (var item in vieModel.SelectedVideo) {
                     OnDataRefresh?.Invoke(item.DataID);
                 }
-            }
-            else
-            {
+            } else {
                 Properties.Settings.Default.EditMode = false;
                 vieModel.SelectedVideo.Clear();
                 OnSelectData?.Invoke();
                 long dataID = GetIDFromMenuItem(sender as MenuItem, 1);
-                if (dataID <= 0) return;
+                if (dataID <= 0)
+                    return;
                 vieModel.LoadExistAssociationDatas(dataID);
                 CurrentAssocDataID = dataID;
                 searchDataBox.Text = string.Empty;
@@ -153,8 +146,7 @@ namespace Jvedio
             set.Add(CurrentAssocDataID);
             foreach (var item in toDelete)
                 set.Add(item);
-            foreach (var item in set)
-            {
+            foreach (var item in set) {
                 OnDataRefresh?.Invoke(item);
             }
             base.Confirm(sender, e);
@@ -190,20 +182,18 @@ namespace Jvedio
         private void SetAssocSelected()
         {
             ItemsControl itemsControl = assoSearchItemsControl;
-            for (int i = 0; i < itemsControl.Items.Count; i++)
-            {
+            for (int i = 0; i < itemsControl.Items.Count; i++) {
                 ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                if (presenter == null) continue;
+                if (presenter == null)
+                    continue;
                 Border border = FindElementByName<Border>(presenter, "rootBorder");
                 if (border == null)
                     continue;
                 long dataID = GetDataID(border);
                 border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
                 border.BorderBrush = Brushes.Transparent;
-                if (dataID > 0 && vieModel.AssociationSelectedDatas?.Count > 0)
-                {
-                    if (vieModel.AssociationSelectedDatas.Where(arg => arg.DataID == dataID).Any())
-                    {
+                if (dataID > 0 && vieModel.AssociationSelectedDatas?.Count > 0) {
+                    if (vieModel.AssociationSelectedDatas.Where(arg => arg.DataID == dataID).Any()) {
                         border.Background = StyleManager.Common.HighLight.Background;
                         border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
                     }
@@ -215,7 +205,8 @@ namespace Jvedio
         {
             GifImage image = sender as GifImage;
             SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
-            if (grid == null || grid.Children.Count <= 0) return;
+            if (grid == null || grid.Children.Count <= 0)
+                return;
             Border border = grid.Children[0] as Border;
             if (border != null)
                 border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
@@ -243,12 +234,15 @@ namespace Jvedio
         public void AssoBorderMouseLeave(object sender, MouseEventArgs e)
         {
             GifImage image = sender as GifImage;
-            if (image == null) return;
+            if (image == null)
+                return;
             long dataID = GetDataID(image);
             SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
-            if (grid == null || grid.Children.Count <= 0) return;
+            if (grid == null || grid.Children.Count <= 0)
+                return;
             Border border = grid.Children[0] as Border;
-            if (border == null || vieModel.AssociationSelectedDatas == null) return;
+            if (border == null || vieModel.AssociationSelectedDatas == null)
+                return;
             if (vieModel.AssociationSelectedDatas.Where(arg => arg.DataID == dataID).Any())
                 border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
             else

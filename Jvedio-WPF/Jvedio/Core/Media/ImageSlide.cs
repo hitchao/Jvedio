@@ -1,5 +1,4 @@
-﻿using static Jvedio.LogManager;
-using Jvedio.Entity;
+﻿using Jvedio.Entity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Core.Media
 {
@@ -68,8 +68,7 @@ namespace Jvedio.Core.Media
             Images = null;
             GC.Collect();
             Images = new List<ImageSource>();
-            if (Directory.Exists(folder))
-            {
+            if (Directory.Exists(folder)) {
                 var sources = from file in new System.IO.DirectoryInfo(folder).GetFiles().AsParallel().Take(number)
                               where ValidImageExtensions.Contains(file.Extension, StringComparer.InvariantCultureIgnoreCase)
                               orderby file.FullName
@@ -77,13 +76,13 @@ namespace Jvedio.Core.Media
                 Images.AddRange(sources);
             }
 
-            if (Images.Count == 0) Images.Add(MetaData.DefaultBigImage);
+            if (Images.Count == 0)
+                Images.Add(MetaData.DefaultBigImage);
         }
 
         private ImageSource CreateImageSource(string file, bool forcePreLoad)
         {
-            if (forcePreLoad)
-            {
+            if (forcePreLoad) {
                 var src = new BitmapImage();
                 src.BeginInit();
                 src.UriSource = new Uri(file, UriKind.Absolute);
@@ -91,9 +90,7 @@ namespace Jvedio.Core.Media
                 src.EndInit();
                 src.Freeze();
                 return src;
-            }
-            else
-            {
+            } else {
                 var src = new BitmapImage(new Uri(file, UriKind.Absolute));
                 src.Freeze();
                 return src;
@@ -105,13 +102,13 @@ namespace Jvedio.Core.Media
             if (!stop)
                 PlaySlideShow();
 
-            if (timerImageChange.Interval == TimeSpan.FromSeconds(0)) timerImageChange.Interval = TimeSpan.FromSeconds(IntervalTimer);
+            if (timerImageChange.Interval == TimeSpan.FromSeconds(0))
+                timerImageChange.Interval = TimeSpan.FromSeconds(IntervalTimer);
         }
 
         public void PlaySlideShow()
         {
-            try
-            {
+            try {
                 if (Images.Count <= 1)
                     return;
                 var oldCtrlIndex = CurrentCtrlIndex;
@@ -123,8 +120,7 @@ namespace Jvedio.Core.Media
                 ImageSource newSource = Images[CurrentSourceIndex];
                 imgFadeIn.Source = newSource;
                 Storyboard fadeOut = new Storyboard();
-                DoubleAnimation FadeOutAnimation = new DoubleAnimation()
-                {
+                DoubleAnimation FadeOutAnimation = new DoubleAnimation() {
                     To = 0.0,
                     Duration = new Duration(TimeSpan.FromSeconds(0.5)),
                 };
@@ -133,8 +129,7 @@ namespace Jvedio.Core.Media
                 fadeOut.Begin(imgFadeOut);
 
                 Storyboard fadeIn = new Storyboard();
-                DoubleAnimation FadeInAnimation = new DoubleAnimation()
-                {
+                DoubleAnimation FadeInAnimation = new DoubleAnimation() {
                     From = 0.0,
                     To = 1.0,
                     Duration = new Duration(TimeSpan.FromSeconds(0.25)),
@@ -142,14 +137,11 @@ namespace Jvedio.Core.Media
                 Storyboard.SetTargetProperty(FadeInAnimation, new PropertyPath("Opacity"));
                 fadeIn.Children.Add(FadeInAnimation);
                 fadeIn.Begin(imgFadeIn);
-                if (stop)
-                {
+                if (stop) {
                     Images = null;
                     GC.Collect();
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
         }

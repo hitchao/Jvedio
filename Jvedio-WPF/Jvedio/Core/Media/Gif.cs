@@ -30,8 +30,7 @@ namespace Jvedio.Core.Media
             var metadataDelay = metadata.GetQueryOrDefault("/grctlext/Delay", 10);
             if (metadataDelay != 0)
                 delay = TimeSpan.FromMilliseconds(metadataDelay * 10);
-            var frameMetadata = new FrameMetadata
-            {
+            var frameMetadata = new FrameMetadata {
                 Left = metadata.GetQueryOrDefault("/imgdesc/Left", 0),
                 Top = metadata.GetQueryOrDefault("/imgdesc/Top", 0),
                 Width = metadata.GetQueryOrDefault("/imgdesc/Width", frame.PixelWidth),
@@ -53,10 +52,8 @@ namespace Jvedio.Core.Media
         public BitmapSource MakeFrame(int width, int height, BitmapSource rawFrame, FrameMetadata metadata, BitmapSource baseFrame)
         {
             DrawingVisual visual = new DrawingVisual();
-            using (var context = visual.RenderOpen())
-            {
-                if (baseFrame != null)
-                {
+            using (var context = visual.RenderOpen()) {
+                if (baseFrame != null) {
                     var fullRect = new Rect(0, 0, width, height);
                     context.DrawImage(baseFrame, fullRect);
                 }
@@ -79,10 +76,8 @@ namespace Jvedio.Core.Media
         {
             GifBitmapDecoder decoder = new GifBitmapDecoder(new Uri(GifPath), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
             var totalDuration = TimeSpan.Zero;
-            if (decoder != null && decoder.Frames.Count > 0)
-            {
-                for (int i = 0; i < decoder.Frames.Count; i++)
-                {
+            if (decoder != null && decoder.Frames.Count > 0) {
+                for (int i = 0; i < decoder.Frames.Count; i++) {
                     var metadata = GetFrameMetadata(decoder.Frames[i]);
                     totalDuration += metadata.Delay;
                 }
@@ -99,14 +94,13 @@ namespace Jvedio.Core.Media
         {
             List<BitmapSource> bitmapSources = new List<BitmapSource>();
             List<TimeSpan> spans = new List<TimeSpan>();
-            if (!File.Exists(GifPath)) return (bitmapSources, spans);
+            if (!File.Exists(GifPath))
+                return (bitmapSources, spans);
             GifBitmapDecoder decoder = new GifBitmapDecoder(new Uri(GifPath), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-            if (decoder != null && decoder.Frames.Count > 0)
-            {
+            if (decoder != null && decoder.Frames.Count > 0) {
                 int index = 0;
                 BitmapSource baseFrame = null;
-                foreach (var rawFrame in decoder.Frames)
-                {
+                foreach (var rawFrame in decoder.Frames) {
                     var metadata = GetFrameMetadata(decoder.Frames[index]);
                     int width = decoder.Metadata.GetQueryOrDefault("/logscrdesc/Width", 0);
                     int height = decoder.Metadata.GetQueryOrDefault("/logscrdesc/Height", 0);
@@ -125,8 +119,7 @@ namespace Jvedio.Core.Media
         {
             GifBitmapDecoder decoder = new GifBitmapDecoder(new Uri(GifPath), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
             BitmapSource result = null;
-            if (decoder != null && decoder.Frames.Count > 0)
-            {
+            if (decoder != null && decoder.Frames.Count > 0) {
                 var frame = decoder.Frames[0];
                 var metadata = GetFrameMetadata(frame);
                 int width = decoder.Metadata.GetQueryOrDefault("/logscrdesc/Width", 0);

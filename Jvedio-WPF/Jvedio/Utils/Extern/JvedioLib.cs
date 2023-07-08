@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -26,7 +25,8 @@ namespace JvedioLib.Security
 
         private static object InvokeMethod(object[] _params, [CallerMemberName] string callerName = "")
         {
-            if (string.IsNullOrEmpty(callerName)) return null;
+            if (string.IsNullOrEmpty(callerName))
+                return null;
             MethodInfo methodInfo = type.GetMethod(callerName);
             object value = methodInfo.Invoke(null, _params);
             return value;
@@ -61,13 +61,15 @@ namespace JvedioLib.Security
     {
         private static object InvokeMethod(object[] _params, Type[] types = null, [CallerMemberName] string callerName = "")
         {
-            if (string.IsNullOrEmpty(callerName)) return null;
+            if (string.IsNullOrEmpty(callerName))
+                return null;
             MethodInfo methodInfo = null;
             if (types != null)
                 methodInfo = type.GetMethod(callerName, types);
             else
                 methodInfo = type.GetMethod(callerName);
-            if (methodInfo == null) return null;
+            if (methodInfo == null)
+                return null;
             object value = methodInfo.Invoke(null, _params);
             return value;
         }
@@ -85,7 +87,8 @@ namespace JvedioLib.Security
         public static bool IsCHS(string filepath)
         {
             object result = InvokeMethod(new object[] { filepath });
-            if (result == null) return false;
+            if (result == null)
+                return false;
             bool.TryParse(result.ToString(), out bool v);
             return v;
         }
@@ -93,7 +96,8 @@ namespace JvedioLib.Security
         public static bool IsHDV(string filepath)
         {
             object result = InvokeMethod(new object[] { filepath }, new Type[] { typeof(string) });
-            if (result == null) return false;
+            if (result == null)
+                return false;
             bool.TryParse(result.ToString(), out bool v);
             return v;
         }
@@ -101,7 +105,8 @@ namespace JvedioLib.Security
         public static bool IsHDV(long filesize)
         {
             object result = InvokeMethod(new object[] { filesize }, new Type[] { typeof(long) });
-            if (result == null) return false;
+            if (result == null)
+                return false;
             bool.TryParse(result.ToString(), out bool v);
             return v;
         }
@@ -121,7 +126,8 @@ namespace JvedioLib.Security
         public static int GetVideoType(string vID)
         {
             object result = InvokeMethod(new object[] { vID });
-            if (result == null) return 0;
+            if (result == null)
+                return 0;
             int.TryParse(result.ToString(), out int v);
             return v;
         }

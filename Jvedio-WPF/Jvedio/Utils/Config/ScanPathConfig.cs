@@ -19,8 +19,10 @@ namespace Jvedio
 
         public ScanPathConfig(string databaseName)
         {
-            if (!string.IsNullOrEmpty(databaseName)) DataBase = databaseName;
-            if (!Directory.Exists(baseDir)) Directory.CreateDirectory(baseDir);
+            if (!string.IsNullOrEmpty(databaseName))
+                DataBase = databaseName;
+            if (!Directory.Exists(baseDir))
+                Directory.CreateDirectory(baseDir);
         }
 
         public void Save(List<string> paths)
@@ -30,16 +32,13 @@ namespace Jvedio
             xmlDoc.Load(filepath);
             XmlNode pathNodes = xmlDoc.SelectSingleNode($"/ScanPaths/DataBase[@Name='{DataBase}']");
             XmlNodeList xmlNodeList = xmlDoc.SelectNodes($"/ScanPaths/DataBase[@Name='{DataBase}']/Path");
-            if (xmlNodeList != null && xmlNodeList.Count > 0)
-            {
-                foreach (XmlNode item in xmlNodeList)
-                {
+            if (xmlNodeList != null && xmlNodeList.Count > 0) {
+                foreach (XmlNode item in xmlNodeList) {
                     pathNodes.RemoveChild(item);
                 }
             }
 
-            foreach (string path in paths)
-            {
+            foreach (string path in paths) {
                 XmlElement xe = xmlDoc.CreateElement("Path");
                 xe.InnerText = path;
                 pathNodes.AppendChild(xe);
@@ -50,37 +49,27 @@ namespace Jvedio
 
         public bool InitXML()
         {
-            try
-            {
-                if (string.IsNullOrEmpty(DataBase)) return false;
+            try {
+                if (string.IsNullOrEmpty(DataBase))
+                    return false;
                 XmlDocument xmlDoc = new XmlDocument();
                 string Root = "ScanPaths";
                 bool CreateRoot = false;
-                if (File.Exists(filepath))
-                {
-                    try
-                    {
+                if (File.Exists(filepath)) {
+                    try {
                         xmlDoc.Load(filepath);
-                    }
-                    catch
-                    {
+                    } catch {
                         CreateRoot = true;
                     }
-                }
-                else
-                {
+                } else {
                     CreateRoot = true;
                 }
 
-                if (CreateRoot)
-                {
-                    try
-                    {
+                if (CreateRoot) {
+                    try {
                         XmlNode header = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
                         xmlDoc.AppendChild(header);
-                    }
-                    catch
-                    {
+                    } catch {
                     }
 
                     // 生成根节点
@@ -90,8 +79,7 @@ namespace Jvedio
 
                 XmlElement rootElement = xmlDoc.DocumentElement;
                 XmlNode node = xmlDoc.SelectSingleNode($"/ScanPaths/DataBase[@Name='{DataBase}']");
-                if (node == null)
-                {
+                if (node == null) {
                     // 不存在该节点
                     XmlElement XE = xmlDoc.CreateElement("DataBase");
                     XE.SetAttribute("Name", DataBase);
@@ -100,9 +88,7 @@ namespace Jvedio
 
                 xmlDoc.Save(filepath);
                 return true;
-            }
-            catch
-            {
+            } catch {
                 return false;
             }
         }
@@ -110,16 +96,16 @@ namespace Jvedio
         public StringCollection Read()
         {
             StringCollection result = new StringCollection();
-            if (!File.Exists(filepath)) InitXML();
+            if (!File.Exists(filepath))
+                InitXML();
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(filepath);
 
             XmlNodeList pathNodes = xmlDoc.SelectNodes($"/ScanPaths/DataBase[@Name='{DataBase}']/Path");
-            if (pathNodes != null && pathNodes.Count > 0)
-            {
-                foreach (XmlNode xmlNode in pathNodes)
-                {
-                    if (!result.Contains(xmlNode.InnerText)) result.Add(xmlNode.InnerText);
+            if (pathNodes != null && pathNodes.Count > 0) {
+                foreach (XmlNode xmlNode in pathNodes) {
+                    if (!result.Contains(xmlNode.InnerText))
+                        result.Add(xmlNode.InnerText);
                 }
             }
 

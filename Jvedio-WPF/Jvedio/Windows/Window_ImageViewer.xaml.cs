@@ -23,14 +23,11 @@ namespace Jvedio
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.EnableWindowFade)
-            {
+            if (Properties.Settings.Default.EnableWindowFade) {
                 var anim = new DoubleAnimation(0, (Duration)Main.FadeInterval);
                 anim.Completed += (s, _) => this.Close();
                 this.BeginAnimation(UIElement.OpacityProperty, anim);
-            }
-            else
-            {
+            } else {
                 this.Close();
             }
         }
@@ -43,8 +40,7 @@ namespace Jvedio
 
         private void Grid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
+            if (e.LeftButton == MouseButtonState.Pressed) {
                 this.DragMove();
             }
         }

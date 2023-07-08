@@ -26,15 +26,12 @@ namespace Jvedio.Entity.CommonSQL
 
         public string _Foreground;
 
-        public string Foreground
-        {
-            get
-            {
+        public string Foreground {
+            get {
                 return _Foreground;
             }
 
-            set
-            {
+            set {
                 _Foreground = value;
                 if (!string.IsNullOrEmpty(value) && value.IndexOf(",") > 0)
                     ForegroundBrush = VisualHelper.RGBAToBrush(value.Split(','));
@@ -44,15 +41,12 @@ namespace Jvedio.Entity.CommonSQL
 
         public string _Background;
 
-        public string Background
-        {
-            get
-            {
+        public string Background {
+            get {
                 return _Background;
             }
 
-            set
-            {
+            set {
                 _Background = value;
                 if (!string.IsNullOrEmpty(value) && value.IndexOf(",") > 0)
                     BackgroundBrush = VisualHelper.RGBAToBrush(value.Split(','));
@@ -66,15 +60,12 @@ namespace Jvedio.Entity.CommonSQL
         public bool _Selected = true;
 
         [TableField(exist: false)]
-        public bool Selected
-        {
-            get
-            {
+        public bool Selected {
+            get {
                 return _Selected;
             }
 
-            set
-            {
+            set {
                 _Selected = value;
                 RaisePropertyChanged();
             }
@@ -94,7 +85,8 @@ namespace Jvedio.Entity.CommonSQL
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
+            if (obj == null)
+                return false;
             TagStamp tagStamp = obj as TagStamp;
             return tagStamp != null && tagStamp.TagID == this.TagID;
         }

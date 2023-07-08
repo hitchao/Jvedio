@@ -47,8 +47,7 @@
 
         public VideoInfo()
         {
-            foreach (var item in typeof(VideoInfo).GetProperties())
-            {
+            foreach (var item in typeof(VideoInfo).GetProperties()) {
                 item.SetValue(this, string.Empty);
             }
         }

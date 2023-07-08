@@ -185,8 +185,7 @@ namespace Jvedio
 
         private void MoveWindow(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
+            if (e.LeftButton == MouseButtonState.Pressed) {
                 this.DragMove();
             }
         }

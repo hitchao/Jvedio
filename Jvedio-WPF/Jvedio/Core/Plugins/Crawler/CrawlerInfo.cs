@@ -39,12 +39,10 @@ namespace Jvedio.Core.Plugins
 
         public string _Path;
 
-        public string Path
-        {
+        public string Path {
             get { return _Path; }
 
-            set
-            {
+            set {
                 _Path = value;
                 FileHash = Encrypt.TryGetFileMD5(value);
             }
@@ -57,11 +55,11 @@ namespace Jvedio.Core.Plugins
 
         public static PluginMetaData ParseDict(Dictionary<string, string> dict)
         {
-            if (dict == null || dict.Count <= 0) return null;
+            if (dict == null || dict.Count <= 0)
+                return null;
             PluginMetaData result = new PluginMetaData();
             PropertyInfo[] propertyInfos = typeof(PluginMetaData).GetProperties();
-            foreach (PropertyInfo propertyInfo in propertyInfos)
-            {
+            foreach (PropertyInfo propertyInfo in propertyInfos) {
                 string name = propertyInfo.Name;
                 if (dict.ContainsKey(name))
                     propertyInfo.SetValue(result, dict[name]);

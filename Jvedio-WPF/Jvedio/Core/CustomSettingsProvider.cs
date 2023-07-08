@@ -1,11 +1,11 @@
 ﻿using Jvedio.Core.Global;
-using static Jvedio.LogManager;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Core
 {
@@ -41,15 +41,12 @@ namespace Jvedio.Core
         /// <summary>
         /// Override.
         /// </summary>
-        public override string ApplicationName
-        {
-            get
-            {
+        public override string ApplicationName {
+            get {
                 return System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.Name;
             }
 
-            set
-            {
+            set {
                 // do nothing
             }
         }
@@ -63,8 +60,7 @@ namespace Jvedio.Core
         public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context, SettingsPropertyCollection collection)
         {
             // load the file
-            if (!_loaded)
-            {
+            if (!_loaded) {
                 _loaded = true;
                 LoadValuesFromFile();
             }
@@ -73,21 +69,18 @@ namespace Jvedio.Core
             SettingsPropertyValueCollection values = new SettingsPropertyValueCollection();
 
             // iterate thought the properties we get from the designer, checking to see if the setting is in the dictionary
-            foreach (SettingsProperty setting in collection)
-            {
+            foreach (SettingsProperty setting in collection) {
                 SettingsPropertyValue value = new SettingsPropertyValue(setting);
                 value.IsDirty = false;
 
                 // need the type of the value for the strong typing
                 var t = Type.GetType(setting.PropertyType.FullName);
 
-                if (SettingsDictionary.ContainsKey(setting.Name))
-                {
+                if (SettingsDictionary.ContainsKey(setting.Name)) {
                     value.SerializedValue = SettingsDictionary[setting.Name].value;
                     value.PropertyValue = Convert.ChangeType(SettingsDictionary[setting.Name].value, t);
-                }
-                else // use defaults in the case where there are no settings yet
-                {
+                } else // use defaults in the case where there are no settings yet
+                  {
                     value.SerializedValue = setting.DefaultValue;
                     value.PropertyValue = Convert.ChangeType(setting.DefaultValue, t);
                 }
@@ -106,21 +99,16 @@ namespace Jvedio.Core
         public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)
         {
             // grab the values from the collection parameter and update the values in our dictionary.
-            foreach (SettingsPropertyValue value in collection)
-            {
-                var setting = new SettingStruct()
-                {
+            foreach (SettingsPropertyValue value in collection) {
+                var setting = new SettingStruct() {
                     value = value.PropertyValue == null ? string.Empty : value.PropertyValue.ToString(),
                     name = value.Name,
                     serializeAs = value.Property.SerializeAs.ToString(),
                 };
 
-                if (!SettingsDictionary.ContainsKey(value.Name))
-                {
+                if (!SettingsDictionary.ContainsKey(value.Name)) {
                     SettingsDictionary.Add(value.Name, setting);
-                }
-                else
-                {
+                } else {
                     SettingsDictionary[value.Name] = setting;
                 }
             }
@@ -134,14 +122,10 @@ namespace Jvedio.Core
         /// </summary>
         private void LoadValuesFromFile()
         {
-            if (!File.Exists(UserConfigPath))
-            {
-                try
-                {
+            if (!File.Exists(UserConfigPath)) {
+                try {
                     Directory.CreateDirectory(PathManager.CurrentUserFolder);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                 }
 
@@ -157,10 +141,8 @@ namespace Jvedio.Core
 
             // iterate through, adding them to the dictionary, (checking for nulls, xml no liked nulls)
             // using "String" as default serializeAs...just in case, no real good reason.
-            foreach (var element in settingElements)
-            {
-                var newSetting = new SettingStruct()
-                {
+            foreach (var element in settingElements) {
+                var newSetting = new SettingStruct() {
                     name = element.Attribute(NAME) == null ? string.Empty : element.Attribute(NAME).Value,
                     serializeAs = element.Attribute(SERIALIZE_AS) == null ? "String" : element.Attribute(SERIALIZE_AS).Value,
                     value = element.Value ?? string.Empty,
@@ -199,8 +181,7 @@ namespace Jvedio.Core
             var settingsSection = import.Element(CONFIG).Element(USER_SETTINGS).Element(typeof(Properties.Settings).FullName);
 
             // iterate though the dictionary, either updating the value or adding the new setting.
-            foreach (var entry in SettingsDictionary)
-            {
+            foreach (var entry in SettingsDictionary) {
                 var setting = settingsSection.Elements().FirstOrDefault(e => e.Attribute(NAME).Value == entry.Key);
                 if (setting == null) // this can happen if a new setting is added via the .settings designer.
                 {
@@ -209,9 +190,8 @@ namespace Jvedio.Core
                     newSetting.Add(new XAttribute(SERIALIZE_AS, entry.Value.serializeAs));
                     newSetting.Value = entry.Value.value ?? string.Empty;
                     settingsSection.Add(newSetting);
-                }
-                else // update the value if it exists.
-                {
+                } else // update the value if it exists.
+                  {
                     setting.Value = entry.Value.value ?? string.Empty;
                 }
             }
@@ -223,10 +203,8 @@ namespace Jvedio.Core
         /// The setting key this is returning must set before the settings are used.
         /// e.g. <c>Properties.Settings.Default.SettingsKey = @"C:\temp\user.config";</c>
         /// </summary>
-        private string UserConfigPath
-        {
-            get
-            {
+        private string UserConfigPath {
+            get {
                 return configPath;
             }
         }

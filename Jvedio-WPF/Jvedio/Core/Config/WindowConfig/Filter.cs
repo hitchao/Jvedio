@@ -14,7 +14,8 @@ namespace Jvedio.Core.WindowConfig
 
         public static Filter CreateInstance()
         {
-            if (_instance == null) _instance = new Filter();
+            if (_instance == null)
+                _instance = new Filter();
 
             return _instance;
         }

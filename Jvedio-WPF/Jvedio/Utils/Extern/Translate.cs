@@ -1,5 +1,5 @@
 ﻿using Jvedio;
-using static Jvedio.LogManager;
+using SuperUtils.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using SuperUtils.Security;
+using static Jvedio.LogManager;
 
 namespace SuperUtils.External
 {
@@ -45,8 +45,7 @@ namespace SuperUtils.External
             //        break;
             //}
 
-            return Task.Run(() =>
-            {
+            return Task.Run(() => {
                 InitYoudao();
                 Dictionary<string, string> dic = new Dictionary<string, string>();
                 string url = "https://openapi.youdao.com/api";
@@ -65,12 +64,9 @@ namespace SuperUtils.External
                 dic.Add("appKey", Youdao_appKey);
                 dic.Add("salt", salt);
                 dic.Add("sign", sign);
-                try
-                {
+                try {
                     return GetYoudaoResult(Post(url, dic));
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Logger.Error(ex);
                     return string.Empty;
                 }
@@ -79,7 +75,8 @@ namespace SuperUtils.External
 
         public static string GetYoudaoResult(string content)
         {
-            if (content.IndexOf("translation") < 0) return string.Empty;
+            if (content.IndexOf("translation") < 0)
+                return string.Empty;
             string pattern = @"""translation"":\["".+""\]";
             string result = Regex.Match(content, pattern).Value;
             return result.Replace("\"translation\":[\"", string.Empty).Replace("\"]", string.Empty);
@@ -87,7 +84,8 @@ namespace SuperUtils.External
 
         public static string ComputeHash(string input, HashAlgorithm algorithm)
         {
-            if (string.IsNullOrEmpty(input) || algorithm == null) return string.Empty;
+            if (string.IsNullOrEmpty(input) || algorithm == null)
+                return string.Empty;
             byte[] inputBytes = Encoding.UTF8.GetBytes(input);
             byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
             return BitConverter.ToString(hashedBytes).Replace("-", string.Empty);
@@ -96,16 +94,15 @@ namespace SuperUtils.External
         public static string Post(string url, Dictionary<string, string> dic)
         {
             string result = string.Empty;
-            if (string.IsNullOrEmpty(url)) return result;
-            try
-            {
+            if (string.IsNullOrEmpty(url))
+                return result;
+            try {
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                 req.Method = "POST";
                 req.ContentType = "application/x-www-form-urlencoded";
                 StringBuilder builder = new StringBuilder();
                 int i = 0;
-                foreach (var item in dic)
-                {
+                foreach (var item in dic) {
                     if (i > 0)
                         builder.Append("&");
                     builder.AppendFormat("{0}={1}", item.Key, item.Value);
@@ -114,30 +111,23 @@ namespace SuperUtils.External
 
                 byte[] data = Encoding.UTF8.GetBytes(builder.ToString());
                 req.ContentLength = data.Length;
-                using (Stream reqStream = req.GetRequestStream())
-                {
+                using (Stream reqStream = req.GetRequestStream()) {
                     reqStream.Write(data, 0, data.Length);
                     reqStream.Close();
                 }
 
                 HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-                if (resp.ContentType.ToLower().Equals("audio/mp3"))
-                {
+                if (resp.ContentType.ToLower().Equals("audio/mp3")) {
                     SaveBinaryFile(resp, "合成的音频存储路径");
-                }
-                else
-                {
+                } else {
                     Stream stream = resp.GetResponseStream();
-                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                    {
+                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8)) {
                         result = reader.ReadToEnd();
                     }
 
                     return result;
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Warn(ex.Message);
             }
 
@@ -146,7 +136,8 @@ namespace SuperUtils.External
 
         public static string Truncate(string q)
         {
-            if (string.IsNullOrEmpty(q)) return null;
+            if (string.IsNullOrEmpty(q))
+                return null;
             int len = q.Length;
             return len <= 20 ? q : (q.Substring(0, 10) + len + q.Substring(len - 10, 10));
         }
@@ -157,16 +148,14 @@ namespace SuperUtils.External
             bool Value = true;
             byte[] buffer = new byte[1024];
 
-            try
-            {
+            try {
                 if (File.Exists(filePath))
                     File.Delete(filePath);
                 Stream outStream = System.IO.File.Create(filePath);
                 Stream inStream = response.GetResponseStream();
 
                 int l;
-                do
-                {
+                do {
                     l = inStream.Read(buffer, 0, buffer.Length);
                     if (l > 0)
                         outStream.Write(buffer, 0, l);
@@ -175,9 +164,7 @@ namespace SuperUtils.External
 
                 outStream.Close();
                 inStream.Close();
-            }
-            catch
-            {
+            } catch {
                 Value = false;
             }
 
@@ -186,7 +173,8 @@ namespace SuperUtils.External
 
         public static string GetResult(string content)
         {
-            if (content.IndexOf("dst") < 0) return string.Empty;
+            if (content.IndexOf("dst") < 0)
+                return string.Empty;
             var lst = new List<string>();
 
             // dynamic json = JsonConvert.DeserializeObject(content);
@@ -202,8 +190,7 @@ namespace SuperUtils.External
             string availableChars = "0123456789";
             var id = new char[length];
             Random random = new Random();
-            for (var i = 0; i < length; i++)
-            {
+            for (var i = 0; i < length; i++) {
                 id[i] = availableChars[random.Next(0, availableChars.Length)];
             }
 

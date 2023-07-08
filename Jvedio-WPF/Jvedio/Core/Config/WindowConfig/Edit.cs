@@ -12,7 +12,8 @@ namespace Jvedio.Core.WindowConfig
 
         public static Edit CreateInstance()
         {
-            if (_instance == null) _instance = new Edit();
+            if (_instance == null)
+                _instance = new Edit();
 
             return _instance;
         }

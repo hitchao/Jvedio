@@ -11,8 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using static Jvedio.MapperManager;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static SuperUtils.Media.ImageHelper;
+using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio
 {
@@ -43,11 +43,13 @@ namespace Jvedio
 
         public void LoadActor()
         {
-            if (this.ActorID <= 0) return;
+            if (this.ActorID <= 0)
+                return;
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             wrapper.Eq("ActorID", this.ActorID);
             ActorInfo actorInfo = actorMapper.SelectById(wrapper);
-            if (actorInfo == null) return;
+            if (actorInfo == null)
+                return;
             ActorInfo.SetImage(ref actorInfo);
             CurrentActorInfo = null;
             CurrentActorInfo = actorInfo;
@@ -56,42 +58,33 @@ namespace Jvedio
         private void SaveActor(object sender, RoutedEventArgs e)
         {
             CurrentActorInfo.ActorName = CurrentActorInfo.ActorName.ToProperFileName();
-            if (string.IsNullOrEmpty(CurrentActorInfo.ActorName))
-            {
+            if (string.IsNullOrEmpty(CurrentActorInfo.ActorName)) {
                 MessageNotify.Error(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
 
-            if (ActorID > 0)
-            {
+            if (ActorID > 0) {
                 int update = actorMapper.UpdateById(CurrentActorInfo);
-                if (update > 0)
-                {
+                if (update > 0) {
                     MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
                     main?.RefreshActor(CurrentActorInfo.ActorID);
                 }
-            }
-            else
-            {
+            } else {
                 // 新增
                 // 检查是否存在
                 SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
                 wrapper.Eq("ActorName", CurrentActorInfo.ActorName.ToProperSql());
                 ActorInfo actorInfo = actorMapper.SelectOne(wrapper);
                 bool insert = true;
-                if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName))
-                {
-                    insert = (bool)new MsgBox( $"{LangManager.GetValueByKey("LibraryAlreadyHas")} {actorInfo.ActorName} {LangManager.GetValueByKey("SameActorToAdd")}").ShowDialog();
+                if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName)) {
+                    insert = (bool)new MsgBox($"{LangManager.GetValueByKey("LibraryAlreadyHas")} {actorInfo.ActorName} {LangManager.GetValueByKey("SameActorToAdd")}").ShowDialog();
                 }
 
-                if (insert)
-                {
+                if (insert) {
                     actorMapper.Insert(CurrentActorInfo);
-                    if (CurrentActorInfo.ActorID > 0)
-                    {
+                    if (CurrentActorInfo.ActorID > 0) {
                         this.DialogResult = true;
-                    }
-                    else
+                    } else
                         MessageNotify.Error(LangManager.GetValueByKey("Error"));
                 }
             }
@@ -99,8 +92,7 @@ namespace Jvedio
 
         private void SetActorImage(object sender, RoutedEventArgs e)
         {
-            if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName))
-            {
+            if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName)) {
                 MsgBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
@@ -110,8 +102,7 @@ namespace Jvedio
             openFileDialog1.Filter = Window_Settings.SupportPictureFormat;
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.RestoreDirectory = true;
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                 string filename = openFileDialog1.FileName;
                 if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
                     imageFileName = filename;
@@ -119,25 +110,20 @@ namespace Jvedio
 
             bool copied = false;
             string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
-            if (File.Exists(targetFileName))
-            {
-                if (new MsgBox( LangManager.GetValueByKey("ActorImageExistsAndUseID")).ShowDialog() == true)
-                {
+            if (File.Exists(targetFileName)) {
+                if (new MsgBox(LangManager.GetValueByKey("ActorImageExistsAndUseID")).ShowDialog() == true) {
                     string dir = System.IO.Path.GetDirectoryName(targetFileName);
                     string ext = System.IO.Path.GetExtension(targetFileName);
                     targetFileName = System.IO.Path.Combine(dir, $"{CurrentActorInfo.ActorID}_{CurrentActorInfo.ActorName}{ext}");
                     FileHelper.TryCopyFile(imageFileName, targetFileName, true);
                     copied = true;
                 }
-            }
-            else
-            {
+            } else {
                 FileHelper.TryCopyFile(imageFileName, targetFileName);
                 copied = true;
             }
 
-            if (copied)
-            {
+            if (copied) {
                 // 设置图片
                 CurrentActorInfo.SmallImage = null;
                 CurrentActorInfo.SmallImage = BitmapImageFromFile(targetFileName);
@@ -149,8 +135,7 @@ namespace Jvedio
         private void ActorImage_Drop(object sender, DragEventArgs e)
         {
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType == PathType.RelativeToData)
-            {
+            if (pathType == PathType.RelativeToData) {
                 MsgBox.Show(LangManager.GetValueByKey("ActorImageNotSupported"));
                 return;
             }
@@ -158,8 +143,7 @@ namespace Jvedio
 
 
 
-            if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName))
-            {
+            if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName)) {
                 MsgBox.Show(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
@@ -168,23 +152,18 @@ namespace Jvedio
             string saveDir = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePicPath, "Actresses"));
             string name = CurrentActorInfo.ActorName.ToProperFileName();
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (dragdropFiles != null && dragdropFiles.Length > 0)
-            {
+            if (dragdropFiles != null && dragdropFiles.Length > 0) {
                 System.Collections.Generic.List<string> list = dragdropFiles.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
-                if (list.Count > 0)
-                {
+                if (list.Count > 0) {
                     string originPath = list[0];
-                    if (FileHelper.IsFile(originPath))
-                    {
+                    if (FileHelper.IsFile(originPath)) {
                         // 设置演员头像
                         string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
                         bool copy = true;
-                        if (File.Exists(targetFileName) && new MsgBox( LangManager.GetValueByKey("ExistsToOverwrite")).ShowDialog() != true)
-                        {
+                        if (File.Exists(targetFileName) && new MsgBox(LangManager.GetValueByKey("ExistsToOverwrite")).ShowDialog() != true) {
                             copy = false;
                         }
-                        if (copy)
-                        {
+                        if (copy) {
                             FileHelper.TryCopyFile(originPath, targetFileName, true);
                             CurrentActorInfo.SmallImage = ImageHelper.BitmapImageFromFile(targetFileName);
                         }

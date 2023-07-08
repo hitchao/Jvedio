@@ -19,29 +19,20 @@ namespace Jvedio.Mapper
 
             // 构造邻接表
             // 邻接表适合存储稀疏图（顶点较多、边较少）
-            if (Associations != null && Associations.Count > 0)
-            {
-                foreach (Association item in Associations)
-                {
+            if (Associations != null && Associations.Count > 0) {
+                foreach (Association item in Associations) {
                     long dataId = item.MainDataID;
-                    if (AdjacencyList.ContainsKey(dataId))
-                    {
+                    if (AdjacencyList.ContainsKey(dataId)) {
                         ListNode<long> node = AdjacencyList[dataId];
-                        while (true)
-                        {
-                            if (node.Next == null)
-                            {
+                        while (true) {
+                            if (node.Next == null) {
                                 node.Next = new ListNode<long>(item.SubDataID);
                                 break;
-                            }
-                            else
-                            {
+                            } else {
                                 node = node.Next;
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         ListNode<long> node = new ListNode<long>(item.SubDataID);
                         ListNode<long> head = new ListNode<long>(-1);
                         head.Next = node;
@@ -76,8 +67,7 @@ namespace Jvedio.Mapper
             Dictionary<long, ListNode<long>> dict = AdjacencyList;
             HashSet<long> set = new HashSet<long>();
             HashSet<long> foundList = new HashSet<long>();
-            if (dict != null && dict.Keys.Count > 0)
-            {
+            if (dict != null && dict.Keys.Count > 0) {
                 FindAssocData(ref set, dict, dataID, ref foundList);
             }
 
@@ -87,44 +77,34 @@ namespace Jvedio.Mapper
 
         private void FindAssocData(ref HashSet<long> set, Dictionary<long, ListNode<long>> dict, long target, ref HashSet<long> foundList)
         {
-            if (foundList.Contains(target)) return;
-            foreach (long key in dict.Keys)
-            {
-                if (key.Equals(target))
-                {
+            if (foundList.Contains(target))
+                return;
+            foreach (long key in dict.Keys) {
+                if (key.Equals(target)) {
                     ListNode<long> head = dict[target].Head;
                     ListNode<long> node = head.Next;
-                    while (node != null)
-                    {
+                    while (node != null) {
                         set.Add(node.Data);
                         node = node.Next;
                     }
-                }
-                else
-                {
+                } else {
                     // 遍历链表，找到符合 target 的节点
                     ListNode<long> head = dict[key].Head;
                     bool found = false;
                     ListNode<long> node = head.Next;
-                    while (node != null)
-                    {
-                        if (node.Data == target)
-                        {
+                    while (node != null) {
+                        if (node.Data == target) {
                             found = true;
                             break;
-                        }
-                        else
-                        {
+                        } else {
                             node = node.Next;
                         }
                     }
 
-                    if (found)
-                    {
+                    if (found) {
                         set.Add(key);
                         node = head.Next;
-                        while (node != null)
-                        {
+                        while (node != null) {
                             set.Add(node.Data);
                             node = node.Next;
                         }
@@ -135,8 +115,7 @@ namespace Jvedio.Mapper
             foundList.Add(target);
 
             // bfs
-            foreach (long item in set.ToArray())
-            {
+            foreach (long item in set.ToArray()) {
                 FindAssocData(ref set, dict, item, ref foundList);
             }
         }

@@ -1,13 +1,13 @@
 ﻿
 using Jvedio.Core.Config;
 using Jvedio.Core.Enums;
-using static Jvedio.LogManager;
 using Jvedio.Core.Scan;
-using SuperUtils.Security;
+using Jvedio.Entity.Common;
 using Newtonsoft.Json;
 using SuperControls.Style;
 using SuperUtils.Common;
 using SuperUtils.IO;
+using SuperUtils.Values;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,9 +16,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Xml;
-using Jvedio.Entity.Common;
-using System.Windows.Controls;
-using SuperUtils.Values;
+using static Jvedio.LogManager;
 
 namespace Jvedio.Entity
 {
@@ -113,12 +111,10 @@ namespace Jvedio.Entity
 
         private string _title;
 
-        public string title
-        {
+        public string title {
             get { return _title; }
 
-            set
-            {
+            set {
                 _title = value;
                 RaisePropertyChanged();
             }
@@ -128,12 +124,10 @@ namespace Jvedio.Entity
 
         private string _filepath;
 
-        public string filepath
-        {
+        public string filepath {
             get { return _filepath; }
 
-            set
-            {
+            set {
                 _filepath = value;
                 RaisePropertyChanged();
             }
@@ -143,21 +137,18 @@ namespace Jvedio.Entity
 
         private string _subsection;
 
-        public string subsection
-        {
+        public string subsection {
             get { return _subsection; }
 
-            set
-            {
+            set {
                 _subsection = value;
                 string[] subsections = value.Split(';');
-                if (subsections.Length >= 2)
-                {
+                if (subsections.Length >= 2) {
                     hassubsection = true;
                     subsectionlist = new List<string>();
-                    foreach (var item in subsections)
-                    {
-                        if (!string.IsNullOrEmpty(item)) subsectionlist.Add(item);
+                    foreach (var item in subsections) {
+                        if (!string.IsNullOrEmpty(item))
+                            subsectionlist.Add(item);
                     }
                 }
 
@@ -175,12 +166,10 @@ namespace Jvedio.Entity
 
         private string _releasedate;
 
-        public string releasedate
-        {
+        public string releasedate {
             get { return _releasedate; }
 
-            set
-            {
+            set {
                 DateTime dateTime = new DateTime(1970, 01, 01);
                 DateTime.TryParse(value.ToString(), out dateTime);
                 _releasedate = dateTime.ToString("yyyy-MM-dd");
@@ -241,15 +230,12 @@ namespace Jvedio.Entity
 
         private Uri _GifUri;
 
-        public Uri GifUri
-        {
-            get
-            {
+        public Uri GifUri {
+            get {
                 return _GifUri;
             }
 
-            set
-            {
+            set {
                 _GifUri = value;
                 RaisePropertyChanged();
             }
@@ -257,12 +243,10 @@ namespace Jvedio.Entity
 
         private BitmapSource _smallimage;
 
-        public BitmapSource smallimage
-        {
+        public BitmapSource smallimage {
             get { return _smallimage; }
 
-            set
-            {
+            set {
                 _smallimage = value;
                 RaisePropertyChanged();
             }
@@ -270,12 +254,10 @@ namespace Jvedio.Entity
 
         private BitmapSource _bigimage;
 
-        public BitmapSource bigimage
-        {
+        public BitmapSource bigimage {
             get { return _bigimage; }
 
-            set
-            {
+            set {
                 _bigimage = value;
                 RaisePropertyChanged();
             }
@@ -286,27 +268,25 @@ namespace Jvedio.Entity
         {
             XmlDocument doc = new XmlDocument();
             XmlNode rootNode = null;
-            try
-            {
+            try {
                 doc.Load(path);
                 rootNode = doc.SelectSingleNode("movie");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw ex;
             }
 
-            if (rootNode == null || rootNode.ChildNodes == null || rootNode.ChildNodes.Count == 0) return null;
+            if (rootNode == null || rootNode.ChildNodes == null || rootNode.ChildNodes.Count == 0)
+                return null;
             Movie movie = new Movie();
-            foreach (XmlNode node in rootNode.ChildNodes)
-            {
+            foreach (XmlNode node in rootNode.ChildNodes) {
                 if (node == null || string.IsNullOrEmpty(node.Name))
                     continue;
                 NfoParse.Parse(ref movie, node.Name, node.InnerText);
             }
 
             // 对于 NFO ，只要没有 VID，就不导入
-            if (string.IsNullOrEmpty(movie.id)) return null;
+            if (string.IsNullOrEmpty(movie.id))
+                return null;
 
             if (!string.IsNullOrEmpty(movie.id))
                 movie.vediotype = JvedioLib.Security.Identify.GetVideoType(movie.id);
@@ -334,28 +314,24 @@ namespace Jvedio.Entity
             movie.extraimageurl = FindAndJoinData(doc, new List<string>() { "fanart/thumb" }, RenameConfig.DEFAULT_NULL_STRING);
 
             // 检查一下视频是否为空
-            if (movie.isNullMovie()) return null;
+            if (movie.isNullMovie())
+                return null;
             return movie;
         }
 
         public static void SetFileSize(string path, ref Movie movie)
         {
-            if (File.Exists(path))
-            {
+            if (File.Exists(path)) {
                 string fatherPath = new FileInfo(path).DirectoryName;
                 List<string> files = DirHelper.GetFileList(fatherPath)?.ToList();
-                if (files != null && files.Count > 0)
-                {
+                if (files != null && files.Count > 0) {
                     var list = files.Where(arg => ScanTask.VIDEO_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).ToList();
-                    if (list != null || list.Count != 0)
-                    {
+                    if (list != null || list.Count != 0) {
                         if (list.Count == 1)
                             movie.filepath = list[0]; // 默认取第一个
                         else
                             movie.subsection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list); // 分段视频
-                    }
-                    else
-                    {
+                    } else {
                         // 如果没扫到视频仍然导入
                         Logger.Warn($"{LangManager.GetValueByKey("DataNotFoundWithNFO")} {path}");
                         movie.filepath = path;      // nfo 路径视为该资源路径
@@ -380,13 +356,10 @@ namespace Jvedio.Entity
         {
             List<string> result = new List<string>();
             string value = "";
-            foreach (string name in list)
-            {
+            foreach (string name in list) {
                 XmlNodeList nodes = TrySelectNode(doc, $"/movie/{name}");
-                if (nodes != null && nodes.Count > 0)
-                {
-                    foreach (XmlNode node in nodes)
-                    {
+                if (nodes != null && nodes.Count > 0) {
+                    foreach (XmlNode node in nodes) {
                         value = node.InnerText.Trim();
 
                         if (!string.IsNullOrEmpty(addNull) && string.IsNullOrEmpty(value))
@@ -402,8 +375,7 @@ namespace Jvedio.Entity
 
         public MetaData toMetaData()
         {
-            MetaData result = new MetaData()
-            {
+            MetaData result = new MetaData() {
                 DBId = DBId,
                 Title = title,
                 Size = (long)filesize,
@@ -429,12 +401,9 @@ namespace Jvedio.Entity
 
         private static XmlNodeList TrySelectNode(XmlDocument doc, string node)
         {
-            try
-            {
+            try {
                 return doc.SelectNodes(node);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
                 return null;
             }
@@ -445,7 +414,8 @@ namespace Jvedio.Entity
             MetaData data = toMetaData();
             var serializedParent = JsonConvert.SerializeObject(data);
             Video video = JsonUtils.TryDeserializeObject<Video>(serializedParent);
-            if (video == null) video = new Video();
+            if (video == null)
+                video = new Video();
             video.VID = id;
             video.VideoType = (VideoType)vediotype;
             video.Series = tag;

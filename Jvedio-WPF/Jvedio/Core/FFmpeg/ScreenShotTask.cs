@@ -1,12 +1,10 @@
-﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Enums;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using SuperControls.Style;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.Tasks;
 using SuperUtils.Time;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using static Jvedio.MapperManager;
 
@@ -38,7 +36,8 @@ namespace Jvedio.Core.FFmpeg
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
+            if (obj == null)
+                return false;
             if (obj is ScreenShotTask other)
                 return other.DataID.Equals(DataID);
             return false;
@@ -55,33 +54,28 @@ namespace Jvedio.Core.FFmpeg
 
         public override void DoWork()
         {
-            Task.Run(async () =>
-            {
+            Task.Run(async () => {
                 Progress = 0;
                 TimeWatch.Start();
                 Video video = videoMapper.SelectVideoByID(DataID);
-                if (video == null || video.DataID <= 0)
-                {
+                if (video == null || video.DataID <= 0) {
                     Logger.Error($"未找到 DataID={DataID} 的资源");
                     return;
                 }
 
                 ScreenShot shot = new ScreenShot(video, Token);
-                shot.onProgress += (s, e) =>
-                {
+                shot.onProgress += (s, e) => {
                     ScreenShot screenShot = s as ScreenShot;
                     Progress = (float)Math.Round(((float)screenShot.CurrentTaskCount + 1) / screenShot.TotalTaskCount, 4) * 100;
                 };
 
-                shot.onError += (s, e) =>
-                {
+                shot.onError += (s, e) => {
                     MessageCallBackEventArgs arg = e as MessageCallBackEventArgs;
                     if (!string.IsNullOrEmpty(arg.Message))
                         Logger.Error(arg.Message);
                 };
 
-                try
-                {
+                try {
                     string outputs = string.Empty;
                     if (Gif)
                         outputs = await shot.AsyncGenerateGif();
@@ -94,9 +88,7 @@ namespace Jvedio.Core.FFmpeg
                     Logger.Info($"{LangManager.GetValueByKey("TotalCost")} {DateHelper.ToReadableTime(ElapsedMilliseconds)}");
                     Logger.Info(LangManager.GetValueByKey("Detail"));
                     Logger.Info(outputs);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     StatusText = ex.Message;
                     Logger.Error(ex.Message);
                     FinalizeWithCancel();

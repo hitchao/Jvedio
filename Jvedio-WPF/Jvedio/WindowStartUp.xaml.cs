@@ -1,24 +1,18 @@
-﻿using Jvedio.Core;
-using Jvedio.Core.Config;
-using Jvedio.Core.CustomEventArgs;
+﻿using Jvedio.Core.Config;
 using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Core.Global;
-using static Jvedio.LogManager;
-using Jvedio.Core.Plugins;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
 using SuperControls.Style;
-using SuperControls.Style.Plugin.Themes;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.IO;
-using SuperUtils.Media;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
@@ -28,9 +22,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static Jvedio.Core.Global.PathManager;
+using static Jvedio.LogManager;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
 
@@ -65,8 +59,7 @@ namespace Jvedio
             cts = new CancellationTokenSource();
             cts.Token.Register(() => Console.WriteLine("取消任务"));
             ct = cts.Token;
-            if (!Properties.Settings.Default.Debug)
-            {
+            if (!Properties.Settings.Default.Debug) {
                 FileHelper.TryDeleteFile("upgrade.bat");
                 FileHelper.TryDeleteFile("upgrade-plugins.bat");
                 FileHelper.TryDeleteDir("Temp");
@@ -82,12 +75,9 @@ namespace Jvedio
             EnsureFileExists();         // 判断文件是否存在
             EnsureDirExists();          // 创建文件夹
 
-            try
-            {
+            try {
                 MapperManager.Init();    // 初始化数据库连接
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
                 App.Current.Shutdown();
             }
@@ -109,10 +99,11 @@ namespace Jvedio
             vieModel_StartUp = new VieModel_StartUp();  // todo 检视
             this.DataContext = vieModel_StartUp;
             List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
-            for (int i = 0; i < radioButtons.Count; i++)
-            {
-                if (i == vieModel_StartUp.CurrentSideIdx) radioButtons[i].IsChecked = true;
-                else radioButtons[i].IsChecked = false;
+            for (int i = 0; i < radioButtons.Count; i++) {
+                if (i == vieModel_StartUp.CurrentSideIdx)
+                    radioButtons[i].IsChecked = true;
+                else
+                    radioButtons[i].IsChecked = false;
             }
             UtilsManager.OnUtilSettingChange(); // 初始化 SuperUtils 的配置
 
@@ -121,21 +112,18 @@ namespace Jvedio
             //ConfigManager.Main.FirstRun = true;
 #endif
 
-            if (ConfigManager.Main.FirstRun)
-            {
+            if (ConfigManager.Main.FirstRun) {
                 Dialog_SetSkinLang skinLang =
                     new Dialog_SetSkinLang();
                 skinLang.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex,
                     ConfigManager.ThemeConfig.ThemeID);
                 skinLang.InitThemes();
-                Dialog_SetSkinLang.OnLangChanged += (lang) =>
-                {
+                Dialog_SetSkinLang.OnLangChanged += (lang) => {
                     Jvedio.Core.Lang.LangManager.SetLang(lang);
                     ConfigManager.Settings.CurrentLanguage = lang;
                     ConfigManager.Settings.Save();
                 };
-                Dialog_SetSkinLang.OnThemeChanged += (ThemeIdx, ThemeID) =>
-                {
+                Dialog_SetSkinLang.OnThemeChanged += (ThemeIdx, ThemeID) => {
                     ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;
                     ConfigManager.ThemeConfig.ThemeID = ThemeID;
                     ConfigManager.ThemeConfig.Save();
@@ -148,13 +136,10 @@ namespace Jvedio
 
 
             Main.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
-            if (!Main.ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault)
-            {
+            if (!Main.ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault) {
                 tabControl.SelectedIndex = 0;
                 LoadDataBase();
-            }
-            else
-            {
+            } else {
                 tabControl.SelectedIndex = 1;
                 vieModel_StartUp.Loading = false;
                 //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
@@ -169,8 +154,7 @@ namespace Jvedio
         {
             // 设置语言
             if (!string.IsNullOrEmpty(ConfigManager.Settings.CurrentLanguage)
-                && SuperControls.Style.LangManager.SupportLanguages.Contains(ConfigManager.Settings.CurrentLanguage))
-            {
+                && SuperControls.Style.LangManager.SupportLanguages.Contains(ConfigManager.Settings.CurrentLanguage)) {
                 SuperControls.Style.LangManager.SetLang(ConfigManager.Settings.CurrentLanguage);
                 Jvedio.Core.Lang.LangManager.SetLang(ConfigManager.Settings.CurrentLanguage);
             }
@@ -189,10 +173,8 @@ namespace Jvedio
         {
             await Task.Delay(1);
             List<string> list = JsonUtils.TryDeserializeObject<List<string>>(ConfigManager.PluginConfig.DeleteList);
-            if (list != null && list.Count > 0)
-            {
-                for (int i = list.Count - 1; i >= 0; i--)
-                {
+            if (list != null && list.Count > 0) {
+                for (int i = list.Count - 1; i >= 0; i--) {
                     string pluginId = list[i];
                     string[] paths = pluginId.Split(new char[] { '/', '\\' });
                     if (paths.Length <= 1)
@@ -202,8 +184,7 @@ namespace Jvedio
                         type += "s";
                     paths[0] = type;
                     string targetPath = Path.GetFullPath(Path.Combine(PathManager.BasePluginsPath, paths.Aggregate(Path.Combine)));
-                    if (Directory.Exists(targetPath))
-                    {
+                    if (Directory.Exists(targetPath)) {
                         DirHelper.TryDelete(targetPath);
                         list.RemoveAt(i);
                     }
@@ -216,36 +197,28 @@ namespace Jvedio
 
         private async Task<bool> BackupData()
         {
-            if (ConfigManager.Settings.AutoBackup)
-            {
+            if (ConfigManager.Settings.AutoBackup) {
                 int period = Jvedio.Core.WindowConfig.Settings.BackUpPeriods[(int)ConfigManager.Settings.AutoBackupPeriodIndex];
                 bool backup = false;
                 string[] arr = DirHelper.TryGetDirList(PathManager.BackupPath);
-                if (arr != null && arr.Length > 0)
-                {
+                if (arr != null && arr.Length > 0) {
                     string dirname = arr[arr.Length - 1];
-                    if (Directory.Exists(dirname))
-                    {
+                    if (Directory.Exists(dirname)) {
                         string dirName = Path.GetFileName(dirname);
                         DateTime before = DateTime.Now.AddDays(1);
                         DateTime now = DateTime.Now;
                         DateTime.TryParse(dirName, out before);
-                        if (now.CompareTo(before) < 0 || (now - before).TotalDays > period)
-                        {
+                        if (now.CompareTo(before) < 0 || (now - before).TotalDays > period) {
                             backup = true;
                         }
                     }
-                }
-                else
-                {
+                } else {
                     backup = true;
                 }
 
-                if (backup)
-                {
+                if (backup) {
                     string dir = Path.Combine(BackupPath, DateHelper.NowDate());
-                    DirHelper.TryCreateDirectory(dir, (Action<Exception>)((err) =>
-                    {
+                    DirHelper.TryCreateDirectory(dir, (Action<Exception>)((err) => {
                         Logger.Error(err);
                         return;
                     }));
@@ -269,8 +242,7 @@ namespace Jvedio
             Jvedio4ToJvedio5.MoveAI();
             string[] files = FileHelper.TryScanDIr(oldDataPath, "*.sqlite", SearchOption.TopDirectoryOnly);
             bool success = await Jvedio4ToJvedio5.MoveDatabases(files);
-            if (success && files != null && files.Length > 0)
-            {
+            if (success && files != null && files.Length > 0) {
                 Jvedio4ToJvedio5.MoveRecentWatch();
                 Jvedio4ToJvedio5.MoveMagnets();
                 Jvedio4ToJvedio5.MoveTranslate();
@@ -283,7 +255,8 @@ namespace Jvedio
 
             // 移动文件
             string targetDir = Path.Combine(AllOldDataPath, "DataBase");
-            if (Directory.Exists(targetDir)) DirHelper.TryDelete(targetDir);
+            if (Directory.Exists(targetDir))
+                DirHelper.TryDelete(targetDir);
             DirHelper.TryMoveDir(oldDataPath, targetDir); // 移动 DataBase
             string[] moveFiles =
             {
@@ -291,10 +264,10 @@ namespace Jvedio
                 "AI.sqlite", "Magnets.sqlite", "Translate.sqlite", "mylist.sqlite",
             };
 
-            foreach (string filename in moveFiles)
-            {
+            foreach (string filename in moveFiles) {
                 string origin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
-                if (File.Exists(origin)) FileHelper.TryMoveFile(origin, Path.Combine(AllOldDataPath, filename));
+                if (File.Exists(origin))
+                    FileHelper.TryMoveFile(origin, Path.Combine(AllOldDataPath, filename));
             }
 
             return true;
@@ -302,15 +275,12 @@ namespace Jvedio
 
         private void InitAppData()
         {
-            try
-            {
+            try {
                 ScanHelper.InitSearchPattern();
 
                 // 读取配置文件，设置 debug
                 ReadConfig();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
         }
@@ -318,20 +288,16 @@ namespace Jvedio
         private void ReadConfig()
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.ini");
-            if (!File.Exists(path)) return;
+            if (!File.Exists(path))
+                return;
             string value = FileHelper.TryReadFile(path);
-            foreach (var item in value.Split('\n'))
-            {
-                if (!string.IsNullOrEmpty(item) && item.IndexOf("=") > 0 && item.Length >= 3)
-                {
+            foreach (var item in value.Split('\n')) {
+                if (!string.IsNullOrEmpty(item) && item.IndexOf("=") > 0 && item.Length >= 3) {
                     string p = item.Split('=')[0];
                     string v = item.Split('=')[1].Replace("\r", string.Empty);
-                    if ("debug".Equals(p) && "true".Equals(v.ToLower()))
-                    {
+                    if ("debug".Equals(p) && "true".Equals(v.ToLower())) {
                         Properties.Settings.Default.Debug = true;
-                    }
-                    else
-                    {
+                    } else {
                         Properties.Settings.Default.Debug = false;
                     }
                 }
@@ -342,16 +308,13 @@ namespace Jvedio
 
         private void DeleteLogs()
         {
-            try
-            {
+            try {
                 // todo 清除日志
                 ClearLogBefore(-10, "log");
                 ClearLogBefore(-10, "log\\NetWork");
                 ClearLogBefore(-10, "log\\scanlog");
                 ClearLogBefore(-10, "log\\file");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Logger.Error(ex);
             }
         }
@@ -360,35 +323,29 @@ namespace Jvedio
         {
             DateTime dateTime = DateTime.Now.AddDays(day);
             filepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filepath);
-            if (!Directory.Exists(filepath)) return;
-            try
-            {
+            if (!Directory.Exists(filepath))
+                return;
+            try {
                 string[] files = Directory.GetFiles(filepath, "*.log", SearchOption.TopDirectoryOnly);
-                foreach (var file in files)
-                {
+                foreach (var file in files) {
                     DateTime.TryParse(file.Split('\\').Last().Replace(".log", string.Empty), out DateTime date);
-                    if (date < dateTime) FileHelper.TryDeleteFile(file);
+                    if (date < dateTime)
+                        FileHelper.TryDeleteFile(file);
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Logger.Error(e);
             }
         }
 
         public void EnsureSettings()
         {
-            try
-            {
-                if (Properties.Settings.Default.UpgradeRequired)
-                {
+            try {
+                if (Properties.Settings.Default.UpgradeRequired) {
                     Properties.Settings.Default.Upgrade();
                     Properties.Settings.Default.UpgradeRequired = false;
                     Properties.Settings.Default.Save();
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 MsgBox.Show(ex.Message);
                 Logger.Error(ex);
             }
@@ -396,23 +353,19 @@ namespace Jvedio
 
         public void EnsureDirExists()
         {
-            foreach (var item in InitDirs)
-            {
+            foreach (var item in InitDirs) {
                 FileHelper.TryCreateDir(item);
             }
 
-            foreach (var item in PicPaths)
-            {
+            foreach (var item in PicPaths) {
                 FileHelper.TryCreateDir(Path.Combine(PicPath, item));
             }
         }
 
         public void EnsureFileExists()
         {
-            foreach (var file in FILE_DEPEND)
-            {
-                if (!File.Exists(file))
-                {
+            foreach (var file in FILE_DEPEND) {
+                if (!File.Exists(file)) {
                     MsgBox.Show($"{SuperControls.Style.LangManager.GetValueByKey("Missing")} {file}");
                     Application.Current.Shutdown();
                 }
@@ -422,8 +375,7 @@ namespace Jvedio
 
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
-            {
+            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
@@ -431,22 +383,17 @@ namespace Jvedio
             AppDatabase database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             MsgBox msgbox = new MsgBox(
                 $"{LangManager.GetValueByKey("IsToDelete")} {database.Name} {LangManager.GetValueByKey("And")} {database.Count} {LangManager.GetValueByKey("TagLabelAndOtherInfo")}");
-            if (msgbox.ShowDialog() == true)
-            {
-                try
-                {
+            if (msgbox.ShowDialog() == true) {
+                try {
                     database.deleteByID(database.DBId);
                     RefreshDatabase();
                     Main main = GetWindowByName("Main", App.Current.Windows) as Main;
-                    if (main != null)
-                    {
+                    if (main != null) {
                         // 重置当前
                         main.vieModel.Select();
                         main.vieModel.Statistic();
                     }
-                }
-                catch (SqlException ex)
-                {
+                } catch (SqlException ex) {
                     MessageCard.Error(ex.Message);
                 }
             }
@@ -454,8 +401,7 @@ namespace Jvedio
 
         private void RenameSqlite(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
-            {
+            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
@@ -463,10 +409,13 @@ namespace Jvedio
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
             string originName = info.Name;
             DialogInput input = new DialogInput(SuperControls.Style.LangManager.GetValueByKey("Rename"), originName);
-            if (input.ShowDialog(this) == false) return;
+            if (input.ShowDialog(this) == false)
+                return;
             string targetName = input.Text;
-            if (string.IsNullOrEmpty(targetName)) return;
-            if (targetName == originName) return;
+            if (string.IsNullOrEmpty(targetName))
+                return;
+            if (targetName == originName)
+                return;
             info.Name = targetName;
             appDatabaseMapper.UpdateById(info);
 
@@ -485,8 +434,7 @@ namespace Jvedio
         private void SortDatabases(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
-            if (menuItem != null)
-            {
+            if (menuItem != null) {
                 string header = menuItem.Header.ToString();
                 vieModel_StartUp.SortType = header;
                 vieModel_StartUp.Sort = !vieModel_StartUp.Sort;
@@ -497,7 +445,8 @@ namespace Jvedio
         private void SearchText_Changed(object sender, RoutedEventArgs e)
         {
             SuperControls.Style.SearchBox textBox = sender as SuperControls.Style.SearchBox;
-            if (textBox == null) return;
+            if (textBox == null)
+                return;
             vieModel_StartUp.CurrentSearch = textBox.Text;
             vieModel_StartUp.Search();
         }
@@ -508,9 +457,11 @@ namespace Jvedio
             vieModel_StartUp.Sort = true;
             vieModel_StartUp.SortType = LangManager.GetValueByKey("CreatedDate");
             DialogInput input = new DialogInput(SuperControls.Style.LangManager.GetValueByKey("NewLibrary"));
-            if (input.ShowDialog(this) == false) return;
+            if (input.ShowDialog(this) == false)
+                return;
             string targetName = input.Text;
-            if (string.IsNullOrEmpty(targetName)) return;
+            if (string.IsNullOrEmpty(targetName))
+                return;
 
             // 创建新数据库
             AppDatabase appDatabase = new AppDatabase();
@@ -540,8 +491,7 @@ namespace Jvedio
 
         public async void LoadDataBase()
         {
-            if (vieModel_StartUp.CurrentDatabases == null || vieModel_StartUp.CurrentDatabases.Count <= 0)
-            {
+            if (vieModel_StartUp.CurrentDatabases == null || vieModel_StartUp.CurrentDatabases.Count <= 0) {
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
@@ -554,21 +504,15 @@ namespace Jvedio
             // 加载数据库
             long id = ConfigManager.Main.CurrentDBId;
             AppDatabase database = null;
-            if (Main.ClickGoBackToStartUp || !ConfigManager.Settings.OpenDataBaseDefault)
-            {
-                if (listBox.SelectedIndex >= 0 && listBox.SelectedIndex < vieModel_StartUp.CurrentDatabases.Count)
-                {
+            if (Main.ClickGoBackToStartUp || !ConfigManager.Settings.OpenDataBaseDefault) {
+                if (listBox.SelectedIndex >= 0 && listBox.SelectedIndex < vieModel_StartUp.CurrentDatabases.Count) {
                     database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
                     id = database.DBId;
                     ConfigManager.Settings.DefaultDBID = id;
-                }
-                else
-                {
+                } else {
                     return;
                 }
-            }
-            else
-            {
+            } else {
                 // 默认打开上一次的库
                 id = ConfigManager.Settings.DefaultDBID;
 
@@ -578,17 +522,14 @@ namespace Jvedio
 
             Main main = GetWindowByName("Main", App.Current.Windows) as Main;
             // 检测该 id 是否在数据库中存在
-            if (database == null)
-            {
+            if (database == null) {
                 MessageNotify.Error(LangManager.GetValueByKey("CancelOpenDefault"));
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel_StartUp.Loading = false;
                 tabControl.SelectedIndex = 1;
                 //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
-            }
-            else
-            {
+            } else {
                 vieModel_StartUp.Loading = false;
 
                 // 次数+1
@@ -597,72 +538,56 @@ namespace Jvedio
                 ConfigManager.Main.CurrentDBId = id;
 
                 // 是否需要扫描
-                if (main == null && ConfigManager.ScanConfig.ScanOnStartUp)
-                {
+                if (main == null && ConfigManager.ScanConfig.ScanOnStartUp) {
                     // 未打开过 main 的时候才会扫描
-                    if (!string.IsNullOrEmpty(database.ScanPath))
-                    {
+                    if (!string.IsNullOrEmpty(database.ScanPath)) {
                         tabControl.SelectedIndex = 0;
                         //await Task.Delay(1000);
                         //this.TitleHeight = 0;
                         List<string> toScan = JsonUtils.TryDeserializeObject<List<string>>(database.ScanPath);
-                        try
-                        {
+                        try {
                             scanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
-                            scanTask.onScanning += (s, ev) =>
-                            {
-                                Dispatcher.Invoke(() =>
-                                {
+                            scanTask.onScanning += (s, ev) => {
+                                Dispatcher.Invoke(() => {
                                     vieModel_StartUp.LoadingText = (ev as MessageCallBackEventArgs).Message;
                                 });
                             };
                             scanTask.Start();
-                            while (scanTask.Running)
-                            {
+                            while (scanTask.Running) {
                                 await Task.Delay(100);
-                                if (CancelScanTask) break;
+                                if (CancelScanTask)
+                                    break;
                             }
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             Logger.Error(ex);
                             MsgBox.Show(ex.Message);
                         }
 
                         //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
-                    }
-                    else
-                    {
+                    } else {
                         tabControl.SelectedIndex = 1;
                     }
                 }
             }
 
             // 启动主窗口
-            if (Main.CurrentDataType == DataType.Video)
-            {
+            if (Main.CurrentDataType == DataType.Video) {
 
-                if (main == null)
-                {
+                if (main == null) {
                     main = new Main();
                     Application.Current.MainWindow = main;
-                }
-                else
-                {
+                } else {
                     main.setDataBases();
                     main.SetComboboxID();
                 }
 
                 main.Show();
-                if (scanTask != null)
-                {
+                if (scanTask != null) {
                     if (main.vieModel.ScanTasks == null)
                         main.vieModel.ScanTasks = new System.Collections.ObjectModel.ObservableCollection<ScanTask>();
                     main.vieModel.ScanTasks.Add(scanTask);
                 }
-            }
-            else
-            {
+            } else {
                 //Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas", App.Current.Windows) as Window_MetaDatas;
                 //if (metaData == null)
                 //{
@@ -686,8 +611,7 @@ namespace Jvedio
 
         private void SetImage(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
-            {
+            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
@@ -698,8 +622,7 @@ namespace Jvedio
             dialog.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
             dialog.Filter = "(jpg;jpeg;png)|*.jpg;*.jpeg;*.png";
             dialog.Multiselect = false;
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                 string filename = dialog.FileName;
                 SetImage(info.DBId, filename);
             }
@@ -707,7 +630,8 @@ namespace Jvedio
 
         private void SetImage(long id, string imagePath)
         {
-            if (id <= 0 || !File.Exists(imagePath)) return;
+            if (id <= 0 || !File.Exists(imagePath))
+                return;
 
             // 复制到 ProjectImagePath 下
             string name = Path.GetFileNameWithoutExtension(imagePath);
@@ -718,8 +642,10 @@ namespace Jvedio
 
             AppDatabase app1 = vieModel_StartUp.Databases.Where(x => x.DBId == id).SingleOrDefault();
             AppDatabase app2 = vieModel_StartUp.CurrentDatabases.Where(x => x.DBId == id).SingleOrDefault();
-            if (app1 != null) app1.ImagePath = newPath;
-            if (app2 != null) app2.ImagePath = newPath;
+            if (app1 != null)
+                app1.ImagePath = newPath;
+            if (app2 != null)
+                app2.ImagePath = newPath;
             appDatabaseMapper.UpdateFieldById("ImagePath", newName, id);
         }
 
@@ -735,14 +661,14 @@ namespace Jvedio
 
         private void HideDataBase(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0)
-            {
+            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
             AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
-            if (info == null) return;
+            if (info == null)
+                return;
             info.Hide = info.Hide == 0 ? 1 : 0;
             appDatabaseMapper.UpdateById(info);
             vieModel_StartUp.ReadFromDataBase();
@@ -759,8 +685,7 @@ namespace Jvedio
             ConfigManager.StartUp.Save();
 
             Main main = GetWindowByName("Main", App.Current.Windows) as Main;
-            if (main != null && !main.IsActive && !EnteringDataBase)
-            {
+            if (main != null && !main.IsActive && !EnteringDataBase) {
                 Application.Current.Shutdown();
 
                 // todo 关闭 main
@@ -794,27 +719,21 @@ namespace Jvedio
 
         private async void RestoreDatabase(object sender, RoutedEventArgs e)
         {
-            if (new MsgBox(LangManager.GetValueByKey("IsToRestore")).ShowDialog(this) == true)
-            {
+            if (new MsgBox(LangManager.GetValueByKey("IsToRestore")).ShowDialog(this) == true) {
                 vieModel_StartUp.Restoring = true;
 
                 // todo 多数据库
                 MapperManager.Dispose();
                 await Task.Delay(2000);
-                bool success = FileHelper.TryDeleteFile(SqlManager.DEFAULT_SQLITE_PATH, (error) =>
-                {
+                bool success = FileHelper.TryDeleteFile(SqlManager.DEFAULT_SQLITE_PATH, (error) => {
                     MessageCard.Error(error.Message);
                 });
-                if (success)
-                {
-                    try
-                    {
+                if (success) {
+                    try {
                         MapperManager.ResetInitState();
                         MapperManager.Init();    // 初始化数据库连接
                         await Task.Delay(3000);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
                         App.Current.Shutdown();
                     }

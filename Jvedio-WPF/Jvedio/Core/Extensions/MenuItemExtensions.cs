@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,22 +32,16 @@ namespace Jvedio.Core.Extensions
             // Add an entry to the group name collection
             var menuItem = d as MenuItem;
 
-            if (menuItem != null)
-            {
+            if (menuItem != null) {
                 string newGroupName = e.NewValue.ToString();
                 string oldGroupName = e.OldValue.ToString();
-                if (string.IsNullOrEmpty(newGroupName))
-                {
+                if (string.IsNullOrEmpty(newGroupName)) {
                     // Removing the toggle button from grouping
                     RemoveCheckboxFromGrouping(menuItem);
-                }
-                else
-                {
+                } else {
                     // Switching to a new group
-                    if (newGroupName != oldGroupName)
-                    {
-                        if (!string.IsNullOrEmpty(oldGroupName))
-                        {
+                    if (newGroupName != oldGroupName) {
+                        if (!string.IsNullOrEmpty(oldGroupName)) {
                             // Remove the old group mapping
                             RemoveCheckboxFromGrouping(menuItem);
                         }
@@ -69,10 +62,8 @@ namespace Jvedio.Core.Extensions
         static void MenuItemChecked(object sender, RoutedEventArgs e)
         {
             var menuItem = e.OriginalSource as MenuItem;
-            foreach (var item in ElementToGroupNames)
-            {
-                if (item.Key != menuItem && item.Value == GetGroupName(menuItem))
-                {
+            foreach (var item in ElementToGroupNames) {
+                if (item.Key != menuItem && item.Value == GetGroupName(menuItem)) {
                     item.Key.IsChecked = false;
                 }
             }

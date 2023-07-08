@@ -1,19 +1,9 @@
 ﻿using Jvedio.Core.Global;
-using static Jvedio.LogManager;
-using Microsoft.VisualBasic.Logging;
-using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.IO;
 using System;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using SuperUtils.Systems;
-using System.Windows.Interop;
 
 namespace Jvedio
 {
@@ -30,12 +20,10 @@ namespace Jvedio
 
         static App()
         {
-            Window_ErrorMsg.OnFeedBack += () =>
-            {
+            Window_ErrorMsg.OnFeedBack += () => {
                 FileHelper.TryOpenUrl(UrlManager.FeedBackUrl);
             };
-            Window_ErrorMsg.OnLog += (str) =>
-            {
+            Window_ErrorMsg.OnLog += (str) => {
                 Logger.Info(str);
             };
         }

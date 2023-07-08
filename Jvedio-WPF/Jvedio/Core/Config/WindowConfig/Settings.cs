@@ -32,7 +32,8 @@ namespace Jvedio.Core.WindowConfig
 
         public static Settings CreateInstance()
         {
-            if (_instance == null) _instance = new Settings();
+            if (_instance == null)
+                _instance = new Settings();
 
             return _instance;
         }
@@ -65,11 +66,9 @@ namespace Jvedio.Core.WindowConfig
         public bool OpenDataBaseDefault { get; set; }
 
         private bool _CloseToTaskBar = true;
-        public bool CloseToTaskBar
-        {
+        public bool CloseToTaskBar {
             get { return _CloseToTaskBar; }
-            set
-            {
+            set {
                 _CloseToTaskBar = value;
                 RaisePropertyChanged();
             }
@@ -91,11 +90,9 @@ namespace Jvedio.Core.WindowConfig
 
 
         private bool _TeenMode = true;
-        public bool TeenMode
-        {
+        public bool TeenMode {
             get { return _TeenMode; }
-            set
-            {
+            set {
                 _TeenMode = value;
                 RaisePropertyChanged();
             }

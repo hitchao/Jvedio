@@ -1,13 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Appium.Windows;
-using SuperUtils.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Automation;
 
 namespace Jvedio.Test.UITest
 {
@@ -45,8 +38,7 @@ namespace Jvedio.Test.UITest
         public void CreateDataBase(string dbName)
         {
             WindowsElement firstRunWindow = this.FindById(WINDOW_SKIN_LANG);
-            if (firstRunWindow != null)
-            {
+            if (firstRunWindow != null) {
                 Assert.IsTrue(this.ClickByXPath(X_PATH_LIST[0]));
                 Assert.IsTrue(this.ClickByXPath(X_PATH_LIST[1])); // 关闭
             }
