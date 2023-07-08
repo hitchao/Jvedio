@@ -47,28 +47,9 @@
             CornerRadius="5"
             Effect="{StaticResource NormalDropShadowEffect}" />
 
-        <Border
-            Width="24"
-            Height="24"
-            Margin="10"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Panel.ZIndex="5"
-            CornerRadius="5"
-            Cursor="Hand"
-            MouseLeftButtonUp="HideActressGrid"
-            Style="{StaticResource CloseBorderStyle}">
-            <Viewbox
-                Width="12"
-                Height="auto"
-                VerticalAlignment="Center">
-                <Path
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
-                    Fill="{DynamicResource Window.Foreground}" />
-            </Viewbox>
-        </Border>
+        <super:HoverPath Click="HideActressGrid" Style="{StaticResource CloseHoverPath}" />
+
+
 
         <Grid Margin="10">
             <Grid.RowDefinitions>

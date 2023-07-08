@@ -59,7 +59,7 @@
         <Setter Property="GroupName" Value="PathGroupRadioButton_Main" />
         <Setter Property="TextVisibility" Value="Collapsed" />
         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
-        <Setter Property="CheckedBrush" Value="{DynamicResource Window.Side.Hover.Background}" />
+        <Setter Property="CheckedBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
     </Style>
 
 </ResourceDictionary>

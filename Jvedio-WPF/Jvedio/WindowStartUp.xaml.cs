@@ -479,33 +479,8 @@ namespace Jvedio
             Console.WriteLine(e.AddedItems[0].ToString());
         }
 
-        private void ShowSettingsPopup(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                Border border = sender as Border;
-                ContextMenu contextMenu = border.ContextMenu;
-                contextMenu.PlacementTarget = border;
-                contextMenu.Placement = PlacementMode.Top;
-                contextMenu.IsOpen = true;
-            }
 
-            e.Handled = true;
-        }
 
-        private void ShowSortPopup(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                Border border = sender as Border;
-                ContextMenu contextMenu = border.ContextMenu;
-                contextMenu.PlacementTarget = border;
-                contextMenu.Placement = PlacementMode.Bottom;
-                contextMenu.IsOpen = true;
-            }
-
-            e.Handled = true;
-        }
 
         private void SortDatabases(object sender, RoutedEventArgs e)
         {
@@ -545,10 +520,6 @@ namespace Jvedio
             RefreshDatabase();
         }
 
-        private void RefreshDatabase(object sender, MouseButtonEventArgs e)
-        {
-            RefreshDatabase();
-        }
 
         public void RefreshDatabase()
         {
@@ -802,10 +773,6 @@ namespace Jvedio
             LoadDataBase();
         }
 
-        private void ShowHelpPicture(object sender, MouseButtonEventArgs e)
-        {
-            MessageCard.Info("新建库并打开后，将含有图片的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
-        }
 
         private void ShowHelpGame(object sender, MouseButtonEventArgs e)
         {
@@ -894,5 +861,11 @@ namespace Jvedio
             about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
             about.ShowDialog();
         }
+
+        private void RefreshDatabase(object sender, RoutedEventArgs e)
+        {
+            RefreshDatabase();
+        }
+
     }
 }

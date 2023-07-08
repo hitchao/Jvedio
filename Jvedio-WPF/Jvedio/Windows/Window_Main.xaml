@@ -1132,35 +1132,12 @@
                                 Text="{Binding ViewAssociationDatas.Count, StringFormat=\ ({0})}" />
                         </StackPanel>
                     </Border>
-                    <Button
+                    <super:HoverPath
                         Grid.Row="0"
-                        Width="25"
-                        Height="25"
-                        Margin="10"
-                        Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        super:CommonExt.CornerRadius="5"
-                        super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
                         Click="HideAssocPopup"
-                        Style="{StaticResource FlatButton}">
-                        <Viewbox
-                            Width="12"
-                            Height="auto"
-                            VerticalAlignment="Center">
-                            <Path
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
-                                Fill="{DynamicResource Window.Foreground}" />
-                        </Viewbox>
-                    </Button>
-
-
-
-
-
-
+                        Style="{StaticResource CloseHoverPath}" />
 
                     <ScrollViewer
                         Grid.Row="1"
@@ -1224,22 +1201,10 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Border
-                                    Grid.Column="0"
-                                    Margin="5"
-                                    VerticalAlignment="Center"
-                                    MouseLeftButtonDown="GoToStartUp"
-                                    Style="{StaticResource RoundBorder}"
-                                    Tag="{DynamicResource Window.Title.Hover.Background}"
-                                    ToolTip="{DynamicResource Return}">
-                                    <Viewbox Width="auto" Height="14">
-                                        <Path
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Data="M1008.024747 439.466667L564.291413 102.4c-29.866667-21.333333-72.533333-21.333333-106.666666 0L18.15808 439.466667c-34.133333 25.6-17.066667 72.533333 25.6 72.533333h42.666667v260.266667C86.424747 861.866667 163.224747 938.666667 257.091413 938.666667h85.333334c25.6 0 42.666667-17.066667 42.666666-42.666667v-209.066667c0-46.933333 38.4-89.6 85.333334-89.6h85.333333c46.933333 0 85.333333 42.666667 85.333333 89.6V896c0 21.333333 17.066667 42.666667 42.666667 42.666667h85.333333c93.866667 0 170.666667-76.8 170.666667-166.4V512h42.666667c38.4 0 55.466667-46.933333 25.6-72.533333z"
-                                            Fill="{DynamicResource Window.Foreground}" />
-                                    </Viewbox>
-                                </Border>
+                                <super:HoverPath
+                                    Click="GoToStartUp"
+                                    Style="{StaticResource HomeHoverPath}"
+                                    ToolTip="{DynamicResource Return}" />
 
 
                                 <ComboBox
@@ -1330,7 +1295,7 @@
                                         <ToggleButton
                                             Width="20"
                                             Height="20"
-                                            Margin="0,3,30,0"
+                                            Margin="0,3,32,0"
                                             Padding="0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
@@ -1357,24 +1322,16 @@
 
                                             </Border>
                                         </ToggleButton>
-                                        <Border
-                                            Margin="4,2"
+                                        <super:HoverPath
+                                            Width="23"
+                                            Height="23"
+                                            Margin="3,2,3,0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
                                             Panel.ZIndex="6"
-                                            PreviewMouseLeftButtonDown="NewTagStamp"
-                                            Style="{StaticResource RoundBorder}"
-                                            Tag="{DynamicResource Window.Title.Hover.Background}"
-                                            ToolTip="{DynamicResource Add}">
-
-                                            <Viewbox Width="auto" Height="13">
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M867.7 423.8H599.8V155.9c0-49.3-40-89.3-89.3-89.3s-89.3 40-89.3 89.3v267.9H153.3c-49.3 0-89.3 40-89.3 89.3s40 89.3 89.3 89.3h267.9v267.9c0 49.3 40 89.3 89.3 89.3s89.3-40 89.3-89.3V602.4h267.9c49.3 0 89.3-40 89.3-89.3s-40-89.3-89.3-89.3z"
-                                                    Fill="{DynamicResource Window.Foreground}" />
-                                            </Viewbox>
-                                        </Border>
+                                            Click="NewTagStamp"
+                                            Style="{StaticResource AddHoverPath}"
+                                            ToolTip="{DynamicResource Add}" />
                                         <super:TogglePanel
                                             Height="auto"
                                             Margin="1,0"
@@ -1446,25 +1403,14 @@
                                     Source="/Resources/Picture/Title.png"
                                     ToolTip="Jvedio" />
 
-
-                                <Border
+                                <super:HoverPath
                                     Width="30"
-                                    Height="auto"
-                                    Margin="0"
+                                    Height="30"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     ContextMenu="{StaticResource SettingsContextMenu}"
-                                    MouseUp="ShowSettingsPopup"
-                                    Style="{StaticResource RoundBorder}"
-                                    Tag="{DynamicResource Window.Title.Hover.Background}"
-                                    ToolTip="{DynamicResource Settings}">
-                                    <Viewbox
-                                        Width="20"
-                                        Height="auto"
-                                        VerticalAlignment="Center">
-                                        <Path Data="M940 596l-76-57.6c0.8-8 1.6-16.8 1.6-26.4s-0.8-18.4-1.6-26.4l76-57.6c20.8-16 26.4-44 12.8-68l-84.8-143.2c-9.6-16.8-28-27.2-47.2-27.2-6.4 0-12 0.8-18.4 3.2L712 228c-15.2-10.4-31.2-19.2-47.2-26.4l-13.6-92c-4-26.4-26.4-45.6-53.6-45.6H426.4c-27.2 0-49.6 19.2-53.6 44.8L360 201.6c-16 7.2-31.2 16-47.2 26.4l-90.4-35.2c-6.4-2.4-12.8-3.2-19.2-3.2-19.2 0-37.6 9.6-46.4 26.4L71.2 360c-13.6 22.4-8 52 12.8 68l76 57.6c-0.8 9.6-1.6 18.4-1.6 26.4s0 16.8 1.6 26.4l-76 57.6c-20.8 16-26.4 44-12.8 68l84.8 143.2c9.6 16.8 28 27.2 47.2 27.2 6.4 0 12-0.8 18.4-3.2L312 796c15.2 10.4 31.2 19.2 47.2 26.4l13.6 92c3.2 25.6 26.4 45.6 53.6 45.6h171.2c27.2 0 49.6-19.2 53.6-44.8l13.6-92.8c16-7.2 31.2-16 47.2-26.4l90.4 35.2c6.4 2.4 12.8 3.2 19.2 3.2 19.2 0 37.6-9.6 46.4-26.4l85.6-144.8c12.8-23.2 7.2-51.2-13.6-67.2zM704 512c0 105.6-86.4 192-192 192S320 617.6 320 512s86.4-192 192-192 192 86.4 192 192z" Fill="{DynamicResource Window.Foreground}" />
-                                    </Viewbox>
-                                </Border>
+                                    Style="{StaticResource SettingHoverPath}"
+                                    ToolTip="{DynamicResource Settings}" />
                             </Grid>
 
                         </Grid>
@@ -1596,7 +1542,7 @@
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
 
                                             <Button
-                                                Margin="5"
+                                                Margin="10,5"
                                                 Padding="10"
                                                 Click="ImportVideo"
                                                 Style="{StaticResource ButtonMain}">
@@ -1624,7 +1570,7 @@
                                             </Button>
 
                                             <super:Switch
-                                                Height="25"
+                                                Height="20"
                                                 Background="{DynamicResource Window.Title.Background}"
                                                 CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
                                                 Click="SetSelectMode"
@@ -1632,39 +1578,22 @@
 
                                             <TextBlock
                                                 VerticalAlignment="Center"
+                                                FontSize="14"
                                                 Foreground="{DynamicResource Window.Foreground}"
                                                 Style="{StaticResource BaseTextBlock}"
                                                 Text="{DynamicResource MultiSelect}" />
 
-                                            <Border
-                                                MouseLeftButtonUp="RandomDisplay"
-                                                Style="{StaticResource ToolsBarBorderStyle}"
-                                                ToolTip="{DynamicResource ToolTip_RandomShow}">
+                                            <super:HoverPath
+                                                Margin="5,0"
+                                                Click="RandomDisplay"
+                                                Data="M927.9656 226.555186a27.839408 27.839408 0 0 0 14.079701-41.91911 44.159062 44.159062 0 0 0-18.879599-14.0797c-74.622414-32.639306-149.308827-64.638626-223.931241-95.99796L523.238201 0h-23.935492l-15.99966 7.03985c-114.877559 48.318973-229.115131 95.99796-343.288705 145.596906l-43.775069 18.879599a29.119381 29.119381 0 0 0-19.839579 27.199422 28.479395 28.479395 0 0 0 19.199592 27.839409c1.599966 0 4.735899 1.919959 6.399864 2.879939C232.108387 287.99388 362.601614 346.232643 492.838847 405.111391a39.679157 39.679157 0 0 0 38.079191 0L863.96696 255.99456c22.399524-9.919789 42.879089-20.159572 63.99864-29.439374zM352.105837 223.99524a107.77371 107.77371 0 0 1-118.397484 0 31.99932 31.99932 0 0 1 0-55.358824 88.95811 88.95811 0 0 1 50.942918-17.599626 105.597756 105.597756 0 0 1 67.454566 17.599626 31.99932 31.99932 0 0 1 0 55.358824z m218.555356 0a106.493737 106.493737 0 0 1-119.03747 0 31.99932 31.99932 0 0 1 0-54.718837 100.733859 100.733859 0 0 1 63.99864-17.599626c18.687603 0.063999 36.863217 5.887875 52.158891 16.639646a31.99932 31.99932 0 0 1 2.879939 55.678817z m219.77133 0a107.77371 107.77371 0 0 1-118.397484 0 31.99932 31.99932 0 0 1 0-55.358824c16.767644-12.799728 37.503203-19.263591 58.558756-18.239612 20.927555-1.023978 41.599116 5.18389 58.558755 17.599626a31.99932 31.99932 0 0 1 1.279973 55.99881zM470.503321 437.110711a2911.938121 2911.938121 0 0 1-86.718157-39.03917C281.131346 351.99252 180.333488 307.833459 78.959642 262.394424a31.99932 31.99932 0 0 0-29.439375-1.919959 34.239272 34.239272 0 0 0-17.279632 33.919279v495.98946a61.758688 61.758688 0 0 0 39.359163 62.078681c124.797348 55.294825 248.570718 110.717647 372.344088 167.036451 26.879429 11.77575 46.399014 0 46.399014-30.079361V475.509895a31.99932 31.99932 0 0 0-21.119551-37.759197l1.279972-0.639987z m-185.212064 243.194833a31.99932 31.99932 0 0 1-54.398844 2.81594 95.99796 95.99796 0 0 1-21.119551-75.134404 134.397144 134.397144 0 0 1 14.399694-42.879089 31.99932 31.99932 0 0 1 54.078851-4.159911c14.271697 16.511649 22.207528 37.6312 22.399524 59.518735 1.151976 20.991554-4.22391 41.919109-15.359674 59.77473zM945.565226 262.394424L555.30152 437.430705a36.479225 36.479225 0 0 0-23.359504 36.479224v514.805061a29.119381 29.119381 0 0 0 44.479055 29.439374l377.143985-169.276403a59.518735 59.518735 0 0 0 38.399184-56.638796V293.753758c0-28.799388-20.479565-42.495097-46.399014-31.359334z m-241.530867 578.163714a31.99932 31.99932 0 0 1-55.03883-2.879939 109.117681 109.117681 0 0 1 7.03985-118.077491 31.99932 31.99932 0 0 1 55.03883 4.159912c9.599796 16.831642 14.207698 36.031234 13.439715 55.358824a95.99796 95.99796 0 0 1-20.479565 61.438694z m170.492377-293.113771a31.99932 31.99932 0 0 1-56.574798-3.455927 109.757668 109.757668 0 0 1 5.439885-115.517545 31.99932 31.99932 0 0 1 58.494757 4.799898c8.639816 14.59169 12.991724 31.359334 12.479734 48.318973a104.317783 104.317783 0 0 1-21.439544 65.918599h1.599966z"
+                                                ToolTip="{DynamicResource ToolTip_RandomShow}" />
 
-                                                <Viewbox Width="auto" Height="18">
-                                                    <Path
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Data="M927.9656 226.555186a27.839408 27.839408 0 0 0 14.079701-41.91911 44.159062 44.159062 0 0 0-18.879599-14.0797c-74.622414-32.639306-149.308827-64.638626-223.931241-95.99796L523.238201 0h-23.935492l-15.99966 7.03985c-114.877559 48.318973-229.115131 95.99796-343.288705 145.596906l-43.775069 18.879599a29.119381 29.119381 0 0 0-19.839579 27.199422 28.479395 28.479395 0 0 0 19.199592 27.839409c1.599966 0 4.735899 1.919959 6.399864 2.879939C232.108387 287.99388 362.601614 346.232643 492.838847 405.111391a39.679157 39.679157 0 0 0 38.079191 0L863.96696 255.99456c22.399524-9.919789 42.879089-20.159572 63.99864-29.439374zM352.105837 223.99524a107.77371 107.77371 0 0 1-118.397484 0 31.99932 31.99932 0 0 1 0-55.358824 88.95811 88.95811 0 0 1 50.942918-17.599626 105.597756 105.597756 0 0 1 67.454566 17.599626 31.99932 31.99932 0 0 1 0 55.358824z m218.555356 0a106.493737 106.493737 0 0 1-119.03747 0 31.99932 31.99932 0 0 1 0-54.718837 100.733859 100.733859 0 0 1 63.99864-17.599626c18.687603 0.063999 36.863217 5.887875 52.158891 16.639646a31.99932 31.99932 0 0 1 2.879939 55.678817z m219.77133 0a107.77371 107.77371 0 0 1-118.397484 0 31.99932 31.99932 0 0 1 0-55.358824c16.767644-12.799728 37.503203-19.263591 58.558756-18.239612 20.927555-1.023978 41.599116 5.18389 58.558755 17.599626a31.99932 31.99932 0 0 1 1.279973 55.99881zM470.503321 437.110711a2911.938121 2911.938121 0 0 1-86.718157-39.03917C281.131346 351.99252 180.333488 307.833459 78.959642 262.394424a31.99932 31.99932 0 0 0-29.439375-1.919959 34.239272 34.239272 0 0 0-17.279632 33.919279v495.98946a61.758688 61.758688 0 0 0 39.359163 62.078681c124.797348 55.294825 248.570718 110.717647 372.344088 167.036451 26.879429 11.77575 46.399014 0 46.399014-30.079361V475.509895a31.99932 31.99932 0 0 0-21.119551-37.759197l1.279972-0.639987z m-185.212064 243.194833a31.99932 31.99932 0 0 1-54.398844 2.81594 95.99796 95.99796 0 0 1-21.119551-75.134404 134.397144 134.397144 0 0 1 14.399694-42.879089 31.99932 31.99932 0 0 1 54.078851-4.159911c14.271697 16.511649 22.207528 37.6312 22.399524 59.518735 1.151976 20.991554-4.22391 41.919109-15.359674 59.77473zM945.565226 262.394424L555.30152 437.430705a36.479225 36.479225 0 0 0-23.359504 36.479224v514.805061a29.119381 29.119381 0 0 0 44.479055 29.439374l377.143985-169.276403a59.518735 59.518735 0 0 0 38.399184-56.638796V293.753758c0-28.799388-20.479565-42.495097-46.399014-31.359334z m-241.530867 578.163714a31.99932 31.99932 0 0 1-55.03883-2.879939 109.117681 109.117681 0 0 1 7.03985-118.077491 31.99932 31.99932 0 0 1 55.03883 4.159912c9.599796 16.831642 14.207698 36.031234 13.439715 55.358824a95.99796 95.99796 0 0 1-20.479565 61.438694z m170.492377-293.113771a31.99932 31.99932 0 0 1-56.574798-3.455927 109.757668 109.757668 0 0 1 5.439885-115.517545 31.99932 31.99932 0 0 1 58.494757 4.799898c8.639816 14.59169 12.991724 31.359334 12.479734 48.318973a104.317783 104.317783 0 0 1-21.439544 65.918599h1.599966z"
-                                                        Fill="{DynamicResource Window.Foreground}" />
-                                                </Viewbox>
-                                            </Border>
-                                            <Border
-                                                MouseLeftButtonUp="ShowFilterGrid"
-                                                Style="{StaticResource ToolsBarBorderStyle}"
-                                                ToolTip="{DynamicResource Filter}">
-
-                                                <Viewbox Width="auto" Height="18">
-                                                    <Path
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Data="M452.923077 512v275.692308l118.153846-98.461539v-177.230769l177.230769-177.230769H275.692308l177.230769 177.230769zM0 512C0 229.218462 229.238154 0 512 0c282.781538 0 512 229.238154 512 512 0 282.781538-229.238154 512-512 512C229.218462 1024 0 794.761846 0 512z"
-                                                        Fill="{DynamicResource Window.Foreground}" />
-                                                </Viewbox>
-                                            </Border>
-
-
-
+                                            <super:HoverPath
+                                                Margin="5,0"
+                                                Click="ShowFilterGrid"
+                                                Data="M452.923077 512v275.692308l118.153846-98.461539v-177.230769l177.230769-177.230769H275.692308l177.230769 177.230769zM0 512C0 229.218462 229.238154 0 512 0c282.781538 0 512 229.238154 512 512 0 282.781538-229.238154 512-512 512C229.218462 1024 0 794.761846 0 512z"
+                                                ToolTip="{StaticResource Filter}" />
 
 
                                             <Border
@@ -1673,10 +1602,11 @@
                                                 CornerRadius="5">
                                                 <StackPanel Name="ViewModeStackPanel" Orientation="Horizontal">
                                                     <super:PathRadioButton
+                                                        Width="25"
                                                         CornerRadius="5,0,0,5"
                                                         Fill="{DynamicResource Window.Foreground}"
                                                         Path="M886.680128 13.86578H136.468464c-37.340302 0-62.274379 24.934078-62.274379 62.274379v871.841311c0 37.340302 24.934078 62.274379 62.274379 62.27438h750.211664c37.340302 0 62.274379-24.934078 62.27438-62.27438V76.140159c0-37.340302-24.934078-62.274379-62.27438-62.274379zM136.468464 76.140159h750.211664V617.878608L710.682029 451.002732 442.731916 730.021143 318.061527 617.878608 136.468464 792.295522V76.140159z m0 871.841311v-78.572752l184.025656-170.524765L599.75579 947.98147H136.468464z m549.401117 0l-200.688918-181.836322 225.501366-234.258701 175.998099 164.321654v251.65174H685.869581z m0 0"
-                                                        PathHeight="20"
+                                                        PathHeight="15"
                                                         PathMargin="5 0 3 0"
                                                         Style="{StaticResource PathGroupRadioButton}"
                                                         ToolTip="{DynamicResource Thumbnail}" />
@@ -1686,7 +1616,7 @@
                                                         Fill="{DynamicResource Window.Foreground}"
                                                         IsChecked="True"
                                                         Path="M934.4 107.52H89.6c-20.48 0-35.84 15.36-35.84 35.84V883.2c0 20.48 15.36 35.84 35.84 35.84h844.8c20.48 0 35.84-15.36 35.84-35.84V143.36c0-20.48-15.36-35.84-35.84-35.84z m-35.84 739.84H125.44V176.64h775.68v670.72h-2.56z m0 0 M335.36 440.32c38.4 0 71.68-30.72 71.68-71.68 0-38.4-30.72-71.68-71.68-71.68-38.4 0-71.68 30.72-71.68 71.68 2.56 40.96 33.28 71.68 71.68 71.68z m0 0M652.8 396.8L445.44 691.2 337.92 540.16 158.72 793.6h704L652.8 396.8z m0 0"
-                                                        PathHeight="20"
+                                                        PathHeight="15"
                                                         Style="{StaticResource PathGroupRadioButton}"
                                                         ToolTip="{DynamicResource Poster}" />
                                                     <super:PathRadioButton
@@ -1705,13 +1635,12 @@
                                                 </StackPanel>
                                             </Border>
 
-
-                                            <Border
+                                            <super:HoverPath
                                                 Name="SortBorder"
-                                                MouseUp="ShowContextMenu"
-                                                Style="{StaticResource ToolsBarBorderStyle}"
+                                                MenuOnLeftClick="True"
+                                                Style="{StaticResource SortHoverPath}"
                                                 ToolTip="{DynamicResource Sorting}">
-                                                <Border.ContextMenu>
+                                                <super:HoverPath.ContextMenu>
                                                     <ContextMenu HorizontalOffset="-50">
                                                         <MenuItem Header="{DynamicResource ID}" IsCheckable="True" />
                                                         <MenuItem Header="{DynamicResource Favorites}" IsCheckable="True" />
@@ -1724,15 +1653,8 @@
                                                         <MenuItem Header="{DynamicResource Rating}" IsCheckable="True" />
                                                         <MenuItem Header="{DynamicResource Duration}" IsCheckable="True" />
                                                     </ContextMenu>
-                                                </Border.ContextMenu>
-                                                <Viewbox Width="auto" Height="18">
-                                                    <Path
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Data="M44.032 451.584c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m0 302.592c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m519.68-484.352c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68z m170.496-120.832c-22.528 0-40.96 18.432-40.96 40.96V834.56c0 22.528 18.432 40.96 40.96 40.96h38.912c15.36 0 28.16-8.192 35.328-20.48l212.48-212.48c0-22.528-18.432-40.96-40.96-40.96H814.08V189.952c0-22.528-18.432-40.96-40.96-40.96h-38.912z"
-                                                        Fill="{DynamicResource Window.Foreground}" />
-                                                </Viewbox>
-                                            </Border>
+                                                </super:HoverPath.ContextMenu>
+                                            </super:HoverPath>
 
 
                                         </StackPanel>
@@ -2113,12 +2035,11 @@
                                                     </StackPanel>
                                                 </Border>
 
-                                                <Border
+                                                <super:HoverPath
                                                     Name="ActorSortBorder"
-                                                    MouseUp="ShowContextMenu"
-                                                    Style="{StaticResource ToolsBarBorderStyle}"
+                                                    Style="{StaticResource SortHoverPath}"
                                                     ToolTip="{DynamicResource Sorting}">
-                                                    <Border.ContextMenu>
+                                                    <super:HoverPath.ContextMenu>
                                                         <ContextMenu HorizontalOffset="-50">
                                                             <MenuItem Header="{DynamicResource Rating}" IsCheckable="True" />
                                                             <MenuItem Header="{DynamicResource Name}" IsCheckable="True" />
@@ -2139,15 +2060,9 @@
                                                             <MenuItem Header="{DynamicResource Actress_Age}" IsCheckable="True" />
 
                                                         </ContextMenu>
-                                                    </Border.ContextMenu>
-                                                    <Viewbox Width="auto" Height="18">
-                                                        <Path
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Data="M44.032 451.584c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m0 302.592c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032z m519.68-484.352c22.528 0 40.96-18.432 40.96-40.96v-38.912c0-22.528-18.432-40.96-40.96-40.96H44.032c-22.528 0-40.96 18.432-40.96 40.96v38.912c0 22.528 18.432 40.96 40.96 40.96h519.68z m170.496-120.832c-22.528 0-40.96 18.432-40.96 40.96V834.56c0 22.528 18.432 40.96 40.96 40.96h38.912c15.36 0 28.16-8.192 35.328-20.48l212.48-212.48c0-22.528-18.432-40.96-40.96-40.96H814.08V189.952c0-22.528-18.432-40.96-40.96-40.96h-38.912z"
-                                                            Fill="{DynamicResource Window.Foreground}" />
-                                                    </Viewbox>
-                                                </Border>
+                                                    </super:HoverPath.ContextMenu>
+                                                </super:HoverPath>
+
 
                                             </StackPanel>
                                         </super:SimplePanel>
@@ -2532,32 +2447,10 @@
                                     Text="{DynamicResource DragFileInOr}" />
                                 <Button Click="ImportVideo" Content="{DynamicResource Scan}" />
                             </StackPanel>
-
-
                         </Border>
                     </super:SimplePanel>
 
-                    <Button
-                        Height="30"
-                        Margin="5"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        super:CommonExt.CornerRadius="5"
-                        super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
-                        Background="{DynamicResource Window.InnerDialog.Background}"
-                        Click="HideBeginScanGrid"
-                        Style="{StaticResource FlatButton}">
-                        <Viewbox
-                            Width="12"
-                            Height="auto"
-                            VerticalAlignment="Center">
-                            <Path
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
-                                Fill="{DynamicResource Window.Foreground}" />
-                        </Viewbox>
-                    </Button>
+                    <super:HoverPath Click="HideBeginScanGrid" Style="{StaticResource CloseHoverPath}" />
                 </super:SimplePanel>
 
             </Grid>
@@ -2707,27 +2600,13 @@
                                             </Button.ContextMenu>
                                         </Button>
 
-                                        <Border
+                                        <super:HoverPath
                                             Grid.Column="2"
-                                            Margin="5,0"
-                                            MouseLeftButtonUp="HideScreenShotPopup"
-                                            Style="{StaticResource ToolsBarBorderStyle}">
-
-                                            <Viewbox
-                                                Width="15"
-                                                Height="15"
-                                                RenderTransformOrigin="0.5,0.5">
-                                                <Viewbox.RenderTransform>
-                                                    <RotateTransform Angle="90" />
-                                                </Viewbox.RenderTransform>
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M312.889 995.556c-17.067 0-28.445-5.69-39.822-17.067-22.756-22.756-17.067-56.889 5.689-79.645L642.844 568.89c11.378-11.378 17.067-22.756 17.067-34.133 0-11.378-5.689-22.756-17.067-34.134L273.067 187.733c-22.756-22.755-28.445-56.889-5.69-79.644 22.756-22.756 56.89-28.445 79.645-5.689l364.09 312.889C745.243 443.733 768 489.244 768 534.756s-17.067 85.333-51.2 119.466L352.711 984.178c-11.378 5.689-28.444 11.378-39.822 11.378z"
-                                                    Fill="{DynamicResource Window.Foreground}" />
-                                            </Viewbox>
-                                        </Border>
-
+                                            Width="20"
+                                            Height="20"
+                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
+                                            Click="HideScreenShotPopup"
+                                            Style="{StaticResource DownHoverPath}" />
 
                                     </Grid>
 
@@ -3078,42 +2957,20 @@
                                             Style="{StaticResource BaseTextBlock}"
                                             Text="{DynamicResource ScanTask}" />
 
-                                        <Border
+                                        <super:HoverPath
                                             Grid.Column="1"
+                                            Width="23"
+                                            Height="23"
                                             Margin="0"
-                                            MouseLeftButtonUp="ClearScanTasks"
-                                            Style="{StaticResource ToolsBarBorderStyle}">
-
-                                            <Viewbox Width="15" Height="15">
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M187.118702 146.498562l771.355932 0.002047v60.796667l-771.355932-0.002046v-60.796668z m0 222.286666l771.355932 0.002046v60.796668l-771.355932-0.002047v-60.796667z m0 224.186945l406.576948 0.001023v60.796668l-406.576948-0.001023v-60.796668z m0 222.286666l406.576948 0.001023v60.796668l-406.576948-0.001024v-60.796667zM65.525366 146.497539h60.796668v60.796668H65.525366v-60.796668z m0 222.287689h60.796668v60.796667H65.525366v-60.796667z m0 224.186945h60.796668v60.796668H65.525366v-60.796668z m0 222.286666h60.796668v60.796667H65.525366v-60.796667z m873.494171 4.916986l-85.97614-85.97614 85.97614-85.976141-57.326637-57.326636-85.97614 85.97614-85.97614-85.97614-57.325613 57.325613 85.97614 85.97614-85.97614 85.97614 57.325613 57.326637 85.97614-85.97614 85.977164 85.97614"
-                                                    Fill="{DynamicResource Window.Foreground}" />
-                                            </Viewbox>
-                                        </Border>
-                                        <Border
+                                            Click="ClearScanTasks"
+                                            Style="{StaticResource DeleteHoverPath}" />
+                                        <super:HoverPath
                                             Grid.Column="2"
-                                            Margin="5,0"
-                                            MouseLeftButtonUp="HideScanPopup"
-                                            Style="{StaticResource ToolsBarBorderStyle}">
-
-                                            <Viewbox
-                                                Width="15"
-                                                Height="15"
-                                                RenderTransformOrigin="0.5,0.5">
-                                                <Viewbox.RenderTransform>
-                                                    <RotateTransform Angle="90" />
-                                                </Viewbox.RenderTransform>
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M312.889 995.556c-17.067 0-28.445-5.69-39.822-17.067-22.756-22.756-17.067-56.889 5.689-79.645L642.844 568.89c11.378-11.378 17.067-22.756 17.067-34.133 0-11.378-5.689-22.756-17.067-34.134L273.067 187.733c-22.756-22.755-28.445-56.889-5.69-79.644 22.756-22.756 56.89-28.445 79.645-5.689l364.09 312.889C745.243 443.733 768 489.244 768 534.756s-17.067 85.333-51.2 119.466L352.711 984.178c-11.378 5.689-28.444 11.378-39.822 11.378z"
-                                                    Fill="{DynamicResource Window.Foreground}" />
-                                            </Viewbox>
-                                        </Border>
-
-
+                                            Width="20"
+                                            Height="20"
+                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
+                                            Click="HideScanPopup"
+                                            Style="{StaticResource DownHoverPath}" />
                                     </Grid>
 
                                     <ItemsControl
@@ -3388,28 +3245,13 @@
                                             </Button.ContextMenu>
                                         </Button>
 
-                                        <Border
+                                        <super:HoverPath
                                             Grid.Column="2"
-                                            Margin="5,0"
-                                            MouseLeftButtonUp="HideDownloadPopup"
-                                            Style="{StaticResource ToolsBarBorderStyle}">
-
-                                            <Viewbox
-                                                Width="15"
-                                                Height="15"
-                                                RenderTransformOrigin="0.5,0.5">
-                                                <Viewbox.RenderTransform>
-                                                    <RotateTransform Angle="90" />
-                                                </Viewbox.RenderTransform>
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M312.889 995.556c-17.067 0-28.445-5.69-39.822-17.067-22.756-22.756-17.067-56.889 5.689-79.645L642.844 568.89c11.378-11.378 17.067-22.756 17.067-34.133 0-11.378-5.689-22.756-17.067-34.134L273.067 187.733c-22.756-22.755-28.445-56.889-5.69-79.644 22.756-22.756 56.89-28.445 79.645-5.689l364.09 312.889C745.243 443.733 768 489.244 768 534.756s-17.067 85.333-51.2 119.466L352.711 984.178c-11.378 5.689-28.444 11.378-39.822 11.378z"
-                                                    Fill="{DynamicResource Window.Foreground}" />
-                                            </Viewbox>
-                                        </Border>
-
-
+                                            Width="20"
+                                            Height="20"
+                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
+                                            Click="HideDownloadPopup"
+                                            Style="{StaticResource DownHoverPath}" />
                                     </Grid>
 
                                     <ItemsControl
@@ -3694,40 +3536,21 @@
                                             Style="{StaticResource BaseTextBlock}"
                                             Text="{DynamicResource RecentMsg}" />
 
-                                        <Border
+                                        <super:HoverPath
                                             Grid.Column="1"
+                                            Width="23"
+                                            Height="23"
                                             Margin="0"
-                                            MouseLeftButtonUp="ClearMsg"
-                                            Style="{StaticResource ToolsBarBorderStyle}">
+                                            Click="ClearMsg"
+                                            Style="{StaticResource DeleteHoverPath}" />
 
-                                            <Viewbox Width="15" Height="15">
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M187.118702 146.498562l771.355932 0.002047v60.796667l-771.355932-0.002046v-60.796668z m0 222.286666l771.355932 0.002046v60.796668l-771.355932-0.002047v-60.796667z m0 224.186945l406.576948 0.001023v60.796668l-406.576948-0.001023v-60.796668z m0 222.286666l406.576948 0.001023v60.796668l-406.576948-0.001024v-60.796667zM65.525366 146.497539h60.796668v60.796668H65.525366v-60.796668z m0 222.287689h60.796668v60.796667H65.525366v-60.796667z m0 224.186945h60.796668v60.796668H65.525366v-60.796668z m0 222.286666h60.796668v60.796667H65.525366v-60.796667z m873.494171 4.916986l-85.97614-85.97614 85.97614-85.976141-57.326637-57.326636-85.97614 85.97614-85.97614-85.97614-57.325613 57.325613 85.97614 85.97614-85.97614 85.97614 57.325613 57.326637 85.97614-85.97614 85.977164 85.97614"
-                                                    Fill="{DynamicResource Window.Foreground}" />
-                                            </Viewbox>
-                                        </Border>
-                                        <Border
+                                        <super:HoverPath
                                             Grid.Column="2"
-                                            Margin="5,0"
-                                            MouseLeftButtonUp="HideMsgPopup"
-                                            Style="{StaticResource ToolsBarBorderStyle}">
-
-                                            <Viewbox
-                                                Width="15"
-                                                Height="15"
-                                                RenderTransformOrigin="0.5,0.5">
-                                                <Viewbox.RenderTransform>
-                                                    <RotateTransform x:Name="rotateTransform" Angle="90" />
-                                                </Viewbox.RenderTransform>
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M312.889 995.556c-17.067 0-28.445-5.69-39.822-17.067-22.756-22.756-17.067-56.889 5.689-79.645L642.844 568.89c11.378-11.378 17.067-22.756 17.067-34.133 0-11.378-5.689-22.756-17.067-34.134L273.067 187.733c-22.756-22.755-28.445-56.889-5.69-79.644 22.756-22.756 56.89-28.445 79.645-5.689l364.09 312.889C745.243 443.733 768 489.244 768 534.756s-17.067 85.333-51.2 119.466L352.711 984.178c-11.378 5.689-28.444 11.378-39.822 11.378z"
-                                                    Fill="{DynamicResource Window.Foreground}" />
-                                            </Viewbox>
-                                        </Border>
+                                            Width="20"
+                                            Height="20"
+                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
+                                            Click="HideMsgPopup"
+                                            Style="{StaticResource DownHoverPath}" />
 
 
                                     </Grid>

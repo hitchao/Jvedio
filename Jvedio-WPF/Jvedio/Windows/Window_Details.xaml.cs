@@ -703,10 +703,6 @@ namespace Jvedio
                 NextMovie(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             else if (e.Key == Key.Space || e.Key == Key.Enter || e.Key == Key.P)
                 PlayVideo(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            else if (e.Key == Key.E)
-                EditInfo(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            else if (e.Key == Key.D)
-                DownLoad(sender, new RoutedEventArgs());
         }
 
         private void SetImage(int idx)
@@ -1322,11 +1318,6 @@ namespace Jvedio
             return null;
         }
 
-        private void CopyVID(object sender, MouseButtonEventArgs e)
-        {
-            string vid = (sender as Border).Tag.ToString();
-            ClipBoard.TrySetDataObject(vid);
-        }
 
         private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
         {
@@ -1393,7 +1384,23 @@ namespace Jvedio
             CanRateChange = false;
         }
 
-        private void CopyVideoInfo(object sender, MouseButtonEventArgs e)
+        private void LabelChanged(object sender, RoutedEventArgs eventArgs)
+        {
+            List<string> list = new List<string>();
+            if (vieModel.CurrentVideo.LabelList != null)
+                list = vieModel.CurrentVideo.LabelList.Select(arg => arg.Value).ToList();
+            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
+            MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData());
+        }
+
+
+
+        private void AddToLabel(object sender, RoutedEventArgs e)
+        {
+            searchLabelPopup.IsOpen = true;
+        }
+
+        private void CopyVideoInfo(object sender, RoutedEventArgs e)
         {
             StringBuilder builder = new StringBuilder();
             foreach (var item in infoStackPanel.Children)
@@ -1416,24 +1423,7 @@ namespace Jvedio
                 ClipBoard.TrySetDataObject(builder.ToString());
             else
                 MessageNotify.Error("无信息！");
-        }
 
-
-
-        private void LabelChanged(object sender, RoutedEventArgs eventArgs)
-        {
-            List<string> list = new List<string>();
-            if (vieModel.CurrentVideo.LabelList != null)
-                list = vieModel.CurrentVideo.LabelList.Select(arg => arg.Value).ToList();
-            vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
-            MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData());
-        }
-
-
-
-        private void AddToLabel(object sender, RoutedEventArgs e)
-        {
-            searchLabelPopup.IsOpen = true;
         }
     }
 }

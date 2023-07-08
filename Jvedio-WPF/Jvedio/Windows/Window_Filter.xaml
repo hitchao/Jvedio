@@ -192,7 +192,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Data="M810.666667 810.666667V213.333333H213.333333v597.333334h597.333334m0-682.666667a85.333333 85.333333 0 0 1 85.333333 85.333333v597.333334a85.333333 85.333333 0 0 1-85.333333 85.333333H213.333333a85.333333 85.333333 0 0 1-85.333333-85.333333V213.333333a85.333333 85.333333 0 0 1 85.333333-85.333333h597.333334m-85.333334 341.333333v85.333334H298.666667v-85.333334h426.666666z"
-                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                        Fill="{DynamicResource Window.Foreground}" />
                                 </Viewbox>
                             </ToggleButton>
                         </StackPanel>
@@ -219,7 +219,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Data="M810.666667 810.666667V213.333333H213.333333v597.333334h597.333334m0-682.666667a85.333333 85.333333 0 0 1 85.333333 85.333333v597.333334a85.333333 85.333333 0 0 1-85.333333 85.333333H213.333333a85.333333 85.333333 0 0 1-85.333333-85.333333V213.333333a85.333333 85.333333 0 0 1 85.333333-85.333333h597.333334m-85.333334 341.333333v85.333334H298.666667v-85.333334h426.666666z"
-                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                        Fill="{DynamicResource Window.Foreground}" />
                                 </Viewbox>
                             </ToggleButton>
                         </StackPanel>
@@ -246,7 +246,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Data="M810.666667 810.666667V213.333333H213.333333v597.333334h597.333334m0-682.666667a85.333333 85.333333 0 0 1 85.333333 85.333333v597.333334a85.333333 85.333333 0 0 1-85.333333 85.333333H213.333333a85.333333 85.333333 0 0 1-85.333333-85.333333V213.333333a85.333333 85.333333 0 0 1 85.333333-85.333333h597.333334m-85.333334 341.333333v85.333334H298.666667v-85.333334h426.666666z"
-                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                        Fill="{DynamicResource Window.Foreground}" />
                                 </Viewbox>
                             </ToggleButton>
                         </StackPanel>
@@ -274,7 +274,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Data="M810.666667 810.666667V213.333333H213.333333v597.333334h597.333334m0-682.666667a85.333333 85.333333 0 0 1 85.333333 85.333333v597.333334a85.333333 85.333333 0 0 1-85.333333 85.333333H213.333333a85.333333 85.333333 0 0 1-85.333333-85.333333V213.333333a85.333333 85.333333 0 0 1 85.333333-85.333333h597.333334m-85.333334 341.333333v85.333334H298.666667v-85.333334h426.666666z"
-                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                        Fill="{DynamicResource Window.Foreground}" />
                                 </Viewbox>
                             </ToggleButton>
                         </StackPanel>
@@ -302,7 +302,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Data="M810.666667 810.666667V213.333333H213.333333v597.333334h597.333334m0-682.666667a85.333333 85.333333 0 0 1 85.333333 85.333333v597.333334a85.333333 85.333333 0 0 1-85.333333 85.333333H213.333333a85.333333 85.333333 0 0 1-85.333333-85.333333V213.333333a85.333333 85.333333 0 0 1 85.333333-85.333333h597.333334m-85.333334 341.333333v85.333334H298.666667v-85.333334h426.666666z"
-                                        Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                        Fill="{DynamicResource Window.Foreground}" />
                                 </Viewbox>
                             </ToggleButton>
                         </StackPanel>
@@ -340,7 +340,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Data="M835.072 184.32l-77.824 81.92c-64.512-66.56-153.6-106.496-251.904-106.496-195.584 0-355.328 159.744-355.328 354.304 0 195.584 159.744 354.304 355.328 354.304 147.456 0 304.128-80.896 337.92-245.76 3.072-15.36-9.216-23.552-21.504-23.552l-72.704 0c-15.36 0-28.672 14.336-29.696 24.576 0 2.048 0 3.072-1.024 3.072-32.768 96.256-107.52 119.808-212.992 119.808-128 0-232.448-104.448-232.448-232.448s104.448-231.424 232.448-231.424c64.512 0 121.856 26.624 165.888 69.632l-101.376 100.352c-1.024 0-1.024 1.024-2.048 1.024-20.48 22.528-12.288 37.888 11.264 37.888l256 0c22.528 0 36.864-15.36 36.864-37.888L871.936 193.536C870.912 174.08 857.6 166.912 835.072 184.32z"
-                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            Fill="{DynamicResource Window.Foreground}" />
                     </Viewbox>
                 </Border>
 
@@ -359,7 +359,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Data="M832.292571 484.059429a30.208 30.208 0 0 0-1.755428-44.397715 284.525714 284.525714 0 0 0-263.606857-56.978285L402.285714 254.025143a165.668571 165.668571 0 0 0-47.835428-135.460572 30.208 30.208 0 0 0-42.715429 0L118.491429 311.734857a30.208 30.208 0 0 0 0 42.788572c35.547429 35.766857 85.430857 53.394286 135.460571 47.835428l124.050286 158.72a286.061714 286.061714 0 0 0 52.443428 278.674286 30.208 30.208 0 0 0 44.324572 1.682286l357.449143-357.376z M634.221714 683.154286l51.712-51.638857 206.921143 206.848-51.712 51.712z"
-                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                            Fill="{DynamicResource Window.Foreground}" />
                     </Viewbox>
                 </ToggleButton>
             </Grid>

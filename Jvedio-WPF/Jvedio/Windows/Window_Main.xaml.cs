@@ -3146,19 +3146,7 @@ namespace Jvedio
             vieModel.MainDataChecked = true;
         }
 
-        private void RandomDisplay(object sender, MouseButtonEventArgs e)
-        {
-            vieModel.RandomDisplay();
-        }
 
-        private void ShowFilterGrid(object sender, MouseButtonEventArgs e)
-        {
-            MessageNotify.Info("开发中");
-            //if (windowFilter == null) windowFilter = new Window_Filter();
-            //windowFilter.Show();
-            //windowFilter.BringIntoView();
-            //windowFilter.Activate();
-        }
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
         {
@@ -3604,19 +3592,7 @@ namespace Jvedio
         }
 
 
-        private void ShowContextMenu(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                Border border = sender as Border;
-                ContextMenu contextMenu = border.ContextMenu;
-                contextMenu.PlacementTarget = border;
-                contextMenu.Placement = PlacementMode.Bottom;
-                contextMenu.IsOpen = true;
-            }
 
-            e.Handled = true;
-        }
 
         private void SortMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -3686,29 +3662,7 @@ namespace Jvedio
             vieModel.ActorPageSize = pagination.PageSize;
         }
 
-        private void NewTagStamp(object sender, MouseButtonEventArgs e)
-        {
-            Window_TagStamp window_TagStamp = new Window_TagStamp();
-            window_TagStamp.Owner = this;
-            bool? dialog = window_TagStamp.ShowDialog();
-            if ((bool)dialog)
-            {
-                string name = window_TagStamp.TagName;
-                if (string.IsNullOrEmpty(name)) return;
-                SolidColorBrush backgroundBrush = window_TagStamp.BackgroundBrush;
-                SolidColorBrush ForegroundBrush = window_TagStamp.ForegroundBrush;
 
-                TagStamp tagStamp = new TagStamp()
-                {
-                    TagName = name,
-                    Foreground = VisualHelper.SerializeBrush(ForegroundBrush),
-                    Background = VisualHelper.SerializeBrush(backgroundBrush),
-                };
-                tagStampMapper.Insert(tagStamp);
-                InitTagStamp();
-
-            }
-        }
 
         private void RefreshTagStamps(long tagID)
         {
@@ -4008,15 +3962,7 @@ namespace Jvedio
             msgPopup.IsOpen = true;
         }
 
-        private void HideMsgPopup(object sender, MouseButtonEventArgs e)
-        {
-            msgPopup.IsOpen = false;
-        }
 
-        private void ClearMsg(object sender, MouseButtonEventArgs e)
-        {
-            vieModel.Message.Clear();
-        }
 
         public void ShowSameActor(long actorID)
         {
@@ -4050,25 +3996,8 @@ namespace Jvedio
             scanStatusPopup.IsOpen = true;
         }
 
-        private void HideScanPopup(object sender, MouseButtonEventArgs e)
-        {
-            scanStatusPopup.IsOpen = false;
-        }
 
-        private void ClearScanTasks(object sender, MouseButtonEventArgs e)
-        {
-            for (int i = vieModel.ScanTasks.Count - 1; i >= 0; i--)
-            {
-                Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
-                if (scanTask.Status == System.Threading.Tasks.TaskStatus.Canceled ||
-                    scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
-                {
-                    vieModel.ScanTasks.RemoveAt(i);
-                }
-            }
 
-            vieModel.ScanStatus = "None";
-        }
 
         private void CancelScanTask(object sender, RoutedEventArgs e)
         {
@@ -4150,27 +4079,8 @@ namespace Jvedio
             new Dialog_Logs(string.Join(Environment.NewLine, task.Logs)).ShowDialog(this);
         }
 
-        private void GoToStartUp(object sender, MouseButtonEventArgs e)
-        {
-            Main.ClickGoBackToStartUp = true;
-            SetWindowVisualStatus(false); // 隐藏所有窗体
-            WindowStartUp windowStartUp = GetWindowByName("WindowStartUp", App.Current.Windows) as WindowStartUp;
-            if (windowStartUp == null) windowStartUp = new WindowStartUp();
-            Application.Current.MainWindow = windowStartUp;
-            windowStartUp.Show();
-        }
 
-        private void HideDownloadPopup(object sender, MouseButtonEventArgs e)
-        {
-            downloadStatusPopup.IsOpen = false;
-            downloadStatusPopup.StaysOpen = false;
-        }
 
-        private void HideScreenShotPopup(object sender, MouseButtonEventArgs e)
-        {
-            screenShotStatusPopup.IsOpen = false;
-            screenShotStatusPopup.StaysOpen = false;
-        }
 
         private void ShowContextMenu(object sender, RoutedEventArgs e)
         {
@@ -4918,6 +4828,96 @@ namespace Jvedio
         private void OpenServerWindow(object sender, MouseButtonEventArgs e)
         {
             OpenServer(null, null);
+        }
+
+        private void GoToStartUp(object sender, RoutedEventArgs e)
+        {
+            Main.ClickGoBackToStartUp = true;
+            SetWindowVisualStatus(false); // 隐藏所有窗体
+            WindowStartUp windowStartUp = GetWindowByName("WindowStartUp", App.Current.Windows) as WindowStartUp;
+            if (windowStartUp == null) windowStartUp = new WindowStartUp();
+            Application.Current.MainWindow = windowStartUp;
+            windowStartUp.Show();
+        }
+
+        private void NewTagStamp(object sender, RoutedEventArgs e)
+        {
+            Window_TagStamp window_TagStamp = new Window_TagStamp();
+            window_TagStamp.Owner = this;
+            bool? dialog = window_TagStamp.ShowDialog();
+            if ((bool)dialog)
+            {
+                string name = window_TagStamp.TagName;
+                if (string.IsNullOrEmpty(name)) return;
+                SolidColorBrush backgroundBrush = window_TagStamp.BackgroundBrush;
+                SolidColorBrush ForegroundBrush = window_TagStamp.ForegroundBrush;
+
+                TagStamp tagStamp = new TagStamp()
+                {
+                    TagName = name,
+                    Foreground = VisualHelper.SerializeBrush(ForegroundBrush),
+                    Background = VisualHelper.SerializeBrush(backgroundBrush),
+                };
+                tagStampMapper.Insert(tagStamp);
+                InitTagStamp();
+
+            }
+        }
+
+        private void RandomDisplay(object sender, RoutedEventArgs e)
+        {
+            vieModel.RandomDisplay();
+        }
+
+        private void ShowFilterGrid(object sender, RoutedEventArgs e)
+        {
+            MessageNotify.Info("开发中");
+            //if (windowFilter == null) windowFilter = new Window_Filter();
+            //windowFilter.Show();
+            //windowFilter.BringIntoView();
+            //windowFilter.Activate();
+        }
+
+        private void ClearScanTasks(object sender, RoutedEventArgs e)
+        {
+            for (int i = vieModel.ScanTasks.Count - 1; i >= 0; i--)
+            {
+                Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
+                if (scanTask.Status == System.Threading.Tasks.TaskStatus.Canceled ||
+                    scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
+                {
+                    vieModel.ScanTasks.RemoveAt(i);
+                }
+            }
+
+            vieModel.ScanStatus = "None";
+        }
+
+        private void ClearMsg(object sender, RoutedEventArgs e)
+        {
+            vieModel.Message.Clear();
+        }
+
+        private void HideScanPopup(object sender, RoutedEventArgs e)
+        {
+            scanStatusPopup.IsOpen = false;
+        }
+
+        private void HideDownloadPopup(object sender, RoutedEventArgs e)
+        {
+            downloadStatusPopup.IsOpen = false;
+            downloadStatusPopup.StaysOpen = false;
+        }
+
+        private void HideMsgPopup(object sender, RoutedEventArgs e)
+        {
+            msgPopup.IsOpen = false;
+        }
+
+        private void HideScreenShotPopup(object sender, RoutedEventArgs e)
+        {
+            screenShotStatusPopup.IsOpen = false;
+            screenShotStatusPopup.StaysOpen = false;
         }
     }
 

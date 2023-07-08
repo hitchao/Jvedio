@@ -181,35 +181,11 @@
                                 Text="{Binding ViewAssociationDatas.Count, StringFormat=\ ({0})}" />
                         </StackPanel>
                     </Border>
-                    <Button
-                        Grid.Row="0"
-                        Width="25"
-                        Height="25"
-                        Margin="10"
-                        Padding="0"
-                        HorizontalAlignment="Right"
+
+                    <super:HoverPath
                         VerticalAlignment="Center"
-                        super:CommonExt.CornerRadius="5"
-                        super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
                         Click="HideAssocPopup"
-                        Style="{StaticResource FlatButton}">
-                        <Viewbox
-                            Width="12"
-                            Height="auto"
-                            VerticalAlignment="Center">
-                            <Path
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
-                                Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                        </Viewbox>
-                    </Button>
-
-
-
-
-
-
+                        Style="{StaticResource CloseHoverPath}" />
 
                     <ScrollViewer
                         Grid.Row="1"
@@ -373,12 +349,9 @@
                                                     Text="{Binding VID, Mode=OneWay}"
                                                     TextAlignment="Left"
                                                     Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-                                                <Border
-                                                    Grid.Column="1"
-                                                    MouseLeftButtonDown="CopyVID"
-                                                    Tag="{Binding VID}">
-                                                    <Border.Style>
-                                                        <Style BasedOn="{StaticResource ToolsBarBorderStyle}" TargetType="Border">
+                                                <super:HoverPath Grid.Column="1" CopyData="{Binding VID}">
+                                                    <super:HoverPath.Style>
+                                                        <Style BasedOn="{StaticResource CopyHoverPath}" TargetType="super:HoverPath">
                                                             <Setter Property="Visibility" Value="Hidden" />
                                                             <Setter Property="Margin" Value="0" />
                                                             <Style.Triggers>
@@ -387,16 +360,9 @@
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </Border.Style>
+                                                    </super:HoverPath.Style>
+                                                </super:HoverPath>
 
-                                                    <Viewbox Width="auto" Height="13">
-                                                        <Path
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
-                                                            Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                                    </Viewbox>
-                                                </Border>
 
 
                                                 <!--  标签戳  -->
@@ -667,31 +633,13 @@
                                 Style="{StaticResource BaseTextBlock}"
                                 Text="{DynamicResource Edit}" />
                         </Border>
-
-
-
-                        <Button
+                        <super:HoverPath
                             Width="30"
                             Height="30"
                             Margin="5,5,10,5"
-                            VerticalAlignment="Stretch"
-                            super:CommonExt.CornerRadius="3"
-                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Deep.Background}"
+                            VerticalAlignment="Center"
                             Click="CloseWindow"
-                            Style="{StaticResource FlatButton}">
-                            <Viewbox
-                                Width="10"
-                                Height="auto"
-                                Margin="-5,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center">
-                                <Path
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Data="M610.218667 505.6l398.08-387.413333a49.664 49.664 0 0 0 0-71.338667l-2.133334-2.133333a52.992 52.992 0 0 0-73.301333 0L534.784 432.64 136.704 44.373333a52.992 52.992 0 0 0-73.386667 0L61.269333 46.592a48.810667 48.810667 0 0 0 0 71.338667l398.165334 387.669333-398.165334 387.498667a49.664 49.664 0 0 0 0 71.253333l2.218667 2.133333c20.48 19.626667 52.821333 19.626667 73.301333 0l398.08-387.413333 398.08 387.413333c20.48 19.626667 52.906667 19.626667 73.386667 0l2.048-2.133333a49.664 49.664 0 0 0 0-71.253333l-398.08-387.413334z"
-                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                            </Viewbox>
-                        </Button>
+                            Style="{StaticResource CloseHoverPath}" />
                     </StackPanel>
 
 
@@ -1027,7 +975,11 @@
                                                     FontSize="24"
                                                     Foreground="{DynamicResource Window.Foreground}"
                                                     Style="{StaticResource ViewTextBox}"
-                                                    Text="{Binding CurrentVideo.VID, Mode=OneWay}" />
+                                                    Text="{Binding CurrentVideo.VID, Mode=OneWay, FallbackValue=VID}" />
+                                                <super:HoverPath
+                                                    Grid.Column="1"
+                                                    CopyData="{Binding VID}"
+                                                    Style="{StaticResource CopyHoverPath}" />
                                             </StackPanel>
                                             <ItemsControl
                                                 Grid.Column="1"
@@ -1570,20 +1522,11 @@
                                     Style="{DynamicResource RoundTabItemStyle}">
                                     <StackPanel Name="infoStackPanel">
 
-                                        <Border
+                                        <super:HoverPath
                                             Grid.Column="1"
-                                            Margin="0"
                                             HorizontalAlignment="Left"
-                                            MouseLeftButtonDown="CopyVideoInfo"
-                                            Style="{StaticResource ToolsBarBorderStyle}">
-                                            <Viewbox Width="auto" Height="13">
-                                                <Path
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
-                                                    Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                            </Viewbox>
-                                        </Border>
+                                            Click="CopyVideoInfo"
+                                            Style="{StaticResource CopyHoverPath}" />
 
                                         <StackPanel Margin="0,5" Orientation="Horizontal">
                                             <TextBlock

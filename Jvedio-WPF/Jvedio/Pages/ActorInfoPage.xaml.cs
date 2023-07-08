@@ -68,11 +68,6 @@ namespace Jvedio.Pages
             this.Visibility = Visibility.Visible;
         }
 
-        private void HideActressGrid(object sender, MouseButtonEventArgs e)
-        {
-            this.Visibility = Visibility.Collapsed;
-            Close?.Invoke();
-        }
 
         private void Image_DragOver(object sender, DragEventArgs e)
         {
@@ -174,6 +169,12 @@ namespace Jvedio.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void HideActressGrid(object sender, RoutedEventArgs e)
+        {
+            this.Visibility = Visibility.Collapsed;
+            Close?.Invoke();
         }
     }
 }

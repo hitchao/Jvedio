@@ -71,7 +71,7 @@ namespace Jvedio
 
         private void RemoveAssociation(object sender, RoutedEventArgs e)
         {
-            Grid grid = (sender as Button).Parent as Grid;
+            Grid grid = (sender as FrameworkElement).Parent as Grid;
             if (grid == null || grid.Tag == null) return;
             long.TryParse(grid.Tag.ToString(), out long dataID);
             if (dataID <= 0) return;
@@ -85,7 +85,7 @@ namespace Jvedio
 
         private void RemoveExistAssociation(object sender, RoutedEventArgs e)
         {
-            Grid grid = (sender as Button).Parent as Grid;
+            Grid grid = (sender as FrameworkElement).Parent as Grid;
             if (grid == null || grid.Tag == null) return;
             long.TryParse(grid.Tag.ToString(), out long dataID);
             if (dataID <= 0) return;

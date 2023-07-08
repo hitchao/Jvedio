@@ -1273,15 +1273,6 @@ namespace Jvedio
             Properties.Settings.Default.ScanRe = (sender as TextBox).Text.Replace("；", ";");
         }
 
-        private void SetBasePicPath(object sender, MouseButtonEventArgs e)
-        {
-            var path = FileHelper.SelectPath(this);
-            if (Directory.Exists(path))
-            {
-                if (!path.EndsWith("\\")) path += "\\";
-                vieModel.BasePicPath = path;
-            }
-        }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1303,10 +1294,6 @@ namespace Jvedio
             //}
         }
 
-        private void ShowCrawlerHelp(object sender, MouseButtonEventArgs e)
-        {
-            MessageCard.Info(LangManager.GetValueByKey("CrawlerServerHint"));
-        }
 
 
 
@@ -1490,10 +1477,6 @@ namespace Jvedio
             FileHelper.TryOpenUrl(UrlManager.HEADER_HELP);
         }
 
-        private void ShowScanReHelp(object sender, MouseButtonEventArgs e)
-        {
-            // MessageCard.Info("在扫描时，对于视频 VID 的识别，例如填写正则为 .*钢铁侠.* 则只要文件名含有钢铁侠，");
-        }
 
 
 
@@ -1756,6 +1739,27 @@ namespace Jvedio
                 ApplySettings(null, null);
 
             }
+        }
+
+        private void SetBasePicPath(object sender, RoutedEventArgs e)
+        {
+            var path = FileHelper.SelectPath(this);
+            if (Directory.Exists(path))
+            {
+                if (!path.EndsWith("\\")) path += "\\";
+                vieModel.BasePicPath = path;
+            }
+        }
+
+        private void ShowScanReHelp(object sender, RoutedEventArgs e)
+        {
+            // MessageCard.Info("在扫描时，对于视频 VID 的识别，例如填写正则为 .*钢铁侠.* 则只要文件名含有钢铁侠，");
+
+        }
+
+        private void ShowCrawlerHelp(object sender, RoutedEventArgs e)
+        {
+            MessageCard.Info(LangManager.GetValueByKey("CrawlerServerHint"));
         }
     }
 }

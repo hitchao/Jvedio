@@ -168,17 +168,7 @@ namespace Jvedio
             calcSize();
         }
 
-        private void ChooseFile(object sender, MouseButtonEventArgs e)
-        {
 
-
-            List<string> fileNames = SelectVideo(vieModel.CurrentVideo.Path);
-            if (fileNames.Count > 0)
-            {
-                vieModel.CurrentVideo.Path = fileNames[0];
-                calcSize();
-            }
-        }
 
         public void calcSize()
         {
@@ -296,7 +286,18 @@ namespace Jvedio
             border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
         }
 
-        private void NewActor(object sender, MouseButtonEventArgs e)
+        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Border border = sender as Border;
+            TextBlock textBlock = border.Child as TextBlock;
+            string text = textBlock.Text;
+            string value = text.Substring(0, text.IndexOf("("));
+            vieModel.CurrentVideo.LabelList.Add(new ObservableString(value));
+            LabelChanged(null, null);
+            searchLabelPopup.IsOpen = false;
+        }
+
+        private void NewActor(object sender, RoutedEventArgs e)
         {
             searchActorPopup.IsOpen = true;
             vieModel.SelectActor();
@@ -305,7 +306,7 @@ namespace Jvedio
                 MessageCard.Info(LangManager.GetValueByKey("ShowActorImageWarning"));
         }
 
-        private void DeleteActor(object sender, MouseButtonEventArgs e)
+        private void DeleteActor(object sender, RoutedEventArgs e)
         {
             long actorID = getDataID(sender as FrameworkElement);
 
@@ -319,17 +320,14 @@ namespace Jvedio
             }
         }
 
-        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
+        private void ChooseFile(object sender, RoutedEventArgs e)
         {
-            Border border = sender as Border;
-            TextBlock textBlock = border.Child as TextBlock;
-            string text = textBlock.Text;
-            string value = text.Substring(0, text.IndexOf("("));
-            vieModel.CurrentVideo.LabelList.Add(new ObservableString(value));
-            LabelChanged(null, null);
-            searchLabelPopup.IsOpen = false;
+            List<string> fileNames = SelectVideo(vieModel.CurrentVideo.Path);
+            if (fileNames.Count > 0)
+            {
+                vieModel.CurrentVideo.Path = fileNames[0];
+                calcSize();
+            }
         }
-
-
     }
 }
