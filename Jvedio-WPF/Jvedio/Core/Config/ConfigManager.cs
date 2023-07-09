@@ -8,7 +8,7 @@ using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio
 {
@@ -16,7 +16,7 @@ namespace Jvedio
     {
         public const string RELEASE_DATE = "2023-07-08";
 
-        public static bool Loaded = false;
+        public static bool Loaded { get; set; } = false;
 
 
         public static StartUp StartUp { get; set; }
@@ -108,6 +108,8 @@ namespace Jvedio
             if (Loaded)
                 return;
 
+            Logger.Info("init config");
+
             // 配置 ffmpeg 路径
             if (!File.Exists(ConfigManager.FFmpegConfig.Path) && File.Exists("ffmpeg.exe"))
                 ConfigManager.FFmpegConfig.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");
@@ -122,6 +124,7 @@ namespace Jvedio
         public static void EnsurePicPaths()
         {
             if (string.IsNullOrEmpty(Settings.PicPathJson)) {
+                Logger.Info("pic path is empty, init new");
                 Dictionary<string, object> dict = new Dictionary<string, object>();
                 dict.Add(PathType.Absolute.ToString(), PathManager.PicPath);
                 dict.Add(PathType.RelativeToApp.ToString(), "./Pic");
@@ -136,7 +139,8 @@ namespace Jvedio
                 Settings.PicPathJson = JsonConvert.SerializeObject(dict);
                 Settings.PicPaths = dict;
             } else {
-                Dictionary<string, object> dictionary = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(Settings.PicPathJson);
+                Dictionary<string, object> dictionary =
+                    JsonUtils.TryDeserializeObject<Dictionary<string, object>>(Settings.PicPathJson);
                 if (dictionary == null)
                     return;
                 string str = dictionary[PathType.RelativeToData.ToString()].ToString();

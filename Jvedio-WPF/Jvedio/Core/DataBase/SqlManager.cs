@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Global;
 using System.IO;
+using static Jvedio.App;
 
 namespace Jvedio.Core.DataBase
 {
@@ -35,6 +36,9 @@ namespace Jvedio.Core.DataBase
             DEFAULT_SQLITE_CONFIG_PATH = Path.Combine(PathManager.CurrentUserFolder, DB_TABLENAME_APP_CONFIG + ".sqlite");
 
             DataBaseBusy = false;
+
+            Logger.Info("sql manager init ok");
+
         }
     }
 }

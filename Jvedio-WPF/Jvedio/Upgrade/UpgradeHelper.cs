@@ -1,17 +1,24 @@
-﻿
-
-using Jvedio.Core.Global;
+﻿using Jvedio.Core.Global;
 using SuperControls.Style.Upgrade;
 using SuperUtils.NetWork;
 using SuperUtils.NetWork.Crawler;
 using System.Threading.Tasks;
 using System.Windows;
+using static Jvedio.App;
 
 namespace Jvedio.Upgrade
 {
     public static class UpgradeHelper
     {
         public static int AUTO_CHECK_UPGRADE_DELAY = 60 * 1000;
+        private static bool WindowClosed { get; set; }
+        private static Window Window { get; set; }
+
+
+        private static SuperUpgrader Upgrader { get; set; }
+        private static Dialog_Upgrade dialog_Upgrade { get; set; }
+
+
         public static void Init(Window parent)
         {
             Upgrader = new SuperUpgrader();
@@ -26,6 +33,7 @@ namespace Jvedio.Upgrade
             Upgrader.AppName = "Jvedio.exe";
             Window = parent;
             WindowClosed = true;
+            Logger.Info("init upgrade ok");
         }
 
         public static void CreateDialog_Upgrade()
@@ -48,17 +56,18 @@ namespace Jvedio.Upgrade
             };
 
             WindowClosed = false;
+            Logger.Info("create upgrade dialog ok");
         }
 
-        private static bool WindowClosed { get; set; }
-        private static Window Window { get; set; }
+
 
         public static void OpenWindow()
         {
             if (WindowClosed)
                 CreateDialog_Upgrade();
-            dialog_Upgrade?.ShowDialog();
 
+            Logger.Info("open upgrade dialog");
+            dialog_Upgrade?.ShowDialog();
         }
 
         public static async Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> GetUpgradeInfo()
@@ -68,8 +77,6 @@ namespace Jvedio.Upgrade
             return await Upgrader.GetUpgradeInfo();
         }
 
-        private static SuperUpgrader Upgrader { get; set; }
-        private static Dialog_Upgrade dialog_Upgrade { get; set; }
 
     }
 }

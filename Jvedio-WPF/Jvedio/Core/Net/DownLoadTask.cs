@@ -22,10 +22,18 @@ namespace Jvedio.Core.Net
     // todo 检视
     public class DownLoadTask : AbstractTask
     {
+        private const String WRONG_STATUS_CODE = "-1";
+
         public bool DownloadPreview { get; set; } // 是否下载预览图
+        public long DataID { get; set; }
+
+        public DataType DataType { get; set; }
+
+        public string Title { get; set; }
+
+        public bool OverrideInfo { get; set; }// 强制下载覆盖信息
 
         public event EventHandler onDownloadSuccess;
-
         public event EventHandler onDownloadPreview;
 
         private static class Delay
@@ -55,22 +63,6 @@ namespace Jvedio.Core.Net
             DataType = data.DataType;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-                return false;
-            if (obj is DownLoadTask other)
-                return other.DataID.Equals(DataID);
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return DataID.GetHashCode();
-        }
-
-        private const String WRONG_STATUS_CODE = "-1";
-
         static Dictionary<int, string> STATUS_DICT = new Dictionary<int, string>()
         {
             {200,"成功获取资源" },
@@ -87,15 +79,6 @@ namespace Jvedio.Core.Net
                 return status.ToString();
             }
         }
-
-        public long DataID { get; set; }
-
-        public DataType DataType { get; set; }
-
-        public string Title { get; set; }
-
-        public bool OverrideInfo { get; set; }// 强制下载覆盖信息
-
 
         public async Task<Dictionary<string, object>> GetDataInfo(Video video, VideoDownLoader downLoader, RequestHeader header, Action<RequestHeader> headerCallBack)
         {
@@ -131,7 +114,7 @@ namespace Jvedio.Core.Net
                 }
 
                 // 等待了很久都没成功
-                Logger.Info($"暂停 {DateHelper.ToReadableTime(Delay.INFO)}");
+                Logger.Info($"wait {DateHelper.ToReadableTime(Delay.INFO)} ms");
                 await Task.Delay(Delay.INFO);
                 return dict;
             } else {
@@ -161,13 +144,13 @@ namespace Jvedio.Core.Net
                         StatusText = "3.1 同步海报图成功";
                         return true;
                     } else
-                        Logger.Error($"同步海报图x失败x，获取字节大小为空");
+                        Logger.Error($"sync poster failed, file byte is empty");
                     await Task.Delay(Delay.BIG_IMAGE);
                 } else {
                     Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                 }
             } else {
-                Logger.Error("同步海报图地址为空");
+                Logger.Error("sync poster image url is empty");
             }
             return false;
         }
@@ -192,13 +175,13 @@ namespace Jvedio.Core.Net
                         StatusText = "4.1 同步缩略图成功";
                         return true;
                     } else
-                        Logger.Error($"同步缩略图x失败x，获取字节大小为空");
+                        Logger.Error($"sync thumbnail failed, file byte is empty");
                     await Task.Delay(Delay.SMALL_IMAGE);
                 } else {
                     Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                 }
             } else {
-                Logger.Error("同步缩略图地址为空");
+                Logger.Error("sync thumbnail image url is empty");
             }
             return false;
         }
@@ -209,7 +192,8 @@ namespace Jvedio.Core.Net
                 int actorCount = actorNames.Count;
                 for (int i = 0; i < actorCount; i++) {
                     string actorName = actorNames[i];
-                    ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
+                    ActorInfo actorInfo =
+                        actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorName", actorName));
                     if (actorInfo == null || actorInfo.ActorID <= 0) {
                         actorInfo = new ActorInfo();
                         actorInfo.ActorName = actorName;
@@ -239,8 +223,13 @@ namespace Jvedio.Core.Net
             }
 
             // 必须要有演员头像才能导入
-            if (names != null && urls != null && names is List<string> actorNames && urls is List<string> ActressImageUrl) {
-                if (actorNames != null && ActressImageUrl != null && actorNames.Count == ActressImageUrl.Count) {
+            if (names != null &&
+                urls != null &&
+                names is List<string> actorNames &&
+                urls is List<string> ActressImageUrl) {
+                if (actorNames != null &&
+                    ActressImageUrl != null &&
+                    actorNames.Count == ActressImageUrl.Count) {
                     int actorCount = actorNames.Count;
                     for (int i = 0; i < actorCount; i++) {
                         string actorName = actorNames[i];
@@ -268,13 +257,17 @@ namespace Jvedio.Core.Net
                                 FileHelper.ByteArrayToFile(fileByte, saveFileName);
                                 StatusText = $"{i + 1}/{actorCount}同步演员头像（{actorName}）成功";
                             } else
-                                Logger.Error($"{i + 1}/{actorCount}同步演员头像（{actorName}）x失败x，获取字节大小为空");
+                                Logger.Error($"{i + 1}/{actorCount} sync actor（{actorName}）image failed, file byte is empty");
                         } else {
                             Logger.Info($"{LangManager.GetValueByKey("SkipDownloadImage")} {saveFileName}");
                         }
                     }
                     return true;
+                } else {
+                    Logger.Error("empty: ActressImageUrl,  actorNames");
                 }
+            } else {
+                Logger.Error("empty: names,  urls");
             }
             return false;
         }
@@ -284,7 +277,9 @@ namespace Jvedio.Core.Net
             if (!ConfigManager.DownloadConfig.DownloadPreviewImage)
                 return true;
             object urls = GetInfoFromExist("ExtraImageUrl", video, dict);
-            if (DownloadPreview && urls != null && urls is List<string> imageUrls) {
+            if (DownloadPreview &&
+                urls != null &&
+                urls is List<string> imageUrls) {
                 if (imageUrls != null && imageUrls.Count > 0) {
                     int imageCount = imageUrls.Count;
                     for (int i = 0; i < imageCount; i++) {
@@ -294,9 +289,9 @@ namespace Jvedio.Core.Net
                         }
                         string url = imageUrls[i];
                         // 下载图片
-                        string saveDir = video.getExtraImage();
-                        if (!Directory.Exists(saveDir))
-                            Directory.CreateDirectory(saveDir);
+                        string saveDir = video.GetExtraImage();
+                        DirHelper.TryCreateDirectory(saveDir);
+
                         string saveFileName = Path.Combine(saveDir, Path.GetFileName(url));
                         if (!File.Exists(saveFileName)) {
                             StatusText = $"{LangManager.GetValueByKey("Preview")} {i + 1}/{imageCount}";
@@ -310,7 +305,7 @@ namespace Jvedio.Core.Net
                                 onDownloadPreview?.Invoke(this, arg);
                                 StatusText = $"{i + 1}/{imageCount}同步预览图 成功";
                             } else {
-                                Logger.Error($"{i + 1}/{imageCount}同步预览图 x失败x，获取字节大小为空");
+                                Logger.Error($"{i + 1}/{imageCount} sync preview image failed，file byte is empty");
                             }
 
                             await Task.Delay(Delay.EXTRA_IMAGE);
@@ -319,11 +314,14 @@ namespace Jvedio.Core.Net
                         }
                     }
                     return true;
+                } else {
+                    Logger.Error("empty: imageUrls");
                 }
-            } else if (!DownloadPreview)
+            } else if (!DownloadPreview) {
                 StatusText = LangManager.GetValueByKey("NotSetPreviewDownload");
-            else
-                Logger.Info("该资源无预览图");
+            } else {
+                Logger.Warning("remote data does not have preview images");
+            }
             return false;
         }
 
@@ -495,6 +493,21 @@ namespace Jvedio.Core.Net
             }
 
             return null;
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is DownLoadTask other)
+                return other.DataID.Equals(DataID);
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return DataID.GetHashCode();
         }
     }
 }

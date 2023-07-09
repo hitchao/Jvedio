@@ -29,7 +29,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
@@ -84,7 +84,7 @@ namespace Jvedio
         {
             SetShadow();            // 设置阴影
             SetSkin();
-            vieModel = new VieModel_Details();
+            vieModel = new VieModel_Details(this);
             vieModel.QueryCompleted += async delegate {
                 SetStatus(true);    // 设置状态
                 await LoadImage(vieModel.ShowScreenShot); // 加载图片
@@ -113,7 +113,7 @@ namespace Jvedio
 
         private void SetLabel()
         {
-            vieModel.getLabels();
+            vieModel.GetLabels();
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
@@ -408,7 +408,6 @@ namespace Jvedio
             }
 
             if (nextID > 0) {
-                vieModel.CleanUp();
                 cancelLoadImage = false;
                 vieModel.Load(nextID);
                 vieModel.SelectImageIndex = 0;
@@ -437,7 +436,6 @@ namespace Jvedio
 
             if (nextID > 0) {
                 cancelLoadImage = false;
-                vieModel.CleanUp();
                 vieModel.Load(nextID);
                 vieModel.SelectImageIndex = 0;
                 RemoveNewAddTag();
@@ -589,7 +587,6 @@ namespace Jvedio
                 idx = 0;
             if (idx >= 0 && idx < DataIDs.Count) {
                 cancelLoadImage = false;
-                vieModel.CleanUp();
                 vieModel.Load(DataIDs[idx]);
                 vieModel.SelectImageIndex = 0;
             } else {
@@ -1020,7 +1017,7 @@ namespace Jvedio
 
             // 扫描预览图目录
             List<string> imagePathList = new List<string>();
-            string imagePath = video.getExtraImage();
+            string imagePath = video.GetExtraImage();
             if (isScreenShot)
                 imagePath = video.GetScreenShot();
             await Task.Run(() => {
@@ -1188,7 +1185,7 @@ namespace Jvedio
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail"))) {
                 FileHelper.TryOpenSelectPath(video.GetSmallImage());
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview"))) {
-                FileHelper.TryOpenSelectPath(video.getExtraImage());
+                FileHelper.TryOpenSelectPath(video.GetExtraImage());
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot"))) {
                 FileHelper.TryOpenSelectPath(video.GetScreenShot());
             } else if (header.Equals("GIF")) {

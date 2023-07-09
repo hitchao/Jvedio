@@ -11,25 +11,30 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
+using static Jvedio.App;
 
 namespace Jvedio.ViewModel
 {
     class VieModel_Edit : ViewModelBase
     {
-        private Window_Edit windowEdit { get; set; }
+        private Window_Edit WindowEdit { get; set; }
 
-        private List<string> oldLabels { get; set; }
+        private List<string> OldLabels { get; set; }
 
-        private bool loadingLabel { get; set; }
+        private bool LoadingLabel { get; set; }
 
-        public VieModel_Edit(long dataId)
+        public VieModel_Edit(long dataId, Window_Edit windowEdit)
         {
-            windowEdit = GetWindowByName("Window_Edit", App.Current.Windows) as Window_Edit;
-            if (dataId <= 0)
+            WindowEdit = windowEdit;
+            if (dataId <= 0) {
+                Logger.Error("data id must > 0");
                 return;
+            }
             DataID = dataId;
             Reset();
         }
+
+        #region "属性"
 
         public Video _CurrentVideo;
 
@@ -175,7 +180,7 @@ namespace Jvedio.ViewModel
             set {
                 _LabelText = value;
                 RaisePropertyChanged();
-                getLabels();
+                GetLabels();
             }
         }
 
@@ -211,24 +216,31 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        #endregion
+
 
         public void Reset()
         {
             CurrentVideo = null;
             CurrentVideo = MapperManager.videoMapper.SelectVideoByID(DataID);
-            oldLabels = CurrentVideo.LabelList?.Select(arg => arg.Value).ToList();
+            OldLabels = CurrentVideo.LabelList?.Select(arg => arg.Value).ToList();
             ViewActors = new ObservableCollection<ActorInfo>();
             foreach (ActorInfo info in CurrentVideo.ActorInfos)
                 ViewActors.Add(info);
 
-            getLabels();
+            GetLabels();
+
+            Logger.Info("reset ok");
         }
 
-        public async void getLabels()
+        public async void GetLabels()
         {
-            if (loadingLabel)
+            if (LoadingLabel) {
+                Logger.Warn("label is loading");
                 return;
-            loadingLabel = true;
+            }
+
+            LoadingLabel = true;
             string like_sql = string.Empty;
 
             string search = LabelText.ToProperSql().Trim();
@@ -257,7 +269,7 @@ namespace Jvedio.ViewModel
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
             }
 
-            loadingLabel = false;
+            LoadingLabel = false;
         }
 
         private delegate void LoadLabelDelegate(string str);
@@ -277,11 +289,15 @@ namespace Jvedio.ViewModel
             int update1 = MapperManager.metaDataMapper.UpdateById(data);
             int update2 = MapperManager.videoMapper.UpdateById(CurrentVideo);
 
+            Logger.Info($"save metadata ret[{update1}], video ret[{update2}]");
+
             // 标签
             MapperManager.metaDataMapper.SaveLabel(data);
+            Logger.Info("save label");
 
             // 演员
             MapperManager.videoMapper.SaveActor(CurrentVideo, ViewActors.ToList());
+            Logger.Info("save actors");
 
             return update1 > 0 & update2 > 0;
         }
@@ -305,20 +321,11 @@ namespace Jvedio.ViewModel
             CurrentActorCount = CurrentActorList.Count;
         }
 
+
+        // todo 模块化
         public async void SelectActor()
         {
             string search = SearchText.ToProperSql().Trim();
-
-            // if (!string.IsNullOrEmpty(search))
-            //    like_sql = $" and ActorName like '%{search}%' ";
-
-            // string count_sql = "SELECT count(*) as Count " +
-            //             "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
-            //             "on metadata_to_actor.ActorID=actor_info.ActorID " +
-            //             "join metadata " +
-            //             "on metadata_to_actor.DataID=metadata.DataID " +
-            //             $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
-            //             like_sql + "GROUP BY actor_info.ActorID );";
             string count_sql = "SELECT count(*) as Count " +
                          "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
                          "on metadata_to_actor.ActorID=actor_info.ActorID " +
@@ -337,13 +344,6 @@ namespace Jvedio.ViewModel
             ActorTotalCount = actorMapper.SelectCount(count_sql);
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
 
-            // string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).ToSelect(false)} FROM actor_info " +
-            //    $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
-            //    $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
-            //    $"WHERE metadata.DBId={GlobalConfig.Main.CurrentDBId} and metadata.DataType={0} " +
-            //    like_sql +
-            //    $"GROUP BY actor_info.ActorID ORDER BY Count DESC"
-            //    + ActorToLimit();
             string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).ToSelect(false)} FROM actor_info " +
                         $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                         $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
@@ -357,7 +357,7 @@ namespace Jvedio.ViewModel
                          + ActorToLimit();
 
             // 只能手动设置页码，很奇怪
-            App.Current.Dispatcher.Invoke(() => { windowEdit.actorPagination.Total = ActorTotalCount; });
+            App.Current.Dispatcher.Invoke(() => { WindowEdit.actorPagination.Total = ActorTotalCount; });
 
             List<Dictionary<string, object>> list = actorMapper.Select(sql);
             List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);

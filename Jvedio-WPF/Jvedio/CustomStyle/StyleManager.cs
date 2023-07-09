@@ -10,19 +10,16 @@ namespace Jvedio
 
         public static FontFamily GlobalFont { get; set; }
 
-        public static string[] FontExt { get; set; }
-
-        static StyleManager()
-        {
-            FontExt = new[] { ".otf", ".ttf" };
-        }
+        public static string[] FontExt { get; set; } = new[] { ".otf", ".ttf" };
 
         public static class Common
         {
             public static class HighLight
             {
-                public static SolidColorBrush Background = (SolidColorBrush)Application.Current.Resources["Common.HighLight.Background"];
-                public static SolidColorBrush BorderBrush = (SolidColorBrush)Application.Current.Resources["Common.HighLight.BorderBrush"];
+                public static SolidColorBrush Background =
+                    (SolidColorBrush)Application.Current.Resources["Common.HighLight.Background"];
+                public static SolidColorBrush BorderBrush =
+                    (SolidColorBrush)Application.Current.Resources["Common.HighLight.BorderBrush"];
             }
         }
     }

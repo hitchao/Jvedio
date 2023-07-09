@@ -154,7 +154,7 @@ namespace Jvedio
             SelectedActress = new List<Actress>();
             ClickFilterDict = new List<string>() { "Genre", "Series", "Studio", "Director", };
 
-            vieModel = new VieModel_Main();
+            vieModel = new VieModel_Main(this);
             this.DataContext = vieModel;
             BindingEvent(); // 绑定控件事件
 
@@ -355,11 +355,11 @@ namespace Jvedio
             };
 
             // 加载关联影片完成
-            vieModel.LoadAssocMetaDataCompleted += (s, e) => {
-                //SetAssocSelected();
-                if (ConfigManager.Settings.AutoGenScreenShot)
-                    AutoGenScreenShot(vieModel.AssociationDatas);
-            };
+            //vieModel.LoadAssocMetaDataCompleted += (s, e) => {
+            //    //SetAssocSelected();
+            //    if (ConfigManager.Settings.AutoGenScreenShot)
+            //        AutoGenScreenShot(vieModel.AssociationDatas);
+            //};
 
             // 下载中
             Global.DownloadManager.Dispatcher.onWorking += (s, e) => {
@@ -1049,7 +1049,7 @@ namespace Jvedio
                 return;
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("LabelName", label);
-            vieModel.extraWrapper = wrapper;
+            vieModel.ExtraWrapper = wrapper;
             vieModel.ClickFilterType = "Label";
             pagination.CurrentPageChange -= Pagination_CurrentPageChange;
             vieModel.CurrentPage = 1;
@@ -1065,7 +1065,7 @@ namespace Jvedio
             if (string.IsNullOrEmpty(clickFilterType))
                 clickFilterType = ClickFilterDict[vieModel.ClassifySelectedIndex];
             wrapper.Like(clickFilterType, str);
-            vieModel.extraWrapper = wrapper;
+            vieModel.ExtraWrapper = wrapper;
             vieModel.ClickFilterType = clickFilterType;
             vieModel.CurrentPage = 1;
             vieModel.LoadData();
@@ -1950,91 +1950,44 @@ namespace Jvedio
 
         public void ReMoveZero(object sender, RoutedEventArgs e)
         {
-            // if (!Properties.Settings.Default.EditMode) vieModel.SelectedVideo.Clear();
+            HandleMenuSelected(sender, 1);
 
-            // Movie CurrentMovie = GetMovieFromVieModel(GetIDFromMenuItem(sender, 1));
-            // if (!vieModel.SelectedVideo.Select(g => g.id).ToList().Contains(CurrentMovie.id)) vieModel.SelectedVideo.Add(CurrentMovie);
-            // int successNum = 0;
-            // for (int i = 0; i < vieModel.SelectedVideo.Count; i++)
-            // {
-            //    Movie movie = vieModel.SelectedVideo[i];
-            //    string oldID = movie.id.ToUpper();
+            ObservableCollection<Video> videos = GetVideosByMenu(sender as MenuItem, 1);
+            if (videos == null)
+                return;
 
-            // Console.WriteLine(vieModel.CurrentVideoList[0].id);
+            int successNum = 0;
+            for (int i = 0; i < vieModel.SelectedVideo.Count; i++) {
+                Video video = vieModel.SelectedVideo[i];
+                string oldVID = video.VID.ToUpper();
 
-            // if (oldID.IndexOf("-") > 0)
-            //    {
-            //        string num = oldID.Split('-').Last();
-            //        string eng = oldID.Remove(oldID.Length - num.Length, num.Length);
-            //        if (num.Length == 5 && eng.Replace("-", "").All(char.IsLetter))
-            //        {
-            //            string newID = eng + num.Remove(0, 2);
-            //            if (DataBase.SelectMovieByID(newID) == null)
-            //            {
-            //                Movie newMovie = DataBase.SelectMovieByID(oldID);
-            //                DataBase.DeleteByField("movie", "id", oldID);
-            //                newMovie.id = newID;
-            //                DataBase.InsertFullMovie(newMovie);
-            //                UpdateInfo(oldID, newID);
-            //                successNum++;
-            //            }
-            //        }
+                Logger.Info($"remove vid zero, old vid: {oldVID}");
 
-            // }
-            // }
+                if (oldVID.IndexOf("-") <= 0) {
+                    Logger.Warn($"vid[{oldVID}] not contain '-'");
+                    continue;
+                }
 
-            // msgCard.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_Success")Num} {successNum}/{vieModel.SelectedVideo.Count}");
+                string num = oldVID.Split('-').Last();
+                string eng = oldVID.Remove(oldVID.Length - num.Length, num.Length);
+                if (num.StartsWith("00")) {
+                    string newVID = eng + num.Remove(0, 2);
+                    video.VID = newVID;
+                    Logger.Info($"update vid from {oldVID} to {newVID}");
+                    if (videoMapper.UpdateFieldById("VID", newVID, video.DataID)) {
+                        successNum++;
+                        RefreshData(video.DataID);
+                    }
+                } else {
+                    Logger.Warn($"{num} not starts with 00");
+                }
 
-            // vieModel.SelectedVideo.Clear();
-            // SetSelected();
-        }
+            }
 
-        private void UpdateInfo(string oldID, string newID)
-        {
-            // Movie movie = DataBase.SelectMovieByID(newID);
-            // SetImage(ref movie);
+            MessageCard.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_Success")} {successNum}/{vieModel.SelectedVideo.Count}");
 
-            // for (int i = 0; i < vieModel.CurrentVideoList.Count; i++)
-            // {
-            //    try
-            //    {
-            //        if (vieModel.CurrentVideoList[i]?.id.ToUpper() == oldID.ToUpper())
-            //        {
-            //            vieModel.CurrentVideoList[i] = null;
-            //            vieModel.CurrentVideoList[i] = movie;
-            //            break;
-            //        }
-            //    }
-            //    catch { }
-            // }
-
-            // for (int i = 0; i < vieModel.MovieList.Count; i++)
-            // {
-            //    try
-            //    {
-            //        if (vieModel.MovieList[i]?.id.ToUpper() == oldID.ToUpper())
-            //        {
-            //            vieModel.MovieList[i] = null;
-            //            vieModel.MovieList[i] = movie;
-            //            break;
-            //        }
-            //    }
-            //    catch { }
-            // }
-
-            // for (int i = 0; i < vieModel.FilterMovieList.Count; i++)
-            // {
-            //    try
-            //    {
-            //        if (vieModel.FilterMovieList[i]?.id.ToUpper() == oldID.ToUpper())
-            //        {
-            //            vieModel.FilterMovieList[i] = null;
-            //            vieModel.FilterMovieList[i] = movie;
-            //            break;
-            //        }
-            //    }
-            //    catch { }
-            // }
+            if (!Properties.Settings.Default.EditMode)
+                vieModel.SelectedVideo.Clear();
         }
 
         public void CopyFile(object sender, RoutedEventArgs e)
@@ -3354,7 +3307,7 @@ namespace Jvedio
         {
             Pagination pagination = sender as Pagination;
             vieModel.CurrentPage = pagination.CurrentPage;
-            VieModel_Main.pageQueue.Enqueue(pagination.CurrentPage);
+            VieModel_Main.PageQueue.Enqueue(pagination.CurrentPage);
             vieModel.LoadData();
         }
 
@@ -3503,7 +3456,7 @@ namespace Jvedio
                     if (video == null)
                         continue;
                     Video.SetImage(ref video);
-                    Video.setTagStamps(ref video); // 设置标签戳
+                    Video.SetTagStamps(ref video); // 设置标签戳
                     Video.HandleEmpty(ref video); // 设置标题和发行日期
 
                     // 设置关联
@@ -3658,7 +3611,7 @@ namespace Jvedio
                 return;
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("actor_info.ActorID", actorID);
-            vieModel.extraWrapper = wrapper;
+            vieModel.ExtraWrapper = wrapper;
             vieModel.ClickFilterType = "Actor";
             pagination.CurrentPageChange -= Pagination_CurrentPageChange;
             vieModel.CurrentPage = 1;
@@ -3860,7 +3813,7 @@ namespace Jvedio
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail"))) {
                 FileHelper.TryOpenSelectPath(video.GetSmallImage());
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview"))) {
-                FileHelper.TryOpenSelectPath(video.getExtraImage());
+                FileHelper.TryOpenSelectPath(video.GetExtraImage());
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot"))) {
                 FileHelper.TryOpenSelectPath(video.GetScreenShot());
             } else if (header.Equals("GIF")) {

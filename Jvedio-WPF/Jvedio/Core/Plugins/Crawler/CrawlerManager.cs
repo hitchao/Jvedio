@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Plugins.Crawler
 {
@@ -23,14 +24,8 @@ namespace Jvedio.Core.Plugins.Crawler
          */
         public static List<PluginMetaData> PluginMetaDatas { get; set; }
 
-        public static string BaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
-
-
-        private static void MoveDir(string baseDir)
-        {
-
-        }
-
+        public static string BaseDir =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
 
         // todo DLL 签名验证
         public static void Init(bool moveFile)
@@ -46,16 +41,20 @@ namespace Jvedio.Core.Plugins.Crawler
                         DirHelper.TryMoveDir(tempPath, crawler_dir, true);
                 }
                 string[] arr = FileHelper.TryGetAllFiles(crawler_dir, "*.dll");
-                if (arr == null || arr.Length <= 0)
+                if (arr == null || arr.Length <= 0) {
+                    Logger.Warn($"dir does not have dll: {crawler_dir}");
                     continue;
+                }
+
                 string dllPath = arr[0];
 
                 // 校验
                 PluginMetaData data = GetPluginData(dllPath);
-                if (data == null)
+                if (data == null) {
+                    Logger.Warn($"parse plugin meta data failed: {dllPath}");
                     continue;
+                }
                 data.SetPluginID(PluginType.Crawler, Path.GetFileName(crawler_dir));
-                //data.Enabled = true;
                 CrawlerInfo info = new CrawlerInfo();
                 info.Path = dllPath;
                 PluginMetaDatas.Add(data);
@@ -89,11 +88,16 @@ namespace Jvedio.Core.Plugins.Crawler
             string json_path = Path.Combine(basePath, "main.json");
             PluginMetaData data = null;
             string jsonPath = GetCrawlerJsonPath(json_path);
-            if (!File.Exists(jsonPath))
+            if (!File.Exists(jsonPath)) {
+                Logger.Warn($"file not exists: {jsonPath}");
                 return null;
+            }
             data = PluginMetaData.ParseByPath(jsonPath);
-            if (data == null)
+            if (data == null) {
+                Logger.Warn($"parse failed: {jsonPath}");
                 return null;
+            }
+
             // 必须加载
             Assembly dll = ReflectionHelper.TryLoadAssembly(dllPath);
             if (dll == null)
@@ -101,22 +105,23 @@ namespace Jvedio.Core.Plugins.Crawler
             Type classType = getPublicType(dll);
             if (classType == null)
                 return null;
-            data.Installed = true;
 
+            data.Installed = true;
             // 读取配置
             string configPath = Path.Combine(basePath, "config.json");
-            if (File.Exists(configPath) && FileHelper.TryReadFile(configPath) is string configString
-                && !string.IsNullOrEmpty(configString)) {
-                Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(configString);
+            if (File.Exists(configPath) &&
+                FileHelper.TryReadFile(configPath) is string configString &&
+                !string.IsNullOrEmpty(configString)) {
+                Dictionary<string, object> dict =
+                    JsonUtils.TryDeserializeObject<Dictionary<string, object>>(configString);
                 if (dict != null) {
                     dict.TryGetValue("enabled", out object enabledString);
                     if (enabledString is bool enabled)
                         data.Enabled = enabled;
                 }
+            } else {
+                Logger.Warn($"read plugin config failed: {configPath}");
             }
-
-
-
             return data;
         }
 
@@ -127,12 +132,6 @@ namespace Jvedio.Core.Plugins.Crawler
             return Path.Combine(dir, name + ".json");
         }
 
-        //public static bool IsPluginInUsed(string pluginId)
-        //{
-        //    // 如果在刮削，则不允许删除任何刮削器插件
-
-        //}
-
         private static Type getPublicType(Assembly dll)
         {
             Type[] types = null;
@@ -140,7 +139,6 @@ namespace Jvedio.Core.Plugins.Crawler
                 types = dll.GetTypes();
             } catch (Exception ex) {
                 MessageCard.Error(ex.Message);
-                Console.WriteLine(ex.Message);
                 return null;
             }
 

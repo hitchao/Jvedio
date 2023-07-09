@@ -3,6 +3,7 @@ using Jvedio.Core.Net;
 using SuperUtils.Framework.Tasks;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using static Jvedio.App;
 
 namespace Jvedio.Global
 {
@@ -20,11 +21,9 @@ namespace Jvedio.Global
         {
             Task.Run(async () => {
                 while (true) {
-
-
                     await Task.Delay(1000);
                     Dispatcher.Working = true;
-                    Debug.Print("下载中...");
+                    Logger.Debug("downloading ...");
                 }
             });
         }

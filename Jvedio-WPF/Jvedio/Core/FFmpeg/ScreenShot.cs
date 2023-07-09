@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static Jvedio.App;
 
 namespace Jvedio.Core.FFmpeg
 {
@@ -23,16 +24,21 @@ namespace Jvedio.Core.FFmpeg
         private const int DEFAULT_GIF_WIDTH = 280;
         private const int DEFAULT_GIF_HEIGHT = 170;
         private const int DEFAULT_DURATION = 3;
-        private object ScreenShotLockObject = new object();
+
+
+        public event EventHandler onProgress;
+        public event EventHandler onError;
+
+        private object ErrorLock { get; set; } = new object();
 
         private Video CurrentVideo { get; set; }
 
-        private int TotalCount = (int)ConfigManager.FFmpegConfig.ScreenShotNum;
-        private int TimeOut = (int)ConfigManager.FFmpegConfig.TimeOut;
-        private string FFmpegPath = ConfigManager.FFmpegConfig.Path;
-        private bool SkipExistScreenShot = ConfigManager.FFmpegConfig.SkipExistScreenShot;
+        private int TotalCount { get; set; } = (int)ConfigManager.FFmpegConfig.ScreenShotNum;
+        private int TimeOut { get; set; } = (int)ConfigManager.FFmpegConfig.TimeOut;
+        private string FFmpegPath { get; set; } = ConfigManager.FFmpegConfig.Path;
+        private bool SkipExistScreenShot { get; set; } = ConfigManager.FFmpegConfig.SkipExistScreenShot;
 
-        private List<string> saveFileNames = new List<string>();
+        private List<string> saveFileNames { get; set; } = new List<string>();
 
         public int TotalTaskCount { get; set; }
 
@@ -40,9 +46,9 @@ namespace Jvedio.Core.FFmpeg
 
         private object TaskCountLock = new object();
 
-        private StringBuilder outputs = new StringBuilder();
+        private StringBuilder outputs { get; set; } = new StringBuilder();
 
-        private CancellationToken Token;
+        private CancellationToken Token { get; set; }
 
         public ScreenShot(Video video, CancellationToken token)
         {
@@ -50,11 +56,6 @@ namespace Jvedio.Core.FFmpeg
             Token = token;
         }
 
-        public event EventHandler onProgress;
-
-        public event EventHandler onError;
-
-        private object ErrorLock = new object();
 
         public async Task<string> AsyncScreenShot()
         {
@@ -63,9 +64,17 @@ namespace Jvedio.Core.FFmpeg
             string originPath = CurrentVideo.Path;
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
-            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum, ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); // 获得需要截图的视频进度
+
+            // 获得需要截图的视频进度
+            string[] cutoffArray =
+                MediaParse.GetCutOffArray(originPath,
+                ConfigManager.FFmpegConfig.ScreenShotNum,
+                ConfigManager.FFmpegConfig.ScreenShotIgnoreStart,
+                ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd);
+
             if (cutoffArray == null || cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
+
             int threadNum = (int)ConfigManager.FFmpegConfig.ThreadNum; // 截图线程
             if (threadNum > MAX_THREAD_NUM || threadNum <= 0)
                 threadNum = DEFAULT_THREAD_NUM;
@@ -112,7 +121,7 @@ namespace Jvedio.Core.FFmpeg
             // 等待所有任务完成
             while (CurrentTaskCount < TotalTaskCount) {
                 await Task.Delay(50);
-                Console.WriteLine("等待截图完成");
+                Console.WriteLine("wait for screen done");
                 if (Token.IsCancellationRequested)
                     break;
             }
@@ -137,6 +146,7 @@ namespace Jvedio.Core.FFmpeg
                 EnableRaisingEvents = true,
             };
             try {
+                Logger.Info($"run ffmpeg cmd: {ffmpegParam}");
                 process.Start();
                 string processOutput = string.Empty;
                 while ((processOutput = process.StandardError.ReadLine()) != null) {
@@ -168,8 +178,13 @@ namespace Jvedio.Core.FFmpeg
             if (!File.Exists(originPath))
                 throw new NotFoundException(originPath);
 
-            string[] cutoffArray = MediaParse.GetCutOffArray(originPath, ConfigManager.FFmpegConfig.ScreenShotNum,
-                ConfigManager.FFmpegConfig.ScreenShotIgnoreStart, ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd); // 获得需要截图的视频进度
+            // 获得需要截图的视频进度
+            string[] cutoffArray =
+                MediaParse.GetCutOffArray(originPath,
+                ConfigManager.FFmpegConfig.ScreenShotNum,
+                ConfigManager.FFmpegConfig.ScreenShotIgnoreStart,
+                ConfigManager.FFmpegConfig.ScreenShotIgnoreEnd);
+
             if (cutoffArray.Length == 0)
                 throw new MediaCutOutOfRangeException();
 

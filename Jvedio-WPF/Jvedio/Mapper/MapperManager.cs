@@ -2,7 +2,7 @@
 using Jvedio.Core.DataBase.Tables;
 using Jvedio.Mapper;
 using System;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio
 {
@@ -26,16 +26,16 @@ namespace Jvedio
         public static UrlCodeMapper urlCodeMapper = new UrlCodeMapper();
         public static AssociationMapper associationMapper = new AssociationMapper();
 
-        private static bool Initialized { get; set; }
+        private static bool Loaded { get; set; }
 
         public static void ResetInitState()
         {
-            Initialized = false;
+            Loaded = false;
         }
 
         public static void Init()
         {
-            if (Initialized)
+            if (Loaded)
                 return;
 
             // todo 泛型似乎无法使用多态进行反射加载
@@ -84,7 +84,8 @@ namespace Jvedio
                 }
             }
 
-            Initialized = true;
+            Loaded = true;
+            Logger.Info("init mapper ok");
         }
 
         public static void Dispose()
@@ -106,6 +107,8 @@ namespace Jvedio
             actorMapper.Dispose();
             urlCodeMapper.Dispose();
             associationMapper.Dispose();
+
+            Logger.Info("dispose mapper ok");
         }
     }
 }

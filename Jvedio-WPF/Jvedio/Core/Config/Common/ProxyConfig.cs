@@ -2,7 +2,7 @@
 using SuperUtils.NetWork;
 using System;
 using System.Net;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Config
 {

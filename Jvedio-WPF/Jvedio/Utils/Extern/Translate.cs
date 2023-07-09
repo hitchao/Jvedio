@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace SuperUtils.External
 {

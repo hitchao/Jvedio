@@ -11,24 +11,21 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using static Jvedio.App;
 
 namespace Jvedio.ViewModel
 {
     public class VieModel_Settings : ViewModelBase
     {
-        public Dictionary<string, object> PicPaths { get; set; }
+        public Dictionary<string, object> PicPaths { get; set; } = new Dictionary<string, object>();
 
         public VieModel_Settings()
         {
-            PicPaths = new Dictionary<string, object>();
             SetServers();
             SetBasePicPaths();
             LoadNfoParseData();
+            Logger.Info("init view model setting ok");
         }
-
-
-
-
 
         public void LoadNfoParseData()
         {

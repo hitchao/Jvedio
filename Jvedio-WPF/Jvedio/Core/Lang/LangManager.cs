@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Lang
 {
@@ -8,7 +9,7 @@ namespace Jvedio.Core.Lang
         public static bool SetLang(string lang)
         {
             if (!SuperControls.Style.LangManager.SupportLanguages.Contains(lang)) {
-                Console.WriteLine("不支持的语言：" + lang);
+                Logger.Warn($"lang not support: {lang}");
                 return false;
             }
 
@@ -22,7 +23,7 @@ namespace Jvedio.Core.Lang
                         Application.Current.Resources.MergedDictionaries.Add(mergedDictionary);
                         return true;
                     } catch (Exception ex) {
-                        Console.WriteLine(ex.Message);
+                        Logger.Error(ex);
                         return false;
                     }
                 }

@@ -19,6 +19,14 @@ namespace Jvedio.Core.Scan
 {
     public class ScanTask : AbstractTask
     {
+
+        private const string DEFAULT_VIDEO_EXT = "3g2,3gp,3gp2,3gpp,amr,amv,asf,avi,bdmv,bik,d2v,divx,drc,dsa,dsm,dss,dsv,evo,f4v,flc,fli,flic,flv,hdmov,ifo,ivf,m1v,m2p,m2t,m2ts,m2v,m4b,m4p,m4v,mkv,mp2v,mp4,mp4v,mpe,mpeg,mpg,mpls,mpv2,mpv4,mov,mts,ogm,ogv,pss,pva,qt,ram,ratdvd,rm,rmm,rmvb,roq,rpm,smil,smk,swf,tp,tpr,ts,vob,vp6,webm,wm,wmp,wmv";
+        private const string DEFAULT_IMAGE_EXT = "png,jpg,jpeg,bmp,jpe,ico,gif";
+
+
+        public event EventHandler onScanning;
+
+
         public static string VIDEO_EXTENSIONS { get; set; }
 
         public static string PICTURE_EXTENSIONS { get; set; }
@@ -27,7 +35,18 @@ namespace Jvedio.Core.Scan
 
         public static List<string> PICTURE_EXTENSIONS_LIST { get; set; }
 
-        public event EventHandler onScanning;
+        public ScanResult ScanResult { get; set; }
+
+        public List<string> ScanPaths { get; set; }
+
+        public List<string> FilePaths { get; set; }
+
+        public List<string> FileExt { get; set; }
+
+        private List<Video> existVideos { get; set; }
+
+        private List<ActorInfo> existActors { get; set; }
+
 
         public static Dictionary<NotImportReason, string> ReasonToString = new Dictionary<NotImportReason, string>()
         {
@@ -38,32 +57,41 @@ namespace Jvedio.Core.Scan
             { NotImportReason.SizeTooLarge, LangManager.GetValueByKey("FileSizeTooBig") },
         };
 
+
+        private static string[] NFOUpdateMetaProps = new string[]
+        {
+            "Title",
+            "ReleaseYear",
+            "ReleaseDate",
+            "Country",
+            "Genre",
+            "Rating",
+            "LastScanDate",
+            "PathExist",
+        };
+
+        private static string[] NFOUpdateVideoProps = new string[]
+        {
+            "Plot",
+            "Director",
+            "Duration",
+            "Studio",
+            "Series",
+            "Outline",
+        };
+
         static ScanTask()
         {
-            VIDEO_EXTENSIONS = "3g2,3gp,3gp2,3gpp,amr,amv,asf,avi,bdmv,bik,d2v,divx,drc,dsa,dsm,dss,dsv,evo,f4v,flc,fli,flic,flv,hdmov,ifo,ivf,m1v,m2p,m2t,m2ts,m2v,m4b,m4p,m4v,mkv,mp2v,mp4,mp4v,mpe,mpeg,mpg,mpls,mpv2,mpv4,mov,mts,ogm,ogv,pss,pva,qt,ram,ratdvd,rm,rmm,rmvb,roq,rpm,smil,smk,swf,tp,tpr,ts,vob,vp6,webm,wm,wmp,wmv";
-            PICTURE_EXTENSIONS = "png,jpg,jpeg,bmp,jpe,ico,gif";
+            VIDEO_EXTENSIONS = DEFAULT_VIDEO_EXT;
+            PICTURE_EXTENSIONS = DEFAULT_IMAGE_EXT;
             VIDEO_EXTENSIONS_LIST = VIDEO_EXTENSIONS.Split(',').Select(arg => "." + arg).ToList();
             PICTURE_EXTENSIONS_LIST = PICTURE_EXTENSIONS.Split(',').Select(arg => "." + arg).ToList();
             STATUS_TO_TEXT_DICT[TaskStatus.Running] = $"{LangManager.GetValueByKey("Scanning")}...";
         }
 
-        #region "property"
 
-        public ScanResult ScanResult { get; set; }
-
-
-
-
-
-        #endregion
-
-        public List<string> ScanPaths { get; set; }
-
-        public List<string> FilePaths { get; set; }
-
-        public List<string> FileExt { get; set; }
-
-        public ScanTask(List<string> scanPaths, List<string> filePaths, IEnumerable<string> fileExt = null) : base()
+        public ScanTask(List<string> scanPaths, List<string> filePaths,
+            IEnumerable<string> fileExt = null) : base()
         {
             if (scanPaths != null && scanPaths.Count > 0)
                 ScanPaths = scanPaths.Where(arg => Directory.Exists(arg)).ToList();
@@ -91,9 +119,6 @@ namespace Jvedio.Core.Scan
             ScanResult = new ScanResult();
         }
 
-        private List<Video> existVideos { get; set; }
-
-        private List<ActorInfo> existActors { get; set; }
 
         public override void DoWork()
         {
@@ -319,32 +344,6 @@ namespace Jvedio.Core.Scan
                 ScanResult.FailNFO.AddRange(failNFO);
         }
 
-        private static string[] NFOUpdateMetaProps = new string[]
-        {
-            "Title",
-            "ReleaseYear",
-            "ReleaseDate",
-            "Country",
-            "Genre",
-            "Rating",
-            "LastScanDate",
-            "PathExist",
-        };
-
-        private static string[] NFOUpdateVideoProps = new string[]
-        {
-            "Plot",
-            "Director",
-            "Duration",
-            "Studio",
-            "Series",
-            "Outline",
-        };
-
-
-
-
-
         private void CopyNfoImage(Dictionary<string, string> dict, List<Video> import, ImageType imageType)
         {
             if (dict == null)
@@ -387,7 +386,7 @@ namespace Jvedio.Core.Scan
                 case ImageType.ScreenShot:
                     return video.GetScreenShot();
                 case ImageType.Preview:
-                    return video.getExtraImage();
+                    return video.GetExtraImage();
                 case ImageType.Actor:
                     return video.GetBigImage();
             }
@@ -409,19 +408,20 @@ namespace Jvedio.Core.Scan
                 if (arr == null || arr.Length == 0)
                     continue;
                 List<string> list = arr.ToList();
-                list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
+                list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST
+                                    .Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
                 string filename = Path.GetFileName(dirName);
-                string originPath = list.Where(arg => Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(filename) >= 0).FirstOrDefault();
+                string originPath = list.Where(arg =>
+                    Path.GetFileNameWithoutExtension(arg).ToLower().IndexOf(filename) >= 0).FirstOrDefault();
                 if (File.Exists(originPath)) {
                     string targetImagePath = GetImagePathByType(item, imageType);
                     if (!File.Exists(targetImagePath)) {
-                        targetImagePath = Path.Combine(Path.GetDirectoryName(targetImagePath), Path.GetFileNameWithoutExtension(targetImagePath)
-                            + Path.GetExtension(originPath));
+                        targetImagePath = Path.Combine(Path.GetDirectoryName(targetImagePath),
+                            Path.GetFileNameWithoutExtension(targetImagePath) + Path.GetExtension(originPath));
                         FileHelper.TryCopyFile(originPath, targetImagePath, true);
                     } else if (ConfigManager.ScanConfig.CopyNFOOverwriteImage) {
                         FileHelper.TryCopyFile(originPath, targetImagePath, true);
                     }
-
                 }
             }
         }
@@ -444,11 +444,11 @@ namespace Jvedio.Core.Scan
                 List<string> list = arr.ToList();
                 list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
                 // 预览图目录
-                string targetPath = item.getExtraImage();
+                string targetPath = item.GetExtraImage();
                 if (type == ImageType.ScreenShot)
                     targetPath = item.GetScreenShot();
                 else if (type == ImageType.Actor)
-                    targetPath = item.getActorPath();
+                    targetPath = item.GetActorPath();
                 DirHelper.TryCreateDirectory(targetPath);
                 foreach (var path in list) {
                     string targetFilePath = Path.Combine(targetPath, Path.GetFileName(path));
@@ -492,11 +492,6 @@ namespace Jvedio.Core.Scan
                 if (ConfigManager.ScanConfig.CopyNFOScreenShot)
                     CopyNfoImage(dict, import, ImageType.ScreenShot);
             }
-
-
-
-
-
 
             // 1. 需要更新的
             List<Video> toUpdate = new List<Video>();

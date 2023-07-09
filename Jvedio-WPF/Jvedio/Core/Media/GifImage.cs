@@ -11,6 +11,8 @@ using System.Windows.Media.Imaging;
 
 namespace Jvedio.Core.Media
 {
+
+    // todo
     public class GifImage : Image
     {
         private bool _isInitialized;

@@ -41,7 +41,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.Core.Global.UrlManager;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio

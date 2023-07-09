@@ -1,6 +1,7 @@
 ﻿using SuperControls.Style.Windows;
 using System;
 using System.IO;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Global
 {
@@ -48,8 +49,9 @@ namespace Jvedio.Core.Global
             CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName);
             try {
                 Directory.CreateDirectory(CurrentUserFolder);
+                Logger.Info("create user foled");
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex);
                 CurrentUserFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
                 try {
                     Directory.CreateDirectory(CurrentUserFolder);
@@ -75,6 +77,8 @@ namespace Jvedio.Core.Global
             oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase"); // Jvedio 5.0 之前的
             BasePicPath = string.Empty;
             PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
+
+            Logger.Info("init all dir ok");
         }
     }
 }

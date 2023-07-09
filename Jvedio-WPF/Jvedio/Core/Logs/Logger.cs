@@ -1,7 +1,10 @@
 ﻿using SuperUtils.Framework.Logger;
 using SuperUtils.IO;
+using SuperUtils.Time;
 using System;
 using System.IO;
+using System.Text;
+using System.Web.UI.WebControls;
 
 namespace Jvedio.Core.Logs
 {
@@ -11,13 +14,13 @@ namespace Jvedio.Core.Logs
     public class Logger : AbstractLogger
     {
 
-        private static string FilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+        private static string FilePath { get; set; } =
+            System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
 
         private static object LogLock { get; set; }
+        public static Logger Instance { get; }
 
         private Logger() { }
-
-        public static Logger Instance { get; }
 
         static Logger()
         {
@@ -28,12 +31,19 @@ namespace Jvedio.Core.Logs
 
         public override void LogPrint(string str)
         {
+            if (str == null)
+                str = "";
             Console.Write(str);
-            if (!Directory.Exists(FilePath))
-                SuperUtils.IO.DirHelper.TryCreateDirectory(FilePath);
-            string filepath = System.IO.Path.Combine(FilePath, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
+            DirHelper.TryCreateDirectory(FilePath);
+            string filepath =
+                System.IO.Path.Combine(FilePath, DateHelper.NowDate() + ".log");
             lock (LogLock) {
-                FileHelper.TryAppendToFile(filepath, str);
+                try {
+                    File.AppendAllText(filepath, str);
+                } catch (Exception ex) {
+                    // 防止递归
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
 

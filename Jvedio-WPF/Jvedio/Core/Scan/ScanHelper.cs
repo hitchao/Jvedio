@@ -15,27 +15,21 @@ using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio
 {
     public class ScanHelper
     {
-        private static string CHARACTERS = "abcdefghijklmn";
-        public static double MinFileSize { get; set; } // 最小文件大小（B）
-
-        public static string SubSectionFeature { get; set; }
-
-        public static List<string> FilePattern { get; set; } // 文件格式
-
+        private const string CHARACTERS = "abcdefghijklmn";
         public const int DEFAULT_MIN_FILESIZE = 1 * 1024 * 1024;   // 1MB
 
-        static ScanHelper()
-        {
-            MinFileSize = DEFAULT_MIN_FILESIZE;
-            SubSectionFeature = "-,_,cd,-cd,hd,whole";
-            FilePattern = new List<string>();
-        }
+        // 最小文件大小（B）
+        public static double MinFileSize { get; set; } = DEFAULT_MIN_FILESIZE;
+
+        public static string SubSectionFeature { get; set; } = "-,_,cd,-cd,hd,whole";
+
+        public static List<string> FilePattern { get; set; } = new List<string>();
 
         public static void InitSearchPattern()
         {
@@ -44,8 +38,12 @@ namespace Jvedio
         }
 
         public (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO)
-            ParseMovie(List<string> filepaths, List<string> fileExt, CancellationToken ct, bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
+            ParseMovie(List<string> filepaths, List<string> fileExt, CancellationToken ct,
+            bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
         {
+            if (filepaths == null || filepaths.Count == 0)
+                return (new List<Video>(), new Dictionary<string, NotImportReason>(), new List<string>());
+
             List<Video> import = new List<Video>();
             List<string> failNFO = new List<string>();
             Dictionary<string, NotImportReason> notImport = new Dictionary<string, NotImportReason>();
@@ -53,75 +51,75 @@ namespace Jvedio
             List<string> nfoPaths = new List<string>();
             List<string> videoPaths = new List<string>();
 
+
             minFileSize = (long)ConfigManager.ScanConfig.MinFileSize * 1024 * 1024;
             if (minFileSize < 0)
                 minFileSize = DEFAULT_MIN_FILESIZE;
 
-            if (filepaths != null || filepaths.Count > 0) {
-                foreach (var item in filepaths) {
-                    if (string.IsNullOrEmpty(item))
-                        continue;
-                    string path = item.ToLower().Trim();
-                    if (string.IsNullOrEmpty(path))
-                        continue;
+            foreach (var item in filepaths) {
+                if (string.IsNullOrEmpty(item))
+                    continue;
+                string path = item.ToLower().Trim();
+                if (string.IsNullOrEmpty(path))
+                    continue;
 
-                    if (path.EndsWith(".nfo"))
-                        nfoPaths.Add(item);
-                    else {
-                        if (fileExt.Contains(Path.GetExtension(item).ToLower()))
-                            videoPaths.Add(item);
-                        else
-                            notImport.Add(item, NotImportReason.NotInExtension);
-                    }
-                }
-
-                // 1. 先识别 nfo 再导入视频，避免路径覆盖
-                if (insertNFO && nfoPaths.Count > 0) {
-                    foreach (var item in nfoPaths) {
-                        Movie movie = null;
-                        try {
-                            movie = Movie.GetInfoFromNfo(item);
-                        } catch (Exception ex) {
-                            Logger.Error(ex);
-                            continue;
-                        }
-
-                        if (movie != null) {
-                            Video video = movie.toVideo();
-                            video.Path = item;
-                            video.LastScanDate = DateHelper.Now();
-                            video.Hash = Encrypt.FasterMd5(video.Path);
-                            import.Add(video);
-                        } else
-                            failNFO.Add(item); // 未从 nfo 中识别出有效的信息
-                    }
-                }
-
-                // 2. 导入视频
-                if (videoPaths.Count > 0) {
-                    try {
-                        List<Video> videos = DistinctMovie(videoPaths, ct, (list) => {
-                            foreach (var key in list.Keys) {
-                                notImport.Add(key, list[key]);
-                            }
-                        });
-
-                        // 检查是否大于给定大小的影片
-                        foreach (var item in videos.Where(arg => arg.Size < minFileSize).Select(arg => arg.Path)) {
-                            if (notImport.ContainsKey(item))
-                                continue;
-                            notImport.Add(item, NotImportReason.SizeTooSmall);
-                        }
-
-                        videos.RemoveAll(arg => arg.Size < minFileSize);
-                        import.AddRange(videos);
-                    } catch (OperationCanceledException) {
-                        callBack?.Invoke($"{SuperControls.Style.LangManager.GetValueByKey("Cancel")}");
-                    } catch (Exception ex) {
-                        callBack?.Invoke(ex.Message);
-                    }
+                if (path.EndsWith(".nfo"))
+                    nfoPaths.Add(item);
+                else {
+                    if (fileExt.Contains(Path.GetExtension(item).ToLower()))
+                        videoPaths.Add(item);
+                    else
+                        notImport.Add(item, NotImportReason.NotInExtension);
                 }
             }
+
+            // 1. 先识别 nfo 再导入视频，避免路径覆盖
+            if (insertNFO && nfoPaths.Count > 0) {
+                foreach (var item in nfoPaths) {
+                    Movie movie = null;
+                    try {
+                        movie = Movie.GetInfoFromNfo(item);
+                    } catch (Exception ex) {
+                        Logger.Error(ex);
+                        continue;
+                    }
+
+                    if (movie != null) {
+                        Video video = movie.toVideo();
+                        video.Path = item;
+                        video.LastScanDate = DateHelper.Now();
+                        video.Hash = Encrypt.FasterMd5(video.Path);
+                        import.Add(video);
+                    } else
+                        failNFO.Add(item); // 未从 nfo 中识别出有效的信息
+                }
+            }
+
+            // 2. 导入视频
+            if (videoPaths.Count > 0) {
+                try {
+                    List<Video> videos = DistinctMovie(videoPaths, ct, (list) => {
+                        foreach (var key in list.Keys) {
+                            notImport.Add(key, list[key]);
+                        }
+                    });
+
+                    // 检查是否大于给定大小的影片
+                    foreach (var item in videos.Where(arg => arg.Size < minFileSize).Select(arg => arg.Path)) {
+                        if (notImport.ContainsKey(item))
+                            continue;
+                        notImport.Add(item, NotImportReason.SizeTooSmall);
+                    }
+
+                    videos.RemoveAll(arg => arg.Size < minFileSize);
+                    import.AddRange(videos);
+                } catch (OperationCanceledException) {
+                    callBack?.Invoke($"{SuperControls.Style.LangManager.GetValueByKey("Cancel")}");
+                } catch (Exception ex) {
+                    callBack?.Invoke(ex.Message);
+                }
+            }
+
 
             return (import, notImport, failNFO);
         }
@@ -161,11 +159,11 @@ namespace Jvedio
             }
 
             result.AddRange(ScanTopPaths(stringCollection));
-            return FirstFilter(result);
+            return FilterFiles(result);
         }
 
         // 根据 视频后缀文件大小筛选
-        public List<string> FirstFilter(List<string> filePathList, string ID = "")
+        public List<string> FilterFiles(List<string> filePathList, string ID = "")
         {
             if (filePathList == null || filePathList.Count == 0)
                 return new List<string>();
@@ -235,13 +233,15 @@ namespace Jvedio
 
         public static (bool, List<string>, List<string>) HandleSubSection(List<string> filePathList)
         {
-            bool isSubSection = true;
-            List<string> notSubSection = new List<string>();
             if (filePathList == null || filePathList.Count == 0)
                 return (false, new List<string>(), new List<string>());
 
+            bool isSubSection = true;
+            List<string> notSubSection = new List<string>();
+
             string fatherPath = new FileInfo(filePathList[0]).Directory.FullName;
-            bool sameFatherPath = filePathList.All(arg => fatherPath.ToLower().Equals(FileHelper.TryGetFullName(arg)?.ToLower()));
+            bool sameFatherPath = filePathList.All(arg => fatherPath.ToLower()
+                .Equals(FileHelper.TryGetFullName(arg)?.ToLower()));
 
             if (!sameFatherPath) {
                 // 并不是所有父目录都相同，提取出父目录最多的文件

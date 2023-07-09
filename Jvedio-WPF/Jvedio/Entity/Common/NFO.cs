@@ -1,22 +1,27 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Entity
 {
     /// <summary>
     /// NFO
+    /// 标准：https://kodi.wiki/view/NFO_files/Movies
     /// </summary>
     public class NFO
     {
-        // NFO 标准：https://kodi.wiki/view/NFO_files/Movies
-        private XmlDocument XmlDoc = new XmlDocument();
-        private string FilePath = string.Empty;
+        private XmlDocument XmlDoc { get; set; } = new XmlDocument();
+        private string FilePath { get; set; } = string.Empty;
 
-        public NFO(string fP, string rootNodeName)
+        public NFO(string filePath, string rootNodeName)
         {
-            FilePath = fP;
+            FilePath = filePath;
+            CreateNewFile(FilePath, rootNodeName);
+        }
+
+        public void CreateNewFile(string filePath, string rootNodeName)
+        {
             try {
                 XmlNode header = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
                 XmlDoc.AppendChild(header);
@@ -39,7 +44,7 @@ namespace Jvedio.Entity
                 CreateNewNode("studio");
                 CreateNewNode("id");
                 CreateNewNode("num");
-                XmlDoc.Save(fP);
+                XmlDoc.Save(filePath);
             } catch (Exception ex) {
                 Logger.Error(ex);
             }

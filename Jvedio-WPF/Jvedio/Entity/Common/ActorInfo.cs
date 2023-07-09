@@ -19,6 +19,13 @@ namespace Jvedio.Entity
     [Table(tableName: "actor_info")]
     public class ActorInfo : INotifyPropertyChanged
     {
+        public ActorInfo()
+        {
+            Cup = 'Z';
+            Gender = Gender.Girl;
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void RaisePropertyChanged([CallerMemberName] string name = null)
@@ -73,12 +80,6 @@ namespace Jvedio.Entity
 
         public string ImageUrl { get; set; }
 
-        public ActorInfo()
-        {
-            Cup = 'Z';
-            Gender = Gender.Girl;
-        }
-
         [TableField(exist: false)]
         public long ImageID { get; set; }
 
@@ -98,26 +99,6 @@ namespace Jvedio.Entity
                 _smallimage = value;
                 RaisePropertyChanged();
             }
-        }
-
-
-
-        public override bool Equals(object obj)
-        {
-            ActorInfo actorInfo = obj as ActorInfo;
-            if (actorInfo == null)
-                return false;
-            return this.ActorID == actorInfo.ActorID;
-        }
-
-        public override int GetHashCode()
-        {
-            return this.ActorID.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return ClassUtils.ToString(this);
         }
 
         public static void SetImage(ref ActorInfo actorInfo)
@@ -175,5 +156,24 @@ namespace Jvedio.Entity
             return result;
         }
 
+
+        public override bool Equals(object obj)
+        {
+            ActorInfo actorInfo = obj as ActorInfo;
+            if (actorInfo == null)
+                return false;
+            return this.ActorID == actorInfo.ActorID;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ActorID.GetHashCode();
+        }
+
+
+        public override string ToString()
+        {
+            return ClassUtils.ToString(this);
+        }
     }
 }

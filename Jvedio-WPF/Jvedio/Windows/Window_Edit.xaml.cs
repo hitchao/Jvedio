@@ -35,7 +35,7 @@ namespace Jvedio
             InitializeComponent();
 
             Init();
-            vieModel = new VieModel_Edit(dataID);
+            vieModel = new VieModel_Edit(dataID, this);
             this.DataContext = vieModel;
         }
 

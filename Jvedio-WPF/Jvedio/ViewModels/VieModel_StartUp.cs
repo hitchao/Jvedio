@@ -7,15 +7,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using static Jvedio.MapperManager;
+using static Jvedio.App;
 
 namespace Jvedio.ViewModel
 {
     public class VieModel_StartUp : ViewModelBase
     {
-        public bool Sort = ConfigManager.StartUp.Sort;
-        public string SortType = ConfigManager.StartUp.SortType;
-        public string CurrentSearch = string.Empty;
-        public long CurrentSideIdx = ConfigManager.StartUp.SideIdx;
+        public bool Sort { get; set; } = ConfigManager.StartUp.Sort;
+        public string SortType { get; set; } = ConfigManager.StartUp.SortType;
+        public string CurrentSearch { get; set; } = string.Empty;
+        public long CurrentSideIdx { get; set; } = ConfigManager.StartUp.SideIdx;
 
         #region "属性"
 
@@ -119,7 +120,8 @@ namespace Jvedio.ViewModel
         {
             ReadFromDataBase();
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            Version = local.Substring(0, local.Length - ".0.0".Length);
+            if (local.EndsWith(".0.0"))
+                Version = local.Substring(0, local.Length - ".0.0".Length);
         }
 
         public void ReadFromDataBase()
@@ -134,6 +136,8 @@ namespace Jvedio.ViewModel
                 return;
             appDatabases.ForEach(item => Databases.Add(item));
             Search();
+
+            Logger.Info("read from database ok");
         }
 
         public void refreshItem()

@@ -17,12 +17,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.Upgrade
 {
     // 【重点】
+
+    [Obsolete]
     public static class Jvedio4ToJvedio5
     {
         public static void MoveScanPathConfig(string[] files)

@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Crawler;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Config
 {
@@ -11,6 +12,8 @@ namespace Jvedio.Core.Config
 
             // 代理设置
             CrawlerHeader.Init();
+
+            Logger.Info("util setting changed");
         }
     }
 }

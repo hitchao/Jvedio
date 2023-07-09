@@ -9,6 +9,7 @@ namespace Jvedio.Entity
     /// <summary>
     /// 主界面演员
     /// </summary>
+    [Obsolete]
     public class Actress : INotifyPropertyChanged, IDisposable
     {
         public event PropertyChangedEventHandler PropertyChanged;

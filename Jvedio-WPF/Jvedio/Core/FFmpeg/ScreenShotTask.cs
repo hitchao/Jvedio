@@ -12,6 +12,12 @@ namespace Jvedio.Core.FFmpeg
 {
     public class ScreenShotTask : AbstractTask
     {
+        public long DataID { get; set; }
+        public bool Gif { get; set; }
+
+        public DataType DataType { get; set; }
+
+        public string Title { get; set; }
 
         static ScreenShotTask()
         {
@@ -24,33 +30,12 @@ namespace Jvedio.Core.FFmpeg
             Gif = gif;
         }
 
-        public long DataID { get; set; }
-
-        public bool Gif { get; set; }
 
         public ScreenShotTask(MetaData data) : base()
         {
             DataID = data.DataID;
             DataType = data.DataType;
         }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-                return false;
-            if (obj is ScreenShotTask other)
-                return other.DataID.Equals(DataID);
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return DataID.GetHashCode();
-        }
-
-        public DataType DataType { get; set; }
-
-        public string Title { get; set; }
 
         public override void DoWork()
         {
@@ -59,7 +44,7 @@ namespace Jvedio.Core.FFmpeg
                 TimeWatch.Start();
                 Video video = videoMapper.SelectVideoByID(DataID);
                 if (video == null || video.DataID <= 0) {
-                    Logger.Error($"未找到 DataID={DataID} 的资源");
+                    Logger.Error($"can not find video by id[{DataID}]");
                     return;
                 }
 
@@ -96,6 +81,21 @@ namespace Jvedio.Core.FFmpeg
 
                 OnCompleted(null);
             });
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is ScreenShotTask other)
+                return other.DataID.Equals(DataID);
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return DataID.GetHashCode();
         }
     }
 }

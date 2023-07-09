@@ -7,8 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Entity.Common
 {
@@ -191,11 +190,6 @@ namespace Jvedio.Entity.Common
                     return (item.Key, parse);
             }
             return (null, null);
-        }
-
-        private static void ParseList(ref Movie movie)
-        {
-
         }
 
         public static void Parse(ref Movie movie, string name, string value)

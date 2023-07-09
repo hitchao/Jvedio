@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Config.Base
 {
@@ -43,6 +44,7 @@ namespace Jvedio.Core.Config.Base
             SelectWrapper<AppConfig> wrapper = new SelectWrapper<AppConfig>();
             wrapper.Eq("ConfigName", ConfigName);
             AppConfig appConfig = MapperManager.appConfigMapper.SelectOne(wrapper);
+            Logger.Info($"read config: {ConfigName}");
             if (appConfig == null || appConfig.ConfigId == 0)
                 return;
             Dictionary<string, object> dict = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(appConfig.ConfigValue);
@@ -74,6 +76,7 @@ namespace Jvedio.Core.Config.Base
             appConfig.ConfigName = ConfigName;
             appConfig.ConfigValue = JsonConvert.SerializeObject(dictionary);        // 不为 null
             MapperManager.appConfigMapper.Insert(appConfig, InsertMode.Replace);
+            Logger.Info($"save config: {ConfigName}");
         }
     }
 }

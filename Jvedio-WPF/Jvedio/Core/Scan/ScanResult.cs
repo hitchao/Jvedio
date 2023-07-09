@@ -18,10 +18,6 @@ namespace Jvedio.Core.Scan
             // 重复的资源统计
         }
 
-
-
-
-
         public Dictionary<string, string> Update { get; set; }
 
         public List<string> Logs { get; set; }

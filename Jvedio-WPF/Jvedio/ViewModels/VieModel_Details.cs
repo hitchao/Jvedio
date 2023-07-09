@@ -1,5 +1,4 @@
-﻿
-using Jvedio.Entity;
+﻿using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -12,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
@@ -21,16 +20,24 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_Details : ViewModelBase
     {
-        private Window_Details windowDetails { get; set; }
-
         public event EventHandler QueryCompleted;
+        private delegate void LoadLabelDelegate(string str);
+        private void LoadLabel(string str) => CurrentLabelList.Add(str);
+        private delegate void LoadViewAssocVideoDelegate(Video video, int idx);
+        private void LoadViewAssocVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
-        private bool loadingLabel { get; set; }
+        private Window_Details WindowDetails { get; set; }
 
-        public VieModel_Details()
+        private bool LoadingLabel { get; set; }
+
+        public VieModel_Details(Window_Details windowDetails)
         {
-            windowDetails = GetWindowByName("Window_Details", App.Current.Windows) as Window_Details;
+            this.WindowDetails = windowDetails;
         }
+
+        #region "属性"
+
+
 
         private bool _TeenMode = ConfigManager.Settings.TeenMode;
 
@@ -141,15 +148,11 @@ namespace Jvedio.ViewModel
             set {
                 _LabelText = value;
                 RaisePropertyChanged();
-                getLabels();
+                GetLabels();
             }
         }
 
-        public void CleanUp()
-        {
-            // todo
-            //MessengerInstance.Unregister(this);
-        }
+        #endregion
 
         public void LoadVideoInfo()
         {
@@ -159,11 +162,13 @@ namespace Jvedio.ViewModel
 
         public void SaveLove()
         {
-            metaDataMapper.UpdateFieldById("Grade", CurrentVideo.Grade.ToString(), CurrentVideo.DataID);
+            bool ok = metaDataMapper.UpdateFieldById("Grade", CurrentVideo.Grade.ToString(), CurrentVideo.DataID);
+            Logger.Info($"update data[{CurrentVideo.DataID}] grade[{CurrentVideo.Grade}] ret[{ok}] ");
         }
 
         public void Load(long dataID)
         {
+            Logger.Info($"begin load data[{dataID}]");
             // 释放图片内存
             if (CurrentVideo != null) {
                 CurrentVideo.SmallImage = null;
@@ -181,12 +186,13 @@ namespace Jvedio.ViewModel
 
             GC.Collect();
 
-            windowDetails.DataID = dataID;
+            WindowDetails.DataID = dataID;
 
             // todo 事务下导致阻塞
             metaDataMapper.IncreaseFieldById("ViewCount", dataID); // 访问次数+1
+            Logger.Info($"view count ++");
             Video video = videoMapper.SelectVideoByID(dataID);
-            Video.setTagStamps(ref video); // 设置标签戳
+            Video.SetTagStamps(ref video); // 设置标签戳
             Video.HandleEmpty(ref video);
 
             // 设置关联
@@ -194,6 +200,7 @@ namespace Jvedio.ViewModel
             video.HasAssociation = set.Count > 0;
             video.AssociationList = set.ToList();
             CurrentVideo = video;
+            Logger.Info($"set assoc");
 
             // 磁力
             List<Magnet> magnets = magnetsMapper.SelectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
@@ -202,6 +209,7 @@ namespace Jvedio.ViewModel
                     CurrentVideo.Magnets = magnets.OrderByDescending(arg => arg.Size)
                         .ThenByDescending(arg => arg.Releasedate)
                         .ThenByDescending(arg => string.Join(" ", arg.Tags).Length).ToList();
+                    Logger.Info($"set magnets");
                 } catch (Exception ex) {
                     Logger.Error(ex);
                 }
@@ -214,6 +222,7 @@ namespace Jvedio.ViewModel
             if (InfoSelectedIndex == 1)
                 LoadVideoInfo();
             QueryCompleted?.Invoke(this, new EventArgs());
+            Logger.Info($"load complete");
         }
 
         public void LoadViewAssocData()
@@ -249,7 +258,7 @@ namespace Jvedio.ViewModel
                 if (bigimage == null)
                     bigimage = smallimage;
                 video.BigImage = bigimage;
-                Video.setTagStamps(ref video); // 设置标签戳
+                Video.SetTagStamps(ref video); // 设置标签戳
                 Video.HandleEmpty(ref video); // 设置标题和发行日期
 
                 if (ConfigManager.Settings.AutoGenScreenShot) {
@@ -272,15 +281,15 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private delegate void LoadViewAssocVideoDelegate(Video video, int idx);
 
-        private void LoadViewAssocVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
-
-        public async void getLabels()
+        public async void GetLabels()
         {
-            if (loadingLabel)
+            if (LoadingLabel) {
+                Logger.Warn("label is loading");
                 return;
-            loadingLabel = true;
+            }
+
+            LoadingLabel = true;
             string like_sql = string.Empty;
 
             string search = LabelText.ToProperSql().Trim();
@@ -309,11 +318,9 @@ namespace Jvedio.ViewModel
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLabelDelegate(LoadLabel), labels[i]);
             }
 
-            loadingLabel = false;
+            LoadingLabel = false;
         }
 
-        private delegate void LoadLabelDelegate(string str);
 
-        private void LoadLabel(string str) => CurrentLabelList.Add(str);
     }
 }

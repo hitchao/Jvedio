@@ -20,7 +20,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Entity
 {
@@ -28,6 +28,9 @@ namespace Jvedio.Entity
     [Table(tableName: "metadata_video")]
     public class Video : MetaData
     {
+
+        public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
+
 
         public Video() : this(true)
         {
@@ -56,7 +59,7 @@ namespace Jvedio.Entity
             return wrapper;
         }
 
-        public static void setTagStamps(ref Video video)
+        public static void SetTagStamps(ref Video video)
         {
             if (video == null || string.IsNullOrEmpty(video.TagIDs))
                 return;
@@ -81,10 +84,6 @@ namespace Jvedio.Entity
         [TableId(IdType.AUTO)]
         public long MVID { get; set; }
 
-#pragma warning disable CS0108 // “Video.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
-        public long DataID { get; set; }
-
-#pragma warning restore CS0108 // “Video.DataID”隐藏继承的成员“MetaData.DataID”。如果是有意隐藏，请使用关键字 new。
         public string VID { get; set; }
 
 
@@ -222,16 +221,6 @@ namespace Jvedio.Entity
             }
         }
 
-        [TableField(exist: false)]
-#pragma warning disable CS0108 // “Video.TagStamp”隐藏继承的成员“MetaData.TagStamp”。如果是有意隐藏，请使用关键字 new。
-        public ObservableCollection<TagStamp> TagStamp { get; set; }
-
-#pragma warning restore CS0108 // “Video.TagStamp”隐藏继承的成员“MetaData.TagStamp”。如果是有意隐藏，请使用关键字 new。
-        [TableField(exist: false)]
-#pragma warning disable CS0108 // “Video.TagIDs”隐藏继承的成员“MetaData.TagIDs”。如果是有意隐藏，请使用关键字 new。
-        public string TagIDs { get; set; }
-#pragma warning restore CS0108 // “Video.TagIDs”隐藏继承的成员“MetaData.TagIDs”。如果是有意隐藏，请使用关键字 new。
-
         private string _ActorNames;
 
         [TableField(exist: false)]
@@ -291,7 +280,9 @@ namespace Jvedio.Entity
             if (ConfigManager.Settings.DownloadWhenTitleNull) {
                 return string.IsNullOrEmpty(Title);
             }
-            return string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(WebUrl) || string.IsNullOrEmpty(ImageUrls);
+            return string.IsNullOrEmpty(Title) ||
+                string.IsNullOrEmpty(WebUrl) ||
+                string.IsNullOrEmpty(ImageUrls);
         }
 
         /// <summary>
@@ -447,7 +438,7 @@ namespace Jvedio.Entity
             return FileHelper.TryGetFullPath(bigImagePath);
         }
 
-        public string getExtraImage()
+        public string GetExtraImage()
         {
             string imagePath = GetImagePath(ImageType.Preview);
 
@@ -461,7 +452,7 @@ namespace Jvedio.Entity
 
             return FileHelper.TryGetFullPath(imagePath);
         }
-        public string getActorPath()
+        public string GetActorPath()
         {
             string imagePath = GetImagePath(ImageType.Actor);
 
@@ -721,25 +712,30 @@ namespace Jvedio.Entity
             }
         }
 
-        public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
 
         public bool IsHDV()
         {
-            return JvedioLib.Security.Identify.IsHDV(Size) || JvedioLib.Security.Identify.IsHDV(Path) || Genre?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
-                    Series?.IndexOfAnyString(Main.TagStrings_HD) >= 0 || Label?.IndexOfAnyString(Main.TagStrings_HD) >= 0;
+            return JvedioLib.Security.Identify.IsHDV(Size) ||
+                   JvedioLib.Security.Identify.IsHDV(Path) ||
+                   Genre?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
+                   Series?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
+                   Label?.IndexOfAnyString(Main.TagStrings_HD) >= 0;
         }
 
         public bool IsCHS()
         {
-            return JvedioLib.Security.Identify.IsCHS(Path) || Genre?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
-                     Series?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 || Label?.IndexOfAnyString(Main.TagStrings_Translated) >= 0;
+            return JvedioLib.Security.Identify.IsCHS(Path) ||
+                   Genre?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
+                   Series?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
+                   Label?.IndexOfAnyString(Main.TagStrings_Translated) >= 0;
         }
 
         public static void SetImage(ref Video video, string imgPath)
         {
             if (video == null)
                 return;
-            BitmapImage image = ImageHelper.ReadImageFromFile(imgPath, Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+            BitmapImage image =
+                ImageHelper.ReadImageFromFile(imgPath, Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
             if (image == null)
                 image = MetaData.DefaultBigImage;
             video.ViewImage = image;
@@ -747,8 +743,12 @@ namespace Jvedio.Entity
         public static void SetImage(ref Video video, int imageMode = 0)
         {
             if (imageMode < 2) {
-                BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+
+                BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.GetSmallImage(),
+                    Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.GetBigImage(),
+                    Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+
                 if (smallimage == null)
                     smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null)

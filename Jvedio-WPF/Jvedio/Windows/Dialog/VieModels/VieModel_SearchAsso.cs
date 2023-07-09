@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
+using static Jvedio.App;
 
 namespace Jvedio.ViewModel
 {
@@ -27,7 +28,10 @@ namespace Jvedio.ViewModel
 
         }
 
-        public Video CurrentVideo { get; set; }// 当前正在关联的影片的 dataID
+        /// <summary>
+        /// 当前正在关联的影片的 dataID
+        /// </summary>
+        public Video CurrentVideo { get; set; }
 
 
         public List<Video> SelectedVideo { get; set; }
@@ -193,6 +197,7 @@ namespace Jvedio.ViewModel
                     bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.HandleEmpty(ref video); // 设置标题和发行日期
+                Logger.Info($"load assoc video: {video.VID}");
                 App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadAssoVideoDelegate(LoadAssoVideo), video, i);
             }
 
@@ -241,6 +246,7 @@ namespace Jvedio.ViewModel
                     Video video = CurrentExistAssocData[i];
                     if (video == null)
                         continue;
+                    Logger.Info($"load exist assoc data: {video.VID}");
                     Video.HandleEmpty(ref video); // 设置标题和发行日期
                 }
 
@@ -284,6 +290,7 @@ namespace Jvedio.ViewModel
                 foreach (long id in toDelete) {
                     string sql = $"delete from common_association where MainDataID='{id}' or SubDataID='{id}'";
                     associationMapper.ExecuteNonQuery(sql);
+                    Logger.Info($"delete assoc id[{id}]");
                 }
             }
 
@@ -302,10 +309,5 @@ namespace Jvedio.ViewModel
             int count = associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
             return count > 0;
         }
-
-
-
-
-
     }
 }

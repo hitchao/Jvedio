@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Crawler
 {
@@ -130,12 +130,18 @@ namespace Jvedio.Core.Crawler
             string header = server.Headers;
             if (string.IsNullOrEmpty(header))
                 return CrawlerHeader.Default;
-            Dictionary<string, string> dict = JsonUtils.TryDeserializeObject<Dictionary<string, string>>(header);
+
+            Logger.Info($"parse header: {header}");
+
+            Dictionary<string, string> dict =
+                JsonUtils.TryDeserializeObject<Dictionary<string, string>>(header);
             if (dict != null && dict.Count > 0) {
                 if (!dict.ContainsKey("cookie") && !string.IsNullOrEmpty(server.Cookies))
                     dict.Add("cookie", server.Cookies);
                 dict["Cache-Control"] = "no-cache";   // 不缓存
                 result.Headers = dict;
+            } else {
+                Logger.Warn("header is not proper");
             }
             return result;
         }

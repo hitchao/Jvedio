@@ -4,7 +4,7 @@ using SuperUtils.Framework.ORM.Mapper;
 using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Mapper.BaseMapper
 {

@@ -12,6 +12,15 @@ namespace Jvedio.Entity.CommonSQL
     [Table(tableName: "common_tagstamp")]
     public class TagStamp : INotifyPropertyChanged
     {
+
+        private static List<long> SystemTags =
+            new List<long>() { TAG_ID_HD, TAG_ID_TRANSLATED, TAG_ID_NEW_ADD };
+
+        public const long TAG_ID_NEW_ADD = 10000;
+        public const long TAG_ID_HD = 1;
+        public const long TAG_ID_TRANSLATED = 2;
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void RaisePropertyChanged([CallerMemberName] string name = null)
@@ -96,11 +105,6 @@ namespace Jvedio.Entity.CommonSQL
             return TagID.GetHashCode();
         }
 
-        private static List<long> SystemTags = new List<long>() { TAG_ID_HD, TAG_ID_TRANSLATED, TAG_ID_NEW_ADD };
-
-        public const long TAG_ID_NEW_ADD = 10000;
-        public const long TAG_ID_HD = 1;
-        public const long TAG_ID_TRANSLATED = 2;
 
         public bool IsSystemTag()
         {

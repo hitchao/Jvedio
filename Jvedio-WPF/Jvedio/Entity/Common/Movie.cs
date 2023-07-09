@@ -16,13 +16,14 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Xml;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Entity
 {
     /// <summary>
     /// Jvedio 影片
     /// </summary>
+    [Obsolete]
     public class Movie : IDisposable, INotifyPropertyChanged
     {
 

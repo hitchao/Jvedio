@@ -24,7 +24,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static Jvedio.Core.Global.PathManager;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
 

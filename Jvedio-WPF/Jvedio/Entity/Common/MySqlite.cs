@@ -1,8 +1,10 @@
 ﻿using SuperUtils.Sql;
+using System;
 using System.Data.SQLite;
 
 namespace Jvedio.Entity
 {
+    [Obsolete]
     public class MySqlite : Sqlite
     {
         public MySqlite(string path) : base(path)

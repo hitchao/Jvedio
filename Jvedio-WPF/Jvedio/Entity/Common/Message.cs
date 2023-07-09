@@ -5,9 +5,6 @@ namespace Jvedio.Entity
 {
     public class Message
     {
-
-
-
         public Message(MessageCardType type, string text)
         {
             Type = type;

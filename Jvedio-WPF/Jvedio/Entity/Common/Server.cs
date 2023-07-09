@@ -25,42 +25,48 @@ namespace Jvedio.Entity
         private string lastRefreshDate = string.Empty;
 
         public bool IsEnable {
-            get => isEnable; set {
+            get => isEnable;
+            set {
                 isEnable = value;
                 RaisePropertyChanged();
             }
         }
 
         public string Url {
-            get => url; set {
+            get => url;
+            set {
                 url = value.ToString().ToProperUrl();
                 RaisePropertyChanged();
             }
         }
 
         public string Cookie {
-            get => cookie; set {
+            get => cookie;
+            set {
                 cookie = value;
                 RaisePropertyChanged();
             }
         }
 
         public int Available {
-            get => available; set {
+            get => available;
+            set {
                 available = value;
                 RaisePropertyChanged();
             }
         }
 
         public string Name {
-            get => name; set {
+            get => name;
+            set {
                 name = value;
                 RaisePropertyChanged();
             }
         }
 
         public string LastRefreshDate {
-            get => lastRefreshDate; set {
+            get => lastRefreshDate;
+            set {
                 lastRefreshDate = value;
                 RaisePropertyChanged();
             }

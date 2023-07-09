@@ -2,19 +2,39 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Global
 {
     public static class UrlManager
     {
+        private const string DonateJsonBasePath = "SuperStudio-Donate";
+
 
         public const string ServerHelpUrl = "https://github.com/hitchao/Jvedio/wiki";
-
         public const string ProjectUrl = "https://github.com/hitchao/Jvedio";
         public const string WebPage = "https://hitchao.github.io/JvedioWebPage/";
         public const string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
         public const string UpgradeSource = "https://hitchao.github.io/";
         public const string ServerUrl = "https://hitchao.github.io/hitchao/jvedio-server/jvedio-server.jar";
+
+
+        public const string NoticeUrl = "https://hitchao.github.io/jvedioupdate/notice.json";
+        public const string FeedBackUrl = "https://github.com/hitchao/Jvedio/issues";
+        public const string WikiUrl = "https://github.com/hitchao/Jvedio/wiki/02_Beginning";
+        public const string WebPageUrl = "https://hitchao.github.io/JvedioWebPage/";
+        public const string ThemeDIY = "https://hitchao.github.io/JvedioWebPage/theme.html";
+        public const string PLUGIN_LIST_URL = "https://hitchao.github.io/Jvedio-Plugin/pluginlist.json";
+        public const string PLUGIN_LIST_BASE_URL = "https://hitchao.github.io/Jvedio-Plugin/";
+        public const string FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/";
+        public const string PLUGIN_UPLOAD_HELP = "https://github.com/hitchao/Jvedio/wiki/08_Plugin";
+        public const string HEADER_HELP = "https://github.com/hitchao/Jvedio/wiki/05_Headers";
+
+        [Obsolete]
+        public const string YoudaoUrl = "https://github.com/hitchao/Jvedio/wiki";
+        [Obsolete]
+        public const string BaiduUrl = "https://github.com/hitchao/Jvedio/wiki";
+
         public static Dictionary<string, UpgradeSource> UpgradeSourceDict = new Dictionary<string, UpgradeSource>()
         {
             {"Github",new UpgradeSource(UpgradeSource,ReleaseUrl,"jvedioupdate") },
@@ -22,9 +42,8 @@ namespace Jvedio.Core.Global
             {"StormKit",new UpgradeSource("https://divealpine-ab8zhe--77466901127398.stormkit.dev/",ReleaseUrl,"") },
         };
 
-        public static List<string> UpgradeSourceKeys = UpgradeSourceDict.Keys.ToList();
-        private static int RemoteIndex = (int)ConfigManager.Settings.RemoteIndex; // 用户切换源的时候存储起来
-        private static string DonateJsonBasePath = "SuperStudio-Donate";
+        public static List<string> UpgradeSourceKeys { get; set; } = UpgradeSourceDict.Keys.ToList();
+        private static int RemoteIndex { get; set; } = (int)ConfigManager.Settings.RemoteIndex; // 用户切换源的时候存储起来
 
         public static int GetRemoteIndex()
         {
@@ -33,11 +52,16 @@ namespace Jvedio.Core.Global
         public static void SetRemoteIndex(int idx)
         {
             RemoteIndex = idx;
+            Logger.Info($"set remote index: {RemoteIndex}");
         }
         public static string GetRemoteBasePath()
         {
             if (RemoteIndex < 0 || RemoteIndex >= UpgradeSourceKeys.Count)
                 RemoteIndex = 0;
+
+            if (RemoteIndex >= UpgradeSourceKeys.Count)
+                return "";
+
             return UpgradeSourceDict[UpgradeSourceKeys[RemoteIndex]].BaseUrl;
         }
 
@@ -50,26 +74,5 @@ namespace Jvedio.Core.Global
         {
             return PLUGIN_LIST_BASE_URL;
         }
-
-
-
-        // *************** 网址 ***************
-        public static readonly string NoticeUrl = "https://hitchao.github.io/jvedioupdate/notice.json";
-        public static readonly string FeedBackUrl = "https://github.com/hitchao/Jvedio/issues";
-        public static readonly string WikiUrl = "https://github.com/hitchao/Jvedio/wiki/02_Beginning";
-        public static readonly string WebPageUrl = "https://hitchao.github.io/JvedioWebPage/";
-
-        public static readonly string ThemeDIY = "https://hitchao.github.io/JvedioWebPage/theme.html";
-        public static readonly string PLUGIN_LIST_URL = "https://hitchao.github.io/Jvedio-Plugin/pluginlist.json";
-        public static readonly string PLUGIN_LIST_BASE_URL = "https://hitchao.github.io/Jvedio-Plugin/";
-        public static readonly string FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/";
-        public static readonly string PLUGIN_UPLOAD_HELP = "https://github.com/hitchao/Jvedio/wiki/08_Plugin";
-        public static readonly string HEADER_HELP = "https://github.com/hitchao/Jvedio/wiki/05_Headers";
-
-        // public static readonly string FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z";
-        [Obsolete]
-        public static readonly string YoudaoUrl = "https://github.com/hitchao/Jvedio/wiki";
-        [Obsolete]
-        public static readonly string BaiduUrl = "https://github.com/hitchao/Jvedio/wiki";
     }
 }

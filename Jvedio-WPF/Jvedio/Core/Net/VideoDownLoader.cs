@@ -15,13 +15,13 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Core.Net
 {
     public class VideoDownLoader
     {
-        public DownLoadState State = DownLoadState.DownLoading;
+        public DownLoadState State { get; set; } = DownLoadState.DownLoading;
 
         private bool Canceled { get; set; }
 
@@ -60,8 +60,10 @@ namespace Jvedio.Core.Net
             foreach (var key in crawlers.Keys) {
                 List<CrawlerServer> crawlerServers = crawlers[key];
                 foreach (CrawlerServer server in crawlerServers) {
-                    if (server.Invoker == null)
+                    if (server.Invoker == null) {
+                        Logger.Warn($"server[{server.PluginID}] invoker is null");
                         continue;
+                    }
                     server.AttachToDict(dataInfo);
                     // Header 传递代理配置进去
                     object o = await server.Invoker.SetMethod("GetInfo").InvokeAsync(new object[] { Header, dataInfo });
@@ -74,47 +76,29 @@ namespace Jvedio.Core.Net
                         headerCallBack?.Invoke(Header);
                         d.Add("PluginID", server.PluginID);
                         return d;
+                    } else {
+                        Logger.Warn($"server[{server.PluginID}] invoker failed");
                     }
                 }
             }
             return null;
         }
 
-        //public (string url, string code) GetUrlAndCode(CrawlerServer server)
-        //{
-        //    // server != NULL
-        //    // server.ServerName != NULL
-        //    string baseUrl = server.Url;
-        //    string url = baseUrl;
-
-
-
-        // if ("BUS".Equals(serverName))
-        // {
-        //    url = $"{baseUrl}{vid}";
-        //    code = vid;
-        // }
-        // else if ("DB".Equals(serverName))
-        // {
-        //    url = baseUrl;
-
-        // }
-        // else if ("FC".Equals(serverName))
-        // {
-        //    // 后面必须要有 /
-        //    url = $"{baseUrl}article/{vid.Replace("FC2-", "")}/";
-        // }
-        //    return (url, code);
-        //}
-
         public Dictionary<PluginMetaData, List<CrawlerServer>> GetCrawlerServer(Dictionary<string, object> dataInfo)
         {
             // 获取信息类型，并设置爬虫类型
-            if (ConfigManager.ServerConfig.CrawlerServers.Count == 0 || CrawlerManager.PluginMetaDatas?.Count == 0)
+            if (ConfigManager.ServerConfig.CrawlerServers == null ||
+                CrawlerManager.PluginMetaDatas == null ||
+                ConfigManager.ServerConfig.CrawlerServers.Count == 0 ||
+                CrawlerManager.PluginMetaDatas?.Count == 0)
                 throw new CrawlerNotFoundException();
-            List<PluginMetaData> pluginMetaDatas = CrawlerManager.PluginMetaDatas.Where(arg => arg.Enabled).ToList();
+
+            List<PluginMetaData> pluginMetaDatas =
+                CrawlerManager.PluginMetaDatas.Where(arg => arg.Enabled).ToList();
+
             if (pluginMetaDatas.Count == 0)
                 throw new CrawlerNotFoundException();
+
             Dictionary<PluginMetaData, List<CrawlerServer>> result =
                 new Dictionary<PluginMetaData, List<CrawlerServer>>();
             for (int i = 0; i < pluginMetaDatas.Count; i++) {
@@ -140,6 +124,7 @@ namespace Jvedio.Core.Net
                         if (webTypeObject != null)
                             webType = webTypeObject.ToString();
                         string urlCodeString = string.Empty;
+
                         // 索引是 ValueType, WebType, LocalValue
                         IWrapper<UrlCode> wrapper = new SelectWrapper<UrlCode>().Eq("ValueType", "video");
                         if (!string.IsNullOrEmpty(webType))
@@ -164,8 +149,6 @@ namespace Jvedio.Core.Net
 
             if (result.Keys.Count == 0)
                 throw new CrawlerNotFoundException();
-
-
 
             // todo 爬虫调度器
             return result;

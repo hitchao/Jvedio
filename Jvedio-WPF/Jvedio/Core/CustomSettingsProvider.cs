@@ -5,7 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using static Jvedio.LogManager;
+using static Jvedio.App;
 
 namespace Jvedio.Core
 {
@@ -14,13 +14,15 @@ namespace Jvedio.Core
     class CustomSettingsProvider : SettingsProvider
     {
         // user.config 存储路径
-        static string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", Environment.UserName, "user-config.xml");
+        private static string configPath =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data",
+                Environment.UserName, "user-config.xml");
 
-        const string NAME = "name";
-        const string SERIALIZE_AS = "serializeAs";
-        const string CONFIG = "configuration";
-        const string USER_SETTINGS = "userSettings";
-        const string SETTING = "setting";
+        private const string NAME = "name";
+        private const string SERIALIZE_AS = "serializeAs";
+        private const string CONFIG = "configuration";
+        private const string USER_SETTINGS = "userSettings";
+        private const string SETTING = "setting";
 
         /// <summary>
         /// Loads the file into memory.

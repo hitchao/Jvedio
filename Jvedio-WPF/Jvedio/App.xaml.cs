@@ -19,14 +19,13 @@ namespace Jvedio
     /// </summary>
     public partial class App : Application
     {
-
-
-        public static Jvedio.Core.Logs.Logger Logger = Jvedio.Core.Logs.Logger.Instance;
+        public static Jvedio.Core.Logs.Logger Logger { get; private set; }
 
         public EventWaitHandle ProgramStarted { get; set; }
 
         static App()
         {
+            Logger = Jvedio.Core.Logs.Logger.Instance;
             Window_ErrorMsg.OnFeedBack += () => {
                 FileHelper.TryOpenUrl(UrlManager.FeedBackUrl);
             };

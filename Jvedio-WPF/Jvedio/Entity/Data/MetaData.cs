@@ -181,6 +181,9 @@ namespace Jvedio.Entity
         }
 
         [TableField(exist: false)]
+        public ObservableCollection<TagStamp> TagStamp { get; set; }
+
+        [TableField(exist: false)]
         public string TagIDs { get; set; }
 
         [TableField(exist: false)]
@@ -188,9 +191,6 @@ namespace Jvedio.Entity
 
         [TableField(exist: false)]
         public List<string> AttachedVideos { get; set; }
-
-        [TableField(exist: false)]
-        public ObservableCollection<TagStamp> TagStamp { get; set; }
 
         [TableField(exist: false)]
         public long Count { get; set; }
@@ -208,8 +208,6 @@ namespace Jvedio.Entity
             DefaultActorImage = new BitmapImage(new Uri("/Resources/Picture/NoPrinting_A.png", UriKind.Relative));
         }
 
-
-
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -221,39 +219,6 @@ namespace Jvedio.Entity
         public override int GetHashCode()
         {
             return this.DataID.GetHashCode();
-        }
-
-        public static SelectWrapper<MetaData> InitWrapper(DataType dataType)
-        {
-            SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId)
-                .Eq("metadata.DataType", (int)dataType);
-            return wrapper;
-        }
-
-        public static void handleEmpty(ref MetaData data)
-        {
-            if (data == null)
-                return;
-            if (Properties.Settings.Default.ShowFileNameIfTitleEmpty
-              && !string.IsNullOrEmpty(data.Path) && string.IsNullOrEmpty(data.Title))
-                data.Title = System.IO.Path.GetFileName(data.Path);
-            if (Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty
-                && !string.IsNullOrEmpty(data.LastScanDate) && string.IsNullOrEmpty(data.ReleaseDate))
-                data.ReleaseDate = DateHelper.ToLocalDate(data.LastScanDate);
-        }
-
-        public static void setTagStamps(ref MetaData data)
-        {
-            if (data == null || string.IsNullOrEmpty(data.TagIDs))
-                return;
-            List<long> list = data.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
-
-            if (list != null && list.Count > 0) {
-                data.TagStamp = new ObservableCollection<TagStamp>();
-                foreach (var item in Main.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
-                    data.TagStamp.Add(item);
-            }
         }
     }
 }

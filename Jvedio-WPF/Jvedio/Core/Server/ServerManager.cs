@@ -15,9 +15,12 @@ namespace Jvedio.Core.Server
     public static class ServerManager
     {
 
-        public static string ServerFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "jvedio-server.jar");
-        public static string ServerLibPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "lib");
-        public static string ServerConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "config.json");
+        public static string ServerFilePath =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "jvedio-server.jar");
+        public static string ServerLibPath =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "lib");
+        public static string ServerConfigPath =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "server", "config.json");
 
         private static void WriteFile(byte[] filebyte, string savepath)
         {

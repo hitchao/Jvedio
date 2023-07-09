@@ -14,15 +14,18 @@ namespace Jvedio.AvalonEdit
 
         public static void Init()
         {
+            Logger.Info("init high light");
             HighlightingManager.Instance.Clear();
             string[] xshd_list = FileHelper.TryGetAllFiles(HighLightPath, "*.xshd");
             foreach (var xshdPath in xshd_list) {
                 try {
+                    Logger.Info($"load xshd file: {xshdPath}");
                     IHighlightingDefinition customHighlighting;
                     using (Stream s = File.OpenRead(xshdPath)) {
                         if (s == null)
                             throw new InvalidOperationException("Could not find embedded resource");
                         using (XmlReader reader = new XmlTextReader(s)) {
+
                             customHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.
                                 HighlightingLoader.Load(reader, HighlightingManager.Instance);
                         }

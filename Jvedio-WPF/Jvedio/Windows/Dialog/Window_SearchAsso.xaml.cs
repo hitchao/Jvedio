@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
+using static Jvedio.App;
 
 namespace Jvedio
 {
@@ -20,9 +21,12 @@ namespace Jvedio
     /// </summary>
     public partial class Window_SearchAsso : BaseDialog
     {
-        private VieModel_SearchAsso vieModel { get; set; }
+        public Action<long> OnDataRefresh;
+        public Action OnSelectData;
 
+        private VieModel_SearchAsso vieModel { get; set; }
         public static string SearchText { get; set; } = "";
+        private long CurrentAssocDataID { get; set; }// 当前正在关联的影片的 dataID
 
         private void searchDataBox_Search(object sender, RoutedEventArgs e)
         {
@@ -36,12 +40,6 @@ namespace Jvedio
             SearchText = vieModel.AssoSearchText;
         }
 
-        public Action<long> OnDataRefresh;
-        public Action OnSelectData;
-
-
-        private long CurrentAssocDataID { get; set; }// 当前正在关联的影片的 dataID
-
         public Window_SearchAsso(List<Video> videos = null)
         {
             InitializeComponent();
@@ -54,15 +52,7 @@ namespace Jvedio
                 CurrentAssocDataID = vieModel.SelectedVideo[0].DataID;
                 vieModel.LoadExistAssociationDatas(vieModel.SelectedVideo[0].DataID);
             }
-        }
-
-        private void CopyVID(object sender, MouseButtonEventArgs e)
-        {
-            string text = (sender as TextBlock).Text;
-            if (string.IsNullOrEmpty(text))
-                return;
-            ClipBoard.TrySetDataObject(text);
-            MessageNotify.Success($"已复制：{text}");
+            Logger.Info("open window search assoc");
         }
 
         private void RemoveAssociation(object sender, RoutedEventArgs e)
@@ -73,6 +63,7 @@ namespace Jvedio
             long.TryParse(grid.Tag.ToString(), out long dataID);
             if (dataID <= 0)
                 return;
+            Logger.Info($"remove assoc by id[{dataID}]");
             Video video = vieModel.AssociationSelectedDatas.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
             if (video != null) {
                 vieModel.AssociationSelectedDatas.Remove(video);
@@ -88,6 +79,7 @@ namespace Jvedio
             long.TryParse(grid.Tag.ToString(), out long dataID);
             if (dataID <= 0)
                 return;
+            Logger.Info($"remove exist assoc by id[{dataID}]");
             Video video = vieModel.ExistAssociationDatas.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
             if (video != null)
                 vieModel.ExistAssociationDatas.Remove(video);

@@ -672,10 +672,7 @@
                     Header="{DynamicResource Menu_GenerateActressImage}"
                     Visibility="Collapsed" />
                 <MenuItem Click="RenameFile" Header="{DynamicResource Menu_RenameFile}" />
-                <MenuItem
-                    Click="ReMoveZero"
-                    Header="{DynamicResource Menu_RemoveZero}"
-                    Visibility="Collapsed" />
+                <MenuItem Click="ReMoveZero" Header="{DynamicResource Menu_RemoveZero}" />
                 <MenuItem
                     Click="DeleteDownloadInfo"
                     Header="{DynamicResource ClearDownloadInfo}"
