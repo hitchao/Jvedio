@@ -1,22 +1,68 @@
 ﻿using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity.Common
 {
+    public enum TabType
+    {
+        Default,
+        GeoVideo,
+        GeoStar,
+        GeoRecentPlay,
+        GeoActor,
+        GeoLabel,
+        GeoClassify,
+        GeoRandom,
+        TabTypeMax,
+    }
+
+
     public class TabItemEx : ViewModelBase
     {
+        public static Dictionary<TabType, Geometry> PATH_TABLE { get; set; }
 
-        public TabItemEx(string name, bool selected = false, bool pinned = false)
+        private const string DEFAULT_PATH_KEY = "GeoDefault";
+
+        static TabItemEx()
+        {
+            PATH_TABLE = new Dictionary<TabType, Geometry>();
+            System.Windows.ResourceDictionary resources = App.Current.Resources;
+
+            Geometry geometry = null;
+            if (resources.Contains(DEFAULT_PATH_KEY))
+                geometry = resources[DEFAULT_PATH_KEY] as Geometry;
+
+            PATH_TABLE.Add(TabType.Default, geometry);
+
+
+            for (TabType type = TabType.GeoVideo; type < TabType.TabTypeMax; type++) {
+                geometry = null;
+                string key = type.ToString();
+                if (resources.Contains(key))
+                    geometry = resources[key] as Geometry;
+                PATH_TABLE.Add(type, geometry);
+            }
+        }
+
+
+
+        public TabItemEx(string name, TabType type, bool selected = false, bool pinned = false)
         {
             Name = name;
             Selected = selected;
             Pinned = pinned;
+            TabGeometry = PATH_TABLE[type];
             UUID = System.Guid.NewGuid().ToString();
         }
+
+
 
 
         private string _UUID;
@@ -41,6 +87,17 @@ namespace Jvedio.Entity.Common
         public bool Pinned {
             get { return _Pinned; }
             set { _Pinned = value; RaisePropertyChanged(); }
+        }
+        private bool _Loading;
+        public bool Loading {
+            get { return _Loading; }
+            set { _Loading = value; RaisePropertyChanged(); }
+        }
+
+        private Geometry _TabGeometry = PATH_TABLE[TabType.Default];
+        public Geometry TabGeometry {
+            get { return _TabGeometry; }
+            set { _TabGeometry = value; RaisePropertyChanged(); }
         }
     }
 }

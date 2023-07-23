@@ -8,6 +8,7 @@ using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
+using Jvedio.ViewModels;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -35,6 +36,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace Jvedio.ViewModel
 {
+
     public class VieModel_Main : ViewModelBase
     {
         public event EventHandler PageChangedCompleted;
@@ -135,16 +137,21 @@ namespace Jvedio.ViewModel
             InitCmd();
             RefreshVideoRenderToken();
             InitBinding();
-            InitSampleData();
+            InitTabData();
             Logger.Info("init view model main ok");
         }
 
-        public void InitSampleData()
+        public TabItemManager TabItemManager { get; set; }
+
+        public void InitTabData()
         {
-            TabItems = new ObservableCollection<TabItemEx>();
-            for (int i = 0; i < 10; i++) {
-                TabItems.Add(new TabItemEx("sample " + i));
-            }
+            TabItemManager = TabItemManager.CreateInstance(this);
+            //TabItems = new ObservableCollection<TabItemEx>();
+            //for (int i = 0; i < 10; i++) {
+            //    TabItemEx tabItemEx = new TabItemEx("sample " + i);
+            //    tabItemEx.Loading = i % 2 == 0;
+            //    TabItems.Add(tabItemEx);
+            //}
         }
 
         private void InitCmd()
@@ -1390,6 +1397,7 @@ namespace Jvedio.ViewModel
         public void RandomDisplay()
         {
             Select(true);
+            TabItemManager.Add(TabType.GeoRandom, LangManager.GetValueByKey("ToolTip_RandomShow"));
         }
 
         #region "影片"
@@ -1444,13 +1452,18 @@ namespace Jvedio.ViewModel
             // 侧边栏参数
             if (o != null && !string.IsNullOrEmpty(o.ToString())) {
                 switch (o.ToString()) {
+                    case "All":
+                        TabItemManager.Add(TabType.GeoVideo, LangManager.GetValueByKey("AllVideo"));
+                        break;
                     case "Favorite":
                         ExtraWrapper.Gt("metadata.Grade", 0);
+                        TabItemManager.Add(TabType.GeoStar, LangManager.GetValueByKey("Favorites"));
                         break;
                     case "RecentWatch":
                         DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                         DateTime date2 = DateTime.Now;
                         ExtraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
+                        TabItemManager.Add(TabType.GeoRecentPlay, LangManager.GetValueByKey("RecentPlay"));
                         break;
                     default:
                         break;
@@ -1737,5 +1750,13 @@ namespace Jvedio.ViewModel
                 ViewAssociationDatas.RemoveAt(i);
             }
         }
+
+
+        #region "TabItem 管理"
+
+
+
+        #endregion
+
     }
 }

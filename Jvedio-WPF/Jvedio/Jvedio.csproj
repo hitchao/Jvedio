@@ -345,6 +345,7 @@
     </Compile>
     <Compile Include="Pages\Navigator.cs" />
     <Compile Include="Upgrade\UpgradeHelper.cs" />
+    <Compile Include="ViewModels\TabItemManager.cs" />
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>

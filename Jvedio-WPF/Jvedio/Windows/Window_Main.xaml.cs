@@ -4034,8 +4034,6 @@ namespace Jvedio
 
         private void GoToStartUp(object sender, RoutedEventArgs e)
         {
-            vieModel.InitSampleData();
-            return;
             Main.ClickGoBackToStartUp = true;
             SetWindowVisualStatus(false); // 隐藏所有窗体
             WindowStartUp windowStartUp = GetWindowByName("WindowStartUp", App.Current.Windows) as WindowStartUp;
@@ -4149,7 +4147,7 @@ namespace Jvedio
                 selectIndex = 0;
 
             if (vieModel.TabItems.Count > 0)
-                SetTabSelected(selectIndex);
+                vieModel.TabItemManager?.SetTabSelected(selectIndex);
         }
 
         private void SetGridVisible(string portName)
@@ -4180,16 +4178,7 @@ namespace Jvedio
             }
         }
 
-        public void SetTabSelected(int idx)
-        {
-            if (vieModel.TabItems == null || idx < 0 || idx >= vieModel.TabItems.Count)
-                return;
 
-            for (int i = 0; i < vieModel.TabItems.Count; i++) {
-                vieModel.TabItems[i].Selected = false;
-            }
-            vieModel.TabItems[idx].Selected = true;
-        }
 
         private int GetTabIndexByMenuItem(object sender)
         {
@@ -4224,8 +4213,8 @@ namespace Jvedio
             if (idx < 0)
                 return;
 
-            RemoveRange(idx + 1, vieModel.TabItems.Count - 1);
-            RemoveRange(0, idx - 1);
+            vieModel.TabItemManager?.RemoveRange(idx + 1, vieModel.TabItems.Count - 1);
+            vieModel.TabItemManager?.RemoveRange(0, idx - 1);
         }
 
         private void CloseAllLeftTab(object sender, RoutedEventArgs e)
@@ -4233,7 +4222,7 @@ namespace Jvedio
             int idx = GetTabIndexByMenuItem(sender);
             if (idx <= 0)
                 return;
-            RemoveRange(0, idx - 1);
+            vieModel.TabItemManager?.RemoveRange(0, idx - 1);
         }
 
         private void CloseAllRightTab(object sender, RoutedEventArgs e)
@@ -4244,31 +4233,16 @@ namespace Jvedio
             int idx = GetTabIndexByMenuItem(sender);
             if (idx < 0)
                 return;
-            RemoveRange(idx + 1, vieModel.TabItems.Count - 1);
+            vieModel.TabItemManager?.RemoveRange(idx + 1, vieModel.TabItems.Count - 1);
         }
 
-        private void RemoveRange(int start, int end)
-        {
-            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
-                return;
 
-            int total = vieModel.TabItems.Count;
-
-            if (start < 0 || start >= total || end < 0 || end >= total || start > end)
-                return;
-
-            for (int i = end; i >= start; i--) {
-                if (vieModel.TabItems[i].Pinned)
-                    continue;
-                vieModel.TabItems.RemoveAt(i);
-            }
-        }
 
         private void CloseAllTabs(object sender, RoutedEventArgs e)
         {
             if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
                 return;
-            RemoveRange(0, vieModel.TabItems.Count - 1);
+            vieModel.TabItemManager?.RemoveRange(0, vieModel.TabItems.Count - 1);
         }
 
         private void MoveToFirst(object sender, RoutedEventArgs e)
@@ -4280,27 +4254,8 @@ namespace Jvedio
             if (idx < 0 || idx >= vieModel.TabItems.Count)
                 return;
 
-            if (vieModel.TabItems[idx].Pinned) {
-                // 如果已经固定，则移动到所有固定的前面
-                vieModel.TabItems.Move(idx, 0);
-            } else {
-                // 如果没有固定，则找到最后一个固定的
-                bool hasPinned = false;
-                int targetIndex = -1;
-                for (int i = 0; i < vieModel.TabItems.Count; i++) {
-                    if (vieModel.TabItems[i].Pinned) {
-                        hasPinned = true;
-                        targetIndex = i;
-                    }
-                }
+            vieModel.TabItemManager.MoveToFirst(idx);
 
-                if (targetIndex < 0 || targetIndex + 1 >= vieModel.TabItems.Count)
-                    targetIndex = 0;
-                if (hasPinned && targetIndex + 1 < vieModel.TabItems.Count)
-                    vieModel.TabItems.Move(idx, targetIndex + 1);
-                else
-                    vieModel.TabItems.Move(idx, 0);
-            }
         }
 
         private void MoveToLast(object sender, RoutedEventArgs e)
@@ -4312,62 +4267,10 @@ namespace Jvedio
             if (idx < 0 || idx >= vieModel.TabItems.Count)
                 return;
 
-            if (vieModel.TabItems[idx].Pinned) {
-                int targetIndex = -1;
-                for (int i = 0; i < vieModel.TabItems.Count; i++) {
-                    if (vieModel.TabItems[i].Pinned)
-                        targetIndex = i;
-                }
-                vieModel.TabItems.Move(idx, targetIndex);
-            } else {
-                vieModel.TabItems.Move(idx, vieModel.TabItems.Count - 1);
-            }
+            vieModel.TabItemManager?.MoveToLast(idx);
         }
 
-        private void PinByIndex(int idx)
-        {
 
-            if (idx < 0)
-                return;
-
-            if (vieModel == null || vieModel.TabItems == null || vieModel.TabItems.Count == 0 ||
-                idx >= vieModel.TabItems.Count)
-                return;
-            TabItemEx tabItem = vieModel.TabItems[idx];
-            if (tabItem.Pinned) {
-                // 取消固定
-                int targetIndex = vieModel.TabItems.Count;
-
-                for (int i = vieModel.TabItems.Count - 1; i >= 0; i--) {
-                    if (targetIndex == vieModel.TabItems.Count && vieModel.TabItems[i].Pinned)
-                        targetIndex = i;
-
-                    if (targetIndex < vieModel.TabItems.Count && idx >= 0)
-                        break;
-                }
-
-                if (targetIndex == vieModel.TabItems.Count)
-                    targetIndex = 0;
-                tabItem.Pinned = false;
-                // 移动到前面
-                vieModel.TabItems.Move(idx, targetIndex);
-            } else {
-                // 固定
-                int targetIndex = -1;
-                for (int i = 0; i < vieModel.TabItems.Count; i++) {
-                    if (targetIndex < 0 && !vieModel.TabItems[i].Pinned)
-                        targetIndex = i;
-
-                    if (targetIndex >= 0 && idx >= 0)
-                        break;
-                }
-                if (targetIndex < 0)
-                    return;
-                tabItem.Pinned = true;
-                // 移动到前面
-                vieModel.TabItems.Move(idx, targetIndex);
-            }
-        }
 
 
         private void PinTab(object sender, RoutedEventArgs e)
@@ -4379,7 +4282,7 @@ namespace Jvedio
             if (idx < 0 || idx >= vieModel.TabItems.Count)
                 return;
 
-            PinByIndex(idx);
+            vieModel.TabItemManager?.PinByIndex(idx);
         }
 
         private void PinTab(object sender, MouseButtonEventArgs e)
@@ -4390,7 +4293,7 @@ namespace Jvedio
             if (sender is FrameworkElement ele && ele.Tag != null &&
                 int.TryParse(ele.Tag.ToString(), out int index) &&
                 index >= 0)
-                PinByIndex(index);
+                vieModel.TabItemManager?.PinByIndex(index);
         }
 
         private void CloseTabItem(object sender, MouseButtonEventArgs e)
@@ -4421,7 +4324,7 @@ namespace Jvedio
                 return;
             int.TryParse(idxStr, out int index);
             if (index >= 0) {
-                SetTabSelected(index);
+                vieModel.TabItemManager?.SetTabSelected(index);
             }
         }
 
