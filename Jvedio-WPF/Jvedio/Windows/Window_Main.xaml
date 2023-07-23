@@ -1102,13 +1102,149 @@
                             </Popup>
                         </super:SimplePanel>
 
+                        <Grid Grid.Row="2" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <!--  选项 tabitem 栏  -->
+                            <ScrollViewer
+                                Grid.Row="1"
+                                VerticalAlignment="Top"
+                                HorizontalScrollBarVisibility="Auto"
+                                PreviewMouseWheel="PortTab_PreviewMouseWheel"
+                                VerticalScrollBarVisibility="Hidden">
+                                <ItemsControl AlternationCount="999" ItemsSource="{Binding TabItems}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Height="30"
+                                                MinWidth="150"
+                                                BorderThickness="0"
+                                                CornerRadius="5 5 0 0"
+                                                Cursor="Hand"
+                                                PreviewMouseLeftButtonDown="BeginDragTabItem"
+                                                PreviewMouseLeftButtonUp="SetPortSelected"
+                                                PreviewMouseMove="Border_PreviewMouseMove"
+                                                Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="{DynamicResource TabItem.Background}" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource TabItem.Hover.Background}" />
+                                                            </Trigger>
+                                                            <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource ListBoxItem.Selected.Active.Background}" />
+                                                            </DataTrigger>
+
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <Border.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Click="CloseCurrentTab" Header="关闭" />
+                                                        <MenuItem Click="CloseOtherTab" Header="关闭其它" />
+                                                        <MenuItem Click="CloseAllLeftTab" Header="关闭左边所有" />
+                                                        <MenuItem Click="CloseAllRightTab" Header="关闭右边所有" />
+                                                        <MenuItem Click="CloseAllTabs" Header="关闭所有" />
+                                                        <Separator />
+                                                        <MenuItem Click="MoveToFirst" Header="移到最前" />
+                                                        <MenuItem Click="MoveToLast" Header="移到最后" />
+                                                        <Separator />
+                                                        <MenuItem
+                                                            Click="PinTab"
+                                                            Header="固定"
+                                                            IsCheckable="True"
+                                                            IsChecked="{Binding Pinned, Mode=OneWay}" />
+                                                        <Separator />
+                                                    </ContextMenu>
+                                                </Border.ContextMenu>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border
+                                                        Grid.Column="0"
+                                                        Width="10"
+                                                        Height="10"
+                                                        Margin="5"
+                                                        CornerRadius="10">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="Green" />
+                                                                <Style.Triggers>
+
+                                                                    <DataTrigger Binding="{Binding Connected}" Value="True">
+                                                                        <Setter Property="Background" Value="Red" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        MaxWidth="120"
+                                                        Margin="0"
+                                                        Padding="10,5"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        Style="{StaticResource BaseTextBlock}"
+                                                        Text="{Binding Name}"
+                                                        TextTrimming="WordEllipsis"
+                                                        TextWrapping="WrapWithOverflow" />
+
+                                                    <Grid Grid.Column="3">
+                                                        <super:HoverPath
+                                                            Width="10"
+                                                            Height="10"
+                                                            Margin="5"
+                                                            VerticalAlignment="Center"
+                                                            Panel.ZIndex="2"
+                                                            PreviewMouseLeftButtonDown="PinTab"
+                                                            Style="{StaticResource PinHoverPath}"
+                                                            Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}"
+                                                            Visibility="{Binding Pinned, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+
+                                                        <super:HoverPath
+                                                            Width="10"
+                                                            Height="10"
+                                                            Margin="5"
+                                                            VerticalAlignment="Center"
+                                                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                                            PreviewMouseLeftButtonDown="CloseTabItem"
+                                                            Style="{StaticResource CloseExHoverPath}"
+                                                            Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}"
+                                                            Visibility="{Binding Pinned, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
+
+                                                    </Grid>
+
+
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+
                         <TabControl
                             Grid.Row="2"
                             Background="Transparent"
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
                             SelectedIndex="{Binding TabSelectedIndex, FallbackValue=0}"
-                            Style="{StaticResource FlatTabControl}">
+                            Style="{StaticResource FlatTabControl}"
+                            Visibility="Collapsed">
                             <TabItem Header="{DynamicResource Movie}">
                                 <!--  影片  -->
                                 <Grid HorizontalAlignment="Stretch">
@@ -1879,7 +2015,7 @@
                         FontSize="12"
                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
                         Text="{Binding StatusText, Mode=OneWay}" />
-                    <super:SysInfo/>
+                    <super:SysInfo />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="2"

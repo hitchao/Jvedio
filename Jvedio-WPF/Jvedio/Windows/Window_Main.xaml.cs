@@ -8,6 +8,7 @@ using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Core.Server;
 using Jvedio.Entity;
+using Jvedio.Entity.Common;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Pages;
 using Jvedio.Upgrade;
@@ -4033,6 +4034,8 @@ namespace Jvedio
 
         private void GoToStartUp(object sender, RoutedEventArgs e)
         {
+            vieModel.InitSampleData();
+            return;
             Main.ClickGoBackToStartUp = true;
             SetWindowVisualStatus(false); // 隐藏所有窗体
             WindowStartUp windowStartUp = GetWindowByName("WindowStartUp", App.Current.Windows) as WindowStartUp;
@@ -4122,6 +4125,317 @@ namespace Jvedio
         private void ClearCache(object sender, RoutedEventArgs e)
         {
             ImageCache.Clear();
+        }
+
+        private void PortTab_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scrollViewer = sender as ScrollViewer;
+            scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
+            e.Handled = true;
+        }
+
+
+        private void RemoveTabItem(int idx)
+        {
+            if (vieModel.TabItems == null)
+                return;
+            if (idx >= 0 && idx < vieModel.TabItems.Count) {
+                vieModel.TabItems[idx].Pinned = false;
+                vieModel.TabItems.RemoveAt(idx);
+            }
+            // 默认选中左边的
+            int selectIndex = idx - 1;
+            if (selectIndex < 0)
+                selectIndex = 0;
+
+            if (vieModel.TabItems.Count > 0)
+                SetTabSelected(selectIndex);
+        }
+
+        private void SetGridVisible(string portName)
+        {
+            Logger.Debug(portName);
+            if (string.IsNullOrEmpty(portName))
+                return;
+
+            ItemsControl itemsControl = null;
+
+            for (int i = 0; i < itemsControl.Items.Count; i++) {
+                ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                if (presenter == null) {
+                    Logger.Debug($"presenter[{i}] is null");
+                    continue;
+                }
+                Grid grid = VisualHelper.FindElementByName<Grid>(presenter, "baseGrid");
+                if (grid == null || grid.Tag == null) {
+                    Logger.Debug($"presenter[{i}] baseGrid is null");
+                    continue;
+                }
+
+                string name = grid.Tag.ToString();
+                if (portName.Equals(name))
+                    grid.Visibility = Visibility.Visible;
+                else
+                    grid.Visibility = Visibility.Hidden;
+            }
+        }
+
+        public void SetTabSelected(int idx)
+        {
+            if (vieModel.TabItems == null || idx < 0 || idx >= vieModel.TabItems.Count)
+                return;
+
+            for (int i = 0; i < vieModel.TabItems.Count; i++) {
+                vieModel.TabItems[i].Selected = false;
+            }
+            vieModel.TabItems[idx].Selected = true;
+        }
+
+        private int GetTabIndexByMenuItem(object sender)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+            if (contextMenu != null &&
+                contextMenu.PlacementTarget is Border border &&
+                border.Tag != null &&
+                int.TryParse(border.Tag.ToString(), out int index)) {
+                return index;
+            }
+            return -1;
+        }
+
+        private void CloseCurrentTab(object sender, RoutedEventArgs e)
+        {
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx < 0)
+                return;
+            RemoveTabItem(idx);
+        }
+
+
+        private void CloseOtherTab(object sender, RoutedEventArgs e)
+        {
+            if (vieModel == null ||
+                vieModel.TabItems == null ||
+                vieModel.TabItems.Count <= 1)
+                return;
+
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx < 0)
+                return;
+
+            RemoveRange(idx + 1, vieModel.TabItems.Count - 1);
+            RemoveRange(0, idx - 1);
+        }
+
+        private void CloseAllLeftTab(object sender, RoutedEventArgs e)
+        {
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx <= 0)
+                return;
+            RemoveRange(0, idx - 1);
+        }
+
+        private void CloseAllRightTab(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
+                return;
+
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx < 0)
+                return;
+            RemoveRange(idx + 1, vieModel.TabItems.Count - 1);
+        }
+
+        private void RemoveRange(int start, int end)
+        {
+            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
+                return;
+
+            int total = vieModel.TabItems.Count;
+
+            if (start < 0 || start >= total || end < 0 || end >= total || start > end)
+                return;
+
+            for (int i = end; i >= start; i--) {
+                if (vieModel.TabItems[i].Pinned)
+                    continue;
+                vieModel.TabItems.RemoveAt(i);
+            }
+        }
+
+        private void CloseAllTabs(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
+                return;
+            RemoveRange(0, vieModel.TabItems.Count - 1);
+        }
+
+        private void MoveToFirst(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
+                return;
+
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx < 0 || idx >= vieModel.TabItems.Count)
+                return;
+
+            if (vieModel.TabItems[idx].Pinned) {
+                // 如果已经固定，则移动到所有固定的前面
+                vieModel.TabItems.Move(idx, 0);
+            } else {
+                // 如果没有固定，则找到最后一个固定的
+                bool hasPinned = false;
+                int targetIndex = -1;
+                for (int i = 0; i < vieModel.TabItems.Count; i++) {
+                    if (vieModel.TabItems[i].Pinned) {
+                        hasPinned = true;
+                        targetIndex = i;
+                    }
+                }
+
+                if (targetIndex < 0 || targetIndex + 1 >= vieModel.TabItems.Count)
+                    targetIndex = 0;
+                if (hasPinned && targetIndex + 1 < vieModel.TabItems.Count)
+                    vieModel.TabItems.Move(idx, targetIndex + 1);
+                else
+                    vieModel.TabItems.Move(idx, 0);
+            }
+        }
+
+        private void MoveToLast(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
+                return;
+
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx < 0 || idx >= vieModel.TabItems.Count)
+                return;
+
+            if (vieModel.TabItems[idx].Pinned) {
+                int targetIndex = -1;
+                for (int i = 0; i < vieModel.TabItems.Count; i++) {
+                    if (vieModel.TabItems[i].Pinned)
+                        targetIndex = i;
+                }
+                vieModel.TabItems.Move(idx, targetIndex);
+            } else {
+                vieModel.TabItems.Move(idx, vieModel.TabItems.Count - 1);
+            }
+        }
+
+        private void PinByIndex(int idx)
+        {
+
+            if (idx < 0)
+                return;
+
+            if (vieModel == null || vieModel.TabItems == null || vieModel.TabItems.Count == 0 ||
+                idx >= vieModel.TabItems.Count)
+                return;
+            TabItemEx tabItem = vieModel.TabItems[idx];
+            if (tabItem.Pinned) {
+                // 取消固定
+                int targetIndex = vieModel.TabItems.Count;
+
+                for (int i = vieModel.TabItems.Count - 1; i >= 0; i--) {
+                    if (targetIndex == vieModel.TabItems.Count && vieModel.TabItems[i].Pinned)
+                        targetIndex = i;
+
+                    if (targetIndex < vieModel.TabItems.Count && idx >= 0)
+                        break;
+                }
+
+                if (targetIndex == vieModel.TabItems.Count)
+                    targetIndex = 0;
+                tabItem.Pinned = false;
+                // 移动到前面
+                vieModel.TabItems.Move(idx, targetIndex);
+            } else {
+                // 固定
+                int targetIndex = -1;
+                for (int i = 0; i < vieModel.TabItems.Count; i++) {
+                    if (targetIndex < 0 && !vieModel.TabItems[i].Pinned)
+                        targetIndex = i;
+
+                    if (targetIndex >= 0 && idx >= 0)
+                        break;
+                }
+                if (targetIndex < 0)
+                    return;
+                tabItem.Pinned = true;
+                // 移动到前面
+                vieModel.TabItems.Move(idx, targetIndex);
+            }
+        }
+
+
+        private void PinTab(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
+                return;
+
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx < 0 || idx >= vieModel.TabItems.Count)
+                return;
+
+            PinByIndex(idx);
+        }
+
+        private void PinTab(object sender, MouseButtonEventArgs e)
+        {
+            if (vieModel.TabItems == null || vieModel.TabItems.Count == 0)
+                return;
+
+            if (sender is FrameworkElement ele && ele.Tag != null &&
+                int.TryParse(ele.Tag.ToString(), out int index) &&
+                index >= 0)
+                PinByIndex(index);
+        }
+
+        private void CloseTabItem(object sender, MouseButtonEventArgs e)
+        {
+            FrameworkElement ele = sender as FrameworkElement;
+            if (ele != null && ele.Tag != null && int.TryParse(ele.Tag.ToString(), out int index) &&
+                index >= 0) {
+                RemoveTabItem(index);
+            }
+
+        }
+
+        private bool CanDragTabItem = false;
+
+        private FrameworkElement CurrentDragElement;
+        private void BeginDragTabItem(object sender, MouseButtonEventArgs e)
+        {
+            CanDragTabItem = true;
+            CurrentDragElement = sender as FrameworkElement;
+            Mouse.Capture(CurrentDragElement, CaptureMode.Element);
+
+            Border border = (Border)sender;
+            if (border == null || border.Tag == null)
+                return;
+            string idxStr = border.Tag.ToString();
+            if (string.IsNullOrEmpty(idxStr) || vieModel.TabItems == null ||
+                vieModel.TabItems.Count <= 0)
+                return;
+            int.TryParse(idxStr, out int index);
+            if (index >= 0) {
+                SetTabSelected(index);
+            }
+        }
+
+        private void SetPortSelected(object sender, MouseButtonEventArgs e)
+        {
+            CanDragTabItem = false;
+            if (CurrentDragElement != null)
+                Mouse.Capture(CurrentDragElement, CaptureMode.None);
+        }
+
+        private void Border_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!CanDragTabItem)
+                return;
         }
     }
 

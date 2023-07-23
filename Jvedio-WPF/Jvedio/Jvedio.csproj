@@ -319,6 +319,7 @@
     <Compile Include="Core\Scan\ScanDetailInfo.cs" />
     <Compile Include="Core\Server\ServerManager.cs" />
     <Compile Include="Entity\Common\NFOParse.cs" />
+    <Compile Include="Entity\Common\TabItemEx.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
     <Compile Include="CustomStyle\StyleManager.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />

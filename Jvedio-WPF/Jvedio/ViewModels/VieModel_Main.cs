@@ -5,6 +5,7 @@ using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
+using Jvedio.Entity.Common;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using SuperControls.Style;
@@ -30,6 +31,7 @@ using static Jvedio.MapperManager;
 using static Jvedio.Window_Server;
 using static SuperUtils.Media.ImageHelper;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace Jvedio.ViewModel
 {
@@ -133,8 +135,16 @@ namespace Jvedio.ViewModel
             InitCmd();
             RefreshVideoRenderToken();
             InitBinding();
-
+            InitSampleData();
             Logger.Info("init view model main ok");
+        }
+
+        public void InitSampleData()
+        {
+            TabItems = new ObservableCollection<TabItemEx>();
+            for (int i = 0; i < 10; i++) {
+                TabItems.Add(new TabItemEx("sample " + i));
+            }
         }
 
         private void InitCmd()
@@ -163,6 +173,18 @@ namespace Jvedio.ViewModel
             RenderVideoCTS.Token.Register(() => { Logger.Warn("cancel load video page task"); });
             RenderVideoCT = RenderVideoCTS.Token;
         }
+
+        #region "TabItem"
+        public ObservableCollection<TabItemEx> _TabItems;
+        public ObservableCollection<TabItemEx> TabItems {
+            get { return _TabItems; }
+
+            set {
+                _TabItems = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
 
 
 
@@ -1460,7 +1482,7 @@ namespace Jvedio.ViewModel
             App.Current.Dispatcher.Invoke((Action)delegate {
                 ScrollViewer scrollViewer =
                     MainWindow.FindVisualChild<ScrollViewer>(MainWindow.MovieItemsControl);
-                scrollViewer.ScrollToTop(); // 滚到顶部
+                scrollViewer?.ScrollToTop(); // 滚到顶部
             });
 
             SelectWrapper<Video> wrapper = Video.InitWrapper();
