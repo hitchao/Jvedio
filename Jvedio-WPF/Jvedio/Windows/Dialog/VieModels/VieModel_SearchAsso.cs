@@ -13,6 +13,7 @@ using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
 using static Jvedio.App;
+using Jvedio.Core.Media;
 
 namespace Jvedio.ViewModel
 {
@@ -189,8 +190,8 @@ namespace Jvedio.ViewModel
                 Video video = videos[i];
                 if (video == null)
                     continue;
-                BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 if (smallimage == null)
                     smallimage = Jvedio.Entity.MetaData.DefaultSmallImage;
                 if (bigimage == null)
@@ -233,11 +234,15 @@ namespace Jvedio.ViewModel
             HashSet<long> set = associationMapper.GetAssociationDatas(dataID);
             if (set?.Count > 0) {
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-                wrapper.Select("VID", "metadata.DataID", "Title", "MVID", "Path").In("metadata.DataID", set.Select(x => x.ToString()));
+
+                wrapper.Select("VID", "metadata.DataID", "Title", "MVID", "Path")
+                    .In("metadata.DataID", set.Select(x => x.ToString()));
+
                 string sql = VideoMapper.BASE_SQL;
                 sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
                 List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-                CurrentExistAssocData = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
+                CurrentExistAssocData =
+                    metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
                 if (CurrentExistAssocData == null)
                     return;

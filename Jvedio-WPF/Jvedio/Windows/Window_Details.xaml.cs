@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.FFmpeg;
+using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
@@ -149,7 +150,7 @@ namespace Jvedio
 
                     // 加载图片
                     string imagePath = actorInfo.GetImagePath(vieModel.CurrentVideo.Path);
-                    BitmapImage smallimage = ReadImageFromFile(imagePath);
+                    BitmapImage smallimage = ImageCache.Get(imagePath);
                     if (smallimage == null) {
                         smallimage = MetaData.DefaultActorImage;
                         //// 根据地址下载图片

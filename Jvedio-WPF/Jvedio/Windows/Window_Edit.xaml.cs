@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Entity;
+using Jvedio.Pages;
 using Jvedio.ViewModel;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -234,7 +235,7 @@ namespace Jvedio
         {
             Pagination pagination = sender as Pagination;
             vieModel.CurrentActorPage = pagination.CurrentPage;
-            VieModel_Main.ActorPageQueue.Enqueue(pagination.CurrentPage);
+            ActorsPage.ActorPageQueue.Enqueue(pagination.CurrentPage);
             vieModel.SelectActor();
         }
 

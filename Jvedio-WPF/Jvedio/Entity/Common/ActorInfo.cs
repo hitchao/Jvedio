@@ -1,6 +1,7 @@
 ﻿
 using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
+using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
@@ -109,7 +110,7 @@ namespace Jvedio.Entity
             if (pathType != PathType.RelativeToData) {
                 // 如果是相对于影片格式的，则不设置图片
                 string smallImagePath = actorInfo.GetImagePath();
-                smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
+                smallimage = ImageCache.Get(smallImagePath);
             }
 
             if (smallimage == null)

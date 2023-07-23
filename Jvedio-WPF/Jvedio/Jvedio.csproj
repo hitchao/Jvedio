@@ -209,6 +209,7 @@
     <Reference Include="System.Reactive, Version=4.4.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.4.1\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -293,6 +294,7 @@
     <Compile Include="Core\FFmpeg\ScreenShotTask.cs" />
     <Compile Include="Core\Config\PathManager.cs" />
     <Compile Include="Core\Lang\LangManager.cs" />
+    <Compile Include="Core\Media\ImageCache.cs" />
     <Compile Include="Core\Net\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
@@ -336,6 +338,9 @@
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="Pages\ActorInfoPage.xaml.cs">
       <DependentUpon>ActorInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ActorsPage.xaml.cs">
+      <DependentUpon>ActorsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Navigator.cs" />
     <Compile Include="Upgrade\UpgradeHelper.cs" />
@@ -500,6 +505,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\ActorInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ActorsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

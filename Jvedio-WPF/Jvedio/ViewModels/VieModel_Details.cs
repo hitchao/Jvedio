@@ -1,4 +1,5 @@
-﻿using Jvedio.Entity;
+﻿using Jvedio.Core.Media;
+using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -251,8 +252,8 @@ namespace Jvedio.ViewModel
                 Video video = videos[i];
                 if (video == null)
                     continue;
-                BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage());
-                BitmapImage bigimage = ReadImageFromFile(video.GetBigImage());
+                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage());
+                BitmapImage bigimage = ImageCache.Get(video.GetBigImage());
                 if (smallimage == null)
                     smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null)

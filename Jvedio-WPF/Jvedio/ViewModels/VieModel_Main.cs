@@ -1,6 +1,7 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
+using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
@@ -35,7 +36,7 @@ namespace Jvedio.ViewModel
     public class VieModel_Main : ViewModelBase
     {
         public event EventHandler PageChangedCompleted;
-        public event EventHandler ActorPageChangedCompleted;
+
         public event EventHandler RenderSqlChanged;
 
 
@@ -53,14 +54,11 @@ namespace Jvedio.ViewModel
 
         public CancellationToken RenderVideoCT { get; set; }
 
-        public CancellationTokenSource RenderActorCTS { get; set; }
 
-        public CancellationToken RenderActorCT { get; set; }
 
         public static Queue<int> PageQueue { get; set; } = new Queue<int>();
 
-        public static Queue<int> ActorPageQueue { get; set; } = new Queue<int>();
-        public static Dictionary<int, string> ActorSortDict { get; set; } = new Dictionary<int, string>();
+
 
         public AppDatabase CurrentAppDataBase { get; set; }
 
@@ -102,56 +100,6 @@ namespace Jvedio.ViewModel
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
         };
 
-        public bool RenderingActor { get; set; }
-
-        public static List<string> ActorSortDictList = new List<string>()
-        {
-            "actor_info.Grade",
-            "actor_info.ActorName",
-            "Count",
-            "actor_info.Country",
-            "Nation",
-            "BirthPlace",
-            "Birthday",
-            "BloodType",
-            "Height",
-            "Weight",
-            "Gender",
-            "Hobby",
-            "Cup",
-            "Chest",
-            "Waist",
-            "Hipline",
-            "actor_info.Grade",
-            "Age",
-        };
-
-
-        public static string[] ActorSelectedField = new string[]
-        {
-            "count(ActorName) as Count",
-            "actor_info.ActorID",
-            "actor_info.ActorName",
-            "actor_info.Country",
-            "Nation",
-            "BirthPlace",
-            "Birthday",
-            "BloodType",
-            "Height",
-            "Weight",
-            "Gender",
-            "Hobby",
-            "Cup",
-            "Chest",
-            "Waist",
-            "Hipline",
-            "WebType",
-            "WebUrl",
-            "actor_info.Grade",
-            "actor_info.ExtraInfo",
-            "actor_info.CreateDate",
-            "actor_info.UpdateDate",
-        };
 
 
         public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>()
@@ -177,12 +125,6 @@ namespace Jvedio.ViewModel
         public RelayCommand<object> AddNewMovie { get; set; }
         #endregion
 
-        static VieModel_Main()
-        {
-            for (int i = 0; i < ActorSortDictList.Count; i++) {
-                ActorSortDict.Add(i, ActorSortDictList[i]);
-            }
-        }
 
         public VieModel_Main(Main main)
         {
@@ -190,7 +132,6 @@ namespace Jvedio.ViewModel
             ClickFilterType = string.Empty;
             InitCmd();
             RefreshVideoRenderToken();
-            RefreshActorRenderToken();
             InitBinding();
 
             Logger.Info("init view model main ok");
@@ -223,12 +164,7 @@ namespace Jvedio.ViewModel
             RenderVideoCT = RenderVideoCTS.Token;
         }
 
-        public void RefreshActorRenderToken()
-        {
-            RenderActorCTS = new CancellationTokenSource();
-            RenderActorCTS.Token.Register(() => { Logger.Warn("cancel load actor page task"); });
-            RenderVideoCT = RenderActorCTS.Token;
-        }
+
 
         #region "界面显示属性"
 
@@ -545,16 +481,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private List<ActorInfo> _SelectedActors = new List<ActorInfo>();
 
-        public List<ActorInfo> SelectedActors {
-            get { return _SelectedActors; }
-
-            set {
-                _SelectedActors = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private ObservableCollection<TagStamp> _TagStamps = new ObservableCollection<TagStamp>();
 
@@ -578,27 +505,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private List<ActorInfo> actorlist;
 
-        public List<ActorInfo> ActorList {
-            get { return actorlist; }
-
-            set {
-                actorlist = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<ActorInfo> _CurrentActorList;
-
-        public ObservableCollection<ActorInfo> CurrentActorList {
-            get { return _CurrentActorList; }
-
-            set {
-                _CurrentActorList = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private ObservableCollection<string> labellist;
 
@@ -656,16 +563,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _SearchingActor = false;
 
-        public bool SearchingActor {
-            get { return _SearchingActor; }
-
-            set {
-                _SearchingActor = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private ObservableCollection<string> _FilePathClassification;
 
@@ -842,16 +740,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public int _CurrentActorCount = 0;
-
-        public int CurrentActorCount {
-            get { return _CurrentActorCount; }
-
-            set {
-                _CurrentActorCount = value;
-                RaisePropertyChanged();
-            }
-        }
 
         public long _TotalCount = 0;
 
@@ -875,39 +763,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int _ActorPageSize = 10;
 
-        public int ActorPageSize {
-            get { return _ActorPageSize; }
-
-            set {
-                _ActorPageSize = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private long _ActorTotalCount = 0;
-
-        public long ActorTotalCount {
-            get { return _ActorTotalCount; }
-
-            set {
-                _ActorTotalCount = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _CurrentActorPage = 1;
-
-        public int CurrentActorPage {
-            get { return _CurrentActorPage; }
-
-            set {
-                _CurrentActorPage = value;
-
-                RaisePropertyChanged();
-            }
-        }
 
         private string _SearchText = string.Empty;
 
@@ -1059,17 +915,15 @@ namespace Jvedio.ViewModel
             Select();
         }
 
-        public void LoadActor()
-        {
-            SelectActor();
-        }
+
 
         public void Reset() => Select();
 
         public void ShowAllActors(object o)
         {
             TabSelectedIndex = 1;
-            SelectActor();
+            // 新开一个 tab 页
+            //SelectActor();
         }
 
         public void ShowAllLabels(object o)
@@ -1281,26 +1135,6 @@ namespace Jvedio.ViewModel
                 .Take(Properties.Settings.Default.SearchCandidateMaxCount).ToList();
         }
 
-        private delegate void LoadActorDelegate(ActorInfo actor, int idx);
-
-        private void LoadActor(ActorInfo actor, int idx)
-        {
-            if (RenderActorCT.IsCancellationRequested)
-                return;
-            if (CurrentActorList.Count < ActorPageSize) {
-                if (idx < CurrentActorList.Count) {
-                    CurrentActorList[idx] = null;
-                    CurrentActorList[idx] = actor;
-                } else {
-                    CurrentActorList.Add(actor);
-                }
-            } else {
-                CurrentActorList[idx] = null;
-                CurrentActorList[idx] = actor;
-            }
-
-            CurrentActorCount = CurrentActorList.Count;
-        }
 
         public void SetClassifyLoadingStatus(bool loading)
         {
@@ -1491,135 +1325,6 @@ namespace Jvedio.ViewModel
             return result;
         }
 
-        #region "演员"
-
-        public void ActorSetActorSortOrder<T>(IWrapper<T> wrapper)
-        {
-            if (wrapper == null || Properties.Settings.Default.ActorSortType >= ActorSortDict.Count)
-                return;
-            string sortField = ActorSortDict[Properties.Settings.Default.ActorSortType];
-            if (Properties.Settings.Default.ActorSortDescending)
-                wrapper.Desc(sortField);
-            else
-                wrapper.Asc(sortField);
-        }
-
-        public string ActorToLimit()
-        {
-            int row_count = ActorPageSize;
-            long offset = ActorPageSize * (CurrentActorPage - 1);
-            return $" LIMIT {offset},{row_count}";
-        }
-
-        public static Dictionary<string, string> Actor_SELECT_TYPE = new Dictionary<string, string>()
-        {
-            { "All", "  " },
-            { "Favorite", "  " },
-        };
-
-        public async void SelectActor()
-        {
-            TabSelectedIndex = 1; // 演员
-
-            // 判断当前获取的队列
-            while (ActorPageQueue.Count > 1) {
-                int page = ActorPageQueue.Dequeue();
-            }
-
-            // 当前有视频在渲染的时候，打断渲染，等待结束
-            while (RenderingActor) {
-                RenderActorCTS?.Cancel(); // 取消加载
-                await Task.Delay(100);
-            }
-
-            App.Current.Dispatcher.Invoke((Action)delegate {
-                MainWindow.ActorScrollViewer.ScrollToTop(); // 滚到顶部
-            });
-
-            SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
-            ActorSetActorSortOrder(wrapper);
-
-            bool search = SearchingActor && !string.IsNullOrEmpty(SearchText);
-
-            string count_sql = "SELECT count(*) as Count " +
-                         "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
-                         "on metadata_to_actor.ActorID=actor_info.ActorID " +
-                         "join metadata " +
-                         "on metadata_to_actor.DataID=metadata.DataID " +
-                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                         $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
-                         "GROUP BY actor_info.ActorID " +
-                         "UNION " +
-                         "select actor_info.ActorID  " +
-                         "FROM actor_info WHERE NOT EXISTS " +
-                         "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
-                         $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
-                         "GROUP BY actor_info.ActorID)";
-
-            ActorTotalCount = actorMapper.SelectCount(count_sql);
-
-            string sql = $"{wrapper.Select(ActorSelectedField).ToSelect(false)} FROM actor_info " +
-                $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
-                $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
-                $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
-                $"GROUP BY actor_info.ActorID " +
-                "UNION " +
-                $"{wrapper.Select(ActorSelectedField).ToSelect(false)} FROM actor_info " +
-                "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
-                $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
-                wrapper.ToOrder() + ActorToLimit();
-
-            // 只能手动设置页码，很奇怪
-            App.Current.Dispatcher.Invoke(() => { MainWindow.actorPagination.Total = ActorTotalCount; });
-            RenderCurrentActors(sql);
-        }
-
-        public void RenderCurrentActors(string sql)
-        {
-            List<Dictionary<string, object>> list = actorMapper.Select(sql);
-            List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
-            ActorList = new List<ActorInfo>();
-            if (actors == null)
-                actors = new List<ActorInfo>();
-            ActorList.AddRange(actors);
-            RenderActor();
-        }
-
-        public async void RenderActor()
-        {
-            if (CurrentActorList == null)
-                CurrentActorList = new ObservableCollection<ActorInfo>();
-
-            for (int i = 0; i < ActorList.Count; i++) {
-                try {
-                    RenderActorCT.ThrowIfCancellationRequested();
-                } catch (OperationCanceledException) {
-                    RenderVideoCTS?.Dispose();
-                    break;
-                }
-
-                RenderingActor = true;
-                ActorInfo actorInfo = ActorList[i];
-                ActorInfo.SetImage(ref actorInfo);
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
-                    new LoadActorDelegate(LoadActor), actorInfo, i);
-            }
-
-            // 清除
-            for (int i = CurrentActorList.Count - 1; i > ActorList.Count - 1; i--) {
-                CurrentActorList.RemoveAt(i);
-            }
-
-            if (RenderActorCT.IsCancellationRequested)
-                RefreshActorRenderToken();
-            RenderingActor = false;
-
-            // if (pageQueue.Count > 0) pageQueue.Dequeue();
-            ActorPageChangedCompleted?.Invoke(this, null);
-        }
-
-        #endregion
 
         public SelectWrapper<Video> GetWrapper(SearchField searchType)
         {
@@ -1980,8 +1685,8 @@ namespace Jvedio.ViewModel
                 Video video = videos[i];
                 if (video == null)
                     continue;
-                BitmapImage smallimage = ReadImageFromFile(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ReadImageFromFile(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
                 if (smallimage == null)
                     smallimage = MetaData.DefaultSmallImage;
                 if (bigimage == null)

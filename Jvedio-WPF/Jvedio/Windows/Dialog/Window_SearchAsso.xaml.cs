@@ -48,10 +48,18 @@ namespace Jvedio
 
             if (videos != null)
                 vieModel.SelectedVideo = videos;
-            if (vieModel.SelectedVideo.Count > 0) {
-                CurrentAssocDataID = vieModel.SelectedVideo[0].DataID;
-                vieModel.LoadExistAssociationDatas(vieModel.SelectedVideo[0].DataID);
+
+            CurrentAssocDataID = vieModel.SelectedVideo[0].DataID;
+            vieModel.LoadExistAssociationDatas(vieModel.SelectedVideo[0].DataID);
+
+            // 将剩余的作为需要关联的
+            for (int i = 1; i < vieModel.SelectedVideo.Count; i++) {
+                Video video = vieModel.SelectedVideo[i];
+                if (!vieModel.ExistAssociationDatas.Contains(video))
+                    vieModel.AssociationSelectedDatas.Add(vieModel.SelectedVideo[i]);
             }
+
+
             Logger.Info("open window search assoc");
         }
 

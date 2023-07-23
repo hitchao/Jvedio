@@ -12,6 +12,8 @@ using System.Windows.Threading;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static Jvedio.App;
+using Jvedio.Pages;
+using Jvedio.Core.Media;
 
 namespace Jvedio.ViewModel
 {
@@ -344,14 +346,14 @@ namespace Jvedio.ViewModel
             ActorTotalCount = actorMapper.SelectCount(count_sql);
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
 
-            string sql = $"{wrapper.Select(VieModel_Main.ActorSelectedField).ToSelect(false)} FROM actor_info " +
+            string sql = $"{wrapper.Select(ActorsPage.ActorSelectedField).ToSelect(false)} FROM actor_info " +
                         $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                         $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                        $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
                         $"GROUP BY actor_info.ActorID " +
                         "UNION " +
-                       $"{wrapper.Select(VieModel_Main.ActorSelectedField).ToSelect(false)} FROM actor_info " +
+                       $"{wrapper.Select(ActorsPage.ActorSelectedField).ToSelect(false)} FROM actor_info " +
                         "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
                          $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} "
                          + ActorToLimit();
@@ -377,7 +379,7 @@ namespace Jvedio.ViewModel
                 if (pathType != PathType.RelativeToData) {
                     // 如果是相对于影片格式的，则不设置图片
                     string smallImagePath = actorInfo.GetImagePath();
-                    smallimage = ImageHelper.ReadImageFromFile(smallImagePath);
+                    smallimage = ImageCache.Get(smallImagePath);
                 }
 
                 if (smallimage == null)

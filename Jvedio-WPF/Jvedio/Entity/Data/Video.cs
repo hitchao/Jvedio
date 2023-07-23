@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
+using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
 using Jvedio.Entity.CommonSQL;
 using Newtonsoft.Json;
@@ -735,7 +736,7 @@ namespace Jvedio.Entity
             if (video == null)
                 return;
             BitmapImage image =
-                ImageHelper.ReadImageFromFile(imgPath, Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                ImageCache.Get(imgPath, Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
             if (image == null)
                 image = MetaData.DefaultBigImage;
             video.ViewImage = image;
@@ -744,9 +745,9 @@ namespace Jvedio.Entity
         {
             if (imageMode < 2) {
 
-                BitmapImage smallimage = ImageHelper.ReadImageFromFile(video.GetSmallImage(),
+                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(),
                     Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ImageHelper.ReadImageFromFile(video.GetBigImage(),
+                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(),
                     Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
 
                 if (smallimage == null)

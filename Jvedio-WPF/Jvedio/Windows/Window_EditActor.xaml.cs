@@ -67,7 +67,9 @@ namespace Jvedio
                 int update = actorMapper.UpdateById(CurrentActorInfo);
                 if (update > 0) {
                     MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
-                    main?.RefreshActor(CurrentActorInfo.ActorID);
+
+                    // todo
+                    // main?.RefreshActor(CurrentActorInfo.ActorID);
                 }
             } else {
                 // 新增
@@ -127,8 +129,8 @@ namespace Jvedio
                 // 设置图片
                 CurrentActorInfo.SmallImage = null;
                 CurrentActorInfo.SmallImage = BitmapImageFromFile(targetFileName);
-
-                main?.RefreshActor(CurrentActorInfo.ActorID);
+                // todo
+                //main?.RefreshActor(CurrentActorInfo.ActorID);
             }
         }
 
