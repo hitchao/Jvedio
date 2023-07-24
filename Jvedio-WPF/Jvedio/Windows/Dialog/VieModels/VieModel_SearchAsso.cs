@@ -14,6 +14,7 @@ using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
 using static Jvedio.App;
 using Jvedio.Core.Media;
+using Jvedio.Core.UserControls.ViewModels;
 
 namespace Jvedio.ViewModel
 {
@@ -171,7 +172,7 @@ namespace Jvedio.ViewModel
                 .RightBracket();
 
             ToAssoSearchLimit(wrapper);
-            wrapper.Select(VieModel_Main.SelectFields);
+            wrapper.Select(VieModel_VideoList.SelectFields);
             string sql = VideoMapper.BASE_SQL;
 
             string count_sql = "select count(*) " + sql + wrapper.ToWhere(false);

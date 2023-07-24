@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Media;
+using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
@@ -236,7 +237,7 @@ namespace Jvedio.ViewModel
                 return;
             SelectWrapper<Video> wrapper = Video.InitWrapper();
             wrapper.In("metadata.DataID", CurrentVideo.AssociationList.Select(arg => arg.ToString()));
-            wrapper.Select(VieModel_Main.SelectFields);
+            wrapper.Select(VieModel_VideoList.SelectFields);
 
             string sql = VideoMapper.BASE_SQL;
 

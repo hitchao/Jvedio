@@ -1,0 +1,265 @@
+﻿<UserControl
+    x:Class="Jvedio.Core.UserControls.ViewVideo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Jvedio.Core.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="clr-namespace:Jvedio.Core.Media"
+    xmlns:p="clr-namespace:Jvedio.Properties"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="GifImageStyle" TargetType="{x:Type media:GifImage}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ShowImageMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="0">
+                    <Setter Property="SourceType" Value="SmallImage" />
+                    <Setter Property="Width" Value="{Binding SmallImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                    <Setter Property="Height" Value="{Binding SmallImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ShowImageMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="1">
+                    <Setter Property="SourceType" Value="BigImage" />
+                    <Setter Property="Width" Value="{Binding BigImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                    <Setter Property="Height" Value="{Binding BigImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ShowImageMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="2">
+                    <Setter Property="SourceType" Value="Gif" />
+                    <Setter Property="Width" Value="{Binding GifImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                    <Setter Property="Height" Value="{Binding GifImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <super:SimplePanel
+        Name="rootGrid"
+        Width="{Binding GlobalImageWidth, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+        Margin="10"
+        Tag="{Binding DataID, Mode=OneWay}">
+        <Border
+            Name="rootBorder"
+            MinWidth="200"
+            Margin="0"
+            Background="{DynamicResource ListBoxItem.Background}"
+            BorderThickness="2"
+            CornerRadius="3"
+            Effect="{StaticResource BlueDropShadowEffect}"
+            Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}}"
+            Style="{StaticResource SimpleBorder}" />
+
+        <StackPanel Margin="0" Tag="{Binding DataID, Mode=OneWay}">
+            <!--  图片  -->
+            <super:SimplePanel Grid.Row="0">
+                <media:GifImage
+                    x:Name="GifImage"
+                    Margin="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BigImageSource="{Binding BigImage, Mode=OneWay}"
+                    Cursor="Hand"
+                    GifSource="{Binding GifUri, Mode=OneWay}"
+                    MouseEnter="Image_MouseEnter"
+                    MouseLeave="Image_MouseLeave"
+                    MouseLeftButtonDown="CanShowDetails"
+                    MouseLeftButtonUp="ShowDetails"
+                    RenderOptions.BitmapScalingMode="LowQuality"
+                    SmallImageSource="{Binding SmallImage, Mode=OneWay}"
+                    Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
+                    Style="{StaticResource GifImageStyle}" />
+
+                <!--  关联视频 + 分段视频  -->
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Panel.ZIndex="3"
+                    Orientation="Horizontal">
+                    <Button
+                        Height="auto"
+                        Margin="5"
+                        Padding="5"
+                        Click="ViewAssocDatas"
+                        Cursor="Hand"
+                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        Style="{StaticResource RoundNormalButton}"
+                        Tag="{DynamicResource Button.Hover.Background}"
+                        Visibility="{Binding HasAssociation, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+
+                        <Image
+                            Width="20"
+                            Height="20"
+                            Source="/Resources/Picture/asso.png" />
+                    </Button>
+                    <Button
+                        Height="auto"
+                        Margin="0,5,5,5"
+                        Padding="5"
+                        Click="ShowSubSection"
+                        Cursor="Hand"
+                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        Style="{StaticResource RoundNormalButton}"
+                        Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                        <Button.ContextMenu>
+                            <ContextMenu HorizontalOffset="-50" VerticalOffset="10" />
+                        </Button.ContextMenu>
+                        <Image
+                            Width="20"
+                            Height="20"
+                            Source="/Resources/Picture/subsection1.png" />
+                    </Button>
+
+                </StackPanel>
+
+                <!--  播放按钮  -->
+                <Image
+                    Height="40"
+                    Margin="10,0,10,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Cursor="Hand"
+                    MouseLeftButtonUp="PlayVideo"
+                    Opacity="0.8"
+                    Source="/Resources/Picture/Jvedio.png"
+                    ToolTip="{Binding Title, Mode=OneWay}">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="False" />
+                                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type super:SimplePanel}, Mode=FindAncestor}}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+
+            </super:SimplePanel>
+            <!--  标签戳+ID  -->
+            <Grid Grid.Row="1" IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock
+                        Height="20"
+                        MaxWidth="150"
+                        Margin="0,7"
+                        Padding="12,0,0,0"
+                        HorizontalAlignment="Left"
+                        Cursor="Hand"
+                        FontSize="15"
+                        MouseLeftButtonDown="CopyVID"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="{Binding VID, Mode=OneWay}"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+                    <!--  日期  -->
+
+                    <TextBlock
+                        Height="20"
+                        MaxWidth="150"
+                        Margin="0,5"
+                        Padding="12,0,0,0"
+                        HorizontalAlignment="Left"
+                        Cursor="Hand"
+                        FontSize="15"
+                        MouseLeftButtonDown="CopyVID"
+                        Opacity="0.5"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="{Binding ReleaseDate, Mode=OneWay}"
+                        TextAlignment="Left"
+                        TextTrimming="WordEllipsis"
+                        Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+                </StackPanel>
+
+
+                <!--  标签戳  -->
+
+                <ItemsControl
+                    Grid.Column="1"
+                    Margin="0,5,5,0"
+                    HorizontalAlignment="Right"
+                    ItemsSource="{Binding TagStamp}"
+                    Tag="{Binding DataID}"
+                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="2"
+                                Padding="4"
+                                Background="{Binding BackgroundBrush}"
+                                BorderThickness="0"
+                                CornerRadius="3"
+                                Tag="{Binding TagID}">
+                                <Border.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Click="DeleteVideoTagStamp" Header="{DynamicResource DeleteTagStamp}" />
+                                    </ContextMenu>
+                                </Border.ContextMenu>
+
+                                <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
+                            </Border>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+
+            </Grid>
+
+            <!--  主界面影片星级  -->
+            <super:Rate
+                Margin="12,2,15,5"
+                AllowHalf="True"
+                Background="{DynamicResource Window.Title.Background}"
+                Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                ItemHeight="20"
+                ItemMargin="3 0"
+                PreviewMouseLeftButtonDown="OnRateMouseDown"
+                ValueChanged="Rate_ValueChanged"
+                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                Value="{Binding Grade, Mode=TwoWay}" />
+
+
+            <TextBlock
+                Height="40"
+                Margin="0,5"
+                Padding="10,0"
+                HorizontalAlignment="Left"
+                Cursor="Hand"
+                FontSize="14"
+                IsEnabled="{Binding EditMode, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                MouseLeftButtonDown="CopyVID"
+                Opacity="0.5"
+                Style="{StaticResource BaseTextBlock}"
+                Text="{Binding Title, Mode=OneWay}"
+                TextAlignment="Left"
+                TextTrimming="CharacterEllipsis"
+                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+
+
+        </StackPanel>
+    </super:SimplePanel>
+</UserControl>

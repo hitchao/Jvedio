@@ -4,6 +4,7 @@ using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
+using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.Entity.CommonSQL;
@@ -39,9 +40,15 @@ namespace Jvedio.ViewModel
 
     public class VieModel_Main : ViewModelBase
     {
-        public event EventHandler PageChangedCompleted;
+
 
         public event EventHandler RenderSqlChanged;
+
+
+        /// <summary>
+        /// flag, 只显示一次提示
+        /// </summary>
+        private static bool ShowRelativeScreen { get; set; } = false;
 
 
         public bool IsFlipOvering { get; set; }
@@ -54,13 +61,8 @@ namespace Jvedio.ViewModel
 
         private static Main MainWindow { get; set; }
 
-        public CancellationTokenSource RenderVideoCTS { get; set; }
-
-        public CancellationToken RenderVideoCT { get; set; }
 
 
-
-        public static Queue<int> PageQueue { get; set; } = new Queue<int>();
 
 
 
@@ -69,40 +71,6 @@ namespace Jvedio.ViewModel
         public static string LabelJoinSql { get; set; } =
             " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
 
-
-        public SelectWrapper<Video> ExtraWrapper { get; set; }
-
-        public static List<string> SortDict = new List<string>()
-        {
-            "metadata_video.VID",
-            "metadata.Grade",
-            "metadata.Size",
-            "metadata.LastScanDate",
-            "metadata.FirstScanDate",
-            "metadata.Title",
-            "metadata.ViewCount",
-            "metadata.ReleaseDate",
-            "metadata.Rating",
-            "metadata_video.Duration",
-        };
-
-        public static string[] SelectFields =
-        {
-            "DISTINCT metadata.DataID",
-            "MVID",
-            "VID",
-            "metadata.Grade",
-            "metadata.Title",
-            "metadata.Path",
-            "metadata.Hash",
-            "metadata_video.SubSection",
-            "metadata_video.ImageUrls",
-            "metadata.ReleaseDate",
-            "metadata.LastScanDate",
-            "metadata_video.WebUrl",
-            "metadata_video.WebType",
-            "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
-        };
 
 
 
@@ -114,11 +82,9 @@ namespace Jvedio.ViewModel
         };
 
 
-        private static bool ShowRelativeScreen { get; set; } = false;
-
 
         #region "RelayCommand"
-        public RelayCommand<object> SelectCommand { get; set; }
+        public RelayCommand<object> SideButtonCmd { get; set; }
 
         public RelayCommand<object> ShowActorsCommand { get; set; }
 
@@ -135,7 +101,7 @@ namespace Jvedio.ViewModel
             MainWindow = main;
             ClickFilterType = string.Empty;
             InitCmd();
-            RefreshVideoRenderToken();
+
             InitBinding();
             InitTabData();
             Logger.Info("init view model main ok");
@@ -146,40 +112,72 @@ namespace Jvedio.ViewModel
         public void InitTabData()
         {
             TabItemManager = TabItemManager.CreateInstance(this);
-            //TabItems = new ObservableCollection<TabItemEx>();
-            //for (int i = 0; i < 10; i++) {
-            //    TabItemEx tabItemEx = new TabItemEx("sample " + i);
-            //    tabItemEx.Loading = i % 2 == 0;
-            //    TabItems.Add(tabItemEx);
-            //}
         }
 
         private void InitCmd()
         {
-            SelectCommand = new RelayCommand<object>(t => GenerateSelect(t));
+            SideButtonCmd = new RelayCommand<object>(t => HandleSideButtonCmd(t)); // todo tab
             ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
             ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
             ShowClassifyCommand = new RelayCommand<object>(t => ShowClassify(t));
             AddNewMovie = new RelayCommand<object>(t => AddSingleMovie());
         }
 
+        public void HandleSideButtonCmd(object o)
+        {
+            if (o == null || string.IsNullOrEmpty(o.ToString()))
+                return;
+
+            string param = o.ToString();
+
+            if (!ShowRelativeScreen &&
+             (PathType)ConfigManager.Settings.PicPathMode == PathType.RelativeToData) {
+                ShowRelativeScreen = true;
+                MessageCard.Info("当前图片模式为相对于影片，如果影片都位于同一目录，图片将会重复/覆盖");
+            }
+
+
+
+
+
+            //ExtraWrapper = new SelectWrapper<Video>();
+
+            switch (param) {
+                case "All":
+                    TabItemManager.Add(TabType.GeoVideo, LangManager.GetValueByKey("AllVideo"));
+                    break;
+                case "Favorite":
+                    //ExtraWrapper.Gt("metadata.Grade", 0);
+                    TabItemManager.Add(TabType.GeoStar, LangManager.GetValueByKey("Favorites"));
+                    break;
+                case "RecentWatch":
+                    DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
+                    DateTime date2 = DateTime.Now;
+                    //ExtraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
+                    TabItemManager.Add(TabType.GeoRecentPlay, LangManager.GetValueByKey("RecentPlay"));
+                    break;
+                default:
+                    break;
+            }
+
+
+            //MainWindow.pagination.CurrentPage = 1;
+            //ClickFilterType = string.Empty;
+            //ShowActorGrid = false;
+        }
+
 
         public void InitBinding()
         {
-            CurrentVideoList.CollectionChanged += (s, e) => {
-                if (CurrentVideoList != null && CurrentVideoList.Count > 0)
-                    ShowSoft = false;
-                else
-                    ShowSoft = true;
-            };
+            // todo tab
+            //CurrentVideoList.CollectionChanged += (s, e) => {
+            //    if (CurrentVideoList != null && CurrentVideoList.Count > 0)
+            //        ShowSoft = false;
+            //    else
+            //        ShowSoft = true;
+            //};
         }
 
-        public void RefreshVideoRenderToken()
-        {
-            RenderVideoCTS = new CancellationTokenSource();
-            RenderVideoCTS.Token.Register(() => { Logger.Warn("cancel load video page task"); });
-            RenderVideoCT = RenderVideoCTS.Token;
-        }
 
         #region "TabItem"
         public ObservableCollection<TabItemEx> _TabItems;
@@ -208,28 +206,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public ObservableCollection<Video> _ViewAssociationDatas;
 
-        public ObservableCollection<Video> ViewAssociationDatas {
-            get { return _ViewAssociationDatas; }
-
-            set {
-                _ViewAssociationDatas = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        // 影片关联
-        public ObservableCollection<Video> _AssociationDatas;
-
-        public ObservableCollection<Video> AssociationDatas {
-            get { return _AssociationDatas; }
-
-            set {
-                _AssociationDatas = value;
-                RaisePropertyChanged();
-            }
-        }
 
 
         private bool _MainDataChecked;
@@ -239,16 +216,6 @@ namespace Jvedio.ViewModel
 
             set {
                 _MainDataChecked = value;
-                RaisePropertyChanged();
-            }
-        }
-        private int _RenderProgress;
-
-        public int RenderProgress {
-            get { return _RenderProgress; }
-
-            set {
-                _RenderProgress = value;
                 RaisePropertyChanged();
             }
         }
@@ -264,16 +231,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _ShowActorGrid;
 
-        public bool ShowActorGrid {
-            get { return _ShowActorGrid; }
-
-            set {
-                _ShowActorGrid = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private Visibility _ActorProgressBarVisibility = Visibility.Collapsed;
 
@@ -477,38 +435,9 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private List<Video> _VideoList;
 
-        public List<Video> VideoList {
-            get { return _VideoList; }
 
-            set {
-                _VideoList = value;
-                RaisePropertyChanged();
-            }
-        }
 
-        private ObservableCollection<Video> _CurrentVideoList = new ObservableCollection<Video>();
-
-        public ObservableCollection<Video> CurrentVideoList {
-            get { return _CurrentVideoList; }
-
-            set {
-                _CurrentVideoList = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private List<Video> _SelectedVideo = new List<Video>();
-
-        public List<Video> SelectedVideo {
-            get { return _SelectedVideo; }
-
-            set {
-                _SelectedVideo = value;
-                RaisePropertyChanged();
-            }
-        }
 
 
 
@@ -723,74 +652,10 @@ namespace Jvedio.ViewModel
 
 
 
-        public bool _EnableEditActress = false;
-
-        public bool EnableEditActress {
-            get { return _EnableEditActress; }
-
-            set {
-                _EnableEditActress = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _CurrentPage = 1;
-
-        public int CurrentPage {
-            get { return _CurrentPage; }
-
-            set {
-                _CurrentPage = value;
-
-                // FlowNum = 0;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _PageSize = Properties.Settings.Default.PageSize;
-
-        public int PageSize {
-            get { return _PageSize; }
-
-            set {
-                _PageSize = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int _CurrentCount = 0;
-
-        public int CurrentCount {
-            get { return _CurrentCount; }
-
-            set {
-                _CurrentCount = value;
-                RaisePropertyChanged();
-            }
-        }
 
 
-        public long _TotalCount = 0;
 
-        public long TotalCount {
-            get { return _TotalCount; }
 
-            set {
-                _TotalCount = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _TotalPage = 1;
-
-        public int TotalPage {
-            get { return _TotalPage; }
-
-            set {
-                _TotalPage = value;
-                RaisePropertyChanged();
-            }
-        }
 
 
 
@@ -879,37 +744,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        #region "右键筛选"
 
-        private int _DataExistIndex = 0;
-
-        public int DataExistIndex {
-            get { return _DataExistIndex; }
-
-            set {
-                if (value < 0 || value > 2)
-                    _DataExistIndex = 0;
-                else
-                    _DataExistIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int _PictureTypeIndex = 0;
-
-        public int PictureTypeIndex {
-            get { return _PictureTypeIndex; }
-
-            set {
-                if (value < 0 || value > 2)
-                    _PictureTypeIndex = 0;
-                else
-                    _PictureTypeIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
 
         private int _DownloadLongTaskDelay = 0;
 
@@ -939,14 +774,10 @@ namespace Jvedio.ViewModel
 
         #endregion
 
-        public void LoadData()
-        {
-            Select();
-        }
 
 
 
-        public void Reset() => Select();
+
 
         public void ShowAllActors(object o)
         {
@@ -1052,8 +883,10 @@ namespace Jvedio.ViewModel
             }
             AddTags(videoList);// 新加入标记
             Statistic();
-            if (ConfigManager.ScanConfig.LoadDataAfterScan)
-                LoadData();
+
+            // todo tab
+            //if (ConfigManager.ScanConfig.LoadDataAfterScan)
+            //    LoadData();
         }
 
         // 打上新加入的标记
@@ -1086,6 +919,39 @@ namespace Jvedio.ViewModel
 
             return result;
         }
+
+        public SelectWrapper<Video> GetWrapper(SearchField searchType)
+        {
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            if (string.IsNullOrEmpty(SearchText))
+                return null;
+            string formatSearch = SearchText.ToProperSql().Trim();
+            if (string.IsNullOrEmpty(formatSearch))
+                return null;
+            string searchContent = formatSearch;
+
+            switch (searchType) {
+                case SearchField.VID:
+
+                    string vid = JvedioLib.Security.Identify.GetVID(formatSearch);
+                    if (string.IsNullOrEmpty(vid))
+                        searchContent = formatSearch;
+                    else
+                        searchContent = vid;
+                    wrapper.Like("VID", searchContent);
+                    break;
+
+                // case SearchType.Title:
+                //    wrapper.Like("Title", searchContent).LeftBracket().Or().Like("Path", searchContent).RightBracket();
+                // break;
+                default:
+                    wrapper.Like(searchType.ToString(), searchContent);
+                    break;
+            }
+
+            return wrapper;
+        }
+
 
         public async Task<List<string>> GetSearchCandidate()
         {
@@ -1170,34 +1036,11 @@ namespace Jvedio.ViewModel
             IsLoadingClassify = loading;
         }
 
-        private delegate void LoadVideoDelegate(Video video, int idx);
-
-        private void LoadVideo(Video video, int idx)
-        {
-            if (RenderVideoCT.IsCancellationRequested)
-                return;
-            if (CurrentVideoList.Count < PageSize) {
-                if (idx < CurrentVideoList.Count) {
-                    CurrentVideoList[idx] = null;
-                    CurrentVideoList[idx] = video;
-                } else {
-                    CurrentVideoList.Add(video);
-                }
-            } else {
-                if (idx < CurrentVideoList.Count) {
-                    CurrentVideoList[idx] = null;
-                    CurrentVideoList[idx] = video;
-                }
-            }
-        }
-
-        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
-
-        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
         private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
 
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
+
 
         // 获得标签
         public async void GetLabelList()
@@ -1355,70 +1198,23 @@ namespace Jvedio.ViewModel
         }
 
 
-        public SelectWrapper<Video> GetWrapper(SearchField searchType)
-        {
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            if (string.IsNullOrEmpty(SearchText))
-                return null;
-            string formatSearch = SearchText.ToProperSql().Trim();
-            if (string.IsNullOrEmpty(formatSearch))
-                return null;
-            string searchContent = formatSearch;
 
-            switch (searchType) {
-                case SearchField.VID:
 
-                    string vid = JvedioLib.Security.Identify.GetVID(formatSearch);
-                    if (string.IsNullOrEmpty(vid))
-                        searchContent = formatSearch;
-                    else
-                        searchContent = vid;
-                    wrapper.Like("VID", searchContent);
-                    break;
 
-                // case SearchType.Title:
-                //    wrapper.Like("Title", searchContent).LeftBracket().Or().Like("Path", searchContent).RightBracket();
-                // break;
-                default:
-                    wrapper.Like(searchType.ToString(), searchContent);
-                    break;
-            }
 
-            return wrapper;
-        }
-
-        public async Task<bool> Query(SearchField searchType = SearchField.VID)
-        {
-            ExtraWrapper = GetWrapper(searchType);
-            Select();
-            return true;
-        }
-
-        public void RandomDisplay()
-        {
-            Select(true);
-            TabItemManager.Add(TabType.GeoRandom, LangManager.GetValueByKey("ToolTip_RandomShow"));
-        }
 
         #region "影片"
 
-        private bool _rendering;
-        public bool Rendering {
-            get { return _rendering; }
-            set {
-                _rendering = value;
-                RaisePropertyChanged();
-            }
-        }
+
 
         public void SetSortOrder<T>(IWrapper<T> wrapper, bool random = false)
         {
             if (wrapper == null)
                 return;
             int.TryParse(Properties.Settings.Default.SortType, out int sortIndex);
-            if (sortIndex < 0 || sortIndex >= SortDict.Count)
+            if (sortIndex < 0 || sortIndex >= VieModel_VideoList.SortDict.Count)
                 sortIndex = 0;
-            string sortField = SortDict[sortIndex];
+            string sortField = VieModel_VideoList.SortDict[sortIndex];
             if (random)
                 wrapper.Asc("RANDOM()");
             else {
@@ -1429,231 +1225,9 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public void ToLimit<T>(IWrapper<T> wrapper)
-        {
-            int row_count = PageSize;
-            long offset = PageSize * (CurrentPage - 1);
-            wrapper.Limit(offset, row_count);
-        }
 
 
 
-        public void GenerateSelect(object o = null)
-        {
-            if (!ShowRelativeScreen &&
-             (PathType)ConfigManager.Settings.PicPathMode == PathType.RelativeToData) {
-                ShowRelativeScreen = true;
-                MessageCard.Info("当前图片模式为相对于影片，如果影片都位于同一目录，图片将会重复/覆盖");
-            }
-
-
-            ExtraWrapper = new SelectWrapper<Video>();
-
-            // 侧边栏参数
-            if (o != null && !string.IsNullOrEmpty(o.ToString())) {
-                switch (o.ToString()) {
-                    case "All":
-                        TabItemManager.Add(TabType.GeoVideo, LangManager.GetValueByKey("AllVideo"));
-                        break;
-                    case "Favorite":
-                        ExtraWrapper.Gt("metadata.Grade", 0);
-                        TabItemManager.Add(TabType.GeoStar, LangManager.GetValueByKey("Favorites"));
-                        break;
-                    case "RecentWatch":
-                        DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
-                        DateTime date2 = DateTime.Now;
-                        ExtraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
-                        TabItemManager.Add(TabType.GeoRecentPlay, LangManager.GetValueByKey("RecentPlay"));
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            MainWindow.pagination.CurrentPage = 1;
-            ClickFilterType = string.Empty;
-            ShowActorGrid = false;
-        }
-
-        public async void Select(bool random = false)
-        {
-            Logger.Info("0.Select");
-            TabSelectedIndex = 0; // 影片
-
-            // 判断当前获取的队列
-            while (PageQueue.Count > 1) {
-                int page = PageQueue.Dequeue();
-                Logger.Info($"skip page: {page}");
-            }
-
-            // 当前有视频在渲染的时候，打断渲染，等待结束
-            while (Rendering) {
-                RenderVideoCTS?.Cancel(); // 取消加载
-                await Task.Delay(100);
-            }
-
-            App.Current.Dispatcher.Invoke((Action)delegate {
-                ScrollViewer scrollViewer =
-                    MainWindow.FindVisualChild<ScrollViewer>(MainWindow.MovieItemsControl);
-                scrollViewer?.ScrollToTop(); // 滚到顶部
-            });
-
-            SelectWrapper<Video> wrapper = Video.InitWrapper();
-
-            SetSortOrder(wrapper, random);
-
-            ToLimit(wrapper);
-            wrapper.Select(SelectFields);
-            if (ExtraWrapper != null)
-                wrapper.Join(ExtraWrapper);
-
-            string sql = VideoMapper.BASE_SQL;
-
-            // todo 如果搜索框选中了标签，搜索出来的结果不一致
-            SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
-            if (Searching) {
-                if (searchType == SearchField.ActorName)
-                    sql += VideoMapper.ACTOR_JOIN_SQL;
-                else if (searchType == SearchField.LabelName)
-                    sql += VideoMapper.LABEL_JOIN_SQL;
-            } else if (!string.IsNullOrEmpty(ClickFilterType)) {
-                if (ClickFilterType == "Label") {
-                    sql += VideoMapper.LABEL_JOIN_SQL;
-                } else if (ClickFilterType == "Actor") {
-                    sql += VideoMapper.ACTOR_JOIN_SQL;
-                } else {
-                }
-            }
-
-            // 标记
-            bool allFalse = TagStamps.All(item => item.Selected == false);
-            if (allFalse) {
-                wrapper.IsNull("TagID");
-                sql += VideoMapper.TAGSTAMP_LEFT_JOIN_SQL;
-            } else {
-                bool allTrue = TagStamps.All(item => item.Selected == true);
-                if (!allTrue) {
-                    wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
-                    sql += VideoMapper.TAGSTAMP_JOIN_SQL;
-                }
-            }
-
-            // 右侧菜单的一些筛选项
-
-            // 1. 仅显示分段视频
-            if (Properties.Settings.Default.OnlyShowSubSection)
-                wrapper.NotEq("SubSection", string.Empty);
-
-            // 2. 视频类型
-            List<MenuItem> allMenus = MainWindow.VideoTypeMenuItem.Items.OfType<MenuItem>().ToList();
-            List<MenuItem> checkedMenus = new List<MenuItem>();
-
-            App.Current.Dispatcher.Invoke(() => {
-                checkedMenus = allMenus.Where(t => t.IsChecked).ToList();
-            });
-
-            if (checkedMenus.Count > 0 && checkedMenus.Count < 4) {
-                // VideoType = 0 or VideoType = 1 or VideoType=2
-                if (checkedMenus.Count == 1) {
-                    int idx = allMenus.IndexOf(checkedMenus[0]);
-                    wrapper.Eq("VideoType", idx);
-                } else if (checkedMenus.Count == 2) {
-                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
-                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
-                    wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).RightBracket();
-                } else if (checkedMenus.Count == 3) {
-                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
-                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
-                    int idx3 = allMenus.IndexOf(checkedMenus[2]);
-                    wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBracket();
-                }
-            }
-
-            // 图片显示模式
-            if (ConfigManager.Settings.PictureIndexCreated && PictureTypeIndex > 0) {
-                sql += VideoMapper.COMMON_PICTURE_EXIST_JOIN_SQL;
-                long pathType = ConfigManager.Settings.PicPathMode;
-                int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageType);
-                if (imageType > 1)
-                    imageType = 0;
-                wrapper.Eq("common_picture_exist.PathType", pathType).Eq("common_picture_exist.ImageType", imageType).Eq("common_picture_exist.Exist", PictureTypeIndex - 1);
-            }
-
-            // 是否可播放
-            if (ConfigManager.Settings.PlayableIndexCreated && DataExistIndex > 0)
-                wrapper.Eq("metadata.PathExist", DataExistIndex - 1);
-
-            string count_sql = "select count(DISTINCT metadata.DataID) " + sql + wrapper.ToWhere(false);
-            TotalCount = metaDataMapper.SelectCount(count_sql);
-
-            WrapperEventArg<Video> arg = new WrapperEventArg<Video>();
-            arg.Wrapper = wrapper;
-            arg.SQL = sql;
-            RenderSqlChanged?.Invoke(null, arg);
-
-            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
-
-            // 只能手动设置页码，很奇怪
-            App.Current.Dispatcher.Invoke(() => { MainWindow.pagination.Total = TotalCount; });
-            RenderCurrentVideo(sql);
-        }
-
-        public void RenderCurrentVideo(string sql)
-        {
-            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
-
-            VideoList = new List<Video>();
-            if (videos == null)
-                videos = new List<Video>();
-            VideoList.AddRange(videos);
-            CurrentCount = VideoList.Count;
-            Render();
-        }
-
-        public async void Render()
-        {
-            Logger.Info("1.Render");
-            if (CurrentVideoList == null)
-                CurrentVideoList = new ObservableCollection<Video>();
-            int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageMode);
-            for (int i = 0; i < VideoList.Count; i++) {
-                try {
-                    RenderVideoCT.ThrowIfCancellationRequested();
-                } catch (OperationCanceledException) {
-                    RenderVideoCTS?.Dispose();
-                    break;
-                }
-
-                Rendering = true;
-                Video video = VideoList[i];
-                if (video == null)
-                    continue;
-                Video.SetImage(ref video, imageMode);
-                Video.SetTagStamps(ref video); // 设置标签戳
-                Video.HandleEmpty(ref video); // 设置标题和发行日期
-
-                // 设置关联
-                HashSet<long> set = associationMapper.GetAssociationDatas(video.DataID);
-                if (set != null) {
-                    video.HasAssociation = set.Count > 0;
-                    video.AssociationList = set.ToList();
-                }
-
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
-                RenderProgress = (int)(100 * (i + 1) / (float)VideoList.Count);
-            }
-
-            // 清除
-            for (int i = CurrentVideoList.Count - 1; i > VideoList.Count - 1; i--) {
-                CurrentVideoList.RemoveAt(i);
-            }
-
-            if (RenderVideoCT.IsCancellationRequested)
-                RefreshVideoRenderToken();
-            Rendering = false;
-            PageChangedCompleted?.Invoke(this, null);
-        }
 
         #endregion
 
@@ -1691,64 +1265,6 @@ namespace Jvedio.ViewModel
             DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
             DateTime date2 = DateTime.Now;
             RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
-        }
-
-        public void LoadViewAssoData(long dataID)
-        {
-            if (ViewAssociationDatas == null)
-                ViewAssociationDatas = new ObservableCollection<Video>();
-            ViewAssociationDatas.Clear();
-            GC.Collect();
-            Video currentVideo = CurrentVideoList.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
-            if (currentVideo.AssociationList == null || currentVideo.AssociationList.Count <= 0)
-                return;
-            SelectWrapper<Video> wrapper = Video.InitWrapper();
-            wrapper.In("metadata.DataID", currentVideo.AssociationList.Select(arg => arg.ToString()));
-            wrapper.Select(SelectFields);
-
-            string sql = VideoMapper.BASE_SQL;
-
-            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
-
-            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
-
-            if (videos == null)
-                return;
-
-            for (int i = 0; i < videos.Count; i++) {
-                Video video = videos[i];
-                if (video == null)
-                    continue;
-                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                if (smallimage == null)
-                    smallimage = MetaData.DefaultSmallImage;
-                if (bigimage == null)
-                    bigimage = smallimage;
-                video.BigImage = bigimage;
-                Video.SetTagStamps(ref video); // 设置标签戳
-                Video.HandleEmpty(ref video); // 设置标题和发行日期
-
-                if (ConfigManager.Settings.AutoGenScreenShot) {
-                    string path = video.GetScreenShot();
-                    if (Directory.Exists(path)) {
-                        string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
-                        if (array.Length > 0) {
-                            Video.SetImage(ref video, array[array.Length / 2]);
-                            video.BigImage = null;
-                            video.BigImage = video.ViewImage;
-                        }
-                    }
-                }
-
-                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
-            }
-
-            // 清除
-            for (int i = ViewAssociationDatas.Count - 1; i > videos.Count - 1; i--) {
-                ViewAssociationDatas.RemoveAt(i);
-            }
         }
 
 

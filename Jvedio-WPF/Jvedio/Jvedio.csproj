@@ -318,6 +318,13 @@
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\Scan\ScanDetailInfo.cs" />
     <Compile Include="Core\Server\ServerManager.cs" />
+    <Compile Include="Core\UserControls\VideoList.xaml.cs">
+      <DependentUpon>VideoList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\UserControls\ViewModels\VieModel_VideoList.cs" />
+    <Compile Include="Core\UserControls\ViewVideo.xaml.cs">
+      <DependentUpon>ViewVideo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Entity\Common\NFOParse.cs" />
     <Compile Include="Entity\Common\TabItemEx.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
@@ -493,6 +500,14 @@
     <Page Include="Core\Lang\zh-CN.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Core\UserControls\VideoList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Core\UserControls\ViewVideo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomStyle\SuperControls\Basic.xaml">
       <Generator>MSBuild:Compile</Generator>

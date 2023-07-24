@@ -184,17 +184,19 @@ namespace Jvedio
         public void InitDataIDs()
         {
             DataIDs = new List<long>();
-            SelectWrapper<Video> wrapper = windowMain?.CurrentWrapper;
-            string sql = windowMain?.CurrentSQL;
-            if (wrapper != null && !string.IsNullOrEmpty(sql)) {
-                if (Properties.Settings.Default.DetailWindowShowAllMovie)
-                    sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder();
-                else
-                    sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
-                List<Dictionary<string, object>> list = videoMapper.Select(sql);
-                if (list != null && list.Count > 0)
-                    DataIDs = list.Select(arg => long.Parse(arg["DataID"].ToString())).ToList();
-            }
+
+            // todo tab
+            //SelectWrapper<Video> wrapper = windowMain?.CurrentWrapper;
+            //string sql = windowMain?.CurrentSQL;
+            //if (wrapper != null && !string.IsNullOrEmpty(sql)) {
+            //    if (Properties.Settings.Default.DetailWindowShowAllMovie)
+            //        sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder();
+            //    else
+            //        sql = "select metadata.DataID" + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
+            //    List<Dictionary<string, object>> list = videoMapper.Select(sql);
+            //    if (list != null && list.Count > 0)
+            //        DataIDs = list.Select(arg => long.Parse(arg["DataID"].ToString())).ToList();
+            //}
         }
 
         private void InitProgressBar()
@@ -267,13 +269,13 @@ namespace Jvedio
                     }
                 });
             };
-            if (!Global.DownloadManager.Dispatcher.Working)
-                Global.DownloadManager.Dispatcher.BeginWork();
-            bool? added = windowMain?.addToDownload(task);
-            if ((bool)added) {
-                windowMain?.setDownloadStatus();
-                MessageNotify.Success("成功加入下载列表");
-            }
+            //if (!Global.DownloadManager.Dispatcher.Working)
+            //    Global.DownloadManager.Dispatcher.BeginWork();
+            //bool? added = windowMain?.addToDownload(task);
+            //if ((bool)added) {
+            //    windowMain?.setDownloadStatus();
+            //    MessageNotify.Success("成功加入下载列表");
+            //}
         }
 
         public void GetScreenGif(object sender, RoutedEventArgs e)
@@ -283,7 +285,7 @@ namespace Jvedio
 
             if (!Global.FFmpegManager.Dispatcher.Working)
                 Global.FFmpegManager.Dispatcher.BeginWork();
-            windowMain?.addToScreenShot(task);
+            //windowMain?.addToScreenShot(task);
         }
 
         public void GetScreenShot(object sender, RoutedEventArgs e)
@@ -307,7 +309,7 @@ namespace Jvedio
             };
             if (!Global.FFmpegManager.Dispatcher.Working)
                 Global.FFmpegManager.Dispatcher.BeginWork();
-            windowMain?.addToScreenShot(task);
+            //windowMain?.addToScreenShot(task);
         }
 
         public void CloseWindow(object sender, RoutedEventArgs e) => this.Close();
@@ -581,7 +583,8 @@ namespace Jvedio
 
         public void DeleteID(object sender, RoutedEventArgs e)
         {
-            windowMain?.DeleteIDs(windowMain?.vieModel.CurrentVideoList, new List<Video> { vieModel.CurrentVideo }, true);
+            // todo tab
+            //windowMain?.DeleteIDs(windowMain?.vieModel.CurrentVideoList, new List<Video> { vieModel.CurrentVideo }, true);
             int idx = DataIDs.IndexOf(vieModel.CurrentVideo.DataID);
             DataIDs.RemoveAll(arg => arg == vieModel.CurrentVideo.DataID);
             if (idx >= DataIDs.Count)

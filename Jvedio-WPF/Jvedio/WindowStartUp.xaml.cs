@@ -390,7 +390,7 @@ namespace Jvedio
                     Main main = GetWindowByName("Main", App.Current.Windows) as Main;
                     if (main != null) {
                         // 重置当前
-                        main.vieModel.Select();
+                        //main.vieModel.Select(); // todo tab
                         main.vieModel.Statistic();
                     }
                 } catch (SqlException ex) {
