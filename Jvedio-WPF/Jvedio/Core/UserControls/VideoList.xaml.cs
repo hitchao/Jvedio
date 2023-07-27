@@ -45,6 +45,7 @@ using Jvedio.Core.Global;
 using Jvedio.Core.Media;
 using Jvedio.Entity.CommonSQL;
 using SuperUtils.Time;
+using static Jvedio.Core.UserControls.VideoItemEventArgs;
 
 namespace Jvedio.Core.UserControls
 {
@@ -53,6 +54,11 @@ namespace Jvedio.Core.UserControls
     /// </summary>
     public partial class VideoList : UserControl
     {
+
+        public long TabID { get; set; }
+
+
+
         private VieModel_VideoList vieModel { get; set; }
 
         private DispatcherTimer ResizingTimer { get; set; }
@@ -70,23 +76,29 @@ namespace Jvedio.Core.UserControls
         public string CurrentSQL { get; set; }
 
 
-        public VideoList()
+        public TabItemEx TabItemEx { get; set; }
+
+        public VideoList(SelectWrapper<Video> extraWrapper, TabItemEx tabItemEx)
         {
             InitializeComponent();
+            TabItemEx = tabItemEx;
             Init();
+            vieModel.ExtraWrapper = extraWrapper;
         }
 
         public void Init()
         {
             ResizingTimer = new DispatcherTimer();
-
+            vieModel = new VieModel_VideoList();
+            this.DataContext = vieModel;
             BindingEvent();
         }
+
+
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             BindingEventAfterRender();
-
             vieModel.Reset();           // 加载数据
         }
 
@@ -135,6 +147,17 @@ namespace Jvedio.Core.UserControls
                 }
             };
         }
+
+        #region "Event"
+        public static readonly RoutedEvent OnItemClickEvent =
+            EventManager.RegisterRoutedEvent("OnItemClick", RoutingStrategy.Bubble,
+                typeof(VideoItemEventHandler), typeof(VideoList));
+
+        public event VideoItemEventHandler OnItemClick {
+            add => AddHandler(OnItemClickEvent, value);
+            remove => RemoveHandler(OnItemClickEvent, value);
+        }
+        #endregion
         private void ResizingTimer_Tick(object sender, EventArgs e)
         {
             Resizing = false;
@@ -1167,17 +1190,21 @@ namespace Jvedio.Core.UserControls
                 ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
                 if (presenter == null)
                     continue;
-                Border border = FindElementByName<Border>(presenter, "rootBorder");
-                if (border == null)
+                ViewVideo viewVideo = FindElementByName<ViewVideo>(presenter, "viewVideo");
+                if (viewVideo == null)
                     continue;
-                long dataID = GetDataID(border);
-                if (border != null && dataID > 0) {
-                    border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
-                    border.BorderBrush = Brushes.Transparent;
-                    if (Properties.Settings.Default.EditMode && vieModel.SelectedVideo != null &&
+                long dataID = GetDataID(viewVideo);
+
+                viewVideo.SetEditMode(vieModel.EditMode);
+
+                if (dataID > 0) {
+                    viewVideo.SetBackground((SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"]);
+                    viewVideo.SetBorderBrush(Brushes.Transparent);
+                    if (vieModel.EditMode && vieModel.SelectedVideo != null &&
                         vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any()) {
-                        border.Background = StyleManager.Common.HighLight.Background;
-                        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
+
+                        viewVideo.SetBackground(StyleManager.Common.HighLight.Background);
+                        viewVideo.SetBorderBrush(StyleManager.Common.HighLight.BorderBrush);
                     }
                 }
             }
@@ -1199,6 +1226,14 @@ namespace Jvedio.Core.UserControls
                 long.TryParse(target.Tag.ToString(), out long id))
                 return id;
 
+            return -1;
+        }
+
+        private long GetDataID(ViewVideo viewVideo)
+        {
+            if (viewVideo != null && viewVideo.Tag != null && long.TryParse(viewVideo.Tag.ToString(), out long dataID)) {
+                return dataID;
+            }
             return -1;
         }
 
@@ -1435,66 +1470,6 @@ namespace Jvedio.Core.UserControls
 
         private bool canShowDetails { get; set; }
 
-
-
-        private void ShowDetails(object sender, MouseButtonEventArgs e)
-        {
-            // todo tab
-            //AssoDataPopup.IsOpen = false;
-            if (Resizing || !canShowDetails)
-                return;
-            FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
-            long iD = GetDataID(element);
-            if (iD <= 0)
-                return;
-            if (Properties.Settings.Default.EditMode && vieModel.CurrentVideoList != null) {
-                Video video = vieModel.CurrentVideoList.FirstOrDefault(arg => arg.DataID == iD);
-                if (video == null)
-                    return;
-                int selectIdx = vieModel.CurrentVideoList.IndexOf(video);
-
-                // 多选
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) {
-                    if (firstIdx == -1)
-                        firstIdx = selectIdx;
-                    else
-                        secondIdx = selectIdx;
-                }
-
-                if (firstIdx >= 0 && secondIdx >= 0) {
-                    if (firstIdx > secondIdx) {
-                        // 交换一下顺序
-                        int temp = firstIdx;
-                        firstIdx = secondIdx - 1;
-                        secondIdx = temp - 1;
-                    }
-
-                    for (int i = firstIdx + 1; i <= secondIdx; i++) {
-                        Video m = vieModel.CurrentVideoList[i];
-                        if (vieModel.SelectedVideo.Contains(m))
-                            vieModel.SelectedVideo.Remove(m);
-                        else
-                            vieModel.SelectedVideo.Add(m);
-                    }
-
-                    firstIdx = -1;
-                    secondIdx = -1;
-                } else {
-                    if (vieModel.SelectedVideo.Contains(video))
-                        vieModel.SelectedVideo.Remove(video);
-                    else
-                        vieModel.SelectedVideo.Add(video);
-                }
-
-                SetSelected();
-            } else {
-                //windowDetails?.Close();
-                Window_Details windowDetails = new Window_Details(iD);
-                windowDetails.Show();
-            }
-
-            canShowDetails = false;
-        }
 
         private void CanShowDetails(object sender, MouseButtonEventArgs e)
         {
@@ -1985,5 +1960,77 @@ namespace Jvedio.Core.UserControls
                 MessageNotify.Error(LangManager.GetValueByKey("SupportPotPlayerOnly"));
         }
 
+        private void onItemShowDetail(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement ele = sender as FrameworkElement;
+            if (ele != null && ele.Tag != null && long.TryParse(ele.Tag.ToString(), out long dataID)) {
+                if (vieModel.EditMode) {
+                    if (vieModel.CurrentVideoList == null)
+                        return;
+                    // 多选
+                    Video video = vieModel.CurrentVideoList.FirstOrDefault(arg => arg.DataID == dataID);
+                    if (video == null)
+                        return;
+                    int selectIdx = vieModel.CurrentVideoList.IndexOf(video);
+
+                    // 多选
+                    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) {
+                        if (firstIdx == -1)
+                            firstIdx = selectIdx;
+                        else
+                            secondIdx = selectIdx;
+                    }
+
+                    if (firstIdx >= 0 && secondIdx >= 0) {
+                        if (firstIdx > secondIdx) {
+                            // 交换一下顺序
+                            int temp = firstIdx;
+                            firstIdx = secondIdx - 1;
+                            secondIdx = temp - 1;
+                        }
+
+                        for (int i = firstIdx + 1; i <= secondIdx; i++) {
+                            Video m = vieModel.CurrentVideoList[i];
+                            if (vieModel.SelectedVideo.Contains(m))
+                                vieModel.SelectedVideo.Remove(m);
+                            else
+                                vieModel.SelectedVideo.Add(m);
+                        }
+
+                        firstIdx = -1;
+                        secondIdx = -1;
+                    } else {
+                        if (vieModel.SelectedVideo.Contains(video))
+                            vieModel.SelectedVideo.Remove(video);
+                        else
+                            vieModel.SelectedVideo.Add(video);
+                    }
+
+                    SetSelected();
+                } else {
+                    RaiseEvent(new VideoItemEventArgs(dataID, OnItemClickEvent, sender));
+                }
+            }
+        }
+
+        private void viewVideo_ImageMouseEnter(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.EditMode && sender is ViewVideo viewVideo) {
+                viewVideo.SetBorderBrush(StyleManager.Common.HighLight.BorderBrush);
+            }
+        }
+
+        private void viewVideo_ImageMouseLeave(object sender, RoutedEventArgs e)
+        {
+            if (vieModel.EditMode &&
+                sender is ViewVideo viewVideo &&
+                GetDataID(viewVideo) is long dataID && dataID > 0) {
+                if (vieModel.SelectedVideo.Where(arg => arg.DataID == dataID).Any()) {
+                    viewVideo.SetBorderBrush(StyleManager.Common.HighLight.BorderBrush);
+                } else {
+                    viewVideo.SetBorderBrush(Brushes.Transparent);
+                }
+            }
+        }
     }
 }

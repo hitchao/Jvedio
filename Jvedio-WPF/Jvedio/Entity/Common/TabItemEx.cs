@@ -58,10 +58,18 @@ namespace Jvedio.Entity.Common
             Name = name;
             Selected = selected;
             Pinned = pinned;
+            TabType = type;
             TabGeometry = PATH_TABLE[type];
             UUID = System.Guid.NewGuid().ToString();
         }
 
+
+
+        private TabType _TabType;
+        public TabType TabType {
+            get { return _TabType; }
+            private set { _TabType = value; RaisePropertyChanged(); }
+        }
 
 
 
@@ -98,6 +106,23 @@ namespace Jvedio.Entity.Common
         public Geometry TabGeometry {
             get { return _TabGeometry; }
             set { _TabGeometry = value; RaisePropertyChanged(); }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            TabItemEx tabItemEx = obj as TabItemEx;
+            if (tabItemEx == null)
+                return false;
+
+            return this.UUID.Equals(tabItemEx.UUID);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.UUID.GetHashCode();
         }
     }
 }

@@ -211,6 +211,9 @@ namespace Jvedio
             //ShowPluginWindow(null, null);
 
             CheckServerStatus();
+
+            // 加载数据
+            vieModel.HandleSideButtonCmd("All");
         }
 
         public async void CheckServerStatus()
@@ -2583,7 +2586,7 @@ namespace Jvedio
             }
         }
 
-        private void SetPortSelected(object sender, MouseButtonEventArgs e)
+        private void SetTabSelected(object sender, MouseButtonEventArgs e)
         {
             CanDragTabItem = false;
             if (CurrentDragElement != null)

@@ -8,6 +8,7 @@
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
+    Name="viewVideo"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="GifImageStyle" TargetType="{x:Type media:GifImage}">
@@ -82,7 +83,7 @@
                         Padding="5"
                         Click="ViewAssocDatas"
                         Cursor="Hand"
-                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}"
                         Style="{StaticResource RoundNormalButton}"
                         Tag="{DynamicResource Button.Hover.Background}"
                         Visibility="{Binding HasAssociation, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
@@ -98,7 +99,7 @@
                         Padding="5"
                         Click="ShowSubSection"
                         Cursor="Hand"
-                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}"
                         Style="{StaticResource RoundNormalButton}"
                         Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                         <Button.ContextMenu>
@@ -129,12 +130,12 @@
                             <Style.Triggers>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="False" />
+                                        <Condition Binding="{Binding EditMode, ElementName=viewVideo, Mode=OneWay}" Value="False" />
                                         <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type super:SimplePanel}, Mode=FindAncestor}}" Value="True" />
                                     </MultiDataTrigger.Conditions>
                                     <Setter Property="Visibility" Value="Visible" />
                                 </MultiDataTrigger>
-                                <DataTrigger Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="True">
+                                <DataTrigger Binding="{Binding EditMode, ElementName=viewVideo, Mode=OneWay}" Value="True">
                                     <Setter Property="Visibility" Value="Hidden" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -145,7 +146,7 @@
 
             </super:SimplePanel>
             <!--  标签戳+ID  -->
-            <Grid Grid.Row="1" IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+            <Grid Grid.Row="1" IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
@@ -233,7 +234,7 @@
                 AllowHalf="True"
                 Background="{DynamicResource Window.Title.Background}"
                 Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}"
                 ItemHeight="20"
                 ItemMargin="3 0"
                 PreviewMouseLeftButtonDown="OnRateMouseDown"
@@ -249,7 +250,7 @@
                 HorizontalAlignment="Left"
                 Cursor="Hand"
                 FontSize="14"
-                IsEnabled="{Binding EditMode, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}"
                 MouseLeftButtonDown="CopyVID"
                 Opacity="0.5"
                 Style="{StaticResource BaseTextBlock}"

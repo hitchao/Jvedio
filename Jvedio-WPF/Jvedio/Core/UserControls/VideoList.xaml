@@ -148,7 +148,11 @@
             <localControl:ViewVideo
                 x:Name="viewVideo"
                 ContextMenu="{StaticResource VideoContextMenu}"
-                ContextMenuOpening="ContextMenu_ContextMenuOpening" />
+                ContextMenuOpening="ContextMenu_ContextMenuOpening"
+                ImageMouseEnter="viewVideo_ImageMouseEnter"
+                ImageMouseLeave="viewVideo_ImageMouseLeave"
+                ShowDetail="onItemShowDetail"
+                Tag="{Binding DataID, Mode=OneWay}" />
         </DataTemplate>
 
     </UserControl.Resources>
@@ -204,7 +208,7 @@
                     Background="{DynamicResource Window.Title.Background}"
                     CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
                     Click="SetSelectMode"
-                    IsChecked="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                    IsChecked="{Binding EditMode, Mode=TwoWay}" />
 
 
 

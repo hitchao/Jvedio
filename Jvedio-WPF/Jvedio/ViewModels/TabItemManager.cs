@@ -1,6 +1,10 @@
 ﻿using Jvedio.Core.Config;
+using Jvedio.Core.UserControls;
+using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.ViewModel;
+using SuperControls.Style;
+using SuperUtils.Framework.ORM.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,12 +12,14 @@ using System.Linq;
 using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Jvedio.ViewModels
 {
 
     public class TabItemManager
     {
+
         private TabItemManager()
         {
         }
@@ -21,17 +27,19 @@ namespace Jvedio.ViewModels
         private static TabItemManager instance { get; set; }
 
         private VieModel_Main vieModel { get; set; }
+        private SimplePanel TabPanel { get; set; }
 
-        public static TabItemManager CreateInstance(VieModel_Main vieModel)
+        public static TabItemManager CreateInstance(VieModel_Main vieModel, SimplePanel tabPanel)
         {
             if (instance == null) {
                 instance = new TabItemManager();
                 instance.vieModel = vieModel;
+                instance.TabPanel = tabPanel;
             }
             return instance;
         }
 
-        public void Add(TabType type, string tabName)
+        public void Add(TabType type, string tabName, object tabData)
         {
             if (vieModel == null) {
                 return;
@@ -57,6 +65,41 @@ namespace Jvedio.ViewModels
             if (idx >= 0)
                 SetTabSelected(idx);
 
+            onAddData(tabItem, tabData);
+        }
+
+        private void OnItemClick(object sender, VideoItemEventArgs e)
+        {
+            long dataID = e.DataID;
+            onShowDetailData(dataID);
+        }
+
+        public void onShowDetailData(long dataID)
+        {
+            Window_Details windowDetails = new Window_Details(dataID);
+            windowDetails.Show();
+        }
+
+        private void onAddData(TabItemEx tabItem, object tabData)
+        {
+            switch (tabItem.TabType) {
+                case TabType.GeoVideo:
+                case TabType.GeoStar:
+                case TabType.GeoRecentPlay:
+                    SelectWrapper<Video> ExtraWrapper = tabData as SelectWrapper<Video>;
+
+                    VideoList videoList = new VideoList(ExtraWrapper, tabItem);
+
+                    videoList.OnItemClick += OnItemClick;
+
+                    TabPanel.Children.Add(videoList);
+
+
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         public void SetTabSelected(int idx)
@@ -68,6 +111,17 @@ namespace Jvedio.ViewModels
                 vieModel.TabItems[i].Selected = false;
             }
             vieModel.TabItems[idx].Selected = true;
+            List<VideoList> videoLists = TabPanel.Children.OfType<VideoList>().ToList();
+
+            int target = -1;
+            for (int i = 0; i < videoLists.Count; i++) {
+                videoLists[i].Visibility = System.Windows.Visibility.Hidden;
+                if (videoLists[i].TabItemEx.Equals(vieModel.TabItems[idx])) {
+                    target = i;
+                }
+            }
+            if (target >= 0 && target < videoLists.Count)
+                videoLists[target].Visibility = System.Windows.Visibility.Visible;
         }
 
         public void PinByIndex(int idx)

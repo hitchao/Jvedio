@@ -111,7 +111,7 @@ namespace Jvedio.ViewModel
 
         public void InitTabData()
         {
-            TabItemManager = TabItemManager.CreateInstance(this);
+            TabItemManager = TabItemManager.CreateInstance(this, MainWindow.TabDataPanel);
         }
 
         private void InitCmd()
@@ -136,25 +136,21 @@ namespace Jvedio.ViewModel
                 MessageCard.Info("当前图片模式为相对于影片，如果影片都位于同一目录，图片将会重复/覆盖");
             }
 
-
-
-
-
-            //ExtraWrapper = new SelectWrapper<Video>();
+            SelectWrapper<Video> ExtraWrapper = new SelectWrapper<Video>();
 
             switch (param) {
                 case "All":
-                    TabItemManager.Add(TabType.GeoVideo, LangManager.GetValueByKey("AllVideo"));
+                    TabItemManager.Add(TabType.GeoVideo, LangManager.GetValueByKey("AllVideo"), ExtraWrapper);
                     break;
                 case "Favorite":
-                    //ExtraWrapper.Gt("metadata.Grade", 0);
-                    TabItemManager.Add(TabType.GeoStar, LangManager.GetValueByKey("Favorites"));
+                    ExtraWrapper.Gt("metadata.Grade", 0);
+                    TabItemManager.Add(TabType.GeoStar, LangManager.GetValueByKey("Favorites"), ExtraWrapper);
                     break;
                 case "RecentWatch":
                     DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
                     DateTime date2 = DateTime.Now;
-                    //ExtraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
-                    TabItemManager.Add(TabType.GeoRecentPlay, LangManager.GetValueByKey("RecentPlay"));
+                    ExtraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
+                    TabItemManager.Add(TabType.GeoRecentPlay, LangManager.GetValueByKey("RecentPlay"), ExtraWrapper);
                     break;
                 default:
                     break;

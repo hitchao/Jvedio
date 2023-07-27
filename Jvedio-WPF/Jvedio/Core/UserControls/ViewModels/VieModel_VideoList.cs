@@ -27,6 +27,8 @@ using Jvedio.Core.CustomEventArgs;
 using Jvedio.Entity.CommonSQL;
 using SuperUtils.Time;
 using System.Windows.Controls;
+using System.Web.UI;
+using System.Windows.Media;
 
 namespace Jvedio.Core.UserControls.ViewModels
 {
@@ -89,11 +91,22 @@ namespace Jvedio.Core.UserControls.ViewModels
 
         public event EventHandler RenderSqlChanged;
 
-        public VieModel_VideoList(long dataId, Window_Edit windowEdit)
+        public VieModel_VideoList()
         {
             RefreshVideoRenderToken();
         }
 
+
+        private bool _EditMode;
+
+        public bool EditMode {
+            get { return _EditMode; }
+
+            set {
+                _EditMode = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private ObservableCollection<TagStamp> _TagStamps = new ObservableCollection<TagStamp>();
 

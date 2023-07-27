@@ -318,6 +318,7 @@
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\Scan\ScanDetailInfo.cs" />
     <Compile Include="Core\Server\ServerManager.cs" />
+    <Compile Include="Core\UserControls\VideoItemEventArgs.cs" />
     <Compile Include="Core\UserControls\VideoList.xaml.cs">
       <DependentUpon>VideoList.xaml</DependentUpon>
     </Compile>
