@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Media;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Core.Media;
 using SuperControls.Style;
 using SuperUtils.WPF.VieModel;
 using System;
@@ -130,16 +131,37 @@ namespace Jvedio.Core.UserControls
 
         #region "属性"
 
-        public int _ImageMode = 1;
-        public int ImageMode {
-            get { return _ImageMode; }
+        public static readonly DependencyProperty ImageWidthProperty = DependencyProperty.Register(
+nameof(ImageWidth), typeof(int), typeof(ViewVideo), new PropertyMetadata((int)ConfigManager.VideoConfig.GlobalImageWidth));
 
+        public int ImageWidth {
+            get { return (int)GetValue(ImageWidthProperty); }
             set {
-                _ImageMode = value;
-                RaisePropertyChanged();
+                SetValue(ImageWidthProperty, value);
             }
         }
 
+        public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
+nameof(ImageHeight), typeof(int), typeof(ViewVideo), new PropertyMetadata((int)ConfigManager.VideoConfig.GlobalImageWidth));
+
+        public int ImageHeight {
+            get {
+                return (int)GetValue(ImageHeightProperty);
+            }
+            set {
+                SetValue(ImageHeightProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty ImageModeProperty = DependencyProperty.Register(
+nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
+
+        public int ImageMode {
+            get { return (int)GetValue(ImageModeProperty); }
+            set {
+                SetValue(ImageModeProperty, value);
+            }
+        }
 
         public bool _EditMode;
         public bool EditMode {
@@ -170,9 +192,28 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        public void SetImageMode(int mode)
+        //public void SetImageMode(int mode, int imageWidth)
+        //{
+        //    if (this.ImageMode != mode)
+        //        this.ImageMode = mode;
+        //    if (this.ImageWidth != imageWidth)
+        //        this.ImageWidth = imageWidth;
+
+        //    int imageHeight = GetImageHeight(mode, imageWidth);
+        //    if (ImageHeight != imageHeight)
+        //        this.ImageHeight = imageHeight;
+        //}
+
+        public static int GetImageHeight(int mode, int width)
         {
-            this.ImageMode = mode;
+            if (mode == 0) {
+                return (int)((double)width * (200 / 147));
+            } else if (mode == 1) {
+                return (int)(width * 540f / 800f);
+            } else if (mode == 2) {
+                return (int)(width * 540f / 800f);
+            }
+            return width;
         }
 
         #endregion

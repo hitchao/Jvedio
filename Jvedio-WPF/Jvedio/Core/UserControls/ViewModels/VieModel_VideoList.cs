@@ -29,6 +29,7 @@ using SuperUtils.Time;
 using System.Windows.Controls;
 using System.Web.UI;
 using System.Windows.Media;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Jvedio.Core.UserControls.ViewModels
 {
@@ -94,9 +95,34 @@ namespace Jvedio.Core.UserControls.ViewModels
         public VieModel_VideoList()
         {
             RefreshVideoRenderToken();
+            GlobalImageHeight = ViewVideo.GetImageHeight(ShowImageMode, GlobalImageWidth);
         }
 
         #region "属性"
+
+
+        private string _UUID;
+
+        public string UUID {
+            get { return _UUID; }
+
+            set {
+                _UUID = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private int _GlobalImageHeight;
+
+        public int GlobalImageHeight {
+            get { return _GlobalImageHeight; }
+
+            set {
+                _GlobalImageHeight = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         private int _GlobalImageWidth = (int)ConfigManager.VideoConfig.GlobalImageWidth;
@@ -106,8 +132,10 @@ namespace Jvedio.Core.UserControls.ViewModels
 
             set {
                 _GlobalImageWidth = value;
-                RaisePropertyChanged();
+                GlobalImageHeight = ViewVideo.GetImageHeight(ShowImageMode, value);
                 ConfigManager.VideoConfig.GlobalImageWidth = value;
+
+                RaisePropertyChanged();
             }
         }
 

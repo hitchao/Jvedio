@@ -16,21 +16,14 @@
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ImageMode, Mode=OneWay, ElementName=viewVideo}" Value="0">
                     <Setter Property="SourceType" Value="SmallImage" />
-                    <Setter Property="Width" Value="{Binding SmallImage_Width, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
-                    <Setter Property="Height" Value="{Binding SmallImage_Height, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
-
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding ImageMode, Mode=OneWay, ElementName=viewVideo}" Value="1">
                     <Setter Property="SourceType" Value="BigImage" />
-                    <Setter Property="Width" Value="{Binding BigImage_Width, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
-                    <Setter Property="Height" Value="{Binding BigImage_Height, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding ImageMode, Mode=OneWay, ElementName=viewVideo}" Value="2">
                     <Setter Property="SourceType" Value="Gif" />
-                    <Setter Property="Width" Value="{Binding GifImage_Width, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
-                    <Setter Property="Height" Value="{Binding GifImage_Height, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -38,7 +31,7 @@
     </UserControl.Resources>
     <super:SimplePanel
         Name="rootGrid"
-        Width="{Binding GlobalImageWidth, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}"
+        Width="{Binding ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
         Margin="10"
         Tag="{Binding DataID, Mode=OneWay}">
         <Border
@@ -57,6 +50,8 @@
             <super:SimplePanel Grid.Row="0">
                 <media:GifImage
                     x:Name="GifImage"
+                    Width="{Binding Path=ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
+                    Height="{Binding Path=ImageHeight, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
                     Margin="2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"

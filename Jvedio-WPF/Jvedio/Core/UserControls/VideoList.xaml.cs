@@ -84,6 +84,7 @@ namespace Jvedio.Core.UserControls
             TabItemEx = tabItemEx;
             Init();
             vieModel.ExtraWrapper = extraWrapper;
+            vieModel.UUID = tabItemEx.UUID;
         }
 
         public void Init()
@@ -129,6 +130,7 @@ namespace Jvedio.Core.UserControls
             ResizingTimer.Tick += new EventHandler(ResizingTimer_Tick);
 
             vieModel.PageChangedCompleted += (s, ev) => {
+                //SetImageMode();
                 if (vieModel.EditMode)
                     SetSelected();
                 if (ConfigManager.Settings.AutoGenScreenShot)
@@ -213,6 +215,12 @@ namespace Jvedio.Core.UserControls
             } else if (idx == 3) {
                 // vieModel.ShowDetailsData();
             }
+
+        }
+
+        public void SetViewMode()
+        {
+
         }
 
         // todo
@@ -267,16 +275,7 @@ namespace Jvedio.Core.UserControls
         // todo 重写图片模式
         private void ImageSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (vieModel.ShowImageMode == 0) {
-                ConfigManager.VideoConfig.SmallImage_Width = vieModel.GlobalImageWidth;
-                ConfigManager.VideoConfig.SmallImage_Height = (int)((double)vieModel.GlobalImageWidth * (200 / 147));
-            } else if (vieModel.ShowImageMode == 1) {
-                ConfigManager.VideoConfig.BigImage_Width = vieModel.GlobalImageWidth;
-                ConfigManager.VideoConfig.BigImage_Height = (int)(vieModel.GlobalImageWidth * 540f / 800f);
-            } else if (vieModel.ShowImageMode == 2) {
-                ConfigManager.VideoConfig.GifImage_Width = vieModel.GlobalImageWidth;
-                ConfigManager.VideoConfig.GifImage_Height = (int)(vieModel.GlobalImageWidth * 540f / 800f);
-            }
+            //SetImageMode();
         }
 
 
@@ -1198,7 +1197,9 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        public void SetImageMode(int imageMode)
+
+
+        public void SetImageMode()
         {
             ItemsControl itemsControl = MovieItemsControl;
             if (itemsControl == null)
@@ -1212,11 +1213,11 @@ namespace Jvedio.Core.UserControls
                 if (viewVideo == null)
                     continue;
                 long dataID = GetDataID(viewVideo);
-
-                viewVideo.SetImageMode(vieModel.ShowImageMode);
-
+                //viewVideo.SetImageMode(vieModel.ShowImageMode, vieModel.GlobalImageWidth);
             }
         }
+
+
 
         private long GetDataID(UIElement o, bool findParent = true)
         {

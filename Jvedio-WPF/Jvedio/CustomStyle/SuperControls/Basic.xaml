@@ -55,6 +55,8 @@
         <Setter Property="SubText" Value="" />
         <Setter Property="CornerRadius" Value="5" />
         <Setter Property="PathMargin" Value="5" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Window.Sub.Foreground}" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="GroupName" Value="PathGroupRadioButton_Main" />
         <Setter Property="TextVisibility" Value="Collapsed" />

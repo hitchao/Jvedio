@@ -327,6 +327,7 @@
     <Compile Include="Core\UserControls\ViewVideo.xaml.cs">
       <DependentUpon>ViewVideo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\UserControls\IViewVideoFieldVisitor.cs" />
     <Compile Include="Entity\Common\NFOParse.cs" />
     <Compile Include="Entity\Common\TabItemEx.cs" />
     <Compile Include="Mapper\MapperManager.cs" />

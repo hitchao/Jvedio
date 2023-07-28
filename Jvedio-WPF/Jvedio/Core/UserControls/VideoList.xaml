@@ -10,6 +10,7 @@
     xmlns:media="clr-namespace:Jvedio.Core.Media"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
+    x:Name="videoList"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Loaded="UserControl_Loaded"
@@ -149,8 +150,11 @@
                 x:Name="viewVideo"
                 ContextMenu="{StaticResource VideoContextMenu}"
                 ContextMenuOpening="ContextMenu_ContextMenuOpening"
+                ImageHeight="{Binding Path=DataContext.GlobalImageHeight, ElementName=videoList}"
+                ImageMode="{Binding Path=DataContext.ShowImageMode, ElementName=videoList}"
                 ImageMouseEnter="viewVideo_ImageMouseEnter"
                 ImageMouseLeave="viewVideo_ImageMouseLeave"
+                ImageWidth="{Binding Path=DataContext.GlobalImageWidth, ElementName=videoList}"
                 ShowDetail="onItemShowDetail"
                 Tag="{Binding DataID, Mode=OneWay}" />
         </DataTemplate>
@@ -215,8 +219,9 @@
                     <StackPanel Name="ViewModeStackPanel" Orientation="Horizontal">
                         <super:PathRadioButton
                             Width="25"
-                            CornerRadius="5,0,0,5"
+                            CornerRadius="3,0,0,3"
                             Fill="{DynamicResource Window.Foreground}"
+                            GroupName="{Binding UUID, Mode=OneWay}"
                             Path="M886.680128 13.86578H136.468464c-37.340302 0-62.274379 24.934078-62.274379 62.274379v871.841311c0 37.340302 24.934078 62.274379 62.274379 62.27438h750.211664c37.340302 0 62.274379-24.934078 62.27438-62.27438V76.140159c0-37.340302-24.934078-62.274379-62.27438-62.274379zM136.468464 76.140159h750.211664V617.878608L710.682029 451.002732 442.731916 730.021143 318.061527 617.878608 136.468464 792.295522V76.140159z m0 871.841311v-78.572752l184.025656-170.524765L599.75579 947.98147H136.468464z m549.401117 0l-200.688918-181.836322 225.501366-234.258701 175.998099 164.321654v251.65174H685.869581z m0 0"
                             PathHeight="15"
                             PathMargin="5 0 3 0"
@@ -224,8 +229,9 @@
                             ToolTip="{DynamicResource Thumbnail}" />
                         <super:PathRadioButton
                             Padding="0,0,0,0"
-                            CornerRadius="0 5 5 0"
+                            CornerRadius="0 3 3 0"
                             Fill="{DynamicResource Window.Foreground}"
+                            GroupName="{Binding UUID, Mode=OneWay}"
                             IsChecked="True"
                             Path="M934.4 107.52H89.6c-20.48 0-35.84 15.36-35.84 35.84V883.2c0 20.48 15.36 35.84 35.84 35.84h844.8c20.48 0 35.84-15.36 35.84-35.84V143.36c0-20.48-15.36-35.84-35.84-35.84z m-35.84 739.84H125.44V176.64h775.68v670.72h-2.56z m0 0 M335.36 440.32c38.4 0 71.68-30.72 71.68-71.68 0-38.4-30.72-71.68-71.68-71.68-38.4 0-71.68 30.72-71.68 71.68 2.56 40.96 33.28 71.68 71.68 71.68z m0 0M652.8 396.8L445.44 691.2 337.92 540.16 158.72 793.6h704L652.8 396.8z m0 0"
                             PathHeight="15"
@@ -233,6 +239,7 @@
                             ToolTip="{DynamicResource Poster}" />
                         <super:PathRadioButton
                             CornerRadius="0"
+                            GroupName="{Binding UUID, Mode=OneWay}"
                             Path="M1024 170.666667v682.666666H0V170.666667h1024zM85.333333 256v512h853.333334V256H85.333333z m354.133334 280.106667c0 82.730667-51.477333 133.333333-136.469334 133.333333-92.501333 0-148.117333-59.776-148.117333-158.72 0-97.706667 55.829333-158.144 146.026667-158.144 73.344 0 127.936 42.709333 135.424 106.24h-75.413334c-7.509333-26.453333-29.994667-42.474667-60.010666-42.474667-42.688 0-68.117333 34.986667-68.117334 93.525334 0 59.584 28.117333 95.850667 71.893334 95.850666 34.773333 0 58.944-20.416 60.8-50.837333l0.213333-5.013333h-54.997333v-52.48H439.466667v38.741333zM573.013333 661.333333h-76.48V360.704h76.458667V661.333333z m147.285334 0H643.84V360.704h204.586667v61.461333h-128.128v68.544h116.245333v58.538667h-116.266667V661.333333z"
                             PathHeight="19"
                             Style="{StaticResource PathGroupRadioButton}"
@@ -240,6 +247,7 @@
                             Visibility="Collapsed" />
                         <super:PathRadioButton
                             CornerRadius="0,5,5,0"
+                            GroupName="{Binding UUID, Mode=OneWay}"
                             Path="M64 480h352V128H64v352z m64-288h224v224H128V192zM64 928h352V576H64v352z m64-288h224v224H128v-224zM526.848 224H928a32 32 0 1 0 0-64H526.848a32 32 0 0 0 0 64zM928 608H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64zM928 384H526.848a32 32 0 0 0 0 64H928a32 32 0 1 0 0-64zM928 832H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64z"
                             PathHeight="19"
                             Style="{StaticResource PathGroupRadioButton}"
