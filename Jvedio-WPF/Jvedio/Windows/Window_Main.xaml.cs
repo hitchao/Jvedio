@@ -1202,7 +1202,8 @@ namespace Jvedio
 
             ConfigManager.Main.Save();
 
-            Properties.Settings.Default.EditMode = false;
+            ConfigManager.VideoConfig.Save();
+
             Properties.Settings.Default.ActorEditMode = false;
             Properties.Settings.Default.Save();
 

@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Jvedio.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ShowImageMode" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
     <Setting Name="DisplayNumber" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">50</Value>
     </Setting>
@@ -88,9 +85,6 @@
     </Setting>
     <Setting Name="Themes" Type="System.String" Scope="User">
       <Value Profile="(Default)">黑色</Value>
-    </Setting>
-    <Setting Name="EditMode" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DLLoadUnCensored" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -194,18 +188,6 @@
     <Setting Name="Selected_Background" Type="System.String" Scope="User">
       <Value Profile="(Default)">#90EE90</Value>
     </Setting>
-    <Setting Name="SmallImage_Height" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">150</Value>
-    </Setting>
-    <Setting Name="SmallImage_Width" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">180</Value>
-    </Setting>
-    <Setting Name="BigImage_Height" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">200</Value>
-    </Setting>
-    <Setting Name="BigImage_Width" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">250</Value>
-    </Setting>
     <Setting Name="ExtraImage_Height" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
@@ -278,9 +260,6 @@
     <Setting Name="RecentWatchDays" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
-    <Setting Name="GlobalImageWidth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">300</Value>
-    </Setting>
     <Setting Name="MainImageAutoMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -313,9 +292,6 @@
     </Setting>
     <Setting Name="HalfCutOFf" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="GifImage_Width" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">250</Value>
     </Setting>
     <Setting Name="SkipExistGif" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -367,9 +343,6 @@
     </Setting>
     <Setting Name="DisplayPage" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="GifImage_Height" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">200</Value>
     </Setting>
     <Setting Name="DisplaySearchBox" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

@@ -130,6 +130,16 @@ namespace Jvedio.Core.UserControls
 
         #region "属性"
 
+        public int _ImageMode = 1;
+        public int ImageMode {
+            get { return _ImageMode; }
+
+            set {
+                _ImageMode = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         public bool _EditMode;
         public bool EditMode {
@@ -154,9 +164,15 @@ namespace Jvedio.Core.UserControls
             rootBorder.Background = brush;
         }
 
-        public void SetEditMode(bool editMode)
+        public void SetEditMode(bool mode)
         {
-            this.EditMode = editMode;
+            this.EditMode = mode;
+        }
+
+
+        public void SetImageMode(int mode)
+        {
+            this.ImageMode = mode;
         }
 
         #endregion

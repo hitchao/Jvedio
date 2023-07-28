@@ -180,6 +180,11 @@
                 Icon="/Resources/Picture/setting.png" />
             <MenuItem Click="ShowPluginWindow" Header="{DynamicResource Plugin}" />
             <MenuItem Header="{DynamicResource Scan}">
+                <MenuItem
+                    Command="{Binding AddNewMovie}"
+                    Header="{DynamicResource ID}"
+                    Icon="/Resources/Picture/新增.png"
+                    Visibility="{Binding Path=TeenMode, Source={x:Static config:ConfigManager.Settings}, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
                 <MenuItem Click="ImportVideoByPaths" Header="{DynamicResource ScanMultiDir}" />
                 <MenuItem Click="ImportVideo" Header="{DynamicResource ScanNas}" />
             </MenuItem>

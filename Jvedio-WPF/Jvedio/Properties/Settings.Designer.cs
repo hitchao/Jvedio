@@ -25,18 +25,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public string ShowImageMode {
-            get {
-                return ((string)(this["ShowImageMode"]));
-            }
-            set {
-                this["ShowImageMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public int DisplayNumber {
             get {
@@ -368,18 +356,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["Themes"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EditMode {
-            get {
-                return ((bool)(this["EditMode"]));
-            }
-            set {
-                this["EditMode"] = value;
             }
         }
         
@@ -793,54 +769,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("150")]
-        public int SmallImage_Height {
-            get {
-                return ((int)(this["SmallImage_Height"]));
-            }
-            set {
-                this["SmallImage_Height"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("180")]
-        public int SmallImage_Width {
-            get {
-                return ((int)(this["SmallImage_Width"]));
-            }
-            set {
-                this["SmallImage_Width"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("200")]
-        public int BigImage_Height {
-            get {
-                return ((int)(this["BigImage_Height"]));
-            }
-            set {
-                this["BigImage_Height"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("250")]
-        public int BigImage_Width {
-            get {
-                return ((int)(this["BigImage_Width"]));
-            }
-            set {
-                this["BigImage_Width"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int ExtraImage_Height {
             get {
@@ -1129,18 +1057,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
-        public int GlobalImageWidth {
-            get {
-                return ((int)(this["GlobalImageWidth"]));
-            }
-            set {
-                this["GlobalImageWidth"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool MainImageAutoMode {
             get {
@@ -1268,18 +1184,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["HalfCutOFf"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("250")]
-        public int GifImage_Width {
-            get {
-                return ((int)(this["GifImage_Width"]));
-            }
-            set {
-                this["GifImage_Width"] = value;
             }
         }
         
@@ -1484,18 +1388,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["DisplayPage"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("200")]
-        public int GifImage_Height {
-            get {
-                return ((int)(this["GifImage_Height"]));
-            }
-            set {
-                this["GifImage_Height"] = value;
             }
         }
         

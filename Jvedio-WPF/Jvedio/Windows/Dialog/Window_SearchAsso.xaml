@@ -106,7 +106,6 @@
                         Width="auto"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
-                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                         Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
@@ -173,7 +172,6 @@
                         Background="Transparent"
                         FontSize="14"
                         Foreground="{DynamicResource Window.Foreground}"
-                        IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                         Opacity="0.5"
                         Style="{StaticResource ReadOnlyNoWrapTextBox}"
                         Text="{Binding Title, Mode=OneWay}"

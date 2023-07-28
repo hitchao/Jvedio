@@ -118,10 +118,9 @@ namespace Jvedio.Core.UserControls
 
             // 设置图片显示模式
             var rbs = ViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
-            int.TryParse(Properties.Settings.Default.ShowImageMode, out int viewMode);
             for (int i = 0; i < rbs.Count; i++) {
                 rbs[i].Click += SetViewMode;
-                if (i == viewMode)
+                if (i == vieModel.ShowImageMode)
                     rbs[i].IsChecked = true;
             }
 
@@ -130,7 +129,7 @@ namespace Jvedio.Core.UserControls
             ResizingTimer.Tick += new EventHandler(ResizingTimer_Tick);
 
             vieModel.PageChangedCompleted += (s, ev) => {
-                if (Properties.Settings.Default.EditMode)
+                if (vieModel.EditMode)
                     SetSelected();
                 if (ConfigManager.Settings.AutoGenScreenShot)
                     AutoGenScreenShot(vieModel.CurrentVideoList);
@@ -198,19 +197,18 @@ namespace Jvedio.Core.UserControls
             int idx = rbs.IndexOf(radioButton);
             ViewMode viewMode = (ViewMode)idx;
 
-            Properties.Settings.Default.ShowImageMode = idx.ToString();
-            Properties.Settings.Default.Save();
+            vieModel.ShowImageMode = idx;
 
             // else if (idx == 2)
             // {
             //    AsyncLoadExtraPic();
             // }
             if (idx == 0)
-                Properties.Settings.Default.GlobalImageWidth = Properties.Settings.Default.SmallImage_Width;
+                vieModel.GlobalImageWidth = (int)ConfigManager.VideoConfig.SmallImage_Width;
             else if (idx == 1)
-                Properties.Settings.Default.GlobalImageWidth = Properties.Settings.Default.BigImage_Width;
+                vieModel.GlobalImageWidth = (int)ConfigManager.VideoConfig.BigImage_Width;
             else if (idx == 2) {
-                Properties.Settings.Default.GlobalImageWidth = Properties.Settings.Default.GifImage_Width;
+                vieModel.GlobalImageWidth = (int)ConfigManager.VideoConfig.GifImage_Width;
                 AsyncLoadGif();
             } else if (idx == 3) {
                 // vieModel.ShowDetailsData();
@@ -254,13 +252,12 @@ namespace Jvedio.Core.UserControls
                 MenuItem item = (MenuItem)contextMenu.Items[i];
                 if (item == menuItem) {
                     item.IsChecked = true;
-                    if (i.ToString().Equals(Properties.Settings.Default.SortType)) {
+                    if (i == vieModel.SortType)
                         Properties.Settings.Default.SortDescending = !Properties.Settings.Default.SortDescending;
-                    }
-
-                    Properties.Settings.Default.SortType = i.ToString();
-                } else
+                    vieModel.SortType = i;
+                } else {
                     item.IsChecked = false;
+                }
             }
 
             vieModel.Reset();
@@ -270,25 +267,16 @@ namespace Jvedio.Core.UserControls
         // todo 重写图片模式
         private void ImageSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (Properties.Settings.Default.ShowImageMode == "0") {
-                Properties.Settings.Default.SmallImage_Width = Properties.Settings.Default.GlobalImageWidth;
-                Properties.Settings.Default.SmallImage_Height = (int)((double)Properties.Settings.Default.SmallImage_Width * (200 / 147));
-            } else if (Properties.Settings.Default.ShowImageMode == "1") {
-                Properties.Settings.Default.BigImage_Width = Properties.Settings.Default.GlobalImageWidth;
-                Properties.Settings.Default.BigImage_Height = (int)(Properties.Settings.Default.GlobalImageWidth * 540f / 800f);
+            if (vieModel.ShowImageMode == 0) {
+                ConfigManager.VideoConfig.SmallImage_Width = vieModel.GlobalImageWidth;
+                ConfigManager.VideoConfig.SmallImage_Height = (int)((double)vieModel.GlobalImageWidth * (200 / 147));
+            } else if (vieModel.ShowImageMode == 1) {
+                ConfigManager.VideoConfig.BigImage_Width = vieModel.GlobalImageWidth;
+                ConfigManager.VideoConfig.BigImage_Height = (int)(vieModel.GlobalImageWidth * 540f / 800f);
+            } else if (vieModel.ShowImageMode == 2) {
+                ConfigManager.VideoConfig.GifImage_Width = vieModel.GlobalImageWidth;
+                ConfigManager.VideoConfig.GifImage_Height = (int)(vieModel.GlobalImageWidth * 540f / 800f);
             }
-
-              // else if (Properties.Settings.Default.ShowImageMode == "2")
-              // {
-              //    Properties.Settings.Default.ExtraImage_Width = Properties.Settings.Default.GlobalImageWidth;
-              //    Properties.Settings.Default.ExtraImage_Height = (int)(Properties.Settings.Default.GlobalImageWidth * 540f / 800f);
-              // }
-              else if (Properties.Settings.Default.ShowImageMode == "2") {
-                Properties.Settings.Default.GifImage_Width = Properties.Settings.Default.GlobalImageWidth;
-                Properties.Settings.Default.GifImage_Height = (int)(Properties.Settings.Default.GlobalImageWidth * 540f / 800f);
-            }
-
-            Properties.Settings.Default.Save();
         }
 
 
@@ -405,7 +393,7 @@ namespace Jvedio.Core.UserControls
             onStatistic?.Invoke();
 
             await Task.Delay(1000);
-            Properties.Settings.Default.EditMode = false;
+            vieModel.EditMode = false;
             vieModel.SelectedVideo.Clear();
             SetSelected();
         }
@@ -413,7 +401,7 @@ namespace Jvedio.Core.UserControls
 
         public void BorderMouseEnter(object sender, MouseEventArgs e)
         {
-            if (Properties.Settings.Default.EditMode) {
+            if (vieModel.EditMode) {
                 GifImage image = sender as GifImage;
                 SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
                 Border border = grid.Children[0] as Border;
@@ -466,18 +454,18 @@ namespace Jvedio.Core.UserControls
         private void DeleteDownloadInfo(object sender, RoutedEventArgs e)
         {
             HandleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode &&
+            if (vieModel.EditMode &&
                 new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete"))
                 .ShowDialog() == false)
                 return;
             CleanDataInfo(vieModel.SelectedVideo);
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 
         public void BorderMouseLeave(object sender, MouseEventArgs e)
         {
-            if (Properties.Settings.Default.EditMode) {
+            if (vieModel.EditMode) {
                 GifImage image = sender as GifImage;
                 long dataID = GetDataID(image);
                 SimplePanel grid = image.FindParentOfType<SimplePanel>("rootGrid");
@@ -493,7 +481,7 @@ namespace Jvedio.Core.UserControls
         public void DeleteID(object sender, RoutedEventArgs e)
         {
             ObservableCollection<Video> videos = HandleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode &&
+            if (vieModel.EditMode &&
                 new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
                 return;
 
@@ -504,7 +492,7 @@ namespace Jvedio.Core.UserControls
         public void DeleteFile(object sender, RoutedEventArgs e)
         {
             HandleMenuSelected(sender);
-            if (Properties.Settings.Default.EditMode && new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false) {
+            if (vieModel.EditMode && new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false) {
                 return;
             }
 
@@ -542,7 +530,7 @@ namespace Jvedio.Core.UserControls
                 DeleteIDs(GetVideosByMenu(sender as MenuItem, 0), vieModel.SelectedVideo, false);
             }
 
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 
@@ -617,7 +605,7 @@ namespace Jvedio.Core.UserControls
                 MessageNotify.Info(LangManager.GetValueByKey("NoFileToRename"));
             }
 
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
 
             if (logs.Count > 0)
@@ -825,7 +813,7 @@ namespace Jvedio.Core.UserControls
 
             MessageCard.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_Success")} {successNum}/{vieModel.SelectedVideo.Count}");
 
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 
@@ -865,7 +853,7 @@ namespace Jvedio.Core.UserControls
             if (success)
                 MessageNotify.Success($"{SuperControls.Style.LangManager.GetValueByKey("Message_Copied")} {count}/{total}");
 
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 
@@ -903,7 +891,7 @@ namespace Jvedio.Core.UserControls
             if (success)
                 MessageNotify.Success($"{LangManager.GetValueByKey("Cut")} {count}/{total}");
 
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 
@@ -1026,7 +1014,7 @@ namespace Jvedio.Core.UserControls
             if (success)
                 MessageNotify.Success($"{SuperControls.Style.LangManager.GetValueByKey("Message_Copied")} {count}/{total}");
 
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 
@@ -1038,7 +1026,7 @@ namespace Jvedio.Core.UserControls
         private ObservableCollection<Video> HandleMenuSelected(object sender, int depth = 0)
         {
             long dataID = GetIDFromMenuItem(sender, depth);
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
 
             ObservableCollection<Video> videos = GetVideosByMenu(sender as MenuItem, depth);
@@ -1148,7 +1136,7 @@ namespace Jvedio.Core.UserControls
             //if (!Global.DownloadManager.Dispatcher.Working)
             //    Global.DownloadManager.Dispatcher.BeginWork();
             //setDownloadStatus();
-            //if (!Properties.Settings.Default.EditMode)
+            //if (!vieModel.EditMode)
             //    vieModel.SelectedVideo.Clear();
         }
 
@@ -1210,6 +1198,26 @@ namespace Jvedio.Core.UserControls
             }
         }
 
+        public void SetImageMode(int imageMode)
+        {
+            ItemsControl itemsControl = MovieItemsControl;
+            if (itemsControl == null)
+                return;
+
+            for (int i = 0; i < itemsControl.Items.Count; i++) {
+                ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+                if (presenter == null)
+                    continue;
+                ViewVideo viewVideo = FindElementByName<ViewVideo>(presenter, "viewVideo");
+                if (viewVideo == null)
+                    continue;
+                long dataID = GetDataID(viewVideo);
+
+                viewVideo.SetImageMode(vieModel.ShowImageMode);
+
+            }
+        }
+
         private long GetDataID(UIElement o, bool findParent = true)
         {
             FrameworkElement element = o as FrameworkElement;
@@ -1257,7 +1265,7 @@ namespace Jvedio.Core.UserControls
         {
             if (vieModel.CurrentVideoList == null || vieModel.SelectedVideo == null)
                 return;
-            Properties.Settings.Default.EditMode = true;
+            vieModel.EditMode = true;
             bool allContain = true; // 检测是否取消选中
             foreach (var item in vieModel.CurrentVideoList) {
                 if (!vieModel.SelectedVideo.Contains(item)) {
@@ -1686,7 +1694,7 @@ namespace Jvedio.Core.UserControls
 
             if (!Jvedio.Global.FFmpegManager.Dispatcher.Working)
                 Jvedio.Global.FFmpegManager.Dispatcher.BeginWork();
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 
@@ -1827,7 +1835,7 @@ namespace Jvedio.Core.UserControls
             }
 
 
-            if (!Properties.Settings.Default.EditMode)
+            if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
 

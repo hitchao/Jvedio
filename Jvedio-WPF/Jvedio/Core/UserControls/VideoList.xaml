@@ -63,7 +63,7 @@
             <MenuItem
                 Click="EditInfo"
                 Header="{DynamicResource Menu_EditInfo}"
-                Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay}" />
             <MenuItem Click="AddToPlayerList" Header="{DynamicResource AddToPlayList}" />
             <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
             <MenuItem Header="{DynamicResource Menu_Advance}">
@@ -98,7 +98,7 @@
                 Header="{DynamicResource ViewWebsite}"
                 Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
 
-            <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+            <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                 <MenuItem Click="OpenPath" Header="{DynamicResource Movie}" />
                 <MenuItem Click="OpenPath" Header="{DynamicResource Poster}" />
                 <MenuItem Click="OpenPath" Header="{DynamicResource Thumbnail}" />
@@ -177,23 +177,6 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
-
-
-                <Button
-                    Margin="5"
-                    Padding="10"
-                    Command="{Binding AddNewMovie}"
-                    Style="{StaticResource ButtonMain}"
-                    Visibility="{Binding Path=TeenMode, Source={x:Static config:ConfigManager.Settings}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image
-                            Height="13"
-                            Margin="0,0,5,0"
-                            Source="/Resources/Picture/新增.png" />
-                        <TextBlock Text="{DynamicResource ID}" />
-                    </StackPanel>
-                </Button>
-
 
                 <TextBlock
                     Margin="10,0,5,0"
@@ -478,7 +461,7 @@
                 Minimum="200"
                 SmallChange="5"
                 ValueChanged="ImageSizeSlider_ValueChanged"
-                Value="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, Mode=TwoWay}" />
+                Value="{Binding Path=GlobalImageWidth, Mode=TwoWay}" />
 
             <Grid Grid.Column="1" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>

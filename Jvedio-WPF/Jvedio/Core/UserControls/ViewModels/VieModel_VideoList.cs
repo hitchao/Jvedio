@@ -96,6 +96,44 @@ namespace Jvedio.Core.UserControls.ViewModels
             RefreshVideoRenderToken();
         }
 
+        #region "属性"
+
+
+        private int _GlobalImageWidth = (int)ConfigManager.VideoConfig.GlobalImageWidth;
+
+        public int GlobalImageWidth {
+            get { return _GlobalImageWidth; }
+
+            set {
+                _GlobalImageWidth = value;
+                RaisePropertyChanged();
+                ConfigManager.VideoConfig.GlobalImageWidth = value;
+            }
+        }
+
+        private int _ShowImageMode = (int)ConfigManager.VideoConfig.ImageMode;
+
+        public int ShowImageMode {
+            get { return _ShowImageMode; }
+
+            set {
+                _ShowImageMode = value;
+                RaisePropertyChanged();
+                ConfigManager.VideoConfig.ImageMode = value;
+            }
+        }
+
+        private int _SortType;
+
+        public int SortType {
+            get { return _SortType; }
+
+            set {
+                _SortType = value;
+                RaisePropertyChanged();
+                Properties.Settings.Default.SortType = value.ToString();
+            }
+        }
 
         private bool _EditMode;
 
@@ -289,7 +327,7 @@ namespace Jvedio.Core.UserControls.ViewModels
                 RaisePropertyChanged();
             }
         }
-
+        #endregion
 
         #region "右键筛选"
 
@@ -600,7 +638,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             if (ConfigManager.Settings.PictureIndexCreated && PictureTypeIndex > 0) {
                 sql += VideoMapper.COMMON_PICTURE_EXIST_JOIN_SQL;
                 long pathType = ConfigManager.Settings.PicPathMode;
-                int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageType);
+                int imageType = ShowImageMode;
                 if (imageType > 1)
                     imageType = 0;
                 wrapper.Eq("common_picture_exist.PathType", pathType).Eq("common_picture_exist.ImageType", imageType).Eq("common_picture_exist.Exist", PictureTypeIndex - 1);
@@ -664,7 +702,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             Logger.Info("1.Render");
             if (CurrentVideoList == null)
                 CurrentVideoList = new ObservableCollection<Video>();
-            int.TryParse(Properties.Settings.Default.ShowImageMode, out int imageMode);
+            int imageMode = ShowImageMode;
             for (int i = 0; i < VideoList.Count; i++) {
                 try {
                     RenderVideoCT.ThrowIfCancellationRequested();

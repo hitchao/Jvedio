@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cmd="clr-namespace:Jvedio.Core.Command"
+    xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -27,24 +28,6 @@
 
 
         <local:VideoTypeToIntConverter x:Key="VideoTypeToIntConverter" />
-
-
-        <Style x:Key="HoverCanvas" TargetType="{x:Type Canvas}">
-            <Setter Property="Visibility" Value="Hidden" />
-            <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="False" />
-                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Grid}, Mode=FindAncestor}}" Value="True" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Visibility" Value="Visible" />
-                </MultiDataTrigger>
-                <DataTrigger Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="True">
-                    <Setter Property="Visibility" Value="Hidden" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
 
         <Style x:Key="ExtraPic" TargetType="Image">
 
@@ -257,8 +240,8 @@
 
                                                 <media:GifImage
                                                     x:Name="gifImage"
-                                                    Width="{Binding BigImage_Width, Source={x:Static p:Settings.Default}, Mode=OneWay}"
-                                                    Height="{Binding BigImage_Height, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                                                    Width="{Binding BigImage_Width, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}"
+                                                    Height="{Binding BigImage_Height, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}"
                                                     Margin="2"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
@@ -276,7 +259,6 @@
                                                     VerticalAlignment="Bottom"
                                                     Click="ShowAssocSubSection"
                                                     Cursor="Hand"
-                                                    IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                     Style="{StaticResource RoundNormalButton}"
                                                     Tag="{DynamicResource Button.Hover.Background}"
                                                     Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
@@ -301,7 +283,6 @@
                                                     Cursor="Hand"
                                                     MouseLeftButtonUp="PlayAssocVideo"
                                                     Opacity="0.5"
-                                                    Style="{StaticResource HoverCanvas}"
                                                     ToolTip="{Binding id, Mode=OneWay}">
                                                     <Ellipse
                                                         Canvas.Left="3"
@@ -327,8 +308,7 @@
                                                 Grid.Row="1"
                                                 Width="auto"
                                                 HorizontalAlignment="Stretch"
-                                                Background="Transparent"
-                                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}">
+                                                Background="Transparent">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto" />
                                                     <ColumnDefinition Width="auto" />
@@ -439,7 +419,7 @@
 
                                             <TextBox
                                                 Grid.Row="4"
-                                                Width="{Binding Path=GlobalImageWidth, Source={x:Static p:Settings.Default}, Converter={StaticResource BiggerWidthConverter}, Mode=OneWay}"
+                                                Width="{Binding Path=GlobalImageWidth, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BiggerWidthConverter}, Mode=OneWay}"
                                                 Height="35"
                                                 Margin="0,5,0,15"
                                                 Padding="10,0"
@@ -447,7 +427,6 @@
                                                 Background="Transparent"
                                                 FontSize="14"
                                                 Foreground="{DynamicResource Window.Foreground}"
-                                                IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                                                 MouseLeftButtonDown="CopyText"
                                                 Opacity="0.5"
                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
@@ -672,7 +651,6 @@
                             Panel.ZIndex="19"
                             Click="ViewAssocDatas"
                             Cursor="Hand"
-                            IsEnabled="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
                             Style="{StaticResource RoundNormalButton}"
                             Tag="{DynamicResource Button.Hover.Background}"
                             Visibility="{Binding CurrentVideo.HasAssociation, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
