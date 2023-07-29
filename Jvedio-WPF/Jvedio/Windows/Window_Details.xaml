@@ -721,8 +721,8 @@
                                     <MenuItem Click="DownLoad" Header="{DynamicResource Menu_SyncInfo}" />
                                     <MenuItem
                                         Header="{DynamicResource Menu_SyncExtra}"
-                                        IsEnabled="False"
-                                        Visibility="{Binding ShowSecret, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        Visibility="Collapsed"
+                                        IsEnabled="False">
                                         <MenuItem Click="DownLoadMagnets" Header="{DynamicResource SyncMagnets}" />
                                     </MenuItem>
                                     <MenuItem Header="{DynamicResource Menu_Advance}">

@@ -487,10 +487,10 @@ namespace Jvedio
             _source.AddHook(HwndHook);
 
             // 注册热键
-            uint modifier = Properties.Settings.Default.HotKey_Modifiers;
-            uint vk = Properties.Settings.Default.HotKey_VK;
+            uint modifier = (uint)ConfigManager.Settings.HotKeyModifiers;
+            uint vk = (uint)ConfigManager.Settings.HotKeyVK;
 
-            if (Properties.Settings.Default.HotKey_Enable && modifier != 0 && vk != 0) {
+            if (ConfigManager.Settings.HotKeyEnable && modifier != 0 && vk != 0) {
                 UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消之前的热键
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success) {
@@ -507,7 +507,7 @@ namespace Jvedio
                     switch (wParam.ToInt32()) {
                         case HOTKEY_ID:
                             int key = ((int)lParam >> 16) & 0xFFFF;
-                            if (key == Properties.Settings.Default.HotKey_VK) {
+                            if (key == (uint)ConfigManager.Settings.HotKeyVK) {
                                 if (TaskIconVisible) {
                                     SetWindowVisualStatus(false, false);
                                 } else {
@@ -773,13 +773,13 @@ namespace Jvedio
 
         public void FadeOut()
         {
-            if (Properties.Settings.Default.EnableWindowFade) {
-                var anim = new DoubleAnimation(0, (Duration)FadeInterval);
-                anim.Completed += (s, _) => this.Close();
-                this.BeginAnimation(UIElement.OpacityProperty, anim);
-            } else {
-                this.Close();
-            }
+            // if (Properties.Settings.Default.EnableWindowFade) {
+            //     var anim = new DoubleAnimation(0, (Duration)FadeInterval);
+            //     anim.Completed += (s, _) => this.Close();
+            //     this.BeginAnimation(UIElement.OpacityProperty, anim);
+            // } else {
+            this.Close();
+            // }
         }
 
 
@@ -1451,7 +1451,7 @@ namespace Jvedio
 
 
 
-    
+
 
         private void Image_DragOver(object sender, DragEventArgs e)
         {

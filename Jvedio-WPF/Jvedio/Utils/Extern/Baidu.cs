@@ -19,8 +19,8 @@ namespace SuperUtils.External
 
         public static void Init()
         {
-            clientId = Jvedio.Properties.Settings.Default.Baidu_API_KEY.Replace(" ", string.Empty);
-            clientSecret = Jvedio.Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", string.Empty);
+            //clientId = Jvedio.Properties.Settings.Default.Baidu_API_KEY.Replace(" ", string.Empty);
+            //clientSecret = Jvedio.Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", string.Empty);
         }
 
         public static string getAccessToken()

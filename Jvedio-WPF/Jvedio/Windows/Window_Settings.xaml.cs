@@ -237,11 +237,11 @@ namespace Jvedio
 
                     {
                         // 保存设置
-                        Properties.Settings.Default.HotKey_Modifiers = fsModifiers;
-                        Properties.Settings.Default.HotKey_VK = VK;
-                        Properties.Settings.Default.HotKey_Enable = true;
-                        Properties.Settings.Default.HotKey_String = hotkeyTextBox.Text;
-                        Properties.Settings.Default.Save();
+                        ConfigManager.Settings.HotKeyModifiers = fsModifiers;
+                        ConfigManager.Settings.HotKeyVK = VK;
+                        ConfigManager.Settings.HotKeyEnable = true;
+                        ConfigManager.Settings.HotKeyString = hotkeyTextBox.Text;
+                        ConfigManager.Settings.Save();
                         MessageNotify.Success(LangManager.GetValueByKey("HotKeySetSuccess"));
                     }
                 }
@@ -282,8 +282,8 @@ namespace Jvedio
                     imageAwesome.Icon = FontAwesomeIcon.CheckCircle;
                     imageAwesome.Spin = false;
                     imageAwesome.Foreground = new SolidColorBrush(Color.FromRgb(32, 183, 89));
-                    string clientId = Properties.Settings.Default.Baidu_API_KEY.Replace(" ", string.Empty);
-                    string clientSecret = Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", string.Empty);
+                    //string clientId = Properties.Settings.Default.Baidu_API_KEY.Replace(" ", string.Empty);
+                    //string clientSecret = Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", string.Empty);
 
                     // SaveKeyValue(clientId, clientSecret, "BaiduAI.key");
                 } else {
@@ -324,11 +324,11 @@ namespace Jvedio
                     imageAwesome.Spin = false;
                     imageAwesome.Foreground = new SolidColorBrush(Color.FromRgb(32, 183, 89));
 
-                    string youdao_appKey = Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
-                    string Youdao_appSecret = Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
+                    //string youdao_appKey = Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
+                    //string Youdao_appSecret = Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
 
-                    // 成功，保存在本地
-                    SaveKeyValue(youdao_appKey, Youdao_appSecret, "youdao.key");
+                    //// 成功，保存在本地
+                    //SaveKeyValue(youdao_appKey, Youdao_appSecret, "youdao.key");
                 } else {
                     imageAwesome.Icon = FontAwesomeIcon.TimesCircle;
                     imageAwesome.Spin = false;
@@ -865,15 +865,15 @@ namespace Jvedio
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             // 注册热键
-            uint modifier = Properties.Settings.Default.HotKey_Modifiers;
-            uint vk = Properties.Settings.Default.HotKey_VK;
+            uint modifier = (uint)ConfigManager.Settings.HotKeyModifiers;
+            uint vk = (uint)ConfigManager.Settings.HotKeyVK;
 
             if (modifier != 0 && vk != 0) {
                 UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消之前的热键
                 bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
                 if (!success) {
                     SuperControls.Style.MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("BossKeyError"));
-                    Properties.Settings.Default.HotKey_Enable = false;
+                    ConfigManager.Settings.HotKeyEnable = false;
                 }
             }
         }
@@ -1118,8 +1118,8 @@ namespace Jvedio
                 return;
             string v = GetValueKey("youdao.key");
             if (v.Split(' ').Length == 2) {
-                Properties.Settings.Default.TL_YOUDAO_APIKEY = v.Split(' ')[0];
-                Properties.Settings.Default.TL_YOUDAO_SECRETKEY = v.Split(' ')[1];
+                //Properties.Settings.Default.TL_YOUDAO_APIKEY = v.Split(' ')[0];
+                //Properties.Settings.Default.TL_YOUDAO_SECRETKEY = v.Split(' ')[1];
             }
         }
 
@@ -1147,8 +1147,8 @@ namespace Jvedio
                 return;
             string v = GetValueKey("BaiduAI.key");
             if (v.Split(' ').Length == 2) {
-                Properties.Settings.Default.Baidu_API_KEY = v.Split(' ')[0];
-                Properties.Settings.Default.Baidu_SECRET_KEY = v.Split(' ')[1];
+                //Properties.Settings.Default.Baidu_API_KEY = v.Split(' ')[0];
+                //Properties.Settings.Default.Baidu_SECRET_KEY = v.Split(' ')[1];
             }
         }
 
@@ -1169,7 +1169,7 @@ namespace Jvedio
 
         private void SetScanRe(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.ScanRe = (sender as TextBox).Text.Replace("；", ";");
+
         }
 
 
@@ -1516,8 +1516,8 @@ namespace Jvedio
                 vieModel.CloseToTaskBar = false;
                 Properties.Settings.Default.DetailWindowShowAllMovie = true;
                 ConfigManager.Settings.DelInfoAfterDelFile = true;
-                Properties.Settings.Default.HotKey_Enable = false;
-                Properties.Settings.Default.HotKey_String = "";
+                ConfigManager.Settings.HotKeyEnable = false;
+                ConfigManager.Settings.HotKeyString = "";
                 langComboBox.SelectedIndex = 0;
                 ConfigManager.Settings.VideoPlayerPath = "";
 
@@ -1574,7 +1574,6 @@ namespace Jvedio
                 ConfigManager.Main.DisplayFunBar = true;
                 ConfigManager.Main.DisplayNavigation = true;
 
-                Properties.Settings.Default.ShowFilter = false;
                 vieModel.DetailShowBg = true;
                 Properties.Settings.Default.ScrollSpeedFactor = 1.5;
 

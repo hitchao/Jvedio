@@ -71,7 +71,6 @@ namespace Jvedio
         // todo
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            EnsureSettings();           // 修复设置错误
             EnsureFileExists();         // 判断文件是否存在
             EnsureDirExists();          // 创建文件夹
 
@@ -334,20 +333,6 @@ namespace Jvedio
                 }
             } catch (Exception e) {
                 Logger.Error(e);
-            }
-        }
-
-        public void EnsureSettings()
-        {
-            try {
-                if (Properties.Settings.Default.UpgradeRequired) {
-                    Properties.Settings.Default.Upgrade();
-                    Properties.Settings.Default.UpgradeRequired = false;
-                    Properties.Settings.Default.Save();
-                }
-            } catch (Exception ex) {
-                MsgBox.Show(ex.Message);
-                Logger.Error(ex);
             }
         }
 

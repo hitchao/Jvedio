@@ -20,8 +20,8 @@ namespace SuperUtils.External
 
         public static void InitYoudao()
         {
-            Youdao_appKey = Jvedio.Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
-            Youdao_appSecret = Jvedio.Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
+            //Youdao_appKey = Jvedio.Properties.Settings.Default.TL_YOUDAO_APIKEY.Replace(" ", string.Empty);
+            //Youdao_appSecret = Jvedio.Properties.Settings.Default.TL_YOUDAO_SECRETKEY.Replace(" ", string.Empty);
         }
 
         // TODO 国际化

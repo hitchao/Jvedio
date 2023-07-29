@@ -41,6 +41,8 @@ namespace Jvedio.ViewModel
     public class VieModel_Main : ViewModelBase
     {
 
+        public const int RECENT_DAY = 3;
+        public const int SEARCH_CANDIDATE_MAX_COUNT = 3;
 
         public event EventHandler RenderSqlChanged;
 
@@ -147,7 +149,7 @@ namespace Jvedio.ViewModel
                     TabItemManager.Add(TabType.GeoStar, LangManager.GetValueByKey("Favorites"), ExtraWrapper);
                     break;
                 case "RecentWatch":
-                    DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
+                    DateTime date1 = DateTime.Now.AddDays(-1 * RECENT_DAY);
                     DateTime date2 = DateTime.Now;
                     ExtraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
                     TabItemManager.Add(TabType.GeoRecentPlay, LangManager.GetValueByKey("RecentPlay"), ExtraWrapper);
@@ -936,10 +938,6 @@ namespace Jvedio.ViewModel
                         searchContent = vid;
                     wrapper.Like("VID", searchContent);
                     break;
-
-                // case SearchType.Title:
-                //    wrapper.Like("Title", searchContent).LeftBracket().Or().Like("Path", searchContent).RightBracket();
-                // break;
                 default:
                     wrapper.Like(searchType.ToString(), searchContent);
                     break;
@@ -966,7 +964,7 @@ namespace Jvedio.ViewModel
                     wrapper.Join(selectWrapper);
 
                 string condition_sql = wrapper.ToWhere(false) + wrapper.ToOrder()
-                            + $" LIMIT 0,{Properties.Settings.Default.SearchCandidateMaxCount}";
+                            + $" LIMIT 0,{SEARCH_CANDIDATE_MAX_COUNT}";
 
                 string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
                             "JOIN metadata " +
@@ -1023,7 +1021,7 @@ namespace Jvedio.ViewModel
             }
 
             result = set.Where(arg => arg.ToLower().IndexOf(search) >= 0).ToList()
-                .Take(Properties.Settings.Default.SearchCandidateMaxCount).ToList();
+                .Take(SEARCH_CANDIDATE_MAX_COUNT).ToList();
         }
 
 
@@ -1261,7 +1259,7 @@ namespace Jvedio.ViewModel
                                      $"WHERE metadata.DBId={dbid} and metadata.DataType={0} ";
 
             AllLabelCount = metaDataMapper.SelectCount(label_count_sql);
-            DateTime date1 = DateTime.Now.AddDays(-1 * Properties.Settings.Default.RecentDays);
+            DateTime date1 = DateTime.Now.AddDays(-1 * RECENT_DAY);
             DateTime date2 = DateTime.Now;
             RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
         }

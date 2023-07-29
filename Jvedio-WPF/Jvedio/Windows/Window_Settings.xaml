@@ -204,7 +204,7 @@
                                         VerticalContentAlignment="Center"
                                         Checked="CheckBox_Checked"
                                         Content="{DynamicResource BossKey}"
-                                        IsChecked="{Binding HotKey_Enable, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                        IsChecked="{Binding HotKeyEnable, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}"
                                         Unchecked="Unregister_HotKey" />
 
                                     <Border Style="{StaticResource InfoBorder}">
@@ -217,7 +217,7 @@
                                             PreviewKeyDown="hotkeyTextBox_PreviewKeyDown"
                                             PreviewKeyUp="hotkeyTextBox_PreviewKeyUp"
                                             Style="{StaticResource ReadOnlyTextBox}"
-                                            Text="{Binding HotKey_String, Mode=OneWay, Source={x:Static p:Settings.Default}}" />
+                                            Text="{Binding HotKeyString, Mode=OneWay, Source={x:Static config:ConfigManager.Settings}}" />
                                     </Border>
 
                                     <Button
@@ -295,121 +295,6 @@
 
 
                         </Grid>
-
-
-                        <super:TogglePanel
-                            Padding="0,5"
-                            HorizontalAlignment="Left"
-                            FontSize="15"
-                            Header="{DynamicResource ShowOtherOptions}"
-                            IsEnabled="False"
-                            IsExpanded="False"
-                            LineWidth="0"
-                            Style="{StaticResource BaseTogglePanel}"
-                            Visibility="Collapsed">
-                            <StackPanel Orientation="Vertical">
-
-
-                                <StackPanel Margin="10,10" Orientation="Horizontal">
-
-                                    <Slider
-                                        x:Name="RecentDaysSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="10"
-                                        Minimum="1"
-                                        Value="{Binding RecentDays, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=RecentDaysSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource ShowRecentCreate}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10,10" Orientation="Horizontal">
-
-                                    <Slider
-                                        x:Name="RecentWatchSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="10"
-                                        Minimum="1"
-                                        Value="{Binding RecentWatchDays, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=RecentWatchSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource ShowRecentPlay}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10,10" Orientation="Horizontal">
-
-                                    <Slider
-                                        x:Name="SearchCandidateSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="15"
-                                        Minimum="3"
-                                        Value="{Binding SearchCandidateMaxCount, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=SearchCandidateSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource SearchCandidateNumber}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10,10" Orientation="Horizontal">
-
-                                    <Slider
-                                        x:Name="FilePathNumSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="20"
-                                        Minimum="3"
-                                        Value="{Binding FilePathClassificationMaxCount, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=FilePathNumSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource DirClassificationNumber}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10,10" Orientation="Horizontal">
-
-                                    <Slider
-                                        x:Name="FilePathDepthSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="10"
-                                        Minimum="1"
-                                        Value="{Binding FilePathClassificationMaxDepth, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=FilePathDepthSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource DirClassificationDepth}" />
-                                </StackPanel>
-
-                            </StackPanel>
-                        </super:TogglePanel>
-
-
-
                     </StackPanel>
                 </ScrollViewer>
 
@@ -587,18 +472,6 @@
             <TabItem Background="Transparent" Header="{DynamicResource ScanAndImport}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <StackPanel
-                            Margin="5,20,0,5"
-                            Orientation="Vertical"
-                            Visibility="Collapsed">
-                            <CheckBox
-                                x:Name="ListenCheckBox"
-                                Margin="10,5,10,5"
-                                Checked="ListenCheckBox_Checked"
-                                Content="监听所有文件改动并更新数据库（不包括C盘）"
-                                IsChecked="{Binding ListenAllDir, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-
-                        </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -630,36 +503,6 @@
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
-
-
-
-
-
-                        <StackPanel
-                            Margin="20,5"
-                            IsEnabled="False"
-                            Orientation="Horizontal"
-                            Visibility="Collapsed">
-                            <TextBlock
-                                MinWidth="200"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="视频识别码的正则表达式"
-                                TextAlignment="Left"
-                                ToolTip="[0-2000]" />
-                            <super:SearchBox
-                                MinWidth="400"
-                                LostFocus="SetScanRe"
-                                PlaceHolder="正则表达式，使用英文分号分割每个正则"
-                                PlaceHolderForeground="{DynamicResource Control.Disabled.Background}"
-                                Text="{Binding ScanRe, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
-                            <super:HoverPath
-                                Margin="10,5"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Panel.ZIndex="20"
-                                Click="ShowScanReHelp"
-                                Style="{StaticResource HelpHoverPath}" />
-                        </StackPanel>
 
                         <StackPanel
                             Margin="20,10"
@@ -1122,14 +965,7 @@
 
                                 <StackPanel Margin="10,10" Orientation="Horizontal">
 
-                                    <Slider
-                                        x:Name="HttpTimeoutSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="40"
-                                        Minimum="2"
-                                        Value="{Binding Timeout_forcestop, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <TextBlock
+                                   <TextBlock
                                         VerticalAlignment="Center"
                                         Style="{StaticResource TextBlockTitle}"
                                         Text="{Binding Value, ElementName=HttpTimeoutSlider}" />
@@ -1141,13 +977,6 @@
 
                                 <StackPanel Margin="10" Orientation="Horizontal">
 
-                                    <Slider
-                                        x:Name="RequestTimeoutSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="40"
-                                        Minimum="2"
-                                        Value="{Binding Timeout_http, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         Style="{StaticResource TextBlockTitle}"
@@ -1160,13 +989,6 @@
 
                                 <StackPanel Margin="10" Orientation="Horizontal">
 
-                                    <Slider
-                                        x:Name="TcpTimeoutSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="40"
-                                        Minimum="2"
-                                        Value="{Binding Timeout_tcp, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         Style="{StaticResource TextBlockTitle}"
@@ -1178,14 +1000,6 @@
                                 </StackPanel>
 
                                 <StackPanel Margin="10" Orientation="Horizontal">
-
-                                    <Slider
-                                        x:Name="DownloadTimeoutSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="40"
-                                        Minimum="5"
-                                        Value="{Binding Timeout_download, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         Style="{StaticResource TextBlockTitle}"
@@ -1198,13 +1012,6 @@
 
                                 <StackPanel Margin="10" Orientation="Horizontal">
 
-                                    <Slider
-                                        x:Name="StreamTimeoutSlider"
-                                        Width="100"
-                                        VerticalAlignment="Center"
-                                        Maximum="40"
-                                        Minimum="3"
-                                        Value="{Binding Timeout_stream, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         Style="{StaticResource TextBlockTitle}"
@@ -1249,16 +1056,6 @@
                                     <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                     <CheckBox Content="{DynamicResource Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                 </WrapPanel>
-                                <CheckBox
-                                    Content="{DynamicResource Filter}"
-                                    IsChecked="{Binding ShowFilter, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}"
-                                    IsEnabled="False"
-                                    Visibility="Collapsed" />
-                                <CheckBox
-                                    Content="{DynamicResource FadeInOut}"
-                                    IsChecked="{Binding EnableWindowFade, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}"
-                                    IsEnabled="False"
-                                    Visibility="Collapsed" />
                                 <CheckBox
                                     Click="SetDetailBg"
                                     Content="{DynamicResource ApplyBgToDetail}"
@@ -1316,17 +1113,6 @@
                                 </WrapPanel>
                                 <CheckBox Content="{DynamicResource ShowFIlename}" IsChecked="{Binding ShowFileNameIfTitleEmpty, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
                                 <CheckBox Content="{DynamicResource ShowCreateDate}" IsChecked="{Binding ShowCreateDateIfReleaseDateEmpty, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
-
-                                <CheckBox
-                                    Content="{DynamicResource ShowTranslation}"
-                                    IsChecked="{Binding TitleShowTranslate, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}"
-                                    IsEnabled="False"
-                                    Visibility="Collapsed" />
-                                <CheckBox
-                                    Content="{DynamicResource ShowTranslate2}"
-                                    IsChecked="{Binding PlotShowTranslate, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}"
-                                    IsEnabled="False"
-                                    Visibility="Collapsed" />
                                 <WrapPanel
                                     Margin="5"
                                     HorizontalAlignment="Left"
@@ -1361,162 +1147,6 @@
                 </ScrollViewer>
             </TabItem>
 
-
-            <TabItem Header="{DynamicResource Translate}" Visibility="Collapsed">
-                <StackPanel IsEnabled="False">
-                    <StackPanel IsEnabled="True" Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox
-                                Margin="20,10"
-                                Content="{DynamicResource Youdao}"
-                                IsChecked="{Binding Enable_TL_YOUDAO, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button
-                                Margin="5,0"
-                                Click="TestTranslate"
-                                Content="{DynamicResource Test}" />
-                            <Button
-                                Margin="5,0"
-                                Click="LoadTranslate"
-                                Content="{DynamicResource LoadLocalKey}" />
-                            <!--  TODO WIN7  -->
-                            <fa:ImageAwesome
-                                Height="20"
-                                Margin="5,0"
-                                Foreground="{DynamicResource Window.Foreground}" />
-                            <Button
-                                Width="auto"
-                                HorizontalAlignment="Left"
-                                Click="Button_Click_2"
-                                Content=" ？"
-                                Cursor="Hand"
-                                Style="{StaticResource ButtonPrimary}" />
-                        </StackPanel>
-
-                        <StackPanel Margin="20,5" Orientation="Horizontal">
-                            <Label Content="API Key" Style="{StaticResource InfoLabel}" />
-                            <TextBox
-                                Width="400"
-                                Height="40"
-                                Margin="10,0"
-                                Padding="10,0"
-                                Background="{DynamicResource Window.Title.Background}"
-                                Style="{StaticResource BaseTextBox}"
-                                Text="{Binding TL_YOUDAO_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        </StackPanel>
-                        <StackPanel Margin="20,5" Orientation="Horizontal">
-                            <Label Content="Secret Key" Style="{StaticResource InfoLabel}" />
-                            <TextBox
-                                Width="400"
-                                Height="40"
-                                Margin="10,0"
-                                Padding="10,0"
-                                Background="{DynamicResource Window.Title.Background}"
-                                Style="{StaticResource BaseTextBox}"
-                                Text="{Binding TL_YOUDAO_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        </StackPanel>
-
-                    </StackPanel>
-
-
-                    <StackPanel IsEnabled="False" Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox
-                                Margin="20,10"
-                                Content="{DynamicResource BaiduTranslation}"
-                                IsChecked="{Binding Enable_TL_BAIDU, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button Click="TestTranslate" Content="{DynamicResource Test}" />
-                            <Image
-                                Width="32"
-                                Height="32"
-                                Margin="20,5" />
-                        </StackPanel>
-
-                        <StackPanel Margin="20,5" Orientation="Horizontal">
-                            <Label Content="API Key" Style="{StaticResource InfoLabel}" />
-                            <TextBox
-                                Width="400"
-                                Height="40"
-                                Margin="10,0"
-                                Padding="10,0"
-                                Background="{DynamicResource Window.Title.Background}"
-                                Style="{StaticResource BaseTextBox}"
-                                Text="{Binding TL_BAIDU_APIKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        </StackPanel>
-                        <StackPanel Margin="20,5" Orientation="Horizontal">
-                            <Label Content="Secret Key" Style="{StaticResource InfoLabel}" />
-                            <TextBox
-                                Width="400"
-                                Height="40"
-                                Margin="10,0"
-                                Padding="10,0"
-                                Background="{DynamicResource Window.Title.Background}"
-                                Style="{StaticResource BaseTextBox}"
-                                Text="{Binding TL_BAIDU_SECRETKEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        </StackPanel>
-
-                    </StackPanel>
-
-
-
-                </StackPanel>
-            </TabItem>
-
-            <TabItem Header="{DynamicResource AI}" Visibility="Collapsed">
-                <StackPanel IsEnabled="False">
-                    <StackPanel IsEnabled="True" Orientation="Vertical">
-
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox
-                                Margin="20,10"
-                                Content="{DynamicResource BaiduFaceRecognition}"
-                                IsChecked="{Binding Enable_BaiduAI, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                            <Button Click="TestAI" Content="{DynamicResource Test}" />
-                            <Button Click="LoadAI" Content="{DynamicResource LoadLocalKey}" />
-                            <fa:ImageAwesome
-                                Height="20"
-                                Margin="5,0"
-                                Foreground="{DynamicResource Window.Foreground}" />
-                            <Button
-                                Click="Button_Click_5"
-                                Content=" ？"
-                                Cursor="Hand"
-                                Style="{StaticResource ButtonPrimary}" />
-
-                        </StackPanel>
-
-                        <StackPanel Margin="20,5" Orientation="Horizontal">
-                            <Label Content="API Key" Style="{StaticResource InfoLabel}" />
-                            <TextBox
-                                Width="400"
-                                Height="40"
-                                Margin="10,0"
-                                Padding="10,0"
-                                Background="{DynamicResource Window.Title.Background}"
-                                Style="{StaticResource BaseTextBox}"
-                                Text="{Binding Baidu_API_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        </StackPanel>
-                        <StackPanel Margin="20,5" Orientation="Horizontal">
-                            <Label Content="Secret Key" Style="{StaticResource InfoLabel}" />
-                            <TextBox
-                                Width="400"
-                                Height="40"
-                                Margin="10,0"
-                                Padding="10,0"
-                                Background="{DynamicResource Window.Title.Background}"
-                                Style="{StaticResource BaseTextBox}"
-                                Text="{Binding Baidu_SECRET_KEY, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        </StackPanel>
-
-                    </StackPanel>
-                    <CheckBox
-                        Margin="20,10"
-                        Content="{DynamicResource HalfCutOff}"
-                        IsChecked="{Binding HalfCutOFf, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-
-
-                </StackPanel>
-            </TabItem>
-
             <TabItem Header="{DynamicResource VedioProcessing}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
@@ -1534,12 +1164,6 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Orientation="Vertical">
-                                <CheckBox
-                                    Content="{DynamicResource ScreenShotToPreviewDir}"
-                                    IsChecked="{Binding ScreenShotToExtraPicPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
-                                    IsEnabled="False"
-                                    Visibility="Collapsed" />
-
                                 <StackPanel Margin="5" Orientation="Horizontal">
                                     <TextBlock
                                         MinWidth="150"

@@ -24,6 +24,12 @@ namespace Jvedio.Core.WindowConfig
             CurrentLanguage = "zh-CN";
             DownloadWhenTitleNull = true;
             IgnoreCertVal = true;
+
+
+            HotKeyEnable = false;
+            HotKeyModifiers = 0;
+            HotKeyVK = 0;
+
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
@@ -121,5 +127,40 @@ namespace Jvedio.Core.WindowConfig
 
         public string ListenPort { get; set; }
         public long RemoteIndex { get; set; }
+
+
+        public bool _HotKeyEnable;
+        public bool HotKeyEnable {
+            get { return _HotKeyEnable; }
+            set {
+                _HotKeyEnable = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public long _HotKeyModifiers;
+        public long HotKeyModifiers {
+            get { return _HotKeyModifiers; }
+            set {
+                _HotKeyModifiers = value;
+                RaisePropertyChanged();
+            }
+        }
+        public long _HotKeyVK;
+        public long HotKeyVK {
+            get { return _HotKeyVK; }
+            set {
+                _HotKeyVK = value;
+                RaisePropertyChanged();
+            }
+        }
+        public string _HotKeyString;
+        public string HotKeyString {
+            get { return _HotKeyString; }
+            set {
+                _HotKeyString = value;
+                RaisePropertyChanged();
+            }
+        }
     }
 }

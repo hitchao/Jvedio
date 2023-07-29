@@ -502,10 +502,6 @@ namespace Jvedio.Core.UserControls.ViewModels
                         searchContent = vid;
                     wrapper.Like("VID", searchContent);
                     break;
-
-                // case SearchType.Title:
-                //    wrapper.Like("Title", searchContent).LeftBracket().Or().Like("Path", searchContent).RightBracket();
-                // break;
                 default:
                     wrapper.Like(searchType.ToString(), searchContent);
                     break;
