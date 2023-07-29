@@ -190,7 +190,7 @@
                                 <CheckBox Content="{DynamicResource TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
 
-                                <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetailWindowShowAllMovie, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
+                                <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetailWindowShowAllMovie, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
 
                                 <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
@@ -315,7 +315,7 @@
                                 Margin="5"
                                 Orientation="Vertical">
                                 <CheckBox Content="{DynamicResource UseScreenIfNoImage}" IsChecked="{Binding AutoGenScreenShot}" />
-                                <CheckBox Content="{DynamicResource ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                <CheckBox Content="{DynamicResource ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
                             </StackPanel>
                         </Grid>
                         <Grid>
@@ -503,23 +503,6 @@
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
-
-                        <StackPanel
-                            Margin="20,10"
-                            Orientation="Horizontal"
-                            Visibility="Collapsed">
-                            <Label Content="{DynamicResource SubsectionSpiltChar}" Style="{StaticResource InfoLabel}" />
-                            <TextBox
-                                Width="400"
-                                Height="40"
-                                Margin="10,0"
-                                Padding="10,0"
-                                VerticalAlignment="Center"
-                                Background="{DynamicResource Window.Title.Background}"
-                                Style="{StaticResource BaseTextBox}"
-                                Text="{Binding SubSectionFeature, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                        </StackPanel>
-
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -534,11 +517,11 @@
                                 Orientation="Vertical">
                                 <CheckBox Content="{DynamicResource DataExistsIndexAfterScan}" IsChecked="{Binding DataExistsIndexAfterScan, Mode=TwoWay}" />
                                 <CheckBox Content="{DynamicResource ImageExistsIndexAfterScan}" IsChecked="{Binding ImageExistsIndexAfterScan, Mode=TwoWay}" />
-                                <CheckBox Content="{DynamicResource ImportNFOWhenScan}" IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                <CheckBox Content="{DynamicResource ImportNFOWhenScan}" IsChecked="{Binding ScanNfo, Mode=TwoWay, Source={x:Static config:ConfigManager.ScanConfig}}" />
                                 <StackPanel
                                     Margin="20,0"
                                     Orientation="Vertical"
-                                    Visibility="{Binding ScanNfo, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+                                    Visibility="{Binding ScanNfo, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.ScanConfig}}">
                                     <!--<StackPanel Margin="20,0" Orientation="Vertical">-->
 
                                     <CheckBox Content="{DynamicResource OverwriteImage}" IsChecked="{Binding CopyNFOOverwriteImage}" />
@@ -593,7 +576,7 @@
                         </Grid>
 
 
-                        <Grid Visibility="{Binding ScanNfo, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+                        <Grid Visibility="{Binding ScanNfo, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.ScanConfig}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="*" />
@@ -726,7 +709,6 @@
                                             Margin="0"
                                             Content="{DynamicResource SaveToNFO}"
                                             IsChecked="{Binding SaveInfoToNFO, Mode=TwoWay}" />
-                                        <!--<StackPanel Orientation="Horizontal" Visibility="{Binding SaveInfoToNFO, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, Source={x:Static p:Settings.Default}}">-->
                                         <StackPanel Orientation="Horizontal" Visibility="Visible">
                                             <super:SearchBox
                                                 Width="380"
@@ -965,7 +947,7 @@
 
                                 <StackPanel Margin="10,10" Orientation="Horizontal">
 
-                                   <TextBlock
+                                    <TextBlock
                                         VerticalAlignment="Center"
                                         Style="{StaticResource TextBlockTitle}"
                                         Text="{Binding Value, ElementName=HttpTimeoutSlider}" />
@@ -1080,8 +1062,8 @@
                                         Maximum="3.0"
                                         Minimum="0.1"
                                         SmallChange="0.2"
-                                        Value="{Binding ScrollSpeedFactor, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <Label Content="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource RoundNumberConverter}, ConverterParameter=2}" Style="{StaticResource InfoLabel}" />
+                                        Value="{Binding ScrollSpeedFactor, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
+                                    <Label Content="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static config:ConfigManager.Main}, Converter={StaticResource RoundNumberConverter}, ConverterParameter=2}" Style="{StaticResource InfoLabel}" />
 
                                 </WrapPanel>
 

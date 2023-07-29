@@ -156,7 +156,7 @@ namespace Jvedio.Core.Scan
 
                 try {
                     (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO) parseResult
-                     = scanHelper.ParseMovie(FilePaths, FileExt, Token, Properties.Settings.Default.ScanNfo, callBack: (msg) => {
+                     = scanHelper.ParseMovie(FilePaths, FileExt, Token, ConfigManager.ScanConfig.ScanNfo, callBack: (msg) => {
                          Logger.Error(msg);
                      });
 

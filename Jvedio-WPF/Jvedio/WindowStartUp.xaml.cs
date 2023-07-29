@@ -59,7 +59,7 @@ namespace Jvedio
             cts = new CancellationTokenSource();
             cts.Token.Register(() => Console.WriteLine("取消任务"));
             ct = cts.Token;
-            if (!Properties.Settings.Default.Debug) {
+            if (!ConfigManager.Settings.Debug) {
                 FileHelper.TryDeleteFile("upgrade.bat");
                 FileHelper.TryDeleteFile("upgrade-plugins.bat");
                 FileHelper.TryDeleteDir("Temp");
@@ -295,14 +295,14 @@ namespace Jvedio
                     string p = item.Split('=')[0];
                     string v = item.Split('=')[1].Replace("\r", string.Empty);
                     if ("debug".Equals(p) && "true".Equals(v.ToLower())) {
-                        Properties.Settings.Default.Debug = true;
+                        ConfigManager.Settings.Debug = true;
                     } else {
-                        Properties.Settings.Default.Debug = false;
+                        ConfigManager.Settings.Debug = false;
                     }
                 }
             }
 
-            Console.WriteLine("Properties.Settings.Default.Debug = " + Properties.Settings.Default.Debug);
+            Console.WriteLine("ConfigManager.Settings.Debug = " + ConfigManager.Settings.Debug);
         }
 
         private void DeleteLogs()

@@ -21,6 +21,7 @@ namespace Jvedio.Core.Config
             LoadDataAfterScan = true;
             DataExistsIndexAfterScan = true;
             ImageExistsIndexAfterScan = true;
+            ScanNfo = false;
         }
 
         private static ScanConfig _instance = null;
@@ -64,6 +65,13 @@ namespace Jvedio.Core.Config
         public bool DataExistsIndexAfterScan { get; set; }
         public bool ImageExistsIndexAfterScan { get; set; }
         public string NFOParseConfig { get; set; }
-
+        public bool _ScanNfo;
+        public bool ScanNfo {
+            get { return _ScanNfo; }
+            set {
+                _ScanNfo = value;
+                RaisePropertyChanged();
+            }
+        }
     }
 }

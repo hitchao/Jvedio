@@ -1514,7 +1514,7 @@ namespace Jvedio
                 vieModel.OpenDataBaseDefault = false;
                 vieModel.ScanOnStartUp = false;
                 vieModel.CloseToTaskBar = false;
-                Properties.Settings.Default.DetailWindowShowAllMovie = true;
+                
                 ConfigManager.Settings.DelInfoAfterDelFile = true;
                 ConfigManager.Settings.HotKeyEnable = false;
                 ConfigManager.Settings.HotKeyString = "";
@@ -1523,7 +1523,7 @@ namespace Jvedio
 
                 // 图片
                 vieModel.AutoGenScreenShot = true;
-                Properties.Settings.Default.MainImageAutoMode = true;
+                
                 ImageSelectComboBox.SelectedIndex = 0;
                 vieModel.BasePicPath = Path.Combine(PathManager.CurrentUserFolder, "pic");
 
@@ -1532,7 +1532,10 @@ namespace Jvedio
                 vieModel.LoadDataAfterScan = true;
                 vieModel.MinFileSize = ScanConfig.DEFAULT_MIN_FILE_SIZE;
                 vieModel.DataExistsIndexAfterScan = true;
-                Properties.Settings.Default.ScanNfo = false;
+
+                ConfigManager.ScanConfig.ScanNfo = false;
+                ConfigManager.ScanConfig.Save();
+
                 vieModel.CopyNFOOverwriteImage = false;
                 vieModel.CopyNFOPicture = true;
                 vieModel.CopyNFOActorPicture = true;
@@ -1573,20 +1576,23 @@ namespace Jvedio
                 ConfigManager.Main.DisplayStatusBar = true;
                 ConfigManager.Main.DisplayFunBar = true;
                 ConfigManager.Main.DisplayNavigation = true;
+                ConfigManager.Main.DetailWindowShowAllMovie = true;
+                ConfigManager.Main.ScrollSpeedFactor = 1.5;
 
                 vieModel.DetailShowBg = true;
-                Properties.Settings.Default.ScrollSpeedFactor = 1.5;
+                
 
                 ConfigManager.VideoConfig.DisplayID = true;
                 ConfigManager.VideoConfig.DisplayTitle = true;
                 ConfigManager.VideoConfig.DisplayDate = true;
                 ConfigManager.VideoConfig.DisplayStamp = true;
                 ConfigManager.VideoConfig.DisplayFavorites = true;
+                ConfigManager.VideoConfig.MainImageAutoMode = true;
+                ConfigManager.VideoConfig.MovieOpacity = 1;
 
-                Properties.Settings.Default.ShowFileNameIfTitleEmpty = true;
-                Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty = true;
-                Properties.Settings.Default.MovieOpacity = 1;
-
+                ConfigManager.VideoConfig.ShowFileNameIfTitleEmpty = true;
+                ConfigManager.VideoConfig.ShowCreateDateIfReleaseDateEmpty = true;
+                
                 // 视频处理
                 vieModel.FFMPEG_Path = "";
                 vieModel.ScreenShot_ThreadNum = FFmpegConfig.DEFAULT_THREAD_NUM;

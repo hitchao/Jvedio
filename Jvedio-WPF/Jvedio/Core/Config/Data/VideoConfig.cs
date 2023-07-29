@@ -32,7 +32,11 @@ namespace Jvedio.Core.Config.Data
             DisplayDate = true;
             DisplayStamp = true;
             DisplayFavorites = true;
+            MainImageAutoMode = true;
+            MovieOpacity = 1;
 
+            ShowCreateDateIfReleaseDateEmpty = true;
+            ShowFileNameIfTitleEmpty = true;
 
         }
 
@@ -45,6 +49,39 @@ namespace Jvedio.Core.Config.Data
             }
         }
 
+
+        private double _MovieOpacity;
+        public double MovieOpacity {
+            get { return _MovieOpacity; }
+            set {
+                _MovieOpacity = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _MainImageAutoMode;
+        public bool MainImageAutoMode {
+            get { return _MainImageAutoMode; }
+            set {
+                _MainImageAutoMode = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _ShowCreateDateIfReleaseDateEmpty;
+        public bool ShowCreateDateIfReleaseDateEmpty {
+            get { return _ShowCreateDateIfReleaseDateEmpty; }
+            set {
+                _ShowCreateDateIfReleaseDateEmpty = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _ShowFileNameIfTitleEmpty;
+        public bool ShowFileNameIfTitleEmpty {
+            get { return _ShowFileNameIfTitleEmpty; }
+            set {
+                _ShowFileNameIfTitleEmpty = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private bool _DisplayFavorites;
         public bool DisplayFavorites {

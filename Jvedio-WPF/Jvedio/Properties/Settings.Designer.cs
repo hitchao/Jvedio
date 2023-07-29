@@ -26,120 +26,12 @@ namespace Jvedio.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DelFromDBIfDel {
-            get {
-                return ((bool)(this["DelFromDBIfDel"]));
-            }
-            set {
-                this["DelFromDBIfDel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-,_,cd,fhd,-fhd,_fhd")]
-        public string SubSectionFeature {
-            get {
-                return ((string)(this["SubSectionFeature"]));
-            }
-            set {
-                this["SubSectionFeature"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ActorEditMode {
             get {
                 return ((bool)(this["ActorEditMode"]));
             }
             set {
                 this["ActorEditMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MainImageAutoMode {
-            get {
-                return ((bool)(this["MainImageAutoMode"]));
-            }
-            set {
-                this["MainImageAutoMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DetailWindowShowAllMovie {
-            get {
-                return ((bool)(this["DetailWindowShowAllMovie"]));
-            }
-            set {
-                this["DetailWindowShowAllMovie"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowFileNameIfTitleEmpty {
-            get {
-                return ((bool)(this["ShowFileNameIfTitleEmpty"]));
-            }
-            set {
-                this["ShowFileNameIfTitleEmpty"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ScanNfo {
-            get {
-                return ((bool)(this["ScanNfo"]));
-            }
-            set {
-                this["ScanNfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public double MovieOpacity {
-            get {
-                return ((double)(this["MovieOpacity"]));
-            }
-            set {
-                this["MovieOpacity"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool SkipExistGif {
-            get {
-                return ((bool)(this["SkipExistGif"]));
-            }
-            set {
-                this["SkipExistGif"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string WebSiteList {
-            get {
-                return ((string)(this["WebSiteList"]));
-            }
-            set {
-                this["WebSiteList"] = value;
             }
         }
         
@@ -176,42 +68,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["ActorViewMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowCreateDateIfReleaseDateEmpty {
-            get {
-                return ((bool)(this["ShowCreateDateIfReleaseDateEmpty"]));
-            }
-            set {
-                this["ShowCreateDateIfReleaseDateEmpty"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Debug {
-            get {
-                return ((bool)(this["Debug"]));
-            }
-            set {
-                this["Debug"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1.5")]
-        public double ScrollSpeedFactor {
-            get {
-                return ((double)(this["ScrollSpeedFactor"]));
-            }
-            set {
-                this["ScrollSpeedFactor"] = value;
             }
         }
     }

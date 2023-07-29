@@ -21,6 +21,9 @@ namespace Jvedio.Core.WindowConfig
             DisplayPage = true;
             DisplaySearchBox = true;
             DisplayStatusBar = true;
+
+            DetailWindowShowAllMovie = false;
+            ScrollSpeedFactor = 1.5;
         }
 
         private static Main _instance = null;
@@ -105,6 +108,22 @@ namespace Jvedio.Core.WindowConfig
             get { return _PaginationCombobox; }
             set {
                 _PaginationCombobox = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _DetailWindowShowAllMovie;
+        public bool DetailWindowShowAllMovie {
+            get { return _DetailWindowShowAllMovie; }
+            set {
+                _DetailWindowShowAllMovie = value;
+                RaisePropertyChanged();
+            }
+        }
+        public double _ScrollSpeedFactor;
+        public double ScrollSpeedFactor {
+            get { return _ScrollSpeedFactor; }
+            set {
+                _ScrollSpeedFactor = value;
                 RaisePropertyChanged();
             }
         }

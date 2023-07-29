@@ -30,6 +30,7 @@ namespace Jvedio.Core.WindowConfig
             HotKeyModifiers = 0;
             HotKeyVK = 0;
 
+            Debug = false;
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
@@ -159,6 +160,14 @@ namespace Jvedio.Core.WindowConfig
             get { return _HotKeyString; }
             set {
                 _HotKeyString = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _Debug;
+        public bool Debug {
+            get { return _Debug; }
+            set {
+                _Debug = value;
                 RaisePropertyChanged();
             }
         }

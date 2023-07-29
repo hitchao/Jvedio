@@ -412,7 +412,7 @@
                                 super:ScrollAnimationBehavior.PointsToScroll="1"
                                 super:ScrollAnimationBehavior.TimeDuration="00:00:00.5"
                                 super:ScrollAnimationBehavior.VerticalOffset="0"
-                                SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static p:Settings.Default}}"
+                                SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static config:ConfigManager.Main}}"
                                 Style="{StaticResource FlatScrollViewer}">
                                 <ItemsPresenter />
                             </local:WheelSpeedScrollViewer>

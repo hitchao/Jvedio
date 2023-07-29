@@ -249,7 +249,7 @@
                                                     Cursor="Hand"
                                                     MouseLeftButtonUp="ShowDetails"
                                                     SourceType="BigImage"
-                                                    Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
+                                                    Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
 
                                                 <Button
                                                     Height="auto"
@@ -964,7 +964,7 @@
                                                 Margin="5,5"
                                                 HorizontalAlignment="Left"
                                                 ItemsSource="{Binding CurrentVideo.TagStamp}"
-                                                Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel Orientation="Horizontal" />

@@ -74,10 +74,10 @@ namespace Jvedio.Entity
 
         public static void HandleEmpty(ref Video video)
         {
-            if (Properties.Settings.Default.ShowFileNameIfTitleEmpty
+            if (ConfigManager.VideoConfig.ShowFileNameIfTitleEmpty
                 && !string.IsNullOrEmpty(video.Path) && string.IsNullOrEmpty(video.Title))
                 video.Title = System.IO.Path.GetFileNameWithoutExtension(video.Path);
-            if (Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty
+            if (ConfigManager.VideoConfig.ShowCreateDateIfReleaseDateEmpty
                 && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
                 video.ReleaseDate = DateHelper.ToLocalDate(video.LastScanDate);
         }

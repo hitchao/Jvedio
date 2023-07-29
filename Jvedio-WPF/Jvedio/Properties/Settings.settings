@@ -2,35 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Jvedio.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DelFromDBIfDel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="SubSectionFeature" Type="System.String" Scope="User">
-      <Value Profile="(Default)">-,_,cd,fhd,-fhd,_fhd</Value>
-    </Setting>
     <Setting Name="ActorEditMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="MainImageAutoMode" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DetailWindowShowAllMovie" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ShowFileNameIfTitleEmpty" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ScanNfo" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="MovieOpacity" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="SkipExistGif" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="WebSiteList" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ActorSortType" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -40,15 +13,6 @@
     </Setting>
     <Setting Name="ActorViewMode" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="ShowCreateDateIfReleaseDateEmpty" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="Debug" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ScrollSpeedFactor" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">1.5</Value>
     </Setting>
   </Settings>
 </SettingsFile>

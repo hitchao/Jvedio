@@ -42,7 +42,7 @@
             BorderThickness="2"
             CornerRadius="3"
             Effect="{StaticResource BlueDropShadowEffect}"
-            Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}}"
+            Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}"
             Style="{StaticResource SimpleBorder}" />
 
         <StackPanel Margin="0" Tag="{Binding DataID, Mode=OneWay}">
@@ -64,7 +64,7 @@
                     MouseLeftButtonUp="ShowDetails"
                     RenderOptions.BitmapScalingMode="LowQuality"
                     SmallImageSource="{Binding SmallImage, Mode=OneWay}"
-                    Stretch="{Binding Path=MainImageAutoMode, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
+                    Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
                     Style="{StaticResource GifImageStyle}" />
 
                 <!--  关联视频 + 分段视频  -->

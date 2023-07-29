@@ -152,22 +152,6 @@
 
 
 
-        <Style x:Key="HoverCanvas" TargetType="{x:Type Canvas}">
-            <Setter Property="Visibility" Value="Hidden" />
-            <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="False" />
-                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Grid}, Mode=FindAncestor}}" Value="True" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Visibility" Value="Visible" />
-                </MultiDataTrigger>
-                <DataTrigger Binding="{Binding EditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Value="True">
-                    <Setter Property="Visibility" Value="Hidden" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
 
         <ContextMenu
             x:Key="SettingsContextMenu"

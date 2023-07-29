@@ -19,10 +19,12 @@ namespace Jvedio
         public int StartPage = 1;
         public int EndPage = 500;
 
+        private string WebSiteList;
+
         public Dialog_LoadPage(bool showbutton) : base(showbutton)
         {
             InitializeComponent();
-            cb.ItemsSource = Properties.Settings.Default.WebSiteList.Split(';');
+            cb.ItemsSource = WebSiteList.Split(';');
             if (cb.Items.Count > 0)
                 cb.SelectedIndex = 0;
 
@@ -54,16 +56,16 @@ namespace Jvedio
 
         private void SaveWebSite(object sender, RoutedEventArgs e)
         {
-            List<string> l1 = StringToList(Properties.Settings.Default.WebSiteList);
-            Properties.Settings.Default.WebSiteList = string.Join(";", l1.Union(StringToList(tb.Text)));
-            cb.ItemsSource = Properties.Settings.Default.WebSiteList.Split(';');
+            List<string> l1 = StringToList(WebSiteList);
+            WebSiteList = string.Join(";", l1.Union(StringToList(tb.Text)));
+            cb.ItemsSource = WebSiteList.Split(';');
         }
 
         private void DeleteWebSite(object sender, RoutedEventArgs e)
         {
-            List<string> l1 = StringToList(Properties.Settings.Default.WebSiteList);
-            Properties.Settings.Default.WebSiteList = string.Join(";", l1.Except(StringToList(url)));
-            cb.ItemsSource = Properties.Settings.Default.WebSiteList.Split(';');
+            List<string> l1 = StringToList(WebSiteList);
+            WebSiteList = string.Join(";", l1.Except(StringToList(url)));
+            cb.ItemsSource = WebSiteList.Split(';');
         }
 
         private List<string> StringToList(string str)

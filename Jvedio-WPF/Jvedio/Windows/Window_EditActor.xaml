@@ -2,6 +2,7 @@
     x:Class="Jvedio.Window_EditActor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
@@ -163,7 +164,7 @@
                         <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Weight, Mode=TwoWay}" />
                     </DockPanel>
 
-                    <DockPanel Visibility="{Binding TeenMode, Source={x:Static p:Settings.Default}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}">
+                    <DockPanel Visibility="{Binding TeenMode, Source={x:Static config:ConfigManager.Settings}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}">
                         <Label Content="{DynamicResource Actress_Cup}" Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}" />
                     </DockPanel>
