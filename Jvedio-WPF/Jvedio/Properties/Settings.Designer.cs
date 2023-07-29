@@ -25,78 +25,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
-        public int DisplayNumber {
-            get {
-                return ((int)(this["DisplayNumber"]));
-            }
-            set {
-                this["DisplayNumber"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayID {
-            get {
-                return ((bool)(this["DisplayID"]));
-            }
-            set {
-                this["DisplayID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayTitle {
-            get {
-                return ((bool)(this["DisplayTitle"]));
-            }
-            set {
-                this["DisplayTitle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayDate {
-            get {
-                return ((bool)(this["DisplayDate"]));
-            }
-            set {
-                this["DisplayDate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayStatusBar {
-            get {
-                return ((bool)(this["DisplayStatusBar"]));
-            }
-            set {
-                this["DisplayStatusBar"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayFunBar {
-            get {
-                return ((bool)(this["DisplayFunBar"]));
-            }
-            set {
-                this["DisplayFunBar"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ProxyActivation {
             get {
@@ -253,18 +181,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ActorClickShowAll {
-            get {
-                return ((bool)(this["ActorClickShowAll"]));
-            }
-            set {
-                this["ActorClickShowAll"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ShowActorWithId {
             get {
@@ -284,18 +200,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["NFOSaveComBoxIndex"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string AllSearchType {
-            get {
-                return ((string)(this["AllSearchType"]));
-            }
-            set {
-                this["AllSearchType"] = value;
             }
         }
         
@@ -625,18 +529,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayStamp {
-            get {
-                return ((bool)(this["DisplayStamp"]));
-            }
-            set {
-                this["DisplayStamp"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Search_MatchAllWord {
             get {
@@ -668,54 +560,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["SearchImmediately"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisPlayNoStamp {
-            get {
-                return ((bool)(this["DisPlayNoStamp"]));
-            }
-            set {
-                this["DisPlayNoStamp"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisPlayCHS {
-            get {
-                return ((bool)(this["DisPlayCHS"]));
-            }
-            set {
-                this["DisPlayCHS"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisPlayOutFlow {
-            get {
-                return ((bool)(this["DisPlayOutFlow"]));
-            }
-            set {
-                this["DisPlayOutFlow"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisPlayHDV {
-            get {
-                return ((bool)(this["DisPlayHDV"]));
-            }
-            set {
-                this["DisPlayHDV"] = value;
             }
         }
         
@@ -788,18 +632,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["ToolsIndex"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DataBasePath {
-            get {
-                return ((string)(this["DataBasePath"]));
-            }
-            set {
-                this["DataBasePath"] = value;
             }
         }
         
@@ -1033,30 +865,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayFavorites {
-            get {
-                return ((bool)(this["DisplayFavorites"]));
-            }
-            set {
-                this["DisplayFavorites"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int BatchIndex {
-            get {
-                return ((int)(this["BatchIndex"]));
-            }
-            set {
-                this["BatchIndex"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DetailWindowShowAllMovie {
             get {
@@ -1064,18 +872,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["DetailWindowShowAllMovie"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DelRenameTitleSpace {
-            get {
-                return ((bool)(this["DelRenameTitleSpace"]));
-            }
-            set {
-                this["DelRenameTitleSpace"] = value;
             }
         }
         
@@ -1136,18 +932,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["SkipExistGif"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayNavigation {
-            get {
-                return ((bool)(this["DisplayNavigation"]));
-            }
-            set {
-                this["DisplayNavigation"] = value;
             }
         }
         
@@ -1316,42 +1100,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["SelectedLanguage"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayPage {
-            get {
-                return ((bool)(this["DisplayPage"]));
-            }
-            set {
-                this["DisplayPage"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplaySearchBox {
-            get {
-                return ((bool)(this["DisplaySearchBox"]));
-            }
-            set {
-                this["DisplaySearchBox"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PaginationCombobox {
-            get {
-                return ((bool)(this["PaginationCombobox"]));
-            }
-            set {
-                this["PaginationCombobox"] = value;
             }
         }
         

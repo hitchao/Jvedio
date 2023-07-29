@@ -328,7 +328,7 @@
                                                     Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                     Text="{Binding VID, Mode=OneWay}"
                                                     TextAlignment="Left"
-                                                    Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                    Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
                                                 <super:HoverPath Grid.Column="1" CopyData="{Binding VID}">
                                                     <super:HoverPath.Style>
                                                         <Style BasedOn="{StaticResource CopyHoverPath}" TargetType="super:HoverPath">
@@ -353,7 +353,7 @@
                                                     HorizontalAlignment="Right"
                                                     ItemsSource="{Binding TagStamp}"
                                                     Tag="{Binding DataID}"
-                                                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <StackPanel Orientation="Horizontal" />
@@ -395,7 +395,7 @@
                                                 Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                                 Text="{Binding ReleaseDate, Mode=OneWay}"
                                                 TextAlignment="Left"
-                                                Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
 
                                             <!--  评分  -->
                                             <StackPanel
@@ -406,7 +406,7 @@
                                                 Cursor="Hand"
                                                 PreviewMouseLeftButtonDown="StackPanel_PreviewMouseLeftButtonDown"
                                                 Tag="{Binding DataID, Mode=OneWay}"
-                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                                                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}">
                                                 <super:Rating
                                                     Half="True"
                                                     RateBackground="{DynamicResource Window.Title.Background}"
@@ -434,7 +434,7 @@
                                                 TextAlignment="Left"
                                                 TextWrapping="Wrap"
                                                 ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                                                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                                                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
 
 
                                         </Grid>

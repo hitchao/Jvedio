@@ -175,7 +175,7 @@
             Grid.Row="0"
             Panel.ZIndex="4"
             Background="Transparent"
-            Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+            Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -291,7 +291,7 @@
             VerticalAlignment="Center"
             Panel.ZIndex="4"
             Opacity="0"
-            Visibility="{Binding DisplayNavigation, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToVisibilityConverter}}">
+            Visibility="{Binding DisplayNavigation, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToVisibilityConverter}}">
             <Rectangle
                 Margin="{Binding MainGridThickness, Converter={StaticResource SmallerThicknessConverter}, ConverterParameter=-5, FallbackValue=5}"
                 Effect="{StaticResource ZeroShadowEffect}"
@@ -452,7 +452,7 @@
             Grid.Row="2"
             HorizontalAlignment="Stretch"
             Panel.ZIndex="5"
-            Visibility="{Binding DisplayPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+            Visibility="{Binding DisplayPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
@@ -505,7 +505,7 @@
                     CurrentPageChange="Pagination_CurrentPageChange"
                     PageSize="{Binding PageSize, Mode=TwoWay}"
                     PageSizes="[10,20,40,50,100]"
-                    ShowCombobox="{Binding PaginationCombobox, Source={x:Static p:Settings.Default}}"
+                    ShowCombobox="{Binding PaginationCombobox, Source={x:Static config:ConfigManager.Main}}"
                     Style="{StaticResource NormalPagination}"
                     Total="{Binding TotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>

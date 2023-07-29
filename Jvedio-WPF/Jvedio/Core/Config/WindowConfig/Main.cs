@@ -15,6 +15,12 @@ namespace Jvedio.Core.WindowConfig
             ShowSearchHistory = true;
             SideDefaultExpanded = true;
             SideTagStampExpanded = true;
+
+            DisplayFunBar = true;
+            DisplayNavigation = false;
+            DisplayPage = true;
+            DisplaySearchBox = true;
+            DisplayStatusBar = true;
         }
 
         private static Main _instance = null;
@@ -51,6 +57,56 @@ namespace Jvedio.Core.WindowConfig
         public bool SideDefaultExpanded { get; set; }
         public bool SideTagStampExpanded { get; set; }
 
+
         public string LatestNotice { get; set; }
+
+        public bool _DisplayFunBar;
+        public bool DisplayFunBar {
+            get { return _DisplayFunBar; }
+            set {
+                _DisplayFunBar = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _DisplayNavigation;
+        public bool DisplayNavigation {
+            get { return _DisplayNavigation; }
+            set {
+                _DisplayNavigation = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _DisplayPage;
+        public bool DisplayPage {
+            get { return _DisplayPage; }
+            set {
+                _DisplayPage = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _DisplaySearchBox;
+        public bool DisplaySearchBox {
+            get { return _DisplaySearchBox; }
+            set {
+                _DisplaySearchBox = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _DisplayStatusBar;
+        public bool DisplayStatusBar {
+            get { return _DisplayStatusBar; }
+            set {
+                _DisplayStatusBar = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _PaginationCombobox;
+        public bool PaginationCombobox {
+            get { return _PaginationCombobox; }
+            set {
+                _PaginationCombobox = value;
+                RaisePropertyChanged();
+            }
+        }
     }
 }

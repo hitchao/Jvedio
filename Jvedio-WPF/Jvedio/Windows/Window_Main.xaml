@@ -666,7 +666,7 @@
                                 SearchOnTextChanged="False"
                                 Style="{StaticResource SearchBoxStyle}"
                                 Text="{Binding SearchText, Mode=TwoWay}"
-                                Visibility="{Binding DisplaySearchBox, Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Visibility="{Binding DisplaySearchBox, Source={x:Static config:ConfigManager.Main}, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <Popup
                                 x:Name="searchResultPopup"
                                 Width="{Binding ElementName=searchBox, Path=ActualWidth}"
@@ -1274,7 +1274,7 @@
                 Grid.Row="1"
                 Height="30"
                 Background="{DynamicResource Window.StatusBar.Background}"
-                Visibility="{Binding DisplayStatusBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static p:Settings.Default}}">
+                Visibility="{Binding DisplayStatusBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />

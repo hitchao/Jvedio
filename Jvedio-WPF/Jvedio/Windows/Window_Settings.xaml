@@ -190,7 +190,7 @@
                                 <CheckBox Content="{DynamicResource TeenMode}" IsChecked="{Binding TeenMode, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
 
-                                <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetailWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetailWindowShowAllMovie, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
 
                                 <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
@@ -1242,21 +1242,21 @@
                                 Margin="5"
                                 Orientation="Vertical">
                                 <WrapPanel Orientation="Horizontal">
-                                    <CheckBox Content="{DynamicResource SearchBar}" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource PageAdjustBar}" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource PageDropMenu}" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                    <CheckBox Content="{DynamicResource SearchBar}" IsChecked="{Binding DisplaySearchBox, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
+                                    <CheckBox Content="{DynamicResource PageAdjustBar}" IsChecked="{Binding DisplayPage, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
+                                    <CheckBox Content="{DynamicResource PageDropMenu}" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
+                                    <CheckBox Content="{DynamicResource StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
+                                    <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
+                                    <CheckBox Content="{DynamicResource Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                 </WrapPanel>
                                 <CheckBox
                                     Content="{DynamicResource Filter}"
-                                    IsChecked="{Binding ShowFilter, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                    IsChecked="{Binding ShowFilter, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}"
                                     IsEnabled="False"
                                     Visibility="Collapsed" />
                                 <CheckBox
                                     Content="{DynamicResource FadeInOut}"
-                                    IsChecked="{Binding EnableWindowFade, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                    IsChecked="{Binding EnableWindowFade, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}"
                                     IsEnabled="False"
                                     Visibility="Collapsed" />
                                 <CheckBox
@@ -1307,24 +1307,24 @@
                                 Margin="5"
                                 Orientation="Vertical">
                                 <WrapPanel Orientation="Horizontal">
-                                    <CheckBox Content="{DynamicResource ID}" IsChecked="{Binding DisplayID, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource Title}" IsChecked="{Binding DisplayTitle, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource Date}" IsChecked="{Binding DisplayDate, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource Stamp}" IsChecked="{Binding DisplayStamp, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <CheckBox Content="{DynamicResource Favorites}" IsChecked="{Binding DisplayFavorites, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                    <CheckBox Content="{DynamicResource ID}" IsChecked="{Binding DisplayID, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
+                                    <CheckBox Content="{DynamicResource Title}" IsChecked="{Binding DisplayTitle, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
+                                    <CheckBox Content="{DynamicResource Date}" IsChecked="{Binding DisplayDate, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
+                                    <CheckBox Content="{DynamicResource Stamp}" IsChecked="{Binding DisplayStamp, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
+                                    <CheckBox Content="{DynamicResource Favorites}" IsChecked="{Binding DisplayFavorites, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
 
                                 </WrapPanel>
-                                <CheckBox Content="{DynamicResource ShowFIlename}" IsChecked="{Binding ShowFileNameIfTitleEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                <CheckBox Content="{DynamicResource ShowCreateDate}" IsChecked="{Binding ShowCreateDateIfReleaseDateEmpty, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                <CheckBox Content="{DynamicResource ShowFIlename}" IsChecked="{Binding ShowFileNameIfTitleEmpty, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
+                                <CheckBox Content="{DynamicResource ShowCreateDate}" IsChecked="{Binding ShowCreateDateIfReleaseDateEmpty, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
 
                                 <CheckBox
                                     Content="{DynamicResource ShowTranslation}"
-                                    IsChecked="{Binding TitleShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                    IsChecked="{Binding TitleShowTranslate, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}"
                                     IsEnabled="False"
                                     Visibility="Collapsed" />
                                 <CheckBox
                                     Content="{DynamicResource ShowTranslate2}"
-                                    IsChecked="{Binding PlotShowTranslate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                                    IsChecked="{Binding PlotShowTranslate, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}"
                                     IsEnabled="False"
                                     Visibility="Collapsed" />
                                 <WrapPanel
@@ -1346,8 +1346,8 @@
                                         Maximum="1"
                                         Minimum="0.1"
                                         SmallChange="0.05"
-                                        Value="{Binding MovieOpacity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
-                                    <Label Content="{Binding MovieOpacity, Mode=OneWay, Source={x:Static p:Settings.Default}, Converter={StaticResource RoundNumberConverter}, ConverterParameter=2}" Style="{StaticResource InfoLabel}" />
+                                        Value="{Binding MovieOpacity, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
+                                    <Label Content="{Binding MovieOpacity, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource RoundNumberConverter}, ConverterParameter=2}" Style="{StaticResource InfoLabel}" />
 
                                 </WrapPanel>
                             </StackPanel>

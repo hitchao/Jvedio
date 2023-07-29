@@ -1567,22 +1567,23 @@ namespace Jvedio
                 ConfigManager.ProxyConfig.Save();
 
                 // 显示
-                Properties.Settings.Default.DisplaySearchBox = true;
-                Properties.Settings.Default.DisplayPage = true;
-                Properties.Settings.Default.PaginationCombobox = true;
-                Properties.Settings.Default.DisplayStatusBar = true;
-                Properties.Settings.Default.DisplayFunBar = true;
-                Properties.Settings.Default.DisplayNavigation = true;
+                ConfigManager.Main.DisplaySearchBox = true;
+                ConfigManager.Main.DisplayPage = true;
+                ConfigManager.Main.PaginationCombobox = true;
+                ConfigManager.Main.DisplayStatusBar = true;
+                ConfigManager.Main.DisplayFunBar = true;
+                ConfigManager.Main.DisplayNavigation = true;
 
                 Properties.Settings.Default.ShowFilter = false;
                 vieModel.DetailShowBg = true;
                 Properties.Settings.Default.ScrollSpeedFactor = 1.5;
 
-                Properties.Settings.Default.DisplayID = true;
-                Properties.Settings.Default.DisplayTitle = true;
-                Properties.Settings.Default.DisplayDate = true;
-                Properties.Settings.Default.DisplayStamp = true;
-                Properties.Settings.Default.DisplayFavorites = true;
+                ConfigManager.VideoConfig.DisplayID = true;
+                ConfigManager.VideoConfig.DisplayTitle = true;
+                ConfigManager.VideoConfig.DisplayDate = true;
+                ConfigManager.VideoConfig.DisplayStamp = true;
+                ConfigManager.VideoConfig.DisplayFavorites = true;
+
                 Properties.Settings.Default.ShowFileNameIfTitleEmpty = true;
                 Properties.Settings.Default.ShowCreateDateIfReleaseDateEmpty = true;
                 Properties.Settings.Default.MovieOpacity = 1;
@@ -1613,7 +1614,7 @@ namespace Jvedio
                 vieModel.AutoBackup = true;
                 vieModel.AutoBackupPeriodIndex = Jvedio.Core.WindowConfig.Settings.DEFAULT_BACKUP_PERIOD_INDEX;
 
-
+                ConfigManager.Main.Save();
                 Properties.Settings.Default.Save();
                 ApplySettings(null, null);
 

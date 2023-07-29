@@ -161,7 +161,7 @@
                         Style="{StaticResource BaseTextBlock}"
                         Text="{Binding VID, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis"
-                        Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                        Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
 
 
                     <!--  日期  -->
@@ -180,7 +180,7 @@
                         Text="{Binding ReleaseDate, Mode=OneWay}"
                         TextAlignment="Left"
                         TextTrimming="WordEllipsis"
-                        Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                        Visibility="{Binding Path=DisplayDate, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
 
                 </StackPanel>
 
@@ -193,7 +193,7 @@
                     HorizontalAlignment="Right"
                     ItemsSource="{Binding TagStamp}"
                     Tag="{Binding DataID}"
-                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}">
+                    Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Horizontal" />
@@ -235,7 +235,7 @@
                 ItemMargin="3 0"
                 PreviewMouseLeftButtonDown="OnRateMouseDown"
                 ValueChanged="Rate_ValueChanged"
-                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}"
+                Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}"
                 Value="{Binding Grade, Mode=TwoWay}" />
 
 
@@ -254,7 +254,7 @@
                 TextAlignment="Left"
                 TextTrimming="CharacterEllipsis"
                 ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static p:Settings.Default}, Mode=OneWay}" />
+                Visibility="{Binding Path=DisplayTitle, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
 
 
         </StackPanel>

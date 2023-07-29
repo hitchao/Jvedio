@@ -26,6 +26,14 @@ namespace Jvedio.Core.Config.Data
             SortDescending = false;
             OnlyShowSubSection = false;
             PageSize = 20;
+
+            DisplayID = true;
+            DisplayTitle = true;
+            DisplayDate = true;
+            DisplayStamp = true;
+            DisplayFavorites = true;
+
+
         }
 
         private long _PageSize;
@@ -33,6 +41,54 @@ namespace Jvedio.Core.Config.Data
             get { return _PageSize; }
             set {
                 _PageSize = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool _DisplayFavorites;
+        public bool DisplayFavorites {
+            get { return _DisplayFavorites; }
+            set {
+                _DisplayFavorites = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _DisplayStamp;
+        public bool DisplayStamp {
+            get { return _DisplayStamp; }
+            set {
+                _DisplayStamp = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool _DisplayDate;
+        public bool DisplayDate {
+            get { return _DisplayDate; }
+            set {
+                _DisplayDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _DisplayTitle;
+        public bool DisplayTitle {
+            get { return _DisplayTitle; }
+            set {
+                _DisplayTitle = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool _DisplayID;
+        public bool DisplayID {
+            get { return _DisplayID; }
+            set {
+                _DisplayID = value;
                 RaisePropertyChanged();
             }
         }
@@ -45,6 +101,7 @@ namespace Jvedio.Core.Config.Data
                 RaisePropertyChanged();
             }
         }
+
         private bool _SortDescending;
         public bool SortDescending {
             get { return _SortDescending; }
