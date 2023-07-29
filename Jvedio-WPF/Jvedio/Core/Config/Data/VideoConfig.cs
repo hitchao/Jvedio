@@ -38,6 +38,9 @@ namespace Jvedio.Core.Config.Data
             ShowCreateDateIfReleaseDateEmpty = true;
             ShowFileNameIfTitleEmpty = true;
 
+            ActorEditMode = false;
+            ActorSortDescending = true;
+
         }
 
         private long _PageSize;
@@ -49,6 +52,44 @@ namespace Jvedio.Core.Config.Data
             }
         }
 
+
+        #region "Actor"
+
+        private long _ActorViewMode;
+        public long ActorViewMode {
+            get { return _ActorViewMode; }
+            set {
+                _ActorViewMode = value;
+                RaisePropertyChanged();
+            }
+        }
+        private long _ActorSortType;
+        public long ActorSortType {
+            get { return _ActorSortType; }
+            set {
+                _ActorSortType = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _ActorSortDescending;
+        public bool ActorSortDescending {
+            get { return _ActorSortDescending; }
+            set {
+                _ActorSortDescending = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _ActorEditMode;
+        public bool ActorEditMode {
+            get { return _ActorEditMode; }
+            set {
+                _ActorEditMode = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
 
         private double _MovieOpacity;
         public double MovieOpacity {

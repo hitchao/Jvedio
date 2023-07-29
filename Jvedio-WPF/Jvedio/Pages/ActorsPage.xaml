@@ -38,14 +38,14 @@
             <Style.Triggers>
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="True" />
+                        <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="True" />
                         <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
                     </MultiDataTrigger.Conditions>
                     <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
                 </MultiDataTrigger>
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="True" />
+                        <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="True" />
                         <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="False" />
                     </MultiDataTrigger.Conditions>
                     <Setter Property="BorderBrush" Value="Transparent" />
@@ -134,7 +134,7 @@
                                 HorizontalAlignment="Left"
                                 FontSize="18"
                                 Foreground="{DynamicResource Window.Foreground}"
-                                IsEnabled="{Binding ActorEditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                                IsEnabled="{Binding ActorEditMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource OppositeBooleanConverter}}"
                                 Opacity="0.7"
                                 Style="{StaticResource ReadOnlyWrapTextBox}"
                                 Text="{Binding ActorName}"
@@ -269,12 +269,12 @@
                                 <Style.Triggers>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="False" />
+                                            <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="False" />
                                             <Condition Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True" />
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="Visibility" Value="Visible" />
                                     </MultiDataTrigger>
-                                    <DataTrigger Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="True">
+                                    <DataTrigger Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="True">
                                         <Setter Property="Visibility" Value="Hidden" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -369,12 +369,12 @@
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="False" />
+                                                <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="False" />
                                                 <Condition Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <Setter Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger>
-                                        <DataTrigger Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static p:Settings.Default}}" Value="True">
+                                        <DataTrigger Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="True">
                                             <Setter Property="Visibility" Value="Hidden" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -422,7 +422,7 @@
                         Margin="0,10"
                         FontSize="18"
                         Foreground="{DynamicResource Window.Foreground}"
-                        IsEnabled="{Binding ActorEditMode, Source={x:Static p:Settings.Default}, Converter={StaticResource OppositeBooleanConverter}}"
+                        IsEnabled="{Binding ActorEditMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource OppositeBooleanConverter}}"
                         Opacity="0.7"
                         Style="{StaticResource ReadOnlyWrapTextBox}"
                         Text="{Binding ActorName}"
@@ -435,7 +435,7 @@
         <Style x:Key="ActorContainerStyle" TargetType="ContentPresenter">
             <Setter Property="ContentTemplate" Value="{StaticResource WrapTemplate}" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding ActorViewMode, Source={x:Static p:Settings.Default}}" Value="1">
+                <DataTrigger Binding="{Binding ActorViewMode, Source={x:Static config:ConfigManager.VideoConfig}}" Value="1">
                     <Setter Property="ContentTemplate" Value="{StaticResource StackTemplate}" />
                 </DataTrigger>
             </Style.Triggers>
@@ -474,7 +474,7 @@
                         Background="{DynamicResource Window.Side.Background}"
                         CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
                         Click="SetActorSelectMode"
-                        IsChecked="{Binding ActorEditMode, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+                        IsChecked="{Binding ActorEditMode, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}"
                         Visibility="Collapsed" />
                     <TextBlock
                         VerticalAlignment="Center"
@@ -567,7 +567,7 @@
                         <Style TargetType="ItemsControl">
                             <Setter Property="ItemsPanel" Value="{DynamicResource WrapTemplate}" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ActorViewMode, Source={x:Static p:Settings.Default}}" Value="1">
+                                <DataTrigger Binding="{Binding ActorViewMode, Source={x:Static config:ConfigManager.VideoConfig}}" Value="1">
                                     <Setter Property="ItemsPanel" Value="{DynamicResource VerticalStackTemplate}" />
                                 </DataTrigger>
                             </Style.Triggers>

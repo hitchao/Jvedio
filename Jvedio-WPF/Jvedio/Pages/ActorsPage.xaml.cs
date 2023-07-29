@@ -180,7 +180,7 @@ namespace Jvedio.Pages
         public void BindingEvent()
         {
             // 设置演员排序类型
-            int actorSortType = Properties.Settings.Default.ActorSortType;
+            int actorSortType = (int)ConfigManager.VideoConfig.ActorSortType;
             var ActorMenuItems = ActorSortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
             for (int i = 0; i < ActorMenuItems.Count; i++) {
                 ActorMenuItems[i].Click += ActorSortMenu_Click;
@@ -194,13 +194,13 @@ namespace Jvedio.Pages
             var arbs = ActorViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
             for (int i = 0; i < arbs.Count; i++) {
                 arbs[i].Click += SetActorViewMode;
-                if (i == Properties.Settings.Default.ActorViewMode)
+                if (i == ConfigManager.VideoConfig.ActorViewMode)
                     arbs[i].IsChecked = true;
             }
 
 
             this.ActorPageChangedCompleted += (s, ev) => {
-                if (Properties.Settings.Default.ActorEditMode)
+                if (ConfigManager.VideoConfig.ActorEditMode)
                     ActorSetSelected();
             };
         }
@@ -223,7 +223,7 @@ namespace Jvedio.Pages
                 if (border != null && actorID > 0) {
                     border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
                     border.BorderBrush = Brushes.Transparent;
-                    if (Properties.Settings.Default.ActorEditMode && SelectedActors != null &&
+                    if (ConfigManager.VideoConfig.ActorEditMode && SelectedActors != null &&
                         SelectedActors.Where(arg => arg.ActorID == actorID).Any()) {
                         border.Background = StyleManager.Common.HighLight.Background;
                         border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
@@ -257,7 +257,7 @@ namespace Jvedio.Pages
             if (element == null)
                 return;
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            if (Properties.Settings.Default.ActorEditMode && grid != null) {
+            if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
                 Border border = grid.Children[0] as Border;
                 if (border != null)
                     border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
@@ -270,7 +270,7 @@ namespace Jvedio.Pages
             if (element == null)
                 return;
             Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            if (Properties.Settings.Default.ActorEditMode && grid != null) {
+            if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
                 long actorID = GetDataID(element);
                 Border border = grid.Children[0] as Border;
                 if (actorID <= 0 || border == null || SelectedActors == null)
@@ -294,7 +294,7 @@ namespace Jvedio.Pages
             long actorID = GetDataID(element);
             if (actorID <= 0)
                 return;
-            if (Properties.Settings.Default.ActorEditMode && CurrentActorList != null) {
+            if (ConfigManager.VideoConfig.ActorEditMode && CurrentActorList != null) {
                 ActorInfo actorInfo = CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
                 if (actorInfo == null)
                     return;
@@ -339,7 +339,7 @@ namespace Jvedio.Pages
 
         public void SelectAllActor(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.ActorEditMode = true;
+            ConfigManager.VideoConfig.ActorEditMode = true;
             bool allContain = true; // 检测是否取消选中
             foreach (var item in CurrentActorList) {
                 if (!SelectedActors.Contains(item)) {
@@ -361,9 +361,9 @@ namespace Jvedio.Pages
                 return;
             var rbs = ActorViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
             int idx = rbs.IndexOf(radioButton);
-            Properties.Settings.Default.ActorViewMode = idx;
-            Properties.Settings.Default.ActorEditMode = false;
-            Properties.Settings.Default.Save();
+            ConfigManager.VideoConfig.ActorViewMode = idx;
+            ConfigManager.VideoConfig.ActorEditMode = false;
+            ConfigManager.VideoConfig.Save();
         }
 
         private void ActorSortMenu_Click(object sender, RoutedEventArgs e)
@@ -374,11 +374,11 @@ namespace Jvedio.Pages
                 MenuItem item = (MenuItem)contextMenu.Items[i];
                 if (item == menuItem) {
                     item.IsChecked = true;
-                    if (i == Properties.Settings.Default.ActorSortType) {
-                        Properties.Settings.Default.ActorSortDescending = !Properties.Settings.Default.ActorSortDescending;
+                    if (i == ConfigManager.VideoConfig.ActorSortType) {
+                        ConfigManager.VideoConfig.ActorSortDescending = !ConfigManager.VideoConfig.ActorSortDescending;
                     }
 
-                    Properties.Settings.Default.ActorSortType = i;
+                    ConfigManager.VideoConfig.ActorSortType = i;
                 } else
                     item.IsChecked = false;
             }
@@ -515,10 +515,10 @@ namespace Jvedio.Pages
 
         public void ActorSetActorSortOrder<T>(IWrapper<T> wrapper)
         {
-            if (wrapper == null || Properties.Settings.Default.ActorSortType >= ActorSortDict.Count)
+            if (wrapper == null || ConfigManager.VideoConfig.ActorSortType >= ActorSortDict.Count)
                 return;
-            string sortField = ActorSortDict[Properties.Settings.Default.ActorSortType];
-            if (Properties.Settings.Default.ActorSortDescending)
+            string sortField = ActorSortDict[(int)ConfigManager.VideoConfig.ActorSortType];
+            if (ConfigManager.VideoConfig.ActorSortDescending)
                 wrapper.Desc(sortField);
             else
                 wrapper.Asc(sortField);
@@ -671,7 +671,7 @@ namespace Jvedio.Pages
                 if (actorID <= 0)
                     return;
 
-                if (!Properties.Settings.Default.ActorEditMode)
+                if (!ConfigManager.VideoConfig.ActorEditMode)
                     SelectedActors.Clear();
                 ActorInfo actor = CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
                 if (!SelectedActors.Where(arg => arg.ActorID == actorID).Any())
@@ -695,7 +695,7 @@ namespace Jvedio.Pages
             //    msgCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_WaitForDownload")); return;
             // }
 
-            // if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
+            // if (!ConfigManager.VideoConfig.ActorEditMode) SelectedActress.Clear();
             // StackPanel sp = null;
             // if (sender is MenuItem mnu)
             // {
@@ -706,7 +706,7 @@ namespace Jvedio.Pages
             //    StartDownLoadActor(SelectedActress);
 
             // }
-            // if (!Properties.Settings.Default.ActorEditMode) SelectedActress.Clear();
+            // if (!ConfigManager.VideoConfig.ActorEditMode) SelectedActress.Clear();
         }
 
         private void ActorImage_DragOver(object sender, DragEventArgs e)

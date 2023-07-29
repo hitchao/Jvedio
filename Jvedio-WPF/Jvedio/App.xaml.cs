@@ -86,8 +86,7 @@ namespace Jvedio
 
         private void SaveConfig()
         {
-            Jvedio.Properties.Settings.Default.ActorEditMode = false;
-            Jvedio.Properties.Settings.Default.Save();
+            Jvedio.ConfigManager.VideoConfig.ActorEditMode = false;
             ConfigManager.SaveAll();
         }
 

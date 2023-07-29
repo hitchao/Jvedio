@@ -22,53 +22,5 @@ namespace Jvedio.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ActorEditMode {
-            get {
-                return ((bool)(this["ActorEditMode"]));
-            }
-            set {
-                this["ActorEditMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ActorSortType {
-            get {
-                return ((int)(this["ActorSortType"]));
-            }
-            set {
-                this["ActorSortType"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ActorSortDescending {
-            get {
-                return ((bool)(this["ActorSortDescending"]));
-            }
-            set {
-                this["ActorSortDescending"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ActorViewMode {
-            get {
-                return ((int)(this["ActorViewMode"]));
-            }
-            set {
-                this["ActorViewMode"] = value;
-            }
-        }
     }
 }

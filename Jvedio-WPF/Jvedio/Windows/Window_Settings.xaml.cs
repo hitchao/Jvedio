@@ -1620,7 +1620,6 @@ namespace Jvedio
                 vieModel.AutoBackupPeriodIndex = Jvedio.Core.WindowConfig.Settings.DEFAULT_BACKUP_PERIOD_INDEX;
 
                 ConfigManager.Main.Save();
-                Properties.Settings.Default.Save();
                 ApplySettings(null, null);
 
             }
