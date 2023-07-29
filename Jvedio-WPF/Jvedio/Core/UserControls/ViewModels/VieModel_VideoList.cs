@@ -151,7 +151,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             }
         }
 
-        private int _SortType;
+        private int _SortType = (int)ConfigManager.VideoConfig.SortType;
 
         public int SortType {
             get { return _SortType; }
@@ -159,7 +159,29 @@ namespace Jvedio.Core.UserControls.ViewModels
             set {
                 _SortType = value;
                 RaisePropertyChanged();
-                Properties.Settings.Default.SortType = value.ToString();
+                ConfigManager.VideoConfig.SortType = value;
+            }
+        }
+        private bool _SortDescending = ConfigManager.VideoConfig.SortDescending;
+
+        public bool SortDescending {
+            get { return _SortDescending; }
+
+            set {
+                _SortDescending = value;
+                RaisePropertyChanged();
+                ConfigManager.VideoConfig.SortDescending = value;
+            }
+        }
+        private bool _OnlyShowSubSection = ConfigManager.VideoConfig.OnlyShowSubSection;
+
+        public bool OnlyShowSubSection {
+            get { return _OnlyShowSubSection; }
+
+            set {
+                _OnlyShowSubSection = value;
+                RaisePropertyChanged();
+                ConfigManager.VideoConfig.OnlyShowSubSection = value;
             }
         }
 
@@ -322,7 +344,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             }
         }
 
-        private int _PageSize = Properties.Settings.Default.PageSize;
+        private int _PageSize = (int)ConfigManager.VideoConfig.PageSize;
 
         public int PageSize {
             get { return _PageSize; }
@@ -330,6 +352,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             set {
                 _PageSize = value;
                 RaisePropertyChanged();
+                ConfigManager.VideoConfig.PageSize = value;
             }
         }
 
@@ -634,7 +657,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             // 右侧菜单的一些筛选项
 
             // 1. 仅显示分段视频
-            if (Properties.Settings.Default.OnlyShowSubSection)
+            if (OnlyShowSubSection)
                 wrapper.NotEq("SubSection", string.Empty);
 
             // 2. 视频类型
@@ -696,14 +719,14 @@ namespace Jvedio.Core.UserControls.ViewModels
         {
             if (wrapper == null)
                 return;
-            int.TryParse(Properties.Settings.Default.SortType, out int sortIndex);
+            int sortIndex = SortType;
             if (sortIndex < 0 || sortIndex >= VieModel_VideoList.SortDict.Count)
                 sortIndex = 0;
             string sortField = VieModel_VideoList.SortDict[sortIndex];
             if (random)
                 wrapper.Asc("RANDOM()");
             else {
-                if (Properties.Settings.Default.SortDescending)
+                if (SortDescending)
                     wrapper.Desc(sortField);
                 else
                     wrapper.Asc(sortField);

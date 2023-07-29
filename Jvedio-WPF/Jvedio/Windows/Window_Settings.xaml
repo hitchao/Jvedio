@@ -192,7 +192,7 @@
 
                                 <CheckBox Content="{DynamicResource DetailViewAll}" IsChecked="{Binding DetailWindowShowAllMovie, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
 
-                                <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
                                 <WrapPanel IsEnabled="False" Orientation="Horizontal">
                                     <CheckBox Content="{DynamicResource ShowHistory}" IsChecked="{Binding ShowSearchHistory, Mode=TwoWay}" />
@@ -284,7 +284,7 @@
                                 <super:SearchBox
                                     Width="410"
                                     Margin="9,0"
-                                    Text="{Binding VideoPlayerPath, Mode=TwoWay, Source={x:Static p:Settings.Default}}" />
+                                    Text="{Binding VideoPlayerPath, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
                                 <Button
                                     Margin="10,0"
                                     BorderBrush="{DynamicResource Button.Selected.BorderBrush}"

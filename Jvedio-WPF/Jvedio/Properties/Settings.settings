@@ -23,12 +23,6 @@
     <Setting Name="ProxyActivation" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="SortType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="SortDescending" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="ScanGivenPath" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -200,9 +194,6 @@
     <Setting Name="ToolsIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="VideoPlayerPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="DataBasePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -268,12 +259,6 @@
     </Setting>
     <Setting Name="BatchIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="DelInfoAfterDelFile" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="OnlyShowSubSection" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DetailWindowShowAllMovie" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -349,9 +334,6 @@
     </Setting>
     <Setting Name="PaginationCombobox" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="PageSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">40</Value>
     </Setting>
     <Setting Name="Debug" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

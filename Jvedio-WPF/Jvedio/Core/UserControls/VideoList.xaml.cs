@@ -106,12 +106,11 @@ namespace Jvedio.Core.UserControls
         public void BindingEvent()
         {
             // 设置排序类型
-            int.TryParse(Properties.Settings.Default.SortType, out int sortType);
             var menuItems = SortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
             for (int i = 0; i < menuItems.Count; i++) {
                 menuItems[i].Click += SortMenu_Click;
                 menuItems[i].IsCheckable = true;
-                if (i == sortType)
+                if (i == vieModel.SortType)
                     menuItems[i].IsChecked = true;
             }
 
@@ -261,7 +260,7 @@ namespace Jvedio.Core.UserControls
                 if (item == menuItem) {
                     item.IsChecked = true;
                     if (i == vieModel.SortType)
-                        Properties.Settings.Default.SortDescending = !Properties.Settings.Default.SortDescending;
+                        vieModel.SortDescending = !vieModel.SortDescending;
                     vieModel.SortType = i;
                 } else {
                     item.IsChecked = false;
@@ -525,7 +524,7 @@ namespace Jvedio.Core.UserControls
             }));
             MessageNotify.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_DeleteToRecycleBin")} {num}/{totalCount}");
 
-            if (Properties.Settings.Default.DelInfoAfterDelFile) {
+            if (ConfigManager.Settings.DelInfoAfterDelFile) {
                 DeleteIDs(GetVideosByMenu(sender as MenuItem, 0), vieModel.SelectedVideo, false);
             }
 
@@ -1651,8 +1650,8 @@ namespace Jvedio.Core.UserControls
         {
             if (File.Exists(filepath)) {
                 bool success = false;
-                if (!string.IsNullOrEmpty(Properties.Settings.Default.VideoPlayerPath) && File.Exists(Properties.Settings.Default.VideoPlayerPath)) {
-                    success = FileHelper.TryOpenFile(Properties.Settings.Default.VideoPlayerPath, filepath);
+                if (!string.IsNullOrEmpty(ConfigManager.Settings.VideoPlayerPath) && File.Exists(ConfigManager.Settings.VideoPlayerPath)) {
+                    success = FileHelper.TryOpenFile(ConfigManager.Settings.VideoPlayerPath, filepath);
                 } else {
                     // 使用默认播放器
                     success = FileHelper.TryOpenFile(filepath);
@@ -1927,7 +1926,7 @@ namespace Jvedio.Core.UserControls
 
         private void AddToPlayerList(object sender, RoutedEventArgs e)
         {
-            string playerPath = Properties.Settings.Default.VideoPlayerPath;
+            string playerPath = ConfigManager.Settings.VideoPlayerPath;
             bool success = false;
 
             if (!File.Exists(playerPath)) {
@@ -2040,6 +2039,45 @@ namespace Jvedio.Core.UserControls
                     viewVideo.SetBorderBrush(Brushes.Transparent);
                 }
             }
+        }
+
+        private void viewVideo_OnPlayVideo(object sender, RoutedEventArgs e)
+        {
+            if (!vieModel.EditMode &&
+                sender is ViewVideo viewVideo &&
+                GetDataID(viewVideo) is long dataId && dataId > 0) {
+
+                Video video = GetVideoFromChildEle(viewVideo, dataId);
+                if (video == null) {
+                    MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
+                    return;
+                }
+                string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAG_ID_NEW_ADD}' and DataID='{dataId}'";
+                tagStampMapper.ExecuteNonQuery(sql);
+                onInitTagStamps?.Invoke();
+                RefreshData(dataId);
+                PlayVideoWithPlayer(video.Path, dataId);
+            }
+        }
+
+        private void DownLoadWithUrl(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TranslateMovie(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GenerateSmallImage(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GenerateActor(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

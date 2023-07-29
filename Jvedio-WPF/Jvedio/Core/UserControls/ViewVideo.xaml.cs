@@ -1,5 +1,7 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Media;
+using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper;
 using SuperControls.Style;
 using SuperUtils.WPF.VieModel;
 using System;
@@ -68,6 +70,16 @@ namespace Jvedio.Core.UserControls
             add => AddHandler(ImageMouseLeaveEvent, value);
             remove => RemoveHandler(ImageMouseLeaveEvent, value);
         }
+
+
+        public static readonly RoutedEvent OnPlayVideoEvent =
+            EventManager.RegisterRoutedEvent("OnPlayVideo", RoutingStrategy.Bubble,
+                typeof(RoutedEventHandler), typeof(ViewVideo));
+
+        public event RoutedEventHandler OnPlayVideo {
+            add => AddHandler(OnPlayVideoEvent, value);
+            remove => RemoveHandler(OnPlayVideoEvent, value);
+        }
         #endregion
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
@@ -104,9 +116,12 @@ namespace Jvedio.Core.UserControls
 
         }
 
-        private void PlayVideo(object sender, MouseButtonEventArgs e)
-        {
 
+
+        public void PlayVideo(object sender, MouseButtonEventArgs e)
+        {
+            if (!EditMode)
+                RaiseEvent(new RoutedEventArgs(OnPlayVideoEvent) { Source = this });
         }
 
         private void CopyVID(object sender, MouseButtonEventArgs e)
@@ -191,18 +206,6 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
             this.EditMode = mode;
         }
 
-
-        //public void SetImageMode(int mode, int imageWidth)
-        //{
-        //    if (this.ImageMode != mode)
-        //        this.ImageMode = mode;
-        //    if (this.ImageWidth != imageWidth)
-        //        this.ImageWidth = imageWidth;
-
-        //    int imageHeight = GetImageHeight(mode, imageWidth);
-        //    if (ImageHeight != imageHeight)
-        //        this.ImageHeight = imageHeight;
-        //}
 
         public static int GetImageHeight(int mode, int width)
         {

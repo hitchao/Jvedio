@@ -109,30 +109,6 @@ namespace Jvedio.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string SortType {
-            get {
-                return ((string)(this["SortType"]));
-            }
-            set {
-                this["SortType"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool SortDescending {
-            get {
-                return ((bool)(this["SortDescending"]));
-            }
-            set {
-                this["SortDescending"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ScanGivenPath {
             get {
@@ -818,18 +794,6 @@ namespace Jvedio.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string VideoPlayerPath {
-            get {
-                return ((string)(this["VideoPlayerPath"]));
-            }
-            set {
-                this["VideoPlayerPath"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string DataBasePath {
             get {
                 return ((string)(this["DataBasePath"]));
@@ -1088,30 +1052,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["BatchIndex"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DelInfoAfterDelFile {
-            get {
-                return ((bool)(this["DelInfoAfterDelFile"]));
-            }
-            set {
-                this["DelInfoAfterDelFile"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool OnlyShowSubSection {
-            get {
-                return ((bool)(this["OnlyShowSubSection"]));
-            }
-            set {
-                this["OnlyShowSubSection"] = value;
             }
         }
         
@@ -1412,18 +1352,6 @@ namespace Jvedio.Properties {
             }
             set {
                 this["PaginationCombobox"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        public int PageSize {
-            get {
-                return ((int)(this["PageSize"]));
-            }
-            set {
-                this["PageSize"] = value;
             }
         }
         

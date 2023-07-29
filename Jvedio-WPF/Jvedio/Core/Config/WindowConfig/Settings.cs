@@ -108,6 +108,8 @@ namespace Jvedio.Core.WindowConfig
 
         // 是否建立可播放索引
         public bool PlayableIndexCreated { get; set; }
+        public string VideoPlayerPath { get; set; }
+        public bool DelInfoAfterDelFile { get; set; }
 
         public bool PictureIndexCreated { get; set; }
 

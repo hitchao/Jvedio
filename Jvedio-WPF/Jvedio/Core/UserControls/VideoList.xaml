@@ -56,7 +56,7 @@
             Opacity="0.9"
             Placement="Mouse"
             PreviewKeyUp="ContextMenu_PreviewKeyUp">
-            <!--<MenuItem Click="DownLoadSelectMovie" Header="{DynamicResource SyncInfo}" />
+            <MenuItem Click="DownLoadSelectMovie" Header="{DynamicResource SyncInfo}" />
             <MenuItem
                 Click="DownLoadWithUrl"
                 Header="{DynamicResource Menu_CustomUrl}"
@@ -121,7 +121,7 @@
                 Click="DeleteFile"
                 Header="{DynamicResource Menu_DeleteFile}"
                 Icon="pack://application:,,,/Resources/menuitem/clear.png"
-                ToolTip="{DynamicResource ToolTip_DeleteFile}" />-->
+                ToolTip="{DynamicResource ToolTip_DeleteFile}" />
 
 
 
@@ -155,6 +155,7 @@
                 ImageMouseEnter="viewVideo_ImageMouseEnter"
                 ImageMouseLeave="viewVideo_ImageMouseLeave"
                 ImageWidth="{Binding Path=DataContext.GlobalImageWidth, ElementName=videoList}"
+                OnPlayVideo="viewVideo_OnPlayVideo"
                 ShowDetail="onItemShowDetail"
                 Tag="{Binding DataID, Mode=OneWay}" />
         </DataTemplate>
@@ -356,7 +357,7 @@
                             Click="LoadData"
                             Header="{DynamicResource ShowSubSection}"
                             IsCheckable="True"
-                            IsChecked="{Binding OnlyShowSubSection, Source={x:Static p:Settings.Default}, Mode=TwoWay}" />
+                            IsChecked="{Binding OnlyShowSubSection, Mode=TwoWay}" />
 
                         <MenuItem Name="VideoTypeMenuItem" Header="{DynamicResource VideoType}">
                             <MenuItem Header="{DynamicResource Normal}" IsCheckable="True" />
@@ -502,7 +503,7 @@
                     Grid.Column="1"
                     CurrentPage="{Binding CurrentPage, Mode=OneWay}"
                     CurrentPageChange="Pagination_CurrentPageChange"
-                    PageSize="{Binding PageSize, Source={x:Static p:Settings.Default}, Mode=TwoWay}"
+                    PageSize="{Binding PageSize, Mode=TwoWay}"
                     PageSizes="[10,20,40,50,100]"
                     ShowCombobox="{Binding PaginationCombobox, Source={x:Static p:Settings.Default}}"
                     Style="{StaticResource NormalPagination}"

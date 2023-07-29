@@ -1207,14 +1207,17 @@ namespace Jvedio.ViewModel
         {
             if (wrapper == null)
                 return;
-            int.TryParse(Properties.Settings.Default.SortType, out int sortIndex);
+            int sortIndex = 0;
+            bool SortDescending = false;
+            // todo tab
+            //int.TryParse(Properties.Settings.Default.SortType, out int sortIndex);
             if (sortIndex < 0 || sortIndex >= VieModel_VideoList.SortDict.Count)
                 sortIndex = 0;
             string sortField = VieModel_VideoList.SortDict[sortIndex];
             if (random)
                 wrapper.Asc("RANDOM()");
             else {
-                if (Properties.Settings.Default.SortDescending)
+                if (SortDescending)
                     wrapper.Desc(sortField);
                 else
                     wrapper.Asc(sortField);

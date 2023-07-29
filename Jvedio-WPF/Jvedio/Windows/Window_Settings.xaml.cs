@@ -419,7 +419,7 @@ namespace Jvedio
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                 string exePath = openFileDialog1.FileName;
                 if (File.Exists(exePath))
-                    Properties.Settings.Default.VideoPlayerPath = exePath;
+                    ConfigManager.Settings.VideoPlayerPath = exePath;
             }
         }
 
@@ -1515,11 +1515,11 @@ namespace Jvedio
                 vieModel.ScanOnStartUp = false;
                 vieModel.CloseToTaskBar = false;
                 Properties.Settings.Default.DetailWindowShowAllMovie = true;
-                Properties.Settings.Default.DelInfoAfterDelFile = true;
+                ConfigManager.Settings.DelInfoAfterDelFile = true;
                 Properties.Settings.Default.HotKey_Enable = false;
                 Properties.Settings.Default.HotKey_String = "";
                 langComboBox.SelectedIndex = 0;
-                Properties.Settings.Default.VideoPlayerPath = "";
+                ConfigManager.Settings.VideoPlayerPath = "";
 
                 // 图片
                 vieModel.AutoGenScreenShot = true;

@@ -130,10 +130,6 @@ namespace Jvedio
 
             ClickGoBackToStartUp = false;
             CurrentDataType = DataType.Video;
-
-            // 每页数目
-            Properties.Settings.Default.OnlyShowSubSection = false;
-
         }
 
         public void Init()
@@ -1455,9 +1451,7 @@ namespace Jvedio
 
 
 
-        private void DownLoadWithUrl(object sender, RoutedEventArgs e)
-        {
-        }
+    
 
         private void Image_DragOver(object sender, DragEventArgs e)
         {

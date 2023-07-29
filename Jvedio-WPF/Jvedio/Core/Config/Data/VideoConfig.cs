@@ -22,6 +22,46 @@ namespace Jvedio.Core.Config.Data
             BigImage_Width = 250;
             GifImage_Width = 250;
             GifImage_Height = 200;
+            SortType = 0;
+            SortDescending = false;
+            OnlyShowSubSection = false;
+            PageSize = 20;
+        }
+
+        private long _PageSize;
+        public long PageSize {
+            get { return _PageSize; }
+            set {
+                _PageSize = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _OnlyShowSubSection;
+        public bool OnlyShowSubSection {
+            get { return _OnlyShowSubSection; }
+            set {
+                _OnlyShowSubSection = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _SortDescending;
+        public bool SortDescending {
+            get { return _SortDescending; }
+            set {
+                _SortDescending = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private long _SortType;
+        public long SortType {
+            get { return _SortType; }
+            set {
+                _SortType = value;
+                RaisePropertyChanged();
+            }
         }
 
         private long _ImageMode;
