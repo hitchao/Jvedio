@@ -97,6 +97,7 @@
                         Cursor="Hand"
                         IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}"
                         Style="{StaticResource RoundNormalButton}"
+                        Tag="{Binding DataID, Mode=OneWay}"
                         Visibility="{Binding HasSubSection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                         <Button.ContextMenu>
                             <ContextMenu HorizontalOffset="-50" VerticalOffset="10" />
@@ -157,7 +158,7 @@
                         HorizontalAlignment="Left"
                         Cursor="Hand"
                         FontSize="15"
-                        MouseLeftButtonDown="CopyVID"
+                        MouseLeftButtonDown="CopyText"
                         Style="{StaticResource BaseTextBlock}"
                         Text="{Binding VID, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis"
@@ -174,7 +175,7 @@
                         HorizontalAlignment="Left"
                         Cursor="Hand"
                         FontSize="15"
-                        MouseLeftButtonDown="CopyVID"
+                        MouseLeftButtonDown="CopyText"
                         Opacity="0.5"
                         Style="{StaticResource BaseTextBlock}"
                         Text="{Binding ReleaseDate, Mode=OneWay}"
@@ -192,7 +193,6 @@
                     Margin="0,5,5,0"
                     HorizontalAlignment="Right"
                     ItemsSource="{Binding TagStamp}"
-                    Tag="{Binding DataID}"
                     Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -247,7 +247,7 @@
                 Cursor="Hand"
                 FontSize="14"
                 IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}"
-                MouseLeftButtonDown="CopyVID"
+                MouseLeftButtonDown="CopyText"
                 Opacity="0.5"
                 Style="{StaticResource BaseTextBlock}"
                 Text="{Binding Title, Mode=OneWay}"

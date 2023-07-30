@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using static Jvedio.App;
+using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel
@@ -765,35 +766,7 @@ namespace Jvedio.ViewModel
 
         public void InitCurrentTagStamps(List<TagStamp> beforeTagStamps = null)
         {
-            List<Dictionary<string, object>> list = tagStampMapper.Select(TagStampMapper.GetTagSql());
-            List<TagStamp> tagStamps = new List<TagStamp>();
-            if (list != null && list.Count > 0) {
-                tagStamps = tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
-                if (beforeTagStamps != null && beforeTagStamps.Count > 0) {
-                    foreach (var item in tagStamps) {
-                        TagStamp tagStamp = beforeTagStamps.FirstOrDefault(arg => arg.TagID == item.TagID);
-                        if (tagStamp != null)
-                            item.Selected = tagStamp.Selected;
-                    }
-                }
-            }
-
-
-
-            TagStamps = new ObservableCollection<TagStamp>();
-
-            // 先增加默认的：高清、中文
-            foreach (TagStamp item in Main.TagStamps) {
-                TagStamp tagStamp = tagStamps.Where(arg => arg.TagID == item.TagID).FirstOrDefault();
-                if (tagStamp != null)
-                    TagStamps.Add(tagStamp);
-                else {
-                    // 无该标记
-                    item.Count = 0;
-                    TagStamps.Add(item);
-                }
-            }
-            Logger.Info("init current tag stamps ok");
+            TagStamps = TagStamp.InitTagStamp(beforeTagStamps);
         }
 
         private void AddSingleMovie()

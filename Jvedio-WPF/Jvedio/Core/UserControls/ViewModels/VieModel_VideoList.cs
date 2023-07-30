@@ -24,16 +24,32 @@ namespace Jvedio.Core.UserControls.ViewModels
 {
     class VieModel_VideoList : ViewModelBase
     {
-
+        #region "事件"
 
         public Action<bool> onScroll;
         public Action<long> onPageChange;
 
+        public event EventHandler PageChangedCompleted;
 
-        public SelectWrapper<Video> ExtraWrapper { get; set; }
+        public event EventHandler RenderSqlChanged;
 
-        public static List<string> SortDict = new List<string>()
-        {
+        private delegate void LoadVideoDelegate(Video video, int idx);
+
+
+        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
+
+        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
+
+        private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
+
+        private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
+
+        #endregion
+
+        #region "静态属性"
+
+        public static List<string> SortDict { get; set; } = new List<string>()
+{
             "metadata_video.VID",
             "metadata.Grade",
             "metadata.Size",
@@ -66,8 +82,12 @@ namespace Jvedio.Core.UserControls.ViewModels
         public static Queue<int> PageQueue { get; set; } = new Queue<int>();
 
 
+        #endregion
 
-        private List<Video> _SelectedVideo = new List<Video>();
+        #region "属性"
+        public SelectWrapper<Video> ExtraWrapper { get; set; }
+
+        private List<Video> _SelectedVideo { get; set; } = new List<Video>();
 
         public CancellationTokenSource RenderVideoCTS { get; set; }
 
@@ -77,17 +97,18 @@ namespace Jvedio.Core.UserControls.ViewModels
 
 
 
-        public event EventHandler PageChangedCompleted;
+        private string _SearchText = string.Empty;
 
-        public event EventHandler RenderSqlChanged;
+        public string SearchText {
+            get { return _SearchText; }
 
-        public VieModel_VideoList()
-        {
-            RefreshVideoRenderToken();
-            GlobalImageHeight = ViewVideo.GetImageHeight(ShowImageMode, GlobalImageWidth);
+            set {
+                _SearchText = value;
+                RaisePropertyChanged();
+
+                // BeginSearch();
+            }
         }
-
-        #region "属性"
 
 
         private string _UUID;
@@ -240,7 +261,7 @@ namespace Jvedio.Core.UserControls.ViewModels
         }
 
 
-        public bool _EnableEditActress = false;
+        private bool _EnableEditActress = false;
 
         public bool EnableEditActress {
             get { return _EnableEditActress; }
@@ -251,7 +272,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             }
         }
 
-        public int _CurrentCount = 0;
+        private int _CurrentCount = 0;
 
         public int CurrentCount {
             get { return _CurrentCount; }
@@ -263,7 +284,7 @@ namespace Jvedio.Core.UserControls.ViewModels
         }
 
 
-        public long _TotalCount = 0;
+        private long _TotalCount = 0;
 
         public long TotalCount {
             get { return _TotalCount; }
@@ -345,7 +366,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             }
         }
 
-        public ObservableCollection<Video> _ViewAssociationDatas;
+        private ObservableCollection<Video> _ViewAssociationDatas;
 
         public ObservableCollection<Video> ViewAssociationDatas {
             get { return _ViewAssociationDatas; }
@@ -357,7 +378,7 @@ namespace Jvedio.Core.UserControls.ViewModels
         }
 
         // 影片关联
-        public ObservableCollection<Video> _AssociationDatas;
+        private ObservableCollection<Video> _AssociationDatas;
 
         public ObservableCollection<Video> AssociationDatas {
             get { return _AssociationDatas; }
@@ -367,9 +388,24 @@ namespace Jvedio.Core.UserControls.ViewModels
                 RaisePropertyChanged();
             }
         }
+
         #endregion
 
-        #region "右键筛选"
+
+        #region "筛选"
+
+
+
+        private bool _ShowFilter = true;
+
+        public bool ShowFilter {
+            get { return _ShowFilter; }
+
+            set {
+                _ShowFilter = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private int _DataExistIndex = 0;
 
@@ -402,13 +438,23 @@ namespace Jvedio.Core.UserControls.ViewModels
             }
         }
         #endregion
+
+
+        public VieModel_VideoList()
+        {
+            RefreshVideoRenderToken();
+            Init();
+        }
+
+        public override void Init()
+        {
+            GlobalImageHeight = ViewVideo.GetImageHeight(ShowImageMode, GlobalImageWidth);
+        }
+
         public void LoadData()
         {
             Select();
         }
-
-
-
 
         public void RandomDisplay()
         {
@@ -418,9 +464,6 @@ namespace Jvedio.Core.UserControls.ViewModels
 
         public void Reset() => Select();
 
-
-
-        private delegate void LoadVideoDelegate(Video video, int idx);
 
         private void LoadVideo(Video video, int idx)
         {
@@ -449,27 +492,6 @@ namespace Jvedio.Core.UserControls.ViewModels
         }
 
 
-        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
-
-        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
-
-        private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
-
-        private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
-
-
-        private string _SearchText = string.Empty;
-
-        public string SearchText {
-            get { return _SearchText; }
-
-            set {
-                _SearchText = value;
-                RaisePropertyChanged();
-
-                // BeginSearch();
-            }
-        }
 
         public SelectWrapper<Video> GetWrapper(SearchField searchType)
         {
@@ -500,7 +522,7 @@ namespace Jvedio.Core.UserControls.ViewModels
         }
 
 
-        public async Task<bool> Query(SearchField searchType = SearchField.VID)
+        public bool Query(SearchField searchType = SearchField.VID)
         {
             ExtraWrapper = GetWrapper(searchType);
             Select();
@@ -571,9 +593,6 @@ namespace Jvedio.Core.UserControls.ViewModels
             long offset = PageSize * (CurrentPage - 1);
             wrapper.Limit(offset, row_count);
         }
-
-
-
 
         public async void Select(bool random = false)
         {
@@ -777,9 +796,5 @@ namespace Jvedio.Core.UserControls.ViewModels
             PageChangedCompleted?.Invoke(this, null);
         }
 
-        public override void Init()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

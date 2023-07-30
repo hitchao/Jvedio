@@ -46,53 +46,74 @@ namespace Jvedio.Core.UserControls
     /// </summary>
     public partial class VideoList : UserControl
     {
+        #region "事件"
 
-        public long TabID { get; set; }
+        public static Action onStatistic;
+        public Action onInitTagStamps;
+        public Action<string> onRenameFile;
 
+        public static readonly RoutedEvent OnItemClickEvent =
+            EventManager.RegisterRoutedEvent("OnItemClick", RoutingStrategy.Bubble,
+                typeof(VideoItemEventHandler), typeof(VideoList));
 
+        public event VideoItemEventHandler OnItemClick {
+            add => AddHandler(OnItemClickEvent, value);
+            remove => RemoveHandler(OnItemClickEvent, value);
+        }
 
+        #endregion
+
+        #region "属性"
         private VieModel_VideoList vieModel { get; set; }
 
         private DispatcherTimer ResizingTimer { get; set; }
         private ScrollViewer dataScrollViewer { get; set; }
-
-        public Action onStatistic;
-        public Action onInitTagStamps;
-        public Action<string> onRenameFile;
-
-
         private bool Resizing { get; set; }
 
         public SelectWrapper<Video> CurrentWrapper { get; set; }
 
         public string CurrentSQL { get; set; }
 
-
         public TabItemEx TabItemEx { get; set; }
+
+        private int firstIdx { get; set; } = -1;
+        private int secondIdx { get; set; } = -1;
+        private int actorFirstIdx { get; set; } = -1;
+        private int actorSecondIdx { get; set; } = -1;
+
+        private bool canShowDetails { get; set; }
+        public List<ImageSlide> ImageSlides { get; set; }
+
+        private bool CanRateChange { get; set; }
+
+        #endregion
+
+
 
         public VideoList(SelectWrapper<Video> extraWrapper, TabItemEx tabItemEx)
         {
             InitializeComponent();
-            TabItemEx = tabItemEx;
-            Init();
+
+            vieModel = new VieModel_VideoList();
+            this.DataContext = vieModel;
+
             vieModel.ExtraWrapper = extraWrapper;
             vieModel.UUID = tabItemEx.UUID;
+            TabItemEx = tabItemEx;
+
+            Init();
         }
 
         public void Init()
         {
             ResizingTimer = new DispatcherTimer();
-            vieModel = new VieModel_VideoList();
-            this.DataContext = vieModel;
             BindingEvent();
         }
-
-
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             BindingEventAfterRender();
-            vieModel.Reset();           // 加载数据
+            vieModel.Reset();
         }
 
         public void BindingEvent()
@@ -140,16 +161,6 @@ namespace Jvedio.Core.UserControls
             };
         }
 
-        #region "Event"
-        public static readonly RoutedEvent OnItemClickEvent =
-            EventManager.RegisterRoutedEvent("OnItemClick", RoutingStrategy.Bubble,
-                typeof(VideoItemEventHandler), typeof(VideoList));
-
-        public event VideoItemEventHandler OnItemClick {
-            add => AddHandler(OnItemClickEvent, value);
-            remove => RemoveHandler(OnItemClickEvent, value);
-        }
-        #endregion
         private void ResizingTimer_Tick(object sender, EventArgs e)
         {
             Resizing = false;
@@ -176,9 +187,6 @@ namespace Jvedio.Core.UserControls
                 }
             }
         }
-
-
-
 
         // todo
         public void SetViewMode(object sender, RoutedEventArgs e)
@@ -240,9 +248,6 @@ namespace Jvedio.Core.UserControls
             // });
         }
 
-
-
-
         private void SortMenu_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -268,8 +273,6 @@ namespace Jvedio.Core.UserControls
         {
             //SetImageMode();
         }
-
-
 
         private void Pagination_CurrentPageChange(object sender, EventArgs e)
         {
@@ -1231,8 +1234,8 @@ namespace Jvedio.Core.UserControls
 
         private long GetDataID(ViewVideo viewVideo)
         {
-            if (viewVideo != null && viewVideo.Tag != null && long.TryParse(viewVideo.Tag.ToString(), out long dataID)) {
-                return dataID;
+            if (viewVideo != null && viewVideo.Tag != null && viewVideo.Tag is Video video && video.DataID > 0) {
+                return video.DataID;
             }
             return -1;
         }
@@ -1242,10 +1245,7 @@ namespace Jvedio.Core.UserControls
             vieModel.RandomDisplay();
         }
 
-        private void ShowFilterGrid(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void NavigationToLetter(object sender, RoutedEventArgs e)
         {
@@ -1463,20 +1463,11 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        private int firstIdx { get; set; } = -1;
-        private int secondIdx { get; set; } = -1;
-        private int actorFirstIdx { get; set; } = -1;
-        private int actorSecondIdx { get; set; } = -1;
-
-        private bool canShowDetails { get; set; }
-
 
         private void CanShowDetails(object sender, MouseButtonEventArgs e)
         {
             canShowDetails = true;
         }
-
-        public List<ImageSlide> ImageSlides { get; set; }
 
 
         // todo
@@ -1519,9 +1510,6 @@ namespace Jvedio.Core.UserControls
         }
 
 
-
-
-
         private Video getAssocVideo(long dataID)
         {
             //if (dataID <= 0 || vieModel?.ViewAssociationDatas?.Count <= 0) return null;
@@ -1542,33 +1530,6 @@ namespace Jvedio.Core.UserControls
             if (videos == null)
                 return null;
             return videos.FirstOrDefault(arg => arg.DataID == dataID);
-        }
-
-        public void ShowSubSection(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-
-            long dataID = GetDataID(button);
-            if (dataID <= 0)
-                return;
-
-            ContextMenu contextMenu = button.ContextMenu;
-            contextMenu.Items.Clear();
-
-            Video video = GetVideoFromChildEle(button, dataID);
-            if (video != null && video.SubSectionList?.Count > 0) {
-                for (int i = 0; i < video.SubSectionList.Count; i++) {
-                    string filepath = video.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
-                    MenuItem menuItem = new MenuItem();
-                    menuItem.Header = i + 1;
-                    menuItem.Click += (s, _) => {
-                        PlayVideoWithPlayer(filepath, dataID);
-                    };
-                    contextMenu.Items.Add(menuItem);
-                }
-
-                contextMenu.IsOpen = true;
-            }
         }
 
         public void ShowAssocSubSection(object sender, RoutedEventArgs e)
@@ -1619,7 +1580,7 @@ namespace Jvedio.Core.UserControls
             tagStampMapper.ExecuteNonQuery(sql);
             onInitTagStamps?.Invoke();
             RefreshData(dataId);
-            PlayVideoWithPlayer(video.Path, dataId);
+            Video.PlayVideoWithPlayer(video.Path, dataId);
         }
 
         public void PlayAssocVideo(object sender, MouseButtonEventArgs e)
@@ -1635,27 +1596,7 @@ namespace Jvedio.Core.UserControls
                 return;
             }
 
-            PlayVideoWithPlayer(video.Path, dataId);
-        }
-
-        public void PlayVideoWithPlayer(string filepath, long dataID = 0)
-        {
-            if (File.Exists(filepath)) {
-                bool success = false;
-                if (!string.IsNullOrEmpty(ConfigManager.Settings.VideoPlayerPath) && File.Exists(ConfigManager.Settings.VideoPlayerPath)) {
-                    success = FileHelper.TryOpenFile(ConfigManager.Settings.VideoPlayerPath, filepath);
-                } else {
-                    // 使用默认播放器
-                    success = FileHelper.TryOpenFile(filepath);
-                }
-
-                if (success && dataID > 0) {
-                    metaDataMapper.UpdateFieldById("ViewDate", DateHelper.Now(), dataID);
-                    onStatistic?.Invoke();
-                }
-            } else {
-                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_OpenFail") + "：" + filepath);
-            }
+            Video.PlayVideoWithPlayer(video.Path, dataId);
         }
 
         public void GenerateGif(object sender, RoutedEventArgs e)
@@ -1689,10 +1630,6 @@ namespace Jvedio.Core.UserControls
             if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
-
-
-
-        private bool CanRateChange { get; set; }
 
 
         private void StackPanel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1963,14 +1900,11 @@ namespace Jvedio.Core.UserControls
         private void onItemShowDetail(object sender, RoutedEventArgs e)
         {
             FrameworkElement ele = sender as FrameworkElement;
-            if (ele != null && ele.Tag != null && long.TryParse(ele.Tag.ToString(), out long dataID)) {
+            if (ele != null && ele.Tag != null && ele.Tag is Video video) {
                 if (vieModel.EditMode) {
                     if (vieModel.CurrentVideoList == null)
                         return;
                     // 多选
-                    Video video = vieModel.CurrentVideoList.FirstOrDefault(arg => arg.DataID == dataID);
-                    if (video == null)
-                        return;
                     int selectIdx = vieModel.CurrentVideoList.IndexOf(video);
 
                     // 多选
@@ -2008,7 +1942,7 @@ namespace Jvedio.Core.UserControls
 
                     SetSelected();
                 } else {
-                    RaiseEvent(new VideoItemEventArgs(dataID, OnItemClickEvent, sender));
+                    RaiseEvent(new VideoItemEventArgs(video.DataID, OnItemClickEvent, sender));
                 }
             }
         }
@@ -2048,7 +1982,7 @@ namespace Jvedio.Core.UserControls
                 tagStampMapper.ExecuteNonQuery(sql);
                 onInitTagStamps?.Invoke();
                 RefreshData(dataId);
-                PlayVideoWithPlayer(video.Path, dataId);
+                Video.PlayVideoWithPlayer(video.Path, dataId);
             }
         }
 
@@ -2070,6 +2004,11 @@ namespace Jvedio.Core.UserControls
         private void GenerateActor(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void FilterClose()
+        {
+            vieModel.ShowFilter = false;
         }
     }
 }

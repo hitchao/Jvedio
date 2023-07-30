@@ -1,9 +1,13 @@
 ﻿
+using Jvedio.Core.Logs;
+using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.WPF.VisualTools;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 
@@ -109,6 +113,38 @@ namespace Jvedio.Entity.CommonSQL
         public bool IsSystemTag()
         {
             return SystemTags.Contains(TagID);
+        }
+
+        public static ObservableCollection<TagStamp> InitTagStamp(List<TagStamp> beforeTagStamps = null)
+        {
+            ObservableCollection<TagStamp> result = new ObservableCollection<TagStamp>();
+            List<Dictionary<string, object>> list = MapperManager.tagStampMapper.Select(TagStampMapper.GetTagSql());
+            List<TagStamp> tagStamps = new List<TagStamp>();
+            if (list != null && list.Count > 0) {
+                tagStamps = MapperManager.tagStampMapper.ToEntity<TagStamp>(list, typeof(TagStamp).GetProperties(), false);
+                if (beforeTagStamps != null && beforeTagStamps.Count > 0) {
+                    foreach (var item in tagStamps) {
+                        TagStamp tagStamp = beforeTagStamps.FirstOrDefault(arg => arg.TagID == item.TagID);
+                        if (tagStamp != null)
+                            item.Selected = tagStamp.Selected;
+                    }
+                }
+            }
+
+            result = new ObservableCollection<TagStamp>();
+
+            // 先增加默认的：高清、中文
+            foreach (TagStamp item in Main.TagStamps) {
+                TagStamp tagStamp = tagStamps.Where(arg => arg.TagID == item.TagID).FirstOrDefault();
+                if (tagStamp != null)
+                    result.Add(tagStamp);
+                else {
+                    // 无该标记
+                    item.Count = 0;
+                    result.Add(item);
+                }
+            }
+            return result;
         }
 
     }

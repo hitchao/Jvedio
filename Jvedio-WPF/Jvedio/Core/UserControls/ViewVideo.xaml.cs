@@ -1,4 +1,11 @@
-﻿using System.ComponentModel;
+﻿using Jvedio.Entity;
+using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper;
+using SuperControls.Style;
+using SuperUtils.WPF.VisualTools;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,14 +25,9 @@ namespace Jvedio.Core.UserControls
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-        public ViewVideo()
-        {
-            InitializeComponent();
-        }
 
-        private bool canShowDetails { get; set; }
 
-        #region "Event"
+        #region "事件"
         public static readonly RoutedEvent ShowDetailEvent =
             EventManager.RegisterRoutedEvent("ShowDetail", RoutingStrategy.Bubble,
                 typeof(RoutedEventHandler), typeof(ViewVideo));
@@ -66,69 +68,14 @@ namespace Jvedio.Core.UserControls
         }
         #endregion
 
-        private void Image_MouseEnter(object sender, MouseEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(ImageMouseEnterEvent, this));
-        }
-
-
-
-        private void Image_MouseLeave(object sender, MouseEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(ImageMouseLeaveEvent, this));
-        }
-
-        private void CanShowDetails(object sender, MouseButtonEventArgs e)
-        {
-            canShowDetails = true;
-        }
-
-        private void ShowDetails(object sender, MouseButtonEventArgs e)
-        {
-            if (canShowDetails)
-                RaiseEvent(new RoutedEventArgs(ShowDetailEvent) { Source = this });
-            canShowDetails = false;
-        }
-
-        private void ViewAssocDatas(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ShowSubSection(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-
-
-        public void PlayVideo(object sender, MouseButtonEventArgs e)
-        {
-            if (!EditMode)
-                RaiseEvent(new RoutedEventArgs(OnPlayVideoEvent) { Source = this });
-        }
-
-        private void CopyVID(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OnRateMouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void Rate_ValueChanged(object sender, SuperControls.Style.FunctionEventArgs<double> e)
-        {
-
-        }
 
         #region "属性"
+        private bool canShowDetails { get; set; }
+
+        #endregion
+
+
+        #region "控件属性"
 
         public static readonly DependencyProperty ImageWidthProperty = DependencyProperty.Register(
 nameof(ImageWidth), typeof(int), typeof(ViewVideo), new PropertyMetadata((int)ConfigManager.VideoConfig.GlobalImageWidth));
@@ -174,6 +121,154 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
 
         #endregion
 
+
+
+        public ViewVideo()
+        {
+            InitializeComponent();
+        }
+
+
+
+        private void Image_MouseEnter(object sender, MouseEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ImageMouseEnterEvent, this));
+        }
+
+
+
+        private void Image_MouseLeave(object sender, MouseEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ImageMouseLeaveEvent, this));
+        }
+
+        private void CanShowDetails(object sender, MouseButtonEventArgs e)
+        {
+            canShowDetails = true;
+        }
+
+        private void ShowDetails(object sender, MouseButtonEventArgs e)
+        {
+            if (canShowDetails)
+                RaiseEvent(new RoutedEventArgs(ShowDetailEvent) { Source = this });
+            canShowDetails = false;
+        }
+
+        private void ViewAssocDatas(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ShowSubSection(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+
+            Video video = GetVideo(this);
+            if (video == null)
+                return;
+
+            ContextMenu contextMenu = element.ContextMenu;
+            contextMenu.Items.Clear();
+
+            if (video != null && video.SubSectionList?.Count > 0) {
+                for (int i = 0; i < video.SubSectionList.Count; i++) {
+                    string filepath = video.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
+                    MenuItem menuItem = new MenuItem();
+                    menuItem.Header = i + 1;
+                    menuItem.Click += (s, _) => {
+                        Video.PlayVideoWithPlayer(filepath, video.DataID);
+                    };
+                    contextMenu.Items.Add(menuItem);
+                }
+
+                contextMenu.IsOpen = true;
+            }
+        }
+
+
+        private Video GetVideo(FrameworkElement ele)
+        {
+            if (ele != null && ele.Tag != null &&
+                ele.Tag is Video video) {
+                return video;
+            }
+            return null;
+        }
+
+
+        public void PlayVideo(object sender, MouseButtonEventArgs e)
+        {
+            if (!EditMode)
+                RaiseEvent(new RoutedEventArgs(OnPlayVideoEvent) { Source = this });
+        }
+
+        private void CopyText(object sender, MouseButtonEventArgs e)
+        {
+            string text = "";
+            if (sender is TextBlock textBlock) {
+                text = textBlock.Text;
+            } else if (sender is TextBox textBox) {
+                text = textBox.Text;
+            }
+            SuperUtils.IO.ClipBoard.TrySetDataObject(text);
+            MessageNotify.Success($"{LangManager.GetValueByKey("Message_Copied")} {text}");
+        }
+
+        private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            Border border = (menuItem.Parent as ContextMenu).PlacementTarget as Border;
+            long.TryParse(border.Tag.ToString(), out long tagID);
+            if (tagID <= 0)
+                return;
+
+            Video video = GetVideo(this);
+            if (video == null)
+                return;
+
+            long dataID = video.DataID;
+
+            ItemsControl itemsControl = border.FindParentOfType<ItemsControl>();
+            if (itemsControl == null || itemsControl.Tag == null)
+                return;
+
+            ObservableCollection<TagStamp> tagStamps = itemsControl.ItemsSource as ObservableCollection<TagStamp>;
+            if (tagStamps == null)
+                return;
+            TagStamp tagStamp = tagStamps.FirstOrDefault(arg => arg.TagID.Equals(tagID));
+            if (tagStamp != null) {
+
+
+                //ObservableCollection<Video> datas = GetVideosFromTagMenu(sender as MenuItem);
+
+                tagStamps.Remove(tagStamp);
+                string sql = $"delete from metadata_to_tagstamp where TagID='{tagID}' and DataID='{dataID}'";
+                MapperManager.tagStampMapper.ExecuteNonQuery(sql);
+                Video newVideo = MapperManager.videoMapper.SelectVideoByID(dataID);
+                video.TagIDs = video.TagIDs;
+                //for (int i = 0; i < datas.Count; i++) {
+                //    if (datas[i].DataID.Equals(DataID)) {
+                //        Video video = videoMapper.SelectVideoByID(DataID);
+                //        if (video == null)
+                //            continue;
+                //        datas[i].TagIDs = video.TagIDs;
+                //        break;
+                //    }
+                //}
+
+                //InitTagStamp();
+            }
+        }
+
+        private void OnRateMouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Rate_ValueChanged(object sender, SuperControls.Style.FunctionEventArgs<double> e)
+        {
+
+        }
 
         #region "对外方法"
         public void SetBorderBrush(SolidColorBrush brush)

@@ -618,7 +618,7 @@
                             Margin="5,5,10,5"
                             VerticalAlignment="Center"
                             Click="CloseWindow"
-                            Style="{StaticResource CloseHoverPath}" />
+                            Style="{StaticResource CloseExHoverPath}" />
                     </StackPanel>
 
 
@@ -721,8 +721,8 @@
                                     <MenuItem Click="DownLoad" Header="{DynamicResource Menu_SyncInfo}" />
                                     <MenuItem
                                         Header="{DynamicResource Menu_SyncExtra}"
-                                        Visibility="Collapsed"
-                                        IsEnabled="False">
+                                        IsEnabled="False"
+                                        Visibility="Collapsed">
                                         <MenuItem Click="DownLoadMagnets" Header="{DynamicResource SyncMagnets}" />
                                     </MenuItem>
                                     <MenuItem Header="{DynamicResource Menu_Advance}">

@@ -348,6 +348,9 @@
     <Compile Include="Core\Config\WindowConfig\Main.cs" />
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
     <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
+    <Compile Include="Core\UserControls\Filter.xaml.cs">
+      <DependentUpon>Filter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ActorInfoPage.xaml.cs">
       <DependentUpon>ActorInfoPage.xaml</DependentUpon>
     </Compile>
@@ -520,6 +523,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomStyle\SuperControls\PathRadioButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Core\UserControls\Filter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

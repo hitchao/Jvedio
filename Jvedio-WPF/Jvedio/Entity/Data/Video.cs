@@ -3,7 +3,9 @@ using Jvedio.Core.Global;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
 using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper;
 using Newtonsoft.Json;
+using SuperControls.Style;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
@@ -50,6 +52,26 @@ namespace Jvedio.Entity
             BigImage = MetaData.DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
             PreviewImageList = new ObservableCollection<BitmapSource>();
+        }
+
+        public static void PlayVideoWithPlayer(string filepath, long dataID = 0, Action onPlayVideo = null)
+        {
+            if (File.Exists(filepath)) {
+                bool success = false;
+                if (!string.IsNullOrEmpty(ConfigManager.Settings.VideoPlayerPath) && File.Exists(ConfigManager.Settings.VideoPlayerPath)) {
+                    success = FileHelper.TryOpenFile(ConfigManager.Settings.VideoPlayerPath, filepath);
+                } else {
+                    // 使用默认播放器
+                    success = FileHelper.TryOpenFile(filepath);
+                }
+
+                if (success && dataID > 0) {
+                    MapperManager.metaDataMapper.UpdateFieldById("ViewDate", DateHelper.Now(), dataID);
+                    onPlayVideo?.Invoke();
+                }
+            } else {
+                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_OpenFail") + "：" + filepath);
+            }
         }
 
         public static SelectWrapper<Video> InitWrapper()

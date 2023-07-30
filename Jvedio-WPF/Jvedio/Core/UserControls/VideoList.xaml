@@ -157,7 +157,7 @@
                 ImageWidth="{Binding Path=DataContext.GlobalImageWidth, ElementName=videoList}"
                 OnPlayVideo="viewVideo_OnPlayVideo"
                 ShowDetail="onItemShowDetail"
-                Tag="{Binding DataID, Mode=OneWay}" />
+                Tag="{Binding ., Mode=OneWay}" />
         </DataTemplate>
 
     </UserControl.Resources>
@@ -168,6 +168,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+
 
 
         <!--  工具栏  -->
@@ -182,6 +183,25 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <ToggleButton
+                    Width="auto"
+                    Height="auto"
+                    Margin="10,0,0,0"
+                    Padding="5"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    IsChecked="{Binding ShowFilter, Mode=TwoWay}"
+                    Style="{StaticResource FlatToggleButton}">
+                    <Viewbox
+                        Width="15"
+                        Height="auto"
+                        VerticalAlignment="Center">
+                        <Path Data="M452.923077 512v275.692308l118.153846-98.461539v-177.230769l177.230769-177.230769H275.692308l177.230769 177.230769zM0 512C0 229.218462 229.238154 0 512 0c282.781538 0 512 229.238154 512 512 0 282.781538-229.238154 512-512 512C229.218462 1024 0 794.761846 0 512z" Fill="{DynamicResource Window.Foreground}" />
+                    </Viewbox>
+                </ToggleButton>
+
+
 
                 <TextBlock
                     Margin="10,0,5,0"
@@ -205,12 +225,6 @@
                     Click="RandomDisplay"
                     Data="{StaticResource GeoRandom}"
                     ToolTip="{DynamicResource ToolTip_RandomShow}" />
-
-                <super:HoverPath
-                    Margin="5,0"
-                    Click="ShowFilterGrid"
-                    Data="M452.923077 512v275.692308l118.153846-98.461539v-177.230769l177.230769-177.230769H275.692308l177.230769 177.230769zM0 512C0 229.218462 229.238154 0 512 0c282.781538 0 512 229.238154 512 512 0 282.781538-229.238154 512-512 512C229.218462 1024 0 794.761846 0 512z"
-                    ToolTip="{StaticResource Filter}" />
 
 
                 <Border
@@ -326,15 +340,27 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <!--  演员  -->
 
-            <Frame x:Name="actorFrame" Visibility="{Binding ShowActorGrid, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <!--  筛选器  -->
+
+            <localControl:Filter
+                Grid.Column="0"
+                Close="FilterClose"
+                Visibility="{Binding ShowFilter, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <!--  演员  -->
+            <Frame
+                x:Name="actorFrame"
+                Grid.Column="1"
+                Visibility="{Binding ShowActorGrid, Converter={StaticResource BoolToVisibilityConverter}}" />
 
             <!--  影片  -->
             <super:SimplePanel
-                Grid.Column="1"
+                Grid.Column="2"
                 Panel.ZIndex="2"
                 AllowDrop="True"
                 FocusVisualStyle="{x:Null}">
