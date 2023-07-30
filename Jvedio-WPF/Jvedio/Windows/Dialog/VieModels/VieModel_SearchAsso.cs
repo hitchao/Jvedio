@@ -1,4 +1,6 @@
-﻿using Jvedio.Entity;
+﻿using Jvedio.Core.Media;
+using Jvedio.Core.UserControls.ViewModels;
+using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Enums;
@@ -10,11 +12,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.MapperManager;
-using static SuperUtils.Media.ImageHelper;
 using static Jvedio.App;
-using Jvedio.Core.Media;
-using Jvedio.Core.UserControls.ViewModels;
+using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel
 {

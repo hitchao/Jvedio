@@ -420,7 +420,6 @@
     <Compile Include="Mapper\Common\PictureMapper.cs" />
     <Compile Include="Mapper\Common\VideoMapper.cs" />
     <Compile Include="Upgrade\Jvedio4ToJvedio5.cs" />
-    <Compile Include="Utils\Extern\Baidu.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -434,7 +433,6 @@
     <Compile Include="WindowsDialog\Dialog_Thanks.xaml.cs">
       <DependentUpon>Dialog_Thanks.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Extern\Translate.cs" />
     <Compile Include="Entity\Common\MySqlite.cs" />
     <Compile Include="Core\Net\VideoDownLoader.cs" />
     <Compile Include="Core\Media\ImageSlide.cs" />

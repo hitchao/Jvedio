@@ -1,19 +1,17 @@
 ﻿using Jvedio.Core.Enums;
+using Jvedio.Core.Media;
 using Jvedio.Entity;
+using Jvedio.Pages;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.Media;
 using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Jvedio.MapperManager;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
 using static Jvedio.App;
-using Jvedio.Pages;
-using Jvedio.Core.Media;
+using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel
 {

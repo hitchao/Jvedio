@@ -2,7 +2,6 @@
 using Jvedio.Entity;
 using Jvedio.ViewModel;
 using SuperControls.Style;
-using SuperUtils.IO;
 using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
@@ -11,8 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static SuperUtils.WPF.VisualTools.VisualHelper;
 using static Jvedio.App;
+using static SuperUtils.WPF.VisualTools.VisualHelper;
 
 namespace Jvedio
 {

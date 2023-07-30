@@ -1,35 +1,24 @@
-﻿using Jvedio.Core.Enums;
+﻿using Jvedio.Core.CustomEventArgs;
+using Jvedio.Core.Enums;
+using Jvedio.Core.Media;
 using Jvedio.Entity;
+using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.Media;
+using SuperUtils.IO;
 using SuperUtils.WPF.VieModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using static Jvedio.MapperManager;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
-using static Jvedio.App;
-using Jvedio.Pages;
-using Jvedio.Core.Media;
-using Jvedio.Entity.Common;
-using Jvedio.ViewModels;
-using SuperControls.Style;
-using System;
-using Jvedio.Mapper;
-using SuperUtils.IO;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Jvedio.Core.CustomEventArgs;
-using Jvedio.Entity.CommonSQL;
-using SuperUtils.Time;
-using System.Windows.Controls;
-using System.Web.UI;
-using System.Windows.Media;
-using Google.Protobuf.WellKnownTypes;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using static Jvedio.App;
+using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.UserControls.ViewModels
 {

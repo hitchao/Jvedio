@@ -9,6 +9,7 @@ using Jvedio.Entity;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
 using SuperControls.Style;
+using SuperControls.Style.CSFile.Interfaces;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
@@ -23,11 +24,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static Jvedio.Core.Global.PathManager;
 using static Jvedio.App;
+using static Jvedio.Core.Global.PathManager;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
-using SuperControls.Style.CSFile.Interfaces;
 
 namespace Jvedio
 {

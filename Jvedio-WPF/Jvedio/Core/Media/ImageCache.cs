@@ -1,12 +1,6 @@
-﻿using SuperUtils.IO;
-using SuperUtils.Media;
+﻿using SuperUtils.Media;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Caching;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio.Core.Media
@@ -38,8 +32,7 @@ namespace Jvedio.Core.Media
         private static bool Add(string path, BitmapImage image)
         {
             CacheItem item = new CacheItem(path, image);
-            if (!_Cache.Contains(path))
-            {
+            if (!_Cache.Contains(path)) {
                 CacheItemPolicy policy = new CacheItemPolicy();
                 policy.SlidingExpiration = TimeSpan.FromSeconds(10);
                 _Cache.Add(item, policy);

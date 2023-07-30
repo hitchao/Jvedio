@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using static Jvedio.Window_Server;
 
 namespace Jvedio.Core.Server
 {

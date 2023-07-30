@@ -1,12 +1,4 @@
 ﻿using Jvedio.Core.Config.Base;
-using Jvedio.Core.Crawler;
-using Jvedio.Core.Global;
-using SuperUtils.NetWork;
-using SuperUtils.NetWork.Entity;
-using System;
-using System.ComponentModel;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Jvedio.Core.Config.Data
 {

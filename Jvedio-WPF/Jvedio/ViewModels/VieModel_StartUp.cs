@@ -6,8 +6,8 @@ using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using static Jvedio.MapperManager;
 using static Jvedio.App;
+using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel
 {

@@ -1,5 +1,4 @@
-﻿using FontAwesome.WPF;
-using Jvedio.Core.Config;
+﻿using Jvedio.Core.Config;
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
@@ -13,10 +12,8 @@ using SuperControls.Style;
 using SuperControls.Style.Plugin;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
-using SuperUtils.External;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
-using SuperUtils.Media;
 using SuperUtils.NetWork;
 using SuperUtils.NetWork.Entity;
 using SuperUtils.Systems;
