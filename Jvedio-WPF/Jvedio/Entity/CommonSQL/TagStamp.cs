@@ -16,6 +16,13 @@ namespace Jvedio.Entity.CommonSQL
     [Table(tableName: "common_tagstamp")]
     public class TagStamp : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
 
         private static List<long> SystemTags =
             new List<long>() { TAG_ID_HD, TAG_ID_TRANSLATED, TAG_ID_NEW_ADD };
@@ -25,12 +32,17 @@ namespace Jvedio.Entity.CommonSQL
         public const long TAG_ID_TRANSLATED = 2;
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        /// <summary>
+        /// 标签戳，全局缓存，避免每次都查询
+        /// </summary>
+        public static List<TagStamp> TagStamps { get; set; }
+
+        public static void Init()
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            TagStamps = MapperManager.tagStampMapper.GetAllTagStamp();
         }
+
 
         [TableId(IdType.AUTO)]
         public long TagID { get; set; }
@@ -134,7 +146,7 @@ namespace Jvedio.Entity.CommonSQL
             result = new ObservableCollection<TagStamp>();
 
             // 先增加默认的：高清、中文
-            foreach (TagStamp item in Main.TagStamps) {
+            foreach (TagStamp item in TagStamp.TagStamps) {
                 TagStamp tagStamp = tagStamps.Where(arg => arg.TagID == item.TagID).FirstOrDefault();
                 if (tagStamp != null)
                     result.Add(tagStamp);

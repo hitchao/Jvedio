@@ -3,8 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Jvedio.Core.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
+    x:Name="filter"
     MinWidth="300"
     d:DesignHeight="1000"
     Loaded="Filter_Loaded"
@@ -12,6 +14,18 @@
 
 
     <UserControl.Resources>
+
+
+
+        <local:LoadStatusConverter x:Key="LoadStatusConverter" />
+
+
+        <Style
+            x:Key="ItemScrollViewer"
+            BasedOn="{StaticResource FlatScrollViewer}"
+            TargetType="ScrollViewer">
+            <Setter Property="MaxHeight" Value="200" />
+        </Style>
         <Style
             x:Key="InfoTextBlock"
             BasedOn="{StaticResource BaseTextBlock}"
@@ -34,6 +48,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="IsChecked" Value="False" />
+            <Setter Property="ToolTip" Value="{DynamicResource SelectAllText}" />
             <Setter Property="ContentTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -206,9 +221,9 @@
                         Height="auto"
                         Margin="1,0"
                         Padding="0,4"
+                        Expand="TogglePanel_Expand"
                         FontSize="14"
                         Header="{DynamicResource Other}"
-                        IsExpanded="True"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
@@ -317,14 +332,26 @@
                         Height="auto"
                         Margin="1,0"
                         Padding="0,4"
+                        Expand="Genre_Expand"
                         FontSize="14"
                         Header="{DynamicResource Genre}"
-                        IsExpanded="True"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
                         <StackPanel Orientation="Vertical">
+                            <ProgressBar
+                                Height="1"
+                                Margin="2"
+                                Style="{StaticResource NormalStaticProgressBar}"
+                                Visibility="{Binding GenreLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
+                                Value="{Binding GenreProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
+                                <super:LoadingCircle
+                                    Width="20"
+                                    Height="20"
+                                    Margin="5"
+                                    DotSize="3"
+                                    Visibility="{Binding GenreLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
@@ -338,24 +365,35 @@
                                     FontSize="12"
                                     Style="{StaticResource SearchBoxStyle}" />
                             </DockPanel>
-                            <ScrollViewer MaxHeight="100">
+                            <ScrollViewer Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="genreWrapPanel" Orientation="Horizontal" />
                             </ScrollViewer>
-
                         </StackPanel>
                     </super:TogglePanel>
                     <super:TogglePanel
                         Height="auto"
                         Margin="1,0"
                         Padding="0,4"
+                        Expand="Series_Expand"
                         FontSize="14"
                         Header="{DynamicResource Tag}"
-                        IsExpanded="True"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
                         <StackPanel Orientation="Vertical">
+                            <ProgressBar
+                                Height="1"
+                                Margin="2"
+                                Style="{StaticResource NormalStaticProgressBar}"
+                                Visibility="{Binding SeriesLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
+                                Value="{Binding SeriesProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
+                                <super:LoadingCircle
+                                    Width="20"
+                                    Height="20"
+                                    Margin="5"
+                                    DotSize="3"
+                                    Visibility="{Binding SeriesLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
@@ -369,7 +407,7 @@
                                     FontSize="12"
                                     Style="{StaticResource SearchBoxStyle}" />
                             </DockPanel>
-                            <ScrollViewer MaxHeight="100">
+                            <ScrollViewer Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="seriesWrapPanel" Orientation="Horizontal" />
                             </ScrollViewer>
 
@@ -379,14 +417,26 @@
                         Height="auto"
                         Margin="1,0"
                         Padding="0,4"
+                        Expand="Director_Expand"
                         FontSize="14"
                         Header="{DynamicResource Director}"
-                        IsExpanded="True"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
                         <StackPanel Orientation="Vertical">
+                            <ProgressBar
+                                Height="1"
+                                Margin="2"
+                                Style="{StaticResource NormalStaticProgressBar}"
+                                Visibility="{Binding DirectorLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
+                                Value="{Binding DirectorProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
+                                <super:LoadingCircle
+                                    Width="20"
+                                    Height="20"
+                                    Margin="5"
+                                    DotSize="3"
+                                    Visibility="{Binding DirectorLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
@@ -400,7 +450,7 @@
                                     FontSize="12"
                                     Style="{StaticResource SearchBoxStyle}" />
                             </DockPanel>
-                            <ScrollViewer MaxHeight="100">
+                            <ScrollViewer Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="directorWrapPanel" Orientation="Horizontal" />
                             </ScrollViewer>
 
@@ -411,14 +461,26 @@
                         Height="auto"
                         Margin="1,0"
                         Padding="0,4"
+                        Expand="Studio_Expand"
                         FontSize="14"
                         Header="{DynamicResource Made}"
-                        IsExpanded="True"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
                         <StackPanel Orientation="Vertical">
+                            <ProgressBar
+                                Height="1"
+                                Margin="2"
+                                Style="{StaticResource NormalStaticProgressBar}"
+                                Visibility="{Binding StudioLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
+                                Value="{Binding StudioProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
+                                <super:LoadingCircle
+                                    Width="20"
+                                    Height="20"
+                                    Margin="5"
+                                    DotSize="3"
+                                    Visibility="{Binding StudioLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
@@ -432,7 +494,7 @@
                                     FontSize="12"
                                     Style="{StaticResource SearchBoxStyle}" />
                             </DockPanel>
-                            <ScrollViewer MaxHeight="100">
+                            <ScrollViewer Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="studioWrapPanel" Orientation="Horizontal" />
                             </ScrollViewer>
 

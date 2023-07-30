@@ -1691,7 +1691,7 @@ namespace Jvedio.Core.UserControls
             foreach (FrameworkElement item in contextMenu.Items) {
                 if ("TagMenuItems".Equals(item.Name) && item is MenuItem menuItem) {
                     menuItem.Items.Clear();
-                    Main.TagStamps.ForEach(arg => {
+                    TagStamp.TagStamps.ForEach(arg => {
                         string tagID = arg.TagID.ToString();
                         MenuItem menu = new MenuItem() {
                             Header = arg.TagName,
@@ -1776,7 +1776,7 @@ namespace Jvedio.Core.UserControls
             string tagIDs = video.TagIDs;
             if (!deleted && string.IsNullOrEmpty(tagIDs)) {
                 video.TagStamp = new ObservableCollection<TagStamp>();
-                video.TagStamp.Add(Main.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
+                video.TagStamp.Add(TagStamp.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
                 video.TagIDs = newTagID.ToString();
             } else {
                 List<string> list = tagIDs.Split(',').ToList();
@@ -1788,7 +1788,7 @@ namespace Jvedio.Core.UserControls
                 video.TagStamp = new ObservableCollection<TagStamp>();
                 foreach (var arg in list) {
                     long.TryParse(arg, out long id);
-                    video.TagStamp.Add(Main.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
+                    video.TagStamp.Add(TagStamp.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
                 }
             }
         }

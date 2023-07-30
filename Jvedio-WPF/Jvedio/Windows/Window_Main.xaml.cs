@@ -6,6 +6,7 @@ using Jvedio.Core.Net;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Core.Server;
+using Jvedio.Core.UserControls;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Upgrade;
@@ -69,11 +70,6 @@ namespace Jvedio
         public static List<string> ClickFilterDict { get; set; }
 
         /// <summary>
-        /// 标签戳，全局缓存，避免每次都查询
-        /// </summary>
-        public static List<TagStamp> TagStamps { get; set; }
-
-        /// <summary>
         /// 如果包含以下文本，则显示对应的标签戳
         /// </summary>
         public static string[] TagStringHD { get; set; }
@@ -124,7 +120,6 @@ namespace Jvedio
         static void StaticInit()
         {
             ClickFilterDict = new List<string>() { "Genre", "Series", "Studio", "Director", };
-            TagStamps = new List<TagStamp>();
             TagStringHD = new string[] { "hd", "高清" };
             TagStringTranslated = new string[] { "中文", "日本語", "Translated", "English" };
             FadeInterval = TimeSpan.FromMilliseconds(150);
@@ -306,21 +301,6 @@ namespace Jvedio
                 Message message = new Message(MessageCard.MessageCardType.Info, msg);
                 MsgShown?.Invoke(this, new MessageEventArg(message));
             }
-        }
-
-        public void InitTagStamp()
-        {
-            // 记住之前的状态
-            List<TagStamp> tagStamps = vieModel.TagStamps.ToList();
-            Main.TagStamps = tagStampMapper.GetAllTagStamp();
-            if (tagStamps != null && tagStamps.Count > 0) {
-                foreach (var item in Main.TagStamps) {
-                    TagStamp tagStamp = tagStamps.FirstOrDefault(arg => arg.TagID == item.TagID);
-                    if (tagStamp != null)
-                        item.Selected = tagStamp.Selected;
-                }
-            }
-            vieModel.InitCurrentTagStamps(tagStamps);
         }
 
         private void BindingEventAfterRender()
@@ -557,6 +537,28 @@ namespace Jvedio
                 });
                 AnimatingSideGrid = false;
             };
+
+
+            // 筛选器变动
+            Filter.onTagStampDelete += () => onTagStampDelete();
+            Filter.onTagStampRefresh += (id) => onTagStampRefresh(id);
+        }
+
+        private void onTagStampRefresh(long id)
+        {
+            // todo tab
+        }
+        private void onTagStampDelete()
+        {
+            // 更新主窗体
+            //if (vieModel.CurrentVideoList != null) {
+            //    for (int i = 0; i < vieModel.CurrentVideoList.Count; i++) {
+            //        if (vieModel.CurrentVideoList[i].TagStamp != null
+            //            && vieModel.CurrentVideoList[i].TagStamp.Contains(tagStamp)) {
+            //            vieModel.CurrentVideoList[i].TagStamp.Remove(tagStamp);
+            //        }
+            //    }
+            //}
         }
 
         public childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
@@ -1068,7 +1070,6 @@ namespace Jvedio
             vieModel.IsRefresh = true;
             vieModel.Statistic();
             //vieModel.Reset(); // todo tab
-            vieModel.InitCurrentTagStamps();
             vieModel.SetClassify(true);
 
             // vieModel.InitLettersNavigation();
@@ -1149,80 +1150,6 @@ namespace Jvedio
             vieModel.ShowFirstRun = Visibility.Hidden;
         }
 
-        public void RefreshTagStamps(long id)
-        {
-            // todo tab
-        }
-
-        private void EditTagStamp(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
-            string tag = (contextMenu.PlacementTarget as PathCheckButton).Tag.ToString();
-            long.TryParse(tag, out long id);
-            if (id <= 0)
-                return;
-
-            TagStamp tagStamp = Main.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
-            Window_TagStamp window_TagStamp = new Window_TagStamp(tagStamp.TagName, tagStamp.BackgroundBrush, tagStamp.ForegroundBrush);
-            bool? dialog = window_TagStamp.ShowDialog();
-            if ((bool)dialog) {
-                string name = window_TagStamp.TagName;
-                if (string.IsNullOrEmpty(name))
-                    return;
-                SolidColorBrush backgroundBrush = window_TagStamp.BackgroundBrush;
-                SolidColorBrush ForegroundBrush = window_TagStamp.ForegroundBrush;
-                tagStamp.TagName = name;
-                tagStamp.Background = VisualHelper.SerializeBrush(backgroundBrush);
-                tagStamp.Foreground = VisualHelper.SerializeBrush(ForegroundBrush);
-                tagStampMapper.UpdateById(tagStamp);
-                InitTagStamp();
-                RefreshTagStamps(id);// 刷新标记
-            }
-        }
-
-        public void onDeleteTagStamps()
-        {
-            // 更新主窗体
-            //if (vieModel.CurrentVideoList != null) {
-            //    for (int i = 0; i < vieModel.CurrentVideoList.Count; i++) {
-            //        if (vieModel.CurrentVideoList[i].TagStamp != null
-            //            && vieModel.CurrentVideoList[i].TagStamp.Contains(tagStamp)) {
-            //            vieModel.CurrentVideoList[i].TagStamp.Remove(tagStamp);
-            //        }
-            //    }
-            //}
-
-        }
-
-        private void DeleteTagStamp(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
-            string tag = (contextMenu.PlacementTarget as PathCheckButton).Tag.ToString();
-            long.TryParse(tag, out long id);
-            if (id <= 0)
-                return;
-            TagStamp tagStamp = Main.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
-            if (tagStamp.IsSystemTag()) {
-                MessageNotify.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
-                return;
-            }
-
-
-            if (new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true) {
-                tagStampMapper.DeleteById(id);
-
-                // 删除
-                string sql = $"delete from metadata_to_tagstamp where TagID={tagStamp.TagID};";
-                tagStampMapper.ExecuteNonQuery(sql);
-                InitTagStamp();
-                onDeleteTagStamps();
-
-
-                // todo 更新详情窗口
-            }
-        }
 
         private async void doSearch(object sender, RoutedEventArgs e)
         {
@@ -1674,29 +1601,6 @@ namespace Jvedio
             }
         }
 
-        private void SetTagStampsSelected(object sender, RoutedEventArgs e)
-        {
-            ToggleButton toggleButton = sender as ToggleButton;
-            bool allChecked = (bool)toggleButton.IsChecked;
-            ItemsControl itemsControl = TagStampItemsControl;
-            for (int i = 0; i < itemsControl.Items.Count; i++) {
-                ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                if (presenter == null)
-                    continue;
-                PathCheckButton button = FindElementByName<PathCheckButton>(presenter, "pathCheckButton");
-                if (button == null)
-                    continue;
-                button.IsChecked = allChecked;
-            }
-
-            // todo tab
-            //vieModel.LoadData();
-        }
-
-
-
-
-
 
         private void ShowUpgradeWindow(object sender, RoutedEventArgs e)
         {
@@ -1887,8 +1791,16 @@ namespace Jvedio
                 };
                 tagStampMapper.Insert(tagStamp);
                 InitTagStamp();
-
             }
+        }
+
+
+        /// <summary>
+        /// 通知所有过滤器控件改变
+        /// </summary>
+        public void InitTagStamp()
+        {
+
         }
 
         private void ClearScanTasks(object sender, RoutedEventArgs e)

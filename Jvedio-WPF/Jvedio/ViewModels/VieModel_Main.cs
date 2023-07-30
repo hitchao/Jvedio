@@ -426,17 +426,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<TagStamp> _TagStamps = new ObservableCollection<TagStamp>();
-
-        public ObservableCollection<TagStamp> TagStamps {
-            get { return _TagStamps; }
-
-            set {
-                _TagStamps = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private ObservableCollection<string> _GenreList;
 
         public ObservableCollection<string> GenreList {
@@ -681,30 +670,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _SideDefaultExpanded = ConfigManager.Main.SideDefaultExpanded;
-
-        public bool SideDefaultExpanded {
-            get { return _SideDefaultExpanded; }
-
-            set {
-                _SideDefaultExpanded = value;
-                RaisePropertyChanged();
-                ConfigManager.Main.SideDefaultExpanded = value;
-                ConfigManager.Main.Save();
-            }
-        }
-        private bool _SideTagStampExpanded = ConfigManager.Main.SideTagStampExpanded;
-
-        public bool SideTagStampExpanded {
-            get { return _SideTagStampExpanded; }
-
-            set {
-                _SideTagStampExpanded = value;
-                RaisePropertyChanged();
-                ConfigManager.Main.SideTagStampExpanded = value;
-                ConfigManager.Main.Save();
-            }
-        }
         private bool _ShowSoft = true;
 
         public bool ShowSoft {
@@ -764,10 +729,7 @@ namespace Jvedio.ViewModel
             TabSelectedIndex = 3;
         }
 
-        public void InitCurrentTagStamps(List<TagStamp> beforeTagStamps = null)
-        {
-            TagStamps = TagStamp.InitTagStamp(beforeTagStamps);
-        }
+
 
         private void AddSingleMovie()
         {

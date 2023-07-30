@@ -6,6 +6,7 @@ using Jvedio.Core.Global;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
+using Jvedio.Entity.CommonSQL;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
 using SuperControls.Style;
@@ -602,6 +603,8 @@ namespace Jvedio
                     }
                 }
             }
+
+            TagStamp.Init(); // 初始化标签戳
 
             // 启动主窗口
             if (Main.CurrentDataType == DataType.Video) {

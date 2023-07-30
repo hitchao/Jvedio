@@ -2,21 +2,26 @@
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using SuperControls.Style;
+using SuperControls.Style.Windows;
 using SuperUtils.IO;
 using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
+using System.Windows.Threading;
+using static Jvedio.Core.UserControls.Filter;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.UserControls
@@ -36,6 +41,14 @@ namespace Jvedio.Core.UserControls
         #region "事件"
 
         public event Action Close;
+
+        public static Action onTagStampDelete;
+        public static Action<long> onTagStampRefresh;
+
+        private delegate void AsyncLoadItemDelegate(UIElementCollection collection, UIElement item);
+
+        private void AsyncLoadItem(UIElementCollection collection, UIElement item) => collection.Add(item);
+
 
         #endregion
 
@@ -104,7 +117,86 @@ namespace Jvedio.Core.UserControls
             }
         }
 
+
+        private int _GenreProgress;
+        public int GenreProgress {
+            get { return _GenreProgress; }
+            set {
+                _GenreProgress = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _SeriesProgress;
+        public int SeriesProgress {
+            get { return _SeriesProgress; }
+            set {
+                _SeriesProgress = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _DirectorProgress;
+        public int DirectorProgress {
+            get { return _DirectorProgress; }
+            set {
+                _DirectorProgress = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _StudioProgress;
+        public int StudioProgress {
+            get { return _StudioProgress; }
+            set {
+                _StudioProgress = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private LoadState _CommonLoad;
+        public LoadState CommonLoad {
+            get { return _CommonLoad; }
+            set {
+                _CommonLoad = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private LoadState _GenreLoad;
+        public LoadState GenreLoad {
+            get { return _GenreLoad; }
+            set {
+                _GenreLoad = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private LoadState _SeriesLoad;
+        public LoadState SeriesLoad {
+            get { return _SeriesLoad; }
+            set {
+                _SeriesLoad = value;
+                RaisePropertyChanged();
+            }
+        }
+        private LoadState _DirectorLoad;
+        public LoadState DirectorLoad {
+            get { return _DirectorLoad; }
+            set {
+                _DirectorLoad = value;
+                RaisePropertyChanged();
+            }
+        }
+        private LoadState _StudioLoad;
+        public LoadState StudioLoad {
+            get { return _StudioLoad; }
+            set {
+                _StudioLoad = value;
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion
+
 
 
 
@@ -115,11 +207,11 @@ namespace Jvedio.Core.UserControls
 
         private void Filter_Loaded(object sender, RoutedEventArgs e)
         {
-            Init();
+            LoadTagStamp();
         }
 
 
-        public void Init()
+        public void LoadAll()
         {
             SetCommonFilter();
             LoadData();
@@ -151,11 +243,19 @@ namespace Jvedio.Core.UserControls
 
         }
 
-        private void AddItem(ICollection<string> list, WrapPanel panel)
+        private async void AddItem(ICollection<string> list, WrapPanel panel, Action complete = null, Action<int> onProgress = null)
         {
             panel.Children.Clear();
-            foreach (string item in list)
-                panel.Children.Add(buildToggleButton(item));
+            int idx = 0;
+            int total = list.Count;
+            foreach (string item in list) {
+                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
+                   new AsyncLoadItemDelegate(AsyncLoadItem), panel.Children, buildToggleButton(item));
+                idx++;
+                float progress = ((float)idx / (float)total * 100);
+                onProgress?.Invoke((int)progress);
+            }
+            complete?.Invoke();
         }
 
         private ToggleButton buildToggleButton(string content, bool isChecked = false)
@@ -188,15 +288,13 @@ namespace Jvedio.Core.UserControls
             AddItem(years, yearWrapPanel);
             AddItem(months, monthWrapPanel);
 
-
-            LoadSingleDataFromMetaData(genreWrapPanel, "Genre"); // 类别
-            LoadSingleData(seriesWrapPanel, "Series"); // 系列
-            LoadSingleData(directorWrapPanel, "Director"); // 导演
-            LoadSingleData(studioWrapPanel, "Studio"); // 制作商
             //LoadSingleData(publisherWrapPanel, "Publisher"); // 发行商
         }
         private void LoadSingleDataFromMetaData(WrapPanel wrapPanel, string field)
         {
+            if (GenreLoad == LoadState.Loaded)
+                return;
+            GenreLoad = LoadState.Loading;
             string sql = $"SELECT DISTINCT {field} FROM metadata " +
                     $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
 
@@ -207,11 +305,12 @@ namespace Jvedio.Core.UserControls
             foreach (string item in dataList)
                 foreach (string data in item.Split(SuperUtils.Values.ConstValues.Separator))
                     set.Add(data);
-            AddItem(set, wrapPanel);
+            AddItem(set, wrapPanel, () => GenreLoad = LoadState.Loaded, (value) => GenreProgress = value);
         }
 
-        private void LoadSingleData(WrapPanel wrapPanel, string field)
+        private void LoadSingleData(WrapPanel wrapPanel, string field, Action before = null, Action complete = null, Action<int> onProgress = null)
         {
+            before?.Invoke();
             string sql = $"SELECT DISTINCT {field} FROM metadata_video join metadata on metadata.DataID=metadata_video.DataID " +
                     $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
 
@@ -222,7 +321,8 @@ namespace Jvedio.Core.UserControls
             foreach (string item in dataList)
                 foreach (string data in item.Split(SuperUtils.Values.ConstValues.Separator))
                     set.Add(data);
-            AddItem(set, wrapPanel);
+
+            AddItem(set, wrapPanel, () => complete?.Invoke(), (value) => onProgress?.Invoke(value));
         }
 
         private void Image_DragOver(object sender, DragEventArgs e)
@@ -250,7 +350,13 @@ namespace Jvedio.Core.UserControls
 
         private void Refresh(object sender, RoutedEventArgs e)
         {
-            Init();
+            CommonLoad = LoadState.None;
+            GenreLoad = LoadState.None;
+            SeriesLoad = LoadState.None;
+            DirectorLoad = LoadState.None;
+            StudioLoad = LoadState.None;
+
+            LoadAll();
         }
 
         private void PathCheckButton_Click(object sender, RoutedEventArgs e)
@@ -258,15 +364,7 @@ namespace Jvedio.Core.UserControls
 
         }
 
-        private void EditTagStamp(object sender, RoutedEventArgs e)
-        {
 
-        }
-
-        private void DeleteTagStamp(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void NewTagStamp(object sender, RoutedEventArgs e)
         {
@@ -295,9 +393,9 @@ namespace Jvedio.Core.UserControls
         {
             // 记住之前的状态
             List<TagStamp> tagStamps = TagStamps.ToList();
-            Main.TagStamps = tagStampMapper.GetAllTagStamp();
+            TagStamp.TagStamps = tagStampMapper.GetAllTagStamp();
             if (tagStamps != null && tagStamps.Count > 0) {
-                foreach (var item in Main.TagStamps) {
+                foreach (var item in TagStamp.TagStamps) {
                     TagStamp tagStamp = tagStamps.FirstOrDefault(arg => arg.TagID == item.TagID);
                     if (tagStamp != null)
                         item.Selected = tagStamp.Selected;
@@ -305,6 +403,62 @@ namespace Jvedio.Core.UserControls
             }
             LoadTagStamp(tagStamps);
         }
+
+        private void EditTagStamp(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+            string tag = (contextMenu.PlacementTarget as PathCheckButton).Tag.ToString();
+            long.TryParse(tag, out long id);
+            if (id <= 0)
+                return;
+
+            TagStamp tagStamp = TagStamp.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
+            Window_TagStamp window_TagStamp = new Window_TagStamp(tagStamp.TagName, tagStamp.BackgroundBrush, tagStamp.ForegroundBrush);
+            bool? dialog = window_TagStamp.ShowDialog();
+            if ((bool)dialog) {
+                string name = window_TagStamp.TagName;
+                if (string.IsNullOrEmpty(name))
+                    return;
+                SolidColorBrush backgroundBrush = window_TagStamp.BackgroundBrush;
+                SolidColorBrush ForegroundBrush = window_TagStamp.ForegroundBrush;
+                tagStamp.TagName = name;
+                tagStamp.Background = VisualHelper.SerializeBrush(backgroundBrush);
+                tagStamp.Foreground = VisualHelper.SerializeBrush(ForegroundBrush);
+                tagStampMapper.UpdateById(tagStamp);
+                InitTagStamp();
+                onTagStampRefresh?.Invoke(id);
+            }
+        }
+
+
+        private void DeleteTagStamp(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+            string tag = (contextMenu.PlacementTarget as PathCheckButton).Tag.ToString();
+            long.TryParse(tag, out long id);
+            if (id <= 0)
+                return;
+            TagStamp tagStamp = TagStamp.TagStamps.Where(arg => arg.TagID == id).FirstOrDefault();
+            if (tagStamp.IsSystemTag()) {
+                MessageNotify.Error(LangManager.GetValueByKey("CanNotDeleteDefaultTag"));
+                return;
+            }
+
+
+            if (new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete") + $"{LangManager.GetValueByKey("TagStamp")} 【{tagStamp.TagName}】").ShowDialog() == true) {
+                tagStampMapper.DeleteById(id);
+
+                // 删除
+                string sql = $"delete from metadata_to_tagstamp where TagID={tagStamp.TagID};";
+                tagStampMapper.ExecuteNonQuery(sql);
+                InitTagStamp();
+                onTagStampDelete?.Invoke();
+                // todo 更新详情窗口
+            }
+        }
+
 
         private void SetTagStampsSelected(object sender, RoutedEventArgs e)
         {
@@ -325,5 +479,68 @@ namespace Jvedio.Core.UserControls
             //vieModel.LoadData();
         }
 
+        private void TogglePanel_Expand(object sender, EventArgs e)
+        {
+            if (sender is TogglePanel panel && panel.IsExpanded)
+                SetCommonFilter();
+        }
+
+        private void Genre_Expand(object sender, EventArgs e)
+        {
+            if (sender is TogglePanel panel && panel.IsExpanded)
+                LoadSingleDataFromMetaData(genreWrapPanel, "Genre"); // 类别
+        }
+
+        private void Series_Expand(object sender, EventArgs e)
+        {
+            if (sender is TogglePanel panel && panel.IsExpanded && SeriesLoad != LoadState.Loaded)
+                LoadSingleData(seriesWrapPanel, "Series", () => SeriesLoad = LoadState.Loading, () => SeriesLoad = LoadState.Loaded, (value) => SeriesProgress = value); // 系列
+        }
+
+        private void Director_Expand(object sender, EventArgs e)
+        {
+            if (sender is TogglePanel panel && panel.IsExpanded && DirectorLoad != LoadState.Loaded)
+                LoadSingleData(directorWrapPanel, "Director", () => DirectorLoad = LoadState.Loading, () => DirectorLoad = LoadState.Loaded, (value) => DirectorProgress = value); // 系列
+
+        }
+
+        private void Studio_Expand(object sender, EventArgs e)
+        {
+            if (sender is TogglePanel panel && panel.IsExpanded && StudioLoad != LoadState.Loaded)
+                LoadSingleData(studioWrapPanel, "Studio", () => StudioLoad = LoadState.Loading, () => StudioLoad = LoadState.Loaded, (value) => StudioProgress = value); // 系列
+        }
+    }
+
+    public enum LoadState
+    {
+        None,
+        Loading,
+        Loaded,
+    }
+
+
+
+    public class LoadStatusConverter : IValueConverter
+    {
+        // 数字转换为选中项的地址
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString())) {
+                return false;
+            }
+
+            Enum.TryParse(value.ToString(), out LoadState state);
+
+            if (state == LoadState.Loading) {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
+
+        // 选中项地址转换为数字
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
     }
 }

@@ -89,7 +89,7 @@ namespace Jvedio.Entity
             List<long> list = video.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
             if (list != null && list.Count > 0) {
                 video.TagStamp = new ObservableCollection<TagStamp>();
-                foreach (var item in Main.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
+                foreach (var item in Jvedio.Entity.CommonSQL.TagStamp.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
                     video.TagStamp.Add(item);
             }
         }
