@@ -13,18 +13,14 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_SelectActor : SuperControls.Style.BaseDialog
     {
-#pragma warning disable CS0612 // “ActorSearch”已过时
-        public List<ActorSearch> ActorSearches;
-#pragma warning restore CS0612 // “ActorSearch”已过时
+        public List<ActorSearch> ActorSearches { get; set; }
 
-        public List<int> SelectedActor;
-        public int VideoType = 1;
-        public int StartPage = 1;
-        public int EndPage = 500;
+        public List<int> SelectedActor { get; set; }
+        public int VideoType { get; set; } = 1;
+        public int StartPage { get; set; } = 1;
+        public int EndPage { get; set; } = 500;
 
-#pragma warning disable CS0612 // “ActorSearch”已过时
         public Dialog_SelectActor(bool showbutton, List<ActorSearch> actorSearches) : base(showbutton)
-#pragma warning restore CS0612 // “ActorSearch”已过时
         {
             InitializeComponent();
             ActorSearches = actorSearches;

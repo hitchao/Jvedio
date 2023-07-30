@@ -11,13 +11,13 @@ namespace Jvedio
     /// </summary>
     public partial class Dialog_LoadPage : SuperControls.Style.BaseDialog
     {
-        public List<ActorSearch> ActorSearches;
-        public string url = string.Empty;
-        public int VideoType = 1;
-        public int StartPage = 1;
-        public int EndPage = 500;
+        public List<ActorSearch> ActorSearches { get; set; }
+        public string url { get; set; } = string.Empty;
+        public int VideoType { get; set; } = 1;
+        public int StartPage { get; set; } = 1;
+        public int EndPage { get; set; } = 500;
 
-        private string WebSiteList;
+        private string WebSiteList { get; set; }
 
         public Dialog_LoadPage(bool showbutton) : base(showbutton)
         {
