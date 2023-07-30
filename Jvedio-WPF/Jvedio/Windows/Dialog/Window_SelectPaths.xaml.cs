@@ -13,24 +13,11 @@ namespace Jvedio
     /// </summary>
     public partial class Window_SelectPaths : BaseWindow
     {
-        public SolidColorBrush _BackgroundBrush = Brushes.Red;
-
-        public SolidColorBrush BackgroundBrush {
-            get { return _BackgroundBrush; }
-            set { _BackgroundBrush = value; }
-        }
-
-        public SolidColorBrush _ForegroundBrush = Brushes.White;
-
-        public SolidColorBrush ForegroundBrush {
-            get { return _ForegroundBrush; }
-            set { _ForegroundBrush = value; }
-        }
-
-        public string TagName { get; set; }
+        #region "属性"
 
         public List<string> Folders { get; set; }
 
+        #endregion
         public Window_SelectPaths()
         {
             InitializeComponent();
@@ -50,13 +37,14 @@ namespace Jvedio
         private void PathListBox_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
-            e.Handled = true; // 必须加
+            e.Handled = true;
         }
 
-        // 检视
         private void PathListBox_Drop(object sender, DragEventArgs e)
         {
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (dragdropFiles == null)
+                return;
             foreach (var item in dragdropFiles) {
                 if (!FileHelper.IsFile(item)) {
                     if (!Folders.Contains(item) && !Folders.IsIntersectWith(item))
@@ -65,7 +53,6 @@ namespace Jvedio
                         MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("FilePathIntersection"));
                 }
             }
-
             OnListChange();
         }
 

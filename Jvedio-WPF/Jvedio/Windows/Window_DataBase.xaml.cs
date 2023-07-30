@@ -21,7 +21,12 @@ namespace Jvedio
     /// </summary>
     public partial class Window_DataBase : BaseWindow
     {
+        #region "事件"
         public Action OnDataChanged;
+        #endregion
+
+        #region "属性"
+
 
         private Main Main { get; set; }
 
@@ -47,16 +52,21 @@ namespace Jvedio
         }
 
 
+        #endregion
+
         public Window_DataBase()
         {
             InitializeComponent();
+            Init();
+        }
+
+        public void Init()
+        {
             Log("初始化");
             this.DataContext = this;
             Main = SuperUtils.WPF.VisualTools.WindowHelper.GetWindowByName("Main", App.Current.Windows) as Main;
             Log("初始化完成");
         }
-
-
 
         private void Log(string text)
         {
