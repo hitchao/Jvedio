@@ -25,7 +25,11 @@ namespace Jvedio.Core.Logs
         static Logger()
         {
             Instance = new Logger();
+#if DEBUG
             Instance.LogLevel = Level.Debug;
+#else
+            Instance.LogLevel = Level.Info;
+#endif
             LogLock = new object();
         }
 

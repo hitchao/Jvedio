@@ -400,5 +400,10 @@ namespace Jvedio.ViewModel
             long offset = ActorPageSize * (CurrentActorPage - 1);
             return $" LIMIT {offset},{row_count}";
         }
+
+        public override void Init()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

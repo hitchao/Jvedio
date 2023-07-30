@@ -13,11 +13,6 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_StartUp : ViewModelBase
     {
-        public bool Sort { get; set; } = ConfigManager.StartUp.Sort;
-        public string SortType { get; set; } = ConfigManager.StartUp.SortType;
-        public string CurrentSearch { get; set; } = string.Empty;
-        public long CurrentSideIdx { get; set; } = ConfigManager.StartUp.SideIdx;
-
         #region "属性"
 
         private bool _Tile = ConfigManager.StartUp.Tile;
@@ -116,9 +111,25 @@ namespace Jvedio.ViewModel
 
         #endregion
 
+        #region "其它属性"
+
+        public bool Sort { get; set; } = ConfigManager.StartUp.Sort;
+        public string SortType { get; set; } = ConfigManager.StartUp.SortType;
+        public string CurrentSearch { get; set; } = string.Empty;
+        public long CurrentSideIdx { get; set; } = ConfigManager.StartUp.SideIdx;
+
+        #endregion
+
+
         public VieModel_StartUp()
         {
+            Init();
+        }
+
+        public override void Init()
+        {
             ReadFromDataBase();
+
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             if (local.EndsWith(".0.0"))
                 Version = local.Substring(0, local.Length - ".0.0".Length);

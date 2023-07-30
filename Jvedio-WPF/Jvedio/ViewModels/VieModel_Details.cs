@@ -323,6 +323,9 @@ namespace Jvedio.ViewModel
             LoadingLabel = false;
         }
 
-
+        public override void Init()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

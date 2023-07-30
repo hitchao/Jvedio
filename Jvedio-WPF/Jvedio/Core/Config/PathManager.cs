@@ -46,6 +46,8 @@ namespace Jvedio.Core.Global
 
         public static string[] InitDirs { get; set; }
 
+        public static string[] ReferenceDllPaths { get; set; }
+
         // *************** 目录 ***************
         public static void Init()
         {
@@ -79,6 +81,11 @@ namespace Jvedio.Core.Global
             oldDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase"); // Jvedio 5.0 之前的
             BasePicPath = string.Empty;
             PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
+
+            ReferenceDllPaths = new string[]{
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"x64\SQLite.Interop.dll") ,
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"x86\SQLite.Interop.dll")
+            };
         }
     }
 }

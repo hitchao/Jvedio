@@ -127,6 +127,11 @@ namespace Jvedio.ViewModel
             ActorImagePath = dict["ActorImagePath"];
         }
 
+        public override void Init()
+        {
+            throw new NotImplementedException();
+        }
+
         private int _TabControlSelectedIndex = (int)ConfigManager.Settings.TabControlSelectedIndex;
 
         public int TabControlSelectedIndex {

@@ -315,5 +315,10 @@ namespace Jvedio.ViewModel
             int count = associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
             return count > 0;
         }
+
+        public override void Init()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

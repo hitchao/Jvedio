@@ -1264,6 +1264,11 @@ namespace Jvedio.ViewModel
             RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
         }
 
+        public override void Init()
+        {
+            throw new NotImplementedException();
+        }
+
 
         #region "TabItem 管理"
 

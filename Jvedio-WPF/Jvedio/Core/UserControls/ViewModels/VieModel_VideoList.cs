@@ -788,6 +788,9 @@ namespace Jvedio.Core.UserControls.ViewModels
             PageChangedCompleted?.Invoke(this, null);
         }
 
-
+        public override void Init()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

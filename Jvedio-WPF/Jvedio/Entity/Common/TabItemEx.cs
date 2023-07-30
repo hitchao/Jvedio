@@ -124,5 +124,10 @@ namespace Jvedio.Entity.Common
         {
             return this.UUID.GetHashCode();
         }
+
+        public override void Init()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

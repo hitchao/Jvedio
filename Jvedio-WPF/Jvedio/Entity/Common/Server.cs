@@ -71,5 +71,10 @@ namespace Jvedio.Entity
                 RaisePropertyChanged();
             }
         }
+
+        public override void Init()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

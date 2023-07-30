@@ -33,15 +33,11 @@ namespace Jvedio
 {
     public partial class WindowStartUp : BaseWindow, IBaseWindow
     {
-
         private const int CLEAR_LOG_DAY = -10;
         private const int CLEAR_BACKUP_DAY = -30;
         private const int DEFAULT_TITLE_HEIGHT = 30;
 
-        private static string[] FILE_DEPEND = {
-            Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"x64\SQLite.Interop.dll") ,
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"x86\SQLite.Interop.dll")
-        };
+        #region "属性"
 
         private CancellationTokenSource cts { get; set; }
         private CancellationToken ct { get; set; }
@@ -52,6 +48,8 @@ namespace Jvedio
         private bool EnteringDataBase { get; set; }
 
         private bool CancelScanTask { get; set; }
+
+        #endregion
 
         public WindowStartUp()
         {
@@ -87,9 +85,25 @@ namespace Jvedio
             }
         }
 
+        public void InitContext()
+        {
+            vieModel = new VieModel_StartUp();  // todo 检视
+            this.DataContext = vieModel;
+
+            List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
+            for (int i = 0; i < radioButtons.Count; i++) {
+                if (i == vieModel.CurrentSideIdx)
+                    radioButtons[i].IsChecked = true;
+                else
+                    radioButtons[i].IsChecked = false;
+            }
+        }
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // 以下顺序不可移动
+            // ************************************
+            // ************* 以下不可移动 *********
+            // ************************************
 
             EnsureFileExists();
             EnsureDirExists();
@@ -149,19 +163,7 @@ namespace Jvedio
             }
         }
 
-        private void InitContext()
-        {
-            vieModel = new VieModel_StartUp();  // todo 检视
-            this.DataContext = vieModel;
 
-            List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
-            for (int i = 0; i < radioButtons.Count; i++) {
-                if (i == vieModel.CurrentSideIdx)
-                    radioButtons[i].IsChecked = true;
-                else
-                    radioButtons[i].IsChecked = false;
-            }
-        }
 
         /// <summary>
         /// 初始化数据库连接
@@ -194,6 +196,7 @@ namespace Jvedio
                 DirHelper.TryDelete(path);
             return true;
         }
+
         private async Task<bool> DeletePlugins()
         {
             await Task.Delay(1);
@@ -402,7 +405,7 @@ namespace Jvedio
 
         public void EnsureFileExists()
         {
-            foreach (var file in FILE_DEPEND) {
+            foreach (var file in ReferenceDllPaths) {
                 if (!File.Exists(file)) {
                     MsgBox.Show($"{SuperControls.Style.LangManager.GetValueByKey("Missing")} {file}");
                     Application.Current.Shutdown();
@@ -459,14 +462,6 @@ namespace Jvedio
             // 仅更新重命名的
             vieModel.refreshItem();
         }
-
-        private void LanguageChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Console.WriteLine(e.AddedItems[0].ToString());
-        }
-
-
-
 
         private void SortDatabases(object sender, RoutedEventArgs e)
         {
@@ -777,17 +772,6 @@ namespace Jvedio
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
-            //string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            //local = local.Substring(0, local.Length);
-            //System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
-            //About about = new About(this, bitmapImage, "Jvedio",
-            //    "超级本地视频管理软件", local, ConfigManager.RELEASE_DATE,
-            //    "Github", UrlManager.ProjectUrl, "Chao", "GPL-3.0");
-            //about.OnOtherClick += (s, ev) =>
-            //{
-            //    FileHelper.TryOpenUrl(UrlManager.WebPage);
-            //};
-            //about.ShowDialog();
             Dialog_About about = new Dialog_About();
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             if (local.EndsWith(".0.0"))
