@@ -57,6 +57,7 @@ namespace Jvedio
             Init();
         }
 
+
         public void Init()
         {
             this.Width = SystemParameters.PrimaryScreenWidth * 2 / 3;
@@ -609,8 +610,9 @@ namespace Jvedio
                     main = new Main();
                     Application.Current.MainWindow = main;
                 } else {
-                    main.setDataBases();
+                    main.InitDataBases();
                     main.SetComboboxID();
+                    main.LoadAll();
                 }
 
                 main.Show();

@@ -27,6 +27,7 @@
     DataContext="{Binding ElementName=main}"
     Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
+    Loaded="BaseWindow_Loaded"
     PreviewKeyUp="Window_PreviewKeyUp"
     ShowThemeSelector="True"
     TitleAlign="Left"
@@ -779,7 +780,7 @@
                                 Grid.Row="0"
                                 VerticalAlignment="Top"
                                 HorizontalScrollBarVisibility="Auto"
-                                PreviewMouseWheel="PortTab_PreviewMouseWheel"
+                                PreviewMouseWheel="Tab_PreviewMouseWheel"
                                 VerticalScrollBarVisibility="Hidden">
                                 <ItemsControl AlternationCount="999" ItemsSource="{Binding TabItems}">
                                     <ItemsControl.ItemsPanel>

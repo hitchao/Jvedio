@@ -1,7 +1,5 @@
-﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Enums;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
-using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Core.UserControls.ViewModels;
@@ -13,27 +11,19 @@ using Jvedio.ViewModels;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.IO;
 using SuperUtils.Time;
 using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.App;
 using static Jvedio.MapperManager;
 using static Jvedio.Window_Server;
-using static SuperUtils.Media.ImageHelper;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace Jvedio.ViewModel
 {
@@ -44,36 +34,23 @@ namespace Jvedio.ViewModel
         public const int RECENT_DAY = 3;
         public const int SEARCH_CANDIDATE_MAX_COUNT = 3;
 
+        #region "事件"
+
         public event EventHandler RenderSqlChanged;
 
+        private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
 
+        private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
+
+        #endregion
+
+        #region "静态属性"
         /// <summary>
         /// flag, 只显示一次提示
         /// </summary>
         private static bool ShowRelativeScreen { get; set; } = false;
-
-
-        public bool IsFlipOvering { get; set; }
-
-        public static string PreviousSql { get; set; } = string.Empty;
-
-        public static int PreviousPage { get; set; } = 1;
-
-        public string ClickFilterType { get; set; }
-
-        private static Main MainWindow { get; set; }
-
-
-
-
-
-
-        public AppDatabase CurrentAppDataBase { get; set; }
-
         public static string LabelJoinSql { get; set; } =
-            " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
-
-
+         " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
 
 
         public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>()
@@ -84,6 +61,22 @@ namespace Jvedio.ViewModel
         };
 
 
+        private static Main MainWindow { get; set; }
+
+        #endregion
+
+        #region "属性"
+
+
+
+        public string ClickFilterType { get; set; }
+
+        public TabItemManager TabItemManager { get; set; }
+
+        public AppDatabase CurrentAppDataBase { get; set; }
+
+
+        #endregion
 
         #region "RelayCommand"
         public RelayCommand<object> SideButtonCmd { get; set; }
@@ -101,15 +94,19 @@ namespace Jvedio.ViewModel
         public VieModel_Main(Main main)
         {
             MainWindow = main;
+            Init();
+        }
+
+
+        public override void Init()
+        {
             ClickFilterType = string.Empty;
             InitCmd();
-
             InitBinding();
             InitTabData();
             Logger.Info("init view model main ok");
         }
 
-        public TabItemManager TabItemManager { get; set; }
 
         public void InitTabData()
         {
@@ -118,7 +115,7 @@ namespace Jvedio.ViewModel
 
         private void InitCmd()
         {
-            SideButtonCmd = new RelayCommand<object>(t => HandleSideButtonCmd(t)); // todo tab
+            SideButtonCmd = new RelayCommand<object>(t => HandleSideButtonCmd(t));
             ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
             ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
             ShowClassifyCommand = new RelayCommand<object>(t => ShowClassify(t));
@@ -189,8 +186,6 @@ namespace Jvedio.ViewModel
         }
         #endregion
 
-
-
         #region "界面显示属性"
 
         public ServerStatus _ServerStatus;
@@ -203,8 +198,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
 
 
         private bool _MainDataChecked;
@@ -433,12 +426,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-
-
         private ObservableCollection<TagStamp> _TagStamps = new ObservableCollection<TagStamp>();
 
         public ObservableCollection<TagStamp> TagStamps {
@@ -460,8 +447,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
 
         private ObservableCollection<string> labellist;
 
@@ -665,8 +650,6 @@ namespace Jvedio.ViewModel
             set {
                 _SearchText = value;
                 RaisePropertyChanged();
-
-                // BeginSearch();
             }
         }
 
@@ -698,16 +681,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-
-
-
-
-
-        public bool _SideDefaultExpanded = ConfigManager.Main.SideDefaultExpanded;
+        private bool _SideDefaultExpanded = ConfigManager.Main.SideDefaultExpanded;
 
         public bool SideDefaultExpanded {
             get { return _SideDefaultExpanded; }
@@ -719,7 +693,7 @@ namespace Jvedio.ViewModel
                 ConfigManager.Main.Save();
             }
         }
-        public bool _SideTagStampExpanded = ConfigManager.Main.SideTagStampExpanded;
+        private bool _SideTagStampExpanded = ConfigManager.Main.SideTagStampExpanded;
 
         public bool SideTagStampExpanded {
             get { return _SideTagStampExpanded; }
@@ -731,7 +705,7 @@ namespace Jvedio.ViewModel
                 ConfigManager.Main.Save();
             }
         }
-        public bool _ShowSoft = true;
+        private bool _ShowSoft = true;
 
         public bool ShowSoft {
             get { return _ShowSoft; }
@@ -771,11 +745,6 @@ namespace Jvedio.ViewModel
         }
 
         #endregion
-
-
-
-
-
 
         public void ShowAllActors(object o)
         {
@@ -879,7 +848,7 @@ namespace Jvedio.ViewModel
                 videoList.Add(video);
                 Logger.Info($"add new video: {vid}");
             }
-            AddTags(videoList);// 新加入标记
+            AddNewDataTag(videoList);
             Statistic();
 
             // todo tab
@@ -887,8 +856,11 @@ namespace Jvedio.ViewModel
             //    LoadData();
         }
 
-        // 打上新加入的标记
-        private void AddTags(List<Video> videos)
+        /// <summary>
+        /// 打上新加入的标记
+        /// </summary>
+        /// <param name="videos"></param>
+        private void AddNewDataTag(List<Video> videos)
         {
             List<string> list = new List<string>();
             foreach (Video video in videos)
@@ -1030,13 +1002,9 @@ namespace Jvedio.ViewModel
             IsLoadingClassify = loading;
         }
 
-
-        private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
-
-        private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
-
-
-        // 获得标签
+        /// <summary>
+        /// 获得标签
+        /// </summary>
         public async void GetLabelList()
         {
             string like_sql = string.Empty;
@@ -1068,7 +1036,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private static AutoResetEvent resetEvent = new AutoResetEvent(false);
 
         public async void SetClassify(bool refresh = false)
         {
@@ -1191,16 +1158,6 @@ namespace Jvedio.ViewModel
             return result;
         }
 
-
-
-
-
-
-
-        #region "影片"
-
-
-
         public void SetSortOrder<T>(IWrapper<T> wrapper, bool random = false)
         {
             if (wrapper == null)
@@ -1222,11 +1179,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-
-
-
-
-        #endregion
 
         /// <summary>
         /// 统计：加载时间 <70ms (15620个信息)
@@ -1263,18 +1215,5 @@ namespace Jvedio.ViewModel
             DateTime date2 = DateTime.Now;
             RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
         }
-
-        public override void Init()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        #region "TabItem 管理"
-
-
-
-        #endregion
-
     }
 }

@@ -718,17 +718,17 @@ namespace Jvedio.Entity
         {
             return JvedioLib.Security.Identify.IsHDV(Size) ||
                    JvedioLib.Security.Identify.IsHDV(Path) ||
-                   Genre?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
-                   Series?.IndexOfAnyString(Main.TagStrings_HD) >= 0 ||
-                   Label?.IndexOfAnyString(Main.TagStrings_HD) >= 0;
+                   Genre?.IndexOfAnyString(Main.TagStringHD) >= 0 ||
+                   Series?.IndexOfAnyString(Main.TagStringHD) >= 0 ||
+                   Label?.IndexOfAnyString(Main.TagStringHD) >= 0;
         }
 
         public bool IsCHS()
         {
             return JvedioLib.Security.Identify.IsCHS(Path) ||
-                   Genre?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
-                   Series?.IndexOfAnyString(Main.TagStrings_Translated) >= 0 ||
-                   Label?.IndexOfAnyString(Main.TagStrings_Translated) >= 0;
+                   Genre?.IndexOfAnyString(Main.TagStringTranslated) >= 0 ||
+                   Series?.IndexOfAnyString(Main.TagStringTranslated) >= 0 ||
+                   Label?.IndexOfAnyString(Main.TagStringTranslated) >= 0;
         }
 
         public static void SetImage(ref Video video, string imgPath)

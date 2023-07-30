@@ -49,10 +49,17 @@ namespace Jvedio.ViewModels
                 vieModel.TabItems = new ObservableCollection<TabItemEx>();
 
             TabItemEx tabItem = vieModel.TabItems.FirstOrDefault(arg => arg.Name.Equals(tabName));
-            if (tabItem == null) {
-                tabItem = new TabItemEx(tabName, type);
-                vieModel.TabItems.Add(tabItem);
+
+            if (tabItem != null) {
+                // 移除
+                RemovePanel(tabItem);
+                RemoveTabItem(vieModel.TabItems.IndexOf(tabItem));
             }
+
+
+            tabItem = new TabItemEx(tabName, type);
+            vieModel.TabItems.Add(tabItem);
+
 
             int idx = -1;
             for (int i = 0; i < vieModel.TabItems.Count; i++) {
