@@ -475,17 +475,17 @@ namespace Jvedio
             Console.WriteLine("***************OnSourceInitialized***************");
 
             // 热键
-            _windowHandle = new WindowInteropHelper(this).Handle;
-            _source = HwndSource.FromHwnd(_windowHandle);
-            _source.AddHook(HwndHook);
+            WindowHandle = new WindowInteropHelper(this).Handle;
+            HSource = HwndSource.FromHwnd(WindowHandle);
+            HSource.AddHook(HwndHook);
 
             // 注册热键
             uint modifier = (uint)ConfigManager.Settings.HotKeyModifiers;
             uint vk = (uint)ConfigManager.Settings.HotKeyVK;
 
             if (ConfigManager.Settings.HotKeyEnable && modifier != 0 && vk != 0) {
-                UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消之前的热键
-                bool success = RegisterHotKey(_windowHandle, HOTKEY_ID, modifier, vk);
+                Win32Helper.UnregisterHotKey(WindowHandle, HOTKEY_ID); // 取消之前的热键
+                bool success = Win32Helper.RegisterHotKey(WindowHandle, HOTKEY_ID, modifier, vk);
                 if (!success) {
                     new MsgBox(SuperControls.Style.LangManager.GetValueByKey("HotKeyConflict")).ShowDialog(this);
                 }
@@ -520,8 +520,8 @@ namespace Jvedio
 
         protected override void OnClosed(EventArgs e)
         {
-            _source.RemoveHook(HwndHook);
-            UnregisterHotKey(_windowHandle, HOTKEY_ID); // 取消热键
+            HSource.RemoveHook(HwndHook);
+            Win32Helper.UnregisterHotKey(WindowHandle, HOTKEY_ID); // 取消热键
             windowFilter?.Close();
             base.OnClosed(e);
         }

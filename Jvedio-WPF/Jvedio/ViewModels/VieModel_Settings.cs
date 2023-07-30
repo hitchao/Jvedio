@@ -17,120 +17,10 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_Settings : ViewModelBase
     {
+        public const int PIC_PATH_MODE_COUNT = 3;
+
+        #region "基本属性"
         public Dictionary<string, object> PicPaths { get; set; } = new Dictionary<string, object>();
-
-        public VieModel_Settings()
-        {
-            SetServers();
-            SetBasePicPaths();
-            LoadNfoParseData();
-            Logger.Info("init view model setting ok");
-        }
-
-        public void LoadNfoParseData()
-        {
-            NfoParseRules = NfoParse.LoadData();
-        }
-
-
-        public void SaveNFOParseData()
-        {
-            NfoParse.SaveData(NfoParseRules);
-        }
-
-
-        public void LoadScanPath(AppDatabase db)
-        {
-            // 读取配置文件
-            ScanPath = new ObservableCollection<string>();
-
-            List<string> list = JsonUtils.TryDeserializeObject<List<string>>(db.ScanPath);
-            if (list != null && list.Count > 0)
-                list.ForEach(arg => ScanPath.Add(arg));
-
-            if (ScanPath.Count == 0)
-                ScanPath = null;
-            Servers = new ObservableCollection<Server>();
-        }
-
-
-
-        public void SetServers()
-        {
-            CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
-            foreach (PluginMetaData plugin in CrawlerManager.PluginMetaDatas) {
-                string pluginID = plugin.PluginID;
-                if (string.IsNullOrEmpty(pluginID))
-                    continue;
-                string name = plugin.PluginName;
-                CrawlerServer crawlerServer = ConfigManager.ServerConfig.CrawlerServers
-                    .Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
-                if (crawlerServer == null) {
-                    crawlerServer = new CrawlerServer();
-                    crawlerServer.PluginID = pluginID;
-                    CrawlerServers.Add(pluginID, null);
-                } else {
-                    ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
-                    ConfigManager.ServerConfig.CrawlerServers.Where(arg => arg.PluginID.Equals(pluginID)).
-                        ToList().ForEach(t => crawlers.Add(t));
-                    if (!CrawlerServers.ContainsKey(pluginID))
-                        CrawlerServers.Add(pluginID, crawlers);
-                }
-            }
-
-            DisplayCrawlerServers = new ObservableCollection<string>();
-            foreach (string key in CrawlerServers.Keys) {
-                int len = PluginType.Crawler.ToString().Length + 1;
-                DisplayCrawlerServers.Add(key.Substring(len));
-            }
-        }
-
-        public bool SaveServers(Action<string> callback = null)
-        {
-            List<CrawlerServer> list = new List<CrawlerServer>();
-            foreach (string key in CrawlerServers.Keys) {
-                List<CrawlerServer> crawlerServers = CrawlerServers[key]?.ToList();
-                if (crawlerServers == null || crawlerServers.Count <= 0)
-                    continue;
-                foreach (CrawlerServer server in crawlerServers) {
-                    if (!server.IsHeaderProper()) {
-                        string format = "{\"UserAgent\":\"value\",...}";
-                        callback?.Invoke($"【{key}】 刮削器处地址为 {server.Url} 的 Headers 不合理，格式必须为：{format}");
-                        return false;
-                    }
-
-                    if (server.Headers == null)
-                        server.Headers = string.Empty;
-                    list.Add(server);
-                }
-            }
-
-            ConfigManager.ServerConfig.CrawlerServers = list;
-            ConfigManager.ServerConfig.Save();
-            return true;
-        }
-
-        public int PIC_PATH_MODE_COUNT = 3;
-
-        public void SetBasePicPaths()
-        {
-            PicPaths = ConfigManager.Settings.PicPaths;
-
-            PathType type = (PathType)PicPathMode;
-            BasePicPath = PicPaths[type.ToString()].ToString();
-
-            Dictionary<string, string> dict = (Dictionary<string, string>)PicPaths[PathType.RelativeToData.ToString()];
-            BigImagePath = dict["BigImagePath"];
-            SmallImagePath = dict["SmallImagePath"];
-            PreviewImagePath = dict["PreviewImagePath"];
-            ScreenShotPath = dict["ScreenShotPath"];
-            ActorImagePath = dict["ActorImagePath"];
-        }
-
-        public override void Init()
-        {
-            throw new NotImplementedException();
-        }
 
         private int _TabControlSelectedIndex = (int)ConfigManager.Settings.TabControlSelectedIndex;
 
@@ -446,6 +336,8 @@ namespace Jvedio.ViewModel
             }
         }
 
+        #endregion
+
         #region "扫描"
 
         private bool _CopyNFOOverwriteImage = ConfigManager.ScanConfig.CopyNFOOverwriteImage;
@@ -680,7 +572,7 @@ namespace Jvedio.ViewModel
 
         #endregion
 
-        #region "nfo"
+        #region "NFO"
         private bool _SaveInfoToNFO = ConfigManager.Settings.SaveInfoToNFO;
 
         public bool SaveInfoToNFO {
@@ -716,7 +608,7 @@ namespace Jvedio.ViewModel
 
         #endregion
 
-        #region "ffmpeg"
+        #region "FFMPEG"
         private string _FFMPEG_Path = ConfigManager.FFmpegConfig.Path;
 
         public string FFMPEG_Path {
@@ -963,5 +855,118 @@ namespace Jvedio.ViewModel
         }
 
         #endregion
+
+        public VieModel_Settings()
+        {
+            Init();
+        }
+
+        public override void Init()
+        {
+            SetServers();
+            SetBasePicPaths();
+            LoadNfoParseData();
+            Logger.Info("init view model setting ok");
+        }
+
+        public void LoadNfoParseData()
+        {
+            NfoParseRules = NfoParse.LoadData();
+        }
+
+
+        public void SaveNFOParseData()
+        {
+            NfoParse.SaveData(NfoParseRules);
+        }
+
+
+        public void LoadScanPath(AppDatabase db)
+        {
+            // 读取配置文件
+            ScanPath = new ObservableCollection<string>();
+
+            List<string> list = JsonUtils.TryDeserializeObject<List<string>>(db.ScanPath);
+            if (list != null && list.Count > 0)
+                list.ForEach(arg => ScanPath.Add(arg));
+
+            if (ScanPath.Count == 0)
+                ScanPath = null;
+            Servers = new ObservableCollection<Server>();
+        }
+
+
+
+        public void SetServers()
+        {
+            CrawlerServers = new Dictionary<string, ObservableCollection<CrawlerServer>>();
+            foreach (PluginMetaData plugin in CrawlerManager.PluginMetaDatas) {
+                string pluginID = plugin.PluginID;
+                if (string.IsNullOrEmpty(pluginID))
+                    continue;
+                string name = plugin.PluginName;
+                CrawlerServer crawlerServer = ConfigManager.ServerConfig.CrawlerServers
+                    .Where(arg => arg.PluginID.Equals(pluginID)).FirstOrDefault();
+                if (crawlerServer == null) {
+                    crawlerServer = new CrawlerServer();
+                    crawlerServer.PluginID = pluginID;
+                    CrawlerServers.Add(pluginID, null);
+                } else {
+                    ObservableCollection<CrawlerServer> crawlers = new ObservableCollection<CrawlerServer>();
+                    ConfigManager.ServerConfig.CrawlerServers.Where(arg => arg.PluginID.Equals(pluginID)).
+                        ToList().ForEach(t => crawlers.Add(t));
+                    if (!CrawlerServers.ContainsKey(pluginID))
+                        CrawlerServers.Add(pluginID, crawlers);
+                }
+            }
+
+            DisplayCrawlerServers = new ObservableCollection<string>();
+            foreach (string key in CrawlerServers.Keys) {
+                int len = PluginType.Crawler.ToString().Length + 1;
+                DisplayCrawlerServers.Add(key.Substring(len));
+            }
+        }
+
+        public bool SaveServers(Action<string> callback = null)
+        {
+            List<CrawlerServer> list = new List<CrawlerServer>();
+            foreach (string key in CrawlerServers.Keys) {
+                List<CrawlerServer> crawlerServers = CrawlerServers[key]?.ToList();
+                if (crawlerServers == null || crawlerServers.Count <= 0)
+                    continue;
+                foreach (CrawlerServer server in crawlerServers) {
+                    if (!server.IsHeaderProper()) {
+                        string format = "{\"UserAgent\":\"value\",...}";
+                        callback?.Invoke($"【{key}】 刮削器处地址为 {server.Url} 的 Headers 不合理，格式必须为：{format}");
+                        return false;
+                    }
+
+                    if (server.Headers == null)
+                        server.Headers = string.Empty;
+                    list.Add(server);
+                }
+            }
+
+            ConfigManager.ServerConfig.CrawlerServers = list;
+            ConfigManager.ServerConfig.Save();
+            return true;
+        }
+
+
+        public void SetBasePicPaths()
+        {
+            PicPaths = ConfigManager.Settings.PicPaths;
+
+            PathType type = (PathType)PicPathMode;
+            BasePicPath = PicPaths[type.ToString()].ToString();
+
+            Dictionary<string, string> dict = (Dictionary<string, string>)PicPaths[PathType.RelativeToData.ToString()];
+            BigImagePath = dict["BigImagePath"];
+            SmallImagePath = dict["SmallImagePath"];
+            PreviewImagePath = dict["PreviewImagePath"];
+            ScreenShotPath = dict["ScreenShotPath"];
+            ActorImagePath = dict["ActorImagePath"];
+        }
+
     }
 }
