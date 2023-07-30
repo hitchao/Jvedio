@@ -21,7 +21,15 @@ namespace Jvedio
     /// </summary>
     public partial class Window_EditActor : BaseWindow
     {
+        #region "属性"
         private Main main { get; set; }
+
+        public long ActorID { get; set; }
+
+        public ActorInfo CurrentActorInfo { get; set; }
+
+
+        #endregion
 
         private Window_EditActor()
         {
@@ -29,22 +37,25 @@ namespace Jvedio
             main = GetWindowByName("Main", App.Current.Windows) as Main;
         }
 
-        public long ActorID { get; set; }
-
-        public ActorInfo CurrentActorInfo { get; set; }
 
         public Window_EditActor(long actorID) : this()
         {
+            if (this.ActorID <= 0)
+                return;
+
             this.ActorID = actorID;
             this.DataContext = this;
-            CurrentActorInfo = new ActorInfo();
-            LoadActor();
+
+            Init();
         }
 
-        public void LoadActor()
+        public void Init()
         {
             if (this.ActorID <= 0)
                 return;
+
+
+            CurrentActorInfo = new ActorInfo();
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             wrapper.Eq("ActorID", this.ActorID);
             ActorInfo actorInfo = actorMapper.SelectById(wrapper);

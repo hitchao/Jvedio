@@ -9,13 +9,8 @@ namespace Jvedio.Windows
     /// </summary>
     public partial class Window_Progress : SuperControls.Style.BaseWindow, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChanged([CallerMemberName] string name = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
+        #region "属性"
         private string _MainText = string.Empty;
 
         public string MainText {
@@ -75,6 +70,7 @@ namespace Jvedio.Windows
                 RaisePropertyChanged();
             }
         }
+        #endregion
 
         public Window_Progress()
         {
@@ -82,7 +78,12 @@ namespace Jvedio.Windows
             DataContext = this;
         }
 
-        public Window_Progress(string title = "", string mainText = "总进度", string subText = "次进度", float mainProgress = 0, float subProgress = 0, string logText = "日志") : this()
+        public Window_Progress(string title = "",
+            string mainText = "总进度",
+            string subText = "次进度",
+            float mainProgress = 0,
+            float subProgress = 0,
+            string logText = "日志") : this()
         {
             if (!string.IsNullOrEmpty(title))
                 Title = title;

@@ -16,30 +16,29 @@ using System.Windows.Threading;
 using static Jvedio.App;
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
-using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio.ViewModel
 {
     public class VieModel_Details : ViewModelBase
     {
+
+        #region "事件"
+
         public event EventHandler QueryCompleted;
         private delegate void LoadLabelDelegate(string str);
         private void LoadLabel(string str) => CurrentLabelList.Add(str);
+
         private delegate void LoadViewAssocVideoDelegate(Video video, int idx);
         private void LoadViewAssocVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
+
+        #endregion
+
+
+        #region "属性"
         private Window_Details WindowDetails { get; set; }
 
         private bool LoadingLabel { get; set; }
-
-        public VieModel_Details(Window_Details windowDetails)
-        {
-            this.WindowDetails = windowDetails;
-        }
-
-        #region "属性"
-
-
 
         private bool _TeenMode = ConfigManager.Settings.TeenMode;
 
@@ -120,7 +119,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public ObservableCollection<Video> _ViewAssociationDatas;
+        private ObservableCollection<Video> _ViewAssociationDatas;
 
         public ObservableCollection<Video> ViewAssociationDatas {
             get { return _ViewAssociationDatas; }
@@ -155,6 +154,19 @@ namespace Jvedio.ViewModel
         }
 
         #endregion
+
+        public VieModel_Details(Window_Details windowDetails)
+        {
+            this.WindowDetails = windowDetails;
+
+            Init();
+        }
+
+
+        public override void Init()
+        {
+
+        }
 
         public void LoadVideoInfo()
         {
@@ -323,9 +335,5 @@ namespace Jvedio.ViewModel
             LoadingLabel = false;
         }
 
-        public override void Init()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -23,36 +23,41 @@ namespace Jvedio
     /// <summary>
     /// Window_Edit.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_Edit : SuperControls.Style.BaseWindow
+    public partial class Window_Edit : BaseWindow
     {
+
+        #region "属性"
         private Main main { get; set; }
 
         private Window_Details windowDetails { get; set; }
 
-        VieModel_Edit vieModel { get; set; }
+        private VieModel_Edit vieModel { get; set; }
+        #endregion
+
 
         public Window_Edit(long dataID)
         {
             InitializeComponent();
 
-            Init();
             vieModel = new VieModel_Edit(dataID, this);
             this.DataContext = vieModel;
+
+            Init();
         }
 
         private void Init()
         {
             main = GetWindowByName("Main", App.Current.Windows) as Main;
             windowDetails = GetWindowByName("Window_Details", App.Current.Windows) as Window_Details;
-            if (StyleManager.GlobalFont != null)
-                this.FontFamily = StyleManager.GlobalFont; // 设置字体
+            //if (StyleManager.GlobalFont != null)
+            //    this.FontFamily = StyleManager.GlobalFont; // 设置字体
         }
 
         private void SaveInfo(object sender, RoutedEventArgs e)
         {
             bool success = vieModel.Save();
             if (success) {
-                vieModel.Reset();
+                vieModel.Init();
 
                 // 更新到主界面和详情界面
                 main?.RefreshData(vieModel.CurrentVideo.DataID);
@@ -95,7 +100,7 @@ namespace Jvedio
                 vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, vieModel.CurrentVideo.SubSectionList);
             }
 
-            calcSize();
+            CalcSize();
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -150,7 +155,7 @@ namespace Jvedio
             if (vieModel.CurrentVideo.SubSectionList != null)
                 list = vieModel.CurrentVideo.SubSectionList.Select(arg => arg.Value).ToList();
             vieModel.CurrentVideo.SubSection = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
-            calcSize();
+            CalcSize();
 
         }
 
@@ -168,12 +173,12 @@ namespace Jvedio
                 string.Join(SuperUtils.Values.ConstValues.SeparatorString,
                 vieModel.CurrentVideo.SubSectionList.Select(arg => arg.Value));
 
-            calcSize();
+            CalcSize();
         }
 
 
 
-        public void calcSize()
+        public void CalcSize()
         {
             long total = 0;
             if (vieModel.CurrentVideo.SubSectionList != null && vieModel.CurrentVideo.SubSectionList.Count > 0) {
@@ -245,7 +250,7 @@ namespace Jvedio
             vieModel.ActorPageSize = pagination.PageSize;
         }
 
-        private long getDataID(UIElement o)
+        private long GetDataID(UIElement o)
         {
             FrameworkElement element = o as FrameworkElement;
             if (element == null)
@@ -261,7 +266,7 @@ namespace Jvedio
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            long actorID = getDataID(sender as FrameworkElement);
+            long actorID = GetDataID(sender as FrameworkElement);
             ActorInfo actorInfo = vieModel.CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
             if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName)) {
                 vieModel.ActorName = actorInfo.ActorName;
@@ -308,7 +313,7 @@ namespace Jvedio
 
         private void DeleteActor(object sender, RoutedEventArgs e)
         {
-            long actorID = getDataID(sender as FrameworkElement);
+            long actorID = GetDataID(sender as FrameworkElement);
 
             for (int i = vieModel.ViewActors.Count - 1; i >= 0; i--) {
                 if (vieModel.ViewActors[i].ActorID == actorID) {
@@ -323,7 +328,7 @@ namespace Jvedio
             List<string> fileNames = SelectVideo(vieModel.CurrentVideo.Path);
             if (fileNames.Count > 0) {
                 vieModel.CurrentVideo.Path = fileNames[0];
-                calcSize();
+                CalcSize();
             }
         }
     }

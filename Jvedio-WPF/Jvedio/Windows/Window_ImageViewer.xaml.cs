@@ -15,6 +15,7 @@ namespace Jvedio
         public Window_ImageViewer(Window owner, ImageSource source)
         {
             InitializeComponent();
+
             this.Owner = owner;
             this.Height = SystemParameters.PrimaryScreenHeight * 0.8;
             this.Width = SystemParameters.PrimaryScreenHeight * 0.8 * 1230 / 720;
@@ -23,13 +24,7 @@ namespace Jvedio
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            // if (Properties.Settings.Default.EnableWindowFade) {
-            //     var anim = new DoubleAnimation(0, (Duration)Main.FadeInterval);
-            //     anim.Completed += (s, _) => this.Close();
-            //     this.BeginAnimation(UIElement.OpacityProperty, anim);
-            // } else {
             this.Close();
-            // }
         }
 
         protected override void OnClosed(EventArgs e)
@@ -40,8 +35,7 @@ namespace Jvedio
 
         private void Grid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
+            if (e.LeftButton == MouseButtonState.Pressed) {
                 this.DragMove();
             }
         }

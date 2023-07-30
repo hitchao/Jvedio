@@ -27,15 +27,16 @@ namespace Jvedio
     public partial class Window_Server : BaseWindow
     {
 
-        private static StringBuilder LogCache = new StringBuilder();
-        public enum ServerStatus
-        {
-            UnReady,
-            Starting,
-            Ready
-        }
-
+        #region "事件"
         public Action<ServerStatus> OnServerStatusChanged;
+
+
+        #endregion
+
+        #region "属性"
+        private static StringBuilder LogCache { get; set; } = new StringBuilder();
+        private static Process CurrentProcess { get; set; }
+
 
         private string _LocalIp;
         public string LocalIp {
@@ -83,24 +84,31 @@ namespace Jvedio
         }
 
 
-
-
+        #endregion
 
 
         public Window_Server()
         {
             InitializeComponent();
             this.DataContext = this;
-
         }
-
-
 
         static Window_Server()
         {
             AvalonEditManager.Init();
         }
 
+        public void Init()
+        {
+            // 获取本地 IP
+            try {
+                LocalIp = NetUtils.GetLocalIPAddress();
+            } catch (Exception ex) {
+                MessageCard.Error(ex.Message);
+            }
+
+            Logger.Info($"get local ip: {LocalIp}");
+        }
 
 
         private async void BaseWindow_ContentRendered(object sender, System.EventArgs e)
@@ -119,26 +127,11 @@ namespace Jvedio
 
         }
 
-        public void Init()
-        {
-            // 获取本地 IP
-            try {
-                LocalIp = NetUtils.GetLocalIPAddress();
-            } catch (Exception ex) {
-                MessageCard.Error(ex.Message);
-            }
-
-            Logger.Info($"get local ip: {LocalIp}");
-        }
-
-
-
         private void SearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
 
         }
 
-        private static Process CurrentProcess { get; set; }
 
         private async void StartServer()
         {

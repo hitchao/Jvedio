@@ -44,34 +44,53 @@ namespace Jvedio
     public partial class Window_Details : Window
     {
 
-        private VieModel_Details vieModel { get; set; }
+        #region "静态属性"
 
+        private delegate void LoadActorDelegate(ActorInfo actor);
+
+        private void LoadActor(ActorInfo actor) => vieModel.CurrentActorList.Add(actor);
+
+        private delegate void LoadExtraImageDelegate(BitmapSource bitmapSource);
+        private delegate void LoadExtraPathDelegate(string path);
+
+        #endregion
+        #region "静态属性"
         private static Main windowMain { get; set; }
 
+        #endregion
+
+
+        #region "属性"
+        private VieModel_Details vieModel { get; set; }
         private Window_Edit windowEdit { get; set; }
 
-        private List<long> DataIDs = new List<long>();
+        private List<long> DataIDs { get; set; } = new List<long>();
 
         public long DataID { get; set; }
 
-        private bool cancelLoadImage { get; set; }// 切换到下一个影片时停止加载图片
+        private bool CancelLoadImage { get; set; }// 切换到下一个影片时停止加载图片
 
-        // 进度条
-        Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager taskbarInstance { get; set; }
+        /// <summary>
+        /// 进度条
+        /// </summary>
+        private Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager TaskbarInstance { get; set; }
 
         private bool CanRateChange { get; set; }
+
+        #endregion
 
         static Window_Details()
         {
             windowMain = GetWindowByName("Main", App.Current.Windows) as Main;
         }
 
+
         public Window_Details(long dataID)
         {
             InitializeComponent();
             DataID = dataID;
+
             Init();
-            InitProgressBar();
         }
 
         public void Init()
@@ -79,28 +98,36 @@ namespace Jvedio
             this.Height = SystemParameters.PrimaryScreenHeight * 0.8;
             this.Width = SystemParameters.PrimaryScreenHeight * 0.8 * 1230 / 720;
             DataIDs = new List<long>();
+            InitProgressBar();
+
+            vieModel = new VieModel_Details(this);
+            vieModel.QueryCompleted += async delegate {
+                SetStatus(true);
+                await LoadImage(vieModel.ShowScreenShot);
+                ShowMagnets();
+                ShowActor();
+                vieModel.GetLabels();
+            };
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            SetShadow();            // 设置阴影
+            SetShadow();
             SetSkin();
-            vieModel = new VieModel_Details(this);
-            vieModel.QueryCompleted += async delegate {
-                SetStatus(true);    // 设置状态
-                await LoadImage(vieModel.ShowScreenShot); // 加载图片
-                renderMagnets();    // 显示磁力
-                ShowActor();
-                SetLabel();
-            };
             vieModel.Load(DataID);
             this.DataContext = vieModel;
+
             rootGrid.Focus();       // 设置键盘左右可切换
             InitDataIDs();          // 设置切换的影片列表
             OpenOtherUrlMenuItem.Items.Clear(); // 设置右键菜单
-            RemoveNewAddTag();      // 移除【新加入】标记
+            RemoveNewAddTag();
         }
 
+
+
+        /// <summary>
+        /// 移除【新加入】标记
+        /// </summary>
         private void RemoveNewAddTag()
         {
             if (vieModel.CurrentVideo != null && vieModel.CurrentVideo.TagStamp != null &&
@@ -110,11 +137,6 @@ namespace Jvedio
                 windowMain?.InitTagStamp();
                 windowMain?.RefreshData(DataID);
             }
-        }
-
-        private void SetLabel()
-        {
-            vieModel.GetLabels();
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
@@ -128,14 +150,15 @@ namespace Jvedio
             searchLabelPopup.IsOpen = false;
         }
 
+
+        /// <summary>
+        /// 设置窗体阴影
+        /// </summary>
         private void SetShadow()
         {
             SuperControls.Style.Utils.DwmDropShadow.DropShadowToWindow(this);
         }
 
-        private delegate void LoadActorDelegate(ActorInfo actor);
-
-        private void LoadActor(ActorInfo actor) => vieModel.CurrentActorList.Add(actor);
 
         public async void ShowActor()
         {
@@ -144,7 +167,7 @@ namespace Jvedio
             // 加载演员
             if (vieModel.CurrentVideo.ActorInfos != null) {
                 for (int i = 0; i < vieModel.CurrentVideo.ActorInfos.Count; i++) {
-                    if (cancelLoadImage)
+                    if (CancelLoadImage)
                         break;
                     ActorInfo actorInfo = vieModel.CurrentVideo.ActorInfos[i];
 
@@ -203,7 +226,7 @@ namespace Jvedio
         {
             ProgressBar.Visibility = Visibility.Collapsed;
             if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
-                taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
+                TaskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
         }
 
         public void Refresh()
@@ -396,7 +419,7 @@ namespace Jvedio
         {
             if (DataIDs.Count == 0)
                 return;
-            cancelLoadImage = true;
+            CancelLoadImage = true;
             long nextID = 0L;
             for (int i = 0; i < DataIDs.Count; i++) {
                 long id = DataIDs[i];
@@ -411,7 +434,7 @@ namespace Jvedio
             }
 
             if (nextID > 0) {
-                cancelLoadImage = false;
+                CancelLoadImage = false;
                 vieModel.Load(nextID);
                 vieModel.SelectImageIndex = 0;
                 RemoveNewAddTag();
@@ -422,7 +445,7 @@ namespace Jvedio
         {
             if (DataIDs.Count == 0)
                 return;
-            cancelLoadImage = true;
+            CancelLoadImage = true;
 
             long nextID = 0L;
             for (int i = 0; i < DataIDs.Count; i++) {
@@ -438,7 +461,7 @@ namespace Jvedio
             }
 
             if (nextID > 0) {
-                cancelLoadImage = false;
+                CancelLoadImage = false;
                 vieModel.Load(nextID);
                 vieModel.SelectImageIndex = 0;
                 RemoveNewAddTag();
@@ -590,7 +613,7 @@ namespace Jvedio
             if (idx >= DataIDs.Count)
                 idx = 0;
             if (idx >= 0 && idx < DataIDs.Count) {
-                cancelLoadImage = false;
+                CancelLoadImage = false;
                 vieModel.Load(DataIDs[idx]);
                 vieModel.SelectImageIndex = 0;
             } else {
@@ -683,7 +706,7 @@ namespace Jvedio
 
         private void SetImage(int idx)
         {
-            if (cancelLoadImage)
+            if (CancelLoadImage)
                 return;
             if (vieModel.CurrentVideo.PreviewImageList.Count == 0) {
                 // 设置为默认图片
@@ -936,6 +959,11 @@ namespace Jvedio
             contextMenu.IsOpen = false;
         }
 
+
+        /// <summary>
+        /// 设置状态
+        /// </summary>
+        /// <param name="status"></param>
         public void SetStatus(bool status)
         {
             NextGrid.IsEnabled = status;
@@ -943,7 +971,7 @@ namespace Jvedio
             ImageChangeStackPanel.IsEnabled = status;
         }
 
-        private void renderMagnets()
+        private void ShowMagnets()
         {
             if (ConfigManager.Settings.TeenMode
                 || vieModel.CurrentVideo.Magnets == null
@@ -968,7 +996,7 @@ namespace Jvedio
 
         private void DisposeImage()
         {
-            cancelLoadImage = true;
+            CancelLoadImage = true;
             if (vieModel.CurrentVideo.PreviewImageList != null) {
                 for (int i = 0; i < vieModel.CurrentVideo.PreviewImageList.Count; i++) {
                     vieModel.CurrentVideo.PreviewImageList[i] = null;
@@ -976,7 +1004,7 @@ namespace Jvedio
             }
 
             GC.Collect();
-            cancelLoadImage = false;
+            CancelLoadImage = false;
         }
 
         private async Task<bool> LoadImage(bool isScreenShot = false)
@@ -1038,7 +1066,7 @@ namespace Jvedio
             foreach (var path in imagePathList) {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraImageDelegate(LoadExtraImage), BitmapImageFromFile(path));
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraPathDelegate(LoadExtraPath), path);
-                if (cancelLoadImage)
+                if (CancelLoadImage)
                     break;
             }
 
@@ -1046,14 +1074,13 @@ namespace Jvedio
             return true;
         }
 
-        private delegate void LoadExtraImageDelegate(BitmapSource bitmapSource);
 
         private void LoadExtraImage(BitmapSource bitmapSource)
         {
             vieModel.CurrentVideo.PreviewImageList.Add(bitmapSource);
         }
 
-        private delegate void LoadExtraPathDelegate(string path);
+
 
         private void LoadExtraPath(string path)
         {
@@ -1077,11 +1104,11 @@ namespace Jvedio
 
         private void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null) {
-                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal, this);
-                taskbarInstance.SetProgressValue((int)e.NewValue, 100, this);
+            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && TaskbarInstance != null) {
+                TaskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal, this);
+                TaskbarInstance.SetProgressValue((int)e.NewValue, 100, this);
                 if (e.NewValue >= 100 || e.NewValue <= 0)
-                    taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
+                    TaskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
             }
         }
 
@@ -1089,8 +1116,8 @@ namespace Jvedio
         private void ProgressBar_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             return;
-            if (ProgressBar.Visibility == Visibility.Collapsed && Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && taskbarInstance != null) {
-                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
+            if (ProgressBar.Visibility == Visibility.Collapsed && Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && TaskbarInstance != null) {
+                TaskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
             }
         }
 

@@ -2,6 +2,7 @@
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
+using Jvedio.Core.Server;
 using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;

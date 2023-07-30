@@ -19,26 +19,21 @@ namespace Jvedio.ViewModel
 {
     class VieModel_Edit : ViewModelBase
     {
+
+        #region "事件"
+        private delegate void LoadLabelDelegate(string str);
+
+        private void LoadLabel(string str) => CurrentLabelList.Add(str);
+        #endregion
+
+        #region "属性"
         private Window_Edit WindowEdit { get; set; }
 
         private List<string> OldLabels { get; set; }
 
         private bool LoadingLabel { get; set; }
 
-        public VieModel_Edit(long dataId, Window_Edit windowEdit)
-        {
-            WindowEdit = windowEdit;
-            if (dataId <= 0) {
-                Logger.Error("data id must > 0");
-                return;
-            }
-            DataID = dataId;
-            Reset();
-        }
-
-        #region "属性"
-
-        public Video _CurrentVideo;
+        private Video _CurrentVideo;
 
         public Video CurrentVideo {
             get { return _CurrentVideo; }
@@ -49,7 +44,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public bool _MoreExpanded = ConfigManager.Edit.MoreExpanded;
+        private bool _MoreExpanded = ConfigManager.Edit.MoreExpanded;
 
         public bool MoreExpanded {
             get { return _MoreExpanded; }
@@ -60,7 +55,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public long _DataID;
+        private long _DataID;
 
         public long DataID {
             get { return _DataID; }
@@ -129,7 +124,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public int _CurrentActorCount = 0;
+        private int _CurrentActorCount = 0;
 
         public int CurrentActorCount {
             get { return _CurrentActorCount; }
@@ -221,7 +216,18 @@ namespace Jvedio.ViewModel
         #endregion
 
 
-        public void Reset()
+        public VieModel_Edit(long dataId, Window_Edit windowEdit)
+        {
+            WindowEdit = windowEdit;
+            if (dataId <= 0) {
+                Logger.Error("data id must > 0");
+                return;
+            }
+            DataID = dataId;
+            Init();
+        }
+
+        public override void Init()
         {
             CurrentVideo = null;
             CurrentVideo = MapperManager.videoMapper.SelectVideoByID(DataID);
@@ -232,7 +238,7 @@ namespace Jvedio.ViewModel
 
             GetLabels();
 
-            Logger.Info("reset ok");
+            Logger.Info("init ok");
         }
 
         public async void GetLabels()
@@ -274,9 +280,6 @@ namespace Jvedio.ViewModel
             LoadingLabel = false;
         }
 
-        private delegate void LoadLabelDelegate(string str);
-
-        private void LoadLabel(string str) => CurrentLabelList.Add(str);
 
         // todo 演员
         public bool Save()
@@ -401,9 +404,5 @@ namespace Jvedio.ViewModel
             return $" LIMIT {offset},{row_count}";
         }
 
-        public override void Init()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

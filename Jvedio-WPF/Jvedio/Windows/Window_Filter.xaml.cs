@@ -15,18 +15,62 @@ namespace Jvedio
     /// </summary>
     public partial class Window_Filter : BaseWindow
     {
-        Main main = GetWindowByName("Main", App.Current.Windows) as Main;
+        #region "属性"
+
+        private Main main { get; set; } = GetWindowByName("Main", App.Current.Windows) as Main;
+
+        #endregion
+
+        #region "静态属性"
+
+        private static List<string> FilterList { get; set; } = new List<string>()
+         {
+            "Year",
+            "Month",
+            "Duration",
+            "Genre",
+            "Grade",
+            "Series",
+            "Director",
+            "Studio",
+            "Publisher",
+        };
+
+        List<string> baseList { get; set; } = new List<string>()
+            {
+                "可播放",
+                "不可播放",
+                "分段视频",
+                "含磁力",
+            };
+
+        List<string> imageList { get; set; } = new List<string>()
+            {
+                "含海报",
+                "含缩略图",
+                "含预览图",
+                "含截图",
+                "含演员头像",
+            };
+
+        #endregion
+
 
         public Window_Filter()
         {
             InitializeComponent();
-            initSize();         // 调整位置和大小
+            Init();
+        }
+
+        public void Init()
+        {
+            InitSize();         // 调整位置和大小
 
             SetCommonFilter(); // 加载默认
             LoadData(); // 加载过滤器
         }
 
-        private void initSize()
+        private void InitSize()
         {
             if (ConfigManager.Filter.Width > 0)
                 this.Width = ConfigManager.Filter.Width;
@@ -53,35 +97,6 @@ namespace Jvedio
             ConfigManager.Filter.Save();
         }
 
-        private static List<string> FilterList = new List<string>()
-        {
-            "Year",
-            "Month",
-            "Duration",
-            "Genre",
-            "Grade",
-            "Series",
-            "Director",
-            "Studio",
-            "Publisher",
-        };
-
-        List<string> baseList = new List<string>()
-            {
-                "可播放",
-                "不可播放",
-                "分段视频",
-                "含磁力",
-            };
-
-        List<string> imageList = new List<string>()
-            {
-                "含海报",
-                "含缩略图",
-                "含预览图",
-                "含截图",
-                "含演员头像",
-            };
 
         private void SetCommonFilter()
         {
@@ -96,9 +111,7 @@ namespace Jvedio
                 imageWrapPanel.Children.Add(buildToggleButton(item));
         }
 
-#pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
-        private async void LoadData()
-#pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
+        private void LoadData()
         {
             string sql = $"SELECT DISTINCT ReleaseDate FROM metadata " +
                 $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0}";
@@ -218,10 +231,5 @@ namespace Jvedio
             scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
             e.Handled = true;
         }
-
-        ////public override void CloseWindow(object sender, RoutedEventArgs e)
-        ////{
-        ////    this.Hide();
-        ////}
     }
 }

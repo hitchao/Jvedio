@@ -19,14 +19,25 @@ namespace Jvedio
     /// </summary>
     public partial class Window_ScanDetail : BaseWindow
     {
+
+        #region "属性"
+        private ScanResult ScanResult { get; set; }
+        private List<ScanDetail> Details { get; set; }
+
+        #endregion
+
         public Window_ScanDetail()
         {
             InitializeComponent();
         }
 
-        public ScanResult ScanResult { get; set; }
+        public Window_ScanDetail(ScanResult scanResult) : this()
+        {
+            ScanResult = scanResult;
+        }
 
-        public class ScanDetail
+
+        private class ScanDetail
         {
             public long ID { get; set; }
             public string Handle { get; set; }
@@ -48,10 +59,7 @@ namespace Jvedio
             }
         }
 
-        public Window_ScanDetail(ScanResult scanResult) : this()
-        {
-            ScanResult = scanResult;
-        }
+
 
         private string getExtension(string path)
         {
@@ -60,10 +68,10 @@ namespace Jvedio
             return System.IO.Path.GetExtension(path).ToLower().Replace(".", string.Empty);
         }
 
-        List<ScanDetail> details;
+
         private void BaseWindow_ContentRendered(object sender, EventArgs e)
         {
-            details = new List<ScanDetail>();
+            Details = new List<ScanDetail>();
             long idx = 0;
             foreach (var item in ScanResult.FailNFO) {
                 ScanDetail detail = new ScanDetail() {
@@ -73,7 +81,7 @@ namespace Jvedio
                     Reason = string.Empty,
                     ID = idx++,
                 };
-                details.Add(detail);
+                Details.Add(detail);
             }
 
             foreach (var key in ScanResult.NotImport.Keys) {
@@ -86,7 +94,7 @@ namespace Jvedio
                     ShowDetail = !string.IsNullOrEmpty(ScanResult.NotImport[key].Detail),
                     ID = idx++,
                 };
-                details.Add(detail);
+                Details.Add(detail);
             }
 
             foreach (var key in ScanResult.Update.Keys) {
@@ -97,7 +105,7 @@ namespace Jvedio
                     Reason = ScanResult.Update[key],
                     ID = idx++,
                 };
-                details.Add(detail);
+                Details.Add(detail);
             }
 
             foreach (var item in ScanResult.Import) {
@@ -108,10 +116,10 @@ namespace Jvedio
                     Reason = string.Empty,
                     ID = idx++,
                 };
-                details.Add(detail);
+                Details.Add(detail);
             }
 
-            dataGrid.ItemsSource = details;
+            dataGrid.ItemsSource = Details;
 
             total.Text = ScanResult.TotalCount.ToString();
             import.Text = ScanResult.Import.Count.ToString();
@@ -161,29 +169,7 @@ namespace Jvedio
 
         private string GenerateOutput()
         {
-            //StringBuilder builder = new StringBuilder();
-            //List<Border> borders = wrapPanel.Children.OfType<Border>().ToList();
-            //for (int i = 0; i < borders.Count; i++)
-            //{
-            //    Border border = borders[i];
-            //    UIElementCollection children = (border.Child as Grid).Children;
-            //    foreach (var item in children)
-            //    {
-            //        if (item.GetType().GetProperty("Text") != null)
-            //        {
-            //            string text = item.GetType().GetProperty("Text").GetValue(item).ToString();
-            //            builder.Append(text + " ");
-            //        }
-            //    }
-
-            //    builder.Append(Environment.NewLine);
-            //}
-
-            //builder.Append(LangManager.GetValueByKey("Detail"));
-            //builder.Append(Environment.NewLine);
-
             List<ScanDetail> datas = new List<ScanDetail>();
-
             for (int i = 0; i < dataGrid.Items.Count; i++) {
                 ScanDetail detail = (ScanDetail)dataGrid.Items[i];
                 datas.Add(detail);
@@ -199,10 +185,10 @@ namespace Jvedio
 
         private void ShowDetail(object sender, RoutedEventArgs e)
         {
-            if (details != null && details.Count > 0) {
+            if (Details != null && Details.Count > 0) {
                 if (sender is Button button && button.Tag != null &&
                     long.TryParse(button.Tag.ToString(), out long id)) {
-                    ScanDetail scanDetail = details.FirstOrDefault(arg => arg.ID == id);
+                    ScanDetail scanDetail = Details.FirstOrDefault(arg => arg.ID == id);
                     if (scanDetail != null)
                         new Dialog_Logs(string.Join(Environment.NewLine, scanDetail.Details)).ShowDialog(this);
                 }
