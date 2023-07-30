@@ -33,10 +33,10 @@ namespace Jvedio
             Loaded = false;
         }
 
-        public static void Init()
+        public static bool Init()
         {
             if (Loaded)
-                return;
+                return false;
 
             // todo 泛型似乎无法使用多态进行反射加载
 
@@ -86,6 +86,7 @@ namespace Jvedio
 
             Loaded = true;
             Logger.Info("init mapper ok");
+            return Loaded;
         }
 
         public static void Dispose()

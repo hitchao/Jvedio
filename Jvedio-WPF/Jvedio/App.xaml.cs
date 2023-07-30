@@ -38,9 +38,23 @@ namespace Jvedio
         {
             SuperUtils.Handler.LogHandler.Logger = Logger;
             SuperControls.Style.Handler.LogHandler.Logger = Logger;
+
+
+            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            Logger.Info(Environment.NewLine);
+            Logger.Info("     ██╗██╗   ██╗███████╗██████╗ ██╗ ██████╗ ");
+            Logger.Info("     ██║██║   ██║██╔════╝██╔══██╗██║██╔═══██╗");
+            Logger.Info("     ██║██║   ██║█████╗  ██║  ██║██║██║   ██║");
+            Logger.Info("██   ██║╚██╗ ██╔╝██╔══╝  ██║  ██║██║██║   ██║");
+            Logger.Info("╚█████╔╝ ╚████╔╝ ███████╗██████╔╝██║╚██████╔╝");
+            Logger.Info(" ╚════╝   ╚═══╝  ╚══════╝╚═════╝ ╚═╝ ╚═════╝ ");
+            Logger.Info(Environment.NewLine);
+
+            Logger.Info($"app init, version: {local}");
+            Logger.Info($"release date: {ConfigManager.RELEASE_DATE}");
+
 #if DEBUG
-            Console.WriteLine("***************OnStartup***************");
-            Console.WriteLine("Debug 不捕获未处理异常");
 #else
             bool createNew;
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "Jvedio", out createNew);
@@ -84,16 +98,15 @@ namespace Jvedio
         }
 
 
-        private void SaveConfig()
-        {
-            Jvedio.ConfigManager.VideoConfig.ActorEditMode = false;
-            ConfigManager.SaveAll();
-        }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            Console.WriteLine("***************OnExit***************");
-            SaveConfig();
+            ConfigManager.SaveAll();
+
+            Logger.Info(Environment.NewLine);
+            Logger.Info("==== goodbye ====");
+            Logger.Info(Environment.NewLine);
+
             base.OnExit(e);
         }
 

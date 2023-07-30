@@ -1,4 +1,5 @@
-﻿using SuperUtils.Framework.Logger;
+﻿using Jvedio.Core.Global;
+using SuperUtils.Framework.Logger;
 using SuperUtils.IO;
 using SuperUtils.Time;
 using System;
@@ -14,8 +15,7 @@ namespace Jvedio.Core.Logs
     public class Logger : AbstractLogger
     {
 
-        private static string FilePath { get; set; } =
-            System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+        private static string FilePath { get; set; } = PathManager.LogPath;
 
         private static object LogLock { get; set; }
         public static Logger Instance { get; }

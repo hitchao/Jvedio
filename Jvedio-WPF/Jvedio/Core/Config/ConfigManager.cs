@@ -8,6 +8,7 @@ using SuperUtils.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using static Jvedio.App;
 
 namespace Jvedio
@@ -16,8 +17,7 @@ namespace Jvedio
     {
         public const string RELEASE_DATE = "2023-07-08";
 
-        public static bool Loaded { get; set; } = false;
-
+        private static bool Loaded { get; set; } = false;
 
         public static StartUp StartUp { get; set; }
         public static Core.WindowConfig.Main Main { get; set; }
@@ -38,7 +38,7 @@ namespace Jvedio
         public static Jvedio.Core.Config.JavaServerConfig JavaServerConfig { get; set; }
         public static Jvedio.Core.Config.Data.VideoConfig VideoConfig { get; set; }
 
-        static ConfigManager()
+        private static void CreateInstance()
         {
             StartUp = StartUp.CreateInstance();
             Main = Core.WindowConfig.Main.CreateInstance();
@@ -60,8 +60,6 @@ namespace Jvedio
             JavaServerConfig = Jvedio.Core.Config.JavaServerConfig.CreateInstance();
 
             VideoConfig = Jvedio.Core.Config.Data.VideoConfig.CreateInstance();
-
-            ReadConfig();
         }
 
         public static void SaveAll()
@@ -84,6 +82,7 @@ namespace Jvedio
             ThemeConfig.Save();
             DownloadConfig.Save();
             JavaServerConfig.Save();
+            VideoConfig.Save();
         }
 
         public static void Restore()
@@ -91,9 +90,12 @@ namespace Jvedio
             Settings.TeenMode = true;
         }
 
-        public static void ReadConfig()
+        private static void Init()
         {
-            System.Reflection.PropertyInfo[] propertyInfos = typeof(ConfigManager).GetProperties();
+            CreateInstance();
+
+            System.Reflection.PropertyInfo[] propertyInfos = typeof(ConfigManager)
+                .GetProperties(BindingFlags.Public | BindingFlags.Static);
 
             foreach (var item in propertyInfos) {
                 AbstractConfig config = item.GetValue(null) as AbstractConfig;
@@ -106,21 +108,20 @@ namespace Jvedio
             }
         }
 
-        public static void Init(Action callBack)
+        public static void Init(Action onLoaded)
         {
             if (Loaded)
                 return;
 
             Logger.Info("init config");
+            Init();
 
             // 配置 ffmpeg 路径
             if (!File.Exists(ConfigManager.FFmpegConfig.Path) && File.Exists("ffmpeg.exe"))
                 ConfigManager.FFmpegConfig.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");
 
-            EnsurePicPaths();
-
-            callBack?.Invoke();
-
+            EnsurePicPaths(); // 必须在配置加载后
+            onLoaded?.Invoke();
             Loaded = true;
         }
 

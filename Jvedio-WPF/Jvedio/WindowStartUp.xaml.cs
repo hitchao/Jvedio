@@ -27,20 +27,25 @@ using static Jvedio.Core.Global.PathManager;
 using static Jvedio.App;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
+using SuperControls.Style.CSFile.Interfaces;
 
 namespace Jvedio
 {
-    public partial class WindowStartUp : SuperControls.Style.BaseWindow
+    public partial class WindowStartUp : BaseWindow, IBaseWindow
     {
+
+        private const int CLEAR_LOG_DAY = -10;
+        private const int CLEAR_BACKUP_DAY = -30;
+        private const int DEFAULT_TITLE_HEIGHT = 30;
 
         private static string[] FILE_DEPEND = {
             Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"x64\SQLite.Interop.dll") ,
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"x86\SQLite.Interop.dll")
         };
 
-        private CancellationTokenSource cts;
-        private CancellationToken ct;
-        private VieModel_StartUp vieModel_StartUp;
+        private CancellationTokenSource cts { get; set; }
+        private CancellationToken ct { get; set; }
+        private VieModel_StartUp vieModel { get; set; }
 
         private ScanTask scanTask { get; set; }
 
@@ -48,72 +53,85 @@ namespace Jvedio
 
         private bool CancelScanTask { get; set; }
 
-        private const int DEFAULT_TITLE_HEIGHT = 30;
-
         public WindowStartUp()
         {
             InitializeComponent();
+            Init();
+        }
+
+        public void Init()
+        {
             this.Width = SystemParameters.PrimaryScreenWidth * 2 / 3;
             this.Height = SystemParameters.PrimaryScreenHeight * 2 / 3;
 
             cts = new CancellationTokenSource();
-            cts.Token.Register(() => Console.WriteLine("取消任务"));
+            cts.Token.Register(() => Logger.Warn("cancel task"));
             ct = cts.Token;
-            if (!ConfigManager.Settings.Debug) {
-                FileHelper.TryDeleteFile("upgrade.bat");
-                FileHelper.TryDeleteFile("upgrade-plugins.bat");
-                FileHelper.TryDeleteDir("Temp");
-            }
-
-            FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
         }
 
-        // todo
+        public void Dispose()
+        {
+            ConfigManager.StartUp.Tile = vieModel.Tile;
+            ConfigManager.StartUp.ShowHideItem = vieModel.ShowHideItem;
+            ConfigManager.StartUp.SideIdx = vieModel.CurrentSideIdx;
+
+            ConfigManager.StartUp.Sort = vieModel.Sort;
+            ConfigManager.StartUp.SortType =
+                string.IsNullOrEmpty(vieModel.SortType) ? LangManager.GetValueByKey("Title") : vieModel.SortType;
+            ConfigManager.StartUp.Save();
+
+            Main main = GetWindowByName("Main", App.Current.Windows) as Main;
+            if (main != null && !main.IsActive && !EnteringDataBase) {
+                ConfigManager.SaveAll();
+                Application.Current.Shutdown();
+            }
+        }
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            EnsureFileExists();         // 判断文件是否存在
-            EnsureDirExists();          // 创建文件夹
+            // 以下顺序不可移动
 
-            try {
-                MapperManager.Init();    // 初始化数据库连接
-            } catch (Exception ex) {
-                MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
-                App.Current.Shutdown();
-            }
+            EnsureFileExists();
+            EnsureDirExists();
 
-            ConfigManager.Init(() => { SetLang(); });
+            InitMapper(); // 初始化数据库
+            ConfigManager.Init(() => SetLang()); // 从数据库加载应用配置
 
-            await MoveOldFiles();           // 迁移旧文件并迁移到新数据库
-                                            // if (GlobalFont != null)
-                                            //    this.FontFamily = GlobalFont;
-            InitAppData();      // 初始化应用数据
-            DeleteLogs();       // 清理日志
-
-            // GlobalConfig.PluginConfig.FetchPluginMetaData(); // 同步远程插件
-            await BackupData(); // 备份文件
+            await MoveOldFiles();
+            InitAppData();
+            DeleteDirs();
+            await BackupData();
             await MovePlugins();
             await DeletePlugins();
-            CrawlerManager.Init(true);   // 初始化爬虫
+            CrawlerManager.Init(true);
 
-            vieModel_StartUp = new VieModel_StartUp();  // todo 检视
-            this.DataContext = vieModel_StartUp;
-            List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
-            for (int i = 0; i < radioButtons.Count; i++) {
-                if (i == vieModel_StartUp.CurrentSideIdx)
-                    radioButtons[i].IsChecked = true;
-                else
-                    radioButtons[i].IsChecked = false;
-            }
+            InitContext();
             UtilsManager.OnUtilSettingChange(); // 初始化 SuperUtils 的配置
+            InitFirstRun();
+            InitMainWindow();
+        }
+
+        private void InitMainWindow()
+        {
+            Main.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
+            if (!Main.ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault) {
+                tabControl.SelectedIndex = 0;
+                LoadDataBase();
+            } else {
+                tabControl.SelectedIndex = 1;
+                vieModel.Loading = false;
+            }
+        }
 
 
+        private void InitFirstRun()
+        {
 #if DEBUG
             //ConfigManager.Main.FirstRun = true;
 #endif
 
             if (ConfigManager.Main.FirstRun) {
-                Dialog_SetSkinLang skinLang =
-                    new Dialog_SetSkinLang();
+                Dialog_SetSkinLang skinLang = new Dialog_SetSkinLang();
                 skinLang.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex,
                     ConfigManager.ThemeConfig.ThemeID);
                 skinLang.InitThemes();
@@ -127,26 +145,34 @@ namespace Jvedio
                     ConfigManager.ThemeConfig.ThemeID = ThemeID;
                     ConfigManager.ThemeConfig.Save();
                 };
-
                 skinLang.ShowDialog(this);
             }
-
-
-
-
-            Main.CurrentDataType = (DataType)ConfigManager.StartUp.SideIdx;
-            if (!Main.ClickGoBackToStartUp && ConfigManager.Settings.OpenDataBaseDefault) {
-                tabControl.SelectedIndex = 0;
-                LoadDataBase();
-            } else {
-                tabControl.SelectedIndex = 1;
-                vieModel_StartUp.Loading = false;
-                //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
-            }
-
         }
 
+        private void InitContext()
+        {
+            vieModel = new VieModel_StartUp();  // todo 检视
+            this.DataContext = vieModel;
 
+            List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
+            for (int i = 0; i < radioButtons.Count; i++) {
+                if (i == vieModel.CurrentSideIdx)
+                    radioButtons[i].IsChecked = true;
+                else
+                    radioButtons[i].IsChecked = false;
+            }
+        }
+
+        /// <summary>
+        /// 初始化数据库连接
+        /// </summary>
+        private void InitMapper()
+        {
+            if (!MapperManager.Init()) {
+                MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")}");
+                App.Current.Shutdown();
+            }
+        }
 
 
         private void SetLang()
@@ -276,7 +302,6 @@ namespace Jvedio
         {
             try {
                 ScanHelper.InitSearchPattern();
-
                 // 读取配置文件，设置 debug
                 ReadConfig();
             } catch (Exception ex) {
@@ -301,18 +326,29 @@ namespace Jvedio
                     }
                 }
             }
-
-            Console.WriteLine("ConfigManager.Settings.Debug = " + ConfigManager.Settings.Debug);
+            Logger.Info($"debug mode: {ConfigManager.Settings.Debug}");
         }
 
-        private void DeleteLogs()
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        private void DeleteDirs()
         {
             try {
-                // todo 清除日志
-                ClearLogBefore(-10, "log");
-                ClearLogBefore(-10, "log\\NetWork");
-                ClearLogBefore(-10, "log\\scanlog");
-                ClearLogBefore(-10, "log\\file");
+                // 清除日志
+                ClearLogBefore(CLEAR_LOG_DAY, PathManager.LogPath);
+                // 清除备份文件
+                DeleteDirBefore(CLEAR_BACKUP_DAY, PathManager.BackupPath);
+
+                if (!ConfigManager.Settings.Debug) {
+                    FileHelper.TryDeleteFile("upgrade.bat");
+                    FileHelper.TryDeleteFile("upgrade-plugins.bat");
+                    FileHelper.TryDeleteDir("Temp");
+                }
+
+                FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
+
             } catch (Exception ex) {
                 Logger.Error(ex);
             }
@@ -330,6 +366,23 @@ namespace Jvedio
                     DateTime.TryParse(file.Split('\\').Last().Replace(".log", string.Empty), out DateTime date);
                     if (date < dateTime)
                         FileHelper.TryDeleteFile(file);
+                }
+            } catch (Exception e) {
+                Logger.Error(e);
+            }
+        }
+
+        public void DeleteDirBefore(int day, string dir)
+        {
+            DateTime dateTime = DateTime.Now.AddDays(day);
+            if (!Directory.Exists(dir))
+                return;
+            try {
+                string[] dirs = Directory.GetDirectories(dir);
+                foreach (var dirName in dirs) {
+                    DateTime.TryParse(dirName.Split('\\').Last(), out DateTime date);
+                    if (date < dateTime)
+                        DirHelper.TryDelete(dirName);
                 }
             } catch (Exception e) {
                 Logger.Error(e);
@@ -355,17 +408,16 @@ namespace Jvedio
                     Application.Current.Shutdown();
                 }
             }
-
         }
 
         private void DelSqlite(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
+            if (listBox.SelectedIndex >= vieModel.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
-            AppDatabase database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            AppDatabase database = vieModel.CurrentDatabases[listBox.SelectedIndex];
             MsgBox msgbox = new MsgBox(
                 $"{LangManager.GetValueByKey("IsToDelete")} {database.Name} {LangManager.GetValueByKey("And")} {database.Count} {LangManager.GetValueByKey("TagLabelAndOtherInfo")}");
             if (msgbox.ShowDialog() == true) {
@@ -386,12 +438,12 @@ namespace Jvedio
 
         private void RenameSqlite(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
+            if (listBox.SelectedIndex >= vieModel.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
-            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            AppDatabase info = vieModel.CurrentDatabases[listBox.SelectedIndex];
             string originName = info.Name;
             DialogInput input = new DialogInput(SuperControls.Style.LangManager.GetValueByKey("Rename"), originName);
             if (input.ShowDialog(this) == false)
@@ -405,7 +457,7 @@ namespace Jvedio
             appDatabaseMapper.UpdateById(info);
 
             // 仅更新重命名的
-            vieModel_StartUp.refreshItem();
+            vieModel.refreshItem();
         }
 
         private void LanguageChanged(object sender, SelectionChangedEventArgs e)
@@ -421,9 +473,9 @@ namespace Jvedio
             MenuItem menuItem = sender as MenuItem;
             if (menuItem != null) {
                 string header = menuItem.Header.ToString();
-                vieModel_StartUp.SortType = header;
-                vieModel_StartUp.Sort = !vieModel_StartUp.Sort;
-                vieModel_StartUp.Search();
+                vieModel.SortType = header;
+                vieModel.Sort = !vieModel.Sort;
+                vieModel.Search();
             }
         }
 
@@ -432,15 +484,15 @@ namespace Jvedio
             SuperControls.Style.SearchBox textBox = sender as SuperControls.Style.SearchBox;
             if (textBox == null)
                 return;
-            vieModel_StartUp.CurrentSearch = textBox.Text;
-            vieModel_StartUp.Search();
+            vieModel.CurrentSearch = textBox.Text;
+            vieModel.Search();
         }
 
         private void NewDatabase(object sender, RoutedEventArgs e)
         {
-            vieModel_StartUp.CurrentSearch = string.Empty;
-            vieModel_StartUp.Sort = true;
-            vieModel_StartUp.SortType = LangManager.GetValueByKey("CreatedDate");
+            vieModel.CurrentSearch = string.Empty;
+            vieModel.Sort = true;
+            vieModel.SortType = LangManager.GetValueByKey("CreatedDate");
             DialogInput input = new DialogInput(SuperControls.Style.LangManager.GetValueByKey("NewLibrary"));
             if (input.ShowDialog(this) == false)
                 return;
@@ -451,7 +503,7 @@ namespace Jvedio
             // 创建新数据库
             AppDatabase appDatabase = new AppDatabase();
             appDatabase.Name = targetName;
-            appDatabase.DataType = (DataType)vieModel_StartUp.CurrentSideIdx;
+            appDatabase.DataType = (DataType)vieModel.CurrentSideIdx;
             appDatabaseMapper.Insert(appDatabase);
             RefreshDatabase();
         }
@@ -459,7 +511,7 @@ namespace Jvedio
 
         public void RefreshDatabase()
         {
-            vieModel_StartUp.ReadFromDataBase();
+            vieModel.ReadFromDataBase();
         }
 
         // todo 检视
@@ -468,17 +520,17 @@ namespace Jvedio
             RadioButton radioButton = sender as RadioButton;
             StackPanel stackPanel = radioButton.Parent as StackPanel;
             int idx = stackPanel.Children.OfType<RadioButton>().ToList().IndexOf(radioButton);
-            vieModel_StartUp.CurrentSideIdx = idx;
+            vieModel.CurrentSideIdx = idx;
             Main.CurrentDataType = (DataType)idx;
             ConfigManager.StartUp.SideIdx = idx;
-            vieModel_StartUp.ReadFromDataBase();
+            vieModel.ReadFromDataBase();
         }
 
         public async void LoadDataBase()
         {
-            if (vieModel_StartUp.CurrentDatabases == null || vieModel_StartUp.CurrentDatabases.Count <= 0) {
+            if (vieModel.CurrentDatabases == null || vieModel.CurrentDatabases.Count <= 0) {
                 ConfigManager.Settings.OpenDataBaseDefault = false;
-                vieModel_StartUp.Loading = false;
+                vieModel.Loading = false;
                 tabControl.SelectedIndex = 1;
                 //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
@@ -490,8 +542,8 @@ namespace Jvedio
             long id = ConfigManager.Main.CurrentDBId;
             AppDatabase database = null;
             if (Main.ClickGoBackToStartUp || !ConfigManager.Settings.OpenDataBaseDefault) {
-                if (listBox.SelectedIndex >= 0 && listBox.SelectedIndex < vieModel_StartUp.CurrentDatabases.Count) {
-                    database = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+                if (listBox.SelectedIndex >= 0 && listBox.SelectedIndex < vieModel.CurrentDatabases.Count) {
+                    database = vieModel.CurrentDatabases[listBox.SelectedIndex];
                     id = database.DBId;
                     ConfigManager.Settings.DefaultDBID = id;
                 } else {
@@ -510,12 +562,12 @@ namespace Jvedio
             if (database == null) {
                 MessageNotify.Error(LangManager.GetValueByKey("CancelOpenDefault"));
                 ConfigManager.Settings.OpenDataBaseDefault = false;
-                vieModel_StartUp.Loading = false;
+                vieModel.Loading = false;
                 tabControl.SelectedIndex = 1;
                 //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
             } else {
-                vieModel_StartUp.Loading = false;
+                vieModel.Loading = false;
 
                 // 次数+1
                 appDatabaseMapper.IncreaseFieldById("ViewCount", id);
@@ -534,7 +586,7 @@ namespace Jvedio
                             scanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
                             scanTask.onScanning += (s, ev) => {
                                 Dispatcher.Invoke(() => {
-                                    vieModel_StartUp.LoadingText = (ev as MessageCallBackEventArgs).Message;
+                                    vieModel.LoadingText = (ev as MessageCallBackEventArgs).Message;
                                 });
                             };
                             scanTask.Start();
@@ -596,12 +648,12 @@ namespace Jvedio
 
         private void SetImage(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
+            if (listBox.SelectedIndex >= vieModel.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
-            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            AppDatabase info = vieModel.CurrentDatabases[listBox.SelectedIndex];
 
             System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
             dialog.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
@@ -625,8 +677,8 @@ namespace Jvedio
             string newPath = Path.Combine(PathManager.ProjectImagePath, newName);
             FileHelper.TryCopyFile(imagePath, newPath);
 
-            AppDatabase app1 = vieModel_StartUp.Databases.Where(x => x.DBId == id).SingleOrDefault();
-            AppDatabase app2 = vieModel_StartUp.CurrentDatabases.Where(x => x.DBId == id).SingleOrDefault();
+            AppDatabase app1 = vieModel.Databases.Where(x => x.DBId == id).SingleOrDefault();
+            AppDatabase app2 = vieModel.CurrentDatabases.Where(x => x.DBId == id).SingleOrDefault();
             if (app1 != null)
                 app1.ImagePath = newPath;
             if (app2 != null)
@@ -641,41 +693,27 @@ namespace Jvedio
 
         private void ShowHideDataBase(object sender, RoutedEventArgs e)
         {
-            vieModel_StartUp.ReadFromDataBase();
+            vieModel.ReadFromDataBase();
         }
 
         private void HideDataBase(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedIndex >= vieModel_StartUp.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
+            if (listBox.SelectedIndex >= vieModel.CurrentDatabases.Count || listBox.SelectedIndex < 0) {
                 MessageNotify.Error(LangManager.GetValueByKey("InnerError"));
                 return;
             }
 
-            AppDatabase info = vieModel_StartUp.CurrentDatabases[listBox.SelectedIndex];
+            AppDatabase info = vieModel.CurrentDatabases[listBox.SelectedIndex];
             if (info == null)
                 return;
             info.Hide = info.Hide == 0 ? 1 : 0;
             appDatabaseMapper.UpdateById(info);
-            vieModel_StartUp.ReadFromDataBase();
+            vieModel.ReadFromDataBase();
         }
 
         private void Window_StartUp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ConfigManager.StartUp.Tile = vieModel_StartUp.Tile;
-            ConfigManager.StartUp.ShowHideItem = vieModel_StartUp.ShowHideItem;
-            ConfigManager.StartUp.SideIdx = vieModel_StartUp.CurrentSideIdx;
-
-            ConfigManager.StartUp.Sort = vieModel_StartUp.Sort;
-            ConfigManager.StartUp.SortType = string.IsNullOrEmpty(vieModel_StartUp.SortType) ? LangManager.GetValueByKey("Title") : vieModel_StartUp.SortType;
-            ConfigManager.StartUp.Save();
-
-            Main main = GetWindowByName("Main", App.Current.Windows) as Main;
-            if (main != null && !main.IsActive && !EnteringDataBase) {
-                Application.Current.Shutdown();
-
-                // todo 关闭 main
-                // main.Close();
-            }
+            Dispose();
         }
 
         private void listBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -705,7 +743,7 @@ namespace Jvedio
         private async void RestoreDatabase(object sender, RoutedEventArgs e)
         {
             if (new MsgBox(LangManager.GetValueByKey("IsToRestore")).ShowDialog(this) == true) {
-                vieModel_StartUp.Restoring = true;
+                vieModel.Restoring = true;
 
                 // todo 多数据库
                 MapperManager.Dispose();
@@ -714,19 +752,19 @@ namespace Jvedio
                     MessageCard.Error(error.Message);
                 });
                 if (success) {
-                    try {
-                        MapperManager.ResetInitState();
-                        MapperManager.Init();    // 初始化数据库连接
-                        await Task.Delay(3000);
-                    } catch (Exception ex) {
-                        MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")} {ex.Message}");
+
+                    MapperManager.ResetInitState();
+                    bool loaded = MapperManager.Init();    // 初始化数据库连接
+                    await Task.Delay(3000);
+                    if (!loaded) {
+                        MsgBox.Show($"{LangManager.GetValueByKey("LibraryInitFailed")}");
                         App.Current.Shutdown();
                     }
 
                     MessageNotify.Success(LangManager.GetValueByKey("Success"));
                 }
-                vieModel_StartUp.Restoring = false;
-                vieModel_StartUp.ReadFromDataBase();
+                vieModel.Restoring = false;
+                vieModel.ReadFromDataBase();
             }
         }
 

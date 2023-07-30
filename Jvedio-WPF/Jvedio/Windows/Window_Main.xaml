@@ -901,12 +901,6 @@
                                 </ItemsControl>
                             </ScrollViewer>
 
-                            <Rectangle
-                                Grid.Row="1"
-                                Height="1"
-                                VerticalAlignment="Stretch"
-                                Fill="{DynamicResource Window.Sub.Foreground}" />
-
                             <!--  动态新增内容  -->
                             <super:SimplePanel x:Name="TabDataPanel" Grid.Row="2" />
 

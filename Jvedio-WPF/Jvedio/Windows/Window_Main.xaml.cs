@@ -1195,20 +1195,11 @@ namespace Jvedio
             ConfigManager.Main.SearchSelectedIndex = vieModel.SearchSelectedIndex;
             ConfigManager.Main.ClassifySelectedIndex = vieModel.ClassifySelectedIndex;
             ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
-
-            ConfigManager.Main.Save();
-
-            ConfigManager.VideoConfig.Save();
-
             ConfigManager.VideoConfig.ActorEditMode = false;
-            Properties.Settings.Default.Save();
-
-
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
             SetConfigValue();
 
             //if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
@@ -2386,22 +2377,7 @@ namespace Jvedio
         }
 
 
-        private void RemoveTabItem(int idx)
-        {
-            if (vieModel.TabItems == null)
-                return;
-            if (idx >= 0 && idx < vieModel.TabItems.Count) {
-                vieModel.TabItems[idx].Pinned = false;
-                vieModel.TabItems.RemoveAt(idx);
-            }
-            // 默认选中左边的
-            int selectIndex = idx - 1;
-            if (selectIndex < 0)
-                selectIndex = 0;
 
-            if (vieModel.TabItems.Count > 0)
-                vieModel.TabItemManager?.SetTabSelected(selectIndex);
-        }
 
         private void SetGridVisible(string portName)
         {
@@ -2451,7 +2427,7 @@ namespace Jvedio
             int idx = GetTabIndexByMenuItem(sender);
             if (idx < 0)
                 return;
-            RemoveTabItem(idx);
+            vieModel.TabItemManager.RemoveTabItem(idx);
         }
 
 
@@ -2554,7 +2530,7 @@ namespace Jvedio
             FrameworkElement ele = sender as FrameworkElement;
             if (ele != null && ele.Tag != null && int.TryParse(ele.Tag.ToString(), out int index) &&
                 index >= 0) {
-                RemoveTabItem(index);
+                vieModel.TabItemManager.RemoveTabItem(index);
             }
 
         }

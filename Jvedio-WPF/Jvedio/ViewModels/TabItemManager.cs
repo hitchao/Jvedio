@@ -89,7 +89,7 @@ namespace Jvedio.ViewModels
                     SelectWrapper<Video> ExtraWrapper = tabData as SelectWrapper<Video>;
 
                     VideoList videoList = new VideoList(ExtraWrapper, tabItem);
-
+                    videoList.Uid = tabItem.UUID;
                     videoList.OnItemClick += OnItemClick;
 
                     TabPanel.Children.Add(videoList);
@@ -100,6 +100,43 @@ namespace Jvedio.ViewModels
                 default:
                     break;
             }
+        }
+
+        public void RemovePanel(TabItemEx tabItem)
+        {
+            int idx = -1;
+            foreach (UIElement item in TabPanel.Children) {
+                idx++;
+                string uid = item.Uid;
+                if (string.IsNullOrEmpty(uid))
+                    continue;
+                if (uid.Equals(tabItem.UUID)) {
+                    break;
+                }
+            }
+            if (idx >= 0 && idx < TabPanel.Children.Count) {
+                TabPanel.Children.RemoveAt(idx);
+            }
+        }
+
+        public void RemoveTabItem(int idx)
+        {
+            if (vieModel.TabItems == null)
+                return;
+            if (idx >= 0 && idx < vieModel.TabItems.Count) {
+
+                // 移除对应的 panel
+                RemovePanel(vieModel.TabItems[idx]);
+                vieModel.TabItems[idx].Pinned = false;
+                vieModel.TabItems.RemoveAt(idx);
+            }
+            // 默认选中左边的
+            int selectIndex = idx - 1;
+            if (selectIndex < 0)
+                selectIndex = 0;
+
+            if (vieModel.TabItems.Count > 0)
+                vieModel.TabItemManager?.SetTabSelected(selectIndex);
         }
 
         public void SetTabSelected(int idx)
