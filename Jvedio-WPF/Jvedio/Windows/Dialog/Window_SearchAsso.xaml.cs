@@ -21,30 +21,42 @@ namespace Jvedio
     /// </summary>
     public partial class Window_SearchAsso : BaseDialog
     {
+
+        #region "事件"
         public Action<long> OnDataRefresh;
         public Action OnSelectData;
+        #endregion
 
-        private VieModel_SearchAsso vieModel { get; set; }
+        #region "静态属性"
         public static string SearchText { get; set; } = "";
-        private long CurrentAssocDataID { get; set; }// 当前正在关联的影片的 dataID
 
-        private void searchDataBox_Search(object sender, RoutedEventArgs e)
-        {
-            SearchBox box = sender as SearchBox;
-            if (!box.IsLoaded)
-                return;
+        #endregion
 
-            string searchText = box.Text;
-            vieModel.AssoSearchText = searchText;
-            vieModel.LoadAssoMetaData();
-            SearchText = vieModel.AssoSearchText;
-        }
+        #region "属性"
+        private VieModel_SearchAsso vieModel { get; set; }
+
+        /// <summary>
+        /// 当前正在关联的影片的 dataID
+        /// </summary>
+        private long CurrentAssocDataID { get; set; }
+
+        #endregion
 
         public Window_SearchAsso(List<Video> videos = null)
         {
             InitializeComponent();
+
             vieModel = new VieModel_SearchAsso(this);
             this.DataContext = vieModel;
+
+
+            Init(videos);
+        }
+
+        public void Init(List<Video> videos)
+        {
+            if (vieModel == null)
+                return;
 
             if (videos != null)
                 vieModel.SelectedVideo = videos;
@@ -62,6 +74,21 @@ namespace Jvedio
 
             Logger.Info("open window search assoc");
         }
+
+
+
+        private void searchDataBox_Search(object sender, RoutedEventArgs e)
+        {
+            SearchBox box = sender as SearchBox;
+            if (!box.IsLoaded)
+                return;
+
+            string searchText = box.Text;
+            vieModel.AssoSearchText = searchText;
+            vieModel.LoadAssoMetaData();
+            SearchText = vieModel.AssoSearchText;
+        }
+
 
         private void RemoveAssociation(object sender, RoutedEventArgs e)
         {

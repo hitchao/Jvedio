@@ -20,26 +20,40 @@ namespace Jvedio.ViewModel
 {
     public class VieModel_SearchAsso : ViewModelBase
     {
-        private static Window_SearchAsso window { get; set; }
 
-        public VieModel_SearchAsso(Window_SearchAsso win)
-        {
-            window = win;
-            SelectedVideo = new List<Video>();
-            CurrentExistAssocData = new List<Video>();
+        #region "事件"
 
-        }
+        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
 
-        /// <summary>
-        /// 当前正在关联的影片的 dataID
-        /// </summary>
-        public Video CurrentVideo { get; set; }
+        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
 
 
+        #endregion
+
+        #region "静态属性"
+        private static Window_SearchAsso Window { get; set; }
+
+        #endregion
+
+        #region "属性"
         public List<Video> SelectedVideo { get; set; }
 
+        private List<Video> CurrentExistAssocData { get; set; }
 
-        public long _AssocSearchTotalCount;
+
+
+        public ObservableCollection<Video> _ViewAssociationDatas;
+
+        public ObservableCollection<Video> ViewAssociationDatas {
+            get { return _ViewAssociationDatas; }
+
+            set {
+                _ViewAssociationDatas = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private long _AssocSearchTotalCount;
 
         public long AssoSearchTotalCount {
             get { return _AssocSearchTotalCount; }
@@ -50,10 +64,11 @@ namespace Jvedio.ViewModel
             }
         }
 
+        private ObservableCollection<Video> _AssociationDatas;
 
-        // 影片关联
-        public ObservableCollection<Video> _AssociationDatas;
-
+        /// <summary>
+        /// 影片关联
+        /// </summary>
         public ObservableCollection<Video> AssociationDatas {
             get { return _AssociationDatas; }
 
@@ -63,7 +78,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        public int _AssocSearchPageSize = 20;
+        private int _AssocSearchPageSize = 20;
 
         public int AssoSearchPageSize {
             get { return _AssocSearchPageSize; }
@@ -73,9 +88,6 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
-
 
 
         private string _AssoSearchText = string.Empty;
@@ -102,7 +114,7 @@ namespace Jvedio.ViewModel
 
 
 
-        public ObservableCollection<Video> _AssociationSelectedDatas = new ObservableCollection<Video>();
+        private ObservableCollection<Video> _AssociationSelectedDatas = new ObservableCollection<Video>();
 
         public ObservableCollection<Video> AssociationSelectedDatas {
             get { return _AssociationSelectedDatas; }
@@ -113,9 +125,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private List<Video> CurrentExistAssocData { get; set; }
-
-        public ObservableCollection<Video> _ExistAssociationDatas = new ObservableCollection<Video>();
+        private ObservableCollection<Video> _ExistAssociationDatas = new ObservableCollection<Video>();
 
         public ObservableCollection<Video> ExistAssociationDatas {
             get { return _ExistAssociationDatas; }
@@ -128,9 +138,24 @@ namespace Jvedio.ViewModel
 
         private delegate void LoadAssoVideoDelegate(Video video, int idx);
 
+
+        #endregion
+
+
+        public VieModel_SearchAsso(Window_SearchAsso window)
+        {
+            Window = window;
+            Init();
+        }
+
+        public override void Init()
+        {
+            SelectedVideo = new List<Video>();
+            CurrentExistAssocData = new List<Video>();
+        }
         private void LoadAssoVideo(Video video, int idx)
         {
-            if (AssociationDatas.Count < window.assoPagination.PageSize) {
+            if (AssociationDatas.Count < Window.assoPagination.PageSize) {
                 if (idx < AssociationDatas.Count) {
                     AssociationDatas[idx] = null;
                     AssociationDatas[idx] = video;
@@ -142,8 +167,6 @@ namespace Jvedio.ViewModel
                 AssociationDatas[idx] = video;
             }
         }
-
-
 
         public void ToAssoSearchLimit<T>(IWrapper<T> wrapper)
         {
@@ -177,7 +200,7 @@ namespace Jvedio.ViewModel
 
             string count_sql = "select count(*) " + sql + wrapper.ToWhere(false);
             AssoSearchTotalCount = metaDataMapper.SelectCount(count_sql);
-            window.assoPagination.Total = AssoSearchTotalCount;
+            Window.assoPagination.Total = AssoSearchTotalCount;
 
             sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
 
@@ -208,23 +231,6 @@ namespace Jvedio.ViewModel
                 AssociationDatas.RemoveAt(i);
             }
         }
-
-        public ObservableCollection<Video> _ViewAssociationDatas;
-
-        public ObservableCollection<Video> ViewAssociationDatas {
-            get { return _ViewAssociationDatas; }
-
-            set {
-                _ViewAssociationDatas = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private delegate void LoadViewAssoVideoDelegate(Video video, int idx);
-
-        private void LoadViewAssoVideo(Video video, int idx) => ViewAssociationDatas.Add(video);
-
-
 
         public void LoadExistAssociationDatas(long dataID)
         {
@@ -314,11 +320,6 @@ namespace Jvedio.ViewModel
                 toInsert.Add(new Association(baseId, item.DataID));
             int count = associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
             return count > 0;
-        }
-
-        public override void Init()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
