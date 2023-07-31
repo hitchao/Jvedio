@@ -9,7 +9,6 @@
     x:Name="filter"
     MinWidth="300"
     d:DesignHeight="1000"
-    Loaded="Filter_Loaded"
     mc:Ignorable="d">
 
 
@@ -19,6 +18,13 @@
 
         <local:LoadStatusConverter x:Key="LoadStatusConverter" />
 
+        <Style
+            x:Key="InfoRadioButton"
+            BasedOn="{StaticResource FlatRoundRadioButton}"
+            TargetType="RadioButton">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="5" />
+        </Style>
 
         <Style
             x:Key="ItemScrollViewer"
@@ -70,7 +76,7 @@
         </Style>
         <Style
             x:Key="FilterToggleButton"
-            BasedOn="{StaticResource FlatToggleButtonStyle}"
+            BasedOn="{StaticResource FlatToggleButton}"
             TargetType="ToggleButton">
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="5,2" />
@@ -86,7 +92,7 @@
     <super:SimplePanel>
         <Border
             Margin="5"
-            Background="{DynamicResource Window.Title.Background}"
+            Background="{DynamicResource Window.Background}"
             CornerRadius="3"
             Effect="{StaticResource ShadowDropShadowEffect}" />
 
@@ -169,8 +175,10 @@
                             Height="auto"
                             Margin="1,0"
                             Padding="0,4"
+                            Expand="TagStamp_Expand"
                             FontSize="14"
                             Header="{DynamicResource TagStamp}"
+                            IsExpanded="{Binding ExpandTag, ElementName=filter, Mode=TwoWay}"
                             IsSelected="False"
                             LineWidth="0"
                             Style="{StaticResource BaseTogglePanel}">
@@ -216,62 +224,162 @@
 
                         </super:TogglePanel>
                     </super:SimplePanel>
-
+                    <!--  IsExpanded="{Binding ExpandCommon, ElementName=filter, Mode=TwoWay}"  -->
                     <super:TogglePanel
                         Height="auto"
                         Margin="1,0"
                         Padding="0,4"
-                        Expand="TogglePanel_Expand"
+                        Expand="Common_Expand"
                         FontSize="14"
                         Header="{DynamicResource Other}"
+                        IsExpanded="True"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
+                        <WrapPanel Orientation="Horizontal">
+                            <CheckBox
+                                Margin="27,10"
+                                Content="分段视频"
+                                FontSize="12" />
+                        </WrapPanel>
+
+
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource SelectAllToggleButton}" />
-                                <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Basic}" />
+                                <ToggleButton
+                                    Click="SetAllSelected"
+                                    Style="{StaticResource SelectAllToggleButton}"
+                                    Visibility="Hidden" />
+                                <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource File}" />
                             </StackPanel>
-                            <WrapPanel Name="basicWrapPanel" Orientation="Horizontal">
-                                <ToggleButton Content="{DynamicResource SelectAllText}" Style="{StaticResource FilterToggleButton}" />
+                            <WrapPanel Name="playWrapPanel" Orientation="Horizontal">
+                                <RadioButton
+                                    Click="SetPlayable"
+                                    Content="{DynamicResource All}"
+                                    GroupName="PlayRadioButton"
+                                    IsChecked="True"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetPlayable"
+                                    Content="{DynamicResource UnPlayable}"
+                                    GroupName="PlayRadioButton"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetPlayable"
+                                    Content="{DynamicResource Playable}"
+                                    GroupName="PlayRadioButton"
+                                    Style="{StaticResource InfoRadioButton}" />
+
                             </WrapPanel>
                         </DockPanel>
 
-
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource SelectAllToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllSelected"
+                                    Style="{StaticResource SelectAllToggleButton}"
+                                    Visibility="Hidden" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Video}" />
                             </StackPanel>
                             <WrapPanel Name="videoTypeWrapPanel" Orientation="Horizontal">
-                                <ToggleButton Content="{DynamicResource SelectAllText}" Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource All}"
+                                    IsChecked="True"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource Normal}"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource Uncensored}"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource Censored}"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource Europe}"
+                                    Style="{StaticResource FilterToggleButton}" />
                             </WrapPanel>
                         </DockPanel>
 
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource SelectAllToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllSelected"
+                                    Style="{StaticResource SelectAllToggleButton}"
+                                    Visibility="Hidden" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Picture}" />
                             </StackPanel>
-                            <WrapPanel Name="imageWrapPanel" Orientation="Horizontal">
-                                <ToggleButton Content="{DynamicResource Nothing}" Style="{StaticResource FilterToggleButton}" />
+                            <WrapPanel Orientation="Horizontal">
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource All}"
+                                    IsChecked="True"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource Poster}"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource Thumbnail}"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource Preview}"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource ScreenShot}"
+                                    Style="{StaticResource FilterToggleButton}" />
                             </WrapPanel>
                         </DockPanel>
 
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource SelectAllToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllSelected"
+                                    Style="{StaticResource SelectAllToggleButton}"
+                                    Visibility="Hidden" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Duration}" />
                             </StackPanel>
-                            <WrapPanel Name="durationWrapPanel" Orientation="Horizontal">
-                                <ToggleButton Content="{DynamicResource SelectAllText}" Style="{StaticResource FilterToggleButton}" />
+                            <WrapPanel Orientation="Horizontal">
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource All}"
+                                    IsChecked="True"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="&lt;30min"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="30min-1h"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="1h-2h"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="2h-3h"
+                                    Style="{StaticResource FilterToggleButton}" />
+                                <ToggleButton
+                                    Click="SetAllChecked"
+                                    Content="&gt;3h"
+                                    Style="{StaticResource FilterToggleButton}" />
                             </WrapPanel>
                         </DockPanel>
 
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
                                 <ToggleButton Style="{StaticResource SelectAllToggleButton}" Visibility="Hidden" />
-                                <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource File}" />
+                                <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Size}" />
                             </StackPanel>
                             <Grid>
                                 <super:DoubleSlider
@@ -310,7 +418,7 @@
                         </DockPanel>
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource SelectAllToggleButton}" />
+                                <ToggleButton Click="SetAllSelected" Style="{StaticResource SelectAllToggleButton}" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Year}" />
                             </StackPanel>
                             <WrapPanel Name="yearWrapPanel" Orientation="Horizontal" />
@@ -319,7 +427,7 @@
                         </DockPanel>
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource SelectAllToggleButton}" />
+                                <ToggleButton Click="SetAllSelected" Style="{StaticResource SelectAllToggleButton}" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Month}" />
                             </StackPanel>
                             <WrapPanel Name="monthWrapPanel" Orientation="Horizontal" />
@@ -335,6 +443,7 @@
                         Expand="Genre_Expand"
                         FontSize="14"
                         Header="{DynamicResource Genre}"
+                        IsExpanded="{Binding ExpandGenre, ElementName=filter, Mode=TwoWay}"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
@@ -377,6 +486,7 @@
                         Expand="Series_Expand"
                         FontSize="14"
                         Header="{DynamicResource Tag}"
+                        IsExpanded="{Binding ExpandSeries, ElementName=filter, Mode=TwoWay}"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
@@ -420,6 +530,7 @@
                         Expand="Director_Expand"
                         FontSize="14"
                         Header="{DynamicResource Director}"
+                        IsExpanded="{Binding ExpandDirector, ElementName=filter, Mode=TwoWay}"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
@@ -464,6 +575,7 @@
                         Expand="Studio_Expand"
                         FontSize="14"
                         Header="{DynamicResource Made}"
+                        IsExpanded="{Binding ExpandStudio, ElementName=filter, Mode=TwoWay}"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
@@ -511,7 +623,7 @@
 
                 <Button
                     MinWidth="100"
-                    Margin="0,10"
+                    Click="ApplyFilter"
                     Content="{DynamicResource Apply}"
                     Style="{StaticResource ButtonPrimary}" />
 

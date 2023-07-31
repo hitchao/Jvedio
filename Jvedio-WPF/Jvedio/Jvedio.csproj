@@ -261,6 +261,7 @@
     <Compile Include="Core\Config\Common\DownloadConfig.cs" />
     <Compile Include="Core\Config\Common\JavaServerConfig.cs" />
     <Compile Include="Core\Config\Common\ThemeConfig.cs" />
+    <Compile Include="Core\Config\Data\FilterConfig.cs" />
     <Compile Include="Core\Config\Data\VideoConfig.cs" />
     <Compile Include="Core\Config\UtilsManager.cs" />
     <Compile Include="Core\DataBase\SqlManager.cs" />

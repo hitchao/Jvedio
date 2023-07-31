@@ -350,6 +350,7 @@
             <localControl:Filter
                 Grid.Column="0"
                 Close="FilterClose"
+                OnApplyWrapper="Filter_OnApplyWrapper"
                 Visibility="{Binding ShowFilter, Converter={StaticResource BoolToVisibilityConverter}}" />
 
             <!--  演员  -->

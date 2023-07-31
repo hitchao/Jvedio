@@ -37,6 +37,7 @@ namespace Jvedio
         public static Jvedio.Core.Config.DownloadConfig DownloadConfig { get; set; }
         public static Jvedio.Core.Config.JavaServerConfig JavaServerConfig { get; set; }
         public static Jvedio.Core.Config.Data.VideoConfig VideoConfig { get; set; }
+        public static Jvedio.Core.Config.Data.FilterConfig FilterConfig { get; set; }
 
         private static void CreateInstance()
         {
@@ -60,6 +61,7 @@ namespace Jvedio
             JavaServerConfig = Jvedio.Core.Config.JavaServerConfig.CreateInstance();
 
             VideoConfig = Jvedio.Core.Config.Data.VideoConfig.CreateInstance();
+            FilterConfig = Jvedio.Core.Config.Data.FilterConfig.CreateInstance();
         }
 
         public static void SaveAll()
@@ -83,6 +85,7 @@ namespace Jvedio
             DownloadConfig.Save();
             JavaServerConfig.Save();
             VideoConfig.Save();
+            FilterConfig.Save();
         }
 
         public static void Restore()

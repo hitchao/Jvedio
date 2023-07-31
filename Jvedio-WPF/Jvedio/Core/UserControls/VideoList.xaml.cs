@@ -159,6 +159,10 @@ namespace Jvedio.Core.UserControls
                     CurrentSQL = arg.SQL;
                 }
             };
+
+            vieModel.onPageChange += (totalCount) => {
+                pagination.Total = totalCount;
+            };
         }
 
         private void ResizingTimer_Tick(object sender, EventArgs e)
@@ -2009,6 +2013,17 @@ namespace Jvedio.Core.UserControls
         private void FilterClose()
         {
             vieModel.ShowFilter = false;
+        }
+
+        private void Filter_OnApplyWrapper(object sender, EventArgs ev)
+        {
+            if (ev is WrapperEventArg<Video> e &&
+                e.Wrapper != null &&
+                e.Wrapper is SelectWrapper<Video> wrapper) {
+                vieModel.FilterWrapper = wrapper;
+                vieModel.FilterSQL = e.SQL;
+                vieModel.LoadData();
+            }
         }
     }
 }

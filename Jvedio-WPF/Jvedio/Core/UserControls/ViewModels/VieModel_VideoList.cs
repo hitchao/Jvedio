@@ -85,6 +85,21 @@ namespace Jvedio.Core.UserControls.ViewModels
         #endregion
 
         #region "属性"
+
+
+        /// <summary>
+        /// 过滤器传进的
+        /// </summary>
+        public SelectWrapper<Video> FilterWrapper { get; set; }
+
+        /// <summary>
+        /// 过滤器传进的 SQL
+        /// </summary>
+        public string FilterSQL { get; set; }
+
+        /// <summary>
+        /// 侧边栏点击进入的
+        /// </summary>
         public SelectWrapper<Video> ExtraWrapper { get; set; }
 
         private List<Video> _SelectedVideo { get; set; } = new List<Video>();
@@ -627,7 +642,15 @@ namespace Jvedio.Core.UserControls.ViewModels
             if (ExtraWrapper != null)
                 wrapper.Join(ExtraWrapper);
 
+
+
             string sql = VideoMapper.BASE_SQL;
+
+            if (FilterWrapper != null) {
+                wrapper.Join(FilterWrapper);
+                if (!string.IsNullOrEmpty(FilterSQL))
+                    sql += FilterSQL;
+            }
 
             // todo 如果搜索框选中了标签，搜索出来的结果不一致
             SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
@@ -642,19 +665,6 @@ namespace Jvedio.Core.UserControls.ViewModels
                 } else if (ClickFilterType == "Actor") {
                     sql += VideoMapper.ACTOR_JOIN_SQL;
                 } else {
-                }
-            }
-
-            // 标记
-            bool allFalse = TagStamps.All(item => item.Selected == false);
-            if (allFalse) {
-                wrapper.IsNull("TagID");
-                sql += VideoMapper.TAGSTAMP_LEFT_JOIN_SQL;
-            } else {
-                bool allTrue = TagStamps.All(item => item.Selected == true);
-                if (!allTrue) {
-                    wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
-                    sql += VideoMapper.TAGSTAMP_JOIN_SQL;
                 }
             }
 
@@ -699,9 +709,7 @@ namespace Jvedio.Core.UserControls.ViewModels
                 wrapper.Eq("common_picture_exist.PathType", pathType).Eq("common_picture_exist.ImageType", imageType).Eq("common_picture_exist.Exist", PictureTypeIndex - 1);
             }
 
-            // 是否可播放
-            if (ConfigManager.Settings.PlayableIndexCreated && DataExistIndex > 0)
-                wrapper.Eq("metadata.PathExist", DataExistIndex - 1);
+
 
             string count_sql = "select count(DISTINCT metadata.DataID) " + sql + wrapper.ToWhere(false);
             TotalCount = metaDataMapper.SelectCount(count_sql);
@@ -712,10 +720,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             RenderSqlChanged?.Invoke(null, arg);
 
             sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false) + wrapper.ToOrder() + wrapper.ToLimit();
-
-            // 只能手动设置页码，很奇怪
             onPageChange?.Invoke(TotalCount);
-            //App.Current.Dispatcher.Invoke(() => { MainWindow.pagination.Total = TotalCount; });
             RenderCurrentVideo(sql);
         }
 
