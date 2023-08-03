@@ -372,35 +372,7 @@
                             FontWeight="Bold"
                             Header="{DynamicResource SelectAll}" />
                         <Separator />
-                        <MenuItem Name="DataExistMenuItem" Header="{DynamicResource IsExisted}">
-                            <MenuItem
-                                Header="{DynamicResource Default}"
-                                IsCheckable="True"
-                                IsChecked="True" />
-                            <MenuItem Header="{DynamicResource NotExists}" IsCheckable="True" />
-                            <MenuItem Header="{DynamicResource Existed}" IsCheckable="True" />
-                        </MenuItem>
-                        <MenuItem
-                            Click="LoadData"
-                            Header="{DynamicResource ShowSubSection}"
-                            IsCheckable="True"
-                            IsChecked="{Binding OnlyShowSubSection, Mode=TwoWay}" />
 
-                        <MenuItem Name="VideoTypeMenuItem" Header="{DynamicResource VideoType}">
-                            <MenuItem Header="{DynamicResource Normal}" IsCheckable="True" />
-                            <MenuItem Header="{DynamicResource Uncensored}" IsCheckable="True" />
-                            <MenuItem Header="{DynamicResource Censored}" IsCheckable="True" />
-                            <MenuItem Header="{DynamicResource Europe}" IsCheckable="True" />
-                        </MenuItem>
-                        <MenuItem Name="PictureFilterType" Header="{DynamicResource ImageExisted}">
-                            <MenuItem
-                                Header="{DynamicResource Default}"
-                                IsCheckable="True"
-                                IsChecked="True" />
-                            <MenuItem Header="{DynamicResource NoImage}" IsCheckable="True" />
-                            <MenuItem Header="{DynamicResource WithImage}" IsCheckable="True" />
-                        </MenuItem>
-                        <Separator />
                         <MenuItem Header="{DynamicResource AllData}">
                             <MenuItem Click="GenerateAllScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
                             <MenuItem Click="DownloadAllVideo" Header="{DynamicResource SyncInfo}" />

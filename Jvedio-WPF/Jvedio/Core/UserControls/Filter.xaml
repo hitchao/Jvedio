@@ -30,7 +30,8 @@
             x:Key="ItemScrollViewer"
             BasedOn="{StaticResource FlatScrollViewer}"
             TargetType="ScrollViewer">
-            <Setter Property="MaxHeight" Value="200" />
+            <Setter Property="MaxHeight" Value="250" />
+            <Setter Property="MinHeight" Value="0" />
         </Style>
         <Style
             x:Key="InfoTextBlock"
@@ -92,7 +93,8 @@
     <super:SimplePanel>
         <Border
             Margin="5"
-            Background="{DynamicResource Window.Background}"
+            BorderBrush="{DynamicResource Window.Title.Background}"
+            BorderThickness="1"
             CornerRadius="3"
             Effect="{StaticResource ShadowDropShadowEffect}" />
 
@@ -127,6 +129,7 @@
             <ScrollViewer
                 Grid.Row="1"
                 Width="290"
+                Margin="5"
                 VerticalScrollBarVisibility="auto">
                 <StackPanel Name="filterStackPanel" Orientation="Vertical">
 
@@ -224,7 +227,7 @@
 
                         </super:TogglePanel>
                     </super:SimplePanel>
-                    <!--  IsExpanded="{Binding ExpandCommon, ElementName=filter, Mode=TwoWay}"  -->
+
                     <super:TogglePanel
                         Height="auto"
                         Margin="1,0"
@@ -232,14 +235,15 @@
                         Expand="Common_Expand"
                         FontSize="14"
                         Header="{DynamicResource Other}"
-                        IsExpanded="True"
+                        IsExpanded="{Binding ExpandCommon, ElementName=filter, Mode=TwoWay}"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
                         <WrapPanel Orientation="Horizontal">
                             <CheckBox
+                                x:Name="OnlyShowSubsection"
                                 Margin="27,10"
-                                Content="分段视频"
+                                Content="{DynamicResource OnlyShowSubsection}"
                                 FontSize="12" />
                         </WrapPanel>
 
@@ -308,34 +312,62 @@
 
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton
-                                    Click="SetAllSelected"
-                                    Style="{StaticResource SelectAllToggleButton}"
-                                    Visibility="Hidden" />
+                                <ToggleButton x:Name="pictureReverse" ToolTip="取反">
+                                    <ToggleButton.Style>
+                                        <Style BasedOn="{StaticResource SelectAllToggleButton}" TargetType="ToggleButton">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <Viewbox
+                                                            Width="14"
+                                                            Height="auto"
+                                                            VerticalAlignment="Center">
+                                                            <Path
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Data="M453.8 531.7H140.1c-22.9 0-41.5 18.6-41.5 41.5v313.7c0 22.9 18.6 41.5 41.5 41.5h313.7c22.9 0 41.5-18.6 41.5-41.5V573.2c0-22.9-18.7-41.5-41.5-41.5z m-2.5 352.7H142.6V575.7h308.7v308.7zM120.6 426.4h209.2c12.2 0 22-9.8 22-22s-9.8-22-22-22H171.5c9.3-133.4 120.8-239 256.5-239 12.2 0 22-9.8 22-22s-9.8-22-22-22c-80.4 0-156.1 31.3-212.9 88.2-33.3 33.3-57.8 73.1-72.5 116.4V195.2c0-12.2-9.8-22-22-22s-22 9.8-22 22v209.2c0 12.1 9.8 22 22 22zM905.3 601.3H696c-12.2 0-22 9.8-22 22s9.8 22 22 22h158.3c-9.3 133.4-120.8 239-256.5 239-12.2 0-22 9.8-22 22s9.8 22 22 22c80.4 0 156.1-31.3 212.9-88.2 33.3-33.3 57.8-73.1 72.5-116.4v108.8c0 12.2 9.8 22 22 22s22-9.8 22-22V623.3c0.1-12.1-9.8-22-21.9-22zM887.5 98.5H573.8c-22.9 0-41.5 18.6-41.5 41.5v313.7c0 22.9 18.6 41.5 41.5 41.5h313.7c22.9 0 41.5-18.6 41.5-41.5V140c0-22.9-18.7-41.5-41.5-41.5z"
+                                                                Fill="{DynamicResource Window.Foreground}" />
+                                                        </Viewbox>
+                                                    </DataTemplate>
+
+                                                </Setter.Value>
+                                            </Setter>
+
+                                        </Style>
+                                    </ToggleButton.Style>
+
+                                </ToggleButton>
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Picture}" />
                             </StackPanel>
-                            <WrapPanel Orientation="Horizontal">
-                                <ToggleButton
-                                    Click="SetAllChecked"
+                            <WrapPanel x:Name="pictureWrapPanel" Orientation="Horizontal">
+                                <RadioButton
+                                    Click="SetPictureType"
                                     Content="{DynamicResource All}"
+                                    GroupName="pictureRadioButton"
                                     IsChecked="True"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
-                                    Click="SetAllChecked"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetPictureType"
                                     Content="{DynamicResource Poster}"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
-                                    Click="SetAllChecked"
+                                    GroupName="pictureRadioButton"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetPictureType"
                                     Content="{DynamicResource Thumbnail}"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
-                                    Click="SetAllChecked"
+                                    GroupName="pictureRadioButton"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetPictureType"
                                     Content="{DynamicResource Preview}"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
+                                    GroupName="pictureRadioButton"
+                                    Style="{StaticResource InfoRadioButton}"
+                                    Visibility="Collapsed" />
+                                <RadioButton
                                     Click="SetAllChecked"
                                     Content="{DynamicResource ScreenShot}"
-                                    Style="{StaticResource FilterToggleButton}" />
+                                    GroupName="pictureRadioButton"
+                                    Style="{StaticResource InfoRadioButton}"
+                                    Visibility="Collapsed" />
                             </WrapPanel>
                         </DockPanel>
 
@@ -347,32 +379,32 @@
                                     Visibility="Hidden" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Duration}" />
                             </StackPanel>
-                            <WrapPanel Orientation="Horizontal">
-                                <ToggleButton
+                            <WrapPanel x:Name="timeWrapPanel" Orientation="Horizontal">
+                                <RadioButton
                                     Click="SetAllChecked"
                                     Content="{DynamicResource All}"
                                     IsChecked="True"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
                                     Click="SetAllChecked"
                                     Content="&lt;30min"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
                                     Click="SetAllChecked"
                                     Content="30min-1h"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
                                     Click="SetAllChecked"
                                     Content="1h-2h"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
                                     Click="SetAllChecked"
                                     Content="2h-3h"
-                                    Style="{StaticResource FilterToggleButton}" />
-                                <ToggleButton
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
                                     Click="SetAllChecked"
                                     Content="&gt;3h"
-                                    Style="{StaticResource FilterToggleButton}" />
+                                    Style="{StaticResource InfoRadioButton}" />
                             </WrapPanel>
                         </DockPanel>
 
@@ -381,20 +413,33 @@
                                 <ToggleButton Style="{StaticResource SelectAllToggleButton}" Visibility="Hidden" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Size}" />
                             </StackPanel>
-                            <Grid>
-                                <super:DoubleSlider
-                                    Margin="10,0"
-                                    BarCornerRadius="2"
-                                    BarHeight="8"
-                                    Integer="True"
-                                    MaxValue="10240"
-                                    Maximum="10240"
-                                    MinValue="0"
-                                    Minimum="0"
-                                    SliderDiameter="15" />
-
-                            </Grid>
-
+                            <WrapPanel x:Name="sizeWrapPanel" Orientation="Horizontal">
+                                <RadioButton
+                                    Click="SetAllChecked"
+                                    Content="{DynamicResource All}"
+                                    IsChecked="True"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetAllChecked"
+                                    Content="&lt;500m"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetAllChecked"
+                                    Content="500-1000m"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetAllChecked"
+                                    Content="1-2g"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetAllChecked"
+                                    Content="2-3g"
+                                    Style="{StaticResource InfoRadioButton}" />
+                                <RadioButton
+                                    Click="SetAllChecked"
+                                    Content="&gt;3g"
+                                    Style="{StaticResource InfoRadioButton}" />
+                            </WrapPanel>
 
 
                         </DockPanel>
@@ -405,6 +450,7 @@
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Rating}" />
                             </StackPanel>
                             <super:DoubleSlider
+                                x:Name="rateSlider"
                                 Margin="10,0"
                                 BarCornerRadius="2"
                                 BarHeight="8"
@@ -425,7 +471,7 @@
 
 
                         </DockPanel>
-                        <DockPanel Style="{StaticResource LinePanelStyle}">
+                        <DockPanel Style="{StaticResource LinePanelStyle}" Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
                                 <ToggleButton Click="SetAllSelected" Style="{StaticResource SelectAllToggleButton}" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource Month}" />
@@ -436,6 +482,7 @@
 
                         </DockPanel>
                     </super:TogglePanel>
+
                     <super:TogglePanel
                         Height="auto"
                         Margin="1,0"
@@ -447,40 +494,45 @@
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel>
                             <ProgressBar
                                 Height="1"
-                                Margin="2"
+                                Margin="2,0"
                                 Style="{StaticResource NormalStaticProgressBar}"
                                 Visibility="{Binding GenreLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
                                 Value="{Binding GenreProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
-                                <super:LoadingCircle
-                                    Width="20"
-                                    Height="20"
+                                <!--<super:LoadingCircle
+                                    Width="16"
+                                    Height="16"
                                     Margin="5"
-                                    DotSize="3"
-                                    Visibility="{Binding GenreLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
+                                    DotSize="2"
+                                    Visibility="{Binding GenreLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />-->
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
                                     Margin="5"
                                     VerticalAlignment="Center"
+                                    Click="SetAllLabelChecked"
                                     Style="{StaticResource SelectAllToggleButton}" />
                                 <super:SearchBox
                                     Height="30"
                                     Margin="5"
                                     BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                                     FontSize="12"
-                                    Style="{StaticResource SearchBoxStyle}" />
+                                    Style="{StaticResource SearchBoxStyle}"
+                                    Visibility="Hidden" />
                             </DockPanel>
                             <ScrollViewer Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="genreWrapPanel" Orientation="Horizontal" />
                             </ScrollViewer>
+
                         </StackPanel>
                     </super:TogglePanel>
+
                     <super:TogglePanel
                         Height="auto"
+                        MinHeight="0"
                         Margin="1,0"
                         Padding="0,4"
                         Expand="Series_Expand"
@@ -490,34 +542,36 @@
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel>
                             <ProgressBar
                                 Height="1"
-                                Margin="2"
+                                Margin="2,0"
                                 Style="{StaticResource NormalStaticProgressBar}"
                                 Visibility="{Binding SeriesLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
                                 Value="{Binding SeriesProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
-                                <super:LoadingCircle
-                                    Width="20"
-                                    Height="20"
+                                <!--<super:LoadingCircle
+                                    Width="16"
+                                    Height="16"
                                     Margin="5"
-                                    DotSize="3"
-                                    Visibility="{Binding SeriesLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
+                                    DotSize="2"
+                                    Visibility="{Binding SeriesLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />-->
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
                                     Margin="5"
                                     VerticalAlignment="Center"
+                                    Click="SetAllLabelChecked"
                                     Style="{StaticResource SelectAllToggleButton}" />
                                 <super:SearchBox
                                     Height="30"
                                     Margin="5"
                                     BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                                     FontSize="12"
-                                    Style="{StaticResource SearchBoxStyle}" />
+                                    Style="{StaticResource SearchBoxStyle}"
+                                    Visibility="Hidden" />
                             </DockPanel>
-                            <ScrollViewer Style="{StaticResource ItemScrollViewer}">
+                            <ScrollViewer Height="0" Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="seriesWrapPanel" Orientation="Horizontal" />
                             </ScrollViewer>
 
@@ -537,29 +591,31 @@
                         <StackPanel Orientation="Vertical">
                             <ProgressBar
                                 Height="1"
-                                Margin="2"
+                                Margin="2,0"
                                 Style="{StaticResource NormalStaticProgressBar}"
                                 Visibility="{Binding DirectorLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
                                 Value="{Binding DirectorProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
-                                <super:LoadingCircle
-                                    Width="20"
-                                    Height="20"
+                                <!--<super:LoadingCircle
+                                    Width="16"
+                                    Height="16"
                                     Margin="5"
-                                    DotSize="3"
-                                    Visibility="{Binding DirectorLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
+                                    DotSize="2"
+                                    Visibility="{Binding DirectorLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />-->
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
                                     Margin="5"
                                     VerticalAlignment="Center"
+                                    Click="SetAllLabelChecked"
                                     Style="{StaticResource SelectAllToggleButton}" />
                                 <super:SearchBox
                                     Height="30"
                                     Margin="5"
                                     BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                                     FontSize="12"
-                                    Style="{StaticResource SearchBoxStyle}" />
+                                    Style="{StaticResource SearchBoxStyle}"
+                                    Visibility="Hidden" />
                             </DockPanel>
                             <ScrollViewer Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="directorWrapPanel" Orientation="Horizontal" />
@@ -582,29 +638,31 @@
                         <StackPanel Orientation="Vertical">
                             <ProgressBar
                                 Height="1"
-                                Margin="2"
+                                Margin="2,0"
                                 Style="{StaticResource NormalStaticProgressBar}"
                                 Visibility="{Binding StudioLoad, ElementName=filter, Mode=OneWay, Converter={StaticResource LoadStatusConverter}}"
                                 Value="{Binding StudioProgress, ElementName=filter, Mode=OneWay}" />
                             <DockPanel LastChildFill="True">
-                                <super:LoadingCircle
-                                    Width="20"
-                                    Height="20"
+                                <!--<super:LoadingCircle
+                                    Width="16"
+                                    Height="16"
                                     Margin="5"
-                                    DotSize="3"
-                                    Visibility="{Binding StudioLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />
+                                    DotSize="2"
+                                    Visibility="{Binding StudioLoad, ElementName=filter, Converter={StaticResource LoadStatusConverter}}" />-->
                                 <ToggleButton
                                     Width="20"
                                     Height="20"
                                     Margin="5"
                                     VerticalAlignment="Center"
+                                    Click="SetAllLabelChecked"
                                     Style="{StaticResource SelectAllToggleButton}" />
                                 <super:SearchBox
                                     Height="30"
                                     Margin="5"
                                     BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                                     FontSize="12"
-                                    Style="{StaticResource SearchBoxStyle}" />
+                                    Style="{StaticResource SearchBoxStyle}"
+                                    Visibility="Hidden" />
                             </DockPanel>
                             <ScrollViewer Style="{StaticResource ItemScrollViewer}">
                                 <WrapPanel Name="studioWrapPanel" Orientation="Horizontal" />

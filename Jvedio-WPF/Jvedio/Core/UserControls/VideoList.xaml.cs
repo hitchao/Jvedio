@@ -1286,44 +1286,6 @@ namespace Jvedio.Core.UserControls
                 vieModel.LoadData();
             };
 
-            // 右键菜单栏点击事件
-            foreach (MenuItem item in VideoTypeMenuItem.Items.OfType<MenuItem>()) {
-                item.Click += (s, e) => vieModel.LoadData();
-            }
-
-            List<MenuItem> pictureFilterTypes = PictureFilterType.Items.OfType<MenuItem>().ToList();
-            foreach (MenuItem item in pictureFilterTypes) {
-                item.Click += (s, e) => {
-                    if (!ConfigManager.Settings.PictureIndexCreated) {
-                        MessageNotify.Error(LangManager.GetValueByKey("PleaseSetImageIndex"));
-                        return;
-                    }
-
-                    foreach (var t in pictureFilterTypes)
-                        t.IsChecked = false;
-                    MenuItem menuItem = s as MenuItem;
-                    menuItem.IsChecked = true;
-                    vieModel.PictureTypeIndex = pictureFilterTypes.IndexOf(menuItem);
-                    vieModel.LoadData();
-                };
-            }
-
-            List<MenuItem> dataExistMenuItems = DataExistMenuItem.Items.OfType<MenuItem>().ToList();
-            foreach (MenuItem menuItem in dataExistMenuItems) {
-                menuItem.Click += (s, e) => {
-                    if (!ConfigManager.Settings.PlayableIndexCreated) {
-                        MessageNotify.Error(LangManager.GetValueByKey("PleaseSetExistsIndex"));
-                        return;
-                    }
-
-                    foreach (var t in dataExistMenuItems)
-                        t.IsChecked = false;
-                    MenuItem item = s as MenuItem;
-                    item.IsChecked = true;
-                    vieModel.DataExistIndex = dataExistMenuItems.IndexOf(item);
-                    vieModel.LoadData();
-                };
-            }
         }
 
         private void LoadData(object sender, RoutedEventArgs e)

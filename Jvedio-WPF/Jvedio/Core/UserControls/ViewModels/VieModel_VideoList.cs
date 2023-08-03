@@ -198,17 +198,6 @@ namespace Jvedio.Core.UserControls.ViewModels
                 ConfigManager.VideoConfig.SortDescending = value;
             }
         }
-        private bool _OnlyShowSubSection = ConfigManager.VideoConfig.OnlyShowSubSection;
-
-        public bool OnlyShowSubSection {
-            get { return _OnlyShowSubSection; }
-
-            set {
-                _OnlyShowSubSection = value;
-                RaisePropertyChanged();
-                ConfigManager.VideoConfig.OnlyShowSubSection = value;
-            }
-        }
 
         private bool _EditMode;
 
@@ -411,7 +400,7 @@ namespace Jvedio.Core.UserControls.ViewModels
 
 
 
-        private bool _ShowFilter = true;
+        private bool _ShowFilter = ConfigManager.VideoConfig.ShowFilter;
 
         public bool ShowFilter {
             get { return _ShowFilter; }
@@ -419,39 +408,10 @@ namespace Jvedio.Core.UserControls.ViewModels
             set {
                 _ShowFilter = value;
                 RaisePropertyChanged();
+                ConfigManager.VideoConfig.ShowFilter = value;
             }
         }
 
-        private int _DataExistIndex = 0;
-
-        public int DataExistIndex {
-            get { return _DataExistIndex; }
-
-            set {
-                if (value < 0 || value > 2)
-                    _DataExistIndex = 0;
-                else
-                    _DataExistIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-
-
-        private int _PictureTypeIndex = 0;
-
-        public int PictureTypeIndex {
-            get { return _PictureTypeIndex; }
-
-            set {
-                if (value < 0 || value > 2)
-                    _PictureTypeIndex = 0;
-                else
-                    _PictureTypeIndex = value;
-                RaisePropertyChanged();
-            }
-        }
         #endregion
 
 
@@ -667,49 +627,6 @@ namespace Jvedio.Core.UserControls.ViewModels
                 } else {
                 }
             }
-
-            // 右侧菜单的一些筛选项
-
-            // 1. 仅显示分段视频
-            if (OnlyShowSubSection)
-                wrapper.NotEq("SubSection", string.Empty);
-
-            // 2. 视频类型
-            //List<MenuItem> allMenus = MainWindow.VideoTypeMenuItem.Items.OfType<MenuItem>().ToList();
-            //List<MenuItem> checkedMenus = new List<MenuItem>();
-
-            //App.Current.Dispatcher.Invoke(() => {
-            //    checkedMenus = allMenus.Where(t => t.IsChecked).ToList();
-            //});
-
-            //if (checkedMenus.Count > 0 && checkedMenus.Count < 4) {
-            //    // VideoType = 0 or VideoType = 1 or VideoType=2
-            //    if (checkedMenus.Count == 1) {
-            //        int idx = allMenus.IndexOf(checkedMenus[0]);
-            //        wrapper.Eq("VideoType", idx);
-            //    } else if (checkedMenus.Count == 2) {
-            //        int idx1 = allMenus.IndexOf(checkedMenus[0]);
-            //        int idx2 = allMenus.IndexOf(checkedMenus[1]);
-            //        wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).RightBracket();
-            //    } else if (checkedMenus.Count == 3) {
-            //        int idx1 = allMenus.IndexOf(checkedMenus[0]);
-            //        int idx2 = allMenus.IndexOf(checkedMenus[1]);
-            //        int idx3 = allMenus.IndexOf(checkedMenus[2]);
-            //        wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBracket();
-            //    }
-            //}
-
-            // 图片显示模式
-            if (ConfigManager.Settings.PictureIndexCreated && PictureTypeIndex > 0) {
-                sql += VideoMapper.COMMON_PICTURE_EXIST_JOIN_SQL;
-                long pathType = ConfigManager.Settings.PicPathMode;
-                int imageType = ShowImageMode;
-                if (imageType > 1)
-                    imageType = 0;
-                wrapper.Eq("common_picture_exist.PathType", pathType).Eq("common_picture_exist.ImageType", imageType).Eq("common_picture_exist.Exist", PictureTypeIndex - 1);
-            }
-
-
 
             string count_sql = "select count(DISTINCT metadata.DataID) " + sql + wrapper.ToWhere(false);
             TotalCount = metaDataMapper.SelectCount(count_sql);

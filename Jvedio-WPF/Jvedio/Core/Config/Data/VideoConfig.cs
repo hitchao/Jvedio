@@ -32,6 +32,7 @@ namespace Jvedio.Core.Config.Data
 
             ActorEditMode = false;
             ActorSortDescending = true;
+            ShowFilter = true;
 
         }
 
@@ -254,6 +255,14 @@ namespace Jvedio.Core.Config.Data
             get { return _GifImage_Width; }
             set {
                 _GifImage_Width = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _ShowFilter;
+        public bool ShowFilter {
+            get { return _ShowFilter; }
+            set {
+                _ShowFilter = value;
                 RaisePropertyChanged();
             }
         }

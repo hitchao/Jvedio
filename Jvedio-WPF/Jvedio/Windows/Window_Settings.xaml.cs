@@ -1235,6 +1235,16 @@ namespace Jvedio
                     list.Add($"({video.DataID},{pathType},1,{(File.Exists(video.GetBigImage()) ? 1 : 0)})");
                     if (IndexCanceled)
                         return false;
+
+                    // todo 预览图
+                    //list.Add($"({video.DataID},{pathType},1,{(File.Exists(video.GetExtraImage()) ? 1 : 0)})");
+                    //if (IndexCanceled)
+                    //    return false;
+
+
+
+                    // todo 影片截图
+
                     App.Current.Dispatcher.Invoke(() => {
                         indexCreatingProgressBar.Value = Math.Round(((double)i + 1) / total * 100, 2);
                     });

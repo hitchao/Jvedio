@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.CustomEventArgs;
+﻿using Google.Protobuf.Collections;
+using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
@@ -27,6 +28,7 @@ using System.Windows.Threading;
 using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.Core.UserControls.Filter;
 using static Jvedio.MapperManager;
+using static Jvedio.App;
 
 namespace Jvedio.Core.UserControls
 {
@@ -79,13 +81,14 @@ namespace Jvedio.Core.UserControls
         };
 
 
-        List<string> TimeList { get; set; } = new List<string>()
-        {
-            "<30min",
-            "30min-1h",
-            "1h-2h",
-            ">2h"
-        };
+        private const long MB_TO_B = 1024 * 1024;
+
+        List<int> TimeList { get; set; } = new List<int>() { 0, 30, 60, 120, 240, 360 };
+
+        /// <summary>
+        /// 单位 MB
+        /// </summary>
+        List<long> SizeList { get; set; } = new List<long>() { 0l * MB_TO_B, 500l * MB_TO_B, 1000l * MB_TO_B, 2000l * MB_TO_B, 3000l * MB_TO_B };
 
         #endregion
 
@@ -287,7 +290,7 @@ namespace Jvedio.Core.UserControls
         public void LoadAll()
         {
             if (ExpandTag)
-                LoadTagStamp();
+                InitTagStamp();
             if (ExpandCommon)
                 SetCommonFilter();
             if (ExpandGenre)
@@ -544,7 +547,7 @@ namespace Jvedio.Core.UserControls
         private void TagStamp_Expand(object sender, EventArgs e)
         {
             if (sender is TogglePanel panel && panel.IsLoaded && panel.IsExpanded)
-                LoadTagStamp();
+                InitTagStamp();
         }
 
         private void Common_Expand(object sender, EventArgs e)
@@ -630,6 +633,15 @@ namespace Jvedio.Core.UserControls
             }
             ApplyFilter();
         }
+        private void SetPictureType(object sender, RoutedEventArgs e)
+        {
+            if (!ConfigManager.Settings.PictureIndexCreated) {
+                MessageNotify.Error(LangManager.GetValueByKey("PleaseSetImageIndex"));
+                return;
+            }
+            SetAllChecked(sender, e);
+        }
+
 
         public void ApplyFilter()
         {
@@ -637,6 +649,7 @@ namespace Jvedio.Core.UserControls
             // 1.标签戳
 
             string sql = "";
+
 
 
             // 标记
@@ -654,6 +667,9 @@ namespace Jvedio.Core.UserControls
                 }
             }
 
+
+            // 分段视频
+
             // 是否可播放
             if (ConfigManager.Settings.PlayableIndexCreated) {
                 List<RadioButton> plays = playWrapPanel.Children.OfType<RadioButton>().ToList();
@@ -670,31 +686,176 @@ namespace Jvedio.Core.UserControls
             }
 
             // 视频类型
-            List<MenuItem> allMenus = videoTypeWrapPanel.Children.OfType<MenuItem>().ToList();
-            List<MenuItem> checkedMenus = allMenus.Where(t => t.IsChecked).ToList();
+            List<ToggleButton> allMenus = videoTypeWrapPanel.Children.OfType<ToggleButton>().ToList();
+            List<ToggleButton> checkedMenus = allMenus.Where(t => (bool)t.IsChecked).ToList();
+            int checkedCount = checkedMenus.Count;
 
-            if (checkedMenus.Count > 0 && checkedMenus.Count < 4) {
-                // VideoType = 0 or VideoType = 1 or VideoType=2
-                if (checkedMenus.Count == 1) {
-                    int idx = allMenus.IndexOf(checkedMenus[0]);
-                    wrapper.Eq("VideoType", idx);
-                } else if (checkedMenus.Count == 2) {
-                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
-                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
-                    wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).RightBracket();
-                } else if (checkedMenus.Count == 3) {
-                    int idx1 = allMenus.IndexOf(checkedMenus[0]);
-                    int idx2 = allMenus.IndexOf(checkedMenus[1]);
-                    int idx3 = allMenus.IndexOf(checkedMenus[2]);
-                    wrapper.Eq("VideoType", idx1).LeftBracket().Or().Eq("VideoType", idx2).Or().Eq("VideoType", idx3).RightBracket();
+            string field = "";
+
+            if (checkedCount > 0 && checkedCount < 4) {
+                field = "VideoType";
+                if (checkedCount == 1) {
+                    int idx = allMenus.IndexOf(checkedMenus[0]) - 1;
+                    if (idx >= 0)
+                        wrapper.Eq(field, idx);
+                } else if (checkedCount == 2) {
+                    int idx1 = allMenus.IndexOf(checkedMenus[0]) - 1;
+                    int idx2 = allMenus.IndexOf(checkedMenus[1]) - 1;
+                    if (idx1 >= 0 && idx2 >= 0)
+                        wrapper.Eq(field, idx1).LeftBracket().Or().Eq(field, idx2).RightBracket();
+                } else if (checkedCount == 3) {
+                    int idx1 = allMenus.IndexOf(checkedMenus[0]) - 1;
+                    int idx2 = allMenus.IndexOf(checkedMenus[1]) - 1;
+                    int idx3 = allMenus.IndexOf(checkedMenus[2]) - 1;
+                    if (idx1 >= 0 && idx2 >= 0 && idx3 >= 0)
+                        wrapper.Eq(field, idx1).LeftBracket().Or().Eq(field, idx2).Or().Eq(field, idx3).RightBracket();
                 }
             }
 
 
+            // 1. 仅显示分段视频
+            if ((bool)OnlyShowSubsection.IsChecked)
+                wrapper.NotEq("SubSection", string.Empty);
+
+            // 图片显示模式
+            if (ConfigManager.Settings.PictureIndexCreated) {
+                List<RadioButton> plays = pictureWrapPanel.Children.OfType<RadioButton>().ToList();
+                int idx = 0;
+                for (int i = 0; i < plays.Count; i++) {
+                    if ((bool)plays[i].IsChecked) {
+                        idx = i;
+                        break;
+                    }
+                }
+                if (idx > 0) {
+                    int exists = (bool)pictureReverse.IsChecked ? 0 : 1;
+                    sql += VideoMapper.COMMON_PICTURE_EXIST_JOIN_SQL;
+                    wrapper.Eq("common_picture_exist.PathType", ConfigManager.Settings.PicPathMode)
+                        .Eq("common_picture_exist.ImageType", idx - 1)
+                        .Eq("common_picture_exist.Exist", exists);
+                }
+            }
+
+            // 时长
+            List<ToggleButton> timeList = timeWrapPanel.Children.OfType<ToggleButton>().ToList();
+            ToggleButton timeButton = timeList.FirstOrDefault(item => (bool)item.IsChecked);
+            if (timeButton != null && timeList.IndexOf(timeButton) is int timeIndex && timeIndex > 0) {
+                field = "Duration";
+                if (timeIndex < 5) {
+                    wrapper.Ge(field, TimeList[timeIndex - 1]).Le(field, TimeList[timeIndex]);
+                } else if (timeIndex == 5) {
+                    wrapper.Ge(field, TimeList[timeIndex]);
+                }
+            }
+
+            // 文件大小
+            List<RadioButton> sizeList = sizeWrapPanel.Children.OfType<RadioButton>().ToList();
+            RadioButton sizeButton = sizeList.FirstOrDefault(item => (bool)item.IsChecked);
+            if (sizeButton != null && sizeList.IndexOf(sizeButton) is int sizeIndex && sizeIndex > 0) {
+                field = "Size";
+                if (sizeIndex < 5) {
+                    wrapper.Ge(field, SizeList[sizeIndex - 1]).Le(field, SizeList[sizeIndex]);
+                } else if (sizeIndex == 5) {
+                    wrapper.Ge(field, SizeList[sizeIndex - 1]);
+                }
+            }
+
+            // 评分
+            double minRate = rateSlider.MinValue;
+            double maxRate = rateSlider.MaxValue;
+            if (minRate != rateSlider.Minimum || maxRate != rateSlider.Maximum) {
+                field = "Grade";
+                if (minRate == maxRate) {
+                    wrapper.Eq(field, minRate);
+                } else {
+                    wrapper.Ge(field, minRate);
+                    wrapper.Le(field, maxRate);
+                }
+            }
+
+            // 年份
+
+            List<ToggleButton> yearList = yearWrapPanel.Children.OfType<ToggleButton>().Where(item => (bool)item.IsChecked).ToList();
+            if (yearList.Count > 0 && yearList.Count != yearWrapPanel.Children.Count) {
+                field = "ReleaseYear";
+                int count = yearList.Count;
+                List<int> list = yearList.Select(item => int.Parse(item.Content.ToString())).ToList();
+                wrapper.Eq(field, list[0]).LeftBracket().Or();
+                for (int i = 1; i < count - 1; i++) {
+                    wrapper.Eq(field, list[i]).Or();
+                }
+                wrapper.Eq(field, list[count - 1]).RightBracket();
+
+            }
+
+            // 月份
+            //List<ToggleButton> monthList = monthWrapPanel.Children.OfType<ToggleButton>().Where(item => (bool)item.IsChecked).ToList();
+            //if (monthList.Count > 0 && monthList.Count != monthWrapPanel.Children.Count) {
+            //    field = "ReleaseDate";
+            //    int count = monthList.Count;
+            //    List<int> list = monthList.Select(item => int.Parse(item.Content.ToString())).ToList();
+            //    wrapper.Eq(field, list[0]).LeftBracket().Or();
+            //    for (int i = 1; i < count - 1; i++) {
+            //        wrapper.Eq(field, list[i]).Or();
+            //    }
+            //    wrapper.Eq(field, list[count - 1]).RightBracket();
+
+            //}
+
+            // 类别
+            List<ToggleButton> genreList = genreWrapPanel.Children.OfType<ToggleButton>().Where(item => (bool)item.IsChecked).ToList();
+            if (genreList.Count > 0 && genreList.Count != genreWrapPanel.Children.Count) {
+                field = "Genre";
+                int count = genreList.Count;
+                List<string> list = genreList.Select(item => item.Content.ToString()).ToList();
+                wrapper.Like(field, list[0]).LeftBracket().Or();
+                for (int i = 1; i < count - 1; i++) {
+                    wrapper.Like(field, list[i]).Or();
+                }
+                wrapper.Like(field, list[count - 1]).RightBracket();
+            }
+
+            // 系列
+            List<ToggleButton> seriesList = seriesWrapPanel.Children.OfType<ToggleButton>().Where(item => (bool)item.IsChecked).ToList();
+            if (seriesList.Count > 0 && seriesList.Count != seriesWrapPanel.Children.Count) {
+                field = "Series";
+                int count = seriesList.Count;
+                List<string> list = seriesList.Select(item => item.Content.ToString()).ToList();
+                wrapper.Like(field, list[0]).LeftBracket().Or();
+                for (int i = 1; i < count - 1; i++) {
+                    wrapper.Like(field, list[i]).Or();
+                }
+                wrapper.Like(field, list[count - 1]).RightBracket();
+            }
+
+            // 导演
+            List<ToggleButton> directorList = directorWrapPanel.Children.OfType<ToggleButton>().Where(item => (bool)item.IsChecked).ToList();
+            if (directorList.Count > 0 && directorList.Count != directorWrapPanel.Children.Count) {
+                field = "Director";
+                int count = directorList.Count;
+                List<string> list = directorList.Select(item => item.Content.ToString()).ToList();
+                wrapper.Like(field, list[0]).LeftBracket().Or();
+                for (int i = 1; i < count - 1; i++) {
+                    wrapper.Like(field, list[i]).Or();
+                }
+                wrapper.Like(field, list[count - 1]).RightBracket();
+            }
+
+            // 系列
+            List<ToggleButton> studioList = studioWrapPanel.Children.OfType<ToggleButton>().Where(item => (bool)item.IsChecked).ToList();
+            if (studioList.Count > 0 && studioList.Count != studioWrapPanel.Children.Count) {
+                field = "Studio";
+                int count = studioList.Count;
+                List<string> list = studioList.Select(item => item.Content.ToString()).ToList();
+                wrapper.Like(field, list[0]).LeftBracket().Or();
+                for (int i = 1; i < count - 1; i++) {
+                    wrapper.Like(field, list[i]).Or();
+                }
+                wrapper.Like(field, list[count - 1]).RightBracket();
+            }
+
             WrapperEventArg<Video> arg = new WrapperEventArg<Video>(wrapper);
             arg.SQL = sql;
-
-
 
             OnApplyWrapper?.Invoke(this, arg);
         }
@@ -709,8 +870,29 @@ namespace Jvedio.Core.UserControls
                     list.ForEach((arg) => arg.IsChecked = false);
                     toggleButton.IsChecked = true;
                 } else {
-                    list[0].IsChecked = false;
+                    list[0].IsChecked = !list.Any(arg => (bool)arg.IsChecked);
                 }
+            }
+        }
+
+        private WrapPanel GetWrapPanel(FrameworkElement ele)
+        {
+            if (ele.Parent is DockPanel panel &&
+                panel.Parent is StackPanel stackPanel &&
+                stackPanel.Children.OfType<ScrollViewer>().Last() is ScrollViewer viewer &&
+                viewer.Content is WrapPanel wrapPanel)
+                return wrapPanel;
+            return null;
+        }
+
+        private void SetAllLabelChecked(object sender, RoutedEventArgs e)
+        {
+            if (sender is ToggleButton button &&
+                GetWrapPanel(button) is WrapPanel wrapPanel &&
+                wrapPanel.Children.OfType<ToggleButton>().ToList() is List<ToggleButton> list
+               ) {
+                bool isChecked = (bool)button.IsChecked;
+                list.ForEach(arg => arg.IsChecked = isChecked);
             }
         }
     }
