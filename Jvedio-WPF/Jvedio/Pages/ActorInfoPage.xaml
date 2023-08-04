@@ -47,7 +47,7 @@
             CornerRadius="5"
             Effect="{StaticResource NormalDropShadowEffect}" />
 
-        <super:HoverPath Click="HideActressGrid" Style="{StaticResource CloseHoverPath}" />
+        <super:HoverPath Click="HideActressGrid" Style="{StaticResource CloseExHoverPath}" />
 
 
 

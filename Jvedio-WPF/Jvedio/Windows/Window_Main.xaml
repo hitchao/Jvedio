@@ -287,80 +287,7 @@
             </Grid>
         </Popup>
 
-        <!--  影片关联弹框  -->
-        <Popup
-            x:Name="AssoDataPopup"
-            Width="{x:Static SystemParameters.PrimaryScreenWidth}"
-            Height="auto"
-            AllowsTransparency="True"
-            Placement="MousePoint"
-            PopupAnimation="Fade"
-            StaysOpen="True"
-            VerticalOffset="0">
-            <Grid Margin="5">
-                <Border
-                    Margin="5"
-                    Background="{DynamicResource Menu.Background}"
-                    CornerRadius="5"
-                    Effect="{StaticResource PopupDropShadowEffect}" />
-
-
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <Border CornerRadius="5 5 0 0" Style="{StaticResource InfoBorder}">
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                            <TextBlock
-                                Grid.Row="0"
-                                FontWeight="Bold"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="关联影片" />
-                            <TextBlock
-                                Foreground="{DynamicResource Window.Sub.Foreground}"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="{Binding ViewAssociationDatas.Count, StringFormat=\ ({0})}" />
-                        </StackPanel>
-                    </Border>
-                    <super:HoverPath
-                        Grid.Row="0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Click="HideAssocPopup"
-                        Style="{StaticResource CloseHoverPath}" />
-
-                    <ScrollViewer
-                        Grid.Row="1"
-                        Margin="5"
-                        CanContentScroll="True"
-                        FocusVisualStyle="{x:Null}"
-                        HorizontalScrollBarVisibility="Auto"
-                        IsDeferredScrollingEnabled="False"
-                        PreviewMouseWheel="ScrollViewer_MouseWheel"
-                        VerticalScrollBarVisibility="Hidden">
-                        <ItemsControl
-                            Name="assoItemsControl"
-                            Margin="5,5,5,5"
-                            Background="Transparent"
-                            ItemsSource="{Binding ViewAssociationDatas}"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                        </ItemsControl>
-                    </ScrollViewer>
-
-                </Grid>
-
-            </Grid>
-        </Popup>
-
-        <Grid Margin="0" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown">
+        <Grid Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
@@ -761,13 +688,14 @@
                                                     </Viewbox>
                                                     <TextBlock
                                                         Grid.Column="1"
-                                                        MaxWidth="120"
+                                                        MaxWidth="200"
                                                         Margin="0"
                                                         Padding="10,5"
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
                                                         Style="{StaticResource BaseTextBlock}"
                                                         Text="{Binding Name}"
+                                                        TextAlignment="Left"
                                                         TextTrimming="WordEllipsis"
                                                         TextWrapping="WrapWithOverflow" />
 
@@ -1148,7 +1076,7 @@
                         </Border>
                     </super:SimplePanel>
 
-                    <super:HoverPath Click="HideBeginScanGrid" Style="{StaticResource CloseHoverPath}" />
+                    <super:HoverPath Click="HideBeginScanGrid" Style="{StaticResource CloseExHoverPath}" />
                 </super:SimplePanel>
 
             </Grid>

@@ -1,6 +1,7 @@
 ﻿using Jvedio.Core.UserControls;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
+using Jvedio.Mapper;
 using Jvedio.ViewModel;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -47,7 +48,6 @@ namespace Jvedio.ViewModels
 
             if (tabItem != null) {
                 // 移除
-                RemovePanel(tabItem);
                 RemoveTabItem(vieModel.TabItems.IndexOf(tabItem));
             }
 
@@ -70,6 +70,47 @@ namespace Jvedio.ViewModels
             onAddData(tabItem, tabData);
         }
 
+        private void OnViewAssoData(object sender, VideoItemEventArgs e)
+        {
+            OnViewAssoData(e.DataID);
+        }
+
+
+        public void OnViewAssoData(long dataID)
+        {
+            if (dataID <= 0)
+                return;
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("DataID", dataID);
+            Video currentVideo = MapperManager.videoMapper.SelectById(wrapper);
+
+            // 设置关联
+            HashSet<long> set = MapperManager.associationMapper.GetAssociationDatas(currentVideo.DataID);
+            if (set != null) {
+                currentVideo.HasAssociation = set.Count > 0;
+                currentVideo.AssociationList = set.ToList();
+            }
+
+
+            if (currentVideo.AssociationList == null || currentVideo.AssociationList.Count <= 0)
+                return;
+
+            string tabName = currentVideo.VID;
+            if (string.IsNullOrEmpty(tabName))
+                tabName = currentVideo.Title;
+            if (string.IsNullOrEmpty(tabName))
+                tabName = System.IO.Path.GetFileNameWithoutExtension(currentVideo.Path);
+
+            SelectWrapper<Video> extraWrapper = new SelectWrapper<Video>();
+
+            currentVideo.AssociationList.Insert(0, dataID); // 自己也加入
+
+            extraWrapper.In("metadata.DataID", currentVideo.AssociationList.Select(arg => arg.ToString()));
+            Add(TabType.GeoAsso, $"关联：{tabName}", extraWrapper);
+        }
+
+
+
         private void OnItemClick(object sender, VideoItemEventArgs e)
         {
             long dataID = e.DataID;
@@ -79,6 +120,10 @@ namespace Jvedio.ViewModels
         public void onShowDetailData(long dataID)
         {
             Window_Details windowDetails = new Window_Details(dataID);
+            windowDetails.onViewAssoData += (id) => {
+                OnViewAssoData(id);
+                windowDetails.Close();
+            };
             windowDetails.Show();
         }
 
@@ -88,11 +133,18 @@ namespace Jvedio.ViewModels
                 case TabType.GeoVideo:
                 case TabType.GeoStar:
                 case TabType.GeoRecentPlay:
+                case TabType.GeoAsso:
                     SelectWrapper<Video> ExtraWrapper = tabData as SelectWrapper<Video>;
 
                     VideoList videoList = new VideoList(ExtraWrapper, tabItem);
+
+                    if (tabItem.TabType == TabType.GeoAsso)
+                        videoList.SetAsso(false);
                     videoList.Uid = tabItem.UUID;
                     videoList.OnItemClick += OnItemClick;
+                    videoList.OnItemViewAsso += OnViewAssoData;
+
+
 
                     TabPanel.Children.Add(videoList);
 

@@ -163,7 +163,7 @@
                                                             Margin="0"
                                                             VerticalAlignment="Center"
                                                             Click="DeleteActor"
-                                                            Style="{StaticResource CloseHoverPath}" />
+                                                            Style="{StaticResource CloseExHoverPath}" />
                                                     </StackPanel>
                                                 </Border>
                                             </Grid>

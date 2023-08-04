@@ -1077,12 +1077,6 @@ namespace Jvedio
             vieModel.MainDataChecked = true;
         }
 
-
-        public void PlayVideoWithPlayer(string filepath, long dataID = 0)
-        {
-        }
-
-
         public void RefreshData(long dataID)
         {
 
@@ -1546,13 +1540,6 @@ namespace Jvedio
             e.Handled = true;
         }
 
-        private void HideAssocPopup(object sender, RoutedEventArgs e)
-        {
-            AssoDataPopup.IsOpen = false;
-        }
-
-
-
         private void RestartTask(object sender, RoutedEventArgs e)
         {
             string dataID = (sender as Button).Tag.ToString();
@@ -1731,10 +1718,6 @@ namespace Jvedio
         }
 
 
-        private void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            AssoDataPopup.IsOpen = false;
-        }
 
         private Window_Server window_Server;
 

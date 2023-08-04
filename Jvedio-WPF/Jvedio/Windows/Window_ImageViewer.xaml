@@ -27,7 +27,7 @@
             BorderThickness="0"
             Effect="{DynamicResource NormalDropShadowEffect}"
             Opacity="0.4" />
-        <super:HoverPath Click="CloseWindow" Style="{StaticResource CloseHoverPath}" />
+        <super:HoverPath Click="CloseWindow" Style="{StaticResource CloseExHoverPath}" />
 
         <Image Name="ImageViewer" Stretch="UniformToFill">
             <!--<Image.Effect>

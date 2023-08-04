@@ -28,6 +28,25 @@ namespace Jvedio.Core.UserControls
 
 
         #region "事件"
+        public static readonly RoutedEvent OnViewAssoDataEvent =
+            EventManager.RegisterRoutedEvent("OnViewAssoData", RoutingStrategy.Bubble,
+                typeof(RoutedEventHandler), typeof(ViewVideo));
+
+        public event RoutedEventHandler OnViewAssoData {
+            add => AddHandler(OnViewAssoDataEvent, value);
+            remove => RemoveHandler(OnViewAssoDataEvent, value);
+        }
+
+
+        public static readonly RoutedEvent OnTagStampRemoveEvent =
+            EventManager.RegisterRoutedEvent("OnTagStampRemove", RoutingStrategy.Bubble,
+                typeof(RoutedEventHandler), typeof(ViewVideo));
+
+        public event RoutedEventHandler OnTagStampRemove {
+            add => AddHandler(OnTagStampRemoveEvent, value);
+            remove => RemoveHandler(OnTagStampRemoveEvent, value);
+        }
+
         public static readonly RoutedEvent ShowDetailEvent =
             EventManager.RegisterRoutedEvent("ShowDetail", RoutingStrategy.Bubble,
                 typeof(RoutedEventHandler), typeof(ViewVideo));
@@ -76,6 +95,16 @@ namespace Jvedio.Core.UserControls
 
 
         #region "控件属性"
+
+        public static readonly DependencyProperty AssoVisibleProperty = DependencyProperty.Register(
+nameof(AssoVisible), typeof(bool), typeof(ViewVideo), new PropertyMetadata(true));
+
+        public bool AssoVisible {
+            get { return (bool)GetValue(AssoVisibleProperty); }
+            set {
+                SetValue(AssoVisibleProperty, value);
+            }
+        }
 
         public static readonly DependencyProperty ImageWidthProperty = DependencyProperty.Register(
 nameof(ImageWidth), typeof(int), typeof(ViewVideo), new PropertyMetadata((int)ConfigManager.VideoConfig.GlobalImageWidth));
@@ -156,7 +185,7 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
 
         private void ViewAssocDatas(object sender, RoutedEventArgs e)
         {
-
+            RaiseEvent(new RoutedEventArgs(OnViewAssoDataEvent) { Source = this });
         }
 
         private void ShowSubSection(object sender, RoutedEventArgs e)
@@ -229,7 +258,7 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
             long dataID = video.DataID;
 
             ItemsControl itemsControl = border.FindParentOfType<ItemsControl>();
-            if (itemsControl == null || itemsControl.Tag == null)
+            if (itemsControl == null)
                 return;
 
             ObservableCollection<TagStamp> tagStamps = itemsControl.ItemsSource as ObservableCollection<TagStamp>;
@@ -237,26 +266,13 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
                 return;
             TagStamp tagStamp = tagStamps.FirstOrDefault(arg => arg.TagID.Equals(tagID));
             if (tagStamp != null) {
-
-
-                //ObservableCollection<Video> datas = GetVideosFromTagMenu(sender as MenuItem);
-
                 tagStamps.Remove(tagStamp);
                 string sql = $"delete from metadata_to_tagstamp where TagID='{tagID}' and DataID='{dataID}'";
                 MapperManager.tagStampMapper.ExecuteNonQuery(sql);
                 Video newVideo = MapperManager.videoMapper.SelectVideoByID(dataID);
                 video.TagIDs = video.TagIDs;
-                //for (int i = 0; i < datas.Count; i++) {
-                //    if (datas[i].DataID.Equals(DataID)) {
-                //        Video video = videoMapper.SelectVideoByID(DataID);
-                //        if (video == null)
-                //            continue;
-                //        datas[i].TagIDs = video.TagIDs;
-                //        break;
-                //    }
-                //}
-
-                //InitTagStamp();
+                // 通知上层数目变化了
+                RaiseEvent(new RoutedEventArgs(OnTagStampRemoveEvent) { Source = this });
             }
         }
 

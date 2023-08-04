@@ -1957,7 +1957,7 @@
                                         <super:HoverPath
                                             Margin="5,0"
                                             Click="DelPath"
-                                            Style="{StaticResource CloseHoverPath}" />
+                                            Style="{StaticResource CloseExHoverPath}" />
                                         <super:HoverPath
                                             Margin="5,0"
                                             Click="ClearPath"
@@ -2107,7 +2107,7 @@
                                                     Height="20"
                                                     VerticalAlignment="Center"
                                                     Click="DeleteServer"
-                                                    Style="{StaticResource CloseHoverPath}" />
+                                                    Style="{StaticResource CloseExHoverPath}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>

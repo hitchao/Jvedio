@@ -80,9 +80,23 @@
                         Click="ViewAssocDatas"
                         Cursor="Hand"
                         IsEnabled="{Binding EditMode, ElementName=viewVideo, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}"
-                        Style="{StaticResource RoundNormalButton}"
-                        Tag="{DynamicResource Button.Hover.Background}"
-                        Visibility="{Binding HasAssociation, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                        Tag="{DynamicResource Button.Hover.Background}">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource RoundNormalButton}" TargetType="Button">
+                                <Setter Property="Visibility" Value="Hidden" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding HasAssociation, Mode=OneWay}" Value="True" />
+                                            <Condition Binding="{Binding Path=AssoVisible, Mode=OneWay, ElementName=viewVideo}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
 
                         <Image
                             Width="20"

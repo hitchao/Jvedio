@@ -148,6 +148,7 @@
             </DataTemplate.Triggers>
             <localControl:ViewVideo
                 x:Name="viewVideo"
+                AssoVisible="{Binding Path=DataContext.ShowAsso, ElementName=videoList}"
                 ContextMenu="{StaticResource VideoContextMenu}"
                 ContextMenuOpening="ContextMenu_ContextMenuOpening"
                 ImageHeight="{Binding Path=DataContext.GlobalImageHeight, ElementName=videoList}"
@@ -155,7 +156,10 @@
                 ImageMouseEnter="viewVideo_ImageMouseEnter"
                 ImageMouseLeave="viewVideo_ImageMouseLeave"
                 ImageWidth="{Binding Path=DataContext.GlobalImageWidth, ElementName=videoList}"
+                Loaded="viewVideo_Loaded"
                 OnPlayVideo="viewVideo_OnPlayVideo"
+                OnTagStampRemove="viewVideo_OnTagStampRemove"
+                OnViewAssoData="viewVideo_OnViewAssoData"
                 ShowDetail="onItemShowDetail"
                 Tag="{Binding ., Mode=OneWay}" />
         </DataTemplate>
@@ -348,6 +352,7 @@
             <!--  筛选器  -->
 
             <localControl:Filter
+                x:Name="filter"
                 Grid.Column="0"
                 Close="FilterClose"
                 OnApplyWrapper="Filter_OnApplyWrapper"

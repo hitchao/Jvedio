@@ -15,6 +15,7 @@ namespace Jvedio.Entity.Common
         GeoLabel,
         GeoClassify,
         GeoRandom,
+        GeoAsso,
         TabTypeMax,
     }
 

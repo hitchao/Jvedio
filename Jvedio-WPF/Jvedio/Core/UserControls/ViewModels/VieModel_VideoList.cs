@@ -112,6 +112,18 @@ namespace Jvedio.Core.UserControls.ViewModels
 
 
 
+        private bool _ShowAsso = true;
+
+        public bool ShowAsso {
+            get { return _ShowAsso; }
+
+            set {
+                _ShowAsso = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
         private string _SearchText = string.Empty;
 
         public string SearchText {

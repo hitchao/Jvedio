@@ -256,7 +256,7 @@
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
                                                 Click="RemoveExistAssociation"
-                                                Style="{StaticResource CloseHoverPath}" />
+                                                Style="{StaticResource CloseExHoverPath}" />
 
                                             <TextBlock
                                                 Grid.Column="1"
@@ -316,7 +316,7 @@
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
                                                 Click="RemoveAssociation"
-                                                Style="{StaticResource CloseHoverPath}" />
+                                                Style="{StaticResource CloseExHoverPath}" />
 
                                             <TextBlock
                                                 Grid.Column="1"

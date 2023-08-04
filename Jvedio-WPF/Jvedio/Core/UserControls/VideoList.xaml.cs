@@ -61,6 +61,15 @@ namespace Jvedio.Core.UserControls
             remove => RemoveHandler(OnItemClickEvent, value);
         }
 
+        public static readonly RoutedEvent OnItemViewAssoEvent =
+            EventManager.RegisterRoutedEvent("OnItemViewAsso", RoutingStrategy.Bubble,
+                typeof(VideoItemEventHandler), typeof(VideoList));
+
+        public event VideoItemEventHandler OnItemViewAsso {
+            add => AddHandler(OnItemViewAssoEvent, value);
+            remove => RemoveHandler(OnItemViewAssoEvent, value);
+        }
+
         #endregion
 
         #region "属性"
@@ -162,6 +171,10 @@ namespace Jvedio.Core.UserControls
 
             vieModel.onPageChange += (totalCount) => {
                 pagination.Total = totalCount;
+            };
+
+            this.onInitTagStamps += () => {
+                this.filter.InitTagStamp();
             };
         }
 
@@ -336,7 +349,8 @@ namespace Jvedio.Core.UserControls
         {
             //AssoDataPopup.IsOpen = false;
             //windowEdit?.Close();
-            Window_Edit windowEdit = new Window_Edit(GetIDFromMenuItem(sender));
+            long dataID = GetIDFromMenuItem(sender);
+            Window_Edit windowEdit = new Window_Edit(dataID);
             windowEdit.ShowDialog();
         }
 
@@ -416,7 +430,7 @@ namespace Jvedio.Core.UserControls
             }
 
             Window_SearchAsso window_SearchAsso = new Window_SearchAsso(vieModel.SelectedVideo);
-            //window_SearchAsso.Owner = this; // todo tab
+            window_SearchAsso.Owner = Application.Current.MainWindow as Main;
             window_SearchAsso.OnDataRefresh += (dataid) => {
                 RefreshData(dataid);
             };
@@ -549,11 +563,11 @@ namespace Jvedio.Core.UserControls
             if (contextMenu == null || contextMenu.PlacementTarget == null)
                 return null;
 
-            SimplePanel panel = contextMenu.PlacementTarget as SimplePanel;
-            if (panel == null)
+            ViewVideo viewVideo = contextMenu.PlacementTarget as ViewVideo;
+            if (viewVideo == null)
                 return null;
 
-            ItemsControl itemsControl = VisualHelper.FindParentOfType<ItemsControl>(panel);
+            ItemsControl itemsControl = VisualHelper.FindParentOfType<ItemsControl>(viewVideo);
             if (itemsControl == null)
                 return null;
 
@@ -1027,6 +1041,8 @@ namespace Jvedio.Core.UserControls
                 vieModel.SelectedVideo.Clear();
 
             ObservableCollection<Video> videos = GetVideosByMenu(sender as MenuItem, depth);
+            if (videos == null)
+                return null;
 
             Video currentVideo = videos.FirstOrDefault(arg => arg.DataID == dataID);
             if (currentVideo == null)
@@ -1068,7 +1084,9 @@ namespace Jvedio.Core.UserControls
             }
 
             FrameworkElement ele = contextMenu.PlacementTarget as FrameworkElement;
-            return GetDataID(ele, false);
+            if (ele.Tag is Video video)
+                return video.DataID;
+            return -1;
         }
 
 
@@ -1627,9 +1645,13 @@ namespace Jvedio.Core.UserControls
 
             // 标记
             FrameworkElement element = sender as FrameworkElement;
-            if (element == null)
+            if (element == null || element.Tag == null)
                 return;
-            long dataID = GetDataID(element, false);
+            Video video = element.Tag as Video;
+            if (video == null)
+                return;
+
+            long dataID = video.DataID;
 
             if (dataID <= 0)
                 return;
@@ -1644,10 +1666,6 @@ namespace Jvedio.Core.UserControls
 
             ObservableCollection<Video> videos = itemsControl.ItemsSource as ObservableCollection<Video>;
             if (videos == null)
-                return;
-
-            Video video = videos.FirstOrDefault(arg => arg.DataID == dataID);
-            if (video == null)
                 return;
 
             List<string> tagIDs = new List<string>();
@@ -1986,6 +2004,28 @@ namespace Jvedio.Core.UserControls
                 vieModel.FilterSQL = e.SQL;
                 vieModel.LoadData();
             }
+        }
+
+        private void viewVideo_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void viewVideo_OnTagStampRemove(object sender, RoutedEventArgs e)
+        {
+            this.filter.InitTagStamp();
+        }
+
+        private void viewVideo_OnViewAssoData(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement ele &&
+                ele.Tag is Video video)
+                RaiseEvent(new VideoItemEventArgs(video.DataID, OnItemViewAssoEvent, sender));
+        }
+
+        public void SetAsso(bool asso)
+        {
+            vieModel.ShowAsso = asso;
         }
     }
 }

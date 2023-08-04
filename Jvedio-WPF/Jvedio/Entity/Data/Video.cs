@@ -107,6 +107,12 @@ namespace Jvedio.Entity
         [TableId(IdType.AUTO)]
         public long MVID { get; set; }
 
+
+        /// <summary>
+        /// 此处不可删除，需要保证 select 查出 id
+        /// </summary>
+        public new long DataID { get; set; }
+
         public string VID { get; set; }
 
 

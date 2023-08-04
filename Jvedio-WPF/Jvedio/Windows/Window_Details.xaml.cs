@@ -53,6 +53,8 @@ namespace Jvedio
         private delegate void LoadExtraImageDelegate(BitmapSource bitmapSource);
         private delegate void LoadExtraPathDelegate(string path);
 
+        public Action<long> onViewAssoData;
+
         #endregion
         #region "静态属性"
         private static Main windowMain { get; set; }
@@ -1156,7 +1158,7 @@ namespace Jvedio
                 string filepath = vieModel.CurrentVideo.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
                 MenuItem menuItem = new MenuItem();
                 menuItem.Header = i + 1;
-                menuItem.Click += (s, _) => windowMain?.PlayVideoWithPlayer(filepath, DataID);
+                menuItem.Click += (s, _) => Video.PlayVideoWithPlayer(filepath, DataID);
                 contextMenu.Items.Add(menuItem);
             }
 
@@ -1169,7 +1171,7 @@ namespace Jvedio
             if (vieModel.CurrentVideo.HasSubSection)
                 ShowSubsection(sender);
             else
-                windowMain?.PlayVideoWithPlayer(vieModel.CurrentVideo.Path, vieModel.CurrentVideo.DataID);
+                Video.PlayVideoWithPlayer(vieModel.CurrentVideo.Path, vieModel.CurrentVideo.DataID);
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1226,13 +1228,7 @@ namespace Jvedio
 
         private void ViewAssocDatas(object sender, RoutedEventArgs e)
         {
-            AssoDataPopup.IsOpen = true;
-            vieModel.LoadViewAssocData();
-        }
-
-        private void HideAssocPopup(object sender, RoutedEventArgs e)
-        {
-            AssoDataPopup.IsOpen = false;
+            onViewAssoData?.Invoke(vieModel.CurrentVideo.DataID);
         }
 
         private void ShowAssocSubSection(object sender, RoutedEventArgs e)
@@ -1254,41 +1250,13 @@ namespace Jvedio
                     string filepath = video.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
                     MenuItem menuItem = new MenuItem();
                     menuItem.Header = i + 1;
-                    menuItem.Click += (s, _) => windowMain?.PlayVideoWithPlayer(filepath, dataID);
+                    menuItem.Click += (s, _) => Video.PlayVideoWithPlayer(filepath, dataID);
                     contextMenu.Items.Add(menuItem);
                 }
 
                 contextMenu.IsOpen = true;
             }
         }
-
-        private void PlayAssocVideo(object sender, MouseButtonEventArgs e)
-        {
-            AssoDataPopup.IsOpen = false;
-            FrameworkElement el = sender as FrameworkElement;
-
-            long dataId = getDataID(el);
-            if (dataId <= 0)
-                return;
-            Video video = getAssocVideo(dataId);
-            if (video == null) {
-                MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
-                return;
-            }
-
-            windowMain?.PlayVideoWithPlayer(video.Path, DataID);
-        }
-
-        private Video getAssocVideo(long dataID)
-        {
-            if (dataID <= 0 || vieModel?.ViewAssociationDatas?.Count <= 0)
-                return null;
-            Video video = vieModel.ViewAssociationDatas.Where(item => item.DataID == dataID).First();
-            if (video != null && video.DataID > 0)
-                return video;
-            return null;
-        }
-
 
         private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
         {
@@ -1324,13 +1292,6 @@ namespace Jvedio
         {
             TextBlock textBlock = sender as TextBlock;
             ClipBoard.TrySetDataObject(textBlock.Text);
-        }
-
-        private void ShowDetails(object sender, MouseButtonEventArgs e)
-        {
-            long dataId = getDataID(sender as FrameworkElement);
-            vieModel.Load(dataId);
-            AssoDataPopup.IsOpen = false;
         }
 
         private long getDataID(UIElement o)
