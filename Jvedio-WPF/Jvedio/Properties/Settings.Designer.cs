@@ -22,5 +22,17 @@ namespace Jvedio.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string temp {
+            get {
+                return ((string)(this["temp"]));
+            }
+            set {
+                this["temp"] = value;
+            }
+        }
     }
 }

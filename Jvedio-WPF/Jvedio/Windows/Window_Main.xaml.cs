@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Enums;
+﻿using Jvedio.AvalonEdit;
+using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Global;
 using Jvedio.Core.Media;
@@ -8,6 +9,7 @@ using Jvedio.Core.Scan;
 using Jvedio.Core.Server;
 using Jvedio.Core.UserControls;
 using Jvedio.Entity;
+using Jvedio.Entity.Common;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
@@ -62,8 +64,6 @@ namespace Jvedio
         #region "静态属性"
 
         private static Style SearchBoxListItemContainerStyle { get; set; }
-
-        private static bool CheckingScanStatus { get; set; }
 
         private static MessageHistory MessageRecorder { get; set; } = new MessageHistory();
 
@@ -176,10 +176,15 @@ namespace Jvedio
             InitTagStamp();
             vieModel.MainDataChecked = true;
 
-
             OpenListen();
             InitUpgrade();
             CheckServerStatus();
+            InitAvalonEdit();
+        }
+
+        public void InitAvalonEdit()
+        {
+            AvalonEditManager.Init();
         }
 
         private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
@@ -324,41 +329,9 @@ namespace Jvedio
             //};
 
             // 下载中
-            Global.DownloadManager.Dispatcher.onWorking += (s, e) => {
-                double progress = Global.DownloadManager.Dispatcher.Progress;
-                if (progress is double.NaN)
-                    progress = 0;
-                vieModel.DownLoadProgress = progress;
-                if (progress < 100)
-                    vieModel.DownLoadVisibility = Visibility.Visible;
-                else
-                    vieModel.DownLoadVisibility = Visibility.Hidden;
-
-                // 任务栏进度条
-                Dispatcher.Invoke(() => {
-                    if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && TaskbarInstance != null) {
-                        TaskbarInstance.SetProgressValue((int)progress, 100, this);
-                        if (progress >= 100 || progress <= 0)
-                            TaskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
-                        else
-                            TaskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal, this);
-                    }
-                });
-            };
-
-            // 截图中
-            Global.FFmpegManager.Dispatcher.onWorking += (s, e) => {
-                vieModel.ScreenShotProgress = Global.FFmpegManager.Dispatcher.Progress;
-                vieModel.ScreenShotVisibility = Visibility.Visible;
-            };
-
+            App.DownloadManager.onRunning += onDownloading;
             // 长时间暂停
-            Global.DownloadManager.Dispatcher.onLongDelay += (s, e) => {
-                string message = (e as MessageCallBackEventArgs).Message;
-                int.TryParse(message, out int value);
-                vieModel.DownloadLongTaskDelay = value / 1000;
-            };
-
+            App.DownloadManager.onLongDelay += onLoadDelay;
 
             // 此处参考：https://social.msdn.microsoft.com/Forums/vstudio/en-US/cefcfaa5-cb86-426f-b57a-b31a3ea5fcdd/how-to-add-eventsetter-by-code?forum=wpf
             SearchBoxListItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
@@ -381,6 +354,36 @@ namespace Jvedio
 
             };
 
+        }
+
+        private void onLoadDelay(object sender, EventArgs e)
+        {
+            string message = (e as MessageCallBackEventArgs).Message;
+            int.TryParse(message, out int value);
+            vieModel.DownloadLongTaskDelay = value / 1000;
+        }
+
+        private void onDownloading()
+        {
+            double progress = App.DownloadManager.Progress;
+            if (progress is double.NaN)
+                progress = 0;
+            vieModel.DownLoadProgress = progress;
+            if (progress < 100)
+                vieModel.DownLoadVisibility = Visibility.Visible;
+            else
+                vieModel.DownLoadVisibility = Visibility.Hidden;
+
+            // 任务栏进度条
+            Dispatcher.Invoke(() => {
+                if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported && TaskbarInstance != null) {
+                    TaskbarInstance.SetProgressValue((int)progress, 100, this);
+                    if (progress >= 100 || progress <= 0)
+                        TaskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress, this);
+                    else
+                        TaskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal, this);
+                }
+            });
         }
 
         public void SetComboboxID()
@@ -713,20 +716,24 @@ namespace Jvedio
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            // 停止所有任务
-            try {
-                // todo 下载程序
-                if (vieModel.DownLoadTasks != null) {
-                    foreach (var item in vieModel.DownLoadTasks) {
-                        item.Cancel();
-                    }
-                }
-            } catch (Exception ex) {
-                Logger.Error(ex);
-            }
-
-            // 关闭所有窗口
+            StopAllTask();
             App.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// 停止所有任务
+        /// </summary>
+        private void StopAllTask()
+        {
+            if (App.ScanManager.RunningCount > 0)
+                App.ScanManager.CancelAll();
+
+            if (App.ScreenShotManager.RunningCount > 0)
+                App.ScreenShotManager.CancelAll();
+
+            if (App.DownloadManager.RunningCount > 0)
+                App.DownloadManager.CancelAll();
+
         }
 
         private void OpenFeedBack(object sender, RoutedEventArgs e)
@@ -862,19 +869,28 @@ namespace Jvedio
 
         public void ShowDownloadPopup(object sender, MouseButtonEventArgs e)
         {
-            downloadStatusPopup.IsOpen = true;
+            vieModel.TabItemManager
+                .Add(Entity.Common.TabType.GeoTask, LangManager.GetValueByKey("Download"), TaskType.Download);
         }
 
-        public void ShowScreenShotPopup(object sender, MouseButtonEventArgs e)
+        public void ShowScreenShotTab(object sender, MouseButtonEventArgs e)
         {
-            screenShotStatusPopup.IsOpen = true;
+            vieModel.TabItemManager
+                .Add(Entity.Common.TabType.GeoTask, LangManager.GetValueByKey("ScreenShotTask"), TaskType.ScreenShot);
         }
 
-        private void Grid_Drop(object sender, DragEventArgs e)
+        private void ShowMsgScanPopup(object sender, MouseButtonEventArgs e)
+        {
+            vieModel.TabItemManager
+                .Add(TabType.GeoTask, LangManager.GetValueByKey("Scan"), TaskType.Scan);
+        }
+
+
+        private void OnDragFileDrop(object sender, DragEventArgs e)
         {
             string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            vieModel.DragInFile = false;
             AddScanTask(dragdropFiles);
-            dragOverBorder.Visibility = Visibility.Collapsed;
         }
 
         private void SaveConfigValue()
@@ -896,8 +912,6 @@ namespace Jvedio
 
         private void AddScanTask(string[] scanFileList)
         {
-            vieModel.ScanStatus = "Scanning";
-
             List<string> files = new List<string>();
             List<string> paths = new List<string>();
 
@@ -909,94 +923,72 @@ namespace Jvedio
             }
 
             Core.Scan.ScanTask scanTask = new Core.Scan.ScanTask(paths, files);
+            scanTask.Title = "-";
 
-            scanTask.onCanceled += (s, ev) => {
-                Console.WriteLine("取消扫描任务");
-            };
-            scanTask.onError += (s, ev) => {
-                MessageRecorder.Error((ev as MessageCallBackEventArgs).Message);
-            };
-            scanTask.onCompleted += (s, ev) => {
-                if (scanTask.Success) {
+            scanTask.onCanceled += (s, ev) => Logger.Warn("cancel scan task");
+            scanTask.onError += (s, ev) => MessageRecorder.Error((ev as MessageCallBackEventArgs).Message);
+            scanTask.onCompleted += ScanComplete;
+            App.ScanManager.AddTask(scanTask);
 
-                    Dispatcher.Invoke(() => {
-                        vieModel.Statistic();
-                        ScanResult scanResult = scanTask.ScanResult;
-                        List<Video> insertVideos = null;
-                        if (scanResult != null) {
-                            insertVideos = scanResult.InsertVideos;
-                            MessageCard.Info($"总数    {scanResult.TotalCount.ToString().PadRight(8)}已导入    {scanResult.Import.Count}{Environment.NewLine}" +
-                                $"更新    {scanResult.Update.Count.ToString().PadRight(8)} 未导入    {scanResult.NotImport.Count}");
-                        }
-
-                        // todo tab
-                        //if (ConfigManager.ScanConfig.LoadDataAfterScan)
-                        //    vieModel.LoadData();
-                        if (ConfigManager.FFmpegConfig.ScreenShotAfterImport) {
-                            ScreenShotAfterImport(insertVideos);
-                        }
-
-
-                        if (ConfigManager.ScanConfig.ImageExistsIndexAfterScan)
-                            SetImageExistsIndexAfterScan();
-
-
-                    });
-                }
-                (s as ScanTask).Running = false;
-            };
-            vieModel.ScanTasks.Add(scanTask);
             scanTask.Start();
-            setScanStatus();
+        }
+
+        private void ScanComplete(object sender, EventArgs ev)
+        {
+            ScanTask scanTask = sender as ScanTask;
+            if (scanTask != null && scanTask.Success) {
+
+                Dispatcher.Invoke(() => {
+                    vieModel.Statistic();
+                    ScanResult scanResult = scanTask.ScanResult;
+                    List<Video> insertVideos = null;
+                    if (scanResult != null) {
+                        insertVideos = scanResult.InsertVideos;
+                        MessageCard.Info($"总数    {scanResult.TotalCount.ToString().PadRight(8)}已导入    {scanResult.Import.Count}{Environment.NewLine}" +
+                            $"更新    {scanResult.Update.Count.ToString().PadRight(8)} 未导入    {scanResult.NotImport.Count}");
+                    }
+
+                    if (ConfigManager.ScanConfig.LoadDataAfterScan)
+                        LoadAll();
+
+                    if (ConfigManager.FFmpegConfig.ScreenShotAfterImport) {
+                        ScreenShotAfterImport(insertVideos);
+                    }
+
+                    if (ConfigManager.ScanConfig.ImageExistsIndexAfterScan)
+                        SetImageExistsIndexAfterScan();
+                });
+            }
+            scanTask.Running = false;
         }
 
         private void SetImageExistsIndexAfterScan()
         {
-
+            // todo
         }
 
         private void ScreenShotAfterImport(List<Video> import)
         {
-            // todo tab
-            //if (import?.Count > 0 && File.Exists(ConfigManager.FFmpegConfig.Path)) {
-            //    for (int i = import.Count - 1; i >= 0; i--)
-            //        screenShotVideo(import[i], false);
-
-            //    if (!Global.FFmpegManager.Dispatcher.Working)
-            //        Global.FFmpegManager.Dispatcher.BeginWork();
-            //}
-        }
-
-        private void setScanStatus()
-        {
-            if (!CheckingScanStatus) {
-                CheckingScanStatus = true;
-                Task.Run(() => {
-                    while (true) {
-                        if (vieModel.ScanTasks.All(arg =>
-                         arg.Status == System.Threading.Tasks.TaskStatus.Canceled ||
-                         arg.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)) {
-                            vieModel.ScanStatus = "Complete";
-                            CheckingScanStatus = false;
-                            break;
-                        } else {
-                            Task.Delay(1000).Wait();
-                        }
-                    }
-                });
+            if (import != null &&
+                import.Count > 0 &&
+                File.Exists(ConfigManager.FFmpegConfig.Path)) {
+                VideoList videoList = vieModel.TabItemManager.GetVideoListByType(TabType.GeoVideo);
+                if (videoList != null)
+                    videoList.GenerateScreenShot(import); // 让主 tab 去处理
             }
         }
 
-        private void Grid_DragOver(object sender, DragEventArgs e)
+        private void OnDragFileOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Link;
             e.Handled = true; // 必须加
-            dragOverBorder.Visibility = Visibility.Visible;
+            vieModel.DragInFile = true;
+
         }
 
-        private void Grid_DragLeave(object sender, DragEventArgs e)
+        private void OnDragFileLeave(object sender, DragEventArgs e)
         {
-            dragOverBorder.Visibility = Visibility.Collapsed;
+            vieModel.DragInFile = false;
         }
 
         private void ClearRecentWatched(object sender, RoutedEventArgs e)
@@ -1069,7 +1061,9 @@ namespace Jvedio
             // 切换数据库
             vieModel.IsRefresh = true;
             vieModel.Statistic();
-            //vieModel.Reset(); // todo tab
+            VideoList videoList = vieModel.TabItemManager.GetVideoListByType(TabType.GeoVideo);
+            if (videoList != null)
+                videoList.Refresh();
             vieModel.SetClassify(true);
 
             // vieModel.InitLettersNavigation();
@@ -1246,153 +1240,6 @@ namespace Jvedio
             //vieModel.StatusText = actorInfo.ActorName;
         }
 
-        private void ShowMsgScanPopup(object sender, MouseButtonEventArgs e)
-        {
-            scanStatusPopup.IsOpen = true;
-        }
-
-        private void CancelScanTask(object sender, RoutedEventArgs e)
-        {
-            string createTime = (sender as Button).Tag.ToString();
-            ScanTask scanTask = vieModel.ScanTasks.Where(arg => arg.CreateTime.Equals(createTime)).FirstOrDefault();
-            scanTask?.Cancel();
-        }
-
-        private void CancelDownloadTask(object sender, RoutedEventArgs e)
-        {
-            string dataID = (sender as Button).Tag.ToString();
-            DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            task?.Cancel();
-        }
-
-        private void CancelScreenShotTask(object sender, RoutedEventArgs e)
-        {
-            string dataID = (sender as Button).Tag.ToString();
-            ScreenShotTask task = vieModel.ScreenShotTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            task?.Cancel();
-        }
-
-        private void CancelDownloadTasks(object sender, RoutedEventArgs e)
-        {
-            foreach (DownLoadTask task in vieModel.DownLoadTasks) {
-                task.Cancel();
-            }
-        }
-
-        private void CancelScreenShotTasks(object sender, RoutedEventArgs e)
-        {
-            foreach (ScreenShotTask task in vieModel.ScreenShotTasks) {
-                task.Cancel();
-            }
-        }
-
-        private void PauseDownloadTask(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-            string dataID = (sender as Button).Tag.ToString();
-            DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            if (button.Content.ToString() == LangManager.GetValueByKey("Pause")) {
-                button.Content = LangManager.GetValueByKey("Continue");
-                task.Pause();
-            } else {
-                button.Content = LangManager.GetValueByKey("Pause");
-            }
-        }
-
-        private void ShowScanDetail(object sender, RoutedEventArgs e)
-        {
-            string createTime = (sender as Button).Tag.ToString();
-            ScanTask scanTask = vieModel.ScanTasks.Where(arg => arg.CreateTime.Equals(createTime)).FirstOrDefault();
-            if (scanTask?.Status != System.Threading.Tasks.TaskStatus.Running) {
-                Window_ScanDetail scanDetail = new Window_ScanDetail(scanTask.ScanResult);
-                scanDetail.Show();
-            }
-        }
-
-        private void ShowDownloadDetail(object sender, RoutedEventArgs e)
-        {
-            string dataID = (sender as Button).Tag.ToString();
-            DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            if (task == null)
-                return;
-            new Dialog_Logs(string.Join(Environment.NewLine, task.Logs)).ShowDialog(this);
-        }
-
-        private void ShowScreenShotDetail(object sender, RoutedEventArgs e)
-        {
-            string dataID = (sender as Button).Tag.ToString();
-            ScreenShotTask task = vieModel.ScreenShotTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            if (task == null)
-                return;
-            new Dialog_Logs(string.Join(Environment.NewLine, task.Logs)).ShowDialog(this);
-        }
-
-
-
-
-        private void ShowContextMenu(object sender, RoutedEventArgs e)
-        {
-            downloadStatusPopup.StaysOpen = true;
-            screenShotStatusPopup.StaysOpen = true;
-            (sender as Button).ContextMenu.IsOpen = true;
-        }
-
-        private void RemoveCompleteTask(object sender, RoutedEventArgs e)
-        {
-            downloadStatusPopup.StaysOpen = false;
-            for (int i = vieModel.DownLoadTasks.Count - 1; i >= 0; i--) {
-                if (vieModel.DownLoadTasks[i].Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
-                    vieModel.DownLoadTasks.RemoveAt(i);
-                }
-            }
-
-            Global.DownloadManager.Dispatcher.ClearDoneList();
-            if (vieModel.DownLoadTasks.Count == 0)
-                vieModel.DownLoadVisibility = Visibility.Collapsed;
-        }
-
-        private void RemoveCancelTask(object sender, RoutedEventArgs e)
-        {
-            downloadStatusPopup.StaysOpen = false;
-            for (int i = vieModel.DownLoadTasks.Count - 1; i >= 0; i--) {
-                if (vieModel.DownLoadTasks[i].Status == System.Threading.Tasks.TaskStatus.Canceled) {
-                    vieModel.DownLoadTasks.RemoveAt(i);
-                }
-            }
-
-            Global.DownloadManager.Dispatcher.ClearDoneList();
-            if (vieModel.DownLoadTasks.Count == 0)
-                vieModel.DownLoadVisibility = Visibility.Collapsed;
-        }
-
-        private void RemoveCompleteScreenShot(object sender, RoutedEventArgs e)
-        {
-            screenShotStatusPopup.StaysOpen = false;
-            for (int i = vieModel.ScreenShotTasks.Count - 1; i >= 0; i--) {
-                if (vieModel.ScreenShotTasks[i].Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
-                    vieModel.ScreenShotTasks.RemoveAt(i);
-                }
-            }
-
-            Global.DownloadManager.Dispatcher.ClearDoneList();
-            if (vieModel.ScreenShotTasks.Count == 0)
-                vieModel.ScreenShotVisibility = Visibility.Collapsed;
-        }
-
-        private void RemoveCancelScreenShot(object sender, RoutedEventArgs e)
-        {
-            screenShotStatusPopup.StaysOpen = false;
-            for (int i = vieModel.ScreenShotTasks.Count - 1; i >= 0; i--) {
-                if (vieModel.ScreenShotTasks[i].Status == System.Threading.Tasks.TaskStatus.Canceled) {
-                    vieModel.ScreenShotTasks.RemoveAt(i);
-                }
-            }
-
-            Global.DownloadManager.Dispatcher.ClearDoneList();
-            if (vieModel.ScreenShotTasks.Count == 0)
-                vieModel.ScreenShotVisibility = Visibility.Collapsed;
-        }
-
 
         private void OpenImageSavePath(object sender, RoutedEventArgs e)
         {
@@ -1408,7 +1255,7 @@ namespace Jvedio
 
         private void OpenLogPath(object sender, RoutedEventArgs e)
         {
-            FileHelper.TryOpenPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"));
+            FileHelper.TryOpenSelectPath(PathManager.LogPath);
         }
 
         private void OpenApplicationPath(object sender, RoutedEventArgs e)
@@ -1542,13 +1389,13 @@ namespace Jvedio
 
         private void RestartTask(object sender, RoutedEventArgs e)
         {
-            string dataID = (sender as Button).Tag.ToString();
-            if (string.IsNullOrEmpty(dataID))
-                return;
-            DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            task?.Restart();
-            if (!Global.DownloadManager.Dispatcher.Working)
-                Global.DownloadManager.Dispatcher.BeginWork();
+            //string dataID = (sender as Button).Tag.ToString();
+            //if (string.IsNullOrEmpty(dataID))
+            //    return;
+            //DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
+            //task?.Restart();
+            //if (!Global.DownloadManager.Dispatcher.Working)
+            //    Global.DownloadManager.Dispatcher.BeginWork();
         }
 
         private void ShowSponsor(object sender, RoutedEventArgs e)
@@ -1714,7 +1561,9 @@ namespace Jvedio
 
         public bool IsTaskRunning()
         {
-            return (vieModel.DownLoadTasks?.Count > 0 || vieModel.ScanTasks?.Count > 0 || vieModel.ScreenShotTasks?.Count > 0);
+            return (App.ScreenShotManager.RunningCount > 0 ||
+                App.ScanManager.RunningCount > 0 ||
+                App.DownloadManager.RunningCount > 0);
         }
 
 
@@ -1788,15 +1637,15 @@ namespace Jvedio
 
         private void ClearScanTasks(object sender, RoutedEventArgs e)
         {
-            for (int i = vieModel.ScanTasks.Count - 1; i >= 0; i--) {
-                Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
-                if (scanTask.Status == System.Threading.Tasks.TaskStatus.Canceled ||
-                    scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
-                    vieModel.ScanTasks.RemoveAt(i);
-                }
-            }
+            //for (int i = vieModel.ScanTasks.Count - 1; i >= 0; i--) {
+            //    Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
+            //    if (scanTask.Status == System.Threading.Tasks.TaskStatus.Canceled ||
+            //        scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
+            //        vieModel.ScanTasks.RemoveAt(i);
+            //    }
+            //}
 
-            vieModel.ScanStatus = "None";
+            //vieModel.ScanStatus = "None";
         }
 
         private void ClearMsg(object sender, RoutedEventArgs e)
@@ -1804,27 +1653,11 @@ namespace Jvedio
             vieModel.Message.Clear();
         }
 
-        private void HideScanPopup(object sender, RoutedEventArgs e)
-        {
-            scanStatusPopup.IsOpen = false;
-        }
-
-        private void HideDownloadPopup(object sender, RoutedEventArgs e)
-        {
-            downloadStatusPopup.IsOpen = false;
-            downloadStatusPopup.StaysOpen = false;
-        }
-
         private void HideMsgPopup(object sender, RoutedEventArgs e)
         {
             msgPopup.IsOpen = false;
         }
 
-        private void HideScreenShotPopup(object sender, RoutedEventArgs e)
-        {
-            screenShotStatusPopup.IsOpen = false;
-            screenShotStatusPopup.StaysOpen = false;
-        }
 
         private void ClearCache(object sender, RoutedEventArgs e)
         {
@@ -1849,6 +1682,24 @@ namespace Jvedio
                 return index;
             }
             return -1;
+        }
+
+
+        private void Border_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (sender is Border border &&
+                border.Tag != null &&
+                int.TryParse(border.Tag.ToString(), out int index)) {
+                vieModel.TabItemManager.SetTabSelected(index);
+            }
+        }
+
+        private void RefreshCurrentTab(object sender, RoutedEventArgs e)
+        {
+            int idx = GetTabIndexByMenuItem(sender);
+            if (idx < 0)
+                return;
+            vieModel.TabItemManager.RefreshTab(idx);
         }
 
         private void CloseCurrentTab(object sender, RoutedEventArgs e)
@@ -1992,6 +1843,7 @@ namespace Jvedio
             if (!CanDragTabItem)
                 return;
         }
+
     }
 
 }

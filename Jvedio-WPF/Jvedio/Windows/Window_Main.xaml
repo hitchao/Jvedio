@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:local="clr-namespace:Jvedio.Core.Extensions"
+    xmlns:local="clr-namespace:Jvedio"
     xmlns:localControl="clr-namespace:Jvedio.Core.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
@@ -460,7 +460,12 @@
                         Style="{StaticResource HoverSpliter}" />
 
 
-                    <Grid Grid.Column="1">
+                    <Grid
+                        Grid.Column="1"
+                        AllowDrop="True"
+                        DragLeave="OnDragFileLeave"
+                        DragOver="OnDragFileOver"
+                        Drop="OnDragFileDrop">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -624,6 +629,7 @@
                                                 Height="30"
                                                 MinWidth="150"
                                                 BorderThickness="0"
+                                                ContextMenuOpening="Border_ContextMenuOpening"
                                                 CornerRadius="5 5 0 0"
                                                 Cursor="Hand"
                                                 PreviewMouseLeftButtonDown="BeginDragTabItem"
@@ -646,14 +652,15 @@
                                                 </Border.Style>
                                                 <Border.ContextMenu>
                                                     <ContextMenu>
-                                                        <MenuItem Click="CloseCurrentTab" Header="关闭" />
-                                                        <MenuItem Click="CloseOtherTab" Header="关闭其它" />
-                                                        <MenuItem Click="CloseAllLeftTab" Header="关闭左边所有" />
-                                                        <MenuItem Click="CloseAllRightTab" Header="关闭右边所有" />
-                                                        <MenuItem Click="CloseAllTabs" Header="关闭所有" />
+                                                        <MenuItem Click="RefreshCurrentTab" Header="{DynamicResource Refresh}" />
+                                                        <MenuItem Click="CloseCurrentTab" Header="{DynamicResource Close}" />
+                                                        <MenuItem Click="CloseOtherTab" Header="{DynamicResource CloseOther}" />
+                                                        <MenuItem Click="CloseAllLeftTab" Header="{DynamicResource CloseAllLeft}" />
+                                                        <MenuItem Click="CloseAllRightTab" Header="{DynamicResource CloseAllRight}" />
+                                                        <MenuItem Click="CloseAllTabs" Header="{DynamicResource CloseAll}" />
                                                         <Separator />
-                                                        <MenuItem Click="MoveToFirst" Header="移到最前" />
-                                                        <MenuItem Click="MoveToLast" Header="移到最后" />
+                                                        <MenuItem Click="MoveToFirst" Header="{DynamicResource MoveToFirst}" />
+                                                        <MenuItem Click="MoveToLast" Header="{DynamicResource MoveToLast}" />
                                                         <Separator />
                                                         <MenuItem
                                                             Click="PinTab"
@@ -1004,32 +1011,44 @@
 
                         <!--  拖入视频时显示  -->
                         <super:SimplePanel
-                            x:Name="dragOverBorder"
+                            Grid.Row="2"
                             Margin="5,0"
                             Panel.ZIndex="99"
-                            Visibility="Collapsed">
+                            DragEnter="OnDragFileOver"
+                            Visibility="{Binding DragInFile, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
                             <Border
                                 Background="{DynamicResource Window.Title.Background}"
                                 CornerRadius="5"
-                                Effect="{StaticResource BlueDropShadowEffect}"
-                                Opacity="0.8"
-                                PreviewDragLeave="Grid_DragLeave" />
+                                Effect="{StaticResource NormalDropShadowEffect}"
+                                Opacity="0.5"
+                                PreviewDragLeave="OnDragFileLeave" />
 
-                            <StackPanel
+                            <Border
+                                Width="220"
+                                Height="220"
+                                Padding="20"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Background="Transparent"
-                                DragEnter="Grid_DragOver"
-                                Orientation="Vertical">
-                                <Image
-                                    Height="100"
-                                    Margin="10,30"
-                                    Source="/Resources/Picture/导入_128.png" />
-                                <TextBlock
-                                    FontSize="25"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{DynamicResource ImportVideo}" />
-                            </StackPanel>
+                                CornerRadius="5"
+                                Style="{StaticResource InfoBorder}">
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent"
+                                    Orientation="Vertical">
+                                    <Image
+                                        Height="40"
+                                        Margin="10,30"
+                                        Source="/Resources/Picture/导入_128.png" />
+                                    <TextBlock
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{DynamicResource ImportVideo}" />
+                                </StackPanel>
+
+                            </Border>
+
 
                         </super:SimplePanel>
 
@@ -1159,314 +1178,11 @@
                         </Border>
 
                     </Grid>
-                    <Grid>
-                        <super:PathMsg
-                            Name="screenShotPathMsg"
-                            MouseLeftButtonUp="ShowScreenShotPopup"
-                            MsgCount="{Binding ScreenShotTasks.Count}"
-                            Path="M443.972267 437.316267L200.157867 117.3504a39.355733 39.355733 0 0 1 5.5296-53.6576 36.4544 36.4544 0 0 1 51.8144 3.754667l254.088533 291.908266 254.0544-291.9424a36.932267 36.932267 0 0 1 51.882667-3.754666 39.287467 39.287467 0 0 1 5.597866 53.76l-243.8144 319.931733 151.381334 174.1824a185.002667 185.002667 0 0 1 223.675733 81.749333 184.0128 184.0128 0 0 1-43.008 233.984 184.388267 184.388267 0 0 1-237.704533-2.7648 183.978667 183.978667 0 0 1-37.341867-234.973866 32.768 32.768 0 0 1-3.754667-4.608l-120.968533-158.378667-67.6864-89.1904 0.068267-0.034133z m-49.493334 57.002666l70.929067 92.8768-74.205867 97.621334c-1.4336 1.365333-2.389333 3.310933-3.754666 4.676266a184.490667 184.490667 0 0 1-275.114667 237.738667 184.558933 184.558933 0 0 1 180.736-315.733333l101.376-117.213867zM240.776533 894.976a110.011733 110.011733 0 0 0 91.5456-64.443733 111.616 111.616 0 0 0-11.707733-111.616 111.5136 111.5136 0 0 0-102.7072-44.373334 110.523733 110.523733 0 0 0-96.221867 121.4464 110.045867 110.045867 0 0 0 119.0912 98.986667z m541.7984 0a110.421333 110.421333 0 0 0 102.7072-44.3392 110.660267 110.660267 0 0 0-25.258666-155.921067 110.011733 110.011733 0 0 0-54.613334-19.729066 110.455467 110.455467 0 0 0-119.534933 98.542933 111.274667 111.274667 0 0 0 96.699733 121.4464z"
-                            Style="{StaticResource NormalPathMsg}" />
-                        <Popup
-                            x:Name="screenShotStatusPopup"
-                            Width="500"
-                            MaxHeight="600"
-                            AllowsTransparency="True"
-                            HorizontalOffset="-450"
-                            Placement="Top"
-                            PlacementTarget="{Binding ElementName=downloadPathMsg}"
-                            PopupAnimation="Fade"
-                            StaysOpen="False"
-                            VerticalOffset="0">
-                            <Grid Margin="5">
-                                <Border
-                                    Margin="5"
-                                    Background="{DynamicResource Menu.Background}"
-                                    CornerRadius="0 0 5 5"
-                                    Effect="{StaticResource PopupDropShadowEffect}" />
-                                <Grid Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid
-                                        Grid.Row="0"
-                                        Height="35"
-                                        Background="{DynamicResource Window.Title.Background}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock
-                                            Margin="10,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{DynamicResource ScreenShotTask}" />
-
-                                        <Button
-                                            Grid.Column="1"
-                                            Margin="5,0"
-                                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                                            Click="ShowContextMenu"
-                                            Content="{DynamicResource ClearList}"
-                                            Style="{StaticResource BorderButton}">
-                                            <Button.ContextMenu>
-                                                <ContextMenu HorizontalOffset="-70" VerticalOffset="5">
-                                                    <MenuItem
-                                                        Click="RemoveCompleteScreenShot"
-                                                        Header="{DynamicResource Done}"
-                                                        IsCheckable="False" />
-                                                    <MenuItem
-                                                        Click="RemoveCancelScreenShot"
-                                                        Header="{DynamicResource Canceled}"
-                                                        IsCheckable="False" />
-                                                </ContextMenu>
-                                            </Button.ContextMenu>
-                                        </Button>
-
-                                        <super:HoverPath
-                                            Grid.Column="2"
-                                            Width="20"
-                                            Height="20"
-                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
-                                            Click="HideScreenShotPopup"
-                                            Style="{StaticResource DownHoverPath}" />
-
-                                    </Grid>
-
-
-                                    <ItemsControl
-                                        Grid.Row="1"
-                                        Margin="10"
-                                        ItemsSource="{Binding ScreenShotTasks}"
-                                        Style="{StaticResource ItemsControlVirtualizedStyle}">
-
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Name="rootGrid" Cursor="Hand">
-                                                    <Border
-                                                        Margin="5"
-                                                        Background="{DynamicResource Menu.Background}"
-                                                        BorderThickness="1"
-                                                        CornerRadius="5"
-                                                        Effect="{StaticResource PopupDropShadowEffect}">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
-                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                    <Grid Margin="5">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="auto" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="auto" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <fa:ImageAwesome
-                                                            Grid.Column="0"
-                                                            Width="30"
-                                                            Margin="10"
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center">
-                                                            <fa:ImageAwesome.Style>
-                                                                <Style TargetType="fa:ImageAwesome">
-                                                                    <Style.Triggers>
-
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Canceled">
-                                                                            <Setter Property="Icon" Value="TimesCircle" />
-                                                                            <Setter Property="Foreground" Value="Red" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="WaitingToRun">
-                                                                            <Setter Property="Icon" Value="Hourglass" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Control.Disabled.Background}" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
-                                                                            <Setter Property="Icon" Value="CheckCircle" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Common.Status.Complete.Background}" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
-                                                                            <Setter Property="Icon" Value="Refresh" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Common.Status.Running.Background}" />
-                                                                            <Setter Property="Spin" Value="True" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </fa:ImageAwesome.Style>
-                                                        </fa:ImageAwesome>
-
-
-                                                        <StackPanel
-                                                            Grid.Column="1"
-                                                            MaxWidth="280"
-                                                            Margin="5"
-                                                            Orientation="Vertical">
-                                                            <TextBlock
-                                                                Margin="5"
-                                                                HorizontalAlignment="Left"
-                                                                FontSize="15"
-                                                                FontWeight="Bold"
-                                                                Text="{Binding Title}"
-                                                                TextTrimming="WordEllipsis"
-                                                                ToolTip="{Binding Title}" />
-                                                            <ProgressBar
-                                                                Height="2"
-                                                                Margin="5,0"
-                                                                Maximum="100"
-                                                                Value="{Binding Progress}">
-                                                                <ProgressBar.Style>
-                                                                    <Style BasedOn="{StaticResource NormalStaticProgressBar}" TargetType="ProgressBar">
-                                                                        <Style.Triggers>
-
-
-
-                                                                            <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
-                                                                                <Setter Property="Visibility" Value="Hidden" />
-                                                                            </DataTrigger>
-
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </ProgressBar.Style>
-                                                            </ProgressBar>
-                                                            <Grid>
-                                                                <TextBlock
-                                                                    Margin="5"
-                                                                    FontSize="10"
-                                                                    Style="{StaticResource BaseTextBlock}"
-                                                                    Text="{Binding CreateTime}"
-                                                                    TextAlignment="Left" />
-                                                                <TextBlock
-                                                                    Margin="5"
-                                                                    HorizontalAlignment="Right"
-                                                                    Text="{Binding Progress, StringFormat=\{0\} %}">
-                                                                    <TextBlock.Style>
-                                                                        <Style TargetType="TextBlock">
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
-                                                                                    <Setter Property="Visibility" Value="Hidden" />
-                                                                                </DataTrigger>
-
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </TextBlock.Style>
-                                                                </TextBlock>
-                                                            </Grid>
-                                                            <StackPanel Margin="5" Orientation="Horizontal">
-                                                                <TextBlock Text="{Binding StatusText}" />
-                                                                <TextBlock Foreground="Red" Text="{Binding Message, StringFormat='   {0} '}" />
-
-                                                            </StackPanel>
-
-
-
-                                                        </StackPanel>
-                                                        <StackPanel
-                                                            Grid.Column="2"
-                                                            Width="100"
-                                                            HorizontalAlignment="Right"
-                                                            VerticalAlignment="Center"
-                                                            Orientation="Vertical">
-                                                            <StackPanel.Style>
-                                                                <Style TargetType="StackPanel">
-                                                                    <Setter Property="Visibility" Value="Hidden" />
-
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Visible" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </StackPanel.Style>
-                                                            <Button
-                                                                MinWidth="80"
-                                                                Margin="6"
-                                                                HorizontalAlignment="Right"
-                                                                Click="CancelScreenShotTask"
-                                                                Content="{DynamicResource Cancel}"
-                                                                Tag="{Binding DataID}">
-                                                                <Button.Style>
-                                                                    <Style BasedOn="{StaticResource ButtonDanger}" TargetType="Button">
-                                                                        <Setter Property="IsEnabled" Value="False" />
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
-                                                                                <Setter Property="IsEnabled" Value="True" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-
-                                                                    </Style>
-                                                                </Button.Style>
-                                                            </Button>
-
-                                                            <Button
-                                                                MinWidth="80"
-                                                                Margin="6,0"
-                                                                HorizontalAlignment="Right"
-                                                                Click="ShowScreenShotDetail"
-                                                                Content="{DynamicResource Detail}"
-                                                                Style="{StaticResource ButtonPrimary}"
-                                                                Tag="{Binding DataID}" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Grid>
-
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-
-
-                                    </ItemsControl>
-
-
-
-                                    <StackPanel
-                                        Grid.Row="2"
-                                        Orientation="Vertical"
-                                        Visibility="{Binding ScreenShotVisibility}">
-
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <ProgressBar
-                                                Grid.Column="0"
-                                                Height="4"
-                                                Margin="10,0"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{StaticResource NormalStaticProgressBar}"
-                                                Value="{Binding ScreenShotProgress}" />
-                                            <TextBlock
-                                                Grid.Column="1"
-                                                MinWidth="50"
-                                                Margin="10,0"
-                                                Text="{Binding ScreenShotProgress, StringFormat=\{0\} %}" />
-                                        </Grid>
-
-                                        <StackPanel Orientation="Horizontal">
-                                            <Button
-                                                Click="CancelScreenShotTasks"
-                                                Content="{DynamicResource CancelALl}"
-                                                Style="{StaticResource ButtonDanger}" />
-                                        </StackPanel>
-                                    </StackPanel>
-
-
-
-
-                                </Grid>
-                            </Grid>
-                        </Popup>
-                    </Grid>
+                    <super:PathMsg
+                        MouseLeftButtonUp="ShowScreenShotTab"
+                        MsgCount="{Binding RunningCount, Source={x:Static local:App.ScreenShotManager}, Mode=OneWay}"
+                        Path="M443.972267 437.316267L200.157867 117.3504a39.355733 39.355733 0 0 1 5.5296-53.6576 36.4544 36.4544 0 0 1 51.8144 3.754667l254.088533 291.908266 254.0544-291.9424a36.932267 36.932267 0 0 1 51.882667-3.754666 39.287467 39.287467 0 0 1 5.597866 53.76l-243.8144 319.931733 151.381334 174.1824a185.002667 185.002667 0 0 1 223.675733 81.749333 184.0128 184.0128 0 0 1-43.008 233.984 184.388267 184.388267 0 0 1-237.704533-2.7648 183.978667 183.978667 0 0 1-37.341867-234.973866 32.768 32.768 0 0 1-3.754667-4.608l-120.968533-158.378667-67.6864-89.1904 0.068267-0.034133z m-49.493334 57.002666l70.929067 92.8768-74.205867 97.621334c-1.4336 1.365333-2.389333 3.310933-3.754666 4.676266a184.490667 184.490667 0 0 1-275.114667 237.738667 184.558933 184.558933 0 0 1 180.736-315.733333l101.376-117.213867zM240.776533 894.976a110.011733 110.011733 0 0 0 91.5456-64.443733 111.616 111.616 0 0 0-11.707733-111.616 111.5136 111.5136 0 0 0-102.7072-44.373334 110.523733 110.523733 0 0 0-96.221867 121.4464 110.045867 110.045867 0 0 0 119.0912 98.986667z m541.7984 0a110.421333 110.421333 0 0 0 102.7072-44.3392 110.660267 110.660267 0 0 0-25.258666-155.921067 110.011733 110.011733 0 0 0-54.613334-19.729066 110.455467 110.455467 0 0 0-119.534933 98.542933 111.274667 111.274667 0 0 0 96.699733 121.4464z"
+                        Style="{StaticResource NormalPathMsg}" />
                     <Grid>
 
                         <Border
@@ -1504,7 +1220,7 @@
                                     <Style TargetType="Path">
                                         <Setter Property="Visibility" Value="Hidden" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ScanStatus}" Value="Scanning">
+                                            <DataTrigger Binding="{Binding Running, Source={x:Static local:App.ScanManager}}" Value="True">
                                                 <DataTrigger.EnterActions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
@@ -1528,594 +1244,30 @@
                                                     </BeginStoryboard>
                                                 </DataTrigger.ExitActions>
                                                 <Setter Property="Visibility" Value="Visible" />
-                                                <Setter Property="Fill" Value="{DynamicResource Common.Status.Running.Background}" />
+                                                <Setter Property="Fill" Value="{DynamicResource Common.HighLight.Deep.Background}" />
                                                 <Setter Property="Data" Value="M171.292444 548.977778a337.464889 337.464889 0 0 1 210.488889-367.445334c111.616-43.52 231.992889-22.698667 317.212445 39.480889L626.460444 338.488889l325.233778-1.251556L835.470222 0l-59.562666 96.426667C650.353778 15.075556 479.175111-11.491556 329.272889 46.933333 121.628444 127.886222 2.048 337.351111 25.6 549.034667h145.635556zM852.764444 465.009778a337.464889 337.464889 0 0 1-210.488888 367.502222c-102.627556 39.992889-215.836444 24.917333-302.819556-29.013333l65.536-106.211556-349.752889-20.48L203.093333 1024l62.065778-100.465778c125.553778 81.351111 279.608889 102.001778 429.511111 43.52 207.644444-80.952889 327.224889-290.304 303.616-502.044444h-145.635555z" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ScanStatus}" Value="Complete">
+                                            <DataTrigger Binding="{Binding Running, Source={x:Static local:App.ScanManager}}" Value="False">
                                                 <Setter Property="Visibility" Value="Visible" />
                                                 <Setter Property="Fill" Value="{DynamicResource Common.Status.Complete.Background}" />
                                                 <Setter Property="Data" Value="M947.605 139.803c-15.766-15.763-39.836-14.107-57.1 0-133.71 109.263-541.798 419.618-541.798 419.618s-165.018-71.128-216.268-94.163c-20.338-9.14-41.328-15.766-57.101 0-15.763 15.763-15.763 41.326 0 57.087 0 0 242.992 244.252 244.157 245.415 8.052 8.052 18.652 11.867 29.212 11.693 10.554 0.175 21.154-3.64 29.211-11.693 1.159-1.163 427.18-428.238 569.686-570.87 15.759-15.772 15.768-41.324 0.001-57.087z m0 0" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ScanStatus}" Value="None">
+                                            <DataTrigger Binding="{Binding Running, Source={x:Static local:App.ScanManager}}" Value="null">
                                                 <Setter Property="Visibility" Value="Hidden" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Path.Style>
                             </Path>
-
                         </Viewbox>
-                        <Popup
-                            x:Name="scanStatusPopup"
-                            Width="400"
-                            MaxHeight="600"
-                            AllowsTransparency="True"
-                            HorizontalOffset="-350"
-                            Placement="Top"
-                            PlacementTarget="{Binding ElementName=msgScan}"
-                            PopupAnimation="Fade"
-                            StaysOpen="False"
-                            VerticalOffset="0">
-                            <Grid Margin="5">
-                                <Border
-                                    Margin="5"
-                                    Background="{DynamicResource Menu.Background}"
-                                    CornerRadius="0 0 5 5"
-                                    Effect="{StaticResource PopupDropShadowEffect}" />
-                                <Grid Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <Grid
-                                        Grid.Row="0"
-                                        Height="35"
-                                        Background="{DynamicResource Window.Title.Background}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock
-                                            Margin="10,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{DynamicResource ScanTask}" />
-
-                                        <super:HoverPath
-                                            Grid.Column="1"
-                                            Width="23"
-                                            Height="23"
-                                            Margin="0"
-                                            Click="ClearScanTasks"
-                                            Style="{StaticResource DeleteHoverPath}" />
-                                        <super:HoverPath
-                                            Grid.Column="2"
-                                            Width="20"
-                                            Height="20"
-                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
-                                            Click="HideScanPopup"
-                                            Style="{StaticResource DownHoverPath}" />
-                                    </Grid>
-
-                                    <ItemsControl
-                                        Grid.Row="1"
-                                        Margin="10"
-                                        ItemsSource="{Binding ScanTasks}"
-                                        Style="{StaticResource ItemsControlVirtualizedStyle}">
-
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Name="rootGrid" Cursor="Hand">
-                                                    <Grid.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem
-                                                                Click="OpenScanPath"
-                                                                Header="{DynamicResource OpenPath}"
-                                                                Tag="{Binding Message}" />
-                                                        </ContextMenu>
-                                                    </Grid.ContextMenu>
-                                                    <Border
-                                                        Margin="5"
-                                                        Background="{DynamicResource Menu.Background}"
-                                                        BorderThickness="1"
-                                                        CornerRadius="5"
-                                                        Effect="{StaticResource PopupDropShadowEffect}">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
-                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                    <Grid Margin="5">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="auto" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="auto" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <fa:ImageAwesome
-                                                            Grid.Column="0"
-                                                            Width="30"
-                                                            Margin="10"
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center">
-                                                            <fa:ImageAwesome.Style>
-                                                                <Style TargetType="fa:ImageAwesome">
-                                                                    <Style.Triggers>
-
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Canceled">
-                                                                            <Setter Property="Icon" Value="TimesCircle" />
-                                                                            <Setter Property="Foreground" Value="Red" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="WaitingToRun">
-                                                                            <Setter Property="Icon" Value="Hourglass" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Control.Disabled.Background}" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
-                                                                            <Setter Property="Icon" Value="CheckCircle" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Common.Status.Complete.Background}" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
-                                                                            <Setter Property="Icon" Value="Refresh" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Common.Status.Running.Background}" />
-                                                                            <Setter Property="Spin" Value="True" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </fa:ImageAwesome.Style>
-
-                                                        </fa:ImageAwesome>
-
-                                                        <StackPanel
-                                                            Grid.Column="1"
-                                                            Margin="5"
-                                                            Orientation="Vertical">
-
-
-
-                                                            <TextBlock
-                                                                Grid.Column="1"
-                                                                Margin="5,10"
-                                                                FontSize="14"
-                                                                FontWeight="Bold"
-                                                                Style="{StaticResource BaseTextBlock}"
-                                                                Text="{Binding Message}"
-                                                                TextAlignment="Left"
-                                                                TextTrimming="WordEllipsis"
-                                                                TextWrapping="NoWrap" />
-                                                            <TextBlock
-                                                                Margin="5,10"
-                                                                FontSize="10"
-                                                                Foreground="{DynamicResource Window.Sub.Foreground}"
-                                                                Style="{StaticResource BaseTextBlock}"
-                                                                Text="{Binding CreateTime}"
-                                                                TextAlignment="Left"
-                                                                TextTrimming="WordEllipsis"
-                                                                TextWrapping="NoWrap" />
-
-
-                                                        </StackPanel>
-                                                        <StackPanel
-                                                            Grid.Column="2"
-                                                            Width="auto"
-                                                            Margin="5,0"
-                                                            VerticalAlignment="Center"
-                                                            Orientation="Vertical">
-                                                            <StackPanel.Style>
-                                                                <Style TargetType="StackPanel">
-                                                                    <Setter Property="Visibility" Value="Hidden" />
-
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Visible" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </StackPanel.Style>
-                                                            <Button
-                                                                Margin="0,4"
-                                                                Click="CancelScanTask"
-                                                                Content="{DynamicResource Cancel}"
-                                                                IsEnabled="{Binding Running}"
-                                                                Style="{StaticResource ButtonDanger}"
-                                                                Tag="{Binding CreateTime}" />
-                                                            <Button
-                                                                Click="ShowScanDetail"
-                                                                Content="{DynamicResource Result}"
-                                                                IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
-                                                                Tag="{Binding CreateTime}" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Grid>
-
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-
-
-                                    </ItemsControl>
-
-
-
-
-
-
-
-                                </Grid>
-                            </Grid>
-                        </Popup>
-                        <Popup
-                            AllowsTransparency="True"
-                            HorizontalOffset="-260"
-                            Placement="Top"
-                            PlacementTarget="{Binding ElementName=msgScan}"
-                            PopupAnimation="Fade"
-                            VerticalOffset="0">
-                            <Popup.Style>
-                                <Style TargetType="Popup">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ScanStatus}" Value="Scanning">
-                                            <Setter Property="IsOpen" Value="True" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Popup.Style>
-                            <super:SimplePanel Margin="5">
-                                <Border
-                                    Width="300"
-                                    Height="80"
-                                    Margin="0,0,0,15"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Background="{DynamicResource Window.Title.Background}"
-                                    CornerRadius="5"
-                                    Effect="{StaticResource PopupDropShadowEffect}">
-                                    <Viewbox
-                                        Width="40"
-                                        Height="auto"
-                                        Margin="0,0,10,-12"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Bottom">
-                                        <Path
-                                            Data="M 10 10 L 50 10 30 40 Z"
-                                            Fill="{DynamicResource Window.Title.Background}"
-                                            Stroke="{DynamicResource Window.Title.Background}"
-                                            StrokeLineJoin="Round"
-                                            StrokeThickness="5" />
-                                    </Viewbox>
-                                </Border>
-
-
-                                <Grid Margin="5">
-                                    <TextBlock
-                                        Margin="25"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Top"
-                                        Style="{StaticResource BaseTextBlock}"
-                                        Text="扫描任务已添加" />
-                                </Grid>
-                            </super:SimplePanel>
-                        </Popup>
                     </Grid>
                     <Grid>
                         <super:PathMsg
                             Name="downloadPathMsg"
                             MouseLeftButtonUp="ShowDownloadPopup"
-                            MsgCount="{Binding DownLoadTasks.Count}"
+                            MsgCount="{Binding RunningCount, Source={x:Static local:App.DownloadManager}, Mode=OneWay}"
                             Path="M942.545455 676.584727a34.909091 34.909091 0 0 1 34.90909 34.909091v139.636364c0 70.562909-57.437091 128-128 128h-674.90909a128.139636 128.139636 0 0 1-128-128v-139.636364a34.909091 34.909091 0 1 1 69.818181 0v139.636364c0 32.046545 26.088727 58.181818 58.181819 58.181818h674.90909c32.093091 0 58.181818-26.135273 58.181819-58.181818v-139.636364a34.909091 34.909091 0 0 1 34.909091-34.909091z m-455.214546 129.396364l-164.584727-164.561455a34.909091 34.909091 0 1 1 49.361454-49.361454l104.983273 104.96V81.454545a34.909091 34.909091 0 1 1 69.818182 0v615.563637l104.96-104.96a34.909091 34.909091 0 1 1 49.361454 49.361454l-164.538181 164.561455a34.792727 34.792727 0 0 1-24.669091 10.216727c-8.96 0-17.873455-3.397818-24.715637-10.216727z"
                             Style="{StaticResource NormalPathMsg}" />
-                        <Popup
-                            x:Name="downloadStatusPopup"
-                            Width="500"
-                            MaxHeight="600"
-                            AllowsTransparency="True"
-                            HorizontalOffset="-450"
-                            Placement="Top"
-                            PlacementTarget="{Binding ElementName=downloadPathMsg}"
-                            PopupAnimation="Fade"
-                            StaysOpen="False"
-                            VerticalOffset="0">
-                            <Grid Margin="5">
-                                <Border
-                                    Margin="5"
-                                    Background="{DynamicResource Menu.Background}"
-                                    CornerRadius="0 0 5 5"
-                                    Effect="{StaticResource PopupDropShadowEffect}" />
-                                <Grid Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid
-                                        Grid.Row="0"
-                                        Height="35"
-                                        Background="{DynamicResource Window.Title.Background}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock
-                                            Margin="10,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{DynamicResource DownloadTask}" />
-
-                                        <Button
-                                            Grid.Column="1"
-                                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                                            Click="ShowContextMenu"
-                                            Content="{DynamicResource ClearList}"
-                                            Style="{StaticResource BorderButton}">
-                                            <Button.ContextMenu>
-                                                <ContextMenu HorizontalOffset="-70" VerticalOffset="5">
-                                                    <MenuItem
-                                                        Click="RemoveCompleteTask"
-                                                        Header="{DynamicResource Done}"
-                                                        IsCheckable="False" />
-                                                    <MenuItem
-                                                        Click="RemoveCancelTask"
-                                                        Header="{DynamicResource Canceled}"
-                                                        IsCheckable="False" />
-                                                </ContextMenu>
-                                            </Button.ContextMenu>
-                                        </Button>
-
-                                        <super:HoverPath
-                                            Grid.Column="2"
-                                            Width="20"
-                                            Height="20"
-                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
-                                            Click="HideDownloadPopup"
-                                            Style="{StaticResource DownHoverPath}" />
-                                    </Grid>
-
-                                    <ItemsControl
-                                        Grid.Row="1"
-                                        Margin="10"
-                                        ItemsSource="{Binding DownLoadTasks}"
-                                        Style="{StaticResource ItemsControlVirtualizedStyle}">
-
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Name="rootGrid" Cursor="Hand">
-                                                    <Border
-                                                        Margin="5"
-                                                        Background="{DynamicResource Menu.Background}"
-                                                        BorderThickness="1"
-                                                        CornerRadius="5"
-                                                        Effect="{StaticResource PopupDropShadowEffect}">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
-                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                    <Grid Margin="5">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="auto" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="auto" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <fa:ImageAwesome
-                                                            Grid.Column="0"
-                                                            Width="30"
-                                                            Margin="10"
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center">
-                                                            <fa:ImageAwesome.Style>
-                                                                <Style TargetType="fa:ImageAwesome">
-                                                                    <Style.Triggers>
-
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Canceled">
-                                                                            <Setter Property="Icon" Value="TimesCircle" />
-                                                                            <Setter Property="Foreground" Value="Red" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="WaitingToRun">
-                                                                            <Setter Property="Icon" Value="Hourglass" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Control.Disabled.Background}" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
-                                                                            <Setter Property="Icon" Value="CheckCircle" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Common.Status.Complete.Background}" />
-                                                                            <Setter Property="Spin" Value="False" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
-                                                                            <Setter Property="Icon" Value="Refresh" />
-                                                                            <Setter Property="Foreground" Value="{DynamicResource Common.Status.Running.Background}" />
-                                                                            <Setter Property="Spin" Value="True" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </fa:ImageAwesome.Style>
-                                                        </fa:ImageAwesome>
-
-
-                                                        <StackPanel
-                                                            Grid.Column="1"
-                                                            MaxWidth="280"
-                                                            Margin="5"
-                                                            Orientation="Vertical">
-                                                            <TextBlock
-                                                                Margin="5"
-                                                                HorizontalAlignment="Left"
-                                                                FontSize="15"
-                                                                FontWeight="Bold"
-                                                                Text="{Binding Title}"
-                                                                TextTrimming="WordEllipsis"
-                                                                ToolTip="{Binding Title}" />
-                                                            <ProgressBar
-                                                                Height="2"
-                                                                Margin="5,0"
-                                                                Maximum="100"
-                                                                Value="{Binding Progress}">
-                                                                <ProgressBar.Style>
-                                                                    <Style BasedOn="{StaticResource NormalStaticProgressBar}" TargetType="ProgressBar">
-                                                                        <Style.Triggers>
-
-
-
-                                                                            <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
-                                                                                <Setter Property="Visibility" Value="Hidden" />
-                                                                            </DataTrigger>
-
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </ProgressBar.Style>
-                                                            </ProgressBar>
-                                                            <Grid>
-                                                                <TextBlock
-                                                                    Margin="5"
-                                                                    FontSize="10"
-                                                                    Foreground="{DynamicResource Window.Sub.Foreground}"
-                                                                    Style="{StaticResource BaseTextBlock}"
-                                                                    Text="{Binding CreateTime}"
-                                                                    TextAlignment="Left" />
-                                                                <TextBlock
-                                                                    Margin="5"
-                                                                    HorizontalAlignment="Right"
-                                                                    Text="{Binding Progress, StringFormat=\{0\} %}">
-                                                                    <TextBlock.Style>
-                                                                        <Style TargetType="TextBlock">
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
-                                                                                    <Setter Property="Visibility" Value="Hidden" />
-                                                                                </DataTrigger>
-
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </TextBlock.Style>
-                                                                </TextBlock>
-                                                            </Grid>
-                                                            <StackPanel Margin="5" Orientation="Horizontal">
-                                                                <TextBlock Text="{Binding StatusText}" />
-                                                                <TextBlock
-                                                                    Width="150"
-                                                                    VerticalAlignment="Center"
-                                                                    Foreground="Red"
-                                                                    Text="{Binding Message, StringFormat='    {0} '}"
-                                                                    TextTrimming="WordEllipsis"
-                                                                    TextWrapping="NoWrap"
-                                                                    ToolTip="{Binding Message}" />
-
-                                                            </StackPanel>
-
-
-
-                                                        </StackPanel>
-                                                        <WrapPanel
-                                                            Grid.Column="2"
-                                                            Width="100"
-                                                            VerticalAlignment="Center"
-                                                            Orientation="Horizontal">
-                                                            <WrapPanel.Style>
-                                                                <Style TargetType="WrapPanel">
-                                                                    <Setter Property="Visibility" Value="Hidden" />
-
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Visible" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </WrapPanel.Style>
-                                                            <Button
-                                                                Margin="2"
-                                                                Click="CancelDownloadTask"
-                                                                Content="{DynamicResource Cancel}"
-                                                                IsEnabled="{Binding Running}"
-                                                                Style="{StaticResource ButtonDanger}"
-                                                                Tag="{Binding DataID}" />
-                                                            <Button
-                                                                Margin="2"
-                                                                Click="RestartTask"
-                                                                Content="{DynamicResource Reboot}"
-                                                                IsEnabled="{Binding Running, Converter={StaticResource OppositeBooleanConverter}}"
-                                                                Tag="{Binding DataID}" />
-                                                            <Button
-                                                                Margin="2"
-                                                                Click="ShowDownloadDetail"
-                                                                Content="{DynamicResource Detail}"
-                                                                Tag="{Binding DataID}" />
-                                                        </WrapPanel>
-                                                    </Grid>
-                                                </Grid>
-
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-
-
-
-                                    <StackPanel Grid.Row="2" Orientation="Vertical">
-
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <ProgressBar
-                                                Grid.Column="0"
-                                                Height="4"
-                                                Margin="10,0"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{StaticResource NormalStaticProgressBar}"
-                                                Visibility="{Binding DownLoadVisibility}"
-                                                Value="{Binding DownLoadProgress}" />
-                                            <TextBlock
-                                                Grid.Column="1"
-                                                Margin="10,0"
-                                                Text="{Binding DownLoadProgress, StringFormat=\{0\} %}"
-                                                Visibility="{Binding DownLoadVisibility}" />
-                                        </Grid>
-
-                                        <Border
-                                            Margin="0"
-                                            CornerRadius="0 0 5 5"
-                                            Style="{StaticResource InfoBorder}">
-
-
-
-                                            <StackPanel Orientation="Horizontal">
-                                                <Button
-                                                    Margin="20,10"
-                                                    Click="CancelDownloadTasks"
-                                                    Content="{DynamicResource CancelALl}"
-                                                    Style="{StaticResource ButtonDanger}" />
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    Text="{Binding Path=DownloadLongTaskDelay, StringFormat=防止服务器屏蔽，随机暂停 {0} s}"
-                                                    Visibility="{Binding DisplayDownloadLongTaskDelay}" />
-                                            </StackPanel>
-                                        </Border>
-
-                                    </StackPanel>
-
-
-
-
-                                </Grid>
-                            </Grid>
-                        </Popup>
                     </Grid>
                     <Grid>
                         <super:PathMsg

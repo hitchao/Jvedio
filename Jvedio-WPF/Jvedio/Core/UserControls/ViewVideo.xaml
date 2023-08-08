@@ -248,6 +248,7 @@
                 ItemHeight="20"
                 ItemMargin="3 0"
                 PreviewMouseLeftButtonDown="OnRateMouseDown"
+                Tag="{Binding DataID, Mode=OneWay}"
                 ValueChanged="Rate_ValueChanged"
                 Visibility="{Binding Path=DisplayFavorites, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}"
                 Value="{Binding Grade, Mode=TwoWay}" />

@@ -305,11 +305,11 @@ namespace Jvedio
 
         public void GetScreenGif(object sender, RoutedEventArgs e)
         {
-            Video video = vieModel.CurrentVideo;
-            ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo, true); // 详情页面下载预览图
+            //Video video = vieModel.CurrentVideo;
+            //ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo, true); // 详情页面下载预览图
 
-            if (!Global.FFmpegManager.Dispatcher.Working)
-                Global.FFmpegManager.Dispatcher.BeginWork();
+            //if (!Global.FFmpegManager.Dispatcher.Working)
+            //    Global.FFmpegManager.Dispatcher.BeginWork();
             //windowMain?.addToScreenShot(task);
         }
 
@@ -332,8 +332,8 @@ namespace Jvedio
                     }
                 });
             };
-            if (!Global.FFmpegManager.Dispatcher.Working)
-                Global.FFmpegManager.Dispatcher.BeginWork();
+            //if (!Global.FFmpegManager.Dispatcher.Working)
+            //    Global.FFmpegManager.Dispatcher.BeginWork();
             //windowMain?.addToScreenShot(task);
         }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="截图日志" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	<RuleSet >
+		<Rule foreground="#FF5E5E5E">\[\d\d\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d\.\d\d\d\]</Rule>
+		<Keywords foreground="#FFAB46BD">
+			<Word>#### ffmpeg commands ####</Word>
+		</Keywords>
+
+		<Keywords fontWeight="bold" foreground="#FFFDA522">
+			<Word>ffmpeg</Word>
+		</Keywords>
+
+		<Rule foreground="#FFA0A0A0">-+[a-z]+</Rule>
+		<Rule foreground="#FFE34A4B">Input\ \#.+</Rule>
+		<Keywords foreground="#FF4EC4F1">
+			<Word>Metadata</Word>
+		</Keywords>
+
+		<Rule foreground="#FF72B677">\d+ms</Rule>
+		<Rule fontWeight="bold" foreground="#FF63A869">Done</Rule>
+
+		<Rule foreground="#FFFF4040">(\[E\].+)</Rule>
+		<Rule foreground="#FFFFEC8B">(\[W\].+)</Rule>
+		<Rule foreground="#FFBFEFFF">(\[D\].+)</Rule>
+		<Rule fontWeight="bold" foreground="#FF63A869">成功</Rule>
+		<Rule fontWeight="bold" foreground="#FFFF4040">失败</Rule>
+	</RuleSet>
+</SyntaxDefinition>

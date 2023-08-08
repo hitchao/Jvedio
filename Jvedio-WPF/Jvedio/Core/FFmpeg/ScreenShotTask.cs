@@ -17,8 +17,6 @@ namespace Jvedio.Core.FFmpeg
 
         public DataType DataType { get; set; }
 
-        public string Title { get; set; }
-
         static ScreenShotTask()
         {
             STATUS_TO_TEXT_DICT[TaskStatus.Running] = $"{LangManager.GetValueByKey("ScreenShotting")}...";
@@ -27,6 +25,8 @@ namespace Jvedio.Core.FFmpeg
         public ScreenShotTask(Video video, bool gif = false) : this(video.toMetaData())
         {
             Title = string.IsNullOrEmpty(video.VID) ? video.Title : video.VID;
+            if (string.IsNullOrEmpty(Title))
+                Title = System.IO.Path.GetFileNameWithoutExtension(video.Path);
             Gif = gif;
         }
 

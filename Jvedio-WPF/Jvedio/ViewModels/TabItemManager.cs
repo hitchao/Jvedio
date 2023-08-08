@@ -1,4 +1,8 @@
-﻿using Jvedio.Core.UserControls;
+﻿using ICSharpCode.AvalonEdit;
+using Jvedio.Core.Media;
+using Jvedio.Core.Scan;
+using Jvedio.Core.UserControls;
+using Jvedio.Core.UserControls.Tasks;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.Mapper;
@@ -8,7 +12,10 @@ using SuperUtils.Framework.ORM.Wrapper;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Documents;
 
 namespace Jvedio.ViewModels
 {
@@ -41,14 +48,26 @@ namespace Jvedio.ViewModels
                 return;
             }
 
-            if (vieModel.TabItems == null)
+            if (vieModel.TabItems == null) {
                 vieModel.TabItems = new ObservableCollection<TabItemEx>();
+                vieModel.TabItems.CollectionChanged += (s, ev) => {
+                    if (vieModel.TabItems.Count == 0) {
+                        vieModel.ShowSoft = true;
+                    } else {
+                        vieModel.ShowSoft = false;
+                    }
+                };
+            }
 
             TabItemEx tabItem = vieModel.TabItems.FirstOrDefault(arg => arg.Name.Equals(tabName));
 
             if (tabItem != null) {
-                // 移除
-                RemoveTabItem(vieModel.TabItems.IndexOf(tabItem));
+
+                SetTabSelected(vieModel.TabItems.IndexOf(tabItem));
+                // 触发刷新
+                RefreshTab(type);
+                return;
+                //RemoveTabItem(vieModel.TabItems.IndexOf(tabItem));
             }
 
 
@@ -145,16 +164,143 @@ namespace Jvedio.ViewModels
                     videoList.OnItemViewAsso += OnViewAssoData;
 
 
-
                     TabPanel.Children.Add(videoList);
 
 
+                    break;
+
+                case TabType.GeoTask:
+                    if (tabData is TaskType type) {
+                        TaskList taskList = new TaskList(type);
+                        taskList.Uid = tabItem.UUID;
+                        SetTaskList(ref taskList, type);
+                        TabPanel.Children.Add(taskList);
+                    }
                     break;
 
                 default:
                     break;
             }
         }
+
+
+
+
+        private void SetTaskList(ref TaskList taskList, TaskType type)
+        {
+            switch (type) {
+                case TaskType.ScreenShot:
+                    taskList.TaskStatusList = App.ScreenShotManager.CurrentTasks;
+                    taskList.onRemoveAll += () => App.ScreenShotManager.RemoveTask(TaskStatus.Canceled | TaskStatus.RanToCompletion);
+                    taskList.onRemoveCancel += () => App.ScreenShotManager.RemoveTask(TaskStatus.Canceled);
+                    taskList.onRemoveComplete += () => App.ScreenShotManager.RemoveTask(TaskStatus.RanToCompletion);
+                    taskList.onCancel += App.ScreenShotManager.CancelTask;
+                    taskList.onCancelAll += App.ScreenShotManager.CancelAll;
+                    taskList.onShowDetail += (tList, id) => {
+                        string logs = App.ScreenShotManager.GetTaskLogs(id);
+                        tList.SetLogs(logs);
+                        tList.ShowLog = true;
+                    };
+
+                    App.ScreenShotManager.onRunning += () => {
+                        TaskList list = GetTaskListByType(type);
+                        list.AllTaskProgress = App.ScreenShotManager.Progress;
+                    };
+
+                    break;
+                case TaskType.Scan:
+                    taskList.TaskStatusList = App.ScanManager.CurrentTasks;
+                    taskList.onRemoveAll += () => App.ScanManager.RemoveTask(TaskStatus.Canceled | TaskStatus.RanToCompletion);
+                    taskList.onRemoveCancel += () => App.ScanManager.RemoveTask(TaskStatus.Canceled);
+                    taskList.onRemoveComplete += () => App.ScanManager.RemoveTask(TaskStatus.RanToCompletion);
+                    taskList.onCancel += App.ScanManager.CancelTask;
+                    taskList.onCancelAll += App.ScanManager.CancelAll;
+                    taskList.onShowDetail += (tList, id) => onShowScanDetail(id);
+
+                    App.ScanManager.onRunning += () => {
+                        TaskList list = GetTaskListByType(type);
+                        list.AllTaskProgress = App.ScanManager.Progress;
+                    };
+
+
+                    break;
+                case TaskType.Download:
+                    taskList.TaskStatusList = App.DownloadManager.CurrentTasks;
+                    taskList.onRemoveAll += () => App.DownloadManager.RemoveTask(TaskStatus.Canceled | TaskStatus.RanToCompletion);
+                    taskList.onRemoveCancel += () => App.DownloadManager.RemoveTask(TaskStatus.Canceled);
+                    taskList.onRemoveComplete += () => App.DownloadManager.RemoveTask(TaskStatus.RanToCompletion);
+                    taskList.onCancel += App.DownloadManager.CancelTask;
+                    taskList.onCancelAll += App.DownloadManager.CancelAll;
+                    taskList.onShowDetail += (tList, id) => {
+                        string logs = App.DownloadManager.GetTaskLogs(id);
+                        tList.SetLogs(logs);
+                        tList.ShowLog = true;
+                    };
+
+                    taskList.onRestart += App.DownloadManager.Restart;
+
+                    App.DownloadManager.onRunning += () => {
+                        TaskList list = GetTaskListByType(type);
+                        if (list != null)
+                            list.AllTaskProgress = App.DownloadManager.Progress;
+                    };
+
+                    break;
+
+                default:
+
+                    break;
+            }
+        }
+
+        public VideoList GetVideoListByType(TabType type)
+        {
+            if (TabPanel.Children == null || TabPanel.Children.Count == 0)
+                return null;
+
+            List<VideoList> videoLists = TabPanel.Children.OfType<VideoList>().ToList();
+            return videoLists.FirstOrDefault(arg => arg.TabItemEx.TabType == type);
+        }
+
+        public TaskList GetTaskListByType(TaskType type)
+        {
+            if (TabPanel.Children == null || TabPanel.Children.Count == 0)
+                return null;
+
+            List<TaskList> videoLists = TabPanel.Children.OfType<TaskList>().ToList();
+            return videoLists.FirstOrDefault(arg => arg.TaskType == type);
+        }
+
+        public void RefreshTab(TabType type)
+        {
+            if (type == TabType.GeoTask)
+                return;
+            VideoList videoList = GetVideoListByType(type);
+            videoList?.Refresh();
+        }
+
+        public void RefreshTab(int idx)
+        {
+            if (idx < 0 || idx >= TabPanel.Children.Count)
+                return;
+            UIElement uIElement = TabPanel.Children[idx];
+
+            if (uIElement is VideoList videoList)
+                videoList?.Refresh();
+        }
+
+
+        private void onShowScanDetail(string id)
+        {
+            ScanTask scanTask = App.ScanManager.CurrentTasks.FirstOrDefault(arg => arg.ID.Equals(id)) as ScanTask;
+            if (scanTask == null)
+                return;
+
+            Window_ScanDetail scanDetail = new Window_ScanDetail(scanTask.ScanResult);
+            scanDetail.Show();
+        }
+
+
 
         public void RemovePanel(TabItemEx tabItem)
         {
@@ -202,17 +348,17 @@ namespace Jvedio.ViewModels
                 vieModel.TabItems[i].Selected = false;
             }
             vieModel.TabItems[idx].Selected = true;
-            List<VideoList> videoLists = TabPanel.Children.OfType<VideoList>().ToList();
+            List<FrameworkElement> allData = TabPanel.Children.OfType<FrameworkElement>().ToList();
 
             int target = -1;
-            for (int i = 0; i < videoLists.Count; i++) {
-                videoLists[i].Visibility = System.Windows.Visibility.Hidden;
-                if (videoLists[i].TabItemEx.Equals(vieModel.TabItems[idx])) {
+            for (int i = 0; i < allData.Count; i++) {
+                allData[i].Visibility = System.Windows.Visibility.Hidden;
+                if (allData[i].Uid.Equals(vieModel.TabItems[idx].UUID)) {
                     target = i;
                 }
             }
-            if (target >= 0 && target < videoLists.Count)
-                videoLists[target].Visibility = System.Windows.Visibility.Visible;
+            if (target >= 0 && target < allData.Count)
+                allData[target].Visibility = System.Windows.Visibility.Visible;
         }
 
         public void PinByIndex(int idx)

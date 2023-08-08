@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Config;
+﻿using Jvedio.AvalonEdit;
+using Jvedio.Core.Config;
 using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
@@ -620,9 +621,10 @@ namespace Jvedio
 
                 main.Show();
                 if (scanTask != null) {
-                    if (main.vieModel.ScanTasks == null)
-                        main.vieModel.ScanTasks = new System.Collections.ObjectModel.ObservableCollection<ScanTask>();
-                    main.vieModel.ScanTasks.Add(scanTask);
+                    // todo tab
+                    //if (main.vieModel.ScanTasks == null)
+                    //    main.vieModel.ScanTasks = new System.Collections.ObjectModel.ObservableCollection<ScanTask>();
+                    //main.vieModel.ScanTasks.Add(scanTask);
                 }
             } else {
                 //Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas", App.Current.Windows) as Window_MetaDatas;

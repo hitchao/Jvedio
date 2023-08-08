@@ -1,9 +1,11 @@
-﻿using Jvedio.Core.Global;
+﻿using Jvedio.AvalonEdit;
+using Jvedio.Core.Global;
 using SuperControls.Style.Windows;
 using SuperUtils.IO;
 using System;
 using System.Threading;
 using System.Windows;
+using Jvedio.Core.Tasks;
 #if DEBUG
 #else
 using System.Diagnostics;
@@ -20,18 +22,31 @@ namespace Jvedio
     public partial class App : Application
     {
         public static Jvedio.Core.Logs.Logger Logger { get; private set; }
+        public static ScreenShotManager ScreenShotManager { get; private set; }
+        public static ScanManager ScanManager { get; private set; }
+        public static DownloadManager DownloadManager { get; private set; }
 
         public EventWaitHandle ProgramStarted { get; set; }
 
         static App()
         {
+
             Logger = Jvedio.Core.Logs.Logger.Instance;
+
+
+            ScreenShotManager = ScreenShotManager.CreateInstance();
+            ScanManager = ScanManager.CreateInstance();
+            DownloadManager = DownloadManager.CreateInstance();
+
+
             Window_ErrorMsg.OnFeedBack += () => {
                 FileHelper.TryOpenUrl(UrlManager.FeedBackUrl);
             };
             Window_ErrorMsg.OnLog += (str) => {
                 Logger.Info(str);
             };
+
+
         }
 
         protected override void OnStartup(StartupEventArgs e)

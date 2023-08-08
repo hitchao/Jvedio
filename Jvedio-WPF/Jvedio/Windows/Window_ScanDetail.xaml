@@ -18,6 +18,17 @@
     <super:BaseWindow.Resources>
 
         <Style
+            x:Key="TitleTextStyle"
+            BasedOn="{StaticResource BaseTextBlock}"
+            TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style
             x:Key="TextBlockStyle"
             BasedOn="{StaticResource BaseTextBlock}"
             TargetType="TextBlock">
@@ -29,7 +40,7 @@
 
         <Style x:Key="StatisticTextBox" TargetType="TextBox">
             <Setter Property="ContextMenu" Value="{StaticResource CopyContextMenu}" />
-            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontSize" Value="14" />
             <Setter Property="Margin" Value="0,20,0,0" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -42,11 +53,10 @@
 
 
         <Style x:Key="StatisticBorder" TargetType="Border">
-            <Setter Property="Height" Value="60" />
             <Setter Property="Margin" Value="10" />
             <Setter Property="MinWidth" Value="90" />
             <Setter Property="Padding" Value="20,10,20,10" />
-            <Setter Property="Background" Value="{DynamicResource ListBoxItem.Background}" />
+            <Setter Property="Background" Value="{DynamicResource Window.Title.Background}" />
             <Setter Property="CornerRadius" Value="5" />
         </Style>
 
@@ -67,74 +77,74 @@
 
             <WrapPanel Name="wrapPanel" Orientation="Horizontal">
                 <Border Style="{StaticResource StatisticBorder}">
-                    <Grid>
-                        <TextBlock Text="{DynamicResource ScanTime}" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TitleTextStyle}" Text="{DynamicResource ScanTime}" />
                         <TextBox
                             Name="scanDate"
                             Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="2022-07-02 10:49:29" />
-                    </Grid>
+                    </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
-                    <Grid>
-                        <TextBlock Text="{DynamicResource TimeSpan}" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TitleTextStyle}" Text="{DynamicResource TimeSpan}" />
                         <TextBox
                             Name="cost"
                             Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="00h:00m:00s:020ms" />
-                    </Grid>
+                    </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
-                    <Grid>
-                        <TextBlock Text="{DynamicResource Total}" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TitleTextStyle}" Text="{DynamicResource Total}" />
                         <TextBox
                             Name="total"
                             Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
-                            Text="150" />
-                    </Grid>
+                            Text="1150" />
+                    </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
-                    <Grid>
-                        <TextBlock Text="{DynamicResource Import}" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TitleTextStyle}" Text="{DynamicResource Import}" />
                         <TextBox
                             Name="import"
                             Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="22" />
-                    </Grid>
+                    </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
-                    <Grid>
-                        <TextBlock Text="{DynamicResource NotImport}" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TitleTextStyle}" Text="{DynamicResource NotImport}" />
                         <TextBox
                             Name="notImport"
                             Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="22" />
-                    </Grid>
+                    </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
-                    <Grid>
-                        <TextBlock Text="{DynamicResource Update}" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TitleTextStyle}" Text="{DynamicResource Update}" />
                         <TextBox
                             Name="update"
                             Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="33" />
-                    </Grid>
+                    </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatisticBorder}">
-                    <Grid>
-                        <TextBlock Text="{DynamicResource NotImportNFO}" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TitleTextStyle}" Text="{DynamicResource NotImportNFO}" />
                         <TextBox
                             Name="failNfo"
                             Foreground="{DynamicResource Window.Sub.Foreground}"
                             Style="{StaticResource StatisticTextBox}"
                             Text="75" />
-                    </Grid>
+                    </StackPanel>
                 </Border>
             </WrapPanel>
         </Grid>

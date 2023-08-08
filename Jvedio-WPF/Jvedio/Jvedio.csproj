@@ -297,6 +297,8 @@
     <Compile Include="Core\Config\PathManager.cs" />
     <Compile Include="Core\Lang\LangManager.cs" />
     <Compile Include="Core\Media\ImageCache.cs" />
+    <Compile Include="Core\Tasks\BaseManager.cs" />
+    <Compile Include="Core\Tasks\ScreenShotManager.cs" />
     <Compile Include="Core\Net\UrlManager.cs" />
     <Compile Include="Core\Interfaces\IDictKeys.cs" />
     <Compile Include="Core\Net\DownLoadTask.cs" />
@@ -319,8 +321,15 @@
     <Compile Include="Core\Exceptions\PrimaryKeyTypeException.cs" />
     <Compile Include="Core\Extensions\MenuItemExtensions.cs" />
     <Compile Include="Core\Scan\ScanDetailInfo.cs" />
+    <Compile Include="Core\Tasks\ScanManager.cs" />
     <Compile Include="Core\Server\ServerManager.cs" />
     <Compile Include="Core\Server\ServerStatus.cs" />
+    <Compile Include="Core\UserControls\Tasks\TaskList.xaml.cs">
+      <DependentUpon>TaskList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\UserControls\Tasks\TaskView.xaml.cs">
+      <DependentUpon>TaskView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\UserControls\VideoItemEventArgs.cs" />
     <Compile Include="Core\UserControls\VideoList.xaml.cs">
       <DependentUpon>VideoList.xaml</DependentUpon>
@@ -405,8 +414,7 @@
       <DependentUpon>Dialog_NewMovie.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Extern\JvedioLib.cs" />
-    <Compile Include="Core\Media\FFmpegManager.cs" />
-    <Compile Include="Core\Net\DownloadManager.cs" />
+    <Compile Include="Core\Tasks\DownloadManager.cs" />
     <Compile Include="Mapper\Common\AssociationMapper.cs" />
     <Compile Include="Mapper\Common\ActorMapper.cs" />
     <Compile Include="Mapper\Common\AIFaceMapper.cs" />
@@ -506,6 +514,14 @@
     <Page Include="Core\Lang\zh-CN.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Core\UserControls\Tasks\TaskList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Core\UserControls\Tasks\TaskView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Core\UserControls\VideoList.xaml">
       <SubType>Designer</SubType>
@@ -662,6 +678,9 @@
     <Content Include="Data\Sql\single_db_game.sql" />
     <Content Include="Data\Sql\single_db_picture.sql" />
     <Resource Include="Resources\Picture\plugin.png" />
+    <None Include="AvalonEdit\Highlighting\TaskLogRule.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="AvalonEdit\Highlighting\LogRule.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

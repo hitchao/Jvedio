@@ -16,7 +16,15 @@ namespace Jvedio.Entity.Common
         GeoClassify,
         GeoRandom,
         GeoAsso,
+        GeoTask,
         TabTypeMax,
+    }
+
+    public enum TaskType
+    {
+        ScreenShot,
+        Download,
+        Scan
     }
 
 

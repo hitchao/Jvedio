@@ -1,0 +1,360 @@
+﻿<UserControl
+    x:Class="Jvedio.Core.UserControls.Tasks.TaskList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:converter="clr-namespace:Jvedio"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:local="clr-namespace:Jvedio.Core.UserControls.Tasks"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
+    x:Name="taskList"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="taskList_Loaded"
+    mc:Ignorable="d">
+
+
+    <UserControl.Resources>
+        <converter:RowToIndexConverter x:Key="RowToIndexConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Panel.ZIndex="10"
+            Background="{DynamicResource Window.Background}"
+            Visibility="{Binding ShowLog, ElementName=taskList, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+                <super:HoverPath Click="HideLog" Style="{StaticResource BackHoverPath}" />
+                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Log}" />
+            </StackPanel>
+
+            <Border
+                Grid.Row="1"
+                Padding="10"
+                Style="{StaticResource InfoBorder}">
+                <avalonEdit:TextEditor
+                    Name="logTextBox"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ContextMenu="{StaticResource TextBoxContextMenu}"
+                    FontFamily="微软雅黑"
+                    FontSize="{Binding SerialPort.TextFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Foreground="{DynamicResource Window.Foreground}"
+                    GotFocus="textBox_GotFocus"
+                    IsReadOnly="True"
+                    LostFocus="textBox_LostFocus"
+                    ShowLineNumbers="True"
+                    WordWrap="True" />
+
+            </Border>
+
+        </Grid>
+
+
+        <StackPanel Margin="5" Orientation="Horizontal">
+
+            <Button
+                Grid.Column="1"
+                Margin="5,0"
+                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                Click="ShowContextMenu"
+                Content="{DynamicResource ClearList}"
+                Style="{StaticResource BorderButton}">
+                <Button.ContextMenu>
+                    <ContextMenu HorizontalOffset="-70" VerticalOffset="5">
+                        <MenuItem
+                            Click="RemoveAll"
+                            Header="{DynamicResource All}"
+                            IsCheckable="False" />
+                        <MenuItem
+                            Click="RemoveComplete"
+                            Header="{DynamicResource Done}"
+                            IsCheckable="False" />
+                        <MenuItem
+                            Click="RemoveCancel"
+                            Header="{DynamicResource Canceled}"
+                            IsCheckable="False" />
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+
+            <Button
+                Click="CancelAll"
+                Content="{DynamicResource CancelALl}"
+                Style="{StaticResource ButtonDanger}"
+                Visibility="{Binding onCancelAll, ElementName=taskList, Converter={StaticResource NullToVisibilityConverter}}" />
+
+            <Grid Width="500" Visibility="{Binding ShowProgress, Mode=OneWay, ElementName=taskList, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar
+                    Grid.Column="0"
+                    Height="4"
+                    Margin="10,0"
+                    Maximum="100"
+                    Minimum="0"
+                    Style="{StaticResource NormalStaticProgressBar}"
+                    Value="{Binding AllTaskProgress, ElementName=taskList, Mode=OneWay}" />
+                <TextBlock
+                    Grid.Column="1"
+                    MinWidth="50"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding AllTaskProgress, StringFormat=\{0\} %, ElementName=taskList, Mode=OneWay}" />
+            </Grid>
+        </StackPanel>
+
+
+        <!--  任务列表  -->
+        <DataGrid
+            Grid.Row="1"
+            Margin="5"
+            HorizontalContentAlignment="Left"
+            d:ItemsSource="{d:SampleData}"
+            CanUserResizeColumns="True"
+            IsReadOnly="True"
+            ItemsSource="{Binding TaskStatusList, ElementName=taskList}"
+            RowHeight="40"
+            Style="{DynamicResource FlatDataGrid}">
+            <DataGrid.RowStyle>
+                <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                    <!--<Setter Property="ContextMenu" Value="{StaticResource contextMenu}" />-->
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+
+                <DataGridTemplateColumn
+                    Width="50"
+                    MinWidth="300"
+                    Header="{DynamicResource Status}"
+                    SortMemberPath="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <fa:ImageAwesome
+                                    Grid.Column="0"
+                                    Width="20"
+                                    Margin="8"
+                                    VerticalAlignment="Center">
+                                    <fa:ImageAwesome.Style>
+                                        <Style TargetType="fa:ImageAwesome">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Canceled">
+                                                    <Setter Property="Icon" Value="TimesCircle" />
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                    <Setter Property="Spin" Value="False" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="WaitingToRun">
+                                                    <Setter Property="Icon" Value="Hourglass" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource Control.Disabled.Background}" />
+                                                    <Setter Property="Spin" Value="False" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
+                                                    <Setter Property="Icon" Value="CheckCircle" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource Common.Status.Complete.Background}" />
+                                                    <Setter Property="Spin" Value="False" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
+                                                    <Setter Property="Icon" Value="Refresh" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource Common.Status.Running.Background}" />
+                                                    <Setter Property="Spin" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </fa:ImageAwesome.Style>
+                                </fa:ImageAwesome>
+
+                                <TextBlock
+                                    Grid.Column="1"
+                                    MinWidth="80"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    Foreground="{DynamicResource Window.Sub.Foreground}"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding StatusText}" />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    FontSize="12"
+                                    Foreground="{DynamicResource Button.Selected.BorderBrush}"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding Message}"
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTip="{Binding Path=Text, RelativeSource={RelativeSource Mode=Self}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTextColumn
+                    MinWidth="50"
+                    Binding="{Binding Title}"
+                    Foreground="{DynamicResource Window.Foreground}"
+                    Header="{DynamicResource Title}"
+                    IsReadOnly="True"
+                    SortMemberPath="Title" />
+
+
+                <DataGridTemplateColumn Header="{DynamicResource Progress}" SortMemberPath="Progress">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ProgressBar
+                                    Height="2"
+                                    MinWidth="100"
+                                    Margin="5,0"
+                                    Foreground="{DynamicResource Button.Selected.BorderBrush}"
+                                    Maximum="100"
+                                    Value="{Binding Progress}">
+                                    <ProgressBar.Style>
+                                        <Style BasedOn="{StaticResource NormalStaticProgressBar}" TargetType="ProgressBar">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
+                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Progress, Mode=OneWay}" Value="0">
+                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ProgressBar.Style>
+                                </ProgressBar>
+                                <TextBlock
+                                    Margin="5"
+                                    FontSize="10"
+                                    Text="{Binding Progress, StringFormat=\{0\} %}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
+                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTextColumn
+                    MinWidth="60"
+                    Binding="{Binding CreateTime}"
+                    Foreground="{DynamicResource Window.Sub.Foreground}"
+                    Header="{DynamicResource Date}"
+                    IsReadOnly="True"
+                    SortMemberPath="CreateTime" />
+
+                <DataGridTemplateColumn MinWidth="50" SortMemberPath="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel
+                                x:Name="buttonStackPanel"
+                                Orientation="Horizontal"
+                                Visibility="Hidden">
+                                <Button
+                                    Uid="{Binding ID}"
+                                    Click="CancelOne"
+                                    Content="{DynamicResource Cancel}"
+                                    Visibility="{Binding onCancel, ElementName=taskList, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource ButtonDanger}" TargetType="Button">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="WaitingToRun">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button
+                                    Uid="{Binding ID}"
+                                    Click="Restart"
+                                    Content="{DynamicResource Reboot}"
+                                    Visibility="{Binding onRestart, ElementName=taskList, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource ButtonWarning}" TargetType="Button">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Canceled">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+
+                                <Button
+                                    Uid="{Binding ID}"
+                                    Click="ShowDetail"
+                                    Content="{DynamicResource Detail}"
+                                    Visibility="{Binding onShowDetail, ElementName=taskList, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource ButtonPrimary}" TargetType="Button">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Canceled">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                            </StackPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                    <Setter TargetName="buttonStackPanel" Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

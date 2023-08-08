@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
+using Jvedio.Core.FFmpeg;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperControls.Style;
@@ -37,6 +38,10 @@ namespace Jvedio.Core.Scan
 
         public ScanResult ScanResult { get; set; }
 
+
+        /// <summary>
+        /// 需要扫描的目录
+        /// </summary>
         public List<string> ScanPaths { get; set; }
 
         public List<string> FilePaths { get; set; }
@@ -131,6 +136,9 @@ namespace Jvedio.Core.Scan
                     onScanning?.Invoke(this, new MessageCallBackEventArgs(path));
                 }
 
+                int total = ScanPaths.Count;
+                int count = 0;
+
                 foreach (string path in ScanPaths) {
                     IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) => {
                         // 发生异常
@@ -140,7 +148,11 @@ namespace Jvedio.Core.Scan
                         onScanning?.Invoke(this, new MessageCallBackEventArgs(dir));
                     }, TokenCTS);
                     FilePaths.AddRange(paths);
+                    count++;
+                    Progress = (float)Math.Round(((float)count) / total, 4) * 100;
                 }
+
+                Progress = 30;
 
 
                 try {
@@ -160,6 +172,8 @@ namespace Jvedio.Core.Scan
                          Logger.Error(msg);
                      });
 
+                    Progress = 60;
+
                     ScanResult.TotalCount = parseResult.import.Count + parseResult.notImport.Count + parseResult.failNFO.Count;
                     try {
                         CheckStatus();
@@ -174,13 +188,24 @@ namespace Jvedio.Core.Scan
                     List<Video> importNFO = parseResult.import.Where(arg => arg.Path.ToLower().EndsWith(".nfo")).ToList();
                     parseResult.import.RemoveAll(arg => arg.Path.ToLower().EndsWith(".nfo"));
                     HandleImport(parseResult.import);
+
+                    Progress = 70;
+
                     HandleImportNFO(importNFO);          // 导入视频后再导入 NFO
+
+                    Progress = 80;
+
                     HandleNotImport(parseResult.notImport);
+
+                    Progress = 90;
+
                     HandleFailNFO(parseResult.failNFO);
+                    Progress = 100;
                     Success = true;
                 } catch (Exception ex) {
                     Logger.Error(ex.Message);
                     Success = false;
+                    Progress = 0;
                 }
 
                 Running = false;

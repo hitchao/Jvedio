@@ -3,6 +3,7 @@ using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using SuperControls.Style;
 using SuperUtils.WPF.VisualTools;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -28,6 +29,10 @@ namespace Jvedio.Core.UserControls
 
 
         #region "事件"
+
+        public static Action onStatistic;
+
+
         public static readonly RoutedEvent OnViewAssoDataEvent =
             EventManager.RegisterRoutedEvent("OnViewAssoData", RoutingStrategy.Bubble,
                 typeof(RoutedEventHandler), typeof(ViewVideo));
@@ -90,6 +95,7 @@ namespace Jvedio.Core.UserControls
 
         #region "属性"
         private bool canShowDetails { get; set; }
+        private bool CanRateChange { get; set; }
 
         #endregion
 
@@ -278,12 +284,22 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
 
         private void OnRateMouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            CanRateChange = true;
         }
 
         private void Rate_ValueChanged(object sender, SuperControls.Style.FunctionEventArgs<double> e)
         {
+            if (!CanRateChange)
+                return;
 
+            if (sender is Rate rate &&
+                rate.Tag != null &&
+                long.TryParse(rate.Tag.ToString(), out long DataID) &&
+                DataID > 0) {
+                MapperManager.metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), DataID);
+                onStatistic?.Invoke();
+            }
+            CanRateChange = false;
         }
 
         #region "对外方法"

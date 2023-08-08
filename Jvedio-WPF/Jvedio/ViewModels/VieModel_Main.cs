@@ -3,6 +3,7 @@ using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Core.Server;
+using Jvedio.Core.UserControls;
 using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
@@ -164,13 +165,8 @@ namespace Jvedio.ViewModel
 
         public void InitBinding()
         {
-            // todo tab
-            //CurrentVideoList.CollectionChanged += (s, e) => {
-            //    if (CurrentVideoList != null && CurrentVideoList.Count > 0)
-            //        ShowSoft = false;
-            //    else
-            //        ShowSoft = true;
-            //};
+            VideoList.onStatistic += Statistic;
+            ViewVideo.onStatistic += Statistic;
         }
 
 
@@ -187,6 +183,18 @@ namespace Jvedio.ViewModel
         #endregion
 
         #region "界面显示属性"
+
+        public bool _DragInFile;
+
+        public bool DragInFile {
+            get { return _DragInFile; }
+
+            set {
+                _DragInFile = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         public ServerStatus _ServerStatus;
 
@@ -316,38 +324,7 @@ namespace Jvedio.ViewModel
 
         #region "ObservableCollection"
 
-        private ObservableCollection<ScanTask> _ScanTasks = new ObservableCollection<ScanTask>();
 
-        public ObservableCollection<ScanTask> ScanTasks {
-            get { return _ScanTasks; }
-
-            set {
-                _ScanTasks = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<DownLoadTask> _DownLoadTasks = new ObservableCollection<DownLoadTask>();
-
-        public ObservableCollection<DownLoadTask> DownLoadTasks {
-            get { return _DownLoadTasks; }
-
-            set {
-                _DownLoadTasks = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<ScreenShotTask> _ScreenShotTasks = new ObservableCollection<ScreenShotTask>();
-
-        public ObservableCollection<ScreenShotTask> ScreenShotTasks {
-            get { return _ScreenShotTasks; }
-
-            set {
-                _ScreenShotTasks = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private double _DownLoadProgress = 0;
 
@@ -360,27 +337,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private double _ScreenShotProgress = 0;
-
-        public double ScreenShotProgress {
-            get { return _ScreenShotProgress; }
-
-            set {
-                _ScreenShotProgress = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private Visibility _ScreenShotVisibility = Visibility.Collapsed;
-
-        public Visibility ScreenShotVisibility {
-            get { return _ScreenShotVisibility; }
-
-            set {
-                _ScreenShotVisibility = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private Visibility _DownLoadVisibility = Visibility.Collapsed;
 

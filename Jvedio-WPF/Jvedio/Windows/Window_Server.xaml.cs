@@ -93,11 +93,6 @@ namespace Jvedio
             this.DataContext = this;
         }
 
-        static Window_Server()
-        {
-            AvalonEditManager.Init();
-        }
-
         public void Init()
         {
             // 获取本地 IP

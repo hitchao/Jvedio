@@ -122,6 +122,11 @@ namespace Jvedio.Core.UserControls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             BindingEventAfterRender();
+            Refresh();
+        }
+
+        public void Refresh()
+        {
             vieModel.Reset();
         }
 
@@ -620,8 +625,8 @@ namespace Jvedio.Core.UserControls
                 vieModel.SelectedVideo.Clear();
 
             if (logs.Count > 0)
-                onRenameFile?.Invoke(string.Join(Environment.NewLine, logs));
-            //new Dialog_Logs(string.Join(Environment.NewLine, logs)).ShowDialog(this);
+                //onRenameFile?.Invoke(string.Join(Environment.NewLine, logs));
+                new Dialog_Logs(string.Join(Environment.NewLine, logs)).ShowDialog(App.Current.MainWindow);
         }
 
         public int RenameFile(List<Video> toRename, TaskLogger logger, ref Dictionary<long, List<string>> dict)
@@ -655,7 +660,7 @@ namespace Jvedio.Core.UserControls
                     }
 
                     if (!changed) {
-                        logger.Info(LangManager.GetValueByKey("SameFileNameToOrigin"));
+                        //logger.Info(LangManager.GetValueByKey("SameFileNameToOrigin"));
                         break;
                     }
 
@@ -684,7 +689,8 @@ namespace Jvedio.Core.UserControls
                     string target = newPath[0];
                     string origin = newVideo.Path;
                     if (origin.Equals(target)) {
-                        logger.Info(LangManager.GetValueByKey("SameFileNameToOrigin"));
+                        //logger.Info(LangManager.GetValueByKey("SameFileNameToOrigin") +
+                        //    $"{Environment.NewLine}    origin: {origin}{Environment.NewLine}    target: {target}");
                         continue;
                     }
 
@@ -1130,29 +1136,34 @@ namespace Jvedio.Core.UserControls
             contextMenu.IsOpen = false;
         }
 
-        public void screenShotVideo(MetaData metaData)
+        public void ScreenShotVideo(MetaData metaData)
         {
             ScreenShotTask task = new ScreenShotTask(metaData);
             task.onError += (s, ev) => {
                 MessageCard.Error((ev as MessageCallBackEventArgs).Message);
             };
-            addToScreenShot(task);
+            AddToScreenShot(task);
         }
 
 
         private void DownLoadSelectMovie(object sender, RoutedEventArgs e)
         {
-            //HandleMenuSelected(sender);
+            HandleMenuSelected(sender);
             //vieModel.DownloadStatus = "Downloading";
-            //foreach (Video video in vieModel.SelectedVideo) {
-            //    DownloadVideo(video);
-            //}
+            DownLoadVideo(vieModel.SelectedVideo);
 
-            //if (!Global.DownloadManager.Dispatcher.Working)
-            //    Global.DownloadManager.Dispatcher.BeginWork();
             //setDownloadStatus();
             //if (!vieModel.EditMode)
             //    vieModel.SelectedVideo.Clear();
+        }
+
+        public void DownLoadVideo(List<Video> videoList)
+        {
+            foreach (Video video in vieModel.SelectedVideo) {
+                DownloadVideo(video);
+            }
+
+            App.DownloadManager.Start();
         }
 
         public void setDownloadStatus()
@@ -1325,14 +1336,11 @@ namespace Jvedio.Core.UserControls
                 return;
 
             foreach (MetaData metaData in metaDatas) {
-                screenShotVideo(metaData);
+                ScreenShotVideo(metaData);
             }
-
-            //if (!Global.FFmpegManager.Dispatcher.Working)
-            //    Global.FFmpegManager.Dispatcher.BeginWork();
         }
 
-        public void screenShotVideo(Video video, bool gif = false)
+        public void ScreenShotVideo(Video video, bool gif = false)
         {
             ScreenShotTask screenShotTask = new ScreenShotTask(video, gif);
             screenShotTask.onError += (s, ev) => {
@@ -1342,7 +1350,7 @@ namespace Jvedio.Core.UserControls
                 if (screenShotTask.Success)
                     LoadImageAfterScreenShort(video);
             };
-            addToScreenShot(screenShotTask);
+            AddToScreenShot(screenShotTask);
         }
 
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
@@ -1352,39 +1360,36 @@ namespace Jvedio.Core.UserControls
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
             List<Video> videos = videoMapper.SelectList();
-            foreach (Video video in videos) {
-                DownloadVideo(video);
-            }
-
-            if (!Jvedio.Global.DownloadManager.Dispatcher.Working)
-                Jvedio.Global.DownloadManager.Dispatcher.BeginWork();
-            setDownloadStatus();
+            DownLoadVideo(videos);
+            //if (!Jvedio.Global.DownloadManager.Dispatcher.Working)
+            //    Jvedio.Global.DownloadManager.Dispatcher.BeginWork();
+            //setDownloadStatus();
         }
 
         public void DownloadVideo(Video video)
         {
-            DownLoadTask task = new DownLoadTask(video, ConfigManager.Settings.DownloadPreviewImage, ConfigManager.Settings.OverrideInfo);
-            long vid = video.DataID;
-            task.onError += (s, ev) => {
+            DownLoadTask downloadTask = new DownLoadTask(video, ConfigManager.Settings.DownloadPreviewImage, ConfigManager.Settings.OverrideInfo);
+            downloadTask.onError += (s, ev) => {
                 MessageCard.Error((ev as MessageCallBackEventArgs).Message);
             };
-            task.onDownloadSuccess += (s, ev) => {
-                DownLoadTask t = s as DownLoadTask;
+            downloadTask.onDownloadSuccess += (s, ev) => {
+                DownLoadTask task = s as DownLoadTask;
                 Dispatcher.Invoke(() => {
-                    RefreshData(t.DataID);
+                    RefreshData(task.DataID);
                     // 更新图片存在
-                    if (t.Success)
+                    if (task.Success)
                         UpdateImageIndex(video, true, true);
                 });
             };
 
-            addToDownload(task);
+            App.DownloadManager.AddTask(downloadTask);
         }
 
 
-        public bool addToDownload(DownLoadTask task)
+        public bool AddToDownload(DownLoadTask task)
         {
-            throw new Exception();
+            return false;
+            //throw new Exception();
             //if (!vieModel.DownLoadTasks.Contains(task)) {
             //    Jvedio.Global.DownloadManager.Dispatcher.Enqueue(task);
             //    vieModel.DownLoadTasks.Add(task);
@@ -1404,14 +1409,9 @@ namespace Jvedio.Core.UserControls
 
 
 
-        public void addToScreenShot(ScreenShotTask task)
+        public void AddToScreenShot(ScreenShotTask task)
         {
-            //if (!vieModel.ScreenShotTasks.Contains(task)) {
-            //    Jvedio.Global.FFmpegManager.Dispatcher.Enqueue(task);
-            //    vieModel.ScreenShotTasks.Add(task);
-            //} else {
-            //    MessageNotify.Info(LangManager.GetValueByKey("TaskExists"));
-            //}
+            App.ScreenShotManager.AddTask(task);
         }
 
         private void LoadImageAfterScreenShort(Video video)
@@ -1585,34 +1585,29 @@ namespace Jvedio.Core.UserControls
 
         public void GenerateGif(object sender, RoutedEventArgs e)
         {
-            GenerateScreenShot(sender, true);
+            HandleMenuSelected(sender, 1);
+            GenerateScreenShot(vieModel.SelectedVideo, true);
         }
 
         public void GenerateScreenShot(object sender, RoutedEventArgs e)
         {
-            GenerateScreenShot(sender);
+            HandleMenuSelected(sender, 1);
+            GenerateScreenShot(vieModel.SelectedVideo);
         }
 
-
-
-
-
-        public void GenerateScreenShot(object sender, bool gif = false)
+        public void GenerateScreenShot(List<Video> Videos, bool gif = false)
         {
             if (!File.Exists(ConfigManager.FFmpegConfig.Path)) {
                 MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_SetFFmpeg"));
                 return;
             }
 
-            HandleMenuSelected(sender, 1);
-            foreach (Video video in vieModel.SelectedVideo) {
-                screenShotVideo(video, gif);
+            foreach (Video video in Videos) {
+                ScreenShotVideo(video, gif);
             }
 
-            if (!Jvedio.Global.FFmpegManager.Dispatcher.Working)
-                Jvedio.Global.FFmpegManager.Dispatcher.BeginWork();
-            if (!vieModel.EditMode)
-                vieModel.SelectedVideo.Clear();
+            //if (!vieModel.EditMode)
+            //    vieModel.SelectedVideo.Clear();
         }
 
 
@@ -1823,8 +1818,8 @@ namespace Jvedio.Core.UserControls
                     MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_FileNotExist") + ": " + video.Path);
                 else
                     FileHelper.TryOpenSelectPath(video.Path);
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail"))) {
-                FileHelper.TryOpenSelectPath(video.GetSmallImage());
+            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Poster"))) {
+                FileHelper.TryOpenSelectPath(video.GetBigImage());
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail"))) {
                 FileHelper.TryOpenSelectPath(video.GetSmallImage());
             } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview"))) {

@@ -7,6 +7,7 @@ using SuperControls.Style;
 using SuperControls.Style.Plugin;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Wrapper;
+using SuperUtils.Framework.Tasks;
 using SuperUtils.NetWork;
 using SuperUtils.NetWork.Entity;
 using System;
@@ -33,11 +34,14 @@ namespace Jvedio.Core.Net
 
         public List<CrawlerServer> CrawlerServers { get; set; } // 该资源支持的爬虫刮削器
 
-        public VideoDownLoader(Video video, CancellationToken token)
+        private TaskLogger TaskLogger { get; set; }
+
+        public VideoDownLoader(Video video, CancellationToken token, TaskLogger Logger)
         {
             CurrentVideo = video;
             cancellationToken = token;
             Header = CrawlerHeader.Default;
+            TaskLogger = Logger;
         }
 
         /// <summary>
@@ -48,6 +52,7 @@ namespace Jvedio.Core.Net
             Canceled = true;
             State = DownLoadState.Fail;
         }
+
 
         public async Task<Dictionary<string, object>> GetInfo(Action<RequestHeader> headerCallBack)
         {
@@ -61,7 +66,7 @@ namespace Jvedio.Core.Net
                 List<CrawlerServer> crawlerServers = crawlers[key];
                 foreach (CrawlerServer server in crawlerServers) {
                     if (server.Invoker == null) {
-                        Logger.Warn($"server[{server.PluginID}] invoker is null");
+                        TaskLogger.Warning($"刮削器[{server.PluginID}] invoker 为空");
                         continue;
                     }
                     server.AttachToDict(dataInfo);
@@ -75,9 +80,17 @@ namespace Jvedio.Core.Net
                         }
                         headerCallBack?.Invoke(Header);
                         d.Add("PluginID", server.PluginID);
+
+                        if (d.ContainsKey("Logs") && d["Logs"] is List<string> logs) {
+                            foreach (var item in logs) {
+                                TaskLogger.Info($"[{server.PluginID}] {item}");
+                            }
+                        }
+
+
                         return d;
                     } else {
-                        Logger.Warn($"server[{server.PluginID}] invoker failed");
+                        TaskLogger.Warning($"刮削器[{server.PluginID}] invoker 失败");
                     }
                 }
             }
@@ -115,10 +128,10 @@ namespace Jvedio.Core.Net
                 // 过滤器仅可使用的刮削器
                 try {
                     PluginInvoker invoker = new PluginInvoker(metaData.GetDllPath());
+                    //Logger.Info($"threadID: {Thread.CurrentThread.ManagedThreadId}, vid: {dataInfo["VID"]}");
                     object reasonObject = invoker.SetMethod("IsPluginAvailable").Invoke(new object[] { dataInfo });
                     string reason = reasonObject as string;
                     if (string.IsNullOrEmpty(reason)) {
-
                         object webTypeObject = invoker.SetMethod("GetWebType").Invoke(null);
                         string webType = "";
                         if (webTypeObject != null)
@@ -139,7 +152,7 @@ namespace Jvedio.Core.Net
                         }
                         result[metaData] = crawlerServers;
                     } else {
-                        Logger.Warn(reason);
+                        TaskLogger.Error($"刮削失败，原因：{reason}");
                     }
                 } catch (Exception ex) {
                     MessageCard.Error($"插件 {metaData.PluginName} 发生了异常：" + ex.Message);
