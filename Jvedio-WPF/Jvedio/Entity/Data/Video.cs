@@ -32,6 +32,8 @@ namespace Jvedio.Entity
     public class Video : MetaData
     {
 
+        public static Action onPlayVideo;
+
         public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
 
 
@@ -54,7 +56,7 @@ namespace Jvedio.Entity
             PreviewImageList = new ObservableCollection<BitmapSource>();
         }
 
-        public static void PlayVideoWithPlayer(string filepath, long dataID = 0, Action onPlayVideo = null)
+        public static void PlayVideoWithPlayer(string filepath, long dataID = 0)
         {
             if (File.Exists(filepath)) {
                 bool success = false;

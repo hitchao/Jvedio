@@ -178,9 +178,76 @@ namespace Jvedio.ViewModels
                     }
                     break;
 
+                case TabType.GeoLabel:
+                    if (tabData is LabelType labelType) {
+                        LabelView labelView = new LabelView(labelType);
+                        labelView.Uid = tabItem.UUID;
+                        SetLabelList(ref labelView, labelType);
+                        labelView.onLabelClick += onLabelClick;
+                        TabPanel.Children.Add(labelView);
+                    }
+                    break;
+
                 default:
                     break;
             }
+        }
+
+        private void SetLabelList(ref LabelView labelView, LabelType type)
+        {
+            List<string> list = null;
+            switch (type) {
+                case LabelType.LabelName:
+                    list = vieModel.GetLabelList();
+                    break;
+                case LabelType.Genre:
+                    list = vieModel.GetGenreList();
+                    break;
+                case LabelType.Series:
+                case LabelType.Studio:
+                case LabelType.Director:
+                    list = vieModel.GetListByField(type.ToString());
+                    break;
+                default:
+                    break;
+            }
+
+            labelView.SetLabel(list);
+        }
+
+        private void onLabelClick(string label, LabelType type)
+        {
+            if (string.IsNullOrEmpty(label) || label.IndexOf("(") < 0)
+                return;
+
+            string labelValue = label.Substring(0, label.LastIndexOf("("));
+            string typeName = type.ToString();
+
+            SelectWrapper<Video> ExtraWrapper = new SelectWrapper<Video>();
+
+
+            string tabName = "";
+
+            switch (type) {
+
+                case LabelType.LabelName:
+                    tabName = LangManager.GetValueByKey("Label");
+                    ExtraWrapper.Eq(typeName, labelValue);
+                    ExtraWrapper.ExtraSql = LabelView.SQL_JOIN;
+                    break;
+
+                case LabelType.Genre:
+                case LabelType.Series:
+                case LabelType.Studio:
+                case LabelType.Director:
+                    tabName = LangManager.GetValueByKey(typeName);
+                    ExtraWrapper.Like(typeName, labelValue);
+                    break;
+                default:
+                    break;
+            }
+
+            Add(TabType.GeoVideo, $"{tabName}: {labelValue}", ExtraWrapper);
         }
 
 

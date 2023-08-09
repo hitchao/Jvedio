@@ -18,6 +18,17 @@
 
     <UserControl.Resources>
 
+        <!--  搜索  -->
+        <Style
+            x:Key="SearchBoxListItemContainerStyle"
+            BasedOn="{StaticResource NormalListBoxItem}"
+            TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+
 
         <Style x:Key="ItemsControlVirtualizedWrapPanelStyle" TargetType="ItemsControl">
             <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True" />
@@ -169,15 +180,87 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
+        <super:SimplePanel Grid.Row="0">
+            <!--  搜索  -->
+            <super:SearchBox
+                Name="searchBox"
+                Margin="0"
+                HideClearButtonOnMouseLeave="False"
+                PreviewKeyDown="searchBox_PreviewKeyDown"
+                PreviewKeyUp="SearchBar_PreviewKeyUp"
+                Search="doSearch"
+                SearchOnTextChanged="False"
+                Style="{StaticResource SearchBoxStyle}"
+                Text="{Binding Path=DataContext.SearchText, Mode=TwoWay, ElementName=videoList}"
+                Visibility="{Binding DisplaySearchBox, Source={x:Static config:ConfigManager.Main}, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <Popup
+                x:Name="searchResultPopup"
+                Width="{Binding ElementName=searchBox, Path=ActualWidth}"
+                MinHeight="300"
+                AllowsTransparency="True"
+                HorizontalOffset="-5"
+                IsOpen="{Binding Path=DataContext.Searching, ElementName=videoList}"
+                Placement="Bottom"
+                PlacementTarget="{Binding ElementName=searchBox}"
+                PopupAnimation="Fade"
+                StaysOpen="False"
+                VerticalOffset="-5">
+                <Grid Margin="5">
+                    <Border
+                        Margin="5"
+                        Background="{DynamicResource Menu.Background}"
+                        CornerRadius="0 0 5 5"
+                        Effect="{StaticResource PopupDropShadowEffect}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
 
+                        <TabControl
+                            Name="searchTabControl"
+                            Grid.Row="0"
+                            Margin="10,10,10,0"
+                            Background="Transparent"
+                            FocusVisualStyle="{x:Null}"
+                            ItemContainerStyle="{StaticResource FlatTabItem}"
+                            SelectedIndex="{Binding Path=DataContext.SearchSelectedIndex, Mode=TwoWay, ElementName=videoList}"
+                            Style="{StaticResource FlatTabControl}">
+                            <TabItem Header="{DynamicResource ID}" />
+                            <TabItem Header="{DynamicResource Title}" />
+                            <TabItem Header="{DynamicResource Path}" />
+                            <TabItem Header="{DynamicResource Actors}" />
+                            <TabItem Header="{DynamicResource Label}" />
+                            <TabItem Header="{DynamicResource Genre}" />
+                            <TabItem Header="{DynamicResource Tag}" />
+                            <TabItem Header="{DynamicResource Studio}" />
+                            <TabItem Header="{DynamicResource Director}" />
+                        </TabControl>
+                        <Grid
+                            Grid.Row="1"
+                            Margin="5"
+                            Background="{DynamicResource Menu.Background}"
+                            Visibility="Collapsed">
+                            <TabControl TabStripPlacement="Bottom">
+                                <TabItem Header="2022-07">
+                                    <WrapPanel Orientation="Horizontal" />
+                                </TabItem>
+                                <TabItem Header="2022-06" />
+                            </TabControl>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Popup>
+        </super:SimplePanel>
 
         <!--  工具栏  -->
         <Grid
-            Grid.Row="0"
+            Grid.Row="1"
             Panel.ZIndex="4"
             Background="Transparent"
             Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}">
@@ -301,7 +384,7 @@
 
         <!--  字母导航栏  -->
         <Grid
-            Grid.Row="1"
+            Grid.Row="2"
             MinWidth="40"
             MinHeight="50"
             Margin="20"
@@ -341,7 +424,7 @@
         </Grid>
 
         <!--  信息展示：演员信息+影片展示  -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
@@ -453,7 +536,7 @@
 
         <!--  底部  -->
         <Grid
-            Grid.Row="2"
+            Grid.Row="3"
             HorizontalAlignment="Stretch"
             Panel.ZIndex="5"
             Visibility="{Binding DisplayPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}">

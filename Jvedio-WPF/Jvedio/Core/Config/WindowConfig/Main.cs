@@ -14,6 +14,7 @@ namespace Jvedio.Core.WindowConfig
             FirstRun = true;
             ShowSearchHistory = true;
             SideDefaultExpanded = true;
+            SideClassifyExpanded = true;
             SideTagStampExpanded = true;
 
             DisplayFunBar = true;
@@ -58,6 +59,7 @@ namespace Jvedio.Core.WindowConfig
 
         public bool ShowSearchHistory { get; set; }
         public bool SideDefaultExpanded { get; set; }
+        public bool SideClassifyExpanded { get; set; }
         public bool SideTagStampExpanded { get; set; }
 
 

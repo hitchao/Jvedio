@@ -355,7 +355,7 @@
                                         Padding="0,4"
                                         FontSize="14"
                                         Header="{DynamicResource Default}"
-                                        IsExpanded="{Binding SideDefaultExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=true}"
+                                        IsExpanded="{Binding SideDefaultExpanded, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}, UpdateSourceTrigger=PropertyChanged, FallbackValue=true}"
                                         IsSelected="False"
                                         LineWidth="0"
                                         Style="{StaticResource BaseTogglePanel}">
@@ -396,19 +396,59 @@
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding AllActorCount}" />
                                             <super:PathRadioButton
-                                                Command="{Binding ShowLabelsCommand}"
+                                                Command="{Binding SideButtonCmd}"
+                                                CommandParameter="Label"
                                                 MainText="{DynamicResource MyLabel}"
                                                 Path="{StaticResource GeoLabel}"
                                                 Style="{StaticResource BasePathRadioButton}"
                                                 SubText="{Binding AllLabelCount}" />
-                                            <super:PathRadioButton
-                                                Command="{Binding ShowClassifyCommand}"
-                                                MainText="{DynamicResource AutoClassification}"
-                                                Path="{StaticResource GeoClassify}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="" />
                                         </StackPanel>
                                     </super:TogglePanel>
+
+
+                                    <super:TogglePanel
+                                        Grid.Row="1"
+                                        Margin="1,0"
+                                        Padding="0,4"
+                                        FontSize="14"
+                                        Header="{DynamicResource AutoClassification}"
+                                        IsExpanded="{Binding SideClassifyExpanded, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}, UpdateSourceTrigger=PropertyChanged, FallbackValue=true}"
+                                        IsSelected="False"
+                                        LineWidth="0"
+                                        Style="{StaticResource BaseTogglePanel}">
+
+                                        <StackPanel>
+                                            <super:PathRadioButton
+                                                Command="{Binding SideButtonCmd}"
+                                                CommandParameter="Genre"
+                                                MainText="{DynamicResource Genre}"
+                                                Path="{StaticResource GeoClassify}"
+                                                Style="{StaticResource BasePathRadioButton}"
+                                                SubText="{Binding AllLabelCount}" />
+                                            <super:PathRadioButton
+                                                Command="{Binding SideButtonCmd}"
+                                                CommandParameter="Series"
+                                                MainText="{DynamicResource Tag}"
+                                                Path="{StaticResource GeoClassify}"
+                                                Style="{StaticResource BasePathRadioButton}"
+                                                SubText="{Binding AllLabelCount}" />
+                                            <super:PathRadioButton
+                                                Command="{Binding SideButtonCmd}"
+                                                CommandParameter="Studio"
+                                                MainText="{DynamicResource Studio}"
+                                                Path="{StaticResource GeoClassify}"
+                                                Style="{StaticResource BasePathRadioButton}"
+                                                SubText="{Binding AllLabelCount}" />
+                                            <super:PathRadioButton
+                                                Command="{Binding SideButtonCmd}"
+                                                CommandParameter="Director"
+                                                MainText="{DynamicResource Director}"
+                                                Path="{StaticResource GeoClassify}"
+                                                Style="{StaticResource BasePathRadioButton}"
+                                                SubText="{Binding AllLabelCount}" />
+                                        </StackPanel>
+                                    </super:TogglePanel>
+
                                 </Grid>
                             </ScrollViewer>
                             <Button
@@ -468,91 +508,14 @@
                         Drop="OnDragFileDrop">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <super:NoticeViewer x:Name="noticeViewer" Grid.Row="0" />
 
-                        <super:SimplePanel Grid.Row="1">
-                            <!--  搜索  -->
-                            <super:SearchBox
-                                Name="searchBox"
-                                Margin="0"
-                                HideClearButtonOnMouseLeave="False"
-                                PreviewKeyDown="searchBox_PreviewKeyDown"
-                                PreviewKeyUp="SearchBar_PreviewKeyUp"
-                                Search="doSearch"
-                                SearchOnTextChanged="False"
-                                Style="{StaticResource SearchBoxStyle}"
-                                Text="{Binding SearchText, Mode=TwoWay}"
-                                Visibility="{Binding DisplaySearchBox, Source={x:Static config:ConfigManager.Main}, Converter={StaticResource BoolToVisibilityConverter}}" />
-                            <Popup
-                                x:Name="searchResultPopup"
-                                Width="{Binding ElementName=searchBox, Path=ActualWidth}"
-                                MinHeight="300"
-                                AllowsTransparency="True"
-                                HorizontalOffset="-5"
-                                IsOpen="{Binding Searching}"
-                                Placement="Bottom"
-                                PlacementTarget="{Binding ElementName=searchBox}"
-                                PopupAnimation="Fade"
-                                StaysOpen="False"
-                                VerticalOffset="-5">
-                                <Grid Margin="5">
-                                    <Border
-                                        Margin="5"
-                                        Background="{DynamicResource Menu.Background}"
-                                        CornerRadius="0 0 5 5"
-                                        Effect="{StaticResource PopupDropShadowEffect}" />
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <TabControl
-                                            Name="searchTabControl"
-                                            Grid.Row="0"
-                                            Margin="10,10,10,0"
-                                            Background="Transparent"
-                                            FocusVisualStyle="{x:Null}"
-                                            ItemContainerStyle="{StaticResource FlatTabItem}"
-                                            SelectedIndex="{Binding SearchSelectedIndex, Mode=TwoWay}"
-                                            Style="{StaticResource FlatTabControl}">
-                                            <TabItem Header="{DynamicResource ID}" />
-                                            <TabItem Header="{DynamicResource Title}" />
-                                            <TabItem Header="{DynamicResource Path}" />
-                                            <TabItem Header="{DynamicResource Actors}" />
-                                            <TabItem Header="{DynamicResource Label}" />
-                                            <TabItem Header="{DynamicResource Genre}" />
-                                            <TabItem Header="{DynamicResource Tag}" />
-                                            <TabItem Header="{DynamicResource Studio}" />
-                                            <TabItem Header="{DynamicResource Director}" />
-                                        </TabControl>
-                                        <Grid
-                                            Grid.Row="1"
-                                            Margin="5"
-                                            Background="{DynamicResource Menu.Background}"
-                                            Visibility="Collapsed">
-                                            <TabControl TabStripPlacement="Bottom">
-                                                <TabItem Header="2022-07">
-                                                    <WrapPanel Orientation="Horizontal" />
-                                                </TabItem>
-                                                <TabItem Header="2022-06" />
-                                            </TabControl>
-
-
-
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Popup>
-                        </super:SimplePanel>
-
                         <!--  logo  -->
                         <StackPanel
-                            Grid.Row="2"
+                            Grid.Row="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Orientation="Vertical"
@@ -604,7 +567,7 @@
                         </StackPanel>
 
 
-                        <Grid Grid.Row="2" Margin="5">
+                        <Grid Grid.Row="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
@@ -613,6 +576,7 @@
                             <!--  选项 tabitem 栏  -->
                             <ScrollViewer
                                 Grid.Row="0"
+                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
                                 HorizontalScrollBarVisibility="Auto"
                                 PreviewMouseWheel="Tab_PreviewMouseWheel"
@@ -620,7 +584,7 @@
                                 <ItemsControl AlternationCount="999" ItemsSource="{Binding TabItems}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" />
+                                            <StackPanel Background="{DynamicResource Window.Side.Background}" Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
@@ -630,7 +594,7 @@
                                                 MinWidth="150"
                                                 BorderThickness="0"
                                                 ContextMenuOpening="Border_ContextMenuOpening"
-                                                CornerRadius="5 5 0 0"
+                                                CornerRadius="10 10 0 0"
                                                 Cursor="Hand"
                                                 PreviewMouseLeftButtonDown="BeginDragTabItem"
                                                 PreviewMouseLeftButtonUp="SetTabSelected"
@@ -644,7 +608,7 @@
                                                                 <Setter Property="Background" Value="{DynamicResource TabItem.Hover.Background}" />
                                                             </Trigger>
                                                             <DataTrigger Binding="{Binding Selected}" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource ListBoxItem.Selected.Active.Background}" />
+                                                                <Setter Property="Background" Value="{DynamicResource Window.Background}" />
                                                             </DataTrigger>
 
                                                         </Style.Triggers>
@@ -746,7 +710,7 @@
                         </Grid>
 
                         <TabControl
-                            Grid.Row="2"
+                            Grid.Row="1"
                             Background="Transparent"
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
@@ -1011,7 +975,7 @@
 
                         <!--  拖入视频时显示  -->
                         <super:SimplePanel
-                            Grid.Row="2"
+                            Grid.Row="1"
                             Margin="5,0"
                             Panel.ZIndex="99"
                             DragEnter="OnDragFileOver"
@@ -1268,102 +1232,6 @@
                             MsgCount="{Binding RunningCount, Source={x:Static local:App.DownloadManager}, Mode=OneWay}"
                             Path="M942.545455 676.584727a34.909091 34.909091 0 0 1 34.90909 34.909091v139.636364c0 70.562909-57.437091 128-128 128h-674.90909a128.139636 128.139636 0 0 1-128-128v-139.636364a34.909091 34.909091 0 1 1 69.818181 0v139.636364c0 32.046545 26.088727 58.181818 58.181819 58.181818h674.90909c32.093091 0 58.181818-26.135273 58.181819-58.181818v-139.636364a34.909091 34.909091 0 0 1 34.909091-34.909091z m-455.214546 129.396364l-164.584727-164.561455a34.909091 34.909091 0 1 1 49.361454-49.361454l104.983273 104.96V81.454545a34.909091 34.909091 0 1 1 69.818182 0v615.563637l104.96-104.96a34.909091 34.909091 0 1 1 49.361454 49.361454l-164.538181 164.561455a34.792727 34.792727 0 0 1-24.669091 10.216727c-8.96 0-17.873455-3.397818-24.715637-10.216727z"
                             Style="{StaticResource NormalPathMsg}" />
-                    </Grid>
-                    <Grid>
-                        <super:PathMsg
-                            Name="msgPathMsg"
-                            MouseLeftButtonUp="ShowMessage"
-                            MsgCount="{Binding Message.Count}"
-                            Path="M864 64H160C107.072 64 64 107.072 64 160v608c0 52.928 43.072 96 96 96h61.92v123.232L443.84 864H864c52.928 0 96-43.072 96-96V160c0-52.928-43.072-96-96-96z m32 704a32 32 0 0 1-32 32H443.84c-10.912 0-21.664 2.816-31.072 8.064l-126.88 70.4V864c0-35.296-28.704-64-64-64H160c-17.632 0-32-14.336-32-32V160c0-17.632 14.368-32 32-32h704c17.664 0 32 14.368 32 32v608z M640 520H256a32 32 0 1 0 0 64h384a32 32 0 1 0 0-64zM768 296H256a32 32 0 0 0 0 64h512a32 32 0 1 0 0-64z"
-                            Style="{StaticResource NormalPathMsg}" />
-                        <Popup
-                            x:Name="msgPopup"
-                            Width="550"
-                            MaxHeight="600"
-                            AllowsTransparency="True"
-                            HorizontalOffset="-520"
-                            Placement="Top"
-                            PlacementTarget="{Binding ElementName=msgPathMsg}"
-                            PopupAnimation="Fade"
-                            StaysOpen="False"
-                            VerticalOffset="0">
-                            <Grid Margin="5">
-                                <Border
-                                    Margin="5"
-                                    Background="{DynamicResource Menu.Background}"
-                                    CornerRadius="0 0 5 5"
-                                    Effect="{StaticResource PopupDropShadowEffect}" />
-                                <Grid Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <Grid
-                                        Grid.Row="0"
-                                        Height="35"
-                                        Background="{DynamicResource Window.Title.Background}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock
-                                            Margin="10,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{DynamicResource RecentMsg}" />
-
-                                        <super:HoverPath
-                                            Grid.Column="1"
-                                            Width="23"
-                                            Height="23"
-                                            Margin="0"
-                                            Click="ClearMsg"
-                                            Style="{StaticResource DeleteHoverPath}" />
-
-                                        <super:HoverPath
-                                            Grid.Column="2"
-                                            Width="20"
-                                            Height="20"
-                                            super:CommonExt.HoverBackground="{StaticResource Window.ToolsBar.Background}"
-                                            Click="HideMsgPopup"
-                                            Style="{StaticResource DownHoverPath}" />
-
-
-                                    </Grid>
-
-                                    <ItemsControl
-                                        Grid.Row="1"
-                                        Margin="10"
-                                        AlternationCount="99999"
-                                        ItemsSource="{Binding Message}"
-                                        Style="{StaticResource ItemsControlVirtualizedStyle}">
-
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <super:MessageCard
-                                                    Close="MessageCard_Close"
-                                                    Foreground="{DynamicResource Window.Foreground}"
-                                                    Message="{Binding Text}"
-                                                    MessageType="{Binding Type}"
-                                                    Tag="{Binding Date}" />
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-
-
-                                    </ItemsControl>
-
-
-
-
-
-
-
-                                </Grid>
-                            </Grid>
-                        </Popup>
                     </Grid>
                 </StackPanel>
             </Grid>

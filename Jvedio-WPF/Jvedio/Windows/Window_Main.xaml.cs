@@ -312,15 +312,6 @@ namespace Jvedio
         {
             SetComboboxID();
 
-            // 搜索框事件
-            searchBox.TextChanged += RefreshCandidate;
-            searchTabControl.SelectionChanged += (s, e) => {
-                if (ConfigManager.Main.SearchSelectedIndex == searchTabControl.SelectedIndex)
-                    return;
-                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
-                RefreshCandidate(null, null);
-            };
-
             // 加载关联影片完成
             //vieModel.LoadAssocMetaDataCompleted += (s, e) => {
             //    //SetAssocSelected();
@@ -332,14 +323,6 @@ namespace Jvedio
             App.DownloadManager.onRunning += onDownloading;
             // 长时间暂停
             App.DownloadManager.onLongDelay += onLoadDelay;
-
-            // 此处参考：https://social.msdn.microsoft.com/Forums/vstudio/en-US/cefcfaa5-cb86-426f-b57a-b31a3ea5fcdd/how-to-add-eventsetter-by-code?forum=wpf
-            SearchBoxListItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
-            EventSetter eventSetter = new EventSetter() {
-                Event = ListBoxItem.MouseDoubleClickEvent,
-                Handler = new MouseButtonEventHandler(ListBoxItem_MouseDoubleClick)
-            };
-            SearchBoxListItemContainerStyle.Setters.Add(eventSetter);
 
 
             Main.OnRecvWinMsg += (str) => {
@@ -353,6 +336,8 @@ namespace Jvedio
                 }
 
             };
+
+            Video.onPlayVideo += () => vieModel.Statistic();
 
         }
 
@@ -389,33 +374,6 @@ namespace Jvedio
         public void SetComboboxID()
         {
             vieModel.CurrentDbId = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == ConfigManager.Main.CurrentDBId);
-        }
-
-        private async void RefreshCandidate(object sender, TextChangedEventArgs e)
-        {
-            List<string> list = await vieModel.GetSearchCandidate();
-            int idx = (int)ConfigManager.Main.SearchSelectedIndex;
-            TabItem tabItem = searchTabControl.Items[idx] as TabItem;
-            AddOrRefreshItem(tabItem, list);
-        }
-
-        private void AddOrRefreshItem(TabItem tabItem, List<string> list)
-        {
-            ListBox listBox;
-            if (tabItem.Content == null) {
-                listBox = new ListBox();
-                tabItem.Content = listBox;
-            } else {
-                listBox = tabItem.Content as ListBox;
-            }
-
-            listBox.Margin = new Thickness(0, 0, 0, 5);
-            listBox.Style = (System.Windows.Style)App.Current.Resources["NormalListBox"];
-            listBox.ItemContainerStyle = SearchBoxListItemContainerStyle;
-            listBox.Background = Brushes.Transparent;
-            listBox.ItemsSource = list;
-            if (vieModel.TabSelectedIndex == 0 && !string.IsNullOrEmpty(vieModel.SearchText))
-                vieModel.Searching = true;
         }
 
 
@@ -514,13 +472,6 @@ namespace Jvedio
         /// </summary>
         private void BindingEvent()
         {
-            // 绑定消息
-            MessageRecorder.MsgShown += (s, ev) => {
-                MessageEventArg eventArg = ev as MessageEventArg;
-                if (eventArg != null && vieModel.Message != null)
-                    vieModel.Message.Add(eventArg.Message);
-            };
-
             // 初始化任务栏的进度条
             if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
                 TaskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
@@ -771,45 +722,6 @@ namespace Jvedio
                 }
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
-            }
-        }
-
-        // todo 优化搜索栏
-        private void SearchBar_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter) {
-                // doSearch(sender, null);
-            } else if (e.Key == Key.Down) {
-                // int count = vieModel.CurrentSearchCandidate.Count;
-
-                // SearchSelectIdex += 1;
-                // if (SearchSelectIdex >= count) SearchSelectIdex = 0;
-                // SetSearchSelect();
-            } else if (e.Key == Key.Up) {
-                // int count = vieModel.CurrentSearchCandidate.Count;
-                // SearchSelectIdex -= 1;
-                // if (SearchSelectIdex < 0) SearchSelectIdex = count - 1;
-                // SetSearchSelect();
-            } else if (e.Key == Key.Escape) {
-                vieModel.Searching = false;
-            } else if (e.Key == Key.Delete) {
-                // searchBox.clearte();
-                searchBox.ClearText();
-            } else if (e.Key == Key.Tab) {
-                // int maxIndex = searchTabControl.Items.Count - 1;
-                // int idx = searchTabControl.SelectedIndex;
-                // if (idx + 1 > maxIndex)
-                // {
-                //    idx = 0;
-                // }
-                // else
-                // {
-                //    idx++;
-                // }
-                // searchTabControl.SelectedIndex = idx;
-                // e.Handled = true;
-                // searchBox.Focus();
-                // searchTabControl.Focus();
             }
         }
 
@@ -1139,71 +1051,6 @@ namespace Jvedio
         }
 
 
-        private async void doSearch(object sender, RoutedEventArgs e)
-        {
-            SearchMode mode = (SearchMode)vieModel.TabSelectedIndex;
-
-            if (vieModel.TabSelectedIndex == 0) {
-                vieModel.Searching = true;
-                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
-                //await vieModel.Query((SearchField)searchTabControl.SelectedIndex);
-                SaveSearchHistory(mode,
-                (SearchField)searchTabControl.SelectedIndex);
-            } else if (vieModel.TabSelectedIndex == 1) {
-                // 搜寻演员
-                //vieModel.SearchingActor = true;
-                //vieModel.SelectActor();
-                //SaveSearchHistory(mode, 0);
-            } else if (vieModel.TabSelectedIndex == 2) {
-                // 搜寻标签
-                vieModel.GetLabelList();
-                SaveSearchHistory(mode, 0);
-            } else if (vieModel.TabSelectedIndex == 3) {
-                // 搜寻分类
-                vieModel.SetClassify(true);
-                SaveSearchHistory(mode, (SearchField)vieModel.ClassifySelectedIndex);
-            }
-
-            vieModel.Searching = false;
-        }
-
-        private void SaveSearchHistory(SearchMode mode, SearchField field)
-        {
-            string searchValue = vieModel.SearchText.ToProperSql();
-            if (string.IsNullOrEmpty(searchValue))
-                return;
-            SearchHistory history = new SearchHistory() {
-                SearchMode = mode,
-                SearchValue = searchValue,
-                CreateDate = DateHelper.Now(),
-                SearchField = field,
-                CreateYear = DateTime.Now.Year,
-                CreateMonth = DateTime.Now.Month,
-                CreateDay = DateTime.Now.Day,
-            };
-            searchHistoryMapper.Insert(history);
-        }
-
-        private void searchBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Tab) {
-                (searchTabControl.Items[(int)ConfigManager.Main.SearchSelectedIndex] as TabItem).Focus();
-            }
-        }
-
-        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            vieModel.SearchText = (sender as ListBoxItem).Content.ToString();
-            doSearch(null, null);
-        }
-
-
-        private void PathCheckButton_Click(object sender, RoutedEventArgs e)
-        {
-            // todo tab 获得当前所有标记状态
-            //vieModel.LoadData();
-        }
-
         private void SideBorder_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (SideGridColumn.ActualWidth <= 100 && !AnimatingSideGrid) {
@@ -1216,10 +1063,6 @@ namespace Jvedio
             }
         }
 
-        private void ShowMessage(object sender, MouseButtonEventArgs e)
-        {
-            msgPopup.IsOpen = true;
-        }
 
         public void ShowSameActor(long actorID)
         {
@@ -1460,13 +1303,6 @@ namespace Jvedio
             about.ShowDialog();
         }
 
-        private void MessageCard_Close(object sender, EventArgs e)
-        {
-            MessageCard messageCard = sender as MessageCard;
-            string Date = messageCard.Tag.ToString();
-            List<Message> messages = vieModel.Message.Where(arg => arg.Date.Equals(Date)).ToList();
-            vieModel.Message.RemoveMany(messages);
-        }
 
         private void OpenScanPath(object sender, RoutedEventArgs e)
         {
@@ -1634,30 +1470,6 @@ namespace Jvedio
         {
 
         }
-
-        private void ClearScanTasks(object sender, RoutedEventArgs e)
-        {
-            //for (int i = vieModel.ScanTasks.Count - 1; i >= 0; i--) {
-            //    Core.Scan.ScanTask scanTask = vieModel.ScanTasks[i];
-            //    if (scanTask.Status == System.Threading.Tasks.TaskStatus.Canceled ||
-            //        scanTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
-            //        vieModel.ScanTasks.RemoveAt(i);
-            //    }
-            //}
-
-            //vieModel.ScanStatus = "None";
-        }
-
-        private void ClearMsg(object sender, RoutedEventArgs e)
-        {
-            vieModel.Message.Clear();
-        }
-
-        private void HideMsgPopup(object sender, RoutedEventArgs e)
-        {
-            msgPopup.IsOpen = false;
-        }
-
 
         private void ClearCache(object sender, RoutedEventArgs e)
         {

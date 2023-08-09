@@ -13,6 +13,7 @@ using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
+using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.Tasks;
 using SuperUtils.IO;
@@ -73,6 +74,8 @@ namespace Jvedio.Core.UserControls
         #endregion
 
         #region "属性"
+
+        private static Style SearchBoxListItemContainerStyle { get; set; }
         private VieModel_VideoList vieModel { get; set; }
 
         private DispatcherTimer ResizingTimer { get; set; }
@@ -1315,7 +1318,60 @@ namespace Jvedio.Core.UserControls
                 vieModel.LoadData();
             };
 
+
+            // 搜索
+            searchBox.TextChanged += RefreshCandidate;
+            searchTabControl.SelectionChanged += (s, e) => {
+                if (ConfigManager.Main.SearchSelectedIndex == searchTabControl.SelectedIndex)
+                    return;
+                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+                RefreshCandidate(null, null);
+            };
+
+            // 搜索的 style
+            // 参考：https://social.msdn.microsoft.com/Forums/vstudio/en-US/cefcfaa5-cb86-426f-b57a-b31a3ea5fcdd/how-to-add-eventsetter-by-code?forum=wpf
+            SearchBoxListItemContainerStyle = (System.Windows.Style)this.Resources["SearchBoxListItemContainerStyle"];
+            EventSetter eventSetter = new EventSetter() {
+                Event = ListBoxItem.MouseDoubleClickEvent,
+                Handler = new MouseButtonEventHandler(ListBoxItem_MouseDoubleClick)
+            };
+            SearchBoxListItemContainerStyle.Setters.Add(eventSetter);
+
         }
+
+        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            vieModel.SearchText = (sender as ListBoxItem).Content.ToString();
+            doSearch(null, null);
+        }
+
+        private async void RefreshCandidate(object sender, TextChangedEventArgs e)
+        {
+            List<string> list = await vieModel.GetSearchCandidate();
+            int idx = (int)ConfigManager.Main.SearchSelectedIndex;
+            TabItem tabItem = searchTabControl.Items[idx] as TabItem;
+            AddOrRefreshItem(tabItem, list);
+        }
+
+        private void AddOrRefreshItem(TabItem tabItem, List<string> list)
+        {
+            ListBox listBox;
+            if (tabItem.Content == null) {
+                listBox = new ListBox();
+                tabItem.Content = listBox;
+            } else {
+                listBox = tabItem.Content as ListBox;
+            }
+
+            listBox.Margin = new Thickness(0, 0, 0, 5);
+            listBox.Style = (System.Windows.Style)App.Current.Resources["NormalListBox"];
+            listBox.ItemContainerStyle = SearchBoxListItemContainerStyle;
+            listBox.Background = Brushes.Transparent;
+            listBox.ItemsSource = list;
+            if (vieModel.TabSelectedIndex == 0 && !string.IsNullOrEmpty(vieModel.SearchText))
+                vieModel.Searching = true;
+        }
+
 
         private void LoadData(object sender, RoutedEventArgs e)
         {
@@ -2021,6 +2077,97 @@ namespace Jvedio.Core.UserControls
         public void SetAsso(bool asso)
         {
             vieModel.ShowAsso = asso;
+        }
+
+
+        private async void doSearch(object sender, RoutedEventArgs e)
+        {
+            SearchMode mode = (SearchMode)vieModel.TabSelectedIndex;
+
+            if (vieModel.TabSelectedIndex == 0) {
+                vieModel.Searching = true;
+                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+                vieModel.Query((SearchField)searchTabControl.SelectedIndex);
+                SaveSearchHistory(mode, (SearchField)searchTabControl.SelectedIndex);
+            } else if (vieModel.TabSelectedIndex == 1) {
+                // 搜寻演员
+                //vieModel.SearchingActor = true;
+                //vieModel.SelectActor();
+                //SaveSearchHistory(mode, 0);
+            }
+            //else if (vieModel.TabSelectedIndex == 2) {
+            //    // 搜寻标签
+            //    vieModel.GetLabelList();
+            //    SaveSearchHistory(mode, 0);
+            //} else if (vieModel.TabSelectedIndex == 3) {
+            //    // 搜寻分类
+            //    vieModel.SetClassify(true);
+            //    SaveSearchHistory(mode, (SearchField)vieModel.ClassifySelectedIndex);
+            //}
+
+            vieModel.Searching = false;
+        }
+
+        private void SaveSearchHistory(SearchMode mode, SearchField field)
+        {
+            string searchValue = vieModel.SearchText.ToProperSql();
+            if (string.IsNullOrEmpty(searchValue))
+                return;
+            SearchHistory history = new SearchHistory() {
+                SearchMode = mode,
+                SearchValue = searchValue,
+                CreateDate = DateHelper.Now(),
+                SearchField = field,
+                CreateYear = DateTime.Now.Year,
+                CreateMonth = DateTime.Now.Month,
+                CreateDay = DateTime.Now.Day,
+            };
+            searchHistoryMapper.Insert(history);
+        }
+
+        private void searchBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab) {
+                (searchTabControl.Items[(int)ConfigManager.Main.SearchSelectedIndex] as TabItem).Focus();
+            }
+        }
+
+        private void SearchBar_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) {
+                doSearch(sender, null);
+            } else if (e.Key == Key.Down) {
+                // int count = vieModel.CurrentSearchCandidate.Count;
+
+                // SearchSelectIdex += 1;
+                // if (SearchSelectIdex >= count) SearchSelectIdex = 0;
+                // SetSearchSelect();
+            } else if (e.Key == Key.Up) {
+                // int count = vieModel.CurrentSearchCandidate.Count;
+                // SearchSelectIdex -= 1;
+                // if (SearchSelectIdex < 0) SearchSelectIdex = count - 1;
+                // SetSearchSelect();
+            } else if (e.Key == Key.Escape) {
+                vieModel.Searching = false;
+            } else if (e.Key == Key.Delete) {
+                // searchBox.clearte();
+                searchBox.ClearText();
+            } else if (e.Key == Key.Tab) {
+                // int maxIndex = searchTabControl.Items.Count - 1;
+                // int idx = searchTabControl.SelectedIndex;
+                // if (idx + 1 > maxIndex)
+                // {
+                //    idx = 0;
+                // }
+                // else
+                // {
+                //    idx++;
+                // }
+                // searchTabControl.SelectedIndex = idx;
+                // e.Handled = true;
+                // searchBox.Focus();
+                // searchTabControl.Focus();
+            }
         }
     }
 }

@@ -152,6 +152,16 @@ namespace Jvedio.ViewModel
                     ExtraWrapper.Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2));
                     TabItemManager.Add(TabType.GeoRecentPlay, LangManager.GetValueByKey("RecentPlay"), ExtraWrapper);
                     break;
+                case "Label":
+                    TabItemManager.Add(TabType.GeoLabel, LangManager.GetValueByKey("Label"), LabelType.LabelName);
+                    break;
+                case "Genre":
+                case "Studio":
+                case "Director":
+                case "Series":
+                    if (Enum.TryParse(param, out LabelType type))
+                        TabItemManager.Add(TabType.GeoLabel, LangManager.GetValueByKey(param), type);
+                    break;
                 default:
                     break;
             }
@@ -349,16 +359,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private ObservableCollection<Message> _Message = new ObservableCollection<Message>();
-
-        public ObservableCollection<Message> Message {
-            get { return _Message; }
-
-            set {
-                _Message = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private ObservableCollection<AppDatabase> _DataBases = new ObservableCollection<AppDatabase>();
 
@@ -895,7 +895,7 @@ namespace Jvedio.ViewModel
         /// <summary>
         /// 获得标签
         /// </summary>
-        public async void GetLabelList()
+        public List<string> GetLabelList()
         {
             string like_sql = string.Empty;
             if (!string.IsNullOrEmpty(SearchText))
@@ -920,10 +920,8 @@ namespace Jvedio.ViewModel
                 }
             }
 
-            LabelList = new ObservableCollection<string>();
-            for (int i = 0; i < labels.Count; i++) {
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), LabelList, labels[i]);
-            }
+            return labels;
+
         }
 
 
@@ -984,40 +982,52 @@ namespace Jvedio.ViewModel
                 }
 
                 SetClassifyLoadingStatus(false);
-            } else if (ClassifySelectedIndex == 1) {
-                if (SeriesList != null && SeriesList.Count > 0 && !refresh)
-                    return;
-                list = GetListByField("Series");
-                SetClassifyLoadingStatus(true);
-                SeriesList = new ObservableCollection<string>();
-                for (int i = 0; i < list.Count; i++) {
-                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), SeriesList, list[i]);
-                }
-
-                SetClassifyLoadingStatus(false);
-            } else if (ClassifySelectedIndex == 2) {
-                if (StudioList != null && StudioList.Count > 0 && !refresh)
-                    return;
-                list = GetListByField("Studio");
-                SetClassifyLoadingStatus(true);
-                StudioList = new ObservableCollection<string>();
-                for (int i = 0; i < list.Count; i++) {
-                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), StudioList, list[i]);
-                }
-
-                SetClassifyLoadingStatus(false);
-            } else if (ClassifySelectedIndex == 3) {
-                if (DirectorList != null && DirectorList.Count > 0 && !refresh)
-                    return;
-                list = GetListByField("Director");
-                SetClassifyLoadingStatus(true);
-                DirectorList = new ObservableCollection<string>();
-                for (int i = 0; i < list.Count; i++) {
-                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new AsyncLoadItemDelegate<string>(AsyncLoadItem), DirectorList, list[i]);
-                }
-
-                SetClassifyLoadingStatus(false);
             }
+        }
+
+        public List<string> GetGenreList()
+        {
+            Dictionary<string, long> genreDict = new Dictionary<string, long>();
+            string sql = $"SELECT Genre from metadata " +
+                $"where metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} AND Genre !=''";
+
+            List<Dictionary<string, object>> lists = metaDataMapper.Select(sql);
+            if (lists != null) {
+                string searchText = string.IsNullOrEmpty(SearchText) ? string.Empty : SearchText;
+                bool search = !string.IsNullOrEmpty(searchText);
+
+                foreach (Dictionary<string, object> item in lists) {
+                    if (!item.ContainsKey("Genre"))
+                        continue;
+                    string genre = item["Genre"].ToString();
+                    if (string.IsNullOrEmpty(genre))
+                        continue;
+                    List<string> genres = genre.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    foreach (string g in genres) {
+                        if (search && g.IndexOf(searchText) < 0)
+                            continue;
+                        if (genreDict.ContainsKey(g))
+                            genreDict[g] = genreDict[g] + 1;
+                        else
+                            genreDict.Add(g, 1);
+                    }
+                }
+            }
+
+            Dictionary<string, long> ordered = null;
+            try {
+                ordered = genreDict.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+            } catch (Exception ex) {
+                Logger.Error(ex);
+            }
+            List<string> result = new List<string>();
+            if (ordered != null) {
+                foreach (var key in ordered.Keys) {
+                    string v = $"{key}({ordered[key]})";
+                    result.Add(v);
+                }
+            }
+            return result;
         }
 
         public List<string> GetListByField(string field)

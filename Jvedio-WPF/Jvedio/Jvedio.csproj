@@ -324,6 +324,9 @@
     <Compile Include="Core\Tasks\ScanManager.cs" />
     <Compile Include="Core\Server\ServerManager.cs" />
     <Compile Include="Core\Server\ServerStatus.cs" />
+    <Compile Include="Core\UserControls\LabelView.xaml.cs">
+      <DependentUpon>LabelView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\UserControls\Tasks\TaskList.xaml.cs">
       <DependentUpon>TaskList.xaml</DependentUpon>
     </Compile>
@@ -514,6 +517,10 @@
     <Page Include="Core\Lang\zh-CN.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Core\UserControls\LabelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Core\UserControls\Tasks\TaskList.xaml">
       <SubType>Designer</SubType>

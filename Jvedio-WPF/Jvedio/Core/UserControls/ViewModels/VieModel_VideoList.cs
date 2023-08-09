@@ -24,6 +24,9 @@ namespace Jvedio.Core.UserControls.ViewModels
 {
     class VieModel_VideoList : ViewModelBase
     {
+        private const int SEARCH_CANDIDATE_MAX_COUNT = 10;
+        private const string LabelJoinSql = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
+
         #region "事件"
 
         public Action<bool> onScroll;
@@ -124,6 +127,18 @@ namespace Jvedio.Core.UserControls.ViewModels
         }
 
 
+        private int _TabSelectedIndex;
+
+        public int TabSelectedIndex {
+            get { return _TabSelectedIndex; }
+
+            set {
+                _TabSelectedIndex = value;
+                RaisePropertyChanged();
+
+                // BeginSearch();
+            }
+        }
         private string _SearchText = string.Empty;
 
         public string SearchText {
@@ -132,8 +147,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             set {
                 _SearchText = value;
                 RaisePropertyChanged();
-
-                // BeginSearch();
+                //BeginSearch();
             }
         }
 
@@ -611,12 +625,15 @@ namespace Jvedio.Core.UserControls.ViewModels
 
             ToLimit(wrapper);
             wrapper.Select(SelectFields);
-            if (ExtraWrapper != null)
-                wrapper.Join(ExtraWrapper);
-
-
 
             string sql = VideoMapper.BASE_SQL;
+
+
+            if (ExtraWrapper != null) {
+                wrapper.Join(ExtraWrapper);
+                if (!string.IsNullOrEmpty(ExtraWrapper.ExtraSql))
+                    sql += ExtraWrapper.ExtraSql; // 一些 join 语句
+            }
 
             if (FilterWrapper != null) {
                 wrapper.Join(FilterWrapper);
@@ -728,6 +745,84 @@ namespace Jvedio.Core.UserControls.ViewModels
                 RefreshVideoRenderToken();
             Rendering = false;
             PageChangedCompleted?.Invoke(this, null);
+        }
+
+        // 搜索
+        public async Task<List<string>> GetSearchCandidate()
+        {
+            return await Task.Run(() => {
+                SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
+                string field = searchType.ToString();
+
+                List<string> result = new List<string>();
+                if (string.IsNullOrEmpty(SearchText))
+                    return result;
+                SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+                SetSortOrder(wrapper); // 按照当前排序
+                wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0);
+                SelectWrapper<Video> selectWrapper = GetWrapper(searchType);
+                if (selectWrapper != null)
+                    wrapper.Join(selectWrapper);
+
+                string condition_sql = wrapper.ToWhere(false) + wrapper.ToOrder()
+                            + $" LIMIT 0,{SEARCH_CANDIDATE_MAX_COUNT}";
+
+                string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
+                            "JOIN metadata " +
+                            "on metadata.DataID=metadata_video.DataID ";
+                if (searchType == SearchField.ActorName)
+                    sql += ActorMapper.actor_join_sql;
+                else if (searchType == SearchField.LabelName)
+                    sql += LabelJoinSql;
+
+                if (searchType == SearchField.Genre) {
+                    // 类别特殊处理
+                    string genre_sql = $"SELECT {field} FROM metadata_video " +
+                            "JOIN metadata " +
+                            "on metadata.DataID=metadata_video.DataID ";
+                    List<Dictionary<string, object>> list = metaDataMapper.Select(genre_sql);
+                    if (list != null && list.Count > 0)
+                        SetGenreCandidate(field, list, ref result);
+                } else {
+                    List<Dictionary<string, object>> list = metaDataMapper.Select(sql + condition_sql);
+                    if (list != null && list.Count > 0) {
+                        foreach (Dictionary<string, object> dict in list) {
+                            if (!dict.ContainsKey(field))
+                                continue;
+                            string value = dict[field].ToString();
+                            if (string.IsNullOrEmpty(value))
+                                continue;
+                            result.Add(value);
+                        }
+                    }
+                }
+
+                return result;
+            });
+        }
+
+        private void SetGenreCandidate(string field, List<Dictionary<string, object>> list, ref List<string> result)
+        {
+            string search = SearchText.ToProperSql().ToLower();
+            HashSet<string> set = new HashSet<string>();
+            foreach (Dictionary<string, object> dict in list) {
+                if (!dict.ContainsKey(field))
+                    continue;
+                string value = dict[field].ToString();
+                if (string.IsNullOrEmpty(value))
+                    continue;
+                string[] arr = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries);
+                if (arr != null && arr.Length > 0) {
+                    foreach (var item in arr) {
+                        if (string.IsNullOrEmpty(item))
+                            continue;
+                        set.Add(item);
+                    }
+                }
+            }
+
+            result = set.Where(arg => arg.ToLower().IndexOf(search) >= 0).ToList()
+                .Take(SEARCH_CANDIDATE_MAX_COUNT).ToList();
         }
 
     }
