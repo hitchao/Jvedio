@@ -751,20 +751,9 @@ namespace Jvedio
             //pagination.CurrentPageChange += Pagination_CurrentPageChange;
         }
 
-        public void ShowSameString(string str, string clickFilterType = "")
+        public void ShowSameString(string str, LabelType labelType)
         {
-            if (vieModel.ClassifySelectedIndex >= ClickFilterDict.Count || string.IsNullOrEmpty(str))
-                return;
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            if (string.IsNullOrEmpty(clickFilterType))
-                clickFilterType = ClickFilterDict[vieModel.ClassifySelectedIndex];
-            wrapper.Like(clickFilterType, str);
-            //vieModel.ExtraWrapper = wrapper;
-            vieModel.ClickFilterType = clickFilterType;
-
-            // todo tab
-            //vieModel.CurrentPage = 1;
-            //vieModel.LoadData();
+            vieModel.onLabelClick(str, labelType);
         }
 
         private void ShowSameString(object sender, MouseButtonEventArgs e)
@@ -775,7 +764,7 @@ namespace Jvedio
             if (string.IsNullOrEmpty(text) || text.IndexOf("(") <= 0)
                 return;
             string labelName = text.Substring(0, text.IndexOf("("));
-            ShowSameString(labelName);
+            //ShowSameString(labelName);
             vieModel.StatusText = labelName;
         }
 

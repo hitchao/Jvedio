@@ -985,6 +985,41 @@ namespace Jvedio.ViewModel
             }
         }
 
+
+        public void onLabelClick(string label, LabelType type)
+        {
+
+            string typeName = type.ToString();
+
+            SelectWrapper<Video> ExtraWrapper = new SelectWrapper<Video>();
+
+
+            string tabName = "";
+
+            switch (type) {
+
+                case LabelType.LabelName:
+                    tabName = LangManager.GetValueByKey("Label");
+                    ExtraWrapper.Eq(typeName, label);
+                    ExtraWrapper.ExtraSql = LabelView.SQL_JOIN;
+                    break;
+
+                case LabelType.Genre:
+                case LabelType.Series:
+                case LabelType.Studio:
+                case LabelType.Director:
+                    tabName = LangManager.GetValueByKey(typeName);
+                    ExtraWrapper.Like(typeName, label);
+                    break;
+                default:
+                    break;
+            }
+
+            TabItemManager.Add(TabType.GeoVideo, $"{tabName}: {label}", ExtraWrapper);
+        }
+
+
+
         public List<string> GetGenreList()
         {
             Dictionary<string, long> genreDict = new Dictionary<string, long>();

@@ -3,6 +3,7 @@ using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Media;
 using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
+using Jvedio.Core.UserControls;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.ViewModel;
@@ -342,7 +343,7 @@ namespace Jvedio
         // 显示类别
         public void ShowSameGenre(object sender, MouseButtonEventArgs e)
         {
-            ShowSameString(sender, "Genre");
+            ShowSameString(sender, LabelType.Genre);
         }
 
         // 显示演员
@@ -371,28 +372,28 @@ namespace Jvedio
         // 显示导演
         public void ShowSameDirector(object sender, MouseButtonEventArgs e)
         {
-            ShowSameString(sender, "Director");
+            ShowSameString(sender, LabelType.Director);
         }
 
         public void ShowSameSeries(object sender, MouseButtonEventArgs e)
         {
-            ShowSameString(sender, "Series");
+            ShowSameString(sender, LabelType.Series);
         }
 
         // 显示发行商
         public void ShowSameStudio(object sender, MouseButtonEventArgs e)
         {
-            ShowSameString(sender, "Studio");
+            ShowSameString(sender, LabelType.Studio);
         }
 
         // 显示系列
-        public void ShowSameString(object sender, string clickFilterType)
+        public void ShowSameString(object sender, LabelType type)
         {
             Border border = sender as Border;
             string text = ((TextBlock)border.Child).Text;
             if (string.IsNullOrEmpty(text))
                 return;
-            windowMain.ShowSameString(text, clickFilterType);
+            windowMain.ShowSameString(text, type);
             this.Close();
         }
 

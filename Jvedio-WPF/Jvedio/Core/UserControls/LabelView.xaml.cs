@@ -111,8 +111,8 @@ namespace Jvedio.Core.UserControls
 
         private void Label_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is TextBlock textBlock)
-                onLabelClick?.Invoke(textBlock.Text, LabelType);
+            if (sender is TextBlock textBlock && textBlock.Text is string label && label.IndexOf("(") > 0)
+                onLabelClick?.Invoke(label.Substring(0, label.LastIndexOf("(")), LabelType);
         }
 
         private void doSearch(object sender, TextChangedEventArgs e)
