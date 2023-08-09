@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         <super:SearchBox
             Name="searchBox"
-            Margin="0"
+            Margin="0,5,0,0"
             HideClearButtonOnMouseLeave="False"
             Style="{StaticResource SearchBoxStyle}"
             TextChanged="doSearch" />

@@ -965,7 +965,6 @@ namespace Jvedio
             VideoList videoList = vieModel.TabItemManager.GetVideoListByType(TabType.GeoVideo);
             if (videoList != null)
                 videoList.Refresh();
-            vieModel.SetClassify(true);
 
             // vieModel.InitLettersNavigation();
             // vieModel.GetFilterInfo();
@@ -1028,11 +1027,6 @@ namespace Jvedio
             // }
         }
 
-        private void ClassifyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            vieModel.SetClassify();
-
-        }
 
         private void HideBeginScanGrid(object sender, RoutedEventArgs e)
         {
