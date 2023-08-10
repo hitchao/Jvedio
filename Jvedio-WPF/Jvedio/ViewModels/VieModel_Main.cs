@@ -123,6 +123,11 @@ namespace Jvedio.ViewModel
             AddNewMovie = new RelayCommand<object>(t => AddSingleMovie());
         }
 
+        public void LoadAll()
+        {
+            HandleSideButtonCmd("All");
+        }
+
         public void HandleSideButtonCmd(object o)
         {
             if (o == null || string.IsNullOrEmpty(o.ToString()))
@@ -413,7 +418,7 @@ namespace Jvedio.ViewModel
 
         #region "Variable"
 
- 
+
 
         private string _ScanStatus;
 
@@ -666,9 +671,8 @@ namespace Jvedio.ViewModel
             AddNewDataTag(videoList);
             Statistic();
 
-            // todo tab
-            //if (ConfigManager.ScanConfig.LoadDataAfterScan)
-            //    LoadData();
+            if (ConfigManager.ScanConfig.LoadDataAfterScan)
+                LoadAll();
         }
 
         /// <summary>
@@ -973,8 +977,6 @@ namespace Jvedio.ViewModel
                 return;
             int sortIndex = 0;
             bool SortDescending = false;
-            // todo tab
-            //int.TryParse(Properties.Settings.Default.SortType, out int sortIndex);
             if (sortIndex < 0 || sortIndex >= VieModel_VideoList.SortDict.Count)
                 sortIndex = 0;
             string sortField = VieModel_VideoList.SortDict[sortIndex];

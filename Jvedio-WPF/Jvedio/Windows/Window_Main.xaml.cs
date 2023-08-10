@@ -194,7 +194,7 @@ namespace Jvedio
 
         public void LoadAll()
         {
-            vieModel.HandleSideButtonCmd("All"); // 加载数据
+            vieModel.LoadAll(); // 加载数据
         }
 
         public void LoadNotifyIcon()
@@ -212,7 +212,18 @@ namespace Jvedio
 
         public void SetAllSelect()
         {
-            // todo tab
+            List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
+            List<ActorList> actorLists = vieModel.TabItemManager.GetAllActorList();
+            if (videoLists != null) {
+                foreach (VideoList video in videoLists) {
+                    video.SetSelected();
+                }
+            }
+            if (actorLists != null) {
+                foreach (ActorList data in actorLists) {
+                    data.SetSelected();
+                }
+            }
         }
 
 
@@ -339,7 +350,11 @@ namespace Jvedio
 
             Video.onPlayVideo += () => vieModel.Statistic();
 
+            VideoList.onDeleteID += (list) => DeleteID(list, false);
+
         }
+
+
 
         private void onLoadDelay(object sender, EventArgs e)
         {
@@ -500,8 +515,27 @@ namespace Jvedio
 
         private void onTagStampRefresh(long id)
         {
-            // todo tab
+            List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
+            if (videoLists != null) {
+                foreach (VideoList video in videoLists) {
+                    video.RefreshTagStamps(id);
+                }
+            }
         }
+
+
+        public void DeleteID(List<Video> list, bool fromDetail)
+        {
+            List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
+            if (videoLists != null) {
+                foreach (VideoList video in videoLists) {
+                    video.DeleteID(list.ToList(), fromDetail);
+                }
+            }
+        }
+
+
+
         private void onTagStampDelete()
         {
             // 更新主窗体
@@ -871,7 +905,6 @@ namespace Jvedio
                 vieModel.ShowFirstRun = Visibility.Visible;
                 ConfigManager.Main.FirstRun = false;
             }
-            this.ButtonSideTop.Visibility = Visibility.Visible;
         }
         // todo
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)

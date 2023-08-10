@@ -206,6 +206,8 @@ namespace Jvedio.ViewModel
             metaDataMapper.IncreaseFieldById("ViewCount", dataID); // 访问次数+1
             Logger.Info($"view count ++");
             Video video = videoMapper.SelectVideoByID(dataID);
+            if (video == null)
+                return;
             Video.SetTagStamps(ref video); // 设置标签戳
             Video.HandleEmpty(ref video);
 

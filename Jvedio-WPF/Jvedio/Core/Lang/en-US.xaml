@@ -19,7 +19,7 @@
     <sys:String x:Key="LoadDataAfterScan">Load the new video immediately after the scan is completed</sys:String>
     <sys:String x:Key="DataExistsIndexAfterScan">There are indexes for establishing resources for new films</sys:String>
     <sys:String x:Key="ImageExistsIndexAfterScan">There is an index on the establishment of a picture of the new film</sys:String>
-
+    <sys:String x:Key="AppTitle">Jvedio-Super Video Manager</sys:String>
 
     <sys:String x:Key="PleaseSetImageIndex">Please establish picture indexes in [Options-Library]!</sys:String>
     <sys:String x:Key="PleaseSetExistsIndex">Please establish a playback index in [Options-Library]!</sys:String>

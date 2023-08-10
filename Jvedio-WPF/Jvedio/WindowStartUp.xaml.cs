@@ -45,7 +45,7 @@ namespace Jvedio
         private CancellationToken ct { get; set; }
         private VieModel_StartUp vieModel { get; set; }
 
-        private ScanTask scanTask { get; set; }
+        private ScanTask ScanTask { get; set; }
 
         private bool EnteringDataBase { get; set; }
 
@@ -581,14 +581,14 @@ namespace Jvedio
                         //this.TitleHeight = 0;
                         List<string> toScan = JsonUtils.TryDeserializeObject<List<string>>(database.ScanPath);
                         try {
-                            scanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
-                            scanTask.onScanning += (s, ev) => {
+                            ScanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
+                            ScanTask.onScanning += (s, ev) => {
                                 Dispatcher.Invoke(() => {
                                     vieModel.LoadingText = (ev as MessageCallBackEventArgs).Message;
                                 });
                             };
-                            scanTask.Start();
-                            while (scanTask.Running) {
+                            ScanTask.Start();
+                            while (ScanTask.Running) {
                                 await Task.Delay(100);
                                 if (CancelScanTask)
                                     break;
@@ -620,12 +620,9 @@ namespace Jvedio
                 }
 
                 main.Show();
-                if (scanTask != null) {
-                    // todo tab
-                    //if (main.vieModel.ScanTasks == null)
-                    //    main.vieModel.ScanTasks = new System.Collections.ObjectModel.ObservableCollection<ScanTask>();
-                    //main.vieModel.ScanTasks.Add(scanTask);
-                }
+                if (ScanTask != null)
+                    App.ScanManager.CurrentTasks.Add(ScanTask);
+
             } else {
                 //Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas", App.Current.Windows) as Window_MetaDatas;
                 //if (metaData == null)
@@ -736,7 +733,7 @@ namespace Jvedio
 
         private void CancelScan(object sender, RoutedEventArgs e)
         {
-            scanTask?.Cancel();
+            ScanTask?.Cancel();
             CancelScanTask = true;
             tabControl.SelectedIndex = 1;
             //this.TitleHeight = DEFAULT_TITLE_HEIGHT;

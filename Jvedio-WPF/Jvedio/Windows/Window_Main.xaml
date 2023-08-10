@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:Jvedio"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="Jvedio-超级视频管理"
+    Title="{DynamicResource AppTitle}"
     Width="1200"
     Height="700"
     MinWidth="800"
@@ -288,6 +288,7 @@
                             Name="SideGridColumn"
                             Width="{Binding SideGridWidth, FallbackValue=200, Mode=OneWay}"
                             MaxWidth="500" />
+                        <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <!--  侧边栏  -->
@@ -484,14 +485,15 @@
 
                     <!--  左右调节  -->
                     <GridSplitter
-                        Grid.Column="0"
-                        Width="5"
+                        Grid.Column="1"
+                        Width="4"
+                        HorizontalAlignment="Left"
                         Panel.ZIndex="10"
                         Style="{StaticResource HoverSpliter}" />
 
 
                     <Grid
-                        Grid.Column="1"
+                        Grid.Column="2"
                         AllowDrop="True"
                         DragLeave="OnDragFileLeave"
                         DragOver="OnDragFileOver"

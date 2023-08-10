@@ -605,8 +605,7 @@ namespace Jvedio
 
         public void DeleteID(object sender, RoutedEventArgs e)
         {
-            // todo tab
-            //windowMain?.DeleteIDs(windowMain?.vieModel.CurrentVideoList, new List<Video> { vieModel.CurrentVideo }, true);
+            windowMain?.DeleteID(new List<Video> { vieModel.CurrentVideo }, true);
             int idx = DataIDs.IndexOf(vieModel.CurrentVideo.DataID);
             DataIDs.RemoveAll(arg => arg == vieModel.CurrentVideo.DataID);
             if (idx >= DataIDs.Count)

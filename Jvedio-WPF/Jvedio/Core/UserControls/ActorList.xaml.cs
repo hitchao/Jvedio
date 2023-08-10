@@ -280,13 +280,13 @@ namespace Jvedio.Core.UserControls
 
             this.ActorPageChangedCompleted += (s, ev) => {
                 if (ConfigManager.VideoConfig.ActorEditMode)
-                    ActorSetSelected();
+                    SetSelected();
                 ActorScrollViewer.ScrollToTop();
             };
         }
 
 
-        public void ActorSetSelected()
+        public void SetSelected()
         {
             ItemsControl itemsControl = ActorItemsControl;
             if (itemsControl == null)
@@ -409,7 +409,7 @@ namespace Jvedio.Core.UserControls
                         SelectedActors.Add(actorInfo);
                 }
 
-                ActorSetSelected();
+                SetSelected();
             }
         }
 
@@ -426,7 +426,7 @@ namespace Jvedio.Core.UserControls
 
             if (allContain)
                 SelectedActors.RemoveMany(CurrentActorList);
-            ActorSetSelected();
+            SetSelected();
         }
 
 
@@ -618,10 +618,10 @@ namespace Jvedio.Core.UserControls
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Right) {
                 // 末页
-                ActorSetSelected();
+                SetSelected();
             } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Left) {
                 CurrentActorPage = 1;
-                ActorSetSelected();
+                SetSelected();
 
             }
         }
@@ -629,7 +629,7 @@ namespace Jvedio.Core.UserControls
         private void SetActorSelectMode(object sender, RoutedEventArgs e)
         {
             SelectedActors.Clear();
-            ActorSetSelected();
+            SetSelected();
         }
 
         private void CurrentActorPageChange(object sender, EventArgs e)

@@ -20,7 +20,7 @@
     <sys:String x:Key="LoadDataAfterScan">スキャンが完了した直後に新しいビデオをロードする</sys:String>
     <sys:String x:Key="DataExistsIndexAfterScan">新しい映画のリソースを確立するためのインデックスがあります</sys:String>
     <sys:String x:Key="ImageExistsIndexAfterScan">新しい映画の写真の確立に関するインデックスがあります</sys:String>
-
+    <sys:String x:Key="AppTitle">Jvedio-スーパービデオマネージャー</sys:String>
 
     <sys:String x:Key="PleaseSetImageIndex">[options-library]で画像インデックスを確立してください！</sys:String>
     <sys:String x:Key="PleaseSetExistsIndex">[Options-Library]で再生インデックスを確立してください！</sys:String>

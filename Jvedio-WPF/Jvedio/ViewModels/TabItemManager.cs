@@ -312,7 +312,15 @@ namespace Jvedio.ViewModels
 
 
 
+        public List<VideoList> GetAllVideoList()
+        {
+            return TabPanel.Children.OfType<VideoList>().ToList();
+        }
 
+        public List<ActorList> GetAllActorList()
+        {
+            return TabPanel.Children.OfType<ActorList>().ToList();
+        }
 
         public VideoList GetVideoListByType(TabType type)
         {

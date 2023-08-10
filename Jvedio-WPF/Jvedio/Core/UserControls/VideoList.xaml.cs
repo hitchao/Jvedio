@@ -50,6 +50,7 @@ namespace Jvedio.Core.UserControls
         #region "事件"
 
         public static Action onStatistic;
+        public static Action<List<Video>> onDeleteID;
         public Action onInitTagStamps;
         public Action<string> onRenameFile;
 
@@ -159,6 +160,7 @@ namespace Jvedio.Core.UserControls
             ResizingTimer.Tick += new EventHandler(ResizingTimer_Tick);
 
             vieModel.PageChangedCompleted += (s, ev) => {
+                GotoTop(null, null);
                 //SetImageMode();
                 if (vieModel.EditMode)
                     SetSelected();
@@ -503,8 +505,14 @@ namespace Jvedio.Core.UserControls
             if (vieModel.EditMode &&
                 new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false)
                 return;
-
+            List<Video> temp = vieModel.SelectedVideo.ToList();
             DeleteIDs(videos, vieModel.SelectedVideo, false);
+            onDeleteID?.Invoke(temp);
+        }
+
+        public void DeleteID(List<Video> list, bool fromDetail)
+        {
+            DeleteIDs(vieModel.CurrentVideoList, list, fromDetail);
         }
 
         // todo 异步删除
@@ -546,7 +554,9 @@ namespace Jvedio.Core.UserControls
             MessageNotify.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_DeleteToRecycleBin")} {num}/{totalCount}");
 
             if (ConfigManager.Settings.DelInfoAfterDelFile) {
+                List<Video> temp = vieModel.SelectedVideo.ToList();
                 DeleteIDs(GetVideosByMenu(sender as MenuItem, 0), vieModel.SelectedVideo, false);
+                onDeleteID?.Invoke(temp);
             }
 
             if (!vieModel.EditMode)
@@ -1806,7 +1816,7 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        private void RefreshTagStamp(ref Video video, long newTagID, bool deleted)
+        public void RefreshTagStamp(ref Video video, long newTagID, bool deleted)
         {
             if (video == null || newTagID <= 0)
                 return;
@@ -1831,7 +1841,7 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        private void RefreshTagStamps(long tagID)
+        public void RefreshTagStamps(long tagID)
         {
             List<long> toRefreshData = new List<long>();
             foreach (var video in vieModel.CurrentVideoList) {
