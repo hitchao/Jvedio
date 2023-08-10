@@ -1335,8 +1335,10 @@ namespace Jvedio.Core.UserControls
                 Event = ListBoxItem.MouseDoubleClickEvent,
                 Handler = new MouseButtonEventHandler(ListBoxItem_MouseDoubleClick)
             };
+
             SearchBoxListItemContainerStyle.Setters.Add(eventSetter);
 
+            actorInfoView.Close += () => vieModel.ShowActorGrid = false;
         }
 
         private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -1845,6 +1847,13 @@ namespace Jvedio.Core.UserControls
         }
 
 
+        public void SetActor(ActorInfo actorInfo)
+        {
+            vieModel.ShowActorGrid = true;
+            vieModel.ShowActorToggle = true;
+            actorInfoView.CurrentActorInfo = actorInfo;
+
+        }
 
         private void HideActressGrid(object sender, MouseButtonEventArgs e)
         {

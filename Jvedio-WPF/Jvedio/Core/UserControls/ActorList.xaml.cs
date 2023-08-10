@@ -24,28 +24,13 @@ using static Jvedio.App;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 
-namespace Jvedio.Pages
+namespace Jvedio.Core.UserControls
 {
     /// <summary>
     /// ActorsPage.xaml 的交互逻辑
     /// </summary>
-    public partial class ActorsPage : Page, INotifyPropertyChanged
+    public partial class ActorList : UserControl, INotifyPropertyChanged
     {
-        public event EventHandler ActorPageChangedCompleted;
-
-
-        public ActorsPage()
-        {
-            InitializeComponent();
-            this.DataContext = this;
-        }
-
-        static ActorsPage()
-        {
-            for (int i = 0; i < ActorSortDictList.Count; i++) {
-                ActorSortDict.Add(i, ActorSortDictList[i]);
-            }
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -54,14 +39,116 @@ namespace Jvedio.Pages
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        #region "事件"
+        public event EventHandler ActorPageChangedCompleted;
+        public Action<long> onShowSameActor;
+
+
+        #endregion
+
+        public ActorList()
         {
-            RefreshActorRenderToken();
-            BindingEvent();
-            ActorSetSelected();
+            InitializeComponent();
+            this.DataContext = this;
         }
 
+        static ActorList()
+        {
+            for (int i = 0; i < ActorSortDictList.Count; i++) {
+                ActorSortDict.Add(i, ActorSortDictList[i]);
+            }
+        }
+
+
+        private void ActorList_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+            RefreshActorRenderToken();
+            BindingEvent();
+            SelectActor();
+        }
+
+        #region "静态属性"
+
+
+        public static Queue<int> ActorPageQueue { get; set; } = new Queue<int>();
+        public static Dictionary<int, string> ActorSortDict { get; set; } = new Dictionary<int, string>();
+
+
+        public static List<string> ActorSortDictList { get; set; } = new List<string>()
+        {
+            "actor_info.Grade",
+            "actor_info.ActorName",
+            "Count",
+            "actor_info.Country",
+            "Nation",
+            "BirthPlace",
+            "Birthday",
+            "BloodType",
+            "Height",
+            "Weight",
+            "Gender",
+            "Hobby",
+            "Cup",
+            "Chest",
+            "Waist",
+            "Hipline",
+            "actor_info.Grade",
+            "Age",
+        };
+
+
+        public static string[] ActorSelectedField { get; set; } = new string[]
+        {
+            "count(ActorName) as Count",
+            "actor_info.ActorID",
+            "actor_info.ActorName",
+            "actor_info.Country",
+            "Nation",
+            "BirthPlace",
+            "Birthday",
+            "BloodType",
+            "Height",
+            "Weight",
+            "Gender",
+            "Hobby",
+            "Cup",
+            "Chest",
+            "Waist",
+            "Hipline",
+            "WebType",
+            "WebUrl",
+            "actor_info.Grade",
+            "actor_info.ExtraInfo",
+            "actor_info.CreateDate",
+            "actor_info.UpdateDate",
+        };
+
+
+        public static Dictionary<string, string> Actor_SELECT_TYPE { get; set; } = new Dictionary<string, string>()
+        {
+            { "All", "  " },
+            { "Favorite", "  " },
+        };
+
+
+
+        #endregion
+
         #region "属性"
+
+
+        private int firstIdx { get; set; } = -1;
+        private int secondIdx { get; set; } = -1;
+        private int actorFirstIdx { get; set; } = -1;
+        private int actorSecondIdx { get; set; } = -1;
+
+        public bool RenderingActor { get; set; }
+
+        public CancellationTokenSource RenderActorCTS { get; set; }
+
+        public CancellationToken RenderActorCT { get; set; }
 
         private bool _SearchingActor = false;
 
@@ -87,7 +174,7 @@ namespace Jvedio.Pages
             }
         }
 
-        private int _ActorPageSize = 10;
+        private int _ActorPageSize = 40;
 
         public int ActorPageSize {
             get { return _ActorPageSize; }
@@ -122,13 +209,13 @@ namespace Jvedio.Pages
             }
         }
 
-        private List<ActorInfo> actorlist;
+        private List<ActorInfo> _Actors;
 
-        public List<ActorInfo> ActorList {
-            get { return actorlist; }
+        public List<ActorInfo> Actors {
+            get { return _Actors; }
 
             set {
-                actorlist = value;
+                _Actors = value;
                 RaisePropertyChanged();
             }
         }
@@ -194,6 +281,7 @@ namespace Jvedio.Pages
             this.ActorPageChangedCompleted += (s, ev) => {
                 if (ConfigManager.VideoConfig.ActorEditMode)
                     ActorSetSelected();
+                ActorScrollViewer.ScrollToTop();
             };
         }
 
@@ -274,10 +362,6 @@ namespace Jvedio.Pages
             }
         }
 
-        private int firstIdx { get; set; } = -1;
-        private int secondIdx { get; set; } = -1;
-        private int actorFirstIdx { get; set; } = -1;
-        private int actorSecondIdx { get; set; } = -1;
 
         // todo 优化多选
         public void SelectActor(object sender, MouseButtonEventArgs e)
@@ -379,65 +463,6 @@ namespace Jvedio.Pages
         }
 
 
-        public static Queue<int> ActorPageQueue { get; set; } = new Queue<int>();
-        public static Dictionary<int, string> ActorSortDict { get; set; } = new Dictionary<int, string>();
-
-
-        public bool RenderingActor { get; set; }
-
-        public static List<string> ActorSortDictList = new List<string>()
-        {
-            "actor_info.Grade",
-            "actor_info.ActorName",
-            "Count",
-            "actor_info.Country",
-            "Nation",
-            "BirthPlace",
-            "Birthday",
-            "BloodType",
-            "Height",
-            "Weight",
-            "Gender",
-            "Hobby",
-            "Cup",
-            "Chest",
-            "Waist",
-            "Hipline",
-            "actor_info.Grade",
-            "Age",
-        };
-
-
-        public static string[] ActorSelectedField = new string[]
-        {
-            "count(ActorName) as Count",
-            "actor_info.ActorID",
-            "actor_info.ActorName",
-            "actor_info.Country",
-            "Nation",
-            "BirthPlace",
-            "Birthday",
-            "BloodType",
-            "Height",
-            "Weight",
-            "Gender",
-            "Hobby",
-            "Cup",
-            "Chest",
-            "Waist",
-            "Hipline",
-            "WebType",
-            "WebUrl",
-            "actor_info.Grade",
-            "actor_info.ExtraInfo",
-            "actor_info.CreateDate",
-            "actor_info.UpdateDate",
-        };
-
-        public CancellationTokenSource RenderActorCTS { get; set; }
-
-        public CancellationToken RenderActorCT { get; set; }
-
         public void RefreshActorRenderToken()
         {
             RenderActorCTS = new CancellationTokenSource();
@@ -499,7 +524,7 @@ namespace Jvedio.Pages
                 wrapper.ToOrder() + ActorToLimit();
 
             // todo 只能手动设置页码，很奇怪
-            //App.Current.Dispatcher.Invoke(() => { MainWindow.actorPagination.Total = ActorTotalCount; });
+            App.Current.Dispatcher.Invoke(() => { actorPagination.Total = ActorTotalCount; });
             RenderCurrentActors(sql);
         }
 
@@ -523,21 +548,15 @@ namespace Jvedio.Pages
             return $" LIMIT {offset},{row_count}";
         }
 
-        public static Dictionary<string, string> Actor_SELECT_TYPE = new Dictionary<string, string>()
-        {
-            { "All", "  " },
-            { "Favorite", "  " },
-        };
-
 
         public void RenderCurrentActors(string sql)
         {
             List<Dictionary<string, object>> list = actorMapper.Select(sql);
             List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
-            ActorList = new List<ActorInfo>();
+            Actors = new List<ActorInfo>();
             if (actors == null)
                 actors = new List<ActorInfo>();
-            ActorList.AddRange(actors);
+            Actors.AddRange(actors);
             RenderActor();
         }
 
@@ -546,7 +565,7 @@ namespace Jvedio.Pages
             if (CurrentActorList == null)
                 CurrentActorList = new ObservableCollection<ActorInfo>();
 
-            for (int i = 0; i < ActorList.Count; i++) {
+            for (int i = 0; i < Actors.Count; i++) {
                 try {
                     RenderActorCT.ThrowIfCancellationRequested();
                 } catch (OperationCanceledException) {
@@ -555,14 +574,14 @@ namespace Jvedio.Pages
                 }
 
                 RenderingActor = true;
-                ActorInfo actorInfo = ActorList[i];
+                ActorInfo actorInfo = Actors[i];
                 ActorInfo.SetImage(ref actorInfo);
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
                     new LoadActorDelegate(LoadActor), actorInfo, i);
             }
 
             // 清除
-            for (int i = CurrentActorList.Count - 1; i > ActorList.Count - 1; i--) {
+            for (int i = CurrentActorList.Count - 1; i > Actors.Count - 1; i--) {
                 CurrentActorList.RemoveAt(i);
             }
 
@@ -624,7 +643,10 @@ namespace Jvedio.Pages
         private void ActorPageSizeChange(object sender, EventArgs e)
         {
             Pagination pagination = sender as Pagination;
+            if (!pagination.IsLoaded)
+                return;
             ActorPageSize = pagination.PageSize;
+            SelectActor();
         }
 
         public void RefreshActor(long actorID)
@@ -809,28 +831,8 @@ namespace Jvedio.Pages
             long.TryParse(button.Tag.ToString(), out long actorID);
             if (actorID <= 0)
                 return;
-            //ShowSameActor(actorID);
-        }
 
-
-
-        private void EditActor(object sender, MouseButtonEventArgs e)
-        {
-            Border button = sender as Border;
-            long.TryParse(button.Tag.ToString(), out long actorID);
-            if (actorID <= 0)
-                return;
-
-            Window_EditActor window_EditActor = new Window_EditActor(actorID);
-            window_EditActor.ShowDialog();
-        }
-
-        private void ShowSameActor(object sender, MouseButtonEventArgs e)
-        {
-            Border button = sender as Border;
-            long.TryParse(button.Tag.ToString(), out long actorID);
-            if (actorID <= 0)
-                return;
+            onShowSameActor?.Invoke(actorID);
             //ShowSameActor(actorID);
         }
 
@@ -843,6 +845,11 @@ namespace Jvedio.Pages
                 // todo
                 //vieModel.Statistic();
             }
+        }
+
+        private void doSearch(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

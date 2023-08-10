@@ -287,7 +287,24 @@
                         <Path Data="M452.923077 512v275.692308l118.153846-98.461539v-177.230769l177.230769-177.230769H275.692308l177.230769 177.230769zM0 512C0 229.218462 229.238154 0 512 0c282.781538 0 512 229.238154 512 512 0 282.781538-229.238154 512-512 512C229.218462 1024 0 794.761846 0 512z" Fill="{DynamicResource Window.Foreground}" />
                     </Viewbox>
                 </ToggleButton>
-
+                <ToggleButton
+                    Width="auto"
+                    Height="auto"
+                    Margin="10,0,0,0"
+                    Padding="3,3,6,6"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    IsChecked="{Binding DataContext.ShowActorGrid, ElementName=videoList, Mode=TwoWay}"
+                    Style="{StaticResource FlatToggleButton}"
+                    Visibility="{Binding DataContext.ShowActorToggle, Converter={StaticResource BoolToVisibilityConverter}, ElementName=videoList}">
+                    <Viewbox
+                        Width="15"
+                        Height="auto"
+                        VerticalAlignment="Center">
+                        <Path Data="{DynamicResource GeoActor}" Fill="{DynamicResource Window.Foreground}" />
+                    </Viewbox>
+                </ToggleButton>
 
 
                 <TextBlock
@@ -442,10 +459,10 @@
                 Visibility="{Binding ShowFilter, Converter={StaticResource BoolToVisibilityConverter}}" />
 
             <!--  演员  -->
-            <Frame
-                x:Name="actorFrame"
+            <localControl:ActorInfoView
+                x:Name="actorInfoView"
                 Grid.Column="1"
-                Visibility="{Binding ShowActorGrid, Converter={StaticResource BoolToVisibilityConverter}}" />
+                Visibility="{Binding DataContext.ShowActorGrid, Converter={StaticResource BoolToVisibilityConverter}, ElementName=videoList}" />
 
             <!--  影片  -->
             <super:SimplePanel

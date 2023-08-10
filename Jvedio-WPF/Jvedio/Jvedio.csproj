@@ -364,13 +364,12 @@
     <Compile Include="Core\UserControls\Filter.xaml.cs">
       <DependentUpon>Filter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ActorInfoPage.xaml.cs">
-      <DependentUpon>ActorInfoPage.xaml</DependentUpon>
+    <Compile Include="Core\UserControls\ActorInfoView.xaml.cs">
+      <DependentUpon>ActorInfoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ActorsPage.xaml.cs">
-      <DependentUpon>ActorsPage.xaml</DependentUpon>
+    <Compile Include="Core\UserControls\ActorList.xaml.cs">
+      <DependentUpon>ActorList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Navigator.cs" />
     <Compile Include="Upgrade\UpgradeHelper.cs" />
     <Compile Include="ViewModels\TabItemManager.cs" />
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
@@ -554,11 +553,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\ActorInfoPage.xaml">
+    <Page Include="Core\UserControls\ActorInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ActorsPage.xaml">
+    <Page Include="Core\UserControls\ActorList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

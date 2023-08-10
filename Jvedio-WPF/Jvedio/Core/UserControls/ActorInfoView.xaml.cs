@@ -10,12 +10,12 @@ using System.Windows.Input;
 using System.Windows.Navigation;
 using static Jvedio.MapperManager;
 
-namespace Jvedio.Pages
+namespace Jvedio.Core.UserControls
 {
     /// <summary>
-    /// ActorInfoPage.xaml 的交互逻辑
+    /// ActorInfoView.xaml 的交互逻辑
     /// </summary>
-    public partial class ActorInfoPage : Page, INotifyPropertyChanged
+    public partial class ActorInfoView : UserControl, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -41,18 +41,10 @@ namespace Jvedio.Pages
 
         public event Action Close;
 
-        public ActorInfoPage()
+        public ActorInfoView()
         {
             InitializeComponent();
             this.DataContext = this;
-            ActorNavigator.NavigationService.LoadCompleted -= NavigationService_LoadCompleted;
-            ActorNavigator.NavigationService.LoadCompleted += NavigationService_LoadCompleted;
-        }
-
-        private void NavigationService_LoadCompleted(object sender, NavigationEventArgs e)
-        {
-            this.CurrentActorInfo = e.ExtraData as ActorInfo;
-            this.Visibility = Visibility.Visible;
         }
 
 
@@ -160,7 +152,6 @@ namespace Jvedio.Pages
 
         private void HideActressGrid(object sender, RoutedEventArgs e)
         {
-            this.Visibility = Visibility.Collapsed;
             Close?.Invoke();
         }
     }

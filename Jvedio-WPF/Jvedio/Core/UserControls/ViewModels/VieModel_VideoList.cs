@@ -289,6 +289,16 @@ namespace Jvedio.Core.UserControls.ViewModels
                 RaisePropertyChanged();
             }
         }
+        private bool _ShowActorToggle;
+
+        public bool ShowActorToggle {
+            get { return _ShowActorToggle; }
+
+            set {
+                _ShowActorToggle = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         private bool _EnableEditActress = false;

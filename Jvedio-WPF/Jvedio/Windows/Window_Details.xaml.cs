@@ -362,11 +362,7 @@ namespace Jvedio
         // 显示标签
         public void ShowSameLabel(object sender, MouseButtonEventArgs e)
         {
-            string label = ((TextBlock)sender).Text;
-            if (string.IsNullOrEmpty(label))
-                return;
-            windowMain.ShowSameLabel(label);
-            this.Close();
+            ShowSameString(sender, LabelType.LabelName);
         }
 
         // 显示导演

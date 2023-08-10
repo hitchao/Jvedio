@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
+using static Jvedio.Core.DataBase.Tables.Sqlite;
 
 namespace Jvedio.ViewModels
 {
@@ -42,7 +43,7 @@ namespace Jvedio.ViewModels
             return instance;
         }
 
-        public void Add(TabType type, string tabName, object tabData)
+        public void Add(TabType type, string tabName, params object[] tabData)
         {
             if (vieModel == null) {
                 return;
@@ -146,14 +147,17 @@ namespace Jvedio.ViewModels
             windowDetails.Show();
         }
 
-        private void onAddData(TabItemEx tabItem, object tabData)
+        private void onAddData(TabItemEx tabItem, params object[] tabData)
         {
             switch (tabItem.TabType) {
                 case TabType.GeoVideo:
                 case TabType.GeoStar:
                 case TabType.GeoRecentPlay:
                 case TabType.GeoAsso:
-                    SelectWrapper<Video> ExtraWrapper = tabData as SelectWrapper<Video>;
+
+                    if (tabData == null || tabData.Length == 0)
+                        return;
+                    SelectWrapper<Video> ExtraWrapper = tabData[0] as SelectWrapper<Video>;
 
                     VideoList videoList = new VideoList(ExtraWrapper, tabItem);
 
@@ -163,14 +167,29 @@ namespace Jvedio.ViewModels
                     videoList.OnItemClick += OnItemClick;
                     videoList.OnItemViewAsso += OnViewAssoData;
 
+                    if (tabData.Length > 1 && tabData[1] is ActorInfo actorInfo) {
+                        videoList.SetActor(actorInfo);
+                    }
 
                     TabPanel.Children.Add(videoList);
 
 
                     break;
+                case TabType.GeoActor:
+                    ActorList actorList = new ActorList();
+                    actorList.Uid = tabItem.UUID;
+
+                    actorList.onShowSameActor += vieModel.ShowSameActor;
+
+                    TabPanel.Children.Add(actorList);
+                    break;
 
                 case TabType.GeoTask:
-                    if (tabData is TaskType type) {
+
+                    if (tabData == null || tabData.Length == 0)
+                        return;
+
+                    if (tabData[0] is TaskType type) {
                         TaskList taskList = new TaskList(type);
                         taskList.Uid = tabItem.UUID;
                         SetTaskList(ref taskList, type);
@@ -179,7 +198,14 @@ namespace Jvedio.ViewModels
                     break;
 
                 case TabType.GeoLabel:
-                    if (tabData is LabelType labelType) {
+
+
+                    if (tabData == null || tabData.Length == 0)
+                        return;
+
+
+
+                    if (tabData[0] is LabelType labelType) {
                         LabelView labelView = new LabelView(labelType);
                         labelView.Uid = tabItem.UUID;
                         SetLabelList(ref labelView, labelType);
@@ -283,6 +309,10 @@ namespace Jvedio.ViewModels
                     break;
             }
         }
+
+
+
+
 
         public VideoList GetVideoListByType(TabType type)
         {

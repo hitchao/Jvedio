@@ -1,7 +1,7 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Media;
+using Jvedio.Core.UserControls;
 using Jvedio.Entity;
-using Jvedio.Pages;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.WPF.VieModel;
@@ -347,14 +347,14 @@ namespace Jvedio.ViewModel
             ActorTotalCount = actorMapper.SelectCount(count_sql);
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
 
-            string sql = $"{wrapper.Select(ActorsPage.ActorSelectedField).ToSelect(false)} FROM actor_info " +
+            string sql = $"{wrapper.Select(Jvedio.Core.UserControls.ActorList.ActorSelectedField).ToSelect(false)} FROM actor_info " +
                         $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                         $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                        $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
                         $"GROUP BY actor_info.ActorID " +
                         "UNION " +
-                       $"{wrapper.Select(ActorsPage.ActorSelectedField).ToSelect(false)} FROM actor_info " +
+                       $"{wrapper.Select(Jvedio.Core.UserControls.ActorList.ActorSelectedField).ToSelect(false)} FROM actor_info " +
                         "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
                          $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} "
                          + ActorToLimit();

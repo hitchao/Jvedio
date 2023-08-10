@@ -1,21 +1,20 @@
-﻿<Page
-    x:Class="Jvedio.Pages.ActorsPage"
+﻿<UserControl
+    x:Class="Jvedio.Core.UserControls.ActorList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Jvedio.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="ActorsPage"
+    x:Name="actorList"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    Loaded="Page_Loaded"
+    Loaded="ActorList_Loaded"
     PreviewKeyUp="Page_PreviewKeyUp"
     mc:Ignorable="d">
 
-    <Page.Resources>
+    <UserControl.Resources>
 
         <Style x:Key="BgHoverBorder" TargetType="Border">
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -380,35 +379,23 @@
                                     </Style.Triggers>
                                 </Style>
                             </Grid.Style>
-                            <Border
+                            <Button
                                 Grid.Column="0"
                                 Height="25"
                                 Margin="0"
-                                MouseLeftButtonUp="EditActor"
-                                Style="{StaticResource BgHoverBorder}"
-                                Tag="{Binding ActorID, Mode=OneWay}">
-
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontWeight="Bold"
-                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                                    Text="{DynamicResource Edit}" />
-                            </Border>
-                            <Border
+                                HorizontalAlignment="Stretch"
+                                Click="EditActor"
+                                Content="{DynamicResource Edit}"
+                                Style="{StaticResource ButtonPrimary}"
+                                Tag="{Binding ActorID, Mode=OneWay}" />
+                            <Button
                                 Grid.Column="1"
                                 Margin="0"
-                                MouseLeftButtonUp="ShowSameActor"
-                                Style="{StaticResource BgHoverBorder}"
-                                Tag="{Binding ActorID, Mode=OneWay}">
-
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontWeight="Bold"
-                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                                    Text="{DynamicResource View}" />
-                            </Border>
+                                HorizontalAlignment="Stretch"
+                                Click="ShowSameActor"
+                                Content="{DynamicResource View}"
+                                Style="{StaticResource ButtonWarning}"
+                                Tag="{Binding ActorID, Mode=OneWay}" />
 
                         </Grid>
                     </Grid>
@@ -441,18 +428,29 @@
             </Style.Triggers>
         </Style>
 
-    </Page.Resources>
+    </UserControl.Resources>
 
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+
+        <!--  搜索  -->
+        <super:SearchBox
+            Name="searchBox"
+            Grid.Row="0"
+            Margin="0,5,0,0"
+            HideClearButtonOnMouseLeave="False"
+            Style="{StaticResource SearchBoxStyle}"
+            Text="{Binding Path=DataContext.SearchText, Mode=TwoWay, ElementName=actorList}"
+            TextChanged="doSearch" />
         <!--  工具栏  -->
         <Grid
-            Grid.Row="0"
+            Grid.Row="1"
             Panel.ZIndex="4"
             Background="Transparent"
             Visibility="{Binding DisplayFunBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}">
@@ -460,7 +458,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <super:SimplePanel Grid.Row="0">
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <Button
                     Margin="10,5"
                     HorizontalAlignment="Left"
@@ -530,10 +528,10 @@
 
 
                 </StackPanel>
-            </super:SimplePanel>
+            </StackPanel>
         </Grid>
         <!--  演员展示  -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ContextMenu>
                 <ContextMenu>
                     <MenuItem
@@ -551,9 +549,10 @@
                 <ItemsControl
                     x:Name="ActorItemsControl"
                     Margin="5,5,5,5"
+                    d:ItemsSource="{d:SampleData ItemCount=5}"
                     Background="Transparent"
                     ItemContainerStyle="{StaticResource ActorContainerStyle}"
-                    ItemsSource="{Binding CurrentActorList}"
+                    ItemsSource="{Binding Path=DataContext.CurrentActorList, ElementName=actorList}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ItemsControl.Resources>
                         <ItemsPanelTemplate x:Key="WrapTemplate">
@@ -579,7 +578,7 @@
 
         <!--  底部  -->
         <Grid
-            Grid.Row="2"
+            Grid.Row="3"
             Panel.ZIndex="5"
             Visibility="{Binding DisplayPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}">
             <Grid.ColumnDefinitions>
@@ -608,13 +607,16 @@
             <super:Pagination
                 Name="actorPagination"
                 Grid.Column="2"
-                CurrentPage="1"
+                CurrentPage="{Binding Path=DataContext.CurrentActorPage, Mode=OneWay}"
                 CurrentPageChange="CurrentActorPageChange"
+                PageSize="{Binding Path=DataContext.ActorPageSize, Mode=TwoWay}"
                 PageSizeChange="ActorPageSizeChange"
+                PageSizes="[10,20,40,50,100]"
+                ShowCombobox="True"
                 Style="{StaticResource NormalPagination}"
-                Total="{Binding ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                Total="{Binding Path=DataContext.ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
 
     </Grid>
 
-</Page>
+</UserControl>

@@ -162,6 +162,9 @@ namespace Jvedio.ViewModel
                     if (Enum.TryParse(param, out LabelType type))
                         TabItemManager.Add(TabType.GeoLabel, LangManager.GetValueByKey(param), type);
                     break;
+                case "Actor":
+                    TabItemManager.Add(TabType.GeoActor, LangManager.GetValueByKey(param), null);
+                    break;
                 default:
                     break;
             }
@@ -410,19 +413,7 @@ namespace Jvedio.ViewModel
 
         #region "Variable"
 
-
-
-        private string _StatusText;
-
-        public string StatusText {
-            get { return _StatusText; }
-
-            set {
-                _StatusText = value;
-                RaisePropertyChanged();
-            }
-        }
-
+ 
 
         private string _ScanStatus;
 
@@ -890,6 +881,17 @@ namespace Jvedio.ViewModel
             TabItemManager.Add(TabType.GeoVideo, $"{tabName}: {label}", ExtraWrapper);
         }
 
+        public void ShowSameActor(long actorID)
+        {
+            ActorInfo actorInfo = MapperManager.actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
+            if (actorInfo == null)
+                return;
+            ActorInfo.SetImage(ref actorInfo);
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("actor_info.ActorID", actorID);
+            wrapper.ExtraSql = ActorMapper.actor_join_sql;
+            TabItemManager.Add(TabType.GeoVideo, $"{LangManager.GetValueByKey("Actor")}: {actorInfo.ActorName}", wrapper, actorInfo);
+        }
 
 
         public List<string> GetGenreList()

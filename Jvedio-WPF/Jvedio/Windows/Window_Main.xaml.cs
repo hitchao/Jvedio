@@ -725,48 +725,13 @@ namespace Jvedio
             }
         }
 
-        public void Label_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            TextBlock tb = sender as TextBlock;
-            string text = tb.Text;
-            if (string.IsNullOrEmpty(text) || text.IndexOf("(") <= 0)
-                return;
-            string labelName = text.Substring(0, text.IndexOf("("));
-            ShowSameLabel(labelName);
-            vieModel.StatusText = labelName;
-        }
-
-        public void ShowSameLabel(string label)
-        {
-            if (string.IsNullOrEmpty(label))
-                return;
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            wrapper.Eq("LabelName", label);
-            //vieModel.ExtraWrapper = wrapper;
-            vieModel.ClickFilterType = "Label";
-            // todo tab
-            //pagination.CurrentPageChange -= Pagination_CurrentPageChange;
-            //vieModel.CurrentPage = 1;
-            //vieModel.LoadData();
-            //pagination.CurrentPageChange += Pagination_CurrentPageChange;
-        }
 
         public void ShowSameString(string str, LabelType labelType)
         {
             vieModel.onLabelClick(str, labelType);
         }
 
-        private void ShowSameString(object sender, MouseButtonEventArgs e)
-        {
-            // todo 存在一些问题：like '%demo%' => '%demo-xxx%'，导致数目多出
-            TextBlock tb = sender as TextBlock;
-            string text = tb.Text;
-            if (string.IsNullOrEmpty(text) || text.IndexOf("(") <= 0)
-                return;
-            string labelName = text.Substring(0, text.IndexOf("("));
-            //ShowSameString(labelName);
-            vieModel.StatusText = labelName;
-        }
+
 
         public void ShowDownloadPopup(object sender, MouseButtonEventArgs e)
         {
@@ -1049,12 +1014,14 @@ namespace Jvedio
 
         public void ShowSameActor(long actorID)
         {
-            if (actorID <= 0)
-                return;
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            wrapper.Eq("actor_info.ActorID", actorID);
-            //vieModel.ExtraWrapper = wrapper;
-            vieModel.ClickFilterType = "Actor";
+
+            vieModel.ShowSameActor(actorID);
+            //if (actorID <= 0)
+            //    return;
+            //SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            //wrapper.Eq("actor_info.ActorID", actorID);
+            ////vieModel.ExtraWrapper = wrapper;
+            //vieModel.ClickFilterType = "Actor";
             //pagination.CurrentPageChange -= Pagination_CurrentPageChange;
             //vieModel.CurrentPage = 1;
             //vieModel.LoadData();
@@ -1361,6 +1328,7 @@ namespace Jvedio
         {
             Window_Settings window_Settings = new Window_Settings();
             window_Settings.Show();
+            notiIconPopup.IsOpen = false;
         }
 
 

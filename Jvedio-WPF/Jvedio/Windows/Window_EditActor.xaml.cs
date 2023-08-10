@@ -40,7 +40,7 @@ namespace Jvedio
 
         public Window_EditActor(long actorID) : this()
         {
-            if (this.ActorID <= 0)
+            if (actorID <= 0)
                 return;
 
             this.ActorID = actorID;

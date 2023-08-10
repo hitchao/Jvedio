@@ -129,7 +129,7 @@
             <ScrollViewer
                 Grid.Row="1"
                 Width="290"
-                Margin="5"
+                Margin="5,0"
                 VerticalScrollBarVisibility="auto">
                 <StackPanel Name="filterStackPanel" Orientation="Vertical">
 
