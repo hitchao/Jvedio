@@ -42,6 +42,7 @@ namespace Jvedio.Core.UserControls
         #region "事件"
         public event EventHandler ActorPageChangedCompleted;
         public Action<long> onShowSameActor;
+        public static Action onStatistic;
 
 
         #endregion
@@ -126,17 +127,6 @@ namespace Jvedio.Core.UserControls
         public CancellationTokenSource RenderActorCTS { get; set; }
 
         public CancellationToken RenderActorCT { get; set; }
-
-        private bool _SearchingActor = false;
-
-        public bool SearchingActor {
-            get { return _SearchingActor; }
-
-            set {
-                _SearchingActor = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private string _SearchText = string.Empty;
 
@@ -238,6 +228,7 @@ namespace Jvedio.Core.UserControls
         {
             InitializeComponent();
             this.DataContext = this;
+            ConfigManager.VideoConfig.ActorEditMode = false;
         }
 
         static ActorList()
@@ -254,6 +245,11 @@ namespace Jvedio.Core.UserControls
                 return;
             RefreshActorRenderToken();
             BindingEvent();
+            SelectActor();
+        }
+
+        public void Refresh()
+        {
             SelectActor();
         }
 
@@ -289,28 +285,28 @@ namespace Jvedio.Core.UserControls
 
         public void SetSelected()
         {
-            ItemsControl itemsControl = ActorItemsControl;
-            if (itemsControl == null)
-                return;
+            //ItemsControl itemsControl = ActorItemsControl;
+            //if (itemsControl == null)
+            //    return;
 
-            for (int i = 0; i < itemsControl.Items.Count; i++) {
-                ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                if (presenter == null)
-                    continue;
-                Border border = FindElementByName<Border>(presenter, "rootBorder");
-                if (border == null)
-                    continue;
-                long actorID = GetDataID(border);
-                if (border != null && actorID > 0) {
-                    border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
-                    border.BorderBrush = Brushes.Transparent;
-                    if (ConfigManager.VideoConfig.ActorEditMode && SelectedActors != null &&
-                        SelectedActors.Where(arg => arg.ActorID == actorID).Any()) {
-                        border.Background = StyleManager.Common.HighLight.Background;
-                        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
-                    }
-                }
-            }
+            //for (int i = 0; i < itemsControl.Items.Count; i++) {
+            //    ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
+            //    if (presenter == null)
+            //        continue;
+            //    Border border = FindElementByName<Border>(presenter, "rootBorder");
+            //    if (border == null)
+            //        continue;
+            //    long actorID = GetDataID(border);
+            //    if (border != null && actorID > 0) {
+            //        border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
+            //        border.BorderBrush = Brushes.Transparent;
+            //        if (ConfigManager.VideoConfig.ActorEditMode && SelectedActors != null &&
+            //            SelectedActors.Where(arg => arg.ActorID == actorID).Any()) {
+            //            border.Background = StyleManager.Common.HighLight.Background;
+            //            border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
+            //        }
+            //    }
+            //}
         }
 
         private long GetDataID(UIElement o, bool findParent = true)
@@ -334,100 +330,100 @@ namespace Jvedio.Core.UserControls
 
         public void ActorBorderMouseEnter(object sender, MouseEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
-            if (element == null)
-                return;
-            Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
-                Border border = grid.Children[0] as Border;
-                if (border != null)
-                    border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
-            }
+            //FrameworkElement element = sender as FrameworkElement;
+            //if (element == null)
+            //    return;
+            //Grid grid = element.FindParentOfType<Grid>("rootGrid");
+            //if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
+            //    Border border = grid.Children[0] as Border;
+            //    if (border != null)
+            //        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
+            //}
         }
 
         public void ActorBorderMouseLeave(object sender, MouseEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
-            if (element == null)
-                return;
-            Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
-                long actorID = GetDataID(element);
-                Border border = grid.Children[0] as Border;
-                if (actorID <= 0 || border == null || SelectedActors == null)
-                    return;
-                if (SelectedActors.Where(arg => arg.ActorID == actorID).Any())
-                    border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
-                else
-                    border.BorderBrush = Brushes.Transparent;
-            }
+            //FrameworkElement element = sender as FrameworkElement;
+            //if (element == null)
+            //    return;
+            //Grid grid = element.FindParentOfType<Grid>("rootGrid");
+            //if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
+            //    long actorID = GetDataID(element);
+            //    Border border = grid.Children[0] as Border;
+            //    if (actorID <= 0 || border == null || SelectedActors == null)
+            //        return;
+            //    if (SelectedActors.Where(arg => arg.ActorID == actorID).Any())
+            //        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
+            //    else
+            //        border.BorderBrush = Brushes.Transparent;
+            //}
         }
 
 
         // todo 优化多选
         public void SelectActor(object sender, MouseButtonEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
-            long actorID = GetDataID(element);
-            if (actorID <= 0)
-                return;
-            if (ConfigManager.VideoConfig.ActorEditMode && CurrentActorList != null) {
-                ActorInfo actorInfo = CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
-                if (actorInfo == null)
-                    return;
-                int selectIdx = CurrentActorList.IndexOf(actorInfo);
+            //FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
+            //long actorID = GetDataID(element);
+            //if (actorID <= 0)
+            //    return;
+            //if (ConfigManager.VideoConfig.ActorEditMode && CurrentActorList != null) {
+            //    ActorInfo actorInfo = CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
+            //    if (actorInfo == null)
+            //        return;
+            //    int selectIdx = CurrentActorList.IndexOf(actorInfo);
 
-                // 多选
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) {
-                    if (actorFirstIdx == -1)
-                        actorFirstIdx = selectIdx;
-                    else
-                        actorSecondIdx = selectIdx;
-                }
+            //    // 多选
+            //    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) {
+            //        if (actorFirstIdx == -1)
+            //            actorFirstIdx = selectIdx;
+            //        else
+            //            actorSecondIdx = selectIdx;
+            //    }
 
-                if (actorFirstIdx >= 0 && actorSecondIdx >= 0) {
-                    if (actorFirstIdx > actorSecondIdx) {
-                        // 交换一下顺序
-                        int temp = actorFirstIdx;
-                        actorFirstIdx = actorSecondIdx - 1;
-                        actorSecondIdx = temp - 1;
-                    }
+            //    if (actorFirstIdx >= 0 && actorSecondIdx >= 0) {
+            //        if (actorFirstIdx > actorSecondIdx) {
+            //            // 交换一下顺序
+            //            int temp = actorFirstIdx;
+            //            actorFirstIdx = actorSecondIdx - 1;
+            //            actorSecondIdx = temp - 1;
+            //        }
 
-                    for (int i = actorFirstIdx + 1; i <= actorSecondIdx; i++) {
-                        ActorInfo m = CurrentActorList[i];
-                        if (SelectedActors.Contains(m))
-                            SelectedActors.Remove(m);
-                        else
-                            SelectedActors.Add(m);
-                    }
+            //        for (int i = actorFirstIdx + 1; i <= actorSecondIdx; i++) {
+            //            ActorInfo m = CurrentActorList[i];
+            //            if (SelectedActors.Contains(m))
+            //                SelectedActors.Remove(m);
+            //            else
+            //                SelectedActors.Add(m);
+            //        }
 
-                    actorFirstIdx = -1;
-                    actorSecondIdx = -1;
-                } else {
-                    if (SelectedActors.Contains(actorInfo))
-                        SelectedActors.Remove(actorInfo);
-                    else
-                        SelectedActors.Add(actorInfo);
-                }
+            //        actorFirstIdx = -1;
+            //        actorSecondIdx = -1;
+            //    } else {
+            //        if (SelectedActors.Contains(actorInfo))
+            //            SelectedActors.Remove(actorInfo);
+            //        else
+            //            SelectedActors.Add(actorInfo);
+            //    }
 
-                SetSelected();
-            }
+            //    SetSelected();
+            //}
         }
 
         public void SelectAllActor(object sender, RoutedEventArgs e)
         {
-            ConfigManager.VideoConfig.ActorEditMode = true;
-            bool allContain = true; // 检测是否取消选中
-            foreach (var item in CurrentActorList) {
-                if (!SelectedActors.Contains(item)) {
-                    SelectedActors.Add(item);
-                    allContain = false;
-                }
-            }
+            //ConfigManager.VideoConfig.ActorEditMode = true;
+            //bool allContain = true; // 检测是否取消选中
+            //foreach (var item in CurrentActorList) {
+            //    if (!SelectedActors.Contains(item)) {
+            //        SelectedActors.Add(item);
+            //        allContain = false;
+            //    }
+            //}
 
-            if (allContain)
-                SelectedActors.RemoveMany(CurrentActorList);
-            SetSelected();
+            //if (allContain)
+            //    SelectedActors.RemoveMany(CurrentActorList);
+            //SetSelected();
         }
 
 
@@ -493,7 +489,7 @@ namespace Jvedio.Core.UserControls
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             ActorSetActorSortOrder(wrapper);
 
-            bool search = SearchingActor && !string.IsNullOrEmpty(SearchText);
+            bool search = !string.IsNullOrEmpty(SearchText);
 
             string count_sql = "SELECT count(*) as Count " +
                          "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
@@ -510,6 +506,7 @@ namespace Jvedio.Core.UserControls
                          $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
                          "GROUP BY actor_info.ActorID)";
 
+
             ActorTotalCount = actorMapper.SelectCount(count_sql);
 
             string sql = $"{wrapper.Select(ActorSelectedField).ToSelect(false)} FROM actor_info " +
@@ -524,9 +521,13 @@ namespace Jvedio.Core.UserControls
                 $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
                 wrapper.ToOrder() + ActorToLimit();
 
-            // todo 只能手动设置页码，很奇怪
-            App.Current.Dispatcher.Invoke(() => { actorPagination.Total = ActorTotalCount; });
+            onPageChange(ActorTotalCount);
             RenderCurrentActors(sql);
+        }
+
+        public void onPageChange(long total)
+        {
+            App.Current.Dispatcher.Invoke(() => actorPagination.Total = ActorTotalCount + 1); // 不知为啥这里少 1
         }
 
 
@@ -558,6 +559,10 @@ namespace Jvedio.Core.UserControls
             if (actors == null)
                 actors = new List<ActorInfo>();
             Actors.AddRange(actors);
+
+
+            CurrentActorCount = Actors.Count;
+
             RenderActor();
         }
 
@@ -611,8 +616,6 @@ namespace Jvedio.Core.UserControls
                 CurrentActorList[idx] = null;
                 CurrentActorList[idx] = actor;
             }
-
-            CurrentActorCount = CurrentActorList.Count;
         }
 
         private void Page_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -839,12 +842,10 @@ namespace Jvedio.Core.UserControls
 
         private void NewActor(object sender, RoutedEventArgs e)
         {
-            bool? success = new Window_EditActor(0).ShowDialog();
+            bool? success = new Window_EditActor(0, true).ShowDialog();
             if ((bool)success) {
                 MessageNotify.Success(LangManager.GetValueByKey("AddSuccess"));
-
-                // todo
-                //vieModel.Statistic();
+                onStatistic?.Invoke();
             }
         }
 
@@ -856,6 +857,11 @@ namespace Jvedio.Core.UserControls
         public void SetSearchFocus()
         {
             searchBox.SetFocus();
+        }
+
+        private void searchBox_Search(object sender, RoutedEventArgs e)
+        {
+            SelectActor();
         }
     }
 }

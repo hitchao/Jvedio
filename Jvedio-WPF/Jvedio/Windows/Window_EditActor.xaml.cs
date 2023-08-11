@@ -2,11 +2,13 @@
 using Jvedio.Core.Scan;
 using Jvedio.Entity;
 using SuperControls.Style;
+using SuperControls.Style.Plugin;
 using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -21,6 +23,13 @@ namespace Jvedio
     /// </summary>
     public partial class Window_EditActor : BaseWindow
     {
+
+
+
+        #region "事件"
+        public static Action<long> onActorInfoChanged;
+
+        #endregion
         #region "属性"
         private Main main { get; set; }
 
@@ -38,49 +47,49 @@ namespace Jvedio
         }
 
 
-        public Window_EditActor(long actorID) : this()
+        public Window_EditActor(long actorID, bool newActor = false) : this()
         {
-            if (actorID <= 0)
-                return;
-
-            this.ActorID = actorID;
             this.DataContext = this;
 
-            Init();
+            if (newActor) {
+                CurrentActorInfo = new ActorInfo();
+            } else {
+                if (actorID <= 0)
+                    return;
+                this.ActorID = actorID;
+                Init();
+            }
+
         }
 
         public void Init()
         {
             if (this.ActorID <= 0)
                 return;
-
-
-            CurrentActorInfo = new ActorInfo();
-            SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
-            wrapper.Eq("ActorID", this.ActorID);
-            ActorInfo actorInfo = actorMapper.SelectById(wrapper);
-            if (actorInfo == null)
-                return;
-            ActorInfo.SetImage(ref actorInfo);
-            CurrentActorInfo = null;
-            CurrentActorInfo = actorInfo;
+            CurrentActorInfo = ActorInfo.GetById(ActorID);
         }
+
+
 
         private void SaveActor(object sender, RoutedEventArgs e)
         {
-            CurrentActorInfo.ActorName = CurrentActorInfo.ActorName.ToProperFileName();
-            if (string.IsNullOrEmpty(CurrentActorInfo.ActorName)) {
+            string actorName = CurrentActorInfo.ActorName.ToProperFileName();
+            if (string.IsNullOrEmpty(actorName)) {
                 MessageNotify.Error(LangManager.GetValueByKey("ActorCanNotBeNull"));
                 return;
             }
 
+            CurrentActorInfo.ActorName = actorName;
+
             if (ActorID > 0) {
                 int update = actorMapper.UpdateById(CurrentActorInfo);
                 if (update > 0) {
-                    MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
+                    ActorInfo actorInfo = ActorInfo.GetById(ActorID);
+                    CurrentActorInfo.SmallImage = null;
+                    CurrentActorInfo.SmallImage = actorInfo.SmallImage;
 
-                    // todo
-                    // main?.RefreshActor(CurrentActorInfo.ActorID);
+                    MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
+                    onActorInfoChanged(ActorID);
                 }
             } else {
                 // 新增
@@ -110,16 +119,18 @@ namespace Jvedio
                 return;
             }
             string imageFileName = string.Empty;
-            System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog1.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
-            openFileDialog1.Filter = Window_Settings.SupportPictureFormat;
-            openFileDialog1.FilterIndex = 1;
-            openFileDialog1.RestoreDirectory = true;
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                string filename = openFileDialog1.FileName;
-                if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
-                    imageFileName = filename;
-            }
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
+            fileDialog.Title = SuperControls.Style.LangManager.GetValueByKey("ChooseFile");
+            fileDialog.Filter = Window_Settings.SupportPictureFormat;
+            fileDialog.FilterIndex = 1;
+            fileDialog.RestoreDirectory = true;
+            if (fileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            string filename = fileDialog.FileName;
+            if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
+                imageFileName = filename;
+
 
             bool copied = false;
             string targetFileName = CurrentActorInfo.GetImagePath(searchExt: false);
@@ -138,10 +149,7 @@ namespace Jvedio
 
             if (copied) {
                 // 设置图片
-                CurrentActorInfo.SmallImage = null;
-                CurrentActorInfo.SmallImage = BitmapImageFromFile(targetFileName);
-                // todo
-                //main?.RefreshActor(CurrentActorInfo.ActorID);
+                SetCurrentImage(targetFileName);
             }
         }
 
@@ -152,8 +160,6 @@ namespace Jvedio
                 MsgBox.Show(LangManager.GetValueByKey("ActorImageNotSupported"));
                 return;
             }
-
-
 
 
             if (CurrentActorInfo == null || string.IsNullOrEmpty(CurrentActorInfo.ActorName)) {
@@ -178,13 +184,25 @@ namespace Jvedio
                         }
                         if (copy) {
                             FileHelper.TryCopyFile(originPath, targetFileName, true);
-                            CurrentActorInfo.SmallImage = ImageHelper.BitmapImageFromFile(targetFileName);
+                            SetCurrentImage(targetFileName);
                         }
 
                     }
                 }
             }
+        }
 
+        private void SetCurrentImage(string targetFileName)
+        {
+            CurrentActorInfo.SmallImage = null;
+            CurrentActorInfo.SmallImage = BitmapImageFromFile(targetFileName);
+            onActorInfoChanged?.Invoke(CurrentActorInfo.ActorID);
+        }
+
+        private void Border_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Link;
+            e.Handled = true; // 必须加
         }
     }
 }

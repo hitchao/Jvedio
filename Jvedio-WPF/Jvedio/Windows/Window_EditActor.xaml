@@ -9,9 +9,10 @@
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource EditActor}"
     Width="800"
-    Height="400"
+    Height="500"
     Background="{DynamicResource Window.Background}"
     Foreground="{DynamicResource Window.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -76,22 +77,28 @@
                     Margin="10"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
+                    AllowDrop="True"
+                    CornerRadius="4"
+                    DragEnter="Border_DragEnter"
                     Drop="ActorImage_Drop"
-                    Style="{StaticResource DropBorderStyle}">
-                    <Image Width="125" Height="auto">
-                        <Image.Source>
-                            <Binding Path="CurrentActorInfo.SmallImage">
-                                <Binding.TargetNullValue>
-                                    <ImageSource>/Resources/Picture/NoPrinting_A.png</ImageSource>
-                                </Binding.TargetNullValue>
-                            </Binding>
-                        </Image.Source>
-                        <Image.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Click="SetActorImage" Header="{DynamicResource SetActorImage}" />
-                            </ContextMenu>
-                        </Image.ContextMenu>
-                    </Image>
+                    Effect="{StaticResource PopupDropShadowEffect}">
+                    <Border.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Click="SetActorImage" Header="{DynamicResource SetActorImage}" />
+                        </ContextMenu>
+                    </Border.ContextMenu>
+
+                    <Border.Background>
+                        <ImageBrush Stretch="Fill">
+                            <ImageBrush.ImageSource>
+                                <Binding Path="CurrentActorInfo.SmallImage">
+                                    <Binding.TargetNullValue>
+                                        <ImageSource>/Resources/Picture/NoPrinting_A.png</ImageSource>
+                                    </Binding.TargetNullValue>
+                                </Binding>
+                            </ImageBrush.ImageSource>
+                        </ImageBrush>
+                    </Border.Background>
 
                 </Border>
 
@@ -99,13 +106,15 @@
                 <super:SearchBox
                     Width="200"
                     PlaceHolder="{DynamicResource ActorName}"
-                    Text="{Binding CurrentActorInfo.ActorName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    ShowClearButton="False"
+                    Text="{Binding CurrentActorInfo.ActorName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    TextAlignment="Center" />
 
 
 
                 <Border
-                    Margin="10"
-                    HorizontalAlignment="Left"
+                    Margin="0,10"
+                    HorizontalAlignment="Center"
                     Background="{DynamicResource Window.Title.Background}"
                     CornerRadius="5">
                     <TextBlock

@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 namespace Jvedio.Core.Media
 {
 
-    // todo
+    // todo 重构
     public class GifImage : Image
     {
 

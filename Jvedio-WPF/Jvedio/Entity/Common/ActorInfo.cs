@@ -3,8 +3,10 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
+using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
+using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Reflections;
 using System.Collections.Generic;
@@ -32,8 +34,14 @@ namespace Jvedio.Entity
         [TableId(IdType.AUTO)]
         public long ActorID { get; set; }
 
-        public string ActorName { get; set; }
-
+        private string _ActorName="";
+        public string ActorName {
+            get { return _ActorName; }
+            set {
+                _ActorName = value;
+                RaisePropertyChanged();
+            }
+        }
         public string Country { get; set; }
 
         public string Nation { get; set; }
@@ -160,6 +168,17 @@ namespace Jvedio.Entity
             return result;
         }
 
+
+        public static ActorInfo GetById(long actorID)
+        {
+            SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
+            wrapper.Eq("ActorID", actorID);
+            ActorInfo actorInfo = MapperManager.actorMapper.SelectById(wrapper);
+            if (actorInfo == null)
+                return null;
+            ActorInfo.SetImage(ref actorInfo);
+            return actorInfo;
+        }
 
         public override bool Equals(object obj)
         {

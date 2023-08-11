@@ -35,6 +35,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.App;
+using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.Core.Global.UrlManager;
 using static Jvedio.MapperManager;
 using static Jvedio.Window_Settings;
@@ -343,9 +344,35 @@ namespace Jvedio
             };
 
             Video.onPlayVideo += () => vieModel.Statistic();
+            ActorList.onStatistic += () => vieModel.Statistic();
 
             VideoList.onDeleteID += (list) => DeleteID(list, false);
 
+            Window_EditActor.onActorInfoChanged += onActorInfoChanged;
+
+        }
+
+        private void onActorInfoChanged(long id)
+        {
+            vieModel.TabItemManager.GetAllActorList().ForEach(arg => {
+                arg.RefreshActor(id);
+            });
+
+            SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
+            wrapper.Eq("ActorID", id);
+            ActorInfo actorInfo = actorMapper.SelectById(wrapper);
+            if (actorInfo != null) {
+                ActorInfo.SetImage(ref actorInfo);
+
+                vieModel.TabItemManager.GetAllVideoList().ForEach(arg => {
+                    if (arg.actorInfoView.CurrentActorInfo != null) {
+                        arg.actorInfoView.CurrentActorInfo = null;
+                        arg.actorInfoView.CurrentActorInfo = actorInfo;
+                        arg.actorInfoView.CurrentActorInfo.SmallImage = actorInfo.SmallImage;
+                    }
+
+                });
+            }
         }
 
 

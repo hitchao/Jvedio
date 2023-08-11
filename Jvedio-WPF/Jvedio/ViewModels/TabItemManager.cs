@@ -362,6 +362,8 @@ namespace Jvedio.ViewModels
 
             if (uIElement is VideoList videoList)
                 videoList?.Refresh();
+            else if (uIElement is ActorList actorList)
+                actorList?.Refresh();
         }
 
 

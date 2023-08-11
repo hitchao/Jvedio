@@ -33,6 +33,7 @@ namespace Jvedio.Core.Config.Data
             ActorEditMode = false;
             ActorSortDescending = true;
             ShowFilter = true;
+            ActorShowCount = true;
 
         }
 
@@ -48,6 +49,14 @@ namespace Jvedio.Core.Config.Data
 
         #region "Actor"
 
+        private bool _ActorShowCount;
+        public bool ActorShowCount {
+            get { return _ActorShowCount; }
+            set {
+                _ActorShowCount = value;
+                RaisePropertyChanged();
+            }
+        }
         private long _ActorViewMode;
         public long ActorViewMode {
             get { return _ActorViewMode; }

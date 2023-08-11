@@ -50,7 +50,23 @@
             BorderBrush="{DynamicResource Window.Title.Background}"
             BorderThickness="1"
             CornerRadius="5"
-            Effect="{StaticResource ShadowDropShadowEffect}" />
+            Effect="{StaticResource ShadowDropShadowEffect}">
+            <Border.Background>
+                <VisualBrush Viewbox="0.06,0.1,0.85,1.5">
+                    <VisualBrush.Visual>
+                        <Image Source="{Binding CurrentActorInfo.SmallImage}">
+                            <Image.BitmapEffect>
+                                <BlurBitmapEffect
+                                    KernelType="Gaussian"
+                                    Radius="100"
+                                    RenderOptions.BitmapScalingMode="LowQuality"
+                                    RenderOptions.EdgeMode="Unspecified" />
+                            </Image.BitmapEffect>
+                        </Image>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Border.Background>
+        </Border>
 
         <super:HoverPath Click="HideActressGrid" Style="{StaticResource CloseExHoverPath}" />
 
@@ -64,29 +80,36 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
-                <Image
-                    Width="120"
-                    Margin="0,20"
+
+                <Border
+                    Width="125"
+                    Height="125"
+                    Margin="0,30,0,0"
                     VerticalAlignment="Top"
                     AllowDrop="True"
+                    CornerRadius="4"
                     DragOver="Image_DragOver"
                     Drop="Image_Drop"
-                    Source="{Binding CurrentActorInfo.SmallImage}"
                     Tag="{Binding CurrentActorInfo.ActorID, Mode=OneWay}">
-                    <Image.ContextMenu>
+                    <Border.ContextMenu>
                         <ContextMenu>
                             <MenuItem Click="OpenActorPath" Header="{DynamicResource OpenPath}" />
                         </ContextMenu>
-                    </Image.ContextMenu>
-                </Image>
+                    </Border.ContextMenu>
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding CurrentActorInfo.SmallImage}" Stretch="Fill" />
+                    </Border.Background>
+                </Border>
+
                 <TextBox
                     Width="auto"
                     MaxWidth="200"
+                    Margin="0,10,0,0"
                     HorizontalAlignment="Center"
                     AcceptsReturn="False"
                     Background="Transparent"
                     ContextMenu="{StaticResource CopyContextMenu}"
-                    FontSize="16"
+                    FontSize="14"
                     FontWeight="Bold"
                     Foreground="{DynamicResource Window.Foreground}"
                     IsReadOnly="True"
