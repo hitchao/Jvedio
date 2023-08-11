@@ -1347,6 +1347,7 @@ namespace Jvedio.Core.UserControls
             SearchBoxListItemContainerStyle.Setters.Add(eventSetter);
 
             actorInfoView.Close += () => vieModel.ShowActorGrid = false;
+
         }
 
         private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -1378,6 +1379,7 @@ namespace Jvedio.Core.UserControls
             listBox.ItemContainerStyle = SearchBoxListItemContainerStyle;
             listBox.Background = Brushes.Transparent;
             listBox.ItemsSource = list;
+            listBox.PreviewKeyUp += searchTabItem_PreviewKeyUp;
             if (vieModel.TabSelectedIndex == 0 && !string.IsNullOrEmpty(vieModel.SearchText))
                 vieModel.Searching = true;
         }
@@ -2142,28 +2144,19 @@ namespace Jvedio.Core.UserControls
             searchHistoryMapper.Insert(history);
         }
 
-        private void searchBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Tab) {
-                (searchTabControl.Items[(int)ConfigManager.Main.SearchSelectedIndex] as TabItem).Focus();
-            }
-        }
+
 
         private void SearchBar_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) {
                 doSearch(sender, null);
-            } else if (e.Key == Key.Down) {
-                // int count = vieModel.CurrentSearchCandidate.Count;
+            } else if (e.Key == Key.Down || e.Key == Key.Up) {
+                if (searchTabControl.SelectedItem is TabItem tabItem &&
+                    tabItem != null && tabItem.Content is ListBox listbox && listbox.Items.Count > 0) {
+                    listbox.Focus();
+                    listbox.SelectedIndex = 0;
+                }
 
-                // SearchSelectIdex += 1;
-                // if (SearchSelectIdex >= count) SearchSelectIdex = 0;
-                // SetSearchSelect();
-            } else if (e.Key == Key.Up) {
-                // int count = vieModel.CurrentSearchCandidate.Count;
-                // SearchSelectIdex -= 1;
-                // if (SearchSelectIdex < 0) SearchSelectIdex = count - 1;
-                // SetSearchSelect();
             } else if (e.Key == Key.Escape) {
                 vieModel.Searching = false;
             } else if (e.Key == Key.Delete) {
@@ -2186,5 +2179,53 @@ namespace Jvedio.Core.UserControls
                 // searchTabControl.Focus();
             }
         }
+
+        private void searchTabItem_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            App.Logger.Info(e.Key.ToString());
+            if (e.Key == Key.Left) {
+                int idx = searchTabControl.SelectedIndex - 1;
+                if (idx < 0)
+                    idx = searchTabControl.Items.Count - 1;
+                searchTabControl.SelectedIndex = idx;
+                e.Handled = true;
+            } else if (e.Key == Key.Right) {
+                int idx = searchTabControl.SelectedIndex + 1;
+                if (idx >= searchTabControl.Items.Count - 1) {
+                    idx = 0;
+                }
+                searchTabControl.SelectedIndex = idx;
+                e.Handled = true;
+            } else if (e.Key == Key.Enter) {
+                if (sender is ListBox listBox &&
+                    listBox.Items.Count > 0 &&
+                    listBox.SelectedItem is string search
+                    && !string.IsNullOrEmpty(search)) {
+
+                    searchBox.TextChanged -= RefreshCandidate;
+
+                    vieModel.SearchText = search;
+                    doSearch(null, null);
+                    vieModel.Searching = false;
+
+                    searchBox.TextChanged += RefreshCandidate;
+                }
+            }
+
+        }
+
+        private void searchTabControl_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) {
+                vieModel.Searching = false;
+                searchBox.SetFocus();
+            }
+        }
+
+        public void SetSearchFocus()
+        {
+            searchBox.SetFocus();
+        }
+
     }
 }

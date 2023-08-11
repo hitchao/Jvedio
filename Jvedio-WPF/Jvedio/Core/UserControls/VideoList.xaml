@@ -191,9 +191,7 @@
                 Name="searchBox"
                 Margin="0,5,0,0"
                 HideClearButtonOnMouseLeave="False"
-                PreviewKeyDown="searchBox_PreviewKeyDown"
                 PreviewKeyUp="SearchBar_PreviewKeyUp"
-                Search="doSearch"
                 SearchOnTextChanged="False"
                 Style="{StaticResource SearchBoxStyle}"
                 Text="{Binding Path=DataContext.SearchText, Mode=TwoWay, ElementName=videoList}"
@@ -229,7 +227,7 @@
                             Background="Transparent"
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
-                            SelectedIndex="{Binding Path=DataContext.SearchSelectedIndex, Mode=TwoWay, ElementName=videoList}"
+                            PreviewKeyUp="searchTabControl_PreviewKeyUp"
                             Style="{StaticResource FlatTabControl}">
                             <TabItem Header="{DynamicResource ID}" />
                             <TabItem Header="{DynamicResource Title}" />

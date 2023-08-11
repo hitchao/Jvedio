@@ -147,7 +147,6 @@ namespace Jvedio.Core.UserControls.ViewModels
             set {
                 _SearchText = value;
                 RaisePropertyChanged();
-                //BeginSearch();
             }
         }
 

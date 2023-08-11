@@ -2,9 +2,6 @@
 
 namespace Jvedio.Core.DataBase.Tables
 {
-    /// <summary>
-    /// todo 应该把数据库表抽象出来
-    /// </summary>
     public static class Sqlite
     {
         public static class SQL

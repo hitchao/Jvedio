@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.App;
@@ -36,6 +37,18 @@ namespace Jvedio.ViewModel
 
 
         #region "属性"
+
+        private bool _LoadingVideoInfo;
+        public bool LoadingVideoInfo {
+            get {
+                return _LoadingVideoInfo;
+            }
+            set {
+                _LoadingVideoInfo = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private Window_Details WindowDetails { get; set; }
 
         private bool LoadingLabel { get; set; }
@@ -168,10 +181,18 @@ namespace Jvedio.ViewModel
 
         }
 
-        public void LoadVideoInfo()
+        public async void LoadVideoInfo()
         {
-            // todo 分段视频
-            VideoInfo = Video.GetMediaInfo(CurrentVideo.Path);
+            // 异步加载
+            if (LoadingVideoInfo)
+                return;
+
+            await Task.Run(() => {
+                LoadingVideoInfo = true;
+                VideoInfo = Video.GetMediaInfo(CurrentVideo.Path);
+                return true;
+            });
+            LoadingVideoInfo = false;
         }
 
         public void SaveLove()

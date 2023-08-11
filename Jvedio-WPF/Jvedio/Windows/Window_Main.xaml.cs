@@ -793,7 +793,6 @@ namespace Jvedio
             ConfigManager.Main.Y = this.Top;
             ConfigManager.Main.Width = this.Width;
             ConfigManager.Main.Height = this.Height;
-            ConfigManager.Main.SearchSelectedIndex = vieModel.SearchSelectedIndex;
             ConfigManager.Main.ClassifySelectedIndex = vieModel.ClassifySelectedIndex;
             ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
         }
@@ -903,6 +902,10 @@ namespace Jvedio
         // todo
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
         {
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.F) {
+                SetTabItemSearch();
+            }
+
             //if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.F) {
             //    // 高级检索
             //} else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Right) {
@@ -938,6 +941,20 @@ namespace Jvedio
             //    PreviousActorPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
         }
 
+
+        private void SetTabItemSearch()
+        {
+            FrameworkElement ele = vieModel.TabItemManager.GetSelected();
+            if (ele is VideoList videoList) {
+                videoList.SetSearchFocus();
+            } else if (ele is ActorList actorList) {
+                actorList.SetSearchFocus();
+            } else if (ele is LabelView labelView) {
+                labelView.SetSearchFocus();
+            }
+
+
+        }
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
@@ -1634,6 +1651,10 @@ namespace Jvedio
                 return;
         }
 
+        private void BaseWindow_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
     }
 
 }

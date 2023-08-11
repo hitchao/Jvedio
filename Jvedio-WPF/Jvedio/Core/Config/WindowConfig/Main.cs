@@ -49,7 +49,14 @@ namespace Jvedio.Core.WindowConfig
 
         public long CurrentDBId { get; set; }
 
-        public long SearchSelectedIndex { get; set; }
+        private long _SearchSelectedIndex;
+        public long SearchSelectedIndex {
+            get { return _SearchSelectedIndex; }
+            set {
+                _SearchSelectedIndex = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public long ClassifySelectedIndex { get; set; }
 

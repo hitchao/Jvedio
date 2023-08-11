@@ -255,16 +255,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int _SearchSelectedIndex = (int)ConfigManager.Main.SearchSelectedIndex;
-
-        public int SearchSelectedIndex {
-            get { return _SearchSelectedIndex; }
-
-            set {
-                _SearchSelectedIndex = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private int _ClassifySelectedIndex = (int)ConfigManager.Main.ClassifySelectedIndex;
 

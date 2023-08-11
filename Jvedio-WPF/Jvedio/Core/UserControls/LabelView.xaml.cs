@@ -118,6 +118,10 @@ namespace Jvedio.Core.UserControls
 
             }
         }
+        public void SetSearchFocus()
+        {
+            searchBox.SetFocus();
+        }
     }
 
     public enum LabelType

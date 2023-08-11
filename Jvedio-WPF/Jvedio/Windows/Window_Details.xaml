@@ -1168,175 +1168,189 @@
                                     Padding="10,5"
                                     Header="{DynamicResource VideoInfo}"
                                     Style="{DynamicResource RoundTabItemStyle}">
-                                    <StackPanel Name="infoStackPanel">
+                                    <super:SimplePanel>
 
-                                        <super:HoverPath
-                                            Grid.Column="1"
-                                            HorizontalAlignment="Left"
-                                            Click="CopyVideoInfo"
-                                            Style="{StaticResource CopyHoverPath}" />
+                                        <Border
+                                            Panel.ZIndex="10"
+                                            Background="{DynamicResource Window.Detail.Background}"
+                                            Opacity="0.5"
+                                            Visibility="{Binding LoadingVideoInfo, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <super:LoadingCircle
+                                                Width="40"
+                                                Height="40"
+                                                DotSize="6" />
+                                        </Border>
 
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock
+
+                                        <StackPanel Name="infoStackPanel">
+                                            <super:HoverPath
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Left"
+                                                Click="CopyVideoInfo"
+                                                Style="{StaticResource CopyHoverPath}" />
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock
+                                                    Width="auto"
+                                                    Style="{StaticResource BaseTextBlock}"
+                                                    Text="{DynamicResource Format}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.Format}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Duration}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.Duration}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FrameRate}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.FrameRate}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource BitRate}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.BitRate}" />
+                                            </StackPanel>
+
+
+
+
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Resolution}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.Resolution}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource DisplayAspectRatio}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.DisplayAspectRatio}" />
+                                            </StackPanel>
+
+
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource BitDepth}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.BitDepth}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FrameCount}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.FrameCount}" />
+                                            </StackPanel>
+
+                                            <Rectangle
                                                 Width="auto"
+                                                Height="1"
+                                                Margin="0,5"
+                                                Fill="{DynamicResource Window.Foreground}" />
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioFormat}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.AudioFormat}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioBitRate}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.AudioBitRate}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioSamplingRate}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.AudioSamplingRate}" />
+                                            </StackPanel>
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Channel}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.Channel}" />
+                                            </StackPanel>
+
+                                            <Rectangle
+                                                Width="auto"
+                                                Height="1"
+                                                Margin="0,5"
+                                                Fill="{DynamicResource Window.Foreground}" />
+
+
+
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FileExtension}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.Extension}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FileSize}" />
+                                                <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
+                                                <TextBox
+                                                    Margin="0"
+                                                    Style="{StaticResource ViewTextBox}"
+                                                    Text="{Binding VideoInfo.FileSize}" />
+                                            </StackPanel>
+
+                                            <TextBlock
+                                                Margin="0"
+                                                Cursor="Hand"
+                                                Foreground="SkyBlue"
+                                                MouseEnter="TextBox_MouseEnter"
+                                                MouseLeave="TextBox_MouseLeave"
+                                                PreviewMouseLeftButtonUp="OpenFilePath"
                                                 Style="{StaticResource BaseTextBlock}"
-                                                Text="{DynamicResource Format}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.Format}" />
+                                                Text="{Binding VideoInfo.FileName}"
+                                                TextWrapping="Wrap" />
+
                                         </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Duration}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.Duration}" />
-                                        </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FrameRate}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.FrameRate}" />
-                                        </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource BitRate}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.BitRate}" />
-                                        </StackPanel>
-
-
-
-
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Resolution}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.Resolution}" />
-                                        </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource DisplayAspectRatio}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.DisplayAspectRatio}" />
-                                        </StackPanel>
-
-
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource BitDepth}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.BitDepth}" />
-                                        </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FrameCount}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.FrameCount}" />
-                                        </StackPanel>
-
-                                        <Rectangle
-                                            Width="auto"
-                                            Height="1"
-                                            Margin="0,5"
-                                            Fill="{DynamicResource Window.Foreground}" />
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioFormat}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.AudioFormat}" />
-                                        </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioBitRate}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.AudioBitRate}" />
-                                        </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource AudioSamplingRate}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.AudioSamplingRate}" />
-                                        </StackPanel>
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Channel}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.Channel}" />
-                                        </StackPanel>
-
-                                        <Rectangle
-                                            Width="auto"
-                                            Height="1"
-                                            Margin="0,5"
-                                            Fill="{DynamicResource Window.Foreground}" />
-
-
-
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FileExtension}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.Extension}" />
-                                        </StackPanel>
-
-                                        <StackPanel Margin="0,5" Orientation="Horizontal">
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource FileSize}" />
-                                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="：" />
-                                            <TextBox
-                                                Margin="0"
-                                                Style="{StaticResource ViewTextBox}"
-                                                Text="{Binding VideoInfo.FileSize}" />
-                                        </StackPanel>
-
-                                        <TextBlock
-                                            Margin="0"
-                                            Cursor="Hand"
-                                            Foreground="SkyBlue"
-                                            MouseEnter="TextBox_MouseEnter"
-                                            MouseLeave="TextBox_MouseLeave"
-                                            PreviewMouseLeftButtonUp="OpenFilePath"
-                                            Style="{StaticResource BaseTextBlock}"
-                                            Text="{Binding VideoInfo.FileName}"
-                                            TextWrapping="Wrap" />
-
-                                    </StackPanel>
+                                    </super:SimplePanel>
 
                                 </TabItem>
                             </TabControl>

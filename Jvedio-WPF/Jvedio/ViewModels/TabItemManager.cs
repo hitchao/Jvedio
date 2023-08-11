@@ -319,6 +319,15 @@ namespace Jvedio.ViewModels
             return TabPanel.Children.OfType<ActorList>().ToList();
         }
 
+        public FrameworkElement GetSelected()
+        {
+            int idx = GetSelectedIndex();
+            if (idx >= 0 && idx < TabPanel.Children.Count) {
+                return TabPanel.Children[idx] as FrameworkElement;
+            }
+            return null;
+        }
+
         public VideoList GetVideoListByType(TabType type)
         {
             if (TabPanel.Children == null || TabPanel.Children.Count == 0)
@@ -425,6 +434,17 @@ namespace Jvedio.ViewModels
             }
             if (target >= 0 && target < allData.Count)
                 allData[target].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public int GetSelectedIndex()
+        {
+            if (vieModel.TabItems.Count > 0) {
+                for (int i = 0; i < vieModel.TabItems.Count; i++) {
+                    if (vieModel.TabItems[i].Selected)
+                        return i;
+                }
+            }
+            return -1;
         }
 
         public void PinByIndex(int idx)
