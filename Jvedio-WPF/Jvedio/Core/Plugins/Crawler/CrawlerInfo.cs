@@ -9,6 +9,9 @@ namespace Jvedio.Core.Plugins
 {
     public class CrawlerInfo
     {
+        #region "属性"
+
+
         public string ServerName { get; set; }
 
         public string InfoType { get; set; }
@@ -48,6 +51,7 @@ namespace Jvedio.Core.Plugins
                 FileHash = Encrypt.TryGetFileMD5(value);
             }
         }
+        #endregion
 
         public CrawlerInfo()
         {

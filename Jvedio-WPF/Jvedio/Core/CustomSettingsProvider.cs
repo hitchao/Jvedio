@@ -9,20 +9,48 @@ using static Jvedio.App;
 
 namespace Jvedio.Core
 {
-    // 修改 user.config 存储路径
-    // https://stackoverflow.com/questions/2265271/custom-path-of-the-user-config
+    /// <summary>
+    /// 自定义 user.config 存储路径
+    /// <para>参考：<see href="https://stackoverflow.com/questions/2265271/custom-path-of-the-user-config">stackoverflow</see></para>
+    /// </summary>
     class CustomSettingsProvider : SettingsProvider
     {
-        // user.config 存储路径
-        private static string configPath =
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data",
-                Environment.UserName, "user-config.xml");
 
         private const string NAME = "name";
         private const string SERIALIZE_AS = "serializeAs";
         private const string CONFIG = "configuration";
         private const string USER_SETTINGS = "userSettings";
         private const string SETTING = "setting";
+
+        #region "属性"
+
+
+        /// <summary>
+        /// user.config 存储路径
+        /// </summary>
+        private static string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data",
+                Environment.UserName, "user-config.xml");
+
+        private bool _loaded { get; set; }
+
+
+        /// <summary>
+        /// The setting key this is returning must set before the settings are used.
+        /// e.g. <c>Properties.Settings.Default.SettingsKey = @"C:\temp\user.config";</c>
+        /// </summary>
+        private string UserConfigPath {
+            get {
+                return configPath;
+            }
+        }
+
+        /// <summary>
+        /// In memory storage of the settings values
+        /// </summary>
+        private Dictionary<string, SettingStruct> SettingsDictionary { get; set; }
+
+
+        #endregion
 
         /// <summary>
         /// Loads the file into memory.
@@ -202,21 +230,6 @@ namespace Jvedio.Core
         }
 
         /// <summary>
-        /// The setting key this is returning must set before the settings are used.
-        /// e.g. <c>Properties.Settings.Default.SettingsKey = @"C:\temp\user.config";</c>
-        /// </summary>
-        private string UserConfigPath {
-            get {
-                return configPath;
-            }
-        }
-
-        /// <summary>
-        /// In memory storage of the settings values
-        /// </summary>
-        private Dictionary<string, SettingStruct> SettingsDictionary { get; set; }
-
-        /// <summary>
         /// Helper struct.
         /// </summary>
         internal struct SettingStruct
@@ -226,6 +239,6 @@ namespace Jvedio.Core
             internal string value;
         }
 
-        bool _loaded;
+
     }
 }

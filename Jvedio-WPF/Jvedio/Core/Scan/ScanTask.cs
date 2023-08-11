@@ -25,8 +25,52 @@ namespace Jvedio.Core.Scan
         private const string DEFAULT_IMAGE_EXT = "png,jpg,jpeg,bmp,jpe,ico,gif";
 
 
+        #region "事件"
+
         public event EventHandler onScanning;
 
+
+
+        #endregion
+
+        #region "静态属性"
+
+
+        public static Dictionary<NotImportReason, string> ReasonToString { get; set; } = new Dictionary<NotImportReason, string>()
+        {
+            { NotImportReason.NotInExtension, LangManager.GetValueByKey("NotSupportedExt") },
+            { NotImportReason.RepetitiveVideo, LangManager.GetValueByKey("RepeatedVideo") },
+            { NotImportReason.RepetitiveVID, LangManager.GetValueByKey("RepeatedVID") },
+            { NotImportReason.SizeTooSmall, LangManager.GetValueByKey("FileSizeTooSmall") },
+            { NotImportReason.SizeTooLarge, LangManager.GetValueByKey("FileSizeTooBig") },
+        };
+
+
+        private static string[] NFOUpdateMetaProps { get; set; } = new string[]
+        {
+            "Title",
+            "ReleaseYear",
+            "ReleaseDate",
+            "Country",
+            "Genre",
+            "Rating",
+            "LastScanDate",
+            "PathExist",
+        };
+
+        private static string[] NFOUpdateVideoProps { get; set; } = new string[]
+        {
+            "Plot",
+            "Director",
+            "Duration",
+            "Studio",
+            "Series",
+            "Outline",
+        };
+
+        #endregion
+
+        #region "属性"
 
         public static string VIDEO_EXTENSIONS { get; set; }
 
@@ -37,7 +81,6 @@ namespace Jvedio.Core.Scan
         public static List<string> PICTURE_EXTENSIONS_LIST { get; set; }
 
         public ScanResult ScanResult { get; set; }
-
 
         /// <summary>
         /// 需要扫描的目录
@@ -51,39 +94,9 @@ namespace Jvedio.Core.Scan
         private List<Video> existVideos { get; set; }
 
         private List<ActorInfo> existActors { get; set; }
+        #endregion
 
 
-        public static Dictionary<NotImportReason, string> ReasonToString = new Dictionary<NotImportReason, string>()
-        {
-            { NotImportReason.NotInExtension, LangManager.GetValueByKey("NotSupportedExt") },
-            { NotImportReason.RepetitiveVideo, LangManager.GetValueByKey("RepeatedVideo") },
-            { NotImportReason.RepetitiveVID, LangManager.GetValueByKey("RepeatedVID") },
-            { NotImportReason.SizeTooSmall, LangManager.GetValueByKey("FileSizeTooSmall") },
-            { NotImportReason.SizeTooLarge, LangManager.GetValueByKey("FileSizeTooBig") },
-        };
-
-
-        private static string[] NFOUpdateMetaProps = new string[]
-        {
-            "Title",
-            "ReleaseYear",
-            "ReleaseDate",
-            "Country",
-            "Genre",
-            "Rating",
-            "LastScanDate",
-            "PathExist",
-        };
-
-        private static string[] NFOUpdateVideoProps = new string[]
-        {
-            "Plot",
-            "Director",
-            "Duration",
-            "Studio",
-            "Series",
-            "Outline",
-        };
 
         static ScanTask()
         {
@@ -220,7 +233,7 @@ namespace Jvedio.Core.Scan
 
         private List<Video> GetExistVideos()
         {
-            string sql = VideoMapper.BASE_SQL;
+            string sql = VideoMapper.SQL_BASE;
             sql = "select metadata.DataID,VID,Hash,Size,Path,MVID " + sql + $" and metadata.DBId={ConfigManager.Main.CurrentDBId}";
             List<Dictionary<string, object>> list = videoMapper.Select(sql);
             return videoMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);

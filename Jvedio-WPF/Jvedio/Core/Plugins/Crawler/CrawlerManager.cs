@@ -14,18 +14,19 @@ namespace Jvedio.Core.Plugins.Crawler
 {
     /// <summary>
     /// 加载爬虫插件
+    /// <para>DLL 文件</para>
     /// </summary>
     public class CrawlerManager
     {
-        /**
-         * 文件类型：DLL 文件，或者 cs 文件
-         * 执行方式：反射加载
-         *
-         */
+
+        #region "属性"
+
+
         public static List<PluginMetaData> PluginMetaDatas { get; set; }
 
-        public static string BaseDir =
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
+        public static string BaseDir { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "crawlers");
+
+        #endregion
 
         // todo DLL 签名验证
         public static void Init(bool moveFile)

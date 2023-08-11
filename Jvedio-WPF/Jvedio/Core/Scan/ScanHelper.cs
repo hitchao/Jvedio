@@ -24,12 +24,18 @@ namespace Jvedio
         private const string CHARACTERS = "abcdefghijklmn";
         public const int DEFAULT_MIN_FILESIZE = 1 * 1024 * 1024;   // 1MB
 
-        // 最小文件大小（B）
+        #region "属性"
+
+        /// <summary>
+        /// 最小文件大小（B）
+        /// </summary>
         public static double MinFileSize { get; set; } = DEFAULT_MIN_FILESIZE;
 
         public static string SubSectionFeature { get; set; } = "-,_,cd,-cd,hd,whole";
 
         public static List<string> FilePattern { get; set; } = new List<string>();
+
+        #endregion
 
         public static void InitSearchPattern()
         {

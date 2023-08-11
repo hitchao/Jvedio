@@ -6,17 +6,7 @@ namespace Jvedio.Core.Scan
 {
     public class ScanResult
     {
-        public ScanResult()
-        {
-            ScanDate = DateHelper.Now();
-            Update = new Dictionary<string, string>();
-            Import = new List<string>();
-            NotImport = new Dictionary<string, ScanDetailInfo>();
-            FailNFO = new List<string>();
-            Logs = new List<string>();
-            InsertVideos = new List<Video>();
-            // 重复的资源统计
-        }
+        #region "属性"
 
         public Dictionary<string, string> Update { get; set; }
 
@@ -37,5 +27,18 @@ namespace Jvedio.Core.Scan
         public long ElapsedMilliseconds { get; set; }
 
         public long TotalCount { get; set; }
+
+        #endregion
+
+        public ScanResult()
+        {
+            ScanDate = DateHelper.Now();
+            Update = new Dictionary<string, string>();
+            Import = new List<string>();
+            NotImport = new Dictionary<string, ScanDetailInfo>();
+            FailNFO = new List<string>();
+            Logs = new List<string>();
+            InsertVideos = new List<Video>();
+        }
     }
 }

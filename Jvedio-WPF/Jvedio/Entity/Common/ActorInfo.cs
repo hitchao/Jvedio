@@ -19,19 +19,15 @@ namespace Jvedio.Entity
     [Table(tableName: "actor_info")]
     public class ActorInfo : INotifyPropertyChanged
     {
-        public ActorInfo()
-        {
-            Cup = 'Z';
-            Gender = Gender.Girl;
-        }
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void RaisePropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+
+        #region "属性"
 
         [TableId(IdType.AUTO)]
         public long ActorID { get; set; }
@@ -99,6 +95,14 @@ namespace Jvedio.Entity
                 _smallimage = value;
                 RaisePropertyChanged();
             }
+        }
+
+        #endregion
+
+        public ActorInfo()
+        {
+            Cup = 'Z';
+            Gender = Gender.Girl;
         }
 
         public static void SetImage(ref ActorInfo actorInfo)

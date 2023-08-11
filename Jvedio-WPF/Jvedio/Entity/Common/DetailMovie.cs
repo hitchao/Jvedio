@@ -12,24 +12,8 @@ namespace Jvedio.Entity
     [Obsolete]
     public class DetailMovie : Movie
     {
-        public DetailMovie() : base()
-        {
-            genrelist = new List<string>();
-            actorlist = new List<Actress>();
-            labellist = new List<string>();
-            extraimagelist = new ObservableCollection<BitmapSource>();
-            extraimagePath = new ObservableCollection<string>();
-        }
 
-        public override void Dispose()
-        {
-            genrelist.Clear();
-            actorlist.Clear();
-            labellist.Clear();
-            extraimagelist.Clear();
-            extraimagePath.Clear();
-            base.Dispose();
-        }
+        #region "属性"
 
         public List<string> genrelist { get; set; }
 
@@ -51,5 +35,28 @@ namespace Jvedio.Entity
         public ObservableCollection<BitmapSource> extraimagelist { get; set; }
 
         public ObservableCollection<string> extraimagePath { get; set; }
+
+
+        #endregion
+
+        public DetailMovie() : base()
+        {
+            genrelist = new List<string>();
+            actorlist = new List<Actress>();
+            labellist = new List<string>();
+            extraimagelist = new ObservableCollection<BitmapSource>();
+            extraimagePath = new ObservableCollection<string>();
+        }
+
+        public override void Dispose()
+        {
+            genrelist.Clear();
+            actorlist.Clear();
+            labellist.Clear();
+            extraimagelist.Clear();
+            extraimagePath.Clear();
+            base.Dispose();
+        }
+
     }
 }

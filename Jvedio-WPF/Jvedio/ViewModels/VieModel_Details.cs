@@ -253,7 +253,7 @@ namespace Jvedio.ViewModel
             wrapper.In("metadata.DataID", CurrentVideo.AssociationList.Select(arg => arg.ToString()));
             wrapper.Select(VieModel_VideoList.SelectFields);
 
-            string sql = VideoMapper.BASE_SQL;
+            string sql = VideoMapper.SQL_BASE;
 
             sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
 

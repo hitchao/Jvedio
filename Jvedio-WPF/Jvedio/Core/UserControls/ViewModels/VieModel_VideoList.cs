@@ -553,7 +553,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             wrapper.In("metadata.DataID", currentVideo.AssociationList.Select(arg => arg.ToString()));
             wrapper.Select(SelectFields);
 
-            string sql = VideoMapper.BASE_SQL;
+            string sql = VideoMapper.SQL_BASE;
 
             sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
 
@@ -636,7 +636,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             ToLimit(wrapper);
             wrapper.Select(SelectFields);
 
-            string sql = VideoMapper.BASE_SQL;
+            string sql = VideoMapper.SQL_BASE;
 
 
             if (ExtraWrapper != null) {
@@ -655,14 +655,14 @@ namespace Jvedio.Core.UserControls.ViewModels
             SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
             if (Searching) {
                 if (searchType == SearchField.ActorName)
-                    sql += VideoMapper.ACTOR_JOIN_SQL;
+                    sql += VideoMapper.SQL_JOIN_ACTOR;
                 else if (searchType == SearchField.LabelName)
-                    sql += VideoMapper.LABEL_JOIN_SQL;
+                    sql += VideoMapper.SQL_JOIN_LABEL;
             } else if (!string.IsNullOrEmpty(ClickFilterType)) {
                 if (ClickFilterType == "Label") {
-                    sql += VideoMapper.LABEL_JOIN_SQL;
+                    sql += VideoMapper.SQL_JOIN_LABEL;
                 } else if (ClickFilterType == "Actor") {
-                    sql += VideoMapper.ACTOR_JOIN_SQL;
+                    sql += VideoMapper.SQL_JOIN_ACTOR;
                 } else {
                 }
             }
@@ -781,7 +781,7 @@ namespace Jvedio.Core.UserControls.ViewModels
                             "JOIN metadata " +
                             "on metadata.DataID=metadata_video.DataID ";
                 if (searchType == SearchField.ActorName)
-                    sql += ActorMapper.actor_join_sql;
+                    sql += ActorMapper.SQL_JOIN_ACTOR;
                 else if (searchType == SearchField.LabelName)
                     sql += LabelJoinSql;
 

@@ -5,7 +5,8 @@ using System.Windows.Controls;
 namespace Jvedio.Core.Extensions
 {
     /// <summary>
-    /// https://stackoverflow.com/a/3652980/13454100
+    /// 单选菜单栏
+    /// <para>参考：<see href="https://stackoverflow.com/a/3652980/13454100">stackoverflow</see></para>
     /// </summary>
     public class MenuItemExtensions : DependencyObject
     {

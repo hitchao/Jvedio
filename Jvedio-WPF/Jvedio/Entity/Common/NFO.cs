@@ -11,8 +11,12 @@ namespace Jvedio.Entity
     /// </summary>
     public class NFO
     {
+        #region "属性"
+
         private XmlDocument XmlDoc { get; set; } = new XmlDocument();
         private string FilePath { get; set; } = string.Empty;
+
+        #endregion
 
         public NFO(string filePath, string rootNodeName)
         {

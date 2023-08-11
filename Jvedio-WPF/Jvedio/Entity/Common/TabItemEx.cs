@@ -30,43 +30,12 @@ namespace Jvedio.Entity.Common
 
     public class TabItemEx : ViewModelBase
     {
-        public static Dictionary<TabType, Geometry> PATH_TABLE { get; set; }
 
         private const string DEFAULT_PATH_KEY = "GeoDefault";
 
-        static TabItemEx()
-        {
-            PATH_TABLE = new Dictionary<TabType, Geometry>();
-            System.Windows.ResourceDictionary resources = App.Current.Resources;
+        #region "属性"
 
-            Geometry geometry = null;
-            if (resources.Contains(DEFAULT_PATH_KEY))
-                geometry = resources[DEFAULT_PATH_KEY] as Geometry;
-
-            PATH_TABLE.Add(TabType.Default, geometry);
-
-
-            for (TabType type = TabType.GeoVideo; type < TabType.TabTypeMax; type++) {
-                geometry = null;
-                string key = type.ToString();
-                if (resources.Contains(key))
-                    geometry = resources[key] as Geometry;
-                PATH_TABLE.Add(type, geometry);
-            }
-        }
-
-
-
-        public TabItemEx(string name, TabType type, bool selected = false, bool pinned = false)
-        {
-            Name = name;
-            Selected = selected;
-            Pinned = pinned;
-            TabType = type;
-            TabGeometry = PATH_TABLE[type];
-            UUID = System.Guid.NewGuid().ToString();
-        }
-
+        public static Dictionary<TabType, Geometry> PATH_TABLE { get; set; }
 
 
         private TabType _TabType;
@@ -111,6 +80,44 @@ namespace Jvedio.Entity.Common
             get { return _TabGeometry; }
             set { _TabGeometry = value; RaisePropertyChanged(); }
         }
+
+
+        #endregion
+
+        static TabItemEx()
+        {
+            PATH_TABLE = new Dictionary<TabType, Geometry>();
+            System.Windows.ResourceDictionary resources = App.Current.Resources;
+
+            Geometry geometry = null;
+            if (resources.Contains(DEFAULT_PATH_KEY))
+                geometry = resources[DEFAULT_PATH_KEY] as Geometry;
+
+            PATH_TABLE.Add(TabType.Default, geometry);
+
+
+            for (TabType type = TabType.GeoVideo; type < TabType.TabTypeMax; type++) {
+                geometry = null;
+                string key = type.ToString();
+                if (resources.Contains(key))
+                    geometry = resources[key] as Geometry;
+                PATH_TABLE.Add(type, geometry);
+            }
+        }
+
+
+
+        public TabItemEx(string name, TabType type, bool selected = false, bool pinned = false)
+        {
+            Name = name;
+            Selected = selected;
+            Pinned = pinned;
+            TabType = type;
+            TabGeometry = PATH_TABLE[type];
+            UUID = System.Guid.NewGuid().ToString();
+        }
+
+
 
         public override bool Equals(object obj)
         {

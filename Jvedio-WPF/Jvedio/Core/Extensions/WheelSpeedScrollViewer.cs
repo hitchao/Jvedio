@@ -6,7 +6,10 @@ using System.Windows.Input;
 
 namespace Jvedio.Core.Extensions
 {
-    // https://stackoverflow.com/a/52075782/13454100
+    /// <summary>
+    /// 滚轮速度控制
+    /// <para>参考：<see href="https://stackoverflow.com/a/52075782/13454100">stackoverflow</see></para>
+    /// </summary>
     public class WheelSpeedScrollViewer : ScrollViewer
     {
         public static readonly DependencyProperty SpeedFactorProperty =

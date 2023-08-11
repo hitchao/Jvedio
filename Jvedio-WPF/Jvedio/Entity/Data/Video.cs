@@ -32,79 +32,21 @@ namespace Jvedio.Entity
     public class Video : MetaData
     {
 
+        #region "事件"
         public static Action onPlayVideo;
 
-        public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
+        #endregion
 
 
-        public Video() : this(true)
-        {
-        }
+        #region "静态属性"
 
-        public Video(bool _initDefaultImage = true)
-        {
-            if (_initDefaultImage)
-                InitDefaultImage();
-        }
+        public static string[] HDV { get; set; } =
+            new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
 
-        // 延迟加载图片
-        public void InitDefaultImage()
-        {
-            SmallImage = MetaData.DefaultSmallImage;
-            BigImage = MetaData.DefaultBigImage;
-            GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
-            PreviewImageList = new ObservableCollection<BitmapSource>();
-        }
+        #endregion
 
-        public static void PlayVideoWithPlayer(string filepath, long dataID = 0)
-        {
-            if (File.Exists(filepath)) {
-                bool success = false;
-                if (!string.IsNullOrEmpty(ConfigManager.Settings.VideoPlayerPath) && File.Exists(ConfigManager.Settings.VideoPlayerPath)) {
-                    success = FileHelper.TryOpenFile(ConfigManager.Settings.VideoPlayerPath, filepath);
-                } else {
-                    // 使用默认播放器
-                    success = FileHelper.TryOpenFile(filepath);
-                }
 
-                if (success && dataID > 0) {
-                    MapperManager.metaDataMapper.UpdateFieldById("ViewDate", DateHelper.Now(), dataID);
-                    onPlayVideo?.Invoke();
-                }
-            } else {
-                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_OpenFail") + "：" + filepath);
-            }
-        }
-
-        public static SelectWrapper<Video> InitWrapper()
-        {
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId)
-                .Eq("metadata.DataType", 0);
-            return wrapper;
-        }
-
-        public static void SetTagStamps(ref Video video)
-        {
-            if (video == null || string.IsNullOrEmpty(video.TagIDs))
-                return;
-            List<long> list = video.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
-            if (list != null && list.Count > 0) {
-                video.TagStamp = new ObservableCollection<TagStamp>();
-                foreach (var item in Jvedio.Entity.CommonSQL.TagStamp.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
-                    video.TagStamp.Add(item);
-            }
-        }
-
-        public static void HandleEmpty(ref Video video)
-        {
-            if (ConfigManager.VideoConfig.ShowFileNameIfTitleEmpty
-                && !string.IsNullOrEmpty(video.Path) && string.IsNullOrEmpty(video.Title))
-                video.Title = System.IO.Path.GetFileNameWithoutExtension(video.Path);
-            if (ConfigManager.VideoConfig.ShowCreateDateIfReleaseDateEmpty
-                && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
-                video.ReleaseDate = DateHelper.ToLocalDate(video.LastScanDate);
-        }
+        #region "属性"
 
         [TableId(IdType.AUTO)]
         public long MVID { get; set; }
@@ -305,6 +247,80 @@ namespace Jvedio.Entity
         // 仅用于 NFO 导入的时候的图片地址
         [TableField(exist: false)]
         public List<string> ActorThumbs { get; set; }
+
+        #endregion
+
+
+
+        public Video() : this(true)
+        {
+        }
+
+        public Video(bool _initDefaultImage = true)
+        {
+            if (_initDefaultImage)
+                InitDefaultImage();
+        }
+
+        // 延迟加载图片
+        public void InitDefaultImage()
+        {
+            SmallImage = MetaData.DefaultSmallImage;
+            BigImage = MetaData.DefaultBigImage;
+            GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
+            PreviewImageList = new ObservableCollection<BitmapSource>();
+        }
+
+        public static void PlayVideoWithPlayer(string filepath, long dataID = 0)
+        {
+            if (File.Exists(filepath)) {
+                bool success = false;
+                if (!string.IsNullOrEmpty(ConfigManager.Settings.VideoPlayerPath) && File.Exists(ConfigManager.Settings.VideoPlayerPath)) {
+                    success = FileHelper.TryOpenFile(ConfigManager.Settings.VideoPlayerPath, filepath);
+                } else {
+                    // 使用默认播放器
+                    success = FileHelper.TryOpenFile(filepath);
+                }
+
+                if (success && dataID > 0) {
+                    MapperManager.metaDataMapper.UpdateFieldById("ViewDate", DateHelper.Now(), dataID);
+                    onPlayVideo?.Invoke();
+                }
+            } else {
+                MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_OpenFail") + "：" + filepath);
+            }
+        }
+
+        public static SelectWrapper<Video> InitWrapper()
+        {
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId)
+                .Eq("metadata.DataType", 0);
+            return wrapper;
+        }
+
+        public static void SetTagStamps(ref Video video)
+        {
+            if (video == null || string.IsNullOrEmpty(video.TagIDs))
+                return;
+            List<long> list = video.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
+            if (list != null && list.Count > 0) {
+                video.TagStamp = new ObservableCollection<TagStamp>();
+                foreach (var item in Jvedio.Entity.CommonSQL.TagStamp.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
+                    video.TagStamp.Add(item);
+            }
+        }
+
+        public static void HandleEmpty(ref Video video)
+        {
+            if (ConfigManager.VideoConfig.ShowFileNameIfTitleEmpty
+                && !string.IsNullOrEmpty(video.Path) && string.IsNullOrEmpty(video.Title))
+                video.Title = System.IO.Path.GetFileNameWithoutExtension(video.Path);
+            if (ConfigManager.VideoConfig.ShowCreateDateIfReleaseDateEmpty
+                && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
+                video.ReleaseDate = DateHelper.ToLocalDate(video.LastScanDate);
+        }
+
 
         public bool toDownload()
         {

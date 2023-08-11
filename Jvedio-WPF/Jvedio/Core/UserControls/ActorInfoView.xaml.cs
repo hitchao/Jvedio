@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Navigation;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.UserControls
@@ -25,6 +24,14 @@ namespace Jvedio.Core.UserControls
         }
 
 
+        #region "事件"
+        public event Action Close;
+
+        #endregion
+
+
+        #region "属性"
+
 
 
 
@@ -39,7 +46,8 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        public event Action Close;
+        #endregion
+
 
         public ActorInfoView()
         {

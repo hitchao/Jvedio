@@ -15,13 +15,18 @@ namespace Jvedio.Core.Media
     // todo
     public class GifImage : Image
     {
-        private bool _isInitialized;
-        private Int32Animation _animation;
 
-        private List<BitmapSource> bitmapImages;
-        private Gif gif;
+        #region "属性"
 
-        private static bool ShowGif = false;
+        private bool _isInitialized { get; set; }
+        private Int32Animation _animation { get; set; }
+
+        private List<BitmapSource> bitmapImages { get; set; }
+        private Gif gif { get; set; }
+
+        private static bool ShowGif { get; set; }
+
+        #endregion
 
         #region "DependencyProperty"
         public int FrameIndex {

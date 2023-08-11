@@ -10,14 +10,16 @@ namespace Jvedio.Upgrade
 {
     public static class UpgradeHelper
     {
-        public static int AUTO_CHECK_UPGRADE_DELAY = 60 * 1000;
+        public const int AUTO_CHECK_UPGRADE_DELAY = 60 * 1000;
+
+        #region "属性"
+
         private static bool WindowClosed { get; set; }
         private static Window Window { get; set; }
 
-
         private static SuperUpgrader Upgrader { get; set; }
         private static Dialog_Upgrade dialog_Upgrade { get; set; }
-
+        #endregion
 
         public static void Init(Window parent)
         {

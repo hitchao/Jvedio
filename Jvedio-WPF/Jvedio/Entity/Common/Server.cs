@@ -8,19 +8,15 @@ namespace Jvedio.Entity
     /// </summary>
     public class Server : ViewModelBase
     {
-        public Server(string name)
-        {
-            this.Name = name;
-        }
 
-        public Server()
-        {
-        }
+
+        #region "属性"
+
 
         private bool isEnable = false;
         private string url = string.Empty;
         private string cookie = string.Empty;
-        private int available = 0; // 指示测试是否通过
+        private int available = 0;
         private string name = string.Empty;
         private string lastRefreshDate = string.Empty;
 
@@ -48,6 +44,9 @@ namespace Jvedio.Entity
             }
         }
 
+        /// <summary>
+        /// 指示测试是否通过
+        /// </summary>
         public int Available {
             get => available;
             set {
@@ -70,6 +69,16 @@ namespace Jvedio.Entity
                 lastRefreshDate = value;
                 RaisePropertyChanged();
             }
+        }
+        #endregion
+
+        public Server(string name)
+        {
+            this.Name = name;
+        }
+
+        public Server()
+        {
         }
 
         public override void Init()

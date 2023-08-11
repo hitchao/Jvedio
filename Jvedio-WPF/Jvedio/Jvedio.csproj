@@ -304,7 +304,6 @@
     <Compile Include="Core\Net\DownLoadTask.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerManager.cs" />
     <Compile Include="Core\CustomSettingsProvider.cs" />
-    <Compile Include="Core\DataBase\MysqlConnection.cs" />
     <Compile Include="Core\Enums\ComicType.cs" />
     <Compile Include="Core\Enums\DataBaseType.cs" />
     <Compile Include="Core\Enums\DataType.cs" />
@@ -330,9 +329,6 @@
     <Compile Include="Core\UserControls\Tasks\TaskList.xaml.cs">
       <DependentUpon>TaskList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\UserControls\Tasks\TaskView.xaml.cs">
-      <DependentUpon>TaskView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Core\UserControls\VideoItemEventArgs.cs" />
     <Compile Include="Core\UserControls\VideoList.xaml.cs">
       <DependentUpon>VideoList.xaml</DependentUpon>
@@ -341,7 +337,6 @@
     <Compile Include="Core\UserControls\ViewVideo.xaml.cs">
       <DependentUpon>ViewVideo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\UserControls\IViewVideoFieldVisitor.cs" />
     <Compile Include="Entity\Common\NFOParse.cs" />
     <Compile Include="Entity\Common\TabItemEx.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
@@ -375,7 +370,6 @@
     <Compile Include="WindowsDialog\Dialog_Logs.xaml.cs">
       <DependentUpon>Dialog_Logs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Entity\Common\Actor.cs" />
     <Compile Include="Entity\Common\ActorInfo.cs" />
     <Compile Include="Entity\Common\Actress.cs" />
     <Compile Include="Core\Scan\ScanTask.cs" />
@@ -522,10 +516,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Core\UserControls\Tasks\TaskList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Core\UserControls\Tasks\TaskView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

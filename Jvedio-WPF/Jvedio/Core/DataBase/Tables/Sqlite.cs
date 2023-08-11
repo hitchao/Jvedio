@@ -9,7 +9,7 @@ namespace Jvedio.Core.DataBase.Tables
     {
         public static class SQL
         {
-            public static List<string> SqlCommands = new List<string>()
+            public static List<string> SqlCommands { get; set; } = new List<string>()
             {
                 "ALTER TABLE metadata ADD COLUMN PathExist INT DEFAULT 0;",
                 "ALTER TABLE actor_info ADD COLUMN ImageUrl TEXT;",
@@ -21,7 +21,7 @@ namespace Jvedio.Core.DataBase.Tables
 
         public static class AppConfig
         {
-            public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+            public static Dictionary<string, string> TABLES { get; set; } = new Dictionary<string, string>();
 
             static AppConfig()
             {
@@ -31,7 +31,7 @@ namespace Jvedio.Core.DataBase.Tables
 
         public static class AppData
         {
-            public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+            public static Dictionary<string, string> TABLES { get; set; } = new Dictionary<string, string>();
 
             static AppData()
             {
@@ -203,7 +203,7 @@ namespace Jvedio.Core.DataBase.Tables
 
         public static class Actor
         {
-            public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+            public static Dictionary<string, string> TABLES { get; set; } = new Dictionary<string, string>();
 
             static Actor()
             {
@@ -240,7 +240,7 @@ namespace Jvedio.Core.DataBase.Tables
 
         public static class Data
         {
-            public static Dictionary<string, string> TABLES = new Dictionary<string, string>();
+            public static Dictionary<string, string> TABLES { get; set; } = new Dictionary<string, string>();
 
             static Data()
             {

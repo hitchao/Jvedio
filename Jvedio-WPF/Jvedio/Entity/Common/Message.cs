@@ -5,6 +5,13 @@ namespace Jvedio.Entity
 {
     public class Message
     {
+
+        public string Date { get; set; }
+
+        public MessageCardType Type { get; set; }
+
+        public string Text { get; set; }
+
         public Message(MessageCardType type, string text)
         {
             Type = type;
@@ -12,10 +19,5 @@ namespace Jvedio.Entity
             Date = DateHelper.Now();
         }
 
-        public string Date { get; set; }
-
-        public MessageCardType Type { get; set; }
-
-        public string Text { get; set; }
     }
 }

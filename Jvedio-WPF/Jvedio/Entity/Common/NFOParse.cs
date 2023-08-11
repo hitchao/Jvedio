@@ -28,15 +28,26 @@ namespace Jvedio.Entity.Common
     /// </summary>
     public class NfoParse : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         private const int DEFAULT_RELEASE_YEAR = 1970;
 
-        public static Dictionary<string, NfoParse> DEFAULT_NFO_PARSE = new Dictionary<string, NfoParse>
+        #region "属性"
+
+        public static Dictionary<string, NfoParse> CurrentNFOParse { get; set; }
+
+        public static Dictionary<string, NfoParse> DEFAULT_NFO_PARSE { get; set; } = new Dictionary<string, NfoParse>
         {
             // 单个
-            {"id", new NfoParse(LangManager.GetValueByKey("ID"),"",ParseType.StrUpper, new List<string>(){"id","num"}) },
+            { "id", new NfoParse(LangManager.GetValueByKey("ID"),"",ParseType.StrUpper, new List<string>(){"id","num"}) },
             { "title",new NfoParse(LangManager.GetValueByKey("Title"),"",ParseType.Str, new List<string>(){"title"})},
             { "releasedate",new NfoParse(LangManager.GetValueByKey("ReleaseDate"),"",ParseType.Str,new List<string>(){"release","releasedate"})},
-            {"director", new NfoParse(LangManager.GetValueByKey("Director"),"",ParseType.Str,new List<string>(){"director"})},
+            { "director", new NfoParse(LangManager.GetValueByKey("Director"),"",ParseType.Str,new List<string>(){"director"})},
             { "studio", new NfoParse(LangManager.GetValueByKey("Studio"),"",ParseType.Str, new List<string>() { "studio" })},
             { "rating",new NfoParse(LangManager.GetValueByKey("Rating"),0.0,ParseType.Float, new List<string>() { "rating" })},
             { "plot", new NfoParse(LangManager.GetValueByKey("Plot"),"",ParseType.Str, new List<string>() { "plot" })},
@@ -51,53 +62,6 @@ namespace Jvedio.Entity.Common
             { "genre",new NfoParse(LangManager.GetValueByKey("Genre"),null,ParseType.None, new List<string>() { "genre"})},
 
         };
-
-        public static Dictionary<string, NfoParse> CurrentNFOParse { get; set; }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged([CallerMemberName] string name = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-
-        static NfoParse()
-        {
-            InitCurrentNFOParse();
-        }
-
-        public NfoParse()
-        {
-        }
-
-        public NfoParse(NfoParse data)
-        {
-            this.ParseType = data.ParseType;
-            this.DefaultValue = data.DefaultValue;
-            this.Name = data.Name;
-            this.ParseValues = new ObservableCollection<ObservableString>();
-            if (data.ParseValues?.Count > 0) {
-                foreach (var item in data.ParseValues) {
-                    this.ParseValues.Add(new ObservableString(item.Value));
-                }
-            }
-        }
-        public NfoParse(string name, object defaultValue, ParseType type, List<string> values)
-        {
-            this.DefaultValue = defaultValue;
-            this.ParseType = type;
-            this.Name = name;
-            this.ParseValues = new ObservableCollection<ObservableString>();
-            if (values != null) {
-                foreach (var item in values) {
-                    this.ParseValues.Add(new ObservableString(item));
-                }
-            }
-
-        }
-
 
 
         private ParseType _ParseType;
@@ -138,6 +102,46 @@ namespace Jvedio.Entity.Common
                 RaisePropertyChanged();
             }
         }
+
+
+        #endregion
+
+
+        static NfoParse()
+        {
+            InitCurrentNFOParse();
+        }
+
+        public NfoParse()
+        {
+        }
+
+        public NfoParse(NfoParse data)
+        {
+            this.ParseType = data.ParseType;
+            this.DefaultValue = data.DefaultValue;
+            this.Name = data.Name;
+            this.ParseValues = new ObservableCollection<ObservableString>();
+            if (data.ParseValues?.Count > 0) {
+                foreach (var item in data.ParseValues) {
+                    this.ParseValues.Add(new ObservableString(item.Value));
+                }
+            }
+        }
+        public NfoParse(string name, object defaultValue, ParseType type, List<string> values)
+        {
+            this.DefaultValue = defaultValue;
+            this.ParseType = type;
+            this.Name = name;
+            this.ParseValues = new ObservableCollection<ObservableString>();
+            if (values != null) {
+                foreach (var item in values) {
+                    this.ParseValues.Add(new ObservableString(item));
+                }
+            }
+
+        }
+
 
         /// <summary>
         /// 初始化当前的 NFO 解析规则

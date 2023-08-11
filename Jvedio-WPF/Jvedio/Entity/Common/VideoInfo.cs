@@ -5,10 +5,17 @@
     /// </summary>
     public class VideoInfo
     {
-        /* 视频信息 */
-        public string Format { get; set; }// 视频格式
+        #region "属性"
 
-        public string BitRate { get; set; }// 总码率
+        /// <summary>
+        /// 视频格式
+        /// </summary>
+        public string Format { get; set; }
+
+        /// <summary>
+        /// 总码率
+        /// </summary>
+        public string BitRate { get; set; }
 
         public string Duration { get; set; }
 
@@ -20,31 +27,64 @@
 
         public string Resolution { get; set; }
 
-        public string DisplayAspectRatio { get; set; }// 宽高比
 
-        public string FrameRate { get; set; }// 帧率
+        /// <summary>
+        /// 宽高比
+        /// </summary>
+        public string DisplayAspectRatio { get; set; }
 
-        public string BitDepth { get; set; }// 位深度
+        /// <summary>
+        /// 帧率
+        /// </summary>
+        public string FrameRate { get; set; }
 
-        public string PixelAspectRatio { get; set; }// 像素宽高比
+        /// <summary>
+        /// 位深度
+        /// </summary>
+        public string BitDepth { get; set; }
 
-        public string Encoded_Library { get; set; }// 编码库
 
-        public string FrameCount { get; set; }// 总帧数
+        /// <summary>
+        /// 像素宽高比
+        /// </summary>
+        public string PixelAspectRatio { get; set; }
 
-        /* 音频信息 */
+
+        /// <summary>
+        /// 编码库
+        /// </summary>
+        public string Encoded_Library { get; set; }
+
+        /// <summary>
+        /// 总帧数
+        /// </summary>
+        public string FrameCount { get; set; }
+
+        /// <summary>
+        /// 音频信息
+        /// </summary>
         public string AudioFormat { get; set; }
 
-        public string AudioBitRate { get; set; }// 码率
+        /// <summary>
+        /// 码率
+        /// </summary>
+        public string AudioBitRate { get; set; }
 
-        public string AudioSamplingRate { get; set; }// 采样率
 
-        public string Channel { get; set; }// 声道数
+        /// <summary>
+        /// 采样率
+        /// </summary>
+        public string AudioSamplingRate { get; set; }
+
+        /// <summary>
+        /// 声道数
+        /// </summary>
+        public string Channel { get; set; }
 
         public string Extension { get; set; }
 
         public string FileName { get; set; }
-
+        #endregion
         public VideoInfo()
         {
             foreach (var item in typeof(VideoInfo).GetProperties()) {

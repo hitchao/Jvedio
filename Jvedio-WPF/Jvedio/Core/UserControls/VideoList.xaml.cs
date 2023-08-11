@@ -101,8 +101,6 @@ namespace Jvedio.Core.UserControls
 
         #endregion
 
-
-
         public VideoList(SelectWrapper<Video> extraWrapper, TabItemEx tabItemEx)
         {
             InitializeComponent();

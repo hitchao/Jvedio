@@ -25,17 +25,15 @@ namespace Jvedio.Core.UserControls
     /// </summary>
     public partial class LabelView : UserControl, INotifyPropertyChanged
     {
-
-        public const string SQL_JOIN = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
-
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void RaisePropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+
+        public const string SQL_JOIN = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
 
         #region "事件"
 
@@ -46,7 +44,6 @@ namespace Jvedio.Core.UserControls
         public Action<string, LabelType> onLabelClick;
 
         #endregion
-
 
         #region "属性"
 

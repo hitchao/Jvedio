@@ -7,7 +7,7 @@ namespace Jvedio.Core.Media
 {
     public static class ImageCache
     {
-        private static MemoryCache _Cache = MemoryCache.Default;
+        private static MemoryCache _Cache { get; set; } = MemoryCache.Default;
 
         static ImageCache()
         {

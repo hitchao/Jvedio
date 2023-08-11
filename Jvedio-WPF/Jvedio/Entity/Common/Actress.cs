@@ -20,41 +20,10 @@ namespace Jvedio.Entity
         }
 
 
+        #region "属性"
+
+
         public static DateTime DEFAULT_DATE_TIME = new DateTime(1970, 01, 01);
-
-        public Actress() : this(string.Empty)
-        {
-        }
-
-        public Actress(string name = "")
-        {
-            id = string.Empty;
-            this.name = name;
-            sex = 1; // 女演员
-            actressimageurl = string.Empty;
-            smallimage = MetaData.DefaultActorImage;
-            bigimage = null;
-            birthday = string.Empty;
-            age = 0;
-            height = 0;
-            cup = string.Empty;
-            hipline = 0;
-            waist = 0;
-            chest = 0;
-            birthplace = string.Empty;
-            hobby = string.Empty;
-            sourceurl = string.Empty;
-            source = string.Empty;
-            imageurl = string.Empty;
-            like = 0;
-        }
-
-        public void Dispose()
-        {
-            smallimage = null;
-            bigimage = null;
-        }
-
         public int num { get; set; }// 仅仅用于计数
 
         public string id { get; set; }
@@ -189,7 +158,40 @@ namespace Jvedio.Entity
 
         public int like { get; set; }
 
+        #endregion
 
+        public Actress() : this(string.Empty)
+        {
+        }
+
+        public Actress(string name = "")
+        {
+            id = string.Empty;
+            this.name = name;
+            sex = 1; // 女演员
+            actressimageurl = string.Empty;
+            smallimage = MetaData.DefaultActorImage;
+            bigimage = null;
+            birthday = string.Empty;
+            age = 0;
+            height = 0;
+            cup = string.Empty;
+            hipline = 0;
+            waist = 0;
+            chest = 0;
+            birthplace = string.Empty;
+            hobby = string.Empty;
+            sourceurl = string.Empty;
+            source = string.Empty;
+            imageurl = string.Empty;
+            like = 0;
+        }
+
+        public void Dispose()
+        {
+            smallimage = null;
+            bigimage = null;
+        }
         public ActorInfo toActorInfo()
         {
             ActorInfo info = new ActorInfo() {

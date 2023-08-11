@@ -8,23 +8,23 @@ namespace Jvedio
 {
     public static class MapperManager
     {
-        public static AppConfigMapper appConfigMapper = new AppConfigMapper();
+        public static AppConfigMapper appConfigMapper { get; set; } = new AppConfigMapper();
 
-        public static AppDatabaseMapper appDatabaseMapper = new AppDatabaseMapper();
-        public static TranslationMapper translationMapper = new TranslationMapper();
-        public static MagnetsMapper magnetsMapper = new MagnetsMapper();
-        public static AIFaceMapper aIFaceMapper = new AIFaceMapper();
-        public static TagStampMapper tagStampMapper = new TagStampMapper();
-        public static SearchHistoryMapper searchHistoryMapper = new SearchHistoryMapper();
+        public static AppDatabaseMapper appDatabaseMapper { get; set; } = new AppDatabaseMapper();
+        public static TranslationMapper translationMapper { get; set; } = new TranslationMapper();
+        public static MagnetsMapper magnetsMapper { get; set; } = new MagnetsMapper();
+        public static AIFaceMapper aIFaceMapper { get; set; } = new AIFaceMapper();
+        public static TagStampMapper tagStampMapper { get; set; } = new TagStampMapper();
+        public static SearchHistoryMapper searchHistoryMapper { get; set; } = new SearchHistoryMapper();
 
-        public static MetaDataMapper metaDataMapper = new MetaDataMapper();
-        public static VideoMapper videoMapper = new VideoMapper();
-        public static PictureMapper pictureMapper = new PictureMapper();
-        public static ComicMapper comicMapper = new ComicMapper();
-        public static GameMapper gameMapper = new GameMapper();
-        public static ActorMapper actorMapper = new ActorMapper();
-        public static UrlCodeMapper urlCodeMapper = new UrlCodeMapper();
-        public static AssociationMapper associationMapper = new AssociationMapper();
+        public static MetaDataMapper metaDataMapper { get; set; } = new MetaDataMapper();
+        public static VideoMapper videoMapper { get; set; } = new VideoMapper();
+        public static PictureMapper pictureMapper { get; set; } = new PictureMapper();
+        public static ComicMapper comicMapper { get; set; } = new ComicMapper();
+        public static GameMapper gameMapper { get; set; } = new GameMapper();
+        public static ActorMapper actorMapper { get; set; } = new ActorMapper();
+        public static UrlCodeMapper urlCodeMapper { get; set; } = new UrlCodeMapper();
+        public static AssociationMapper associationMapper { get; set; } = new AssociationMapper();
 
         private static bool Loaded { get; set; }
 

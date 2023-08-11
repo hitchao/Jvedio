@@ -11,7 +11,28 @@ namespace Jvedio.Mapper
     // todo 代码检视
     public class VideoMapper : BaseMapper<Video>
     {
-        public static string[] SelectFields =
+
+        public const string SQL_BASE =
+            " FROM metadata_video JOIN metadata on metadata.DataID=metadata_video.DataID ";
+
+        public const string SQL_JOIN_ACTOR =
+            " JOIN metadata_to_actor on metadata_to_actor.DataID=metadata.DataID" +
+            " JOIN actor_info on metadata_to_actor.ActorID=actor_info.ActorID ";
+
+        public const string SQL_JOIN_LABEL =
+            " JOIN metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
+
+        const string SQL_JOIN_TAGSTAMP =
+            " JOIN metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
+
+        public const string SQL_LEFT_JOIN_TAGSTAMP =
+            " LEFT JOIN metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
+
+        public const string SQL_JOIN_COMMON_PICTURE_EXIST =
+            " JOIN common_picture_exist on common_picture_exist.DataID=metadata.DataID ";
+
+
+        public static string[] SelectFields { get; set; } =
         {
             "metadata.DataID",
             "DBId",
@@ -133,23 +154,5 @@ namespace Jvedio.Mapper
             MapperManager.videoMapper.ExecuteNonQuery(builder.ToString());
         }
 
-        public static string BASE_SQL =
-            $" FROM metadata_video JOIN metadata on metadata.DataID=metadata_video.DataID ";
-
-        public static string ACTOR_JOIN_SQL =
-            " join metadata_to_actor on metadata_to_actor.DataID=metadata.DataID " +
-               "JOIN actor_info on metadata_to_actor.ActorID=actor_info.ActorID ";
-
-        public static string LABEL_JOIN_SQL =
-            " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
-
-        public static string TAGSTAMP_JOIN_SQL =
-            " join metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
-
-        public static string TAGSTAMP_LEFT_JOIN_SQL =
-            " LEFT JOIN metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
-
-        public static string COMMON_PICTURE_EXIST_JOIN_SQL =
-            " join common_picture_exist on common_picture_exist.DataID=metadata.DataID ";
     }
 }

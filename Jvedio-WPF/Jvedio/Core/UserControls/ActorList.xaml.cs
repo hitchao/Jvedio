@@ -46,29 +46,6 @@ namespace Jvedio.Core.UserControls
 
         #endregion
 
-        public ActorList()
-        {
-            InitializeComponent();
-            this.DataContext = this;
-        }
-
-        static ActorList()
-        {
-            for (int i = 0; i < ActorSortDictList.Count; i++) {
-                ActorSortDict.Add(i, ActorSortDictList[i]);
-            }
-        }
-
-
-        private void ActorList_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-            RefreshActorRenderToken();
-            BindingEvent();
-            SelectActor();
-        }
-
         #region "静态属性"
 
 
@@ -255,6 +232,30 @@ namespace Jvedio.Core.UserControls
         }
 
         #endregion
+
+
+        public ActorList()
+        {
+            InitializeComponent();
+            this.DataContext = this;
+        }
+
+        static ActorList()
+        {
+            for (int i = 0; i < ActorSortDictList.Count; i++) {
+                ActorSortDict.Add(i, ActorSortDictList[i]);
+            }
+        }
+
+
+        private void ActorList_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+            RefreshActorRenderToken();
+            BindingEvent();
+            SelectActor();
+        }
 
         public void BindingEvent()
         {

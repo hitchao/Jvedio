@@ -8,8 +8,8 @@ namespace Jvedio.Core.Global
 {
     public static class UrlManager
     {
+        #region "const"
         private const string DonateJsonBasePath = "SuperStudio-Donate";
-
 
         public const string ServerHelpUrl = "https://github.com/hitchao/Jvedio/wiki";
         public const string ProjectUrl = "https://github.com/hitchao/Jvedio";
@@ -30,12 +30,12 @@ namespace Jvedio.Core.Global
         public const string PLUGIN_UPLOAD_HELP = "https://github.com/hitchao/Jvedio/wiki/08_Plugin";
         public const string HEADER_HELP = "https://github.com/hitchao/Jvedio/wiki/05_Headers";
 
-        [Obsolete]
-        public const string YoudaoUrl = "https://github.com/hitchao/Jvedio/wiki";
-        [Obsolete]
-        public const string BaiduUrl = "https://github.com/hitchao/Jvedio/wiki";
 
-        public static Dictionary<string, UpgradeSource> UpgradeSourceDict = new Dictionary<string, UpgradeSource>()
+        #endregion
+
+        #region "属性"
+
+        public static Dictionary<string, UpgradeSource> UpgradeSourceDict { get; set; } = new Dictionary<string, UpgradeSource>()
         {
             {"Github",new UpgradeSource(UpgradeSource,ReleaseUrl,"jvedioupdate") },
             {"Github加速",new UpgradeSource("https://cdn.jsdelivr.net/gh/hitchao/",ReleaseUrl,"jvedioupdate") },
@@ -43,7 +43,13 @@ namespace Jvedio.Core.Global
         };
 
         public static List<string> UpgradeSourceKeys { get; set; } = UpgradeSourceDict.Keys.ToList();
-        private static int RemoteIndex { get; set; } = (int)ConfigManager.Settings.RemoteIndex; // 用户切换源的时候存储起来
+
+        /// <summary>
+        /// 用户切换源的时候存储起来
+        /// </summary>
+        private static int RemoteIndex { get; set; } = (int)ConfigManager.Settings.RemoteIndex;
+
+        #endregion
 
         public static int GetRemoteIndex()
         {

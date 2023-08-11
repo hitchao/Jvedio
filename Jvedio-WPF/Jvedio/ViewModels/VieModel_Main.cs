@@ -633,7 +633,7 @@ namespace Jvedio.ViewModel
             List<string> vidList = ParseVIDList(result.Text, result.Prefix, result.VideoType);
 
             // 1.查询是否存在对应的 VID
-            string sql = VideoMapper.BASE_SQL;
+            string sql = VideoMapper.SQL_BASE;
             IWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Select("VID").Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0).In("VID", vidList);
             sql = wrapper.ToSelect() + sql + wrapper.ToWhere(false);
@@ -761,7 +761,7 @@ namespace Jvedio.ViewModel
                             "JOIN metadata " +
                             "on metadata.DataID=metadata_video.DataID ";
                 if (searchType == SearchField.ActorName)
-                    sql += ActorMapper.actor_join_sql;
+                    sql += ActorMapper.SQL_JOIN_ACTOR;
                 else if (searchType == SearchField.LabelName)
                     sql += LabelJoinSql;
 
@@ -893,7 +893,7 @@ namespace Jvedio.ViewModel
             ActorInfo.SetImage(ref actorInfo);
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("actor_info.ActorID", actorID);
-            wrapper.ExtraSql = ActorMapper.actor_join_sql;
+            wrapper.ExtraSql = ActorMapper.SQL_JOIN_ACTOR;
             TabItemManager.Add(TabType.GeoVideo, $"{LangManager.GetValueByKey("Actor")}: {actorInfo.ActorName}", wrapper, actorInfo);
         }
 

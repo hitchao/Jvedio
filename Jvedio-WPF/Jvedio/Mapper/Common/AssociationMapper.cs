@@ -75,7 +75,8 @@ namespace Jvedio.Mapper
             return set;
         }
 
-        private void FindAssocData(ref HashSet<long> set, Dictionary<long, ListNode<long>> dict, long target, ref HashSet<long> foundList)
+        private void FindAssocData(ref HashSet<long> set, Dictionary<long, ListNode<long>> dict,
+            long target, ref HashSet<long> foundList)
         {
             if (foundList.Contains(target))
                 return;

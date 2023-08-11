@@ -25,6 +25,14 @@ namespace Jvedio.Core.Net
     {
         private const String WRONG_STATUS_CODE = "-1";
 
+        #region "事件"
+        public event EventHandler onDownloadSuccess;
+        public event EventHandler onDownloadPreview;
+
+        #endregion
+
+        #region "属性"
+
         public bool DownloadPreview { get; set; } // 是否下载预览图
         public long DataID { get; set; }
 
@@ -32,8 +40,8 @@ namespace Jvedio.Core.Net
 
         public bool OverrideInfo { get; set; }// 强制下载覆盖信息
 
-        public event EventHandler onDownloadSuccess;
-        public event EventHandler onDownloadPreview;
+        #endregion
+
 
         private static class Delay
         {

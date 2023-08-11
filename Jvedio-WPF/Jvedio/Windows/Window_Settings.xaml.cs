@@ -1214,7 +1214,7 @@ namespace Jvedio
             IndexCanceled = false;
             long total = 0;
             bool result = await Task.Run(() => {
-                string sql = VideoMapper.BASE_SQL;
+                string sql = VideoMapper.SQL_BASE;
                 IWrapper<Video> wrapper = new SelectWrapper<Video>();
                 wrapper.Select("metadata.DataID", "Path", "VID", "Hash");
                 sql = wrapper.ToSelect(false) + sql;

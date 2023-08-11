@@ -23,6 +23,8 @@ namespace Jvedio.Entity
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        #region "属性"
+
 
         [TableId(IdType.AUTO)]
         public long DataID { get; set; }
@@ -197,6 +199,7 @@ namespace Jvedio.Entity
         public static BitmapImage DefaultBigImage { get; set; }
 
         public static BitmapImage DefaultActorImage { get; set; }
+        #endregion
 
         static MetaData()
         {

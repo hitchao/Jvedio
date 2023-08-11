@@ -34,75 +34,8 @@ namespace Jvedio.Entity
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        #region "属性"
 
-
-        public Movie(string id)
-        {
-            this.id = id;
-            title = string.Empty;
-            filesize = 0;
-            filepath = string.Empty;
-            hassubsection = false;
-            subsection = string.Empty;
-            subsectionlist = new List<string>();
-            tagstamps = string.Empty;
-            vediotype = 1;
-            scandate = string.Empty;
-            visits = 0;
-            releasedate = string.Empty;
-            director = string.Empty;
-            tag = string.Empty;
-            runtime = 0;
-            genre = string.Empty;
-            actor = string.Empty;
-            actorid = string.Empty;
-            studio = string.Empty;
-            rating = 0;
-            chinesetitle = string.Empty;
-            favorites = 0;
-            label = string.Empty;
-            plot = string.Empty;
-            outline = string.Empty;
-            year = 1970;
-            runtime = 0;
-            country = string.Empty;
-            countrycode = 0;
-            otherinfo = string.Empty;
-            sourceurl = string.Empty;
-            source = string.Empty;
-            actressimageurl = string.Empty;
-            smallimageurl = string.Empty;
-            bigimageurl = string.Empty;
-            extraimageurl = string.Empty;
-            smallimage = MetaData.DefaultSmallImage;
-            bigimage = MetaData.DefaultBigImage;
-            GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
-        }
-
-        public Movie() : this(string.Empty)
-        {
-        }
-
-        public virtual void Dispose()
-        {
-            subsectionlist.Clear();
-            smallimage = null;
-            bigimage = null;
-        }
-
-        public bool IsToDownLoadInfo()
-        {
-            return this != null && (this.title == string.Empty || this.sourceurl == string.Empty || this.smallimageurl == string.Empty || this.bigimageurl == string.Empty);
-        }
-
-        public bool isNullMovie()
-        {
-            return
-                string.IsNullOrEmpty(title) &&
-                string.IsNullOrEmpty(id) &&
-                string.IsNullOrEmpty(filepath) &&
-                filesize == 0;
-        }
 
         public string id { get; set; }
 
@@ -264,6 +197,75 @@ namespace Jvedio.Entity
             }
         }
 
+        #endregion
+
+        public Movie(string id)
+        {
+            this.id = id;
+            title = string.Empty;
+            filesize = 0;
+            filepath = string.Empty;
+            hassubsection = false;
+            subsection = string.Empty;
+            subsectionlist = new List<string>();
+            tagstamps = string.Empty;
+            vediotype = 1;
+            scandate = string.Empty;
+            visits = 0;
+            releasedate = string.Empty;
+            director = string.Empty;
+            tag = string.Empty;
+            runtime = 0;
+            genre = string.Empty;
+            actor = string.Empty;
+            actorid = string.Empty;
+            studio = string.Empty;
+            rating = 0;
+            chinesetitle = string.Empty;
+            favorites = 0;
+            label = string.Empty;
+            plot = string.Empty;
+            outline = string.Empty;
+            year = 1970;
+            runtime = 0;
+            country = string.Empty;
+            countrycode = 0;
+            otherinfo = string.Empty;
+            sourceurl = string.Empty;
+            source = string.Empty;
+            actressimageurl = string.Empty;
+            smallimageurl = string.Empty;
+            bigimageurl = string.Empty;
+            extraimageurl = string.Empty;
+            smallimage = MetaData.DefaultSmallImage;
+            bigimage = MetaData.DefaultBigImage;
+            GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
+        }
+
+        public Movie() : this(string.Empty)
+        {
+        }
+
+        public virtual void Dispose()
+        {
+            subsectionlist.Clear();
+            smallimage = null;
+            bigimage = null;
+        }
+
+        public bool IsToDownLoadInfo()
+        {
+            return this != null && (this.title == string.Empty || this.sourceurl == string.Empty || this.smallimageurl == string.Empty || this.bigimageurl == string.Empty);
+        }
+
+        public bool isNullMovie()
+        {
+            return
+                string.IsNullOrEmpty(title) &&
+                string.IsNullOrEmpty(id) &&
+                string.IsNullOrEmpty(filepath) &&
+                filesize == 0;
+        }
 
         public static Movie GetInfoFromNfo(string path)
         {

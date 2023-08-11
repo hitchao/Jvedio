@@ -7,10 +7,10 @@ namespace Jvedio.Mapper
 {
     public class ComicMapper : BaseMapper<Comic>
     {
-        public static string BASE_SQL =
-            $" FROM metadata_comic JOIN metadata on metadata.DataID=metadata_comic.DataID ";
+        public const string SQL_BASE =
+            " FROM metadata_comic JOIN metadata on metadata.DataID=metadata_comic.DataID ";
 
-        public static string[] SelectFields =
+        public static string[] SelectFields { get; set; } =
         {
             "metadata.DataID",
             "CID",
@@ -24,7 +24,7 @@ namespace Jvedio.Mapper
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
         };
 
-        public static string[] SelectAllFields =
+        public static string[] SelectAllFields { get; set; } =
         {
             "metadata.DataID",
             "DBId",
@@ -63,7 +63,7 @@ namespace Jvedio.Mapper
             "ExtraInfo",
         };
 
-        public static List<string> SortDict = new List<string>()
+        public static List<string> SortDict { get; set; } = new List<string>()
         {
              "Size",
              "FirstScanDate",

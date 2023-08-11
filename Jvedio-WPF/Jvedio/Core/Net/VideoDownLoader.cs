@@ -22,6 +22,8 @@ namespace Jvedio.Core.Net
 {
     public class VideoDownLoader
     {
+
+        #region "属性"
         public DownLoadState State { get; set; } = DownLoadState.DownLoading;
 
         private bool Canceled { get; set; }
@@ -35,6 +37,8 @@ namespace Jvedio.Core.Net
         public List<CrawlerServer> CrawlerServers { get; set; } // 该资源支持的爬虫刮削器
 
         private TaskLogger TaskLogger { get; set; }
+
+        #endregion
 
         public VideoDownLoader(Video video, CancellationToken token, TaskLogger Logger)
         {

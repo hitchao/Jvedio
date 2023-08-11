@@ -23,15 +23,18 @@ namespace Jvedio.ViewModels
 
     public class TabItemManager
     {
-
-        private TabItemManager()
-        {
-        }
+        #region "属性"
 
         private static TabItemManager instance { get; set; }
 
         private VieModel_Main vieModel { get; set; }
         private SimplePanel TabPanel { get; set; }
+
+        #endregion
+
+        private TabItemManager()
+        {
+        }
 
         public static TabItemManager CreateInstance(VieModel_Main vieModel, SimplePanel tabPanel)
         {

@@ -10,9 +10,15 @@ namespace Jvedio.Mapper.BaseMapper
 {
     public class BaseMapper<T> : AbstractMapper<T>
     {
+        #region "属性"
+
         static SqliteMapper<T> SqliteMapper { get; set; }
 
         static MySQLMapper<T> MySQLMapper { get; set; }
+
+
+        #endregion
+
 
         public override void Init()
         {

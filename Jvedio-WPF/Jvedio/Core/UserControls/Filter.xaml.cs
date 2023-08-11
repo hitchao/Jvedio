@@ -1,13 +1,10 @@
-﻿using Google.Protobuf.Collections;
-using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Enums;
+﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.IO;
 using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
@@ -21,14 +18,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Navigation;
 using System.Windows.Threading;
-using static Jvedio.Core.DataBase.Tables.Sqlite;
-using static Jvedio.Core.UserControls.Filter;
 using static Jvedio.MapperManager;
-using static Jvedio.App;
 
 namespace Jvedio.Core.UserControls
 {
@@ -657,12 +649,12 @@ namespace Jvedio.Core.UserControls
                 bool allFalse = TagStamps.All(item => item.Selected == false);
                 if (allFalse) {
                     wrapper.IsNull("TagID");
-                    sql += VideoMapper.TAGSTAMP_LEFT_JOIN_SQL;
+                    sql += VideoMapper.SQL_LEFT_JOIN_TAGSTAMP;
                 } else {
                     bool allTrue = TagStamps.All(item => item.Selected == true);
                     if (!allTrue) {
                         wrapper.In("metadata_to_tagstamp.TagID", TagStamps.Where(item => item.Selected == true).Select(item => item.TagID.ToString()));
-                        sql += VideoMapper.TAGSTAMP_JOIN_SQL;
+                        sql += VideoMapper.SQL_JOIN_TAGSTAMP;
                     }
                 }
             }
@@ -729,7 +721,7 @@ namespace Jvedio.Core.UserControls
                 }
                 if (idx > 0) {
                     int exists = (bool)pictureReverse.IsChecked ? 0 : 1;
-                    sql += VideoMapper.COMMON_PICTURE_EXIST_JOIN_SQL;
+                    sql += VideoMapper.SQL_JOIN_COMMON_PICTURE_EXIST;
                     wrapper.Eq("common_picture_exist.PathType", ConfigManager.Settings.PicPathMode)
                         .Eq("common_picture_exist.ImageType", idx - 1)
                         .Eq("common_picture_exist.Exist", exists);

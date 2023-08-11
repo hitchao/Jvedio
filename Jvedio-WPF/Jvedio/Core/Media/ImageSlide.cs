@@ -15,18 +15,30 @@ namespace Jvedio.Core.Media
 {
     /// <summary>
     /// 预览图展示效果
-    /// 改编于 http://www.codescratcher.com/wpf/create-image-slideshow-wpf/#DownloadPopup
+    /// <para>参考：<see href="http://www.codescratcher.com/wpf/create-image-slideshow-wpf/#DownloadPopup">codescratcher</see></para>
     /// </summary>
     public class ImageSlide
     {
-        private Image[] ImageControls;
-        private DispatcherTimer timerImageChange;
-        private List<ImageSource> Images;
-        private static string[] ValidImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
-        private string strImagePath = string.Empty;
-        private int CurrentSourceIndex, CurrentCtrlIndex, IntervalTimer = 2;
-        private int MaxViewNum = 10; // 最多展示的图片数量
-        private bool stop = false;
+
+        #region "属性"
+        private static string[] ValidImageExtensions { get; set; } = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
+
+        private int CurrentSourceIndex { get; set; }
+        private int CurrentCtrlIndex { get; set; }
+        private int IntervalTimer { get; set; } = 2;
+
+        private Image[] ImageControls { get; set; }
+        private DispatcherTimer timerImageChange { get; set; }
+        private List<ImageSource> Images { get; set; }
+        private string strImagePath { get; set; } = string.Empty;
+
+        private int MaxViewNum { get; set; } = 10; // 最多展示的图片数量
+        private bool stop { get; set; }
+
+
+
+        #endregion
+
 
         /// <summary>
         /// 主界面的预览图展示

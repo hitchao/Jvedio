@@ -25,9 +25,16 @@ namespace Jvedio.Core.FFmpeg
         private const int DEFAULT_GIF_HEIGHT = 170;
         private const int DEFAULT_DURATION = 3;
 
+        #region "事件"
+
 
         public event EventHandler onProgress;
         public event EventHandler onError;
+
+
+        #endregion
+
+        #region "属性"
 
         private object ErrorLock { get; set; } = new object();
 
@@ -50,6 +57,7 @@ namespace Jvedio.Core.FFmpeg
 
         private CancellationToken Token { get; set; }
 
+        #endregion
         public ScreenShot(Video video, CancellationToken token)
         {
             CurrentVideo = video;

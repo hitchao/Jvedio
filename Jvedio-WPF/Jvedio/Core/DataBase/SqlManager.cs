@@ -11,12 +11,6 @@ namespace Jvedio.Core.DataBase
             Init();
         }
 
-        // *************** 数据库***************
-        /*
-         * 如果是 sqlite => xxx.sqlite ；如果是 Mysql/PostgreSql => 数据库名称：xxx
-         * 使用 SQLITE 存储用户的配置，用户的数据可以采用多数据库形式
-         * DB_TABLENAME_JVEDIO_DATA ,对于 SQLITE 来说是文件名，对于 Mysql 来说是库名
-         */
         public static string DB_TABLENAME_APP_CONFIG { get; set; }
 
         public static string DB_TABLENAME_APP_DATAS { get; set; }

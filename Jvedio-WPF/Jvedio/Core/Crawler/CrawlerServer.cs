@@ -31,8 +31,11 @@ namespace Jvedio.Core.Crawler
             PluginID = string.Empty;
         }
 
-        public UrlCode UrlCode;
-        public PluginInvoker Invoker;
+        #region "属性"
+
+
+        public UrlCode UrlCode { get; set; }
+        public PluginInvoker Invoker { get; set; }
 
         public string PluginID { get; set; }
 
@@ -105,6 +108,8 @@ namespace Jvedio.Core.Crawler
                 RaisePropertyChanged();
             }
         }
+        #endregion
+
 
         public bool IsHeaderProper()
         {

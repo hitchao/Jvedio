@@ -195,7 +195,7 @@ namespace Jvedio.ViewModel
 
             ToAssoSearchLimit(wrapper);
             wrapper.Select(VieModel_VideoList.SelectFields);
-            string sql = VideoMapper.BASE_SQL;
+            string sql = VideoMapper.SQL_BASE;
 
             string count_sql = "select count(*) " + sql + wrapper.ToWhere(false);
             AssoSearchTotalCount = metaDataMapper.SelectCount(count_sql);
@@ -244,7 +244,7 @@ namespace Jvedio.ViewModel
                 wrapper.Select("VID", "metadata.DataID", "Title", "MVID", "Path")
                     .In("metadata.DataID", set.Select(x => x.ToString()));
 
-                string sql = VideoMapper.BASE_SQL;
+                string sql = VideoMapper.SQL_BASE;
                 sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
                 List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
                 CurrentExistAssocData =
