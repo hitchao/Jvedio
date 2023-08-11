@@ -1,11 +1,10 @@
-﻿using Jvedio.AvalonEdit;
-using Jvedio.Core.Global;
+﻿using Jvedio.Core.Global;
+using Jvedio.Core.Tasks;
 using SuperControls.Style.Windows;
 using SuperUtils.IO;
 using System;
 using System.Threading;
 using System.Windows;
-using Jvedio.Core.Tasks;
 #if DEBUG
 #else
 using System.Diagnostics;

@@ -3,7 +3,6 @@ using Jvedio.Core.Global;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Mapper;
 using Newtonsoft.Json;
 using SuperControls.Style;
 using SuperUtils.Common;

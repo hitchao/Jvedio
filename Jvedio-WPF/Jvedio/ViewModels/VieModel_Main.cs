@@ -1,13 +1,9 @@
 ﻿using Jvedio.Core.Enums;
-using Jvedio.Core.FFmpeg;
-using Jvedio.Core.Net;
-using Jvedio.Core.Scan;
 using Jvedio.Core.Server;
 using Jvedio.Core.UserControls;
 using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
-using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using Jvedio.ViewModels;
 using SuperControls.Style;
@@ -21,9 +17,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using static Jvedio.App;
-using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.ViewModel

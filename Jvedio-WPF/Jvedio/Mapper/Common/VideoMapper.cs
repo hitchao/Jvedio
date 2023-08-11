@@ -22,7 +22,7 @@ namespace Jvedio.Mapper
         public const string SQL_JOIN_LABEL =
             " JOIN metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
 
-        const string SQL_JOIN_TAGSTAMP =
+        public const string SQL_JOIN_TAGSTAMP =
             " JOIN metadata_to_tagstamp on metadata_to_tagstamp.DataID=metadata.DataID ";
 
         public const string SQL_LEFT_JOIN_TAGSTAMP =

@@ -1,6 +1,5 @@
 ﻿using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
-using Jvedio.Core.FFmpeg;
 using Jvedio.Entity;
 using Jvedio.Mapper;
 using SuperControls.Style;

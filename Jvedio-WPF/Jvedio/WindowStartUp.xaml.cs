@@ -1,5 +1,4 @@
-﻿using Jvedio.AvalonEdit;
-using Jvedio.Core.Config;
+﻿using Jvedio.Core.Config;
 using Jvedio.Core.DataBase;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;

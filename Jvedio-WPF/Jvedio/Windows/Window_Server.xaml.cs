@@ -1,6 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
-using Jvedio.AvalonEdit;
 using Jvedio.Core.DataBase;
 using Jvedio.Core.Global;
 using Jvedio.Core.Server;

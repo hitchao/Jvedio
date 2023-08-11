@@ -1,6 +1,5 @@
 ﻿using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Mapper;
 using SuperControls.Style;
 using SuperUtils.WPF.VisualTools;
 using System;

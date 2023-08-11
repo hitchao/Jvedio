@@ -16,7 +16,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using static Jvedio.App;
 
 namespace Jvedio.Core.Net
 {

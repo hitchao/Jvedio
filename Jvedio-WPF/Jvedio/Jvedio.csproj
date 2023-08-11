@@ -339,6 +339,7 @@
     </Compile>
     <Compile Include="Entity\Common\NFOParse.cs" />
     <Compile Include="Entity\Common\TabItemEx.cs" />
+    <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="Mapper\MapperManager.cs" />
     <Compile Include="CustomStyle\StyleManager.cs" />
     <Compile Include="Core\Plugins\Crawler\CrawlerInfo.cs" />
@@ -355,7 +356,6 @@
     <Compile Include="Core\Config\WindowConfig\MetaData.cs" />
     <Compile Include="Core\Config\WindowConfig\Main.cs" />
     <Compile Include="Core\Config\WindowConfig\StartUp.cs" />
-    <Compile Include="Mapper\BaseMapper\MySQLMapper.cs" />
     <Compile Include="Core\UserControls\Filter.xaml.cs">
       <DependentUpon>Filter.xaml</DependentUpon>
     </Compile>

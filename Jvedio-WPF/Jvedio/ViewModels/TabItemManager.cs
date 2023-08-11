@@ -1,11 +1,8 @@
-﻿using ICSharpCode.AvalonEdit;
-using Jvedio.Core.Media;
-using Jvedio.Core.Scan;
+﻿using Jvedio.Core.Scan;
 using Jvedio.Core.UserControls;
 using Jvedio.Core.UserControls.Tasks;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
-using Jvedio.Mapper;
 using Jvedio.ViewModel;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
@@ -14,9 +11,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Documents;
-using static Jvedio.Core.DataBase.Tables.Sqlite;
 
 namespace Jvedio.ViewModels
 {

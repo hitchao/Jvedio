@@ -1,17 +1,4 @@
-﻿using Jvedio.Core.Enums;
-using Jvedio.Core.FFmpeg;
-using Jvedio.Core.Net;
-using SuperUtils.Framework.Tasks;
-using SuperUtils.WPF.VieModel;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Threading;
+﻿using SuperUtils.Framework.Tasks;
 
 namespace Jvedio.Core.Tasks
 {

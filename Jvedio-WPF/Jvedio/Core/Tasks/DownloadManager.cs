@@ -1,14 +1,6 @@
-﻿
-using Jvedio.Core.FFmpeg;
-using Jvedio.Core.Net;
+﻿using Jvedio.Core.Net;
 using SuperUtils.Framework.Tasks;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System;
-using System.Threading.Tasks;
-using static Jvedio.App;
-using System.Linq;
 
 namespace Jvedio.Core.Tasks
 {

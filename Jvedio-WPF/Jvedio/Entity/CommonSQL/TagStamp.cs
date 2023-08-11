@@ -1,6 +1,4 @@
-﻿
-using Jvedio.Core.Logs;
-using Jvedio.Mapper;
+﻿using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.WPF.VisualTools;
