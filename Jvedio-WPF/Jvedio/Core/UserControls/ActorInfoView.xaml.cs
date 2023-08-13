@@ -68,7 +68,7 @@ namespace Jvedio.Core.UserControls
                 FileHelper.TryOpenSelectPath(CurrentActorInfo.GetImagePath());
         }
 
-        // todo
+        // todo 演员信息下载
         private void BeginDownLoadActress(object sender, MouseButtonEventArgs e)
         {
             // List<Actress> actresses = new List<Actress>();

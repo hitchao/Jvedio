@@ -53,6 +53,27 @@ namespace Jvedio
             //    this.FontFamily = StyleManager.GlobalFont; // 设置字体
         }
 
+        private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            BindingEvent();
+        }
+
+
+        private void BindingEvent()
+        {
+            actorList.onShowSameActor += SelectOneActor;
+        }
+
+        private void SelectOneActor(long actorID)
+        {
+            ActorInfo actorInfo = actorList.CurrentActorList.FirstOrDefault(arg => arg.ActorID == actorID);
+            if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName)) {
+                vieModel.ActorName = actorInfo.ActorName;
+                vieModel.ActorID = actorInfo.ActorID;
+                vieModel.CurrentImage = actorInfo.SmallImage;
+            }
+        }
+
         private void SaveInfo(object sender, RoutedEventArgs e)
         {
             bool success = vieModel.Save();
@@ -236,19 +257,7 @@ namespace Jvedio
                 vieModel.ViewActors.Add(actorInfo);
         }
 
-        private void CurrentActorPageChange(object sender, EventArgs e)
-        {
-            Pagination pagination = sender as Pagination;
-            vieModel.CurrentActorPage = pagination.CurrentPage;
-            ActorList.ActorPageQueue.Enqueue(pagination.CurrentPage);
-            vieModel.SelectActor();
-        }
 
-        private void ActorPageSizeChange(object sender, EventArgs e)
-        {
-            Pagination pagination = sender as Pagination;
-            vieModel.ActorPageSize = pagination.PageSize;
-        }
 
         private long GetDataID(UIElement o)
         {
@@ -264,16 +273,6 @@ namespace Jvedio
             return -1;
         }
 
-        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            long actorID = GetDataID(sender as FrameworkElement);
-            ActorInfo actorInfo = vieModel.CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
-            if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName)) {
-                vieModel.ActorName = actorInfo.ActorName;
-                vieModel.ActorID = actorInfo.ActorID;
-                vieModel.CurrentImage = actorInfo.SmallImage;
-            }
-        }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -305,7 +304,6 @@ namespace Jvedio
         private void NewActor(object sender, RoutedEventArgs e)
         {
             searchActorPopup.IsOpen = true;
-            vieModel.SelectActor();
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType.Equals(PathType.RelativeToData))
                 MessageCard.Info(LangManager.GetValueByKey("ShowActorImageWarning"));
@@ -331,5 +329,8 @@ namespace Jvedio
                 CalcSize();
             }
         }
+
+
+
     }
 }

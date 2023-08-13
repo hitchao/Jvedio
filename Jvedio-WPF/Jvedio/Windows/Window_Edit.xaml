@@ -5,14 +5,16 @@
     xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Jvedio"
+    xmlns:localControl="clr-namespace:Jvedio.Core.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource Edit}"
-    Width="800"
+    Width="1000"
     MinWidth="800"
     Closing="BaseWindow_Closing"
     Foreground="{DynamicResource Window.Foreground}"
+    Loaded="BaseWindow_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -175,200 +177,93 @@
                             </Grid>
                             <Popup
                                 x:Name="searchActorPopup"
-                                Width="800"
-                                MinHeight="300"
+                                Width="900"
+                                Height="500"
                                 AllowsTransparency="True"
-                                HorizontalOffset="-5"
+                                HorizontalOffset="0"
                                 Placement="Bottom"
                                 PlacementTarget="{Binding ElementName=actorTagPanel}"
                                 PopupAnimation="Fade"
                                 StaysOpen="True"
-                                VerticalOffset="-5">
+                                VerticalOffset="0">
                                 <Grid Margin="5">
                                     <Border
                                         Margin="5"
                                         Background="{DynamicResource Menu.Background}"
                                         CornerRadius="5"
                                         Effect="{StaticResource PopupDropShadowEffect}" />
-                                    <Grid Margin="4,5">
+                                    <Grid Margin="5">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto" />
                                             <RowDefinition Height="*" />
                                             <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
 
-                                        <super:SearchBox
-                                            Grid.Row="0"
-                                            Margin="5"
-                                            Style="{StaticResource SearchBoxStyle}"
-                                            Text="{Binding SearchText, Mode=TwoWay}" />
-
-                                        <Grid Grid.Row="1">
+                                        <Grid Grid.Row="0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="auto" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
+
                                             <Grid Grid.Column="0">
-                                                <StackPanel Orientation="Vertical">
+                                                <StackPanel Margin="10" Orientation="Vertical">
                                                     <Border
-                                                        Grid.Column="3"
-                                                        Width="100"
-                                                        Height="100"
-                                                        Margin="10,20"
-                                                        VerticalAlignment="Top"
-                                                        Style="{StaticResource DropBorderStyle}">
-                                                        <Image Source="{Binding CurrentImage}" />
+                                                        Width="125"
+                                                        Height="125"
+                                                        HorizontalAlignment="Center"
+                                                        CornerRadius="4"
+                                                        Effect="{StaticResource PopupDropShadowEffect}">
+                                                        <Border.Background>
+                                                            <ImageBrush Stretch="Fill">
+                                                                <ImageBrush.ImageSource>
+                                                                    <Binding Path="CurrentImage">
+                                                                        <Binding.TargetNullValue>
+                                                                            <ImageSource>/Resources/Picture/NoPrinting_A.png</ImageSource>
+                                                                        </Binding.TargetNullValue>
+                                                                    </Binding>
+                                                                </ImageBrush.ImageSource>
+                                                            </ImageBrush>
+                                                        </Border.Background>
                                                     </Border>
-                                                    <TextBox
-                                                        Width="auto"
+                                                    <TextBlock
+                                                        Width="125"
                                                         Margin="5,0"
                                                         Padding="10"
                                                         HorizontalAlignment="Stretch"
-                                                        HorizontalContentAlignment="Center"
-                                                        Background="{DynamicResource Window.Side.Background}"
-                                                        BorderBrush="#326CF3"
-                                                        BorderThickness="0"
-                                                        Foreground="{DynamicResource Window.Foreground}"
-                                                        IsReadOnly="True"
-                                                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                                        Text="{Binding ActorName, Mode=TwoWay}" />
+                                                        FontSize="12"
+                                                        Style="{StaticResource BaseTextBlock}"
+                                                        Text="{Binding ActorName, Mode=TwoWay}"
+                                                        TextWrapping="Wrap" />
                                                 </StackPanel>
                                             </Grid>
-                                            <ScrollViewer
-                                                x:Name="ActorScrollViewer"
+
+                                            <localControl:ActorList
+                                                x:Name="actorList"
                                                 Grid.Column="1"
-                                                CanContentScroll="True"
-                                                FocusVisualStyle="{x:Null}"
-                                                IsDeferredScrollingEnabled="False"
-                                                VerticalScrollBarVisibility="Auto">
-
-
-                                                <ItemsControl
-                                                    x:Name="ActorItemsControl"
-                                                    Margin="5,5,5,5"
-                                                    Background="Transparent"
-                                                    ItemsSource="{Binding CurrentActorList}"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <WrapPanel />
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Grid
-                                                                Name="rootGrid"
-                                                                Width="auto"
-                                                                Margin="5"
-                                                                Tag="{Binding ActorID, Mode=OneWay}">
-                                                                <Border
-                                                                    Name="rootBorder"
-                                                                    Padding="0"
-                                                                    Background="{DynamicResource ListBoxItem.Background}"
-                                                                    BorderThickness="2"
-                                                                    CornerRadius="0 0 2 2 "
-                                                                    Effect="{StaticResource BlueDropShadowEffect}" />
-                                                                <Grid>
-                                                                    <Grid.RowDefinitions>
-                                                                        <RowDefinition Height="auto" />
-
-                                                                        <RowDefinition Height="*" />
-                                                                    </Grid.RowDefinitions>
-
-
-                                                                    <Grid Grid.Row="0">
-                                                                        <Border
-                                                                            Margin="5"
-                                                                            Padding="10,5"
-                                                                            HorizontalAlignment="Right"
-                                                                            VerticalAlignment="Top"
-                                                                            Panel.ZIndex="5"
-                                                                            Background="{DynamicResource Window.Side.Background}"
-                                                                            CornerRadius="5"
-                                                                            Opacity="0.7">
-                                                                            <TextBlock Text="{Binding Count}" />
-                                                                        </Border>
-                                                                        <Image
-                                                                            Width="125"
-                                                                            Height="125"
-                                                                            Margin="2,2,2,10"
-                                                                            VerticalAlignment="Top"
-                                                                            AllowDrop="True"
-                                                                            Cursor="Hand"
-                                                                            FocusVisualStyle="{x:Null}"
-                                                                            MouseEnter="Image_MouseEnter"
-                                                                            MouseLeave="Image_MouseLeave"
-                                                                            MouseUp="Image_MouseUp"
-                                                                            Source="{Binding SmallImage}"
-                                                                            Stretch="UniformToFill" />
-                                                                    </Grid>
-
-
-
-
-                                                                    <TextBox
-                                                                        Name="ActorNameTextBox"
-                                                                        Grid.Row="1"
-                                                                        Width="125"
-                                                                        MaxHeight="60"
-                                                                        Margin="0,5"
-                                                                        FontSize="18"
-                                                                        Foreground="{DynamicResource Window.Foreground}"
-                                                                        Opacity="0.7"
-                                                                        Style="{StaticResource ReadOnlyWrapTextBox}"
-                                                                        Text="{Binding ActorName}"
-                                                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-
-
-                                                                </Grid>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                            </ScrollViewer>
+                                                ViewMode="True" />
                                         </Grid>
 
+                                        <Border
+                                            Grid.Row="1"
+                                            Margin="0"
+                                            Background="{DynamicResource Window.Title.Background}"
+                                            CornerRadius="0 0 4 4 ">
+                                            <StackPanel
+                                                Margin="10,5,10,5"
+                                                HorizontalAlignment="Center"
+                                                Orientation="Horizontal">
+                                                <Button
+                                                    MinWidth="100"
+                                                    Click="newActor_Cancel"
+                                                    Content="{StaticResource Cancel}"
+                                                    Style="{StaticResource ButtonDanger}" />
+                                                <Button
+                                                    MinWidth="100"
+                                                    Click="newActor_Confirm"
+                                                    Content="{StaticResource Confirm}"
+                                                    Style="{StaticResource ButtonPrimary}" />
+                                            </StackPanel>
+                                        </Border>
 
-
-                                        <Grid Grid.Row="2" Margin="5">
-
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="auto" />
-                                                <ColumnDefinition Width="auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <super:Pagination
-                                                Name="actorPagination"
-                                                Grid.Column="0"
-                                                Background="{DynamicResource Menu.Background}"
-                                                BorderBrush="{DynamicResource Window.Title.Foreground}"
-                                                CurrentPage="1"
-                                                CurrentPageBackground="#409EFF"
-                                                CurrentPageChange="CurrentActorPageChange"
-                                                Foreground="{DynamicResource Window.Foreground}"
-                                                PageBackground="{DynamicResource Window.Side.Background}"
-                                                PageCount="5"
-                                                PageHoverBackground="{DynamicResource Window.Title.Hover.Background}"
-                                                PageSize="40"
-                                                PageSizeChange="ActorPageSizeChange"
-                                                PageSizes="[10,20,40,50,100,200]"
-                                                Total="{Binding ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            <Button
-                                                Grid.Column="1"
-                                                MinWidth="70"
-                                                Click="newActor_Confirm"
-                                                Content="{DynamicResource Confirm}"
-                                                Style="{StaticResource ButtonPrimary}" />
-                                            <Button
-                                                Grid.Column="2"
-                                                MinWidth="70"
-                                                Click="newActor_Cancel"
-                                                Content="{DynamicResource Cancel}"
-                                                Style="{StaticResource ButtonDanger}" />
-
-                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Popup>

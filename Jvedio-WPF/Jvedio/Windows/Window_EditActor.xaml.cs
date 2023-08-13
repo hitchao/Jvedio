@@ -1,5 +1,6 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
+using Jvedio.Core.UserControls;
 using Jvedio.Entity;
 using SuperControls.Style;
 using SuperControls.Style.Plugin;
@@ -70,6 +71,10 @@ namespace Jvedio
         }
 
 
+        private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         private void SaveActor(object sender, RoutedEventArgs e)
         {
@@ -204,5 +209,6 @@ namespace Jvedio
             e.Effects = DragDropEffects.Link;
             e.Handled = true; // 必须加
         }
+
     }
 }

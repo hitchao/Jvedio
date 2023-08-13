@@ -63,27 +63,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private List<ActorInfo> actorlist;
-
-        public List<ActorInfo> ActorList {
-            get { return actorlist; }
-
-            set {
-                actorlist = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<ActorInfo> _CurrentActorList;
-
-        public ObservableCollection<ActorInfo> CurrentActorList {
-            get { return _CurrentActorList; }
-
-            set {
-                _CurrentActorList = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private ObservableCollection<string> _CurrentLabelList;
 
@@ -154,17 +133,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _SearchText = string.Empty;
-
-        public string SearchText {
-            get { return _SearchText; }
-
-            set {
-                _SearchText = value;
-                RaisePropertyChanged();
-                SelectActor();
-            }
-        }
 
         private string _LabelText = string.Empty;
 
@@ -304,102 +272,7 @@ namespace Jvedio.ViewModel
             return update1 > 0 & update2 > 0;
         }
 
-        private delegate void LoadActorDelegate(ActorInfo actor, int idx);
 
-        private void LoadActor(ActorInfo actor, int idx)
-        {
-            if (CurrentActorList.Count < ActorPageSize) {
-                if (idx < CurrentActorList.Count) {
-                    CurrentActorList[idx] = null;
-                    CurrentActorList[idx] = actor;
-                } else {
-                    CurrentActorList.Add(actor);
-                }
-            } else {
-                CurrentActorList[idx] = null;
-                CurrentActorList[idx] = actor;
-            }
-
-            CurrentActorCount = CurrentActorList.Count;
-        }
-
-
-        // todo 模块化
-        public async void SelectActor()
-        {
-            string search = SearchText.ToProperSql().Trim();
-            string count_sql = "SELECT count(*) as Count " +
-                         "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
-                         "on metadata_to_actor.ActorID=actor_info.ActorID " +
-                         "join metadata " +
-                         "on metadata_to_actor.DataID=metadata.DataID " +
-                         $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
-                         "GROUP BY actor_info.ActorID " +
-                         "UNION " +
-                         "select actor_info.ActorID  " +
-                         "FROM actor_info WHERE NOT EXISTS " +
-                         "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
-                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
-                         "GROUP BY actor_info.ActorID)";
-
-            ActorTotalCount = actorMapper.SelectCount(count_sql);
-            SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
-
-            string sql = $"{wrapper.Select(Jvedio.Core.UserControls.ActorList.ActorSelectedField).ToSelect(false)} FROM actor_info " +
-                        $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
-                        $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
-                        $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                       $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} " +
-                        $"GROUP BY actor_info.ActorID " +
-                        "UNION " +
-                       $"{wrapper.Select(Jvedio.Core.UserControls.ActorList.ActorSelectedField).ToSelect(false)} FROM actor_info " +
-                        "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
-                         $"{(!string.IsNullOrEmpty(search) ? $"and actor_info.ActorName like '%{search}%' " : string.Empty)} "
-                         + ActorToLimit();
-
-            // 只能手动设置页码，很奇怪
-            App.Current.Dispatcher.Invoke(() => { WindowEdit.actorPagination.Total = ActorTotalCount; });
-
-            List<Dictionary<string, object>> list = actorMapper.Select(sql);
-            List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
-            ActorList = new List<ActorInfo>();
-            if (actors == null)
-                actors = new List<ActorInfo>();
-            ActorList.AddRange(actors);
-
-            if (CurrentActorList == null)
-                CurrentActorList = new ObservableCollection<ActorInfo>();
-            for (int i = 0; i < ActorList.Count; i++) {
-                ActorInfo actorInfo = ActorList[i];
-
-                // 加载图片
-                PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-                BitmapImage smallimage = null;
-                if (pathType != PathType.RelativeToData) {
-                    // 如果是相对于影片格式的，则不设置图片
-                    string smallImagePath = actorInfo.GetImagePath();
-                    smallimage = ImageCache.Get(smallImagePath);
-                }
-
-                if (smallimage == null)
-                    smallimage = MetaData.DefaultActorImage;
-                actorInfo.SmallImage = smallimage;
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
-            }
-
-            // 清除
-            for (int i = CurrentActorList.Count - 1; i > ActorList.Count - 1; i--) {
-                CurrentActorList.RemoveAt(i);
-            }
-        }
-
-        public string ActorToLimit()
-        {
-            int row_count = ActorPageSize;
-            long offset = ActorPageSize * (CurrentActorPage - 1);
-            return $" LIMIT {offset},{row_count}";
-        }
 
     }
 }

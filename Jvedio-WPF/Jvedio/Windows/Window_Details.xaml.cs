@@ -142,6 +142,24 @@ namespace Jvedio
             }
         }
 
+        public void RemoveTag(long tagID)
+        {
+            if (vieModel.CurrentVideo != null && vieModel.CurrentVideo.TagStamp != null &&
+                vieModel.CurrentVideo.TagStamp.Count > 0) {
+                int idx = -1;
+                for (int i = 0; i < vieModel.CurrentVideo.TagStamp.Count; i++) {
+                    if (vieModel.CurrentVideo.TagStamp[i].TagID == tagID) {
+                        idx = i;
+                        break;
+                    }
+                }
+                if (idx >= 0 && idx < vieModel.CurrentVideo.TagStamp.Count) {
+                    vieModel.CurrentVideo.TagStamp.RemoveAt(idx);
+                }
+            }
+
+        }
+
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Border border = sender as Border;

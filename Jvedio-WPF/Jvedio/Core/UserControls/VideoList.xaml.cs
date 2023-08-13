@@ -213,7 +213,6 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        // todo
         public void SetViewMode(object sender, RoutedEventArgs e)
         {
             PathRadioButton radioButton = sender as PathRadioButton;
@@ -247,7 +246,7 @@ namespace Jvedio.Core.UserControls
 
         }
 
-        // todo
+        // todo 加载 gif
         public void AsyncLoadGif()
         {
             // if (vieModel.CurrentVideoList == null) return;
@@ -388,8 +387,6 @@ namespace Jvedio.Core.UserControls
                 }
             }
 
-            // todo FilterMovieList
-            // vieModel.FilterMovieList.Remove(arg);
             videoMapper.deleteVideoByIds(to_delete.Select(arg => arg.DataID.ToString()).ToList());
 
             // 关闭详情窗口
@@ -771,7 +768,7 @@ namespace Jvedio.Core.UserControls
             vieModel.EnableEditActress = !vieModel.EnableEditActress;
         }
 
-        // todo
+        // todo 演员信息下载
         private void BeginDownLoadActress(object sender, MouseButtonEventArgs e)
         {
             // List<Actress> actresses = new List<Actress>();
@@ -1522,7 +1519,7 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        // todo
+        // todo 预览图展示
         public void AsyncLoadExtraPic()
         {
             ItemsControl itemsControl = MovieItemsControl;

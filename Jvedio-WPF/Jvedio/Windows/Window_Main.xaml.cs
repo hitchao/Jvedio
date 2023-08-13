@@ -530,8 +530,8 @@ namespace Jvedio
 
 
             // 筛选器变动
-            Filter.onTagStampDelete += () => onTagStampDelete();
-            Filter.onTagStampRefresh += (id) => onTagStampRefresh(id);
+            Filter.onTagStampDelete += onTagStampDelete;
+            Filter.onTagStampRefresh += onTagStampRefresh;
         }
 
         private void onTagStampRefresh(long id)
@@ -557,17 +557,17 @@ namespace Jvedio
 
 
 
-        private void onTagStampDelete()
+        private void onTagStampDelete(long id)
         {
-            // 更新主窗体
-            //if (vieModel.CurrentVideoList != null) {
-            //    for (int i = 0; i < vieModel.CurrentVideoList.Count; i++) {
-            //        if (vieModel.CurrentVideoList[i].TagStamp != null
-            //            && vieModel.CurrentVideoList[i].TagStamp.Contains(tagStamp)) {
-            //            vieModel.CurrentVideoList[i].TagStamp.Remove(tagStamp);
-            //        }
-            //    }
-            //}
+            // 删除主窗体所有标签戳
+            VideoList videoList = vieModel.TabItemManager.GetVideoListByType(TabType.GeoVideo);
+            if (videoList != null)
+                videoList.RefreshTagStamps(id);
+
+            // 删除详情窗口的标签戳
+            Window window = GetWindowByName("Window_Details", App.Current.Windows);
+            if (window != null && window is Window_Details window_Details)
+                window_Details?.RemoveTag(id);
         }
 
         public childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject

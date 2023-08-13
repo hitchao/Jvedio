@@ -300,10 +300,7 @@
                 Width="auto"
                 Margin="5"
                 Tag="{Binding ActorID, Mode=OneWay}">
-                <Border
-                    Name="rootBorder"
-                    CornerRadius="6"
-                    Style="{StaticResource ActorBorder}">
+                <Border Name="rootBorder" CornerRadius="6">
                     <Border.Background>
                         <VisualBrush Viewbox="0.06,0.1,0.85,0.7">
                             <VisualBrush.Visual>
@@ -319,6 +316,25 @@
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Border.Background>
+                    <Border.Style>
+                        <Style BasedOn="{StaticResource ActorBorder}" TargetType="Border">
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}" Value="True" />
+                                        <Condition Binding="{Binding Path=ViewMode, ElementName=actorList}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding Path=ViewMode, ElementName=actorList}" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                 </Border>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -345,9 +361,12 @@
                         <Border
                             Width="125"
                             Height="125"
-                            Margin="2,0"
+                            Margin="2"
                             VerticalAlignment="Top"
-                            CornerRadius="4">
+                            ContextMenuService.IsEnabled="{Binding Path=ViewMode, ElementName=actorList, Converter={StaticResource OppositeBooleanConverter}}"
+                            CornerRadius="4"
+                            PreviewMouseUp="Border_PreviewMouseUp"
+                            Tag="{Binding ActorID}">
                             <Border.ContextMenu>
                                 <ContextMenu Tag="{Binding ActorID}">
                                     <MenuItem Click="DeleteActors" Header="{DynamicResource Delete}" />
@@ -361,6 +380,15 @@
                             <Border.Background>
                                 <ImageBrush ImageSource="{Binding SmallImage}" Stretch="Fill" />
                             </Border.Background>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=ViewMode, ElementName=actorList}" Value="True">
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                         </Border>
                         <Grid
                             Margin="4,0"
@@ -383,6 +411,9 @@
                                             <Setter Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger>
                                         <DataTrigger Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="True">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ViewMode, ElementName=actorList}" Value="True">
                                             <Setter Property="Visibility" Value="Hidden" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -468,13 +499,17 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <StackPanel
+                Grid.Row="0"
+                Margin="10,5"
+                Orientation="Horizontal">
                 <Button
                     Margin="10,5"
                     HorizontalAlignment="Left"
                     Click="NewActor"
                     Content="{DynamicResource NewActor}"
-                    Style="{StaticResource ButtonPrimary}" />
+                    Style="{StaticResource ButtonPrimary}"
+                    Visibility="{Binding ViewMode, ElementName=actorList, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
 
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <super:Switch
@@ -550,7 +585,7 @@
         </Grid>
         <!--  演员展示  -->
         <Grid Grid.Row="2">
-            <Grid.ContextMenu>
+            <!--<Grid.ContextMenu>
                 <ContextMenu>
                     <MenuItem
                         Click="SelectAllActor"
@@ -558,7 +593,7 @@
                         Icon="pack://application:,,,/Resources/menuitem/selectall.png"
                         Visibility="Collapsed" />
                 </ContextMenu>
-            </Grid.ContextMenu>
+            </Grid.ContextMenu>-->
             <ScrollViewer
                 x:Name="ActorScrollViewer"
                 CanContentScroll="True"

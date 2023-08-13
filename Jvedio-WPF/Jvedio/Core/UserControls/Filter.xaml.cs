@@ -40,7 +40,7 @@ namespace Jvedio.Core.UserControls
 
         public event Action Close;
 
-        public static Action onTagStampDelete;
+        public static Action<long> onTagStampDelete;
         public static Action<long> onTagStampRefresh;
 
 
@@ -512,8 +512,7 @@ namespace Jvedio.Core.UserControls
                 string sql = $"delete from metadata_to_tagstamp where TagID={tagStamp.TagID};";
                 tagStampMapper.ExecuteNonQuery(sql);
                 InitTagStamp();
-                onTagStampDelete?.Invoke();
-                // todo 更新详情窗口
+                onTagStampDelete?.Invoke(tagStamp.TagID);
             }
         }
 

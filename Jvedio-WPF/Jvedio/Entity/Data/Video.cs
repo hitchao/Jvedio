@@ -367,7 +367,7 @@ namespace Jvedio.Entity
                 else
                     result = System.IO.Path.Combine(saveDir, $"{Hash}{(string.IsNullOrEmpty(ext) ? string.Empty : ext)}");
             } else {
-                // todo
+                // todo 其它图片模式
             }
 
             if (!string.IsNullOrEmpty(result))

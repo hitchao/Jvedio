@@ -224,15 +224,35 @@ namespace Jvedio.Core.UserControls
         #endregion
 
 
+        #region "控件属性"
+
+        public static readonly DependencyProperty ViewModeProperty = DependencyProperty.Register(
+nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
+
+        public bool ViewMode {
+            get { return (bool)GetValue(ViewModeProperty); }
+            set {
+                SetValue(ViewModeProperty, value);
+            }
+        }
+
+        #endregion
+
+
         public ActorList()
         {
             InitializeComponent();
+
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+
             this.DataContext = this;
             ConfigManager.VideoConfig.ActorEditMode = false;
         }
 
         static ActorList()
         {
+
             for (int i = 0; i < ActorSortDictList.Count; i++) {
                 ActorSortDict.Add(i, ActorSortDictList[i]);
             }
@@ -243,9 +263,12 @@ namespace Jvedio.Core.UserControls
         {
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
-            RefreshActorRenderToken();
-            BindingEvent();
-            SelectActor();
+
+            if (sender is ActorList actorList && actorList.IsLoaded) {
+                RefreshActorRenderToken();
+                BindingEvent();
+                SelectActor();
+            }
         }
 
         public void Refresh()
@@ -360,7 +383,7 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        // todo 优化多选
+        // todo 优化演员多选
         public void SelectActor(object sender, MouseButtonEventArgs e)
         {
             //FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
@@ -469,6 +492,8 @@ namespace Jvedio.Core.UserControls
 
         public async void SelectActor()
         {
+            if (ConfigManager.Main == null)
+                return;
 
             // 判断当前获取的队列
             while (ActorPageQueue.Count > 1) {
@@ -480,11 +505,6 @@ namespace Jvedio.Core.UserControls
                 RenderActorCTS?.Cancel(); // 取消加载
                 await Task.Delay(100);
             }
-
-            // todo
-            //App.Current.Dispatcher.Invoke((Action)delegate {
-            //    MainWindow.ActorScrollViewer.ScrollToTop(); // 滚到顶部
-            //});
 
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
             ActorSetActorSortOrder(wrapper);
@@ -534,7 +554,10 @@ namespace Jvedio.Core.UserControls
 
         public void ActorSetActorSortOrder<T>(IWrapper<T> wrapper)
         {
-            if (wrapper == null || ConfigManager.VideoConfig.ActorSortType >= ActorSortDict.Count)
+            if (wrapper == null ||
+                ActorSortDict == null ||
+                ConfigManager.VideoConfig == null ||
+                ConfigManager.VideoConfig.ActorSortType >= ActorSortDict.Count)
                 return;
             string sortField = ActorSortDict[(int)ConfigManager.VideoConfig.ActorSortType];
             if (ConfigManager.VideoConfig.ActorSortDescending)
@@ -639,6 +662,11 @@ namespace Jvedio.Core.UserControls
         private void CurrentActorPageChange(object sender, EventArgs e)
         {
             Pagination pagination = sender as Pagination;
+
+            if (!pagination.IsLoaded)
+                return;
+
+
             CurrentActorPage = pagination.CurrentPage;
             ActorPageQueue.Enqueue(pagination.CurrentPage);
             SelectActor();
@@ -705,7 +733,7 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        // todo
+        // todo 演员信息下载
         public void DownLoadSelectedActor(object sender, RoutedEventArgs e)
         {
             // if (downLoadActress?.State == DownLoadState.DownLoading)
@@ -861,7 +889,15 @@ namespace Jvedio.Core.UserControls
 
         private void searchBox_Search(object sender, RoutedEventArgs e)
         {
-            SelectActor();
+            if (sender is SearchBox searchBox && searchBox.IsLoaded)
+                SelectActor();
+        }
+
+        private void Border_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewMode && sender is FrameworkElement ele && ele.Tag != null &&
+                long.TryParse(ele.Tag.ToString(), out long actorID))
+                onShowSameActor?.Invoke(actorID);
         }
     }
 }
