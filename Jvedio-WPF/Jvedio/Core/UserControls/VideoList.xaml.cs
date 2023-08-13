@@ -221,10 +221,6 @@ namespace Jvedio.Core.UserControls
 
             vieModel.ShowImageMode = idx;
 
-            // else if (idx == 2)
-            // {
-            //    AsyncLoadExtraPic();
-            // }
             if (idx == 0)
                 vieModel.GlobalImageWidth = (int)ConfigManager.VideoConfig.SmallImage_Width;
             else if (idx == 1)
@@ -233,7 +229,7 @@ namespace Jvedio.Core.UserControls
                 vieModel.GlobalImageWidth = (int)ConfigManager.VideoConfig.GifImage_Width;
                 AsyncLoadGif();
             } else if (idx == 3) {
-                // vieModel.ShowDetailsData();
+                //vieModel.ShowDetailsData();
             }
 
         }

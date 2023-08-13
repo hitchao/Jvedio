@@ -346,7 +346,7 @@
                             ToolTip="{DynamicResource Thumbnail}" />
                         <super:PathRadioButton
                             Padding="0,0,0,0"
-                            CornerRadius="0 3 3 0"
+                            CornerRadius="0"
                             Fill="{DynamicResource Window.Foreground}"
                             GroupName="{Binding UUID, Mode=OneWay}"
                             IsChecked="True"
@@ -363,10 +363,10 @@
                             ToolTip="GIF"
                             Visibility="Collapsed" />
                         <super:PathRadioButton
-                            CornerRadius="0,5,5,0"
+                            CornerRadius="0 3 3 0"
                             GroupName="{Binding UUID, Mode=OneWay}"
                             Path="M64 480h352V128H64v352z m64-288h224v224H128V192zM64 928h352V576H64v352z m64-288h224v224H128v-224zM526.848 224H928a32 32 0 1 0 0-64H526.848a32 32 0 0 0 0 64zM928 608H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64zM928 384H526.848a32 32 0 0 0 0 64H928a32 32 0 1 0 0-64zM928 832H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64z"
-                            PathHeight="19"
+                            PathHeight="15"
                             Style="{StaticResource PathGroupRadioButton}"
                             Visibility="Collapsed" />
                     </StackPanel>

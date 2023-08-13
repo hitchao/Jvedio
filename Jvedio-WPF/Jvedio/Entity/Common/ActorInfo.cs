@@ -9,11 +9,13 @@ using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Reflections;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
@@ -34,7 +36,7 @@ namespace Jvedio.Entity
         [TableId(IdType.AUTO)]
         public long ActorID { get; set; }
 
-        private string _ActorName="";
+        private string _ActorName = string.Empty;
         public string ActorName {
             get { return _ActorName; }
             set {
@@ -42,47 +44,162 @@ namespace Jvedio.Entity
                 RaisePropertyChanged();
             }
         }
-        public string Country { get; set; }
 
-        public string Nation { get; set; }
+        private string _Country = string.Empty;
+        public string Country {
+            get { return _Country; }
+            set {
+                _Country = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _Nation = string.Empty;
+        public string Nation {
+            get { return _Nation; }
+            set {
+                _Nation = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _BirthPlace = string.Empty;
+        public string BirthPlace {
+            get { return _BirthPlace; }
+            set {
+                _BirthPlace = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _Birthday = string.Empty;
 
-        public string BirthPlace { get; set; }
+        public string Birthday {
+            get { return _Birthday; }
+            set {
+                _Birthday = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string Birthday { get; set; }
+        private int _Age;
 
-        public int Age { get; set; }
+        public int Age {
+            get { return _Age; }
+            set {
+                _Age = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string BloodType { get; set; }
+        private string _BloodType = string.Empty;
+        public string BloodType {
+            get { return _BloodType; }
+            set {
+                _BloodType = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public int Height { get; set; }
 
-        public int Weight { get; set; }
+        private int _Height;
 
-        public Gender Gender { get; set; }
+        public int Height {
+            get { return _Height; }
+            set {
+                _Height = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string Hobby { get; set; }
+        private int _Weight;
 
-        public char Cup { get; set; }
+        public int Weight {
+            get { return _Weight; }
+            set {
+                _Weight = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public int Chest { get; set; }
+        public Gender _Gender = Gender.Girl;
 
-        public int Waist { get; set; }
+        public Gender Gender {
+            get { return _Gender; }
+            set {
+                _Gender = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public int Hipline { get; set; }
+        private string _Hobby = string.Empty;
 
-        public string WebType { get; set; }
+        public string Hobby {
+            get { return _Hobby; }
+            set {
+                _Hobby = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string WebUrl { get; set; }
+        private char _Cup = 'Z';
 
-        public float Grade { get; set; }
+        public char Cup {
+            get { return _Cup; }
+            set {
+                _Cup = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string ExtraInfo { get; set; }
+        private int _Chest;
 
-        public string CreateDate { get; set; }
+        public int Chest {
+            get { return _Chest; }
+            set {
+                _Chest = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string UpdateDate { get; set; }
+        private int _Waist;
 
-        public string ImageUrl { get; set; }
+        public int Waist {
+            get { return _Waist; }
+            set {
+                _Waist = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _Hipline;
+
+        public int Hipline {
+            get { return _Hipline; }
+            set {
+                _Hipline = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string WebType { get; set; } = string.Empty;
+
+        public string WebUrl { get; set; } = string.Empty;
+
+        private float _Grade;
+
+        public float Grade {
+            get { return _Grade; }
+            set {
+                _Grade = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string ExtraInfo { get; set; } = string.Empty;
+
+        public string CreateDate { get; set; } = string.Empty;
+
+        public string UpdateDate { get; set; } = string.Empty;
+
+        public string ImageUrl { get; set; } = string.Empty;
 
         [TableField(exist: false)]
         public long ImageID { get; set; }
@@ -101,6 +218,56 @@ namespace Jvedio.Entity
 
             set {
                 _smallimage = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _InfoString;
+
+        [TableField(exist: false)]
+        public string InfoString {
+            get {
+
+                StringBuilder builder = new StringBuilder();
+                if (Height > 0)
+                    builder.Append($"{Height}cm ");
+                if (Weight > 0)
+                    builder.Append($"{Weight}kg ");
+                if (!string.IsNullOrEmpty(Birthday))
+                    builder.Append($"{Birthday} ");
+                if (Age > 0)
+                    builder.Append($"({Age}岁) ");
+                if (!string.IsNullOrEmpty(BirthPlace))
+                    builder.Append($"{BirthPlace} ");
+                if (Chest > 0)
+                    builder.Append($"{Chest} ");
+                if (Waist > 0)
+                    builder.Append($"{Waist} ");
+                if (Hipline > 0)
+                    builder.Append($"{Hipline} ");
+
+                builder.Append(Environment.NewLine);
+
+                if (Cup >= 'A' && Cup < 'Z')
+                    builder.Append($"{Cup} ");
+                if (!string.IsNullOrEmpty(Country))
+                    builder.Append($"{Country} ");
+                if (!string.IsNullOrEmpty(Nation))
+                    builder.Append($"{Nation} ");
+
+                if (!string.IsNullOrEmpty(BloodType))
+                    builder.Append($"{BloodType} ");
+                if (!string.IsNullOrEmpty(Hobby))
+                    builder.Append($"{Hobby} ");
+
+                if (builder.Length == 0)
+                    builder.Append("-");
+
+                return builder.ToString();
+            }
+
+            set {
+                _InfoString = value;
                 RaisePropertyChanged();
             }
         }
@@ -148,15 +315,17 @@ namespace Jvedio.Entity
             } else if (!string.IsNullOrEmpty(dataPath)) {
                 string basePath = System.IO.Path.GetDirectoryName(dataPath);
                 Dictionary<string, string> dict = (Dictionary<string, string>)ConfigManager.Settings.PicPaths[pathType.ToString()];
-                string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePath, dict["ActorImagePath"]));
-                string[] arr = FileHelper.TryGetAllFiles(path, "*.*");
-                if (arr != null && arr.Length > 0) {
-                    List<string> list = arr.ToList();
-                    list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
+                if (dict != null && dict.ContainsKey("ActorImagePath")) {
+                    string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePath, dict["ActorImagePath"]));
+                    string[] arr = FileHelper.TryGetAllFiles(path, "*.*");
+                    if (arr != null && arr.Length > 0) {
+                        List<string> list = arr.ToList();
+                        list = list.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(System.IO.Path.GetExtension(arg).ToLower())).ToList();
 
-                    foreach (string item in list) {
-                        if (System.IO.Path.GetFileNameWithoutExtension(item).ToLower().Equals(ActorName))
-                            return item;
+                        foreach (string item in list) {
+                            if (System.IO.Path.GetFileNameWithoutExtension(item).ToLower().Equals(ActorName))
+                                return item;
+                        }
                     }
                 }
 

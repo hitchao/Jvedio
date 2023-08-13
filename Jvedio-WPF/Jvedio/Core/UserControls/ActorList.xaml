@@ -9,7 +9,7 @@
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     x:Name="actorList"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1200"
     Loaded="ActorList_Loaded"
     PreviewKeyUp="Page_PreviewKeyUp"
     mc:Ignorable="d">
@@ -53,114 +53,179 @@
         </Style>
 
 
-        <!--  ContainerStyle  -->
-        <DataTemplate x:Key="StackTemplate">
+        <!--  表格数据  -->
+        <DataTemplate x:Key="ActorTemplateStack">
             <Grid
                 Name="rootGrid"
+                Width="450"
                 Margin="5"
                 Tag="{Binding ActorID, Mode=OneWay}">
-                <Border
-                    Name="rootBorder"
-                    Width="{Binding ElementName=rootGrid, Path=ActualWidth}"
-                    Height="auto"
-                    Background="{DynamicResource ListBoxItem.Background}"
-                    BorderThickness="2"
-                    CornerRadius="0"
-                    Cursor="Hand"
-                    Effect="{StaticResource BlueDropShadowEffect}"
-                    MouseEnter="ActorBorderMouseEnter"
-                    MouseLeave="ActorBorderMouseLeave"
-                    MouseLeftButtonUp="SelectActor">
-                    <Border.ContextMenu>
-                        <ContextMenu>
-
-                            <MenuItem
-                                Click="DownLoadSelectedActor"
-                                Header="{DynamicResource SyncInfo}"
-                                IsEnabled="False" />
-
-                        </ContextMenu>
-                    </Border.ContextMenu>
+                <Border Name="rootBorder" CornerRadius="6">
+                    <Border.Background>
+                        <VisualBrush Viewbox="0.1,0.5,0.85,0.7">
+                            <VisualBrush.Visual>
+                                <Image Source="{Binding SmallImage}">
+                                    <Image.BitmapEffect>
+                                        <BlurBitmapEffect
+                                            KernelType="Gaussian"
+                                            Radius="100"
+                                            RenderOptions.BitmapScalingMode="LowQuality"
+                                            RenderOptions.EdgeMode="Unspecified" />
+                                    </Image.BitmapEffect>
+                                </Image>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Border.Background>
+                    <Border.Style>
+                        <Style BasedOn="{StaticResource ActorBorder}" TargetType="Border">
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}" Value="True" />
+                                        <Condition Binding="{Binding Path=ViewMode, ElementName=actorList}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding Path=ViewMode, ElementName=actorList}" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                 </Border>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <Image
-                        Grid.Column="0"
-                        Width="125"
-                        Height="125"
-                        Margin="2"
-                        VerticalAlignment="Top"
-                        AllowDrop="True"
-                        Cursor="Hand"
-                        DragOver="ActorImage_DragOver"
-                        Drop="ActorImage_Drop"
-                        FocusVisualStyle="{x:Null}"
-                        MouseLeftButtonUp="SelectActor"
-                        Source="{Binding SmallImage}"
-                        Stretch="UniformToFill"
-                        Tag="{Binding ActorID}">
-                        <Image.ContextMenu>
-                            <ContextMenu Tag="{Binding ActorID}">
-                                <MenuItem Click="DeleteActors" Header="{DynamicResource Delete}" />
-                                <MenuItem Click="OpenActorImagePath" Header="{DynamicResource OpenPath}" />
-                                <MenuItem
-                                    Click="DownLoadSelectedActor"
-                                    Header="{DynamicResource SyncInfo}"
-                                    IsEnabled="False" />
 
-                            </ContextMenu>
-                        </Image.ContextMenu>
-                    </Image>
-                    <Grid Grid.Column="1" Margin="5,0">
+                    <Grid Grid.Row="0">
+                        <Border
+                            Padding="6,4"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Panel.ZIndex="5"
+                            Opacity="0.8"
+                            Style="{StaticResource InfoBorder}"
+                            Visibility="{Binding ActorShowCount, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock
+                                Margin="0"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="{Binding Count}"
+                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                        </Border>
+                        <Border
+                            Width="125"
+                            Height="125"
+                            Margin="2"
+                            VerticalAlignment="Top"
+                            ContextMenuService.IsEnabled="{Binding Path=ViewMode, ElementName=actorList, Converter={StaticResource OppositeBooleanConverter}}"
+                            CornerRadius="4"
+                            PreviewMouseUp="Border_PreviewMouseUp"
+                            Tag="{Binding ActorID}">
+                            <Border.ContextMenu>
+                                <ContextMenu Tag="{Binding ActorID}">
+                                    <MenuItem Click="DeleteActors" Header="{DynamicResource Delete}" />
+                                    <MenuItem Click="OpenActorImagePath" Header="{DynamicResource OpenPath}" />
+                                    <MenuItem
+                                        Click="DownLoadSelectedActor"
+                                        Header="{DynamicResource SyncInfo}"
+                                        IsEnabled="False" />
+                                </ContextMenu>
+                            </Border.ContextMenu>
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding SmallImage}" Stretch="Fill" />
+                            </Border.Background>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=ViewMode, ElementName=actorList}" Value="True">
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                        </Border>
+                        <Grid
+                            Margin="4,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Opacity="0.8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="5*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="False" />
+                                                <Condition Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                        <DataTrigger Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="True">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ViewMode, ElementName=actorList}" Value="True">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Button
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="0"
+                                HorizontalAlignment="Stretch"
+                                Click="EditActor"
+                                Content="{DynamicResource Edit}"
+                                Style="{StaticResource ButtonPrimary}"
+                                Tag="{Binding ActorID, Mode=OneWay}" />
+                            <Button
+                                Grid.Column="1"
+                                Margin="0"
+                                HorizontalAlignment="Stretch"
+                                Click="ShowSameActor"
+                                Content="{DynamicResource View}"
+                                Style="{StaticResource ButtonWarning}"
+                                Tag="{Binding ActorID, Mode=OneWay}" />
+
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
-
+                            <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel
+
+                        <TextBox
+                            Name="ActorNameTextBox"
                             Grid.Row="0"
-                            Margin="0,10,0,0"
-                            Orientation="Horizontal">
-                            <TextBox
-                                Name="ActorNameTextBox"
-                                MaxHeight="60"
-                                Margin="0"
-                                HorizontalAlignment="Left"
-                                FontSize="18"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                IsEnabled="{Binding ActorEditMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource OppositeBooleanConverter}}"
-                                Opacity="0.7"
-                                Style="{StaticResource ReadOnlyWrapTextBox}"
-                                Text="{Binding ActorName}"
-                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-
-                            <Label
-                                MinWidth="50"
-                                MaxHeight="60"
-                                Background="{DynamicResource Window.Detail.Background}"
-                                BorderThickness="0"
-                                Content="{Binding Count}"
-                                FontSize="18"
-                                Foreground="{DynamicResource Window.Foreground}"
-                                Opacity="0.7"
-                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />
-
-
-
-
-
-
-                        </StackPanel>
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            FontSize="14"
+                            Foreground="{DynamicResource Window.Foreground}"
+                            IsEnabled="{Binding ActorEditMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource OppositeBooleanConverter}}"
+                            MaxLines="2"
+                            Opacity="0.7"
+                            Style="{StaticResource ReadOnlyWrapTextBox}"
+                            Text="{Binding ActorName}"
+                            TextAlignment="Left"
+                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
 
                         <!--  演员星标  -->
                         <super:Rate
                             Grid.Row="1"
-                            Margin="5"
+                            Margin="12,0"
                             VerticalAlignment="Center"
                             AllowHalf="True"
                             Background="{DynamicResource Window.Background}"
@@ -172,129 +237,24 @@
                             ValueChanged="SideActorRate_ValueChanged"
                             Visibility="Visible"
                             Value="{Binding Grade, Mode=TwoWay}" />
-                        <StackPanel
+
+                        <TextBox
                             Grid.Row="2"
-                            Margin="0,5"
-                            Orientation="Horizontal">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=tb, Path=Text}" Value="">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-
-                            <TextBox Name="tb" Style="{StaticResource ReadOnlyNoWrapTextBox}">
-                                <TextBox.Text>
-                                    <MultiBinding Converter="{StaticResource MultiUnitConverter}" ConverterParameter="cm,kg">
-                                        <Binding Path="Height" />
-                                        <Binding Path="Weight" />
-                                        <Binding Path="Birthday" />
-                                    </MultiBinding>
-                                </TextBox.Text>
-                            </TextBox>
-                            <Border
-                                Margin="10,0"
-                                Background="{DynamicResource ListBoxItem.Hover.Background}"
-                                CornerRadius="2">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=_tb, Path=Text}" Value="">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <TextBox Name="_tb" Style="{StaticResource ReadOnlyNoWrapTextBox}">
-                                    <TextBox.Text>
-                                        <MultiBinding Converter="{StaticResource MultiLargerConverter}" ConverterParameter="0">
-                                            <Binding Path="Chest" />
-                                            <Binding Path="Waist" />
-                                            <Binding Path="Hipline" />
-                                        </MultiBinding>
-                                    </TextBox.Text>
-                                </TextBox>
-
-                            </Border>
-                            <Border
-                                Background="{DynamicResource ListBoxItem.Selected.Active.Background}"
-                                CornerRadius="20"
-                                Visibility="{Binding Cup, Converter={StaticResource NotEqualConverter}, ConverterParameter='Z'}">
-                                <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}" Text="{Binding Cup}" />
-
-                            </Border>
-
-                            <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}">
-                                <TextBox.Text>
-                                    <MultiBinding StringFormat="{} {0}  {1}  {2}">
-                                        <Binding Path="Country" />
-                                        <Binding Path="Nation" />
-                                        <Binding Path="BirthPlace" />
-                                    </MultiBinding>
-                                </TextBox.Text>
-                            </TextBox>
-                            <Border
-                                Margin="10,0"
-                                Background="{DynamicResource ListBoxItem.Hover.Background}"
-                                CornerRadius="2"
-                                Visibility="{Binding Hobby, Converter={StaticResource NullToVisibilityConverter}}">
-
-                                <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}" Text="{Binding Hobby}" />
-
-                            </Border>
-                            <Border
-                                Background="{DynamicResource Common.HighLight.Deep.Background}"
-                                CornerRadius="5"
-                                Visibility="{Binding BloodType, Converter={StaticResource NullToVisibilityConverter}}">
-                                <TextBox Style="{StaticResource ReadOnlyNoWrapTextBox}" Text="{Binding BloodType, StringFormat='血型:{0}'}" />
-
-                            </Border>
-                        </StackPanel>
-
-
-
+                            MaxHeight="60"
+                            Margin="4"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Foreground="{DynamicResource Window.Sub.Foreground}"
+                            Style="{StaticResource ReadOnlyWrapTextBox}"
+                            Text="{Binding InfoString}"
+                            TextAlignment="Left" />
                     </Grid>
-                    <StackPanel
-                        Grid.Column="2"
-                        Margin="20,0"
-                        VerticalAlignment="Center"
-                        Orientation="Vertical">
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Setter Property="Visibility" Value="Hidden" />
-                                <Style.Triggers>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="False" />
-                                            <Condition Binding="{Binding ElementName=rootGrid, Path=IsMouseOver}" Value="True" />
-                                        </MultiDataTrigger.Conditions>
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </MultiDataTrigger>
-                                    <DataTrigger Binding="{Binding ActorEditMode, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                        <Button
-                            MinWidth="100"
-                            Click="EditActor"
-                            Content="{DynamicResource Edit}"
-                            Tag="{Binding ActorID, Mode=OneWay}" />
-                        <Button
-                            MinWidth="100"
-                            Click="ShowSameActor"
-                            Content="{DynamicResource View}"
-                            Tag="{Binding ActorID, Mode=OneWay}" />
-                    </StackPanel>
-
                 </Grid>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="WrapTemplate">
+
+
+        <DataTemplate x:Key="ActorTemplateWrap">
             <Grid
                 Name="rootGrid"
                 Width="auto"
@@ -459,11 +419,13 @@
                 </Grid>
             </Grid>
         </DataTemplate>
+
+
         <Style x:Key="ActorContainerStyle" TargetType="ContentPresenter">
-            <Setter Property="ContentTemplate" Value="{StaticResource WrapTemplate}" />
+            <Setter Property="ContentTemplate" Value="{StaticResource ActorTemplateWrap}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ActorViewMode, Source={x:Static config:ConfigManager.VideoConfig}}" Value="1">
-                    <Setter Property="ContentTemplate" Value="{StaticResource StackTemplate}" />
+                    <Setter Property="ContentTemplate" Value="{StaticResource ActorTemplateStack}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -528,28 +490,34 @@
                         VerticalAlignment="Center"
                         Background="{DynamicResource Window.Side.Background}"
                         CornerRadius="5">
-                        <StackPanel Name="ActorViewModeStackPanel" Orientation="Horizontal">
+                        <StackPanel Name="ViewModeStackPanel" Orientation="Horizontal">
                             <super:PathRadioButton
                                 CornerRadius="5,0,0,5"
+                                IsChecked="True"
                                 Path="M886.680128 13.86578H136.468464c-37.340302 0-62.274379 24.934078-62.274379 62.274379v871.841311c0 37.340302 24.934078 62.274379 62.274379 62.27438h750.211664c37.340302 0 62.274379-24.934078 62.27438-62.27438V76.140159c0-37.340302-24.934078-62.274379-62.27438-62.274379zM136.468464 76.140159h750.211664V617.878608L710.682029 451.002732 442.731916 730.021143 318.061527 617.878608 136.468464 792.295522V76.140159z m0 871.841311v-78.572752l184.025656-170.524765L599.75579 947.98147H136.468464z m549.401117 0l-200.688918-181.836322 225.501366-234.258701 175.998099 164.321654v251.65174H685.869581z m0 0"
                                 PathHeight="17"
                                 Style="{StaticResource PathGroupRadioButton}"
                                 ToolTip="{DynamicResource Thumbnail}" />
                             <super:PathRadioButton
-                                CornerRadius="0,5,5,0"
+                                CornerRadius="0"
                                 Path="M64 480h352V128H64v352z m64-288h224v224H128V192zM64 928h352V576H64v352z m64-288h224v224H128v-224zM526.848 224H928a32 32 0 1 0 0-64H526.848a32 32 0 0 0 0 64zM928 608H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64zM928 384H526.848a32 32 0 0 0 0 64H928a32 32 0 1 0 0-64zM928 832H526.848a32 32 0 1 0 0 64H928a32 32 0 1 0 0-64z"
+                                PathHeight="17"
+                                Style="{StaticResource PathGroupRadioButton}" />
+                            <super:PathRadioButton
+                                CornerRadius="0,5,5,0"
+                                Path="M959.825 384.002V191.94c0-70.692-57.308-128-128-128H191.94c-70.692 0-128 57.308-128 128v639.885c0 70.692 57.308 128 128 128h639.885c70.692 0 128-57.308 128-128V384.002z m-813.16-237.337a63.738 63.738 0 0 1 45.336-18.785H832a63.962 63.962 0 0 1 63.886 64.121v128.061H127.88v-128.06a63.738 63.738 0 0 1 18.785-45.337z m269.127 461.308v-223.97h192.181v223.97H415.792z m192.181 63.94v223.972H415.792V671.914h192.181z m-256.121-63.94H127.88v-223.97h223.972v223.97zM146.665 877.21a63.467 63.467 0 0 1-18.785-45.21V671.914h223.972v223.97h-159.85a63.626 63.626 0 0 1-45.337-18.675z m749.22-45.21a63.763 63.763 0 0 1-63.886 63.886H671.914V671.914h223.97v160.085z m0-224.026H671.914v-223.97h223.97v223.97z"
                                 PathHeight="17"
                                 Style="{StaticResource PathGroupRadioButton}" />
                         </StackPanel>
                     </Border>
 
                     <super:HoverPath
-                        Name="ActorSortBorder"
+                        Name="SortBorder"
                         Style="{StaticResource SortHoverPath}"
                         ToolTip="{DynamicResource Sorting}">
                         <super:HoverPath.ContextMenu>
                             <ContextMenu HorizontalOffset="-50">
-                                <MenuItem Header="{DynamicResource Rating}" IsCheckable="True" />
+                                <MenuItem Header="{DynamicResource Favorites}" IsCheckable="True" />
                                 <MenuItem Header="{DynamicResource Name}" IsCheckable="True" />
                                 <MenuItem Header="{DynamicResource WorkCount}" IsCheckable="True" />
                                 <MenuItem Header="{DynamicResource Country}" IsCheckable="True" />
@@ -595,30 +563,31 @@
                 </ContextMenu>
             </Grid.ContextMenu>-->
             <ScrollViewer
-                x:Name="ActorScrollViewer"
+                x:Name="scrollViewer"
                 CanContentScroll="True"
                 FocusVisualStyle="{x:Null}"
                 IsDeferredScrollingEnabled="False"
-                VerticalScrollBarVisibility="Auto">
+                VerticalScrollBarVisibility="Auto"
+                Visibility="{Binding ShowTable, ElementName=actorList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                 <ItemsControl
                     x:Name="ActorItemsControl"
                     Margin="5,5,5,5"
                     d:ItemsSource="{d:SampleData ItemCount=5}"
                     Background="Transparent"
                     ItemContainerStyle="{StaticResource ActorContainerStyle}"
-                    ItemsSource="{Binding Path=DataContext.CurrentActorList, ElementName=actorList}"
+                    ItemsSource="{Binding Path=DataContext.CurrentList, ElementName=actorList}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ItemsControl.Resources>
-                        <ItemsPanelTemplate x:Key="WrapTemplate">
+                        <ItemsPanelTemplate x:Key="ActorTemplateWrap">
                             <WrapPanel />
                         </ItemsPanelTemplate>
                         <ItemsPanelTemplate x:Key="VerticalStackTemplate">
-                            <VirtualizingStackPanel Orientation="Vertical" />
+                            <WrapPanel />
                         </ItemsPanelTemplate>
                     </ItemsControl.Resources>
                     <ItemsControl.Style>
                         <Style TargetType="ItemsControl">
-                            <Setter Property="ItemsPanel" Value="{DynamicResource WrapTemplate}" />
+                            <Setter Property="ItemsPanel" Value="{DynamicResource ActorTemplateWrap}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ActorViewMode, Source={x:Static config:ConfigManager.VideoConfig}}" Value="1">
                                     <Setter Property="ItemsPanel" Value="{DynamicResource VerticalStackTemplate}" />
@@ -628,6 +597,236 @@
                     </ItemsControl.Style>
                 </ItemsControl>
             </ScrollViewer>
+
+            <!--  表格展示  -->
+
+            <DataGrid
+                Margin="5"
+                HorizontalContentAlignment="Left"
+                d:ItemsSource="{d:SampleData}"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="False"
+                IsReadOnly="True"
+                ItemsSource="{Binding Path=DataContext.CurrentList, ElementName=actorList}"
+                RowHeight="40"
+                Style="{DynamicResource FlatDataGrid}"
+                Visibility="{Binding ShowTable, ElementName=actorList, Converter={StaticResource BoolToVisibilityConverter}}">
+                <DataGrid.RowStyle>
+                    <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow" />
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="{DynamicResource Operate}" SortMemberPath="Favorites">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel
+                                    x:Name="_stackPanel"
+                                    Opacity="0.8"
+                                    Orientation="Horizontal"
+                                    Visibility="Hidden">
+                                    <Button
+                                        Grid.Column="0"
+                                        Height="25"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Stretch"
+                                        Click="EditActor"
+                                        Content="{DynamicResource Edit}"
+                                        Style="{StaticResource ButtonPrimary}"
+                                        Tag="{Binding ActorID, Mode=OneWay}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Margin="0"
+                                        HorizontalAlignment="Stretch"
+                                        Click="ShowSameActor"
+                                        Content="{DynamicResource View}"
+                                        Style="{StaticResource ButtonWarning}"
+                                        Tag="{Binding ActorID, Mode=OneWay}" />
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                        <Setter TargetName="_stackPanel" Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{DynamicResource Name}" SortMemberPath="Favorites">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="200"
+                                    Cursor="Arrow"
+                                    Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                    Text="{Binding ActorName}"
+                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Width="50"
+                        Header="{DynamicResource Gender}"
+                        SortMemberPath="Gender">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image
+                                    Grid.Row="0"
+                                    Width="24"
+                                    Height="24">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Gender}" Value="Girl">
+                                                    <Setter Property="Source" Value="pack://application:,,,/Resources/Picture/girl.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Gender}" Value="Boy">
+                                                    <Setter Property="Source" Value="pack://application:,,,/Resources/Picture/boy.png" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding Count}"
+                        Header="{DynamicResource WorkCount}"
+                        IsReadOnly="True"
+                        SortMemberPath="Count" />
+
+
+
+                    <DataGridTemplateColumn Header="{DynamicResource Favorites}" SortMemberPath="Favorites">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <super:Rate
+                                    Grid.Row="1"
+                                    AllowHalf="True"
+                                    Background="{DynamicResource Window.Title.Background}"
+                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                                    ItemHeight="20"
+                                    ItemMargin="3 0"
+                                    Tag="{Binding ActorID, Mode=OneWay}"
+                                    ToolTip="{DynamicResource DoubleClickToCancel}"
+                                    ValueChanged="SideActorRate_ValueChanged"
+                                    Value="{Binding Grade, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding Age}"
+                        Header="{DynamicResource Actress_Age}"
+                        IsReadOnly="True"
+                        SortMemberPath="Age" />
+
+                    <DataGridTextColumn
+                        Width="80"
+                        Binding="{Binding Birthday}"
+                        Header="{DynamicResource Actress_Birthday}"
+                        IsReadOnly="True"
+                        SortMemberPath="Birthday" />
+                    <DataGridTextColumn
+                        MinWidth="100"
+                        Binding="{Binding BirthPlace}"
+                        Header="{DynamicResource Actress_Birthplace}"
+                        IsReadOnly="True"
+                        SortMemberPath="BirthPlace" />
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding Chest}"
+                        Header="{DynamicResource Actress_Chest}"
+                        IsReadOnly="True"
+                        SortMemberPath="Chest" />
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding Cup}"
+                        Header="{DynamicResource Actress_Cup}"
+                        IsReadOnly="True"
+                        SortMemberPath="Cup" />
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding Height}"
+                        Header="{DynamicResource Actress_Height}"
+                        IsReadOnly="True"
+                        SortMemberPath="Height" />
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding Weight}"
+                        Header="{DynamicResource Actress_Weight}"
+                        IsReadOnly="True"
+                        SortMemberPath="Weight" />
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding Hipline}"
+                        Header="{DynamicResource Actress_Hipline}"
+                        IsReadOnly="True"
+                        SortMemberPath="Hipline" />
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding Waist}"
+                        Header="{DynamicResource Actress_Waist}"
+                        IsReadOnly="True"
+                        SortMemberPath="Waist" />
+
+
+                    <DataGridTextColumn
+                        MinWidth="50"
+                        Binding="{Binding BloodType}"
+                        Header="{DynamicResource BloodType}"
+                        IsReadOnly="True"
+                        SortMemberPath="BloodType" />
+
+
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding Nation}"
+                        Header="{DynamicResource Nationality}"
+                        IsReadOnly="True"
+                        SortMemberPath="Nation" />
+
+
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding Country}"
+                        Header="{DynamicResource Country}"
+                        IsReadOnly="True"
+                        SortMemberPath="Country" />
+
+
+                    <DataGridTemplateColumn Header="{DynamicResource Actress_Hobby}" SortMemberPath="Favorites">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="200"
+                                    Cursor="Arrow"
+                                    Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                    Text="{Binding Hobby}"
+                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
+                    <DataGridTextColumn
+                        Width="160"
+                        Binding="{Binding CreateDate}"
+                        Header="{DynamicResource CreatedDate}"
+                        IsReadOnly="True"
+                        SortMemberPath="CreateDate" />
+                    <DataGridTextColumn
+                        Width="160"
+                        Binding="{Binding UpdateDate}"
+                        Header="{DynamicResource Update}"
+                        IsReadOnly="True"
+                        SortMemberPath="UpdateDate" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+
+
         </Grid>
 
         <!--  底部  -->
@@ -652,8 +851,8 @@
                     Style="{StaticResource BaseTextBlock}">
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{} {0}/{1}">
-                            <Binding Path="CurrentActorCount" />
-                            <Binding Path="ActorTotalCount" />
+                            <Binding Path="CurrentCount" />
+                            <Binding Path="TotalCount" />
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
@@ -662,16 +861,16 @@
 
             <!--  页码  -->
             <super:Pagination
-                Name="actorPagination"
+                Name="pagination"
                 Grid.Column="2"
-                CurrentPage="{Binding Path=DataContext.CurrentActorPage, Mode=OneWay}"
+                CurrentPage="{Binding Path=DataContext.CurrentPage, Mode=OneWay}"
                 CurrentPageChange="CurrentActorPageChange"
-                PageSize="{Binding Path=DataContext.ActorPageSize, Mode=TwoWay}"
+                PageSize="{Binding Path=DataContext.PageSize, Mode=TwoWay}"
                 PageSizeChange="ActorPageSizeChange"
                 PageSizes="[10,20,40,50,100]"
                 ShowCombobox="True"
                 Style="{StaticResource NormalPagination}"
-                Total="{Binding Path=DataContext.ActorTotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                Total="{Binding Path=DataContext.TotalCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
 
     </Grid>

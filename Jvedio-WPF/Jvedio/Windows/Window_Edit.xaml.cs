@@ -66,7 +66,7 @@ namespace Jvedio
 
         private void SelectOneActor(long actorID)
         {
-            ActorInfo actorInfo = actorList.CurrentActorList.FirstOrDefault(arg => arg.ActorID == actorID);
+            ActorInfo actorInfo = actorList.CurrentList.FirstOrDefault(arg => arg.ActorID == actorID);
             if (actorInfo != null && !string.IsNullOrEmpty(actorInfo.ActorName)) {
                 vieModel.ActorName = actorInfo.ActorName;
                 vieModel.ActorID = actorInfo.ActorID;

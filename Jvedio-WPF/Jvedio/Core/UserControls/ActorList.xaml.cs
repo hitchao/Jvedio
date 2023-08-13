@@ -39,7 +39,7 @@ namespace Jvedio.Core.UserControls
         }
 
         #region "事件"
-        public event EventHandler ActorPageChangedCompleted;
+        public event EventHandler PageChangedCompleted;
         public Action<long> onShowSameActor;
         public static Action onStatistic;
 
@@ -49,11 +49,11 @@ namespace Jvedio.Core.UserControls
         #region "静态属性"
 
 
-        public static Queue<int> ActorPageQueue { get; set; } = new Queue<int>();
-        public static Dictionary<int, string> ActorSortDict { get; set; } = new Dictionary<int, string>();
+        public static Queue<int> PageQueue { get; set; } = new Queue<int>();
+        public static Dictionary<int, string> SortDict { get; set; } = new Dictionary<int, string>();
 
 
-        public static List<string> ActorSortDictList { get; set; } = new List<string>()
+        public static List<string> SortDictList { get; set; } = new List<string>()
         {
             "actor_info.Grade",
             "actor_info.ActorName",
@@ -76,7 +76,7 @@ namespace Jvedio.Core.UserControls
         };
 
 
-        public static string[] ActorSelectedField { get; set; } = new string[]
+        public static string[] SelectedField { get; set; } = new string[]
         {
             "count(ActorName) as Count",
             "actor_info.ActorID",
@@ -92,6 +92,7 @@ namespace Jvedio.Core.UserControls
             "Hobby",
             "Cup",
             "Chest",
+            "Age",
             "Waist",
             "Hipline",
             "WebType",
@@ -121,12 +122,22 @@ namespace Jvedio.Core.UserControls
         private int actorFirstIdx { get; set; } = -1;
         private int actorSecondIdx { get; set; } = -1;
 
-        public bool RenderingActor { get; set; }
+        public bool Rendering { get; set; }
 
-        public CancellationTokenSource RenderActorCTS { get; set; }
+        public CancellationTokenSource RenderCTS { get; set; }
 
-        public CancellationToken RenderActorCT { get; set; }
+        public CancellationToken RenderCT { get; set; }
 
+        private bool _ShowTable = false;
+
+        public bool ShowTable {
+            get { return _ShowTable; }
+
+            set {
+                _ShowTable = value;
+                RaisePropertyChanged();
+            }
+        }
         private string _SearchText = string.Empty;
 
         public string SearchText {
@@ -140,36 +151,36 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        private int _ActorPageSize = 40;
+        private int _PageSize = 40;
 
-        public int ActorPageSize {
-            get { return _ActorPageSize; }
+        public int PageSize {
+            get { return _PageSize; }
 
             set {
-                _ActorPageSize = value;
+                _PageSize = value;
                 RaisePropertyChanged();
             }
         }
 
-        private long _ActorTotalCount = 0;
+        private long _TotalCount = 0;
 
-        public long ActorTotalCount {
-            get { return _ActorTotalCount; }
+        public long TotalCount {
+            get { return _TotalCount; }
 
             set {
-                _ActorTotalCount = value;
+                _TotalCount = value;
                 RaisePropertyChanged();
             }
         }
 
 
-        private int _CurrentActorPage = 1;
+        private int _CurrentPage = 1;
 
-        public int CurrentActorPage {
-            get { return _CurrentActorPage; }
+        public int CurrentPage {
+            get { return _CurrentPage; }
 
             set {
-                _CurrentActorPage = value;
+                _CurrentPage = value;
 
                 RaisePropertyChanged();
             }
@@ -186,25 +197,25 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        private ObservableCollection<ActorInfo> _CurrentActorList;
+        private ObservableCollection<ActorInfo> _CurrentList;
 
-        public ObservableCollection<ActorInfo> CurrentActorList {
-            get { return _CurrentActorList; }
+        public ObservableCollection<ActorInfo> CurrentList {
+            get { return _CurrentList; }
 
             set {
-                _CurrentActorList = value;
+                _CurrentList = value;
                 RaisePropertyChanged();
             }
         }
 
 
-        public int _CurrentActorCount = 0;
+        public int _CurrentCount = 0;
 
-        public int CurrentActorCount {
-            get { return _CurrentActorCount; }
+        public int CurrentCount {
+            get { return _CurrentCount; }
 
             set {
-                _CurrentActorCount = value;
+                _CurrentCount = value;
                 RaisePropertyChanged();
             }
         }
@@ -247,13 +258,15 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
             this.DataContext = this;
             ConfigManager.VideoConfig.ActorEditMode = false;
+
+            SetDataGrid();
         }
 
         static ActorList()
         {
 
-            for (int i = 0; i < ActorSortDictList.Count; i++) {
-                ActorSortDict.Add(i, ActorSortDictList[i]);
+            for (int i = 0; i < SortDictList.Count; i++) {
+                SortDict.Add(i, SortDictList[i]);
             }
         }
 
@@ -266,41 +279,41 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             if (sender is ActorList actorList && actorList.IsLoaded) {
                 RefreshActorRenderToken();
                 BindingEvent();
-                SelectActor();
+                Select();
             }
         }
 
         public void Refresh()
         {
-            SelectActor();
+            Select();
         }
 
         public void BindingEvent()
         {
             // 设置演员排序类型
             int actorSortType = (int)ConfigManager.VideoConfig.ActorSortType;
-            var ActorMenuItems = ActorSortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
-            for (int i = 0; i < ActorMenuItems.Count; i++) {
-                ActorMenuItems[i].Click += ActorSortMenu_Click;
-                ActorMenuItems[i].IsCheckable = true;
+            var SortMenuItems = SortBorder.ContextMenu.Items.OfType<MenuItem>().ToList();
+            for (int i = 0; i < SortMenuItems.Count; i++) {
+                SortMenuItems[i].Click += SortMenu_Click;
+                SortMenuItems[i].IsCheckable = true;
                 if (i == actorSortType)
-                    ActorMenuItems[i].IsChecked = true;
+                    SortMenuItems[i].IsChecked = true;
             }
 
 
             // 设置演员显示模式
-            var arbs = ActorViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
+            var arbs = ViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
             for (int i = 0; i < arbs.Count; i++) {
-                arbs[i].Click += SetActorViewMode;
+                arbs[i].Click += SetViewMode;
                 if (i == ConfigManager.VideoConfig.ActorViewMode)
                     arbs[i].IsChecked = true;
             }
 
 
-            this.ActorPageChangedCompleted += (s, ev) => {
+            this.PageChangedCompleted += (s, ev) => {
                 if (ConfigManager.VideoConfig.ActorEditMode)
                     SetSelected();
-                ActorScrollViewer.ScrollToTop();
+                scrollViewer.ScrollToTop();
             };
         }
 
@@ -350,118 +363,30 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             return -1;
         }
 
-        public void ActorBorderMouseEnter(object sender, MouseEventArgs e)
-        {
-            //FrameworkElement element = sender as FrameworkElement;
-            //if (element == null)
-            //    return;
-            //Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            //if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
-            //    Border border = grid.Children[0] as Border;
-            //    if (border != null)
-            //        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
-            //}
-        }
 
-        public void ActorBorderMouseLeave(object sender, MouseEventArgs e)
-        {
-            //FrameworkElement element = sender as FrameworkElement;
-            //if (element == null)
-            //    return;
-            //Grid grid = element.FindParentOfType<Grid>("rootGrid");
-            //if (ConfigManager.VideoConfig.ActorEditMode && grid != null) {
-            //    long actorID = GetDataID(element);
-            //    Border border = grid.Children[0] as Border;
-            //    if (actorID <= 0 || border == null || SelectedActors == null)
-            //        return;
-            //    if (SelectedActors.Where(arg => arg.ActorID == actorID).Any())
-            //        border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
-            //    else
-            //        border.BorderBrush = Brushes.Transparent;
-            //}
-        }
-
-
-        // todo 优化演员多选
-        public void SelectActor(object sender, MouseButtonEventArgs e)
-        {
-            //FrameworkElement element = sender as FrameworkElement; // 点击 border 也能选中
-            //long actorID = GetDataID(element);
-            //if (actorID <= 0)
-            //    return;
-            //if (ConfigManager.VideoConfig.ActorEditMode && CurrentActorList != null) {
-            //    ActorInfo actorInfo = CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
-            //    if (actorInfo == null)
-            //        return;
-            //    int selectIdx = CurrentActorList.IndexOf(actorInfo);
-
-            //    // 多选
-            //    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) {
-            //        if (actorFirstIdx == -1)
-            //            actorFirstIdx = selectIdx;
-            //        else
-            //            actorSecondIdx = selectIdx;
-            //    }
-
-            //    if (actorFirstIdx >= 0 && actorSecondIdx >= 0) {
-            //        if (actorFirstIdx > actorSecondIdx) {
-            //            // 交换一下顺序
-            //            int temp = actorFirstIdx;
-            //            actorFirstIdx = actorSecondIdx - 1;
-            //            actorSecondIdx = temp - 1;
-            //        }
-
-            //        for (int i = actorFirstIdx + 1; i <= actorSecondIdx; i++) {
-            //            ActorInfo m = CurrentActorList[i];
-            //            if (SelectedActors.Contains(m))
-            //                SelectedActors.Remove(m);
-            //            else
-            //                SelectedActors.Add(m);
-            //        }
-
-            //        actorFirstIdx = -1;
-            //        actorSecondIdx = -1;
-            //    } else {
-            //        if (SelectedActors.Contains(actorInfo))
-            //            SelectedActors.Remove(actorInfo);
-            //        else
-            //            SelectedActors.Add(actorInfo);
-            //    }
-
-            //    SetSelected();
-            //}
-        }
-
-        public void SelectAllActor(object sender, RoutedEventArgs e)
-        {
-            //ConfigManager.VideoConfig.ActorEditMode = true;
-            //bool allContain = true; // 检测是否取消选中
-            //foreach (var item in CurrentActorList) {
-            //    if (!SelectedActors.Contains(item)) {
-            //        SelectedActors.Add(item);
-            //        allContain = false;
-            //    }
-            //}
-
-            //if (allContain)
-            //    SelectedActors.RemoveMany(CurrentActorList);
-            //SetSelected();
-        }
-
-
-        public void SetActorViewMode(object sender, RoutedEventArgs e)
+        public void SetViewMode(object sender, RoutedEventArgs e)
         {
             PathRadioButton radioButton = sender as PathRadioButton;
             if (radioButton == null)
                 return;
-            var rbs = ActorViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
+            var rbs = ViewModeStackPanel.Children.OfType<PathRadioButton>().ToList();
             int idx = rbs.IndexOf(radioButton);
             ConfigManager.VideoConfig.ActorViewMode = idx;
             ConfigManager.VideoConfig.ActorEditMode = false;
             ConfigManager.VideoConfig.Save();
+            SetDataGrid();
         }
 
-        private void ActorSortMenu_Click(object sender, RoutedEventArgs e)
+        public void SetDataGrid()
+        {
+            if (ConfigManager.VideoConfig.ActorViewMode == 2) {
+                ShowTable = true;
+            } else {
+                ShowTable = false;
+            }
+        }
+
+        private void SortMenu_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
             ContextMenu contextMenu = menuItem.Parent as ContextMenu;
@@ -478,35 +403,35 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                     item.IsChecked = false;
             }
 
-            SelectActor();
+            Select();
         }
 
 
         public void RefreshActorRenderToken()
         {
-            RenderActorCTS = new CancellationTokenSource();
-            RenderActorCTS.Token.Register(() => { Logger.Warn("cancel load actor page task"); });
-            RenderActorCT = RenderActorCTS.Token;
+            RenderCTS = new CancellationTokenSource();
+            RenderCTS.Token.Register(() => { Logger.Warn("cancel load actor page task"); });
+            RenderCT = RenderCTS.Token;
         }
 
-        public async void SelectActor()
+        public async void Select()
         {
             if (ConfigManager.Main == null)
                 return;
 
             // 判断当前获取的队列
-            while (ActorPageQueue.Count > 1) {
-                int page = ActorPageQueue.Dequeue();
+            while (PageQueue.Count > 1) {
+                int page = PageQueue.Dequeue();
             }
 
             // 当前有视频在渲染的时候，打断渲染，等待结束
-            while (RenderingActor) {
-                RenderActorCTS?.Cancel(); // 取消加载
+            while (Rendering) {
+                RenderCTS?.Cancel(); // 取消加载
                 await Task.Delay(100);
             }
 
             SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
-            ActorSetActorSortOrder(wrapper);
+            SetSortOrder(wrapper);
 
             bool search = !string.IsNullOrEmpty(SearchText);
 
@@ -526,39 +451,39 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                          "GROUP BY actor_info.ActorID)";
 
 
-            ActorTotalCount = actorMapper.SelectCount(count_sql);
+            TotalCount = actorMapper.SelectCount(count_sql);
 
-            string sql = $"{wrapper.Select(ActorSelectedField).ToSelect(false)} FROM actor_info " +
+            string sql = $"{wrapper.Select(SelectedField).ToSelect(false)} FROM actor_info " +
                 $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                 $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                 $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
                 $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
                 $"GROUP BY actor_info.ActorID " +
                 "UNION " +
-                $"{wrapper.Select(ActorSelectedField).ToSelect(false)} FROM actor_info " +
+                $"{wrapper.Select(SelectedField).ToSelect(false)} FROM actor_info " +
                 "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
                 $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
                 wrapper.ToOrder() + ActorToLimit();
 
-            onPageChange(ActorTotalCount);
-            RenderCurrentActors(sql);
+            onPageChange(TotalCount);
+            Render(sql);
         }
 
         public void onPageChange(long total)
         {
-            App.Current.Dispatcher.Invoke(() => actorPagination.Total = ActorTotalCount + 1); // 不知为啥这里少 1
+            App.Current.Dispatcher.Invoke(() => pagination.Total = TotalCount + 1); // 不知为啥这里少 1
         }
 
 
 
-        public void ActorSetActorSortOrder<T>(IWrapper<T> wrapper)
+        public void SetSortOrder<T>(IWrapper<T> wrapper)
         {
             if (wrapper == null ||
-                ActorSortDict == null ||
+                SortDict == null ||
                 ConfigManager.VideoConfig == null ||
-                ConfigManager.VideoConfig.ActorSortType >= ActorSortDict.Count)
+                ConfigManager.VideoConfig.ActorSortType >= SortDict.Count)
                 return;
-            string sortField = ActorSortDict[(int)ConfigManager.VideoConfig.ActorSortType];
+            string sortField = SortDict[(int)ConfigManager.VideoConfig.ActorSortType];
             if (ConfigManager.VideoConfig.ActorSortDescending)
                 wrapper.Desc(sortField);
             else
@@ -567,13 +492,13 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
         public string ActorToLimit()
         {
-            int row_count = ActorPageSize;
-            long offset = ActorPageSize * (CurrentActorPage - 1);
+            int row_count = PageSize;
+            long offset = PageSize * (CurrentPage - 1);
             return $" LIMIT {offset},{row_count}";
         }
 
 
-        public void RenderCurrentActors(string sql)
+        public void Render(string sql)
         {
             List<Dictionary<string, object>> list = actorMapper.Select(sql);
             List<ActorInfo> actors = actorMapper.ToEntity<ActorInfo>(list, typeof(ActorInfo).GetProperties(), false);
@@ -583,25 +508,25 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             Actors.AddRange(actors);
 
 
-            CurrentActorCount = Actors.Count;
+            CurrentCount = Actors.Count;
 
             RenderActor();
         }
 
         public async void RenderActor()
         {
-            if (CurrentActorList == null)
-                CurrentActorList = new ObservableCollection<ActorInfo>();
+            if (CurrentList == null)
+                CurrentList = new ObservableCollection<ActorInfo>();
 
             for (int i = 0; i < Actors.Count; i++) {
                 try {
-                    RenderActorCT.ThrowIfCancellationRequested();
+                    RenderCT.ThrowIfCancellationRequested();
                 } catch (OperationCanceledException) {
-                    RenderActorCTS?.Dispose();
+                    RenderCTS?.Dispose();
                     break;
                 }
 
-                RenderingActor = true;
+                Rendering = true;
                 ActorInfo actorInfo = Actors[i];
                 ActorInfo.SetImage(ref actorInfo);
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
@@ -609,34 +534,32 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             }
 
             // 清除
-            for (int i = CurrentActorList.Count - 1; i > Actors.Count - 1; i--) {
-                CurrentActorList.RemoveAt(i);
+            for (int i = CurrentList.Count - 1; i > Actors.Count - 1; i--) {
+                CurrentList.RemoveAt(i);
             }
 
-            if (RenderActorCT.IsCancellationRequested)
+            if (RenderCT.IsCancellationRequested)
                 RefreshActorRenderToken();
-            RenderingActor = false;
+            Rendering = false;
 
             // if (pageQueue.Count > 0) pageQueue.Dequeue();
-            ActorPageChangedCompleted?.Invoke(this, null);
+            PageChangedCompleted?.Invoke(this, null);
         }
 
         private delegate void LoadActorDelegate(ActorInfo actor, int idx);
 
         private void LoadActor(ActorInfo actor, int idx)
         {
-            if (RenderActorCT.IsCancellationRequested)
+            if (RenderCT.IsCancellationRequested)
                 return;
-            if (CurrentActorList.Count < ActorPageSize) {
-                if (idx < CurrentActorList.Count) {
-                    CurrentActorList[idx] = null;
-                    CurrentActorList[idx] = actor;
+            if (CurrentList.Count < PageSize) {
+                if (idx < CurrentList.Count) {
+                    CurrentList[idx] = actor;
                 } else {
-                    CurrentActorList.Add(actor);
+                    CurrentList.Add(actor);
                 }
             } else {
-                CurrentActorList[idx] = null;
-                CurrentActorList[idx] = actor;
+                CurrentList[idx] = actor;
             }
         }
 
@@ -646,7 +569,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                 // 末页
                 SetSelected();
             } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Left) {
-                CurrentActorPage = 1;
+                CurrentPage = 1;
                 SetSelected();
 
             }
@@ -666,9 +589,9 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                 return;
 
 
-            CurrentActorPage = pagination.CurrentPage;
-            ActorPageQueue.Enqueue(pagination.CurrentPage);
-            SelectActor();
+            CurrentPage = pagination.CurrentPage;
+            PageQueue.Enqueue(pagination.CurrentPage);
+            Select();
         }
 
         private void ActorPageSizeChange(object sender, EventArgs e)
@@ -676,30 +599,20 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             Pagination pagination = sender as Pagination;
             if (!pagination.IsLoaded)
                 return;
-            ActorPageSize = pagination.PageSize;
-            SelectActor();
+            PageSize = pagination.PageSize;
+            Select();
         }
 
         public void RefreshActor(long actorID)
         {
-            if (CurrentActorList?.Count <= 0)
+            if (CurrentList?.Count <= 0)
                 return;
-            for (int i = 0; i < CurrentActorList.Count; i++) {
-                if (CurrentActorList[i]?.ActorID == actorID) {
-                    long count = CurrentActorList[i].Count;
-                    CurrentActorList[i].SmallImage = null;
-                    CurrentActorList[i] = null;
-
-                    SelectWrapper<ActorInfo> wrapper = new SelectWrapper<ActorInfo>();
-                    wrapper.Eq("ActorID", actorID);
-                    ActorInfo actorInfo = actorMapper.SelectById(wrapper);
-                    if (actorInfo == null)
-                        continue;
-                    ActorInfo.SetImage(ref actorInfo);
-                    actorInfo.Count = count;
-
-                    CurrentActorList[i] = actorInfo;
-                    CurrentActorList[i].SmallImage = actorInfo.SmallImage;
+            for (int i = 0; i < CurrentList.Count; i++) {
+                if (CurrentList[i]?.ActorID == actorID) {
+                    long count = CurrentList[i].Count;
+                    CurrentList[i] = new ActorInfo();
+                    CurrentList[i] = ActorInfo.GetById(actorID);
+                    CurrentList[i].Count = count;
                     break;
                 }
             }
@@ -718,7 +631,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
                 if (!ConfigManager.VideoConfig.ActorEditMode)
                     SelectedActors.Clear();
-                ActorInfo actor = CurrentActorList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
+                ActorInfo actor = CurrentList.Where(arg => arg.ActorID == actorID).FirstOrDefault();
                 if (!SelectedActors.Where(arg => arg.ActorID == actorID).Any())
                     SelectedActors.Add(actor);
 
@@ -728,7 +641,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                     actorMapper.ExecuteNonQuery(sql);
                 }
 
-                SelectActor();
+                Select();
             }
         }
 
@@ -889,7 +802,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
         private void searchBox_Search(object sender, RoutedEventArgs e)
         {
             if (sender is SearchBox searchBox && searchBox.IsLoaded)
-                SelectActor();
+                Select();
         }
 
         private void Border_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -901,12 +814,12 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
         public void NextPage()
         {
-            actorPagination.NextPage();
+            pagination.NextPage();
         }
 
         public void PreviousPage()
         {
-            actorPagination.PrevPage();
+            pagination.PrevPage();
         }
 
         public void GoToTop()
@@ -921,12 +834,22 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
         public void FirstPage()
         {
-            actorPagination.FirstPage();
+            pagination.FirstPage();
         }
 
         public void LastPage()
         {
-            actorPagination.LastPage();
+            pagination.LastPage();
+        }
+
+        private void SideActorRate_ValueChanged(object sender, FunctionEventArgs<double> e)
+        {
+            if (sender is Rate rate && rate.Tag != null &&
+                long.TryParse(rate.Tag.ToString(), out long actorID) &&
+                actorID > 0) {
+                actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), actorID);
+            }
+
         }
     }
 }
