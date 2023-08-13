@@ -176,6 +176,7 @@
                     VerticalAlignment="Bottom"
                     Orientation="Vertical">
                     <RadioButton
+                        Name="ExtraImageRadioButton"
                         Height="30"
                         Margin="5,5,5,0"
                         Background="{DynamicResource Window.Side.Background}"
@@ -511,6 +512,7 @@
                                                         <Border
                                                             Panel.ZIndex="5"
                                                             Background="Black"
+                                                            ContextMenuService.Placement="Mouse"
                                                             Cursor="Hand"
                                                             MouseEnter="Border_MouseEnter"
                                                             MouseLeave="Border_MouseLeave"
@@ -518,9 +520,9 @@
                                                             Opacity="0.5"
                                                             Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}">
                                                             <Border.ContextMenu>
-                                                                <ContextMenu>
+                                                                <ContextMenu Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}">
                                                                     <MenuItem Click="OpenExtraImagePath" Header="{DynamicResource OpenPath}" />
-                                                                    <MenuItem Header="{DynamicResource SetAs}" Visibility="Collapsed">
+                                                                    <MenuItem Header="{DynamicResource SetAs}">
                                                                         <MenuItem Click="SetToBigAndSmallPic" Header="{DynamicResource ThumbnailAndPoster}" />
                                                                         <MenuItem Click="SetToSmallPic" Header="{DynamicResource Thumbnail}" />
                                                                         <MenuItem Click="SetToBigPic" Header="{DynamicResource Poster}" />
@@ -775,7 +777,7 @@
                                                                             Grid.Row="0"
                                                                             Width="80"
                                                                             Height="80"
-                                                                            Margin="1,2.5,1,10"
+                                                                            Margin="1.5"
                                                                             VerticalAlignment="Top"
                                                                             CornerRadius="4"
                                                                             Cursor="Hand"
@@ -786,36 +788,20 @@
 
                                                                         </Border>
 
-                                                                        <Image
-                                                                            Grid.Row="0"
-                                                                            Width="80"
-                                                                            Height="80"
-                                                                            Margin="2.5,2.5,2.5,10"
-                                                                            VerticalAlignment="Top"
-                                                                            AllowDrop="True"
-                                                                            Cursor="Hand"
-                                                                            FocusVisualStyle="{x:Null}"
-                                                                            MouseEnter="Image_MouseEnter"
-                                                                            MouseLeave="Image_MouseLeave"
-                                                                            Source="{Binding SmallImage}"
-                                                                            Stretch="UniformToFill"
-                                                                            Visibility="Collapsed" />
 
-
-
-
-                                                                        <TextBox
+                                                                        <TextBlock
                                                                             Name="ActorNameTextBox"
                                                                             Grid.Row="1"
                                                                             Width="80"
                                                                             MaxHeight="60"
-                                                                            Margin="0"
+                                                                            Margin="0,10"
                                                                             FontSize="12"
                                                                             Foreground="{DynamicResource Window.Foreground}"
                                                                             Opacity="0.7"
-                                                                            Style="{StaticResource ReadOnlyWrapTextBox}"
+                                                                            Style="{StaticResource BaseTextBlock}"
                                                                             Text="{Binding ActorName}"
-                                                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                                                                            TextAlignment="Center"
+                                                                            TextTrimming="CharacterEllipsis" />
                                                                         <!--<Label
                                                                         Grid.Row="2"
                                                                         Width="120"

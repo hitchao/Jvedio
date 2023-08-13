@@ -554,8 +554,6 @@ namespace Jvedio
             }
         }
 
-
-        // todo 检视
         private void SetCheckedBoxChecked()
         {
             List<ToggleButton> toggleButtons = CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList();
@@ -923,7 +921,6 @@ namespace Jvedio
             ConfigManager.Settings.OpenDataBaseDefault = vieModel.OpenDataBaseDefault;
             ConfigManager.Settings.AutoGenScreenShot = vieModel.AutoGenScreenShot;
             ConfigManager.Settings.CloseToTaskBar = vieModel.CloseToTaskBar;
-            ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
             ConfigManager.Settings.CurrentLanguage = vieModel.CurrentLanguage;
             ConfigManager.Settings.SaveInfoToNFO = vieModel.SaveInfoToNFO;
             ConfigManager.Settings.NFOSavePath = vieModel.NFOSavePath;
@@ -1236,14 +1233,12 @@ namespace Jvedio
                     if (IndexCanceled)
                         return false;
 
-                    // todo 预览图
+                    // todo 预览图的图片索引地址
                     //list.Add($"({video.DataID},{pathType},1,{(File.Exists(video.GetExtraImage()) ? 1 : 0)})");
                     //if (IndexCanceled)
                     //    return false;
 
-
-
-                    // todo 影片截图
+                    // todo 影片截图的图片索引地址
 
                     App.Current.Dispatcher.Invoke(() => {
                         indexCreatingProgressBar.Value = Math.Round(((double)i + 1) / total * 100, 2);
@@ -1270,11 +1265,7 @@ namespace Jvedio
         }
 
 
-        private void SetDetailBg(object sender, RoutedEventArgs e)
-        {
-            // todo
-            ConfigManager.Settings.DetailShowBg = vieModel.DetailShowBg;
-        }
+
 
         private void PluginList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1387,8 +1378,6 @@ namespace Jvedio
                 ConfigManager.Main.DisplayNavigation = true;
                 ConfigManager.Main.DetailWindowShowAllMovie = true;
                 ConfigManager.Main.ScrollSpeedFactor = 1.5;
-
-                vieModel.DetailShowBg = true;
 
 
                 ConfigManager.VideoConfig.DisplayID = true;

@@ -41,6 +41,13 @@ namespace Jvedio.Core.Media
             return true;
         }
 
+        public static void Remove(string path)
+        {
+            if (_Cache.Contains(path)) {
+                _Cache.Remove(path);
+            }
+        }
+
         public static void Clear()
         {
             _Cache.Dispose();

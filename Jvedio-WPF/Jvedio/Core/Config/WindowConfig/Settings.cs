@@ -121,7 +121,14 @@ namespace Jvedio.Core.WindowConfig
         public bool PictureIndexCreated { get; set; }
 
 
-        public bool DetailShowBg { get; set; }
+        private bool _DetailShowBg;
+        public bool DetailShowBg {
+            get { return _DetailShowBg; }
+            set {
+                _DetailShowBg = value;
+                RaisePropertyChanged();
+            }
+        }
 
         // 端口
         public bool ListenEnabled { get; set; }

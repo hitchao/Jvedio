@@ -28,7 +28,7 @@ namespace Jvedio.Upgrade
             Upgrader.UpgradeSourceIndex = UrlManager.GetRemoteIndex();
             Upgrader.Language = "zh-CN";
             Upgrader.Header = new CrawlerHeader(SuperWebProxy.SystemWebProxy).Default;
-            Upgrader.Logger = null;//todo
+            Upgrader.Logger = null;//todo Upgrader.Logger
             Upgrader.BeforeUpdateDelay = 5;
             Upgrader.AfterUpdateDelay = 1;
             Upgrader.UpDateFileDir = "TEMP";

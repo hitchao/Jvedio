@@ -1038,10 +1038,7 @@
                                     <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                     <CheckBox Content="{DynamicResource Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                 </WrapPanel>
-                                <CheckBox
-                                    Click="SetDetailBg"
-                                    Content="{DynamicResource ApplyBgToDetail}"
-                                    IsChecked="{Binding DetailShowBg, Mode=TwoWay}" />
+                                <CheckBox Content="{DynamicResource ApplyBgToDetail}" IsChecked="{Binding DetailShowBg, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
                                 <WrapPanel
                                     Margin="5"

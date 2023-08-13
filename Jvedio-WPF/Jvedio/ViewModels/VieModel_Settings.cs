@@ -559,16 +559,6 @@ namespace Jvedio.ViewModel
         }
 
 
-        private bool _DetailShowBg = ConfigManager.Settings.DetailShowBg;
-
-        public bool DetailShowBg {
-            get { return _DetailShowBg; }
-
-            set {
-                _DetailShowBg = value;
-                RaisePropertyChanged();
-            }
-        }
 
         #endregion
 

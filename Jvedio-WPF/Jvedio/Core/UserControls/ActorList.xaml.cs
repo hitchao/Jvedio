@@ -29,9 +29,8 @@ namespace Jvedio.Core.UserControls
     /// <summary>
     /// ActorsPage.xaml 的交互逻辑
     /// </summary>
-    public partial class ActorList : UserControl, INotifyPropertyChanged
+    public partial class ActorList : UserControl, ITabItemControl, INotifyPropertyChanged
     {
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void RaisePropertyChanged([CallerMemberName] string name = null)
@@ -898,6 +897,36 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             if (ViewMode && sender is FrameworkElement ele && ele.Tag != null &&
                 long.TryParse(ele.Tag.ToString(), out long actorID))
                 onShowSameActor?.Invoke(actorID);
+        }
+
+        public void NextPage()
+        {
+            actorPagination.NextPage();
+        }
+
+        public void PreviousPage()
+        {
+            actorPagination.PrevPage();
+        }
+
+        public void GoToTop()
+        {
+
+        }
+
+        public void GoToBottom()
+        {
+
+        }
+
+        public void FirstPage()
+        {
+            actorPagination.FirstPage();
+        }
+
+        public void LastPage()
+        {
+            actorPagination.LastPage();
         }
     }
 }

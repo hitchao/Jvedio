@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using static Jvedio.App;
 
 namespace Jvedio.Entity
@@ -790,10 +791,8 @@ namespace Jvedio.Entity
         {
             if (imageMode < 2) {
 
-                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(),
-                    Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(),
-                    Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
 
                 if (smallimage == null)
                     smallimage = MetaData.DefaultSmallImage;

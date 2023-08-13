@@ -51,6 +51,7 @@ namespace Jvedio.ViewModel
 
         private Window_Details WindowDetails { get; set; }
 
+        public bool LoadingData { get; set; }
         private bool LoadingLabel { get; set; }
 
         private bool _TeenMode = ConfigManager.Settings.TeenMode;
@@ -203,6 +204,9 @@ namespace Jvedio.ViewModel
 
         public void Load(long dataID)
         {
+            if (LoadingData)
+                return;
+            LoadingData = true;
             Logger.Info($"begin load data[{dataID}]");
             // 释放图片内存
             if (CurrentVideo != null) {
@@ -227,8 +231,10 @@ namespace Jvedio.ViewModel
             metaDataMapper.IncreaseFieldById("ViewCount", dataID); // 访问次数+1
             Logger.Info($"view count ++");
             Video video = videoMapper.SelectVideoByID(dataID);
-            if (video == null)
+            if (video == null) {
+                LoadingData = false;
                 return;
+            }
             Video.SetTagStamps(ref video); // 设置标签戳
             Video.HandleEmpty(ref video);
 

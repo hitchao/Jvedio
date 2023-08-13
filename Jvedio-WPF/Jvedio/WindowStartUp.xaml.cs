@@ -89,7 +89,7 @@ namespace Jvedio
 
         public void InitContext()
         {
-            vieModel = new VieModel_StartUp();  // todo 检视
+            vieModel = new VieModel_StartUp();
             this.DataContext = vieModel;
 
             List<RadioButton> radioButtons = SidePanel.Children.OfType<RadioButton>().ToList();
@@ -511,7 +511,6 @@ namespace Jvedio
             vieModel.ReadFromDataBase();
         }
 
-        // todo 检视
         private void ChangeDataType(object sender, RoutedEventArgs e)
         {
             RadioButton radioButton = sender as RadioButton;

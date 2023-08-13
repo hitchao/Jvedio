@@ -45,12 +45,13 @@ namespace Jvedio.Core.UserControls
     /// <summary>
     /// VideoList.xaml 的交互逻辑
     /// </summary>
-    public partial class VideoList : UserControl
+    public partial class VideoList : UserControl, ITabItemControl
     {
         #region "事件"
 
         public static Action onStatistic;
         public static Action<List<Video>> onDeleteID;
+        public Action<WrapperEventArg<Video>> onRenderSql;
         public Action onInitTagStamps;
         public Action<string> onRenameFile;
 
@@ -83,9 +84,6 @@ namespace Jvedio.Core.UserControls
         private ScrollViewer dataScrollViewer { get; set; }
         private bool Resizing { get; set; }
 
-        public SelectWrapper<Video> CurrentWrapper { get; set; }
-
-        public string CurrentSQL { get; set; }
 
         public TabItemEx TabItemEx { get; set; }
 
@@ -171,10 +169,9 @@ namespace Jvedio.Core.UserControls
 
             vieModel.RenderSqlChanged += (s, ev) => {
                 WrapperEventArg<Video> arg = ev as WrapperEventArg<Video>;
-                if (arg != null) {
-                    CurrentWrapper = arg.Wrapper as SelectWrapper<Video>;
-                    CurrentSQL = arg.SQL;
-                }
+                if (arg != null)
+                    onRenderSql?.Invoke(arg);
+
             };
 
             vieModel.onPageChange += (totalCount) => {
@@ -335,7 +332,7 @@ namespace Jvedio.Core.UserControls
             dataScrollViewer?.ScrollToTop();
         }
 
-        private void GotoBottom(object sender, RoutedEventArgs e)
+        public void GotoBottom(object sender, RoutedEventArgs e)
         {
             dataScrollViewer?.ScrollToBottom();
         }
@@ -2224,5 +2221,34 @@ namespace Jvedio.Core.UserControls
             searchBox.SetFocus();
         }
 
+        public void NextPage()
+        {
+            pagination.NextPage();
+        }
+
+        public void PreviousPage()
+        {
+            pagination.PrevPage();
+        }
+
+        public void GoToTop()
+        {
+            GotoTop(null, null);
+        }
+
+        public void GoToBottom()
+        {
+            GotoBottom(null, null);
+        }
+
+        public void FirstPage()
+        {
+            pagination.FirstPage();
+        }
+
+        public void LastPage()
+        {
+            pagination.LastPage();
+        }
     }
 }

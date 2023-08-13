@@ -323,6 +323,7 @@
     <Compile Include="Core\Tasks\ScanManager.cs" />
     <Compile Include="Core\Server\ServerManager.cs" />
     <Compile Include="Core\Server\ServerStatus.cs" />
+    <Compile Include="Core\UserControls\ITabItemControl.cs" />
     <Compile Include="Core\UserControls\LabelView.xaml.cs">
       <DependentUpon>LabelView.xaml</DependentUpon>
     </Compile>

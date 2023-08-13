@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Scan;
+﻿using Jvedio.Core.CustomEventArgs;
+using Jvedio.Core.Scan;
 using Jvedio.Core.UserControls;
 using Jvedio.Core.UserControls.Tasks;
 using Jvedio.Entity;
@@ -23,6 +24,8 @@ namespace Jvedio.ViewModels
 
         private VieModel_Main vieModel { get; set; }
         private SimplePanel TabPanel { get; set; }
+
+        private WrapperEventArg<Video> CurrentWrapperArg { get; set; }
 
         #endregion
 
@@ -136,7 +139,7 @@ namespace Jvedio.ViewModels
 
         public void onShowDetailData(long dataID)
         {
-            Window_Details windowDetails = new Window_Details(dataID);
+            Window_Details windowDetails = new Window_Details(dataID, CurrentWrapperArg);
             windowDetails.onViewAssoData += (id) => {
                 OnViewAssoData(id);
                 windowDetails.Close();
@@ -163,6 +166,7 @@ namespace Jvedio.ViewModels
                     videoList.Uid = tabItem.UUID;
                     videoList.OnItemClick += OnItemClick;
                     videoList.OnItemViewAsso += OnViewAssoData;
+                    videoList.onRenderSql += OnRenderSql;
 
                     if (tabData.Length > 1 && tabData[1] is ActorInfo actorInfo) {
                         videoList.SetActor(actorInfo);
@@ -214,6 +218,13 @@ namespace Jvedio.ViewModels
                 default:
                     break;
             }
+        }
+
+        private void OnRenderSql(WrapperEventArg<Video> arg)
+        {
+            if (arg == null || arg.Wrapper == null || string.IsNullOrEmpty(arg.SQL))
+                return;
+            CurrentWrapperArg = arg;
         }
 
         private void SetLabelList(ref LabelView labelView, LabelType type)

@@ -659,7 +659,6 @@ namespace Jvedio
                 MessageRecorder.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_WatchFail")} {fileWatcherMessage}");
         }
 
-        // todo
         private static void OnCreated(object obj, FileSystemEventArgs e)
         {
             // 导入数据库
@@ -688,7 +687,6 @@ namespace Jvedio
             // }
         }
 
-        // todo
         private static void OnDeleted(object obj, FileSystemEventArgs e)
         {
             // if (Properties.Settings.Default.ListenAllDir & Properties.Settings.Default.DelFromDBIfDel)
@@ -874,18 +872,11 @@ namespace Jvedio
                     if (ConfigManager.FFmpegConfig.ScreenShotAfterImport) {
                         ScreenShotAfterImport(insertVideos);
                     }
-
-                    if (ConfigManager.ScanConfig.ImageExistsIndexAfterScan)
-                        SetImageExistsIndexAfterScan();
                 });
             }
             scanTask.Running = false;
         }
 
-        private void SetImageExistsIndexAfterScan()
-        {
-            // todo
-        }
 
         private void ScreenShotAfterImport(List<Video> import)
         {
@@ -926,62 +917,59 @@ namespace Jvedio
                 ConfigManager.Main.FirstRun = false;
             }
         }
-        // todo
+
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.F) {
-                SetTabItemSearch();
+                SetTabItemStatus(TabActionType.Search);
+            } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Up) {
+                SetTabItemStatus(TabActionType.GoToTop);
+            } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Down) {
+                SetTabItemStatus(TabActionType.GoToBottom);
+            } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Left) {
+                SetTabItemStatus(TabActionType.FirstPage);
+            } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Right) {
+                SetTabItemStatus(TabActionType.LastPage);
+            } else if (e.Key == Key.Right) {
+                SetTabItemStatus(TabActionType.NextPage);
+            } else if (e.Key == Key.Left) {
+                SetTabItemStatus(TabActionType.PreviousPage);
             }
-
-            //if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.F) {
-            //    // 高级检索
-            //} else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Right) {
-            //    // 末页
-            //    if (vieModel.TabSelectedIndex == 0) {
-            //        vieModel.CurrentPage = vieModel.TotalPage;
-
-            //        // vieModel.AsyncFlipOver();
-            //        SetSelected();
-            //    }
-            //} else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Left) {
-            //    // 首页
-            //    if (vieModel.TabSelectedIndex == 0) {
-            //        vieModel.CurrentPage = 1;
-
-            //        // vieModel.AsyncFlipOver();
-            //        SetSelected();
-            //    }
-            //} else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Up) {
-            //    // 回到顶部
-            //    // ScrollViewer.ScrollToTop();
-            //} else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Down) {
-            //    // 滑倒底端
-            //}
-
-            // else if (vieModel.TabSelectedIndex == 0 && e.Key == Key.Right)
-            //    NextPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            // else if (vieModel.TabSelectedIndex == 0 && e.Key == Key.Left)
-            //    PreviousPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            // else if (vieModel.TabSelectedIndex == 1 && e.Key == Key.Right)
-            //    NextActorPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-            // else if (vieModel.TabSelectedIndex == 1 && e.Key == Key.Left)
-            //    PreviousActorPage(sender, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
         }
 
-
-        private void SetTabItemSearch()
+        private void SetTabItemStatus(TabActionType type)
         {
-            FrameworkElement ele = vieModel.TabItemManager.GetSelected();
-            if (ele is VideoList videoList) {
-                videoList.SetSearchFocus();
-            } else if (ele is ActorList actorList) {
-                actorList.SetSearchFocus();
-            } else if (ele is LabelView labelView) {
-                labelView.SetSearchFocus();
+            ITabItemControl ele = vieModel.TabItemManager.GetSelected() as ITabItemControl;
+            switch (type) {
+                case TabActionType.Search:
+                    ele.SetSearchFocus();
+                    break;
+                case TabActionType.NextPage:
+                    ele.NextPage();
+                    break;
+                case TabActionType.PreviousPage:
+                    ele.PreviousPage();
+                    break;
+                case TabActionType.GoToTop:
+                    ele.GoToTop();
+                    break;
+                case TabActionType.GoToBottom:
+                    ele.GoToBottom();
+                    break;
+                case TabActionType.FirstPage:
+                    ele.FirstPage();
+                    break;
+                case TabActionType.LastPage:
+                    ele.LastPage();
+                    break;
+
+                default:
+                    break;
+
             }
 
-
         }
+
         private void DatabaseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
@@ -1014,7 +1002,10 @@ namespace Jvedio
 
         public void RefreshImage(Video video)
         {
-
+            List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
+            foreach (var item in videoLists) {
+                item.RefreshImage(video);
+            }
         }
 
         public void RefreshGrade(Video newVideo)

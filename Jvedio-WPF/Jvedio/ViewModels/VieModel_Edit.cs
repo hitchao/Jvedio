@@ -245,8 +245,6 @@ namespace Jvedio.ViewModel
             LoadingLabel = false;
         }
 
-
-        // todo 演员
         public bool Save()
         {
             if (CurrentVideo == null)

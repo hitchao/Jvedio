@@ -15,7 +15,7 @@ namespace Jvedio.Core.UserControls
     /// <summary>
     /// LabelView.xaml 的交互逻辑
     /// </summary>
-    public partial class LabelView : UserControl, INotifyPropertyChanged
+    public partial class LabelView : UserControl, INotifyPropertyChanged, ITabItemControl
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -121,6 +121,36 @@ namespace Jvedio.Core.UserControls
         public void SetSearchFocus()
         {
             searchBox.SetFocus();
+        }
+
+        public void NextPage()
+        {
+
+        }
+
+        public void PreviousPage()
+        {
+
+        }
+
+        public void GoToTop()
+        {
+
+        }
+
+        public void GoToBottom()
+        {
+
+        }
+
+        public void FirstPage()
+        {
+
+        }
+
+        public void LastPage()
+        {
+
         }
     }
 
