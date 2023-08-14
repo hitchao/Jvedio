@@ -159,11 +159,12 @@ namespace Jvedio.Core.UserControls
 
             vieModel.PageChangedCompleted += (s, ev) => {
                 GotoTop(null, null);
-                //SetImageMode();
                 if (vieModel.EditMode)
                     SetSelected();
                 if (ConfigManager.Settings.AutoGenScreenShot)
                     AutoGenScreenShot(vieModel.CurrentVideoList);
+                if (tableData.Visibility == Visibility.Visible && tableData.Items.Count > 0)
+                    tableData.ScrollIntoView(tableData.Items[0]);
             };
 
 

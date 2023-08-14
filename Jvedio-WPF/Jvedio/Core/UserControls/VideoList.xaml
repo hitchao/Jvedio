@@ -18,6 +18,16 @@
 
     <UserControl.Resources>
 
+
+        <Style
+            x:Key="DataGridTextBlockStyle"
+            BasedOn="{StaticResource BaseTextBlock}"
+            TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextAlignment" Value="Left" />
+        </Style>
+
         <!--  搜索  -->
         <Style
             x:Key="SearchBoxListItemContainerStyle"
@@ -304,21 +314,31 @@
                     </Viewbox>
                 </ToggleButton>
 
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=DataContext.ShowImageMode, Mode=OneWay, ElementName=videoList}" Value="2">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock
+                        Margin="10,0,5,0"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="{DynamicResource Window.Foreground}"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="{DynamicResource Edit}" />
 
-                <TextBlock
-                    Margin="10,0,5,0"
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="{DynamicResource Window.Foreground}"
-                    Style="{StaticResource BaseTextBlock}"
-                    Text="{DynamicResource Edit}" />
-
-                <super:Switch
-                    Height="20"
-                    Background="{DynamicResource Window.Title.Background}"
-                    CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
-                    Click="SetSelectMode"
-                    IsChecked="{Binding EditMode, Mode=TwoWay}" />
+                    <super:Switch
+                        Height="20"
+                        Background="{DynamicResource Window.Title.Background}"
+                        CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
+                        Click="SetSelectMode"
+                        IsChecked="{Binding EditMode, Mode=TwoWay}" />
+                </StackPanel>
 
 
 
@@ -551,6 +571,7 @@
 
             <!--  表格展示  -->
             <DataGrid
+                Name="tableData"
                 Grid.Column="2"
                 Margin="5"
                 HorizontalContentAlignment="Left"
@@ -695,6 +716,7 @@
                     <DataGridTextColumn
                         Width="100"
                         Binding="{Binding Size, Converter={StaticResource BitToGBConverter}}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Size}"
                         IsReadOnly="True"
                         SortMemberPath="Size" />
@@ -703,6 +725,7 @@
                     <DataGridTextColumn
                         Width="60"
                         Binding="{Binding Duration}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Duration}"
                         IsReadOnly="True"
                         SortMemberPath="Duration" />
@@ -711,8 +734,9 @@
 
 
                     <DataGridTextColumn
-                        Width="160"
+                        Width="90"
                         Binding="{Binding ReleaseDate}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource ReleaseDate}"
                         IsReadOnly="True"
                         SortMemberPath="ReleaseDate" />
@@ -720,48 +744,55 @@
                     <DataGridTextColumn
                         Width="80"
                         Binding="{Binding ViewCount}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource ViewNumber}"
                         IsReadOnly="True"
                         SortMemberPath="ViewCount" />
 
 
                     <DataGridTextColumn
-                        Width="160"
+                        Width="180"
                         Binding="{Binding ViewDate}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource RecentView}"
                         IsReadOnly="True"
                         SortMemberPath="ViewDate" />
 
                     <DataGridTextColumn
-                        Width="160"
+                        Width="180"
                         Binding="{Binding LastScanDate}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource ImportDate}"
                         IsReadOnly="True"
                         SortMemberPath="LastScanDate" />
 
                     <DataGridTextColumn
-                        Width="160"
+                        Width="120"
                         Binding="{Binding Director}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Director}"
                         IsReadOnly="True"
                         SortMemberPath="Director" />
 
                     <DataGridTextColumn
-                        Width="160"
+                        Width="120"
                         Binding="{Binding Studio}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Studio}"
                         IsReadOnly="True"
                         SortMemberPath="Studio" />
 
                     <DataGridTextColumn
-                        Width="160"
+                        Width="180"
                         Binding="{Binding CreateDate}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource CreatedDate}"
                         IsReadOnly="True"
                         SortMemberPath="CreateDate" />
                     <DataGridTextColumn
-                        Width="160"
+                        Width="180"
                         Binding="{Binding UpdateDate}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Update}"
                         IsReadOnly="True"
                         SortMemberPath="UpdateDate" />

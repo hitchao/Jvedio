@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.App;
@@ -492,6 +493,49 @@ namespace Jvedio.ViewModel
             }
         }
 
+        private long _AllGenreCount = 0;
+
+        public long AllGenreCount {
+            get { return _AllGenreCount; }
+
+            set {
+                _AllGenreCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private long _AllSeriesCount = 0;
+
+        public long AllSeriesCount {
+            get { return _AllSeriesCount; }
+
+            set {
+                _AllSeriesCount = value;
+                RaisePropertyChanged();
+            }
+        }
+        private long _AllStudioCount = 0;
+
+        public long AllStudioCount {
+            get { return _AllStudioCount; }
+
+            set {
+                _AllStudioCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private long _AllDirectorCount = 0;
+
+        public long AllDirectorCount {
+            get { return _AllDirectorCount; }
+
+            set {
+                _AllDirectorCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
 
 
@@ -657,6 +701,16 @@ namespace Jvedio.ViewModel
 
             if (ConfigManager.ScanConfig.LoadDataAfterScan)
                 LoadAll();
+
+            if (exists.Count > 0) {
+                StringBuilder builder = new StringBuilder();
+                builder.Append($"以下识别码已存在：{Environment.NewLine}");
+
+                builder.Append(string.Join(Environment.NewLine, exists));
+
+                new Dialog_Logs(builder.ToString()).ShowDialog();
+                ;
+            }
         }
 
         /// <summary>
@@ -881,8 +935,7 @@ namespace Jvedio.ViewModel
             TabItemManager.Add(TabType.GeoVideo, $"{LangManager.GetValueByKey("Actor")}: {actorInfo.ActorName}", wrapper, actorInfo);
         }
 
-
-        public List<string> GetGenreList()
+        private Dictionary<string, long> GetGenreDict()
         {
             Dictionary<string, long> genreDict = new Dictionary<string, long>();
             string sql = $"SELECT Genre from metadata " +
@@ -910,7 +963,12 @@ namespace Jvedio.ViewModel
                     }
                 }
             }
+            return genreDict;
+        }
 
+        public List<string> GetGenreList()
+        {
+            Dictionary<string, long> genreDict = GetGenreDict();
             Dictionary<string, long> ordered = null;
             try {
                 ordered = genreDict.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
@@ -1009,6 +1067,13 @@ namespace Jvedio.ViewModel
             DateTime date1 = DateTime.Now.AddDays(-1 * RECENT_DAY);
             DateTime date2 = DateTime.Now;
             RecentWatchCount = metaDataMapper.SelectCount(new SelectWrapper<MetaData>().Eq("DBId", dbid).Eq("DataType", 0).Between("ViewDate", DateHelper.ToLocalDate(date1), DateHelper.ToLocalDate(date2)));
+
+            // 类别
+            AllGenreCount = GetGenreDict().Count;
+            AllSeriesCount = GetListByField(LabelType.Series.ToString()).Count;
+            AllStudioCount = GetListByField(LabelType.Studio.ToString()).Count;
+            AllDirectorCount = GetListByField(LabelType.Director.ToString()).Count;
+
         }
     }
 }

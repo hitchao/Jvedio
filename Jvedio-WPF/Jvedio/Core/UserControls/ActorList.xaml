@@ -16,6 +16,15 @@
 
     <UserControl.Resources>
 
+        <Style
+            x:Key="DataGridTextBlockStyle"
+            BasedOn="{StaticResource BaseTextBlock}"
+            TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+
         <Style x:Key="BgHoverBorder" TargetType="Border">
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="CornerRadius" Value="0" />
@@ -619,6 +628,7 @@
             <!--  表格展示  -->
 
             <DataGrid
+                x:Name="tableData"
                 Margin="5"
                 HorizontalContentAlignment="Left"
                 d:ItemsSource="{d:SampleData}"
@@ -667,11 +677,13 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource Name}" SortMemberPath="Favorites">
+                    <DataGridTemplateColumn
+                        Width="200"
+                        Header="{DynamicResource Name}"
+                        SortMemberPath="Favorites">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox
-                                    Width="200"
                                     Cursor="Arrow"
                                     Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                     Text="{Binding ActorName}"
@@ -679,6 +691,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+
                     <DataGridTemplateColumn
                         Width="50"
                         Header="{DynamicResource Gender}"
@@ -706,13 +719,6 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn
-                        Width="100"
-                        Binding="{Binding Count}"
-                        Header="{DynamicResource WorkCount}"
-                        IsReadOnly="True"
-                        SortMemberPath="Count" />
-
 
 
                     <DataGridTemplateColumn Header="{DynamicResource Favorites}" SortMemberPath="Favorites">
@@ -734,57 +740,76 @@
                     </DataGridTemplateColumn>
 
                     <DataGridTextColumn
+                        Width="60"
+                        Binding="{Binding Count}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                        Header="{DynamicResource WorkCount}"
+                        IsReadOnly="True"
+                        SortMemberPath="Count" />
+
+
+
+                    <DataGridTextColumn
                         Width="50"
                         Binding="{Binding Age}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Age}"
                         IsReadOnly="True"
                         SortMemberPath="Age" />
 
                     <DataGridTextColumn
-                        Width="80"
+                        Width="100"
                         Binding="{Binding Birthday}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Birthday}"
                         IsReadOnly="True"
                         SortMemberPath="Birthday" />
                     <DataGridTextColumn
                         MinWidth="100"
                         Binding="{Binding BirthPlace}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Birthplace}"
                         IsReadOnly="True"
                         SortMemberPath="BirthPlace" />
                     <DataGridTextColumn
                         Width="50"
                         Binding="{Binding Chest}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Chest}"
                         IsReadOnly="True"
                         SortMemberPath="Chest" />
                     <DataGridTextColumn
                         Width="50"
                         Binding="{Binding Cup}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Cup}"
                         IsReadOnly="True"
                         SortMemberPath="Cup" />
                     <DataGridTextColumn
                         Width="50"
                         Binding="{Binding Height}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Height}"
                         IsReadOnly="True"
                         SortMemberPath="Height" />
                     <DataGridTextColumn
                         Width="50"
                         Binding="{Binding Weight}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Weight}"
                         IsReadOnly="True"
                         SortMemberPath="Weight" />
                     <DataGridTextColumn
                         Width="50"
                         Binding="{Binding Hipline}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Hipline}"
                         IsReadOnly="True"
                         SortMemberPath="Hipline" />
                     <DataGridTextColumn
                         Width="50"
                         Binding="{Binding Waist}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Actress_Waist}"
                         IsReadOnly="True"
                         SortMemberPath="Waist" />
@@ -793,6 +818,7 @@
                     <DataGridTextColumn
                         MinWidth="50"
                         Binding="{Binding BloodType}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource BloodType}"
                         IsReadOnly="True"
                         SortMemberPath="BloodType" />
@@ -801,6 +827,7 @@
                     <DataGridTextColumn
                         Width="100"
                         Binding="{Binding Nation}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Nationality}"
                         IsReadOnly="True"
                         SortMemberPath="Nation" />
@@ -809,16 +836,19 @@
                     <DataGridTextColumn
                         Width="100"
                         Binding="{Binding Country}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Country}"
                         IsReadOnly="True"
                         SortMemberPath="Country" />
 
 
-                    <DataGridTemplateColumn Header="{DynamicResource Actress_Hobby}" SortMemberPath="Favorites">
+                    <DataGridTemplateColumn
+                        Width="200"
+                        Header="{DynamicResource Actress_Hobby}"
+                        SortMemberPath="Favorites">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox
-                                    Width="200"
                                     Cursor="Arrow"
                                     Style="{StaticResource ReadOnlyNoWrapTextBox}"
                                     Text="{Binding Hobby}"
@@ -831,12 +861,14 @@
                     <DataGridTextColumn
                         Width="160"
                         Binding="{Binding CreateDate}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource CreatedDate}"
                         IsReadOnly="True"
                         SortMemberPath="CreateDate" />
                     <DataGridTextColumn
                         Width="160"
                         Binding="{Binding UpdateDate}"
+                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Update}"
                         IsReadOnly="True"
                         SortMemberPath="UpdateDate" />

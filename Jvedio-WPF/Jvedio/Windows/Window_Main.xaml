@@ -415,28 +415,28 @@
                                                 MainText="{DynamicResource Genre}"
                                                 Path="{StaticResource GeoClassify}"
                                                 Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllLabelCount}" />
+                                                SubText="{Binding AllGenreCount}" />
                                             <super:PathRadioButton
                                                 Command="{Binding SideButtonCmd}"
                                                 CommandParameter="Series"
                                                 MainText="{DynamicResource Tag}"
                                                 Path="{StaticResource GeoClassify}"
                                                 Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllLabelCount}" />
+                                                SubText="{Binding AllSeriesCount}" />
                                             <super:PathRadioButton
                                                 Command="{Binding SideButtonCmd}"
                                                 CommandParameter="Studio"
                                                 MainText="{DynamicResource Studio}"
                                                 Path="{StaticResource GeoClassify}"
                                                 Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllLabelCount}" />
+                                                SubText="{Binding AllStudioCount}" />
                                             <super:PathRadioButton
                                                 Command="{Binding SideButtonCmd}"
                                                 CommandParameter="Director"
                                                 MainText="{DynamicResource Director}"
                                                 Path="{StaticResource GeoClassify}"
                                                 Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllLabelCount}" />
+                                                SubText="{Binding AllDirectorCount}" />
                                         </StackPanel>
                                     </super:TogglePanel>
 
