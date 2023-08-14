@@ -1,4 +1,5 @@
 ﻿using SuperControls.Style;
+using SuperControls.Style.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,6 +35,17 @@ namespace Jvedio.Core.UserControls
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
 
         public Action<string, LabelType> onLabelClick;
+
+        private Action<string, LabelType> _onAddLabel;
+
+        public Action<string, LabelType> onAddLabel {
+            get { return _onAddLabel; }
+
+            set {
+                _onAddLabel = value;
+                RaisePropertyChanged();
+            }
+        }
 
         #endregion
 
@@ -98,11 +110,7 @@ namespace Jvedio.Core.UserControls
                 Cache.AddRange(list);
         }
 
-        private void Label_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is TextBlock textBlock && textBlock.Text is string label && label.IndexOf("(") > 0)
-                onLabelClick?.Invoke(label.Substring(0, label.LastIndexOf("(")), LabelType);
-        }
+
 
         private void doSearch(object sender, TextChangedEventArgs e)
         {
@@ -151,6 +159,21 @@ namespace Jvedio.Core.UserControls
         public void LastPage()
         {
 
+        }
+
+        private void OnAddLabel(object sender, RoutedEventArgs e)
+        {
+            DialogInput input = new DialogInput(SuperControls.Style.LangManager.GetValueByKey("PleaseEnter"));
+            if (input.ShowDialog(App.Current.MainWindow) == false)
+                return;
+            string value = input.Text;
+            onAddLabel?.Invoke(value, LabelType);
+        }
+
+        private void Label_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock textBlock && textBlock.Text is string label && label.IndexOf("(") > 0)
+                onLabelClick?.Invoke(label.Substring(0, label.LastIndexOf("(")), LabelType);
         }
     }
 

@@ -14,6 +14,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <super:SearchBox
@@ -23,7 +24,36 @@
             Style="{StaticResource SearchBoxStyle}"
             TextChanged="doSearch" />
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button
+                MinWidth="80"
+                Margin="10"
+                Padding="0,5"
+                Click="OnAddLabel"
+                Visibility="{Binding onAddLabel, Converter={StaticResource NullToVisibilityConverter}, ElementName=labelList}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox
+                            Width="12"
+                            Height="auto"
+                            VerticalAlignment="Center">
+                            <Path
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Data="{DynamicResource GeoAdd}"
+                                Fill="{DynamicResource Window.Foreground}" />
+                        </Viewbox>
+                        <TextBlock
+                            Margin="5"
+                            FontSize="12"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="{DynamicResource Add}" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <ItemsControl
                 x:Name="itemsControl"
                 Margin="5"
@@ -41,7 +71,7 @@
                             <TextBlock
                                 FontSize="14"
                                 Foreground="{DynamicResource Window.Sub.Foreground}"
-                                MouseUp="Label_MouseDown"
+                                PreviewMouseLeftButtonUp="Label_MouseUp"
                                 Style="{StaticResource BaseTextBlock}"
                                 Text="{Binding .}" />
                         </Border>

@@ -249,6 +249,11 @@ namespace Jvedio.ViewModels
             labelView.SetLabel(list);
         }
 
+        private void onAddLabel(string value, LabelType type)
+        {
+
+        }
+
 
 
         private void SetTaskList(ref TaskList taskList, TaskType type)
@@ -556,7 +561,8 @@ namespace Jvedio.ViewModels
             for (int i = end; i >= start; i--) {
                 if (vieModel.TabItems[i].Pinned)
                     continue;
-                vieModel.TabItems.RemoveAt(i);
+                RemoveTabItem(i);
+                //vieModel.TabItems.RemoveAt(i);
             }
         }
     }
