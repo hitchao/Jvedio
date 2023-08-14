@@ -38,6 +38,26 @@ namespace Jvedio.ViewModel
 
         #region "属性"
 
+        private int _ScreenShotCount;
+        public int ScreenShotCount {
+            get {
+                return _ScreenShotCount;
+            }
+            set {
+                _ScreenShotCount = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _PreviewImageCount;
+        public int PreviewImageCount {
+            get {
+                return _PreviewImageCount;
+            }
+            set {
+                _PreviewImageCount = value;
+                RaisePropertyChanged();
+            }
+        }
         private bool _LoadingVideoInfo;
         public bool LoadingVideoInfo {
             get {

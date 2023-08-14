@@ -71,6 +71,7 @@ namespace Jvedio.Core.UserControls
         // todo 演员信息下载
         private void BeginDownLoadActress(object sender, MouseButtonEventArgs e)
         {
+            MessageNotify.Info("开发中");
             // List<Actress> actresses = new List<Actress>();
             // actresses.Add(vieModel.Actress);
             // DownLoadActress downLoadActress = new DownLoadActress(actresses);
@@ -139,12 +140,15 @@ namespace Jvedio.Core.UserControls
 
         private void EditActress(object sender, MouseButtonEventArgs e)
         {
-
+            if (CurrentActorInfo != null) {
+                Window_EditActor window_EditActor = new Window_EditActor(CurrentActorInfo.ActorID);
+                window_EditActor.ShowDialog();
+            }
         }
 
         private void LoadActorOtherMovie(object sender, MouseButtonEventArgs e)
         {
-
+            MessageNotify.Info("开发中");
         }
 
         private void ActorRate_ValueChanged(object sender, EventArgs e)

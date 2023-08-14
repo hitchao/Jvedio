@@ -124,23 +124,33 @@
 
             <StackPanel
                 Grid.Row="1"
-                IsEnabled="False"
-                Orientation="Horizontal"
-                Visibility="Collapsed">
-                <Border MouseLeftButtonUp="EditActress">
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Border
+                    Margin="2,0"
+                    Padding="0"
+                    MouseLeftButtonUp="EditActress"
+                    Style="{StaticResource HoverBorder}">
                     <Image
                         Height="15"
                         Margin="5"
                         Source="pack://application:,,,/Resources/Picture/edit.png" />
                 </Border>
-                <Border MouseLeftButtonUp="BeginDownLoadActress">
+                <Border
+                    Margin="2,0"
+                    Padding="0"
+                    MouseLeftButtonUp="BeginDownLoadActress"
+                    Style="{StaticResource HoverBorder}">
                     <Image
                         Height="20"
-                        Margin="5"
+                        Margin="3"
                         Source="pack://application:,,,/Resources/Picture/download.png" />
                 </Border>
                 <Border
+                    Margin="2,0"
+                    Padding="0"
                     PreviewMouseLeftButtonUp="LoadActorOtherMovie"
+                    Style="{StaticResource HoverBorder}"
                     Tag="{Binding CurrentActorInfo.ActorName, Mode=OneWay}"
                     ToolTip="{DynamicResource LoadActorOtherMovie}"
                     Visibility="Visible">
@@ -158,7 +168,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 AllowHalf="True"
-                Background="{DynamicResource Window.Side.Background}"
+                Background="{DynamicResource Window.Title.Background}"
                 Foreground="{DynamicResource Common.HighLight.Deep.Background}"
                 ItemHeight="20"
                 ItemMargin="3 0"

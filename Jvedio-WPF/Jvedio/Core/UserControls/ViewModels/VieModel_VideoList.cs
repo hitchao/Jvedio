@@ -491,7 +491,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             //TabItemManager.Add(TabType.GeoRandom, LangManager.GetValueByKey("ToolTip_RandomShow"));
         }
 
-        public void Reset() => Select();
+        public void Refresh() => Select();
 
 
         private void LoadVideo(Video video, int idx)

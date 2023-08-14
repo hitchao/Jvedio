@@ -129,7 +129,7 @@ namespace Jvedio.Core.UserControls
 
         public void Refresh()
         {
-            vieModel.Reset();
+            vieModel.Refresh();
         }
 
         public void BindingEvent()
@@ -289,7 +289,7 @@ namespace Jvedio.Core.UserControls
                 }
             }
 
-            vieModel.Reset();
+            vieModel.Refresh();
         }
 
 
@@ -406,19 +406,18 @@ namespace Jvedio.Core.UserControls
                     }
                 }
             }
-
-            // msgCard.Info($"{SuperControls.Style.LangManager.GetValueByKey("SuccessDelete")} {to_delete.Count} ");
             // 修复数字显示
-            vieModel.CurrentCount -= to_delete.Count;
-            vieModel.TotalCount -= to_delete.Count;
+            //vieModel.CurrentCount -= to_delete.Count;
+            //vieModel.TotalCount -= to_delete.Count;
 
             to_delete.Clear();
             onStatistic?.Invoke();
 
-            await Task.Delay(1000);
+            await Task.Delay(200);
             vieModel.EditMode = false;
             vieModel.SelectedVideo.Clear();
             SetSelected();
+            vieModel.Refresh();
         }
 
 

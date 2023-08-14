@@ -1047,6 +1047,12 @@ namespace Jvedio
                 }
             });
 
+            if (!isScreenShot) {
+                vieModel.PreviewImageCount = imagePathList.Count;
+            } else {
+                vieModel.ScreenShotCount = imagePathList.Count;
+            }
+
             // 加载预览图/截图
             foreach (var path in imagePathList) {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadExtraImageDelegate(LoadExtraImage), BitmapImageFromFile(path));

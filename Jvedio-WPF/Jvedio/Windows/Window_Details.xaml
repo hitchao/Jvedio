@@ -187,10 +187,29 @@
                         IsChecked="{Binding ShowScreenShot, Mode=TwoWay, Converter={StaticResource OppositeBooleanConverter}}"
                         Style="{StaticResource FlatRoundRadioButton}"
                         ToolTip="{DynamicResource Poster}">
-                        <Image
-                            Width="22"
-                            Height="22"
-                            Source="/Resources/Picture/图像.png" />
+                        <Grid>
+                            <Image
+                                Width="22"
+                                Height="22"
+                                Source="/Resources/Picture/图像.png" />
+                            <Border
+                                Width="15"
+                                Height="15"
+                                Margin="-5,-2"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Background="{DynamicResource Common.HighLight.Deep.Background}"
+                                CornerRadius="15">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="8"
+                                    Foreground="{DynamicResource Window.Foreground}"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding PreviewImageCount, Mode=OneWay}" />
+                            </Border>
+
+                        </Grid>
                     </RadioButton>
                     <RadioButton
                         Height="30"
@@ -201,10 +220,29 @@
                         IsChecked="{Binding ShowScreenShot, Mode=TwoWay}"
                         Style="{StaticResource FlatRoundRadioButton}"
                         ToolTip="{DynamicResource ScreenShot}">
-                        <Image
-                            Width="22"
-                            Height="22"
-                            Source="/Resources/Picture/视频.png" />
+                        <Grid>
+                            <Image
+                                Width="22"
+                                Height="22"
+                                Source="/Resources/Picture/视频.png" />
+                            <Border
+                                Width="15"
+                                Height="15"
+                                Margin="-5,-2"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Background="{DynamicResource Common.HighLight.Deep.Background}"
+                                CornerRadius="15">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="8"
+                                    Foreground="{DynamicResource Window.Foreground}"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{Binding ScreenShotCount, Mode=OneWay}" />
+                            </Border>
+                        </Grid>
+
                     </RadioButton>
                 </StackPanel>
 
