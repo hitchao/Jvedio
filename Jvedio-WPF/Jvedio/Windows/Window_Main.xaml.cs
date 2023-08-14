@@ -96,7 +96,6 @@ namespace Jvedio
 
         private SuperControls.Style.Plugin.Window_Plugin window_Plugin { get; set; }
 
-        private Window_Filter windowFilter { get; set; }
 
         private Window_Details windowDetails { get; set; }
 
@@ -501,7 +500,6 @@ namespace Jvedio
         {
             HSource.RemoveHook(HwndHook);
             Win32Helper.UnregisterHotKey(WindowHandle, HOTKEY_ID); // 取消热键
-            windowFilter?.Close();
             base.OnClosed(e);
         }
 

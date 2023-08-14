@@ -14,6 +14,7 @@
     MinWidth="800"
     Closing="BaseWindow_Closing"
     Foreground="{DynamicResource Window.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     Loaded="BaseWindow_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">

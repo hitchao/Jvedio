@@ -10,6 +10,7 @@
     Height="600"
     Background="{DynamicResource Window.Background}"
     Foreground="{DynamicResource Window.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>

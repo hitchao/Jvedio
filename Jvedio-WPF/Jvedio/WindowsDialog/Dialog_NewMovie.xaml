@@ -13,6 +13,7 @@
     Background="{DynamicResource Window.InnerDialog.Background}"
     Closing="BaseDialog_Closing"
     ContentRendered="BaseDialog_ContentRendered"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     SizeToContent="Height"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">

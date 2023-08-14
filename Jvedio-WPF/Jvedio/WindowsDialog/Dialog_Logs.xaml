@@ -8,6 +8,7 @@
     Height="500"
     Background="{DynamicResource Window.Background}"
     Foreground="{DynamicResource Window.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     Topmost="True"
     WindowStartupLocation="CenterScreen">
 

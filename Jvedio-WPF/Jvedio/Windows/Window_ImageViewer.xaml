@@ -10,6 +10,7 @@
     Height="450"
     AllowsTransparency="true"
     Background="Transparent"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     PreviewKeyUp="Window_PreviewKeyUp"
     ResizeMode="NoResize"
     ShowInTaskbar="False"

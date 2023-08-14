@@ -11,6 +11,7 @@
     MaxWidth="800"
     MaxHeight="800"
     Background="{DynamicResource Window.Background}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 

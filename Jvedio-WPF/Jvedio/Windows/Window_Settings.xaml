@@ -16,6 +16,7 @@
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
     Foreground="{DynamicResource Window.Sub.Foreground}"
+    Icon="pack://application:,,,/Resources/Jvedio.ico"
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">

@@ -439,9 +439,6 @@
     <Compile Include="Core\FFmpeg\ScreenShot.cs" />
     <Compile Include="Utils\Config\RecentWatchedConfig.cs" />
     <Compile Include="Utils\Config\ScanPathConfig.cs" />
-    <Compile Include="WindowsDialog\Dialog_Thanks.xaml.cs">
-      <DependentUpon>Dialog_Thanks.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Entity\Common\MySqlite.cs" />
     <Compile Include="Core\Net\VideoDownLoader.cs" />
     <Compile Include="Core\Media\ImageSlide.cs" />
@@ -468,9 +465,6 @@
     </Compile>
     <Compile Include="Windows\Window_Details.xaml.cs">
       <DependentUpon>Window_Details.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Window_Filter.xaml.cs">
-      <DependentUpon>Window_Filter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Window_Edit.xaml.cs">
       <DependentUpon>Window_Edit.xaml</DependentUpon>
@@ -572,10 +566,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WindowsDialog\Dialog_Thanks.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Windows\Dialog\Window_SearchAsso.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -591,10 +581,6 @@
     <Page Include="Windows\Window_ScanDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Window_Filter.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Window_EditActor.xaml">
       <SubType>Designer</SubType>
