@@ -74,10 +74,18 @@ namespace Jvedio.Core.UserControls.ViewModels
             "metadata.Title",
             "metadata.Path",
             "metadata.Hash",
+            "metadata.Size",
+            "metadata.ViewCount",
+            "metadata.ViewDate",
+            "metadata.CreateDate",
+            "metadata.UpdateDate",
             "metadata_video.SubSection",
             "metadata_video.ImageUrls",
             "metadata.ReleaseDate",
             "metadata.LastScanDate",
+            "metadata_video.Director",
+            "metadata_video.Studio",
+            "metadata_video.Duration",
             "metadata_video.WebUrl",
             "metadata_video.WebType",
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
@@ -114,6 +122,17 @@ namespace Jvedio.Core.UserControls.ViewModels
         public string ClickFilterType { get; set; }
 
 
+
+        private bool _ShowTable = true;
+
+        public bool ShowTable {
+            get { return _ShowTable; }
+
+            set {
+                _ShowTable = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private bool _ShowAsso = true;
 
@@ -481,14 +500,14 @@ namespace Jvedio.Core.UserControls.ViewModels
                 return;
             if (CurrentVideoList.Count < PageSize) {
                 if (idx < CurrentVideoList.Count) {
-                    CurrentVideoList[idx] = null;
+                    //CurrentVideoList[idx] = null;
                     CurrentVideoList[idx] = video;
                 } else {
                     CurrentVideoList.Add(video);
                 }
             } else {
                 if (idx < CurrentVideoList.Count) {
-                    CurrentVideoList[idx] = null;
+                    //CurrentVideoList[idx] = null;
                     CurrentVideoList[idx] = video;
                 }
             }

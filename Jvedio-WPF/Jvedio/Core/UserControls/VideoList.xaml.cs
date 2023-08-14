@@ -110,6 +110,8 @@ namespace Jvedio.Core.UserControls
             vieModel.UUID = tabItemEx.UUID;
             TabItemEx = tabItemEx;
 
+            SetDataGrid();
+
             Init();
         }
 
@@ -202,7 +204,7 @@ namespace Jvedio.Core.UserControls
                         string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
                         if (array.Length > 0) {
                             Video.SetImage(ref video, array[array.Length / 2]);
-                            data[i].BigImage = null;
+                            //data[i].BigImage = null;
                             data[i].BigImage = video.ViewImage;
                         }
                     }
@@ -231,13 +233,18 @@ namespace Jvedio.Core.UserControls
             } else if (idx == 3) {
                 //vieModel.ShowDetailsData();
             }
-
+            SetDataGrid();
         }
 
-        public void SetViewMode()
+        private void SetDataGrid()
         {
-
+            if (vieModel.ShowImageMode == 2) {
+                vieModel.ShowTable = true;
+            } else {
+                vieModel.ShowTable = false;
+            }
         }
+
 
         // todo 加载 gif
         public void AsyncLoadGif()
@@ -349,7 +356,13 @@ namespace Jvedio.Core.UserControls
         {
             //AssoDataPopup.IsOpen = false;
             //windowEdit?.Close();
-            long dataID = GetIDFromMenuItem(sender);
+            long dataID = 0;
+            if (sender is Button button && button.Tag != null &&
+                long.TryParse(button.Tag.ToString(), out dataID)) {
+
+            } else {
+                dataID = GetIDFromMenuItem(sender);
+            }
             Window_Edit windowEdit = new Window_Edit(dataID);
             windowEdit.ShowDialog();
         }
@@ -921,7 +934,7 @@ namespace Jvedio.Core.UserControls
             for (int i = 0; i < vieModel.CurrentVideoList.Count; i++) {
                 if (vieModel.CurrentVideoList[i]?.DataID == newVideo.DataID) {
                     Video video = vieModel.CurrentVideoList[i];
-                    vieModel.CurrentVideoList[i] = null;
+                    //vieModel.CurrentVideoList[i] = null;
                     video.Grade = newVideo.Grade;
                     vieModel.CurrentVideoList[i] = video;
                     onStatistic?.Invoke();
@@ -971,7 +984,7 @@ namespace Jvedio.Core.UserControls
 
                     vieModel.CurrentVideoList[i].SmallImage = null;
                     vieModel.CurrentVideoList[i].BigImage = null;
-                    vieModel.CurrentVideoList[i] = null;
+                    //vieModel.CurrentVideoList[i] = null;
 
                     vieModel.CurrentVideoList[i] = video;
                     vieModel.CurrentVideoList[i].SmallImage = video.SmallImage;
@@ -1669,26 +1682,6 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        private void StackPanel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            CanRateChange = true;
-        }
-
-        private void Rate_ValueChanged(object sender, EventArgs e)
-        {
-            if (!CanRateChange)
-                return;
-            Rate rate = (Rate)sender;
-            if (rate == null)
-                return;
-            long id = GetDataID(rate);
-            if (id <= 0)
-                return;
-            metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), id);
-            onStatistic?.Invoke();
-            CanRateChange = false;
-        }
-
         private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             if (vieModel.Rendering) {
@@ -1792,7 +1785,7 @@ namespace Jvedio.Core.UserControls
                         if (datas[i].DataID == dataID) {
                             Video video = datas[i];
                             RefreshTagStamp(ref video, tagID, deleted);
-                            datas[i] = null;
+                            //datas[i] = null;
                             datas[i] = video;
                             break;
                         }
@@ -2018,15 +2011,31 @@ namespace Jvedio.Core.UserControls
                 GetDataID(viewVideo) is long dataId && dataId > 0) {
 
                 Video video = GetVideoFromChildEle(viewVideo, dataId);
-                if (video == null) {
-                    MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
-                    return;
-                }
-                string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAG_ID_NEW_ADD}' and DataID='{dataId}'";
-                tagStampMapper.ExecuteNonQuery(sql);
-                onInitTagStamps?.Invoke();
-                RefreshData(dataId);
-                Video.PlayVideoWithPlayer(video.Path, dataId);
+                PlayVideo(video);
+            }
+        }
+
+        private void PlayVideo(Video video)
+        {
+            if (video == null) {
+                MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
+                return;
+            }
+            long dataId = video.DataID;
+            string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAG_ID_NEW_ADD}' and DataID='{dataId}'";
+            tagStampMapper.ExecuteNonQuery(sql);
+            onInitTagStamps?.Invoke();
+            RefreshData(dataId);
+            Video.PlayVideoWithPlayer(video.Path, dataId);
+        }
+
+        private void OnPlayVideo(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag != null &&
+                long.TryParse(button.Tag.ToString(), out long dataID) &&
+                dataID > 0) {
+                Video video = videoMapper.SelectVideoByID(dataID);
+                PlayVideo(video);
             }
         }
 
@@ -2245,6 +2254,49 @@ namespace Jvedio.Core.UserControls
         public void LastPage()
         {
             pagination.LastPage();
+        }
+
+        private void Rate_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CanRateChange = true;
+        }
+
+
+        private void Rate_ValueChanged(object sender, FunctionEventArgs<double> e)
+        {
+            if (!CanRateChange)
+                return;
+
+            if (sender is Rate rate &&
+                rate.Tag != null &&
+                long.TryParse(rate.Tag.ToString(), out long dataID) &&
+                dataID > 0) {
+                metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), dataID);
+                onStatistic?.Invoke();
+                CanRateChange = false;
+            }
+        }
+
+        private void OpenVideoPath(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag != null &&
+                long.TryParse(button.Tag.ToString(), out long dataID) &&
+                dataID > 0) {
+                Video video = videoMapper.SelectVideoByID(dataID);
+
+                if (video == null || !File.Exists(video.Path))
+                    MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_FileNotExist") + ": " + video.Path);
+                else
+                    FileHelper.TryOpenSelectPath(video.Path);
+            }
+        }
+
+        private void ShowDetail(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag != null &&
+                long.TryParse(button.Tag.ToString(), out long id)) {
+                RaiseEvent(new VideoItemEventArgs(id, OnItemClickEvent, sender));
+            }
         }
     }
 }

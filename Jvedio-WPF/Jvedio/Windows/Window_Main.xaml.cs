@@ -228,6 +228,10 @@ namespace Jvedio
             ThemeSelectorDefault.AddTransParentColor("ListBoxItem.Background");
             ThemeSelectorDefault.AddTransParentColor("Window.Side.Background");
             ThemeSelectorDefault.AddTransParentColor("Window.Side.Hover.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Even.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Odd.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Hover.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Header.Background");
             ThemeSelectorDefault.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
             ThemeSelectorDefault.onThemeChanged += (ThemeIdx, ThemeID) => {
                 ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;

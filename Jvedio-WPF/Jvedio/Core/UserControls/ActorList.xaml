@@ -466,12 +466,30 @@
                 Margin="10,5"
                 Orientation="Horizontal">
                 <Button
-                    Margin="10,5"
+                    Margin="0,0,10,0"
                     HorizontalAlignment="Left"
                     Click="NewActor"
-                    Content="{DynamicResource NewActor}"
                     Style="{StaticResource ButtonPrimary}"
-                    Visibility="{Binding ViewMode, ElementName=actorList, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
+                    Visibility="{Binding ViewMode, ElementName=actorList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox
+                                Width="12"
+                                Height="auto"
+                                VerticalAlignment="Center">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="{DynamicResource GeoAdd}"
+                                    Fill="{DynamicResource Window.Foreground}" />
+                            </Viewbox>
+                            <TextBlock
+                                Margin="5,0"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="{DynamicResource NewActor}" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
 
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <super:Switch

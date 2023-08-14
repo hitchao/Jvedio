@@ -789,21 +789,21 @@ namespace Jvedio.Entity
         }
         public static void SetImage(ref Video video, int imageMode = 0)
         {
-            if (imageMode < 2) {
+            //if (imageMode < 2) {
 
-                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+            BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+            BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
 
-                if (smallimage == null)
-                    smallimage = MetaData.DefaultSmallImage;
-                if (bigimage == null)
-                    bigimage = MetaData.DefaultBigImage;
-                video.SmallImage = smallimage;
-                video.BigImage = bigimage;
-            } else if (imageMode == 2) {
-                // string gifpath = Video.parseImagePath(video.GifImagePath);
-                // if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
-            }
+            if (smallimage == null)
+                smallimage = MetaData.DefaultSmallImage;
+            if (bigimage == null)
+                bigimage = MetaData.DefaultBigImage;
+            video.SmallImage = smallimage;
+            video.BigImage = bigimage;
+            //} else if (imageMode == 2) {
+            // string gifpath = Video.parseImagePath(video.GifImagePath);
+            // if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
+            //}
         }
 
         /// <summary>
