@@ -14,6 +14,8 @@ Version.md
 
 
 # User-specific files
+*.doc
+*.docx
 *.rsuser
 *.suo
 *.user
