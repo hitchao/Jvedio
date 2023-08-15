@@ -128,6 +128,16 @@ namespace Jvedio.Core.UserControls
 
         public CancellationToken RenderCT { get; set; }
 
+        private bool _Nothing = true;
+
+        public bool Nothing {
+            get { return _Nothing; }
+
+            set {
+                _Nothing = value;
+                RaisePropertyChanged();
+            }
+        }
         private bool _ShowTable = false;
 
         public bool ShowTable {
@@ -471,7 +481,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
         public void onPageChange(long total)
         {
-            App.Current.Dispatcher.Invoke(() => pagination.Total = TotalCount + 1); // 不知为啥这里少 1
+            App.Current.Dispatcher.Invoke(() => pagination.Total = TotalCount);
         }
 
 
@@ -515,8 +525,13 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
         public async void RenderActor()
         {
-            if (CurrentList == null)
+            if (CurrentList == null) {
                 CurrentList = new ObservableCollection<ActorInfo>();
+                Nothing = true;
+                CurrentList.CollectionChanged += (s, e) => {
+                    Nothing = CurrentList.Count == 0;
+                };
+            }
 
             for (int i = 0; i < Actors.Count; i++) {
                 try {
@@ -786,6 +801,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             if ((bool)success) {
                 MessageNotify.Success(LangManager.GetValueByKey("AddSuccess"));
                 onStatistic?.Invoke();
+                Refresh();
             }
         }
 

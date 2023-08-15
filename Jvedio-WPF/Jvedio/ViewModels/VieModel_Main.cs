@@ -1057,7 +1057,7 @@ namespace Jvedio.ViewModel
                      "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
                      "GROUP BY actor_info.ActorID)";
 
-            AllActorCount = actorMapper.SelectCount(actor_count_sql) + 1;
+            AllActorCount = actorMapper.SelectCount(actor_count_sql);
 
             string label_count_sql = "SELECT COUNT(DISTINCT LabelName) as Count  from metadata_to_label " +
                                     "join metadata on metadata_to_label.DataID=metadata.DataID " +

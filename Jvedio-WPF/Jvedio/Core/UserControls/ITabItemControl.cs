@@ -25,6 +25,7 @@ namespace Jvedio.Core.UserControls
 
     internal interface ITabItemControl
     {
+        void Refresh();
         void SetSearchFocus();
         void NextPage();
         void PreviousPage();

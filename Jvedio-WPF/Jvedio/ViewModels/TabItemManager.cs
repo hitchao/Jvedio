@@ -209,7 +209,12 @@ namespace Jvedio.ViewModels
                     if (tabData[0] is LabelType labelType) {
                         LabelView labelView = new LabelView(labelType);
                         labelView.Uid = tabItem.UUID;
-                        SetLabelList(ref labelView, labelType);
+
+                        labelView.SetLabel(GetLabelList(labelType));
+                        labelView.onRefresh += (t) => {
+                            labelView.SetLabel(GetLabelList(t));
+                        };
+
                         labelView.onLabelClick += vieModel.onLabelClick;
                         TabPanel.Children.Add(labelView);
                     }
@@ -227,7 +232,7 @@ namespace Jvedio.ViewModels
             CurrentWrapperArg = arg;
         }
 
-        private void SetLabelList(ref LabelView labelView, LabelType type)
+        private List<string> GetLabelList(LabelType type)
         {
             List<string> list = null;
             switch (type) {
@@ -246,7 +251,7 @@ namespace Jvedio.ViewModels
                     break;
             }
 
-            labelView.SetLabel(list);
+            return list;
         }
 
         private void onAddLabel(string value, LabelType type)
@@ -374,12 +379,17 @@ namespace Jvedio.ViewModels
         {
             if (idx < 0 || idx >= TabPanel.Children.Count)
                 return;
-            UIElement uIElement = TabPanel.Children[idx];
+            ITabItemControl ele = TabPanel.Children[idx] as ITabItemControl;
+            ele?.Refresh();
+        }
 
-            if (uIElement is VideoList videoList)
-                videoList?.Refresh();
-            else if (uIElement is ActorList actorList)
-                actorList?.Refresh();
+        public void RefreshAllTab()
+        {
+            if (TabPanel.Children != null && TabPanel.Children.Count > 0) {
+                for (int i = 0; i < TabPanel.Children.Count; i++) {
+                    RefreshTab(i);
+                }
+            }
         }
 
 

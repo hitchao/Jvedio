@@ -459,7 +459,7 @@
         </Grid>
 
         <!--  信息展示：演员信息+影片展示  -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Visibility="{Binding DataContext.Nothing, ElementName=videoList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
@@ -518,6 +518,7 @@
                     Value="{Binding RenderProgress, Mode=OneWay}" />
 
                 <!--  影片  -->
+
                 <ItemsControl
                     x:Name="MovieItemsControl"
                     Background="Transparent"
@@ -536,7 +537,7 @@
                                 super:ScrollAnimationBehavior.TimeDuration="00:00:00.5"
                                 super:ScrollAnimationBehavior.VerticalOffset="0"
                                 SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static config:ConfigManager.Main}}"
-                                Style="{StaticResource FlatScrollViewer}">
+                                Style="{StaticResource FloatScrollViewer}">
                                 <ItemsPresenter />
                             </local:WheelSpeedScrollViewer>
 
@@ -801,6 +802,14 @@
 
 
         </Grid>
+
+        <Image
+            Grid.Row="2"
+            Height="256"
+            Margin="3"
+            Source="pack://application:,,,/Resources/Picture/nothing.png"
+            Visibility="{Binding DataContext.Nothing, ElementName=videoList, Converter={StaticResource BoolToVisibilityConverter}}" />
+
 
         <!--  底部  -->
         <Grid

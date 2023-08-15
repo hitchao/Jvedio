@@ -579,7 +579,7 @@
             </StackPanel>
         </Grid>
         <!--  演员展示  -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Visibility="{Binding Nothing, ElementName=actorList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
             <!--<Grid.ContextMenu>
                 <ContextMenu>
                     <MenuItem
@@ -589,6 +589,7 @@
                         Visibility="Collapsed" />
                 </ContextMenu>
             </Grid.ContextMenu>-->
+
             <ScrollViewer
                 x:Name="scrollViewer"
                 CanContentScroll="True"
@@ -878,6 +879,16 @@
 
 
         </Grid>
+
+
+        <Image
+            Grid.Row="2"
+            Height="256"
+            Margin="3"
+            Source="pack://application:,,,/Resources/Picture/nothing.png"
+            Visibility="{Binding Nothing, ElementName=actorList, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+
 
         <!--  底部  -->
         <Grid

@@ -33,6 +33,18 @@
 
     <super:BaseWindow.Resources>
 
+        <Style
+            x:Key="HelloPageButton"
+            BasedOn="{StaticResource FlatButton}"
+            TargetType="Button">
+            <Setter Property="Width" Value="80" />
+            <Setter Property="Height" Value="70" />
+            <Setter Property="super:CommonExt.CornerRadius" Value="5" />
+            <Setter Property="super:CommonExt.HoverBackground" Value="{DynamicResource Button.Hover.Background}" />
+        </Style>
+
+
+
         <Style x:Key="ItemsControlVirtualizedStyle" TargetType="ItemsControl">
             <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True" />
             <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
@@ -442,21 +454,7 @@
 
                                 </Grid>
                             </ScrollViewer>
-                            <Button
-                                Grid.Row="2"
-                                Margin="20,10"
-                                Padding="10"
-                                HorizontalAlignment="Stretch"
-                                Click="ImportVideo"
-                                Style="{StaticResource ButtonMain}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image
-                                        Height="13"
-                                        Margin="0,0,5,0"
-                                        Source="/Resources/Picture/导入.png" />
-                                    <TextBlock Text="{DynamicResource ImportVideo}" />
-                                </StackPanel>
-                            </Button>
+
                             <Grid
                                 Grid.Row="3"
                                 Margin="0,0,5,5"
@@ -506,44 +504,163 @@
                         <super:NoticeViewer x:Name="noticeViewer" Grid.Row="0" />
 
                         <!--  logo  -->
-                        <StackPanel
-                            Grid.Row="1"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Vertical"
-                            Visibility="{Binding ShowSoft, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid Grid.Row="1" Visibility="{Binding ShowSoft, Converter={StaticResource BoolToVisibilityConverter}}">
 
-                            <Image
-                                Grid.Row="0"
-                                Height="128"
-                                Margin="10"
-                                Source="pack://application:,,,/Resources/Picture/Jvedio.png">
-                                <Image.Effect>
-                                    <DropShadowEffect
-                                        BlurRadius="4"
-                                        Direction="315"
-                                        Opacity="1"
-                                        ShadowDepth="5"
-                                        Color="Black" />
-                                </Image.Effect>
-                            </Image>
-                            <TextBlock
-                                Grid.Row="1"
-                                FontSize="25"
-                                Style="{StaticResource BaseTextBlock}"
-                                Text="{DynamicResource ThanksUseJvedio}">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect
-                                        BlurRadius="4"
-                                        Direction="315"
-                                        Opacity="1"
-                                        ShadowDepth="5"
-                                        Color="Black" />
-                                </TextBlock.Effect>
-                            </TextBlock>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+
+                                <Image
+                                    Grid.Row="0"
+                                    Height="96"
+                                    Source="pack://application:,,,/Resources/Picture/Jvedio.png">
+                                    <Image.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="4"
+                                            Direction="315"
+                                            Opacity="1"
+                                            ShadowDepth="5" />
+                                    </Image.Effect>
+                                </Image>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="20"
+                                    FontFamily="楷体"
+                                    FontSize="25"
+                                    FontWeight="Bold"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="{DynamicResource ThanksUseJvedio}">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="4"
+                                            Direction="315"
+                                            Opacity="1"
+                                            ShadowDepth="5" />
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <Button
+                                    Grid.Row="1"
+                                    Width="150"
+                                    Margin="20"
+                                    Padding="10,15"
+                                    super:CommonExt.BorderThickness="2"
+                                    BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                                    Click="ImportVideo"
+                                    Style="{StaticResource BorderButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image
+                                            Height="13"
+                                            Margin="0,0,5,0"
+                                            Source="/Resources/Picture/导入.png" />
+                                        <TextBlock Margin="5,0" Text="{DynamicResource ImportVideo}" />
+                                    </StackPanel>
+                                </Button>
+
+
+
+                            </StackPanel>
+
+                            <StackPanel
+                                Margin="70"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Orientation="Horizontal">
+                                <Button Click="GoToStartUp" Style="{StaticResource HelloPageButton}">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                                        <Viewbox
+                                            Width="20"
+                                            Height="auto"
+                                            Margin="5"
+                                            VerticalAlignment="Center">
+                                            <Path
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="{StaticResource GeoHome}"
+                                                Fill="{DynamicResource Window.Foreground}" />
+                                        </Viewbox>
+                                        <TextBlock
+                                            Margin="5"
+                                            HorizontalAlignment="Center"
+                                            Text="{DynamicResource Library}" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button
+                                    Command="{Binding SideButtonCmd}"
+                                    CommandParameter="All"
+                                    Style="{StaticResource HelloPageButton}">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                                        <Viewbox
+                                            Width="20"
+                                            Height="auto"
+                                            Margin="5"
+                                            VerticalAlignment="Center">
+                                            <Path
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="{StaticResource GeoVideo}"
+                                                Fill="{DynamicResource Window.Foreground}" />
+                                        </Viewbox>
+                                        <TextBlock
+                                            Margin="5"
+                                            HorizontalAlignment="Center"
+                                            Text="{DynamicResource AllVideo}" />
+                                    </StackPanel>
+
+                                </Button>
+                                <Button
+                                    Command="{Binding SideButtonCmd}"
+                                    CommandParameter="Actor"
+                                    Style="{StaticResource HelloPageButton}">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                                        <Viewbox
+                                            Width="20"
+                                            Height="auto"
+                                            Margin="5"
+                                            VerticalAlignment="Center">
+                                            <Path
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="{StaticResource GeoActor}"
+                                                Fill="{DynamicResource Window.Foreground}" />
+                                        </Viewbox>
+                                        <TextBlock
+                                            Margin="5"
+                                            HorizontalAlignment="Center"
+                                            Text="{DynamicResource Actors}" />
+                                    </StackPanel>
+
+                                </Button>
+                                <Button Click="ShowSettingsWindow" Style="{StaticResource HelloPageButton}">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                                        <Viewbox
+                                            Width="20"
+                                            Height="auto"
+                                            Margin="5"
+                                            VerticalAlignment="Center">
+                                            <Path
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="{StaticResource GeoSetting}"
+                                                Fill="{DynamicResource Window.Foreground}" />
+                                        </Viewbox>
+                                        <TextBlock
+                                            Margin="5"
+                                            HorizontalAlignment="Center"
+                                            Text="{DynamicResource Settings}" />
+                                    </StackPanel>
+
+                                </Button>
+                            </StackPanel>
+
                             <TextBlock
                                 Grid.Row="2"
-                                FontSize="15"
+                                Margin="20"
+                                VerticalAlignment="Bottom"
+                                FontSize="12"
                                 Foreground="{DynamicResource Window.Sub.Foreground}"
                                 Style="{StaticResource BaseTextBlock}"
                                 Text="@Jvedio Copyright © 2020">
@@ -556,9 +673,7 @@
                                         Color="Black" />
                                 </TextBlock.Effect>
                             </TextBlock>
-                        </StackPanel>
-
-
+                        </Grid>
                         <Grid Grid.Row="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
@@ -572,6 +687,7 @@
                                 VerticalAlignment="Top"
                                 HorizontalScrollBarVisibility="Auto"
                                 PreviewMouseWheel="Tab_PreviewMouseWheel"
+                                Style="{StaticResource FloatScrollViewer}"
                                 VerticalScrollBarVisibility="Hidden">
                                 <ItemsControl AlternationCount="999" ItemsSource="{Binding TabItems}">
                                     <ItemsControl.ItemsPanel>

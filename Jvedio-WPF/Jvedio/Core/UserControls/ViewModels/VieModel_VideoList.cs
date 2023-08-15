@@ -123,6 +123,16 @@ namespace Jvedio.Core.UserControls.ViewModels
 
 
 
+        private bool _Nothing;
+
+        public bool Nothing {
+            get { return _Nothing; }
+
+            set {
+                _Nothing = value;
+                RaisePropertyChanged();
+            }
+        }
         private bool _ShowTable = true;
 
         public bool ShowTable {
@@ -378,7 +388,7 @@ namespace Jvedio.Core.UserControls.ViewModels
         }
 
 
-        private ObservableCollection<Video> _CurrentVideoList = new ObservableCollection<Video>();
+        private ObservableCollection<Video> _CurrentVideoList;
 
         public ObservableCollection<Video> CurrentVideoList {
             get { return _CurrentVideoList; }
@@ -734,8 +744,13 @@ namespace Jvedio.Core.UserControls.ViewModels
         public async void Render()
         {
             Logger.Info("1.Render");
-            if (CurrentVideoList == null)
+            if (CurrentVideoList == null) {
                 CurrentVideoList = new ObservableCollection<Video>();
+                Nothing = true;
+                CurrentVideoList.CollectionChanged += (s, e) => {
+                    Nothing = CurrentVideoList.Count == 0;
+                };
+            }
             int imageMode = ShowImageMode;
             for (int i = 0; i < VideoList.Count; i++) {
                 try {

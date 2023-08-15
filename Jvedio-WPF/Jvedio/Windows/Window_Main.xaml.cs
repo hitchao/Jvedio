@@ -988,12 +988,10 @@ namespace Jvedio
             // 切换数据库
             vieModel.IsRefresh = true;
             vieModel.Statistic();
-            VideoList videoList = vieModel.TabItemManager.GetVideoListByType(TabType.GeoVideo);
-            if (videoList != null)
-                videoList.Refresh();
 
-            // vieModel.InitLettersNavigation();
-            // vieModel.GetFilterInfo();
+            vieModel.TabItemManager.RefreshAllTab();
+
+
             vieModel.MainDataChecked = true;
         }
 

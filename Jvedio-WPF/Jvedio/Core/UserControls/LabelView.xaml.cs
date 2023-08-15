@@ -35,6 +35,7 @@ namespace Jvedio.Core.UserControls
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
 
         public Action<string, LabelType> onLabelClick;
+        public Action<LabelType> onRefresh;
 
         private Action<string, LabelType> _onAddLabel;
 
@@ -72,6 +73,15 @@ namespace Jvedio.Core.UserControls
                 RaisePropertyChanged();
             }
         }
+        public bool _Nothing;
+        public bool Nothing {
+            get { return _Nothing; }
+
+            set {
+                _Nothing = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
 
@@ -92,9 +102,23 @@ namespace Jvedio.Core.UserControls
 
         }
 
+
+        public void Refresh()
+        {
+            onRefresh?.Invoke(LabelType);
+            Init(Cache);
+        }
+
         public async void Init(List<string> list)
         {
             LabelList = new ObservableCollection<string>();
+            Nothing = true;
+            LabelList.CollectionChanged += (s, ev) => {
+                if (LabelList.Count == 0)
+                    Nothing = true;
+                else
+                    Nothing = false;
+            };
 
             if (list != null) {
                 for (int i = 0; i < list.Count; i++) {

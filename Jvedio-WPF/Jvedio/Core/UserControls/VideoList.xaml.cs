@@ -1355,8 +1355,12 @@ namespace Jvedio.Core.UserControls
 
         private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            vieModel.SearchText = (sender as ListBoxItem).Content.ToString();
-            doSearch(null, null);
+            if (sender is ListBoxItem listBoxItem &&
+                listBoxItem.Content != null &&
+                listBoxItem.Content.ToString() is string search) {
+                BeginSearch(search);
+            }
+
         }
 
         private async void RefreshCandidate(object sender, TextChangedEventArgs e)
@@ -2200,17 +2204,21 @@ namespace Jvedio.Core.UserControls
                     listBox.Items.Count > 0 &&
                     listBox.SelectedItem is string search
                     && !string.IsNullOrEmpty(search)) {
-
-                    searchBox.TextChanged -= RefreshCandidate;
-
-                    vieModel.SearchText = search;
-                    doSearch(null, null);
-                    vieModel.Searching = false;
-
-                    searchBox.TextChanged += RefreshCandidate;
+                    BeginSearch(search);
                 }
             }
 
+        }
+
+        private void BeginSearch(string search)
+        {
+            searchBox.TextChanged -= RefreshCandidate;
+
+            vieModel.SearchText = search;
+            doSearch(null, null);
+            vieModel.Searching = false;
+
+            searchBox.TextChanged += RefreshCandidate;
         }
 
         private void searchTabControl_PreviewKeyUp(object sender, KeyEventArgs e)

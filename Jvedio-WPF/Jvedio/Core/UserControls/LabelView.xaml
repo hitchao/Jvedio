@@ -53,7 +53,17 @@
             </Button>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+        <Image
+            Grid.Row="2"
+            Height="256"
+            Margin="3"
+            Source="pack://application:,,,/Resources/Picture/nothing.png"
+            Visibility="{Binding Nothing, ElementName=labelList, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+        <ScrollViewer
+            Grid.Row="2"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="{Binding Nothing, ElementName=labelList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
             <ItemsControl
                 x:Name="itemsControl"
                 Margin="5"
