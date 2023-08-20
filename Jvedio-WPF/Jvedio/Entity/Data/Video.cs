@@ -842,8 +842,13 @@ namespace Jvedio.Entity
             BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
             BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
 
+            bool findScreenShot = false;
+
+            video.SmallImage = null;
+            video.BigImage = null;
             if (smallimage == null) {
                 SetScreenShotImage(ref video);
+                findScreenShot = true;
                 if (video.ViewImage != null)
                     video.SmallImage = video.ViewImage;
                 else
@@ -853,9 +858,9 @@ namespace Jvedio.Entity
             }
 
             if (bigimage == null) {
-                if (video.ViewImage == null) {
+                if (!findScreenShot) 
                     SetScreenShotImage(ref video);
-                }
+                
                 if (video.ViewImage != null)
                     video.BigImage = video.ViewImage;
                 else

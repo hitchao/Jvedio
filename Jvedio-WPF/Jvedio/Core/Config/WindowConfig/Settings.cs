@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.Config.Base;
+using Jvedio.Core.Media;
 using System.Collections.Generic;
 
 namespace Jvedio.Core.WindowConfig
@@ -31,6 +32,8 @@ namespace Jvedio.Core.WindowConfig
             HotKeyVK = 0;
 
             Debug = false;
+            ImageCache = true;
+            CacheExpiration = Jvedio.Core.Media.ImageCache.DEFAULT_CACHE_EXPIRATION;
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };
@@ -179,6 +182,22 @@ namespace Jvedio.Core.WindowConfig
             get { return _Debug; }
             set {
                 _Debug = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _ImageCache;
+        public bool ImageCache {
+            get { return _ImageCache; }
+            set {
+                _ImageCache = value;
+                RaisePropertyChanged();
+            }
+        }
+        public long _CacheExpiration;
+        public long CacheExpiration {
+            get { return _CacheExpiration; }
+            set {
+                _CacheExpiration = value;
                 RaisePropertyChanged();
             }
         }

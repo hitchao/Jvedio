@@ -7,6 +7,13 @@ namespace Jvedio.Core.Media
 {
     public static class ImageCache
     {
+        /// <summary>
+        /// 默认图片缓存时长
+        /// </summary>
+        public const long DEFAULT_CACHE_EXPIRATION = 10;
+
+
+
         private static MemoryCache _Cache { get; set; } = MemoryCache.Default;
 
         static ImageCache()
@@ -23,6 +30,11 @@ namespace Jvedio.Core.Media
 
             // 读取该文件，加入缓存
             BitmapImage img = ImageHelper.ReadImageFromFile(path, DecodePixelWidth);
+
+            if (!ConfigManager.Settings.ImageCache)
+                return img;
+
+
             if (img == null)
                 return null;
             Add(path, img);
@@ -34,7 +46,7 @@ namespace Jvedio.Core.Media
             CacheItem item = new CacheItem(path, image);
             if (!_Cache.Contains(path)) {
                 CacheItemPolicy policy = new CacheItemPolicy();
-                policy.SlidingExpiration = TimeSpan.FromSeconds(10);
+                policy.SlidingExpiration = TimeSpan.FromMinutes(ConfigManager.Settings.CacheExpiration);
                 _Cache.Add(item, policy);
             }
 
@@ -50,7 +62,7 @@ namespace Jvedio.Core.Media
 
         public static void Clear()
         {
-            _Cache.Dispose();
+            _Cache?.Dispose();
             GC.Collect();
         }
     }

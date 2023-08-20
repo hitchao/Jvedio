@@ -1639,14 +1639,11 @@ namespace Jvedio
 
         private void BeginDragTabItem(object sender, MouseButtonEventArgs e)
         {
-            CanDragTabItem = true;
-            CurrentDragElement = sender as FrameworkElement;
-            Mouse.Capture(CurrentDragElement, CaptureMode.Element);
 
-            Border border = (Border)sender;
-            if (border == null || border.Tag == null)
+            FrameworkElement ele = (FrameworkElement)sender;
+            if (ele == null || ele.Tag == null)
                 return;
-            string idxStr = border.Tag.ToString();
+            string idxStr = ele.Tag.ToString();
             if (string.IsNullOrEmpty(idxStr) || vieModel.TabItems == null ||
                 vieModel.TabItems.Count <= 0)
                 return;
@@ -1654,6 +1651,11 @@ namespace Jvedio
             if (index >= 0) {
                 vieModel.TabItemManager?.SetTabSelected(index);
             }
+
+            CanDragTabItem = true;
+            CurrentDragElement = ele;
+            Mouse.Capture(CurrentDragElement, CaptureMode.Element);
+
         }
 
         private void SetTabSelected(object sender, MouseButtonEventArgs e)
@@ -1667,6 +1669,9 @@ namespace Jvedio
         {
             if (!CanDragTabItem)
                 return;
+
+            this.Cursor = Cursors.SizeWE;
+
         }
 
         private void BaseWindow_PreviewKeyUp(object sender, KeyEventArgs e)

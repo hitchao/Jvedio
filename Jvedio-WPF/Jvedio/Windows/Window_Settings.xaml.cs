@@ -2,6 +2,7 @@
 using Jvedio.Core.Crawler;
 using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
+using Jvedio.Core.Media;
 using Jvedio.Core.Plugins.Crawler;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
@@ -1436,6 +1437,12 @@ namespace Jvedio
         private void ShowCrawlerHelp(object sender, RoutedEventArgs e)
         {
             MessageCard.Info(LangManager.GetValueByKey("CrawlerServerHint"));
+        }
+
+        private void ClearCache(object sender, RoutedEventArgs e)
+        {
+            ImageCache.Clear();
+            MessageNotify.Success(LangManager.GetValueByKey("Message_Success"));
         }
     }
 }

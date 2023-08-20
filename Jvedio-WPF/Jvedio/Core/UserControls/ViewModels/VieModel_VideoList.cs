@@ -517,7 +517,13 @@ namespace Jvedio.Core.UserControls.ViewModels
                 }
             } else {
                 if (idx < CurrentVideoList.Count) {
-                    CurrentVideoList[idx] = video;
+                    if (CurrentVideoList[idx].DataID == video.DataID) {
+                        // 不知为啥，如果 2 个对象相等，则不会触发 notify
+                        Video temp = CurrentVideoList[idx];
+                        RefreshData(ref temp, video);
+                    } else {
+                        CurrentVideoList[idx] = video;
+                    }
                 }
             }
         }

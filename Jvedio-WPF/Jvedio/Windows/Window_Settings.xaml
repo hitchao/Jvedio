@@ -319,6 +319,47 @@
                                 <CheckBox Content="{DynamicResource ImageStretch}" IsChecked="{Binding MainImageAutoMode, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
                             </StackPanel>
                         </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Style="{StaticResource SettingTitleStyle}" Text="{DynamicResource Picture}" />
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="5"
+                                Orientation="Vertical">
+                                <CheckBox
+                                    Click="ClearCache"
+                                    Content="{DynamicResource UseCache}"
+                                    IsChecked="{Binding ImageCache, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
+                                <StackPanel Margin="5" Orientation="Horizontal">
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="时长" />
+                                    <TextBlock
+                                        Margin="0"
+                                        HorizontalAlignment="Left"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="(min)" />
+                                    <super:Slider
+                                        Width="300"
+                                        Margin="10,0"
+                                        Maximum="60"
+                                        Minimum="1"
+                                        Value="{Binding CacheExpiration, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
+
+                                </StackPanel>
+                                <Button
+                                    HorizontalAlignment="Left"
+                                    Click="ClearCache"
+                                    Content="{DynamicResource ClearCache}"
+                                    Style="{StaticResource ButtonWarning}" />
+                            </StackPanel>
+                        </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
