@@ -80,7 +80,7 @@
                 AllowsTransparency="True"
                 Placement="Mouse"
                 PopupAnimation="Fade"
-                StaysOpen="True">
+                StaysOpen="False">
                 <Grid Margin="5">
                     <Border
                         Margin="5"

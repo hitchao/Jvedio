@@ -256,14 +256,10 @@ namespace Jvedio.ViewModel
                 return;
             }
             Video.SetTagStamps(ref video); // 设置标签戳
-            Video.HandleEmpty(ref video);
+            Video.SetTileAndDate(ref video);
+            Video.SetAsso(ref video);
 
-            // 设置关联
-            HashSet<long> set = associationMapper.GetAssociationDatas(video.DataID);
-            video.HasAssociation = set.Count > 0;
-            video.AssociationList = set.ToList();
             CurrentVideo = video;
-            Logger.Info($"set assoc");
 
             // 磁力
             List<Magnet> magnets = magnetsMapper.SelectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
@@ -322,7 +318,7 @@ namespace Jvedio.ViewModel
                     bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.SetTagStamps(ref video); // 设置标签戳
-                Video.HandleEmpty(ref video); // 设置标题和发行日期
+                Video.SetTileAndDate(ref video); // 设置标题和发行日期
 
                 if (ConfigManager.Settings.AutoGenScreenShot) {
                     string path = video.GetScreenShot();

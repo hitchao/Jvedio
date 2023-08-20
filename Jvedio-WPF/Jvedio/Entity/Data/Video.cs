@@ -3,6 +3,7 @@ using Jvedio.Core.Global;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
 using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper;
 using Newtonsoft.Json;
 using SuperControls.Style;
 using SuperUtils.Common;
@@ -24,6 +25,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static Jvedio.App;
+using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace Jvedio.Entity
 {
@@ -238,11 +240,33 @@ namespace Jvedio.Entity
         [TableField(exist: false)]
         public List<Magnet> Magnets { get; set; }
 
-        [TableField(exist: false)]
-        public bool HasAssociation { get; set; }
+
+        private bool _HasAssociation;
 
         [TableField(exist: false)]
-        public List<long> AssociationList { get; set; }
+        public bool HasAssociation {
+
+            get { return _HasAssociation; }
+
+
+            set {
+                _HasAssociation = value;
+                RaisePropertyChanged();
+            }
+
+        }
+
+
+        private ObservableCollection<long> _AssociationList;
+
+        [TableField(exist: false)]
+        public ObservableCollection<long> AssociationList {
+            get { return _AssociationList; }
+            set {
+                _AssociationList = value;
+                RaisePropertyChanged();
+            }
+        }
 
         // 仅用于 NFO 导入的时候的图片地址
         [TableField(exist: false)]
@@ -299,19 +323,27 @@ namespace Jvedio.Entity
             return wrapper;
         }
 
+        /// <summary>
+        /// 设置标签戳
+        /// </summary>
+        /// <param name="video"></param>
         public static void SetTagStamps(ref Video video)
         {
+            video.TagStamp = new ObservableCollection<TagStamp>();
             if (video == null || string.IsNullOrEmpty(video.TagIDs))
                 return;
             List<long> list = video.TagIDs.Split(',').Select(arg => long.Parse(arg)).ToList();
             if (list != null && list.Count > 0) {
-                video.TagStamp = new ObservableCollection<TagStamp>();
                 foreach (var item in Jvedio.Entity.CommonSQL.TagStamp.TagStamps.Where(arg => list.Contains(arg.TagID)).ToList())
                     video.TagStamp.Add(item);
             }
         }
 
-        public static void HandleEmpty(ref Video video)
+        /// <summary>
+        /// 设置标题和发行日期
+        /// </summary>
+        /// <param name="video"></param>
+        public static void SetTileAndDate(ref Video video)
         {
             if (ConfigManager.VideoConfig.ShowFileNameIfTitleEmpty
                 && !string.IsNullOrEmpty(video.Path) && string.IsNullOrEmpty(video.Title))
@@ -787,23 +819,50 @@ namespace Jvedio.Entity
                 image = MetaData.DefaultBigImage;
             video.ViewImage = image;
         }
+
+
+        private static void SetScreenShotImage(ref Video video)
+        {
+
+            if (ConfigManager.Settings.AutoGenScreenShot) {
+                // 检查有无截图
+                string path = video.GetScreenShot();
+                if (Directory.Exists(path)) {
+                    string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+                    if (array.Length > 0) {
+                        Video.SetImage(ref video, array[array.Length / 2]);
+                    }
+                }
+            }
+        }
+
+
         public static void SetImage(ref Video video, int imageMode = 0)
         {
-            //if (imageMode < 2) {
-
             BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
             BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
 
-            if (smallimage == null)
-                smallimage = MetaData.DefaultSmallImage;
-            if (bigimage == null)
-                bigimage = MetaData.DefaultBigImage;
-            video.SmallImage = smallimage;
-            video.BigImage = bigimage;
-            //} else if (imageMode == 2) {
-            // string gifpath = Video.parseImagePath(video.GifImagePath);
-            // if (File.Exists(gifpath)) video.GifUri = new Uri(gifpath);
-            //}
+            if (smallimage == null) {
+                SetScreenShotImage(ref video);
+                if (video.ViewImage != null)
+                    video.SmallImage = video.ViewImage;
+                else
+                    video.SmallImage = DefaultSmallImage;
+            } else {
+                video.SmallImage = smallimage;
+            }
+
+            if (bigimage == null) {
+                if (video.ViewImage == null) {
+                    SetScreenShotImage(ref video);
+                }
+                if (video.ViewImage != null)
+                    video.BigImage = video.ViewImage;
+                else
+                    video.BigImage = DefaultBigImage;
+            } else {
+                video.BigImage = bigimage;
+            }
         }
 
         /// <summary>
@@ -956,6 +1015,36 @@ namespace Jvedio.Entity
             hashCode = hashCode * -1521134295 + base.GetHashCode();
             hashCode = hashCode * -1521134295 + DataID.GetHashCode();
             return hashCode;
+        }
+
+        /// <summary>
+        /// 设置关联
+        /// </summary>
+        /// <param name="video"></param>
+        /// <param name="dataID"></param>
+        public static void SetAsso(ref Video video)
+        {
+            video.HasAssociation = false;
+            video.AssociationList = new ObservableCollection<long>();
+
+            HashSet<long> set = MapperManager.associationMapper.GetAssociationDatas(video.DataID);
+
+            if (set != null) {
+                video.HasAssociation = set.Count > 0;
+                foreach (var item in set.ToArray()) {
+                    video.AssociationList.Add(item);
+                }
+            }
+        }
+
+        public static Video GetById(long dataID)
+        {
+            Video video = MapperManager.videoMapper.SelectVideoByID(dataID);
+            SetImage(ref video);
+            SetTagStamps(ref video);
+            SetTileAndDate(ref video);
+            SetAsso(ref video);
+            return video;
         }
     }
 }

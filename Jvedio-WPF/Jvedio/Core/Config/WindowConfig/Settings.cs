@@ -81,6 +81,10 @@ namespace Jvedio.Core.WindowConfig
             }
         }
 
+
+        /// <summary>
+        /// 无封面时将截图作为封面
+        /// </summary>
         public bool AutoGenScreenShot { get; set; }
 
         public long DefaultDBID { get; set; }

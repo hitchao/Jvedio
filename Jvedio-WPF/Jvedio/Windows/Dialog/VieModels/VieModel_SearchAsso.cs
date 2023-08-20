@@ -220,7 +220,7 @@ namespace Jvedio.ViewModel
                 if (bigimage == null)
                     bigimage = smallimage;
                 video.BigImage = bigimage;
-                Video.HandleEmpty(ref video); // 设置标题和发行日期
+                Video.SetTileAndDate(ref video); // 设置标题和发行日期
                 Logger.Info($"load assoc video: {video.VID}");
                 App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadAssoVideoDelegate(LoadAssoVideo), video, i);
             }
@@ -258,7 +258,7 @@ namespace Jvedio.ViewModel
                     if (video == null)
                         continue;
                     Logger.Info($"load exist assoc data: {video.VID}");
-                    Video.HandleEmpty(ref video); // 设置标题和发行日期
+                    Video.SetTileAndDate(ref video); // 设置标题和发行日期
                 }
 
                 if (CurrentExistAssocData != null)

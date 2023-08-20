@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.App;
@@ -510,14 +511,12 @@ namespace Jvedio.Core.UserControls.ViewModels
                 return;
             if (CurrentVideoList.Count < PageSize) {
                 if (idx < CurrentVideoList.Count) {
-                    //CurrentVideoList[idx] = null;
                     CurrentVideoList[idx] = video;
                 } else {
                     CurrentVideoList.Add(video);
                 }
             } else {
                 if (idx < CurrentVideoList.Count) {
-                    //CurrentVideoList[idx] = null;
                     CurrentVideoList[idx] = video;
                 }
             }
@@ -566,64 +565,6 @@ namespace Jvedio.Core.UserControls.ViewModels
             ExtraWrapper = GetWrapper(searchType);
             Select();
             return true;
-        }
-
-        public void LoadViewAssoData(long dataID)
-        {
-            if (ViewAssociationDatas == null)
-                ViewAssociationDatas = new ObservableCollection<Video>();
-            ViewAssociationDatas.Clear();
-            GC.Collect();
-            Video currentVideo = CurrentVideoList.Where(arg => arg.DataID.Equals(dataID)).FirstOrDefault();
-            if (currentVideo.AssociationList == null || currentVideo.AssociationList.Count <= 0)
-                return;
-            SelectWrapper<Video> wrapper = Video.InitWrapper();
-            wrapper.In("metadata.DataID", currentVideo.AssociationList.Select(arg => arg.ToString()));
-            wrapper.Select(SelectFields);
-
-            string sql = VideoMapper.SQL_BASE;
-
-            sql = wrapper.ToSelect(false) + sql + wrapper.ToWhere(false);
-
-            List<Dictionary<string, object>> list = metaDataMapper.Select(sql);
-            List<Video> videos = metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
-
-            if (videos == null)
-                return;
-
-            for (int i = 0; i < videos.Count; i++) {
-                Video video = videos[i];
-                if (video == null)
-                    continue;
-                BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-                if (smallimage == null)
-                    smallimage = MetaData.DefaultSmallImage;
-                if (bigimage == null)
-                    bigimage = smallimage;
-                video.BigImage = bigimage;
-                Video.SetTagStamps(ref video); // 设置标签戳
-                Video.HandleEmpty(ref video); // 设置标题和发行日期
-
-                if (ConfigManager.Settings.AutoGenScreenShot) {
-                    string path = video.GetScreenShot();
-                    if (Directory.Exists(path)) {
-                        string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
-                        if (array.Length > 0) {
-                            Video.SetImage(ref video, array[array.Length / 2]);
-                            video.BigImage = null;
-                            video.BigImage = video.ViewImage;
-                        }
-                    }
-                }
-
-                App.Current.Dispatcher.Invoke(DispatcherPriority.Background, new LoadViewAssoVideoDelegate(LoadViewAssoVideo), video, i);
-            }
-
-            // 清除
-            for (int i = ViewAssociationDatas.Count - 1; i > videos.Count - 1; i--) {
-                ViewAssociationDatas.RemoveAt(i);
-            }
         }
 
         public void ToLimit<T>(IWrapper<T> wrapper)
@@ -751,7 +692,6 @@ namespace Jvedio.Core.UserControls.ViewModels
                     Nothing = CurrentVideoList.Count == 0;
                 };
             }
-            int imageMode = ShowImageMode;
             for (int i = 0; i < VideoList.Count; i++) {
                 try {
                     RenderVideoCT.ThrowIfCancellationRequested();
@@ -764,16 +704,10 @@ namespace Jvedio.Core.UserControls.ViewModels
                 Video video = VideoList[i];
                 if (video == null)
                     continue;
-                Video.SetImage(ref video, imageMode);
+                Video.SetImage(ref video, ShowImageMode);
                 Video.SetTagStamps(ref video); // 设置标签戳
-                Video.HandleEmpty(ref video); // 设置标题和发行日期
-
-                // 设置关联
-                HashSet<long> set = associationMapper.GetAssociationDatas(video.DataID);
-                if (set != null) {
-                    video.HasAssociation = set.Count > 0;
-                    video.AssociationList = set.ToList();
-                }
+                Video.SetTileAndDate(ref video); // 设置标题和发行日期
+                Video.SetAsso(ref video);
 
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);
                 RenderProgress = (int)(100 * (i + 1) / (float)VideoList.Count);
@@ -842,6 +776,37 @@ namespace Jvedio.Core.UserControls.ViewModels
 
                 return result;
             });
+        }
+
+        public void RefreshData(long dataID)
+        {
+            if (CurrentVideoList == null || CurrentVideoList.Count == 0)
+                return;
+            int idx = -1;
+            for (int i = 0; i < VideoList.Count; i++) {
+                if (VideoList[i].DataID == dataID) {
+                    idx = i;
+                    break;
+                }
+            }
+            if (idx < 0 || idx >= CurrentVideoList.Count)
+                return;
+            Video video = Video.GetById(dataID);
+            Video temp = VideoList[idx];
+            RefreshData(ref temp, video);
+            temp = CurrentVideoList[idx];
+            RefreshData(ref temp, video);
+        }
+
+        private void RefreshData(ref Video origin, Video target)
+        {
+            System.Reflection.PropertyInfo[] propertyInfos = target.GetType().GetProperties();
+            foreach (var item in propertyInfos) {
+                object v = item.GetValue(target);
+                if (v != null) {
+                    item.SetValue(origin, v);
+                }
+            }
         }
 
         private void SetGenreCandidate(string field, List<Dictionary<string, object>> list, ref List<string> result)

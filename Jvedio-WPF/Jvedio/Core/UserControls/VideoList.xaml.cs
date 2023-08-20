@@ -205,7 +205,7 @@ namespace Jvedio.Core.UserControls
                         string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
                         if (array.Length > 0) {
                             Video.SetImage(ref video, array[array.Length / 2]);
-                            //data[i].BigImage = null;
+                            data[i].BigImage = null;
                             data[i].BigImage = video.ViewImage;
                         }
                     }
@@ -443,7 +443,7 @@ namespace Jvedio.Core.UserControls
             Window_SearchAsso window_SearchAsso = new Window_SearchAsso(vieModel.SelectedVideo);
             window_SearchAsso.Owner = Application.Current.MainWindow as Main;
             window_SearchAsso.OnDataRefresh += (dataid) => {
-                RefreshData(dataid);
+                vieModel.RefreshData(dataid);
             };
             window_SearchAsso.OnSelectData += () => {
                 SetSelected();
@@ -453,14 +453,6 @@ namespace Jvedio.Core.UserControls
 
         }
 
-        private void ViewAssocDatas(object sender, RoutedEventArgs e)
-        {
-            //AssoDataPopup.IsOpen = true;
-            long dataID = GetDataID(sender as FrameworkElement);
-            if (dataID <= 0)
-                return;
-            vieModel.LoadViewAssoData(dataID);
-        }
 
 
 
@@ -834,7 +826,7 @@ namespace Jvedio.Core.UserControls
                     Logger.Info($"update vid from {oldVID} to {newVID}");
                     if (videoMapper.UpdateFieldById("VID", newVID, video.DataID)) {
                         successNum++;
-                        RefreshData(video.DataID);
+                        vieModel.RefreshData(video.DataID);
                     }
                 } else {
                     Logger.Warn($"{num} not starts with 00");
@@ -962,53 +954,7 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        public void RefreshData(long dataID)
-        {
-            if (vieModel.CurrentVideoList?.Count <= 0)
-                return;
-            for (int i = 0; i < vieModel.CurrentVideoList.Count; i++) {
-                if (vieModel.CurrentVideoList[i]?.DataID == dataID) {
-                    Video video = videoMapper.SelectVideoByID(dataID);
-                    if (video == null)
-                        continue;
-                    Video.SetImage(ref video);
-                    Video.SetTagStamps(ref video); // 设置标签戳
-                    Video.HandleEmpty(ref video); // 设置标题和发行日期
 
-                    // 设置关联
-                    HashSet<long> set = associationMapper.GetAssociationDatas(dataID);
-                    if (set != null) {
-                        video.HasAssociation = set.Count > 0;
-                        video.AssociationList = set.ToList();
-                    }
-
-                    vieModel.CurrentVideoList[i].SmallImage = null;
-                    vieModel.CurrentVideoList[i].BigImage = null;
-                    //vieModel.CurrentVideoList[i] = null;
-
-                    vieModel.CurrentVideoList[i] = video;
-                    vieModel.CurrentVideoList[i].SmallImage = video.SmallImage;
-                    vieModel.CurrentVideoList[i].BigImage = video.BigImage;
-
-                    if (ConfigManager.Settings.AutoGenScreenShot) {
-                        if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage) {
-                            // 检查有无截图
-                            string path = video.GetScreenShot();
-                            if (Directory.Exists(path)) {
-                                string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
-                                if (array.Length > 0) {
-                                    Video.SetImage(ref video, array[array.Length / 2]);
-                                    vieModel.CurrentVideoList[i].BigImage = null;
-                                    vieModel.CurrentVideoList[i].BigImage = video.ViewImage;
-                                }
-                            }
-                        }
-                    }
-
-                    break;
-                }
-            }
-        }
 
 
         public void CopyAssocFile(object sender, RoutedEventArgs e)
@@ -1239,27 +1185,6 @@ namespace Jvedio.Core.UserControls
         }
 
 
-
-        public void SetImageMode()
-        {
-            ItemsControl itemsControl = MovieItemsControl;
-            if (itemsControl == null)
-                return;
-
-            for (int i = 0; i < itemsControl.Items.Count; i++) {
-                ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-                if (presenter == null)
-                    continue;
-                ViewVideo viewVideo = FindElementByName<ViewVideo>(presenter, "viewVideo");
-                if (viewVideo == null)
-                    continue;
-                long dataID = GetDataID(viewVideo);
-                //viewVideo.SetImageMode(vieModel.ShowImageMode, vieModel.GlobalImageWidth);
-            }
-        }
-
-
-
         private long GetDataID(UIElement o, bool findParent = true)
         {
             FrameworkElement element = o as FrameworkElement;
@@ -1450,7 +1375,7 @@ namespace Jvedio.Core.UserControls
             downloadTask.onDownloadSuccess += (s, ev) => {
                 DownLoadTask task = s as DownLoadTask;
                 Dispatcher.Invoke(() => {
-                    RefreshData(task.DataID);
+                    vieModel.RefreshData(task.DataID);
                     // 更新图片存在
                     if (task.Success)
                         UpdateImageIndex(video, true, true);
@@ -1620,43 +1545,6 @@ namespace Jvedio.Core.UserControls
             //}
         }
 
-
-
-
-        public void PlayVideo(object sender, MouseButtonEventArgs e)
-        {
-            //AssoDataPopup.IsOpen = false;
-            FrameworkElement el = sender as FrameworkElement;
-            long dataId = GetDataID(el);
-            if (dataId <= 0)
-                return;
-            Video video = GetVideoFromChildEle(el, dataId);
-            if (video == null) {
-                MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
-                return;
-            }
-            string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAG_ID_NEW_ADD}' and DataID='{dataId}'";
-            tagStampMapper.ExecuteNonQuery(sql);
-            onInitTagStamps?.Invoke();
-            RefreshData(dataId);
-            Video.PlayVideoWithPlayer(video.Path, dataId);
-        }
-
-        public void PlayAssocVideo(object sender, MouseButtonEventArgs e)
-        {
-            //AssoDataPopup.IsOpen = false;
-            FrameworkElement el = sender as FrameworkElement;
-            long dataId = GetDataID(el);
-            if (dataId <= 0)
-                return;
-            Video video = getAssocVideo(dataId);
-            if (video == null) {
-                MessageNotify.Error(LangManager.GetValueByKey("CanNotPlay"));
-                return;
-            }
-
-            Video.PlayVideoWithPlayer(video.Path, dataId);
-        }
 
         public void GenerateGif(object sender, RoutedEventArgs e)
         {
@@ -1839,7 +1727,7 @@ namespace Jvedio.Core.UserControls
                 toRefreshData.Add(video.DataID);
             }
             foreach (var item in toRefreshData) {
-                RefreshData(item);
+                vieModel.RefreshData(item);
             }
         }
 
@@ -2029,7 +1917,7 @@ namespace Jvedio.Core.UserControls
             string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAG_ID_NEW_ADD}' and DataID='{dataId}'";
             tagStampMapper.ExecuteNonQuery(sql);
             onInitTagStamps?.Invoke();
-            RefreshData(dataId);
+            vieModel.RefreshData(dataId);
             Video.PlayVideoWithPlayer(video.Path, dataId);
         }
 

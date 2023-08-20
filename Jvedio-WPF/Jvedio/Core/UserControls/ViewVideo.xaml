@@ -87,7 +87,7 @@
                                 <Style.Triggers>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding HasAssociation, Mode=OneWay}" Value="True" />
+                                            <Condition Binding="{Binding Path=HasAssociation, Mode=OneWay}" Value="True" />
                                             <Condition Binding="{Binding Path=AssoVisible, Mode=OneWay, ElementName=viewVideo}" Value="True" />
                                         </MultiDataTrigger.Conditions>
                                         <MultiDataTrigger.Setters>

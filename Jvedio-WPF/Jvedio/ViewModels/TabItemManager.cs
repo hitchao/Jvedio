@@ -105,12 +105,7 @@ namespace Jvedio.ViewModels
             Video currentVideo = MapperManager.videoMapper.SelectById(wrapper);
 
             // 设置关联
-            HashSet<long> set = MapperManager.associationMapper.GetAssociationDatas(currentVideo.DataID);
-            if (set != null) {
-                currentVideo.HasAssociation = set.Count > 0;
-                currentVideo.AssociationList = set.ToList();
-            }
-
+            Video.SetAsso(ref currentVideo);
 
             if (currentVideo.AssociationList == null || currentVideo.AssociationList.Count <= 0)
                 return;
