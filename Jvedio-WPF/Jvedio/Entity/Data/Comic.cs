@@ -10,10 +10,7 @@ namespace Jvedio.Entity.Data
         [TableId(IdType.AUTO)]
         public long CID { get; set; }
 
-#pragma warning disable CS0108 // “Comic.DataID”隐藏继承的成员“Picture.DataID”。如果是有意隐藏，请使用关键字 new。
-        public long DataID { get; set; }
 
-#pragma warning restore CS0108 // “Comic.DataID”隐藏继承的成员“Picture.DataID”。如果是有意隐藏，请使用关键字 new。
         public string Language { get; set; }
 
         public ComicType ComicType { get; set; }

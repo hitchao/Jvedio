@@ -226,7 +226,7 @@ namespace Jvedio
             }
         }
 
-        private async void StartDownLoadActorImage()
+        private  void StartDownLoadActorImage()
         {
             // await HttpHelper.AsyncDownLoadFile(actorInfo.ImageUrl, CrawlerHeader.Default);
         }
@@ -650,7 +650,7 @@ namespace Jvedio
                 FileHelper.TryOpenUrl(url);
         }
 
-        public async void TranslateMovie(object sender, RoutedEventArgs e)
+        public  void TranslateMovie(object sender, RoutedEventArgs e)
         {
             // if (IsTranslating) return;
 

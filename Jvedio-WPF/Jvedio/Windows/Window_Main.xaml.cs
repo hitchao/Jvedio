@@ -168,8 +168,6 @@ namespace Jvedio
 
             BindingEventAfterRender();
             InitTagStamp();
-            vieModel.MainDataChecked = true;
-
             OpenListen();
             InitUpgrade();
             CheckServerStatus();
@@ -384,7 +382,6 @@ namespace Jvedio
         {
             string message = (e as MessageCallBackEventArgs).Message;
             int.TryParse(message, out int value);
-            vieModel.DownloadLongTaskDelay = value / 1000;
         }
 
         private void onDownloading()
@@ -820,8 +817,7 @@ namespace Jvedio
             ConfigManager.Main.Y = this.Top;
             ConfigManager.Main.Width = this.Width;
             ConfigManager.Main.Height = this.Height;
-            ConfigManager.Main.ClassifySelectedIndex = vieModel.ClassifySelectedIndex;
-            ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
+            // ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -922,9 +918,18 @@ namespace Jvedio
 
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
         {
+
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.F) {
                 SetTabItemStatus(TabActionType.Search);
-            } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Up) {
+                return;
+            }
+
+            if (vieModel.Searching) {
+                return;
+            }
+
+
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Up) {
                 SetTabItemStatus(TabActionType.GoToTop);
             } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Down) {
                 SetTabItemStatus(TabActionType.GoToBottom);
@@ -986,13 +991,8 @@ namespace Jvedio
             ConfigManager.Settings.DefaultDBID = vieModel.CurrentAppDataBase.DBId;
 
             // 切换数据库
-            vieModel.IsRefresh = true;
             vieModel.Statistic();
-
             vieModel.TabItemManager.RefreshAllTab();
-
-
-            vieModel.MainDataChecked = true;
         }
 
         public void RefreshData(long dataID)
@@ -1417,23 +1417,23 @@ namespace Jvedio
 
 
 
-        private Window_Server window_Server;
+        //private Window_Server window_Server;
 
         private void OpenServer(object sender, RoutedEventArgs e)
         {
             MessageNotify.Info("开发中");
             return;
 
-            if (window_Server != null)
-                window_Server.Close();
-            window_Server = new Window_Server();
+            //if (window_Server != null)
+            //    window_Server.Close();
+            //window_Server = new Window_Server();
 
-            window_Server.OnServerStatusChanged += (status) => {
-                vieModel.ServerStatus = status;
-            };
+            //window_Server.OnServerStatusChanged += (status) => {
+            //    vieModel.ServerStatus = status;
+            //};
 
-            window_Server.Owner = this;
-            window_Server.ShowDialog();
+            //window_Server.Owner = this;
+            //window_Server.ShowDialog();
 
         }
 
@@ -1670,7 +1670,7 @@ namespace Jvedio
             if (!CanDragTabItem)
                 return;
 
-            this.Cursor = Cursors.SizeWE;
+            //this.Cursor = Cursors.SizeWE;
 
         }
 

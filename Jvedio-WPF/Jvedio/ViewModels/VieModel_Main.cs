@@ -1,7 +1,6 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Server;
 using Jvedio.Core.UserControls;
-using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.Mapper;
@@ -16,7 +15,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using static Jvedio.App;
 using static Jvedio.MapperManager;
@@ -32,8 +30,6 @@ namespace Jvedio.ViewModel
 
         #region "事件"
 
-        public event EventHandler RenderSqlChanged;
-
         private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);
 
         private void AsyncLoadItem<T>(ObservableCollection<T> list, T item) => list.Add(item);
@@ -45,25 +41,12 @@ namespace Jvedio.ViewModel
         /// flag, 只显示一次提示
         /// </summary>
         private static bool ShowRelativeScreen { get; set; } = false;
-        public static string LabelJoinSql { get; set; } =
-         " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
-
-
-        public static Dictionary<string, string> SELECT_TYPE = new Dictionary<string, string>()
-        {
-            { "All", "  " },
-            { "Favorite", "  " },
-            { "RecentWatch", "  " },
-        };
-
 
         private static Main MainWindow { get; set; }
 
         #endregion
 
         #region "属性"
-
-
 
         public string ClickFilterType { get; set; }
 
@@ -76,13 +59,6 @@ namespace Jvedio.ViewModel
 
         #region "RelayCommand"
         public RelayCommand<object> SideButtonCmd { get; set; }
-
-        public RelayCommand<object> ShowActorsCommand { get; set; }
-
-        public RelayCommand<object> ShowLabelsCommand { get; set; }
-
-        public RelayCommand<object> ShowClassifyCommand { get; set; }
-
         public RelayCommand<object> AddNewMovie { get; set; }
         #endregion
 
@@ -112,9 +88,6 @@ namespace Jvedio.ViewModel
         private void InitCmd()
         {
             SideButtonCmd = new RelayCommand<object>(t => HandleSideButtonCmd(t));
-            ShowActorsCommand = new RelayCommand<object>(t => ShowAllActors(t));
-            ShowLabelsCommand = new RelayCommand<object>(t => ShowAllLabels(t));
-            ShowClassifyCommand = new RelayCommand<object>(t => ShowClassify(t));
             AddNewMovie = new RelayCommand<object>(t => AddSingleMovie());
         }
 
@@ -141,6 +114,7 @@ namespace Jvedio.ViewModel
             switch (param) {
                 case "All":
                     TabItemManager.Add(TabType.GeoVideo, LangManager.GetValueByKey("AllVideo"), ExtraWrapper);
+                    MainDataChecked = true;
                     break;
                 case "Favorite":
                     ExtraWrapper.Gt("metadata.Grade", 0);
@@ -168,11 +142,6 @@ namespace Jvedio.ViewModel
                 default:
                     break;
             }
-
-
-            //MainWindow.pagination.CurrentPage = 1;
-            //ClickFilterType = string.Empty;
-            //ShowActorGrid = false;
         }
 
 
@@ -180,6 +149,7 @@ namespace Jvedio.ViewModel
         {
             VideoList.onStatistic += Statistic;
             ViewVideo.onStatistic += Statistic;
+            VideoList.onSearchingChange += (value) => Searching = value;
         }
 
 
@@ -244,32 +214,12 @@ namespace Jvedio.ViewModel
         }
 
 
-
-        private Visibility _ActorProgressBarVisibility = Visibility.Collapsed;
-
-        public Visibility ActorProgressBarVisibility {
-            get { return _ActorProgressBarVisibility; }
-
-            set {
-                _ActorProgressBarVisibility = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-        private int _ClassifySelectedIndex = (int)ConfigManager.Main.ClassifySelectedIndex;
-
-        public int ClassifySelectedIndex {
-            get { return _ClassifySelectedIndex; }
-
-            set {
-                _ClassifySelectedIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private double _SideGridWidth = ConfigManager.Main.SideGridWidth;
 
+
+        /// <summary>
+        /// 侧边栏宽度，不可删
+        /// </summary>
         public double SideGridWidth {
             get { return _SideGridWidth; }
 
@@ -279,49 +229,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private int _TabSelectedIndex = 0;
-
-        public int TabSelectedIndex {
-            get { return _TabSelectedIndex; }
-
-            set {
-                _TabSelectedIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _IsLoadingMovie = true;
-
-        public bool IsLoadingMovie {
-            get { return _IsLoadingMovie; }
-
-            set {
-                _IsLoadingMovie = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _IsLoadingClassify = false;
-
-        public bool IsLoadingClassify {
-            get { return _IsLoadingClassify; }
-
-            set {
-                _IsLoadingClassify = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private Thickness _MainGridThickness = new Thickness(10);
-
-        public Thickness MainGridThickness {
-            get { return _MainGridThickness; }
-
-            set {
-                _MainGridThickness = value;
-                RaisePropertyChanged();
-            }
-        }
 
         #endregion
 
@@ -404,28 +311,6 @@ namespace Jvedio.ViewModel
         #region "Variable"
 
 
-
-        private string _ScanStatus;
-
-        public string ScanStatus {
-            get { return _ScanStatus; }
-
-            set {
-                _ScanStatus = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string _DownloadStatus;
-
-        public string DownloadStatus {
-            get { return _DownloadStatus; }
-
-            set {
-                _DownloadStatus = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private double _RecentWatchedCount = 0;
 
@@ -537,14 +422,6 @@ namespace Jvedio.ViewModel
         }
 
 
-
-
-
-
-
-
-
-
         private string _SearchText = string.Empty;
 
         public string SearchText {
@@ -555,34 +432,17 @@ namespace Jvedio.ViewModel
                 RaisePropertyChanged();
             }
         }
+        private bool _Searching;
 
-
-
-        #endregion
-
-        #region "筛选"
-
-        private bool _IsRefresh = false;
-
-        public bool IsRefresh {
-            get { return _IsRefresh; }
+        public bool Searching {
+            get { return _Searching; }
 
             set {
-                _IsRefresh = value;
+                _Searching = value;
                 RaisePropertyChanged();
             }
         }
 
-        private ObservableCollection<Notice> _Notices;
-
-        public ObservableCollection<Notice> Notices {
-            get { return _Notices; }
-
-            set {
-                _Notices = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private bool _ShowSoft = true;
 
@@ -596,54 +456,7 @@ namespace Jvedio.ViewModel
         }
 
 
-
-        private int _DownloadLongTaskDelay = 0;
-
-        public int DownloadLongTaskDelay {
-            get { return _DownloadLongTaskDelay; }
-
-            set {
-                _DownloadLongTaskDelay = value;
-                if (value > 0)
-                    DisplayDownloadLongTaskDelay = Visibility.Visible;
-                else
-                    DisplayDownloadLongTaskDelay = Visibility.Hidden;
-                RaisePropertyChanged();
-            }
-        }
-
-        private Visibility _DisplayDownloadLongTaskDelay = Visibility.Hidden;
-
-        public Visibility DisplayDownloadLongTaskDelay {
-            get { return _DisplayDownloadLongTaskDelay; }
-
-            set {
-                _DisplayDownloadLongTaskDelay = value;
-                RaisePropertyChanged();
-            }
-        }
-
         #endregion
-
-        public void ShowAllActors(object o)
-        {
-            TabSelectedIndex = 1;
-            // 新开一个 tab 页
-            //SelectActor();
-        }
-
-        public void ShowAllLabels(object o)
-        {
-            TabSelectedIndex = 2;
-            GetLabelList();
-        }
-
-        public void ShowClassify(object o)
-        {
-            TabSelectedIndex = 3;
-        }
-
-
 
         private void AddSingleMovie()
         {
@@ -745,118 +558,6 @@ namespace Jvedio.ViewModel
             }
 
             return result;
-        }
-
-        public SelectWrapper<Video> GetWrapper(SearchField searchType)
-        {
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            if (string.IsNullOrEmpty(SearchText))
-                return null;
-            string formatSearch = SearchText.ToProperSql().Trim();
-            if (string.IsNullOrEmpty(formatSearch))
-                return null;
-            string searchContent = formatSearch;
-
-            switch (searchType) {
-                case SearchField.VID:
-
-                    string vid = JvedioLib.Security.Identify.GetVID(formatSearch);
-                    if (string.IsNullOrEmpty(vid))
-                        searchContent = formatSearch;
-                    else
-                        searchContent = vid;
-                    wrapper.Like("VID", searchContent);
-                    break;
-                default:
-                    wrapper.Like(searchType.ToString(), searchContent);
-                    break;
-            }
-
-            return wrapper;
-        }
-
-
-        public async Task<List<string>> GetSearchCandidate()
-        {
-            return await Task.Run(() => {
-                SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
-                string field = searchType.ToString();
-
-                List<string> result = new List<string>();
-                if (string.IsNullOrEmpty(SearchText))
-                    return result;
-                SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-                SetSortOrder(wrapper); // 按照当前排序
-                wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0);
-                SelectWrapper<Video> selectWrapper = GetWrapper(searchType);
-                if (selectWrapper != null)
-                    wrapper.Join(selectWrapper);
-
-                string condition_sql = wrapper.ToWhere(false) + wrapper.ToOrder()
-                            + $" LIMIT 0,{SEARCH_CANDIDATE_MAX_COUNT}";
-
-                string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
-                            "JOIN metadata " +
-                            "on metadata.DataID=metadata_video.DataID ";
-                if (searchType == SearchField.ActorName)
-                    sql += ActorMapper.SQL_JOIN_ACTOR;
-                else if (searchType == SearchField.LabelName)
-                    sql += LabelJoinSql;
-
-                if (searchType == SearchField.Genre) {
-                    // 类别特殊处理
-                    string genre_sql = $"SELECT {field} FROM metadata_video " +
-                            "JOIN metadata " +
-                            "on metadata.DataID=metadata_video.DataID ";
-                    List<Dictionary<string, object>> list = metaDataMapper.Select(genre_sql);
-                    if (list != null && list.Count > 0)
-                        SetGenreCandidate(field, list, ref result);
-                } else {
-                    List<Dictionary<string, object>> list = metaDataMapper.Select(sql + condition_sql);
-                    if (list != null && list.Count > 0) {
-                        foreach (Dictionary<string, object> dict in list) {
-                            if (!dict.ContainsKey(field))
-                                continue;
-                            string value = dict[field].ToString();
-                            if (string.IsNullOrEmpty(value))
-                                continue;
-                            result.Add(value);
-                        }
-                    }
-                }
-
-                return result;
-            });
-        }
-
-        private void SetGenreCandidate(string field, List<Dictionary<string, object>> list, ref List<string> result)
-        {
-            string search = SearchText.ToProperSql().ToLower();
-            HashSet<string> set = new HashSet<string>();
-            foreach (Dictionary<string, object> dict in list) {
-                if (!dict.ContainsKey(field))
-                    continue;
-                string value = dict[field].ToString();
-                if (string.IsNullOrEmpty(value))
-                    continue;
-                string[] arr = value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries);
-                if (arr != null && arr.Length > 0) {
-                    foreach (var item in arr) {
-                        if (string.IsNullOrEmpty(item))
-                            continue;
-                        set.Add(item);
-                    }
-                }
-            }
-
-            result = set.Where(arg => arg.ToLower().IndexOf(search) >= 0).ToList()
-                .Take(SEARCH_CANDIDATE_MAX_COUNT).ToList();
-        }
-
-
-        public void SetClassifyLoadingStatus(bool loading)
-        {
-            IsLoadingClassify = loading;
         }
 
         /// <summary>
@@ -1012,26 +713,6 @@ namespace Jvedio.ViewModel
 
             return result;
         }
-
-        public void SetSortOrder<T>(IWrapper<T> wrapper, bool random = false)
-        {
-            if (wrapper == null)
-                return;
-            int sortIndex = 0;
-            bool SortDescending = false;
-            if (sortIndex < 0 || sortIndex >= VieModel_VideoList.SortDict.Count)
-                sortIndex = 0;
-            string sortField = VieModel_VideoList.SortDict[sortIndex];
-            if (random)
-                wrapper.Asc("RANDOM()");
-            else {
-                if (SortDescending)
-                    wrapper.Desc(sortField);
-                else
-                    wrapper.Asc(sortField);
-            }
-        }
-
 
         /// <summary>
         /// 统计：加载时间 <70ms (15620个信息)

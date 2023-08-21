@@ -30,8 +30,10 @@ namespace Jvedio.Core.UserControls.ViewModels
 
         #region "事件"
 
-        public Action<bool> onScroll;
+        //public Action<bool> onScroll;
         public Action<long> onPageChange;
+
+        public static Action<bool> onSearchingChange;
 
         public event EventHandler PageChangedCompleted;
 
@@ -113,6 +115,11 @@ namespace Jvedio.Core.UserControls.ViewModels
         /// 侧边栏点击进入的
         /// </summary>
         public SelectWrapper<Video> ExtraWrapper { get; set; }
+
+        /// <summary>
+        /// 搜索
+        /// </summary>
+        public SelectWrapper<Video> SearchWrapper { get; set; }
 
         private List<Video> _SelectedVideo { get; set; } = new List<Video>();
 
@@ -304,6 +311,7 @@ namespace Jvedio.Core.UserControls.ViewModels
 
             set {
                 _Searching = value;
+                onSearchingChange?.Invoke(value);
                 RaisePropertyChanged();
             }
         }
@@ -537,7 +545,7 @@ namespace Jvedio.Core.UserControls.ViewModels
 
 
 
-        public SelectWrapper<Video> GetWrapper(SearchField searchType)
+        public SelectWrapper<Video> GetSearchWrapper(SearchField searchType)
         {
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             if (string.IsNullOrEmpty(SearchText))
@@ -568,7 +576,7 @@ namespace Jvedio.Core.UserControls.ViewModels
 
         public bool Query(SearchField searchType = SearchField.VID)
         {
-            ExtraWrapper = GetWrapper(searchType);
+            SearchWrapper = GetSearchWrapper(searchType);
             Select();
             return true;
         }
@@ -583,7 +591,6 @@ namespace Jvedio.Core.UserControls.ViewModels
         public async void Select(bool random = false)
         {
             Logger.Info("0.Select");
-            //TabSelectedIndex = 0; // 影片
 
             // 判断当前获取的队列
             while (PageQueue.Count > 1) {
@@ -593,16 +600,9 @@ namespace Jvedio.Core.UserControls.ViewModels
 
             // 当前有视频在渲染的时候，打断渲染，等待结束
             while (Rendering) {
-                RenderVideoCTS?.Cancel(); // 取消加载
+                RenderVideoCTS?.Cancel();
                 await Task.Delay(100);
             }
-
-            App.Current.Dispatcher.Invoke((Action)delegate {
-                onScroll?.Invoke(true);
-                //ScrollViewer scrollViewer =
-                //    MainWindow.FindVisualChild<ScrollViewer>(MainWindow.MovieItemsControl);
-                //scrollViewer?.ScrollToTop(); // 滚到顶部
-            });
 
             SelectWrapper<Video> wrapper = Video.InitWrapper();
 
@@ -618,6 +618,12 @@ namespace Jvedio.Core.UserControls.ViewModels
                 wrapper.Join(ExtraWrapper);
                 if (!string.IsNullOrEmpty(ExtraWrapper.ExtraSql))
                     sql += ExtraWrapper.ExtraSql; // 一些 join 语句
+            }
+
+            if (SearchWrapper != null) {
+                wrapper.Join(SearchWrapper);
+                if (!string.IsNullOrEmpty(SearchWrapper.ExtraSql))
+                    sql += SearchWrapper.ExtraSql; // 一些 join 语句
             }
 
             if (FilterWrapper != null) {
@@ -743,20 +749,35 @@ namespace Jvedio.Core.UserControls.ViewModels
                 SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
                 SetSortOrder(wrapper); // 按照当前排序
                 wrapper.Eq("metadata.DBId", ConfigManager.Main.CurrentDBId).Eq("metadata.DataType", 0);
-                SelectWrapper<Video> selectWrapper = GetWrapper(searchType);
+                SelectWrapper<Video> selectWrapper = GetSearchWrapper(searchType);
                 if (selectWrapper != null)
                     wrapper.Join(selectWrapper);
 
-                string condition_sql = wrapper.ToWhere(false) + wrapper.ToOrder()
-                            + $" LIMIT 0,{SEARCH_CANDIDATE_MAX_COUNT}";
 
                 string sql = $"SELECT DISTINCT {field} FROM metadata_video " +
                             "JOIN metadata " +
                             "on metadata.DataID=metadata_video.DataID ";
+
+                if (ExtraWrapper != null) {
+                    wrapper.Join(ExtraWrapper);
+                    if (!string.IsNullOrEmpty(ExtraWrapper.ExtraSql))
+                        sql += ExtraWrapper.ExtraSql;
+                }
+
+                if (FilterWrapper != null) {
+                    wrapper.Join(FilterWrapper);
+                    if (!string.IsNullOrEmpty(FilterSQL))
+                        sql += FilterSQL;
+                }
+
                 if (searchType == SearchField.ActorName)
                     sql += ActorMapper.SQL_JOIN_ACTOR;
                 else if (searchType == SearchField.LabelName)
                     sql += LabelJoinSql;
+
+
+                string condition_sql = wrapper.ToWhere(false) + wrapper.ToOrder()
+                            + $" LIMIT 0,{SEARCH_CANDIDATE_MAX_COUNT}";
 
                 if (searchType == SearchField.Genre) {
                     // 类别特殊处理

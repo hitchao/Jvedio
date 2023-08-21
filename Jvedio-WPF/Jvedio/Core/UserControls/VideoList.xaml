@@ -202,6 +202,7 @@
                 Margin="0,5,0,0"
                 HideClearButtonOnMouseLeave="False"
                 PreviewKeyUp="SearchBar_PreviewKeyUp"
+                Search="doSearch"
                 SearchOnTextChanged="False"
                 Style="{StaticResource SearchBoxStyle}"
                 Text="{Binding Path=DataContext.SearchText, Mode=TwoWay, ElementName=videoList}"
@@ -626,7 +627,7 @@
                     </DataGridTemplateColumn>
 
                     <DataGridTemplateColumn
-                        Width="100"
+                        Width="150"
                         Header="{DynamicResource ID}"
                         SortMemberPath="Favorites">
                         <DataGridTemplateColumn.CellTemplate>

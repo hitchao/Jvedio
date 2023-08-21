@@ -274,7 +274,8 @@ namespace Jvedio.ViewModels
 
                     App.ScreenShotManager.onRunning += () => {
                         TaskList list = GetTaskListByType(type);
-                        list.AllTaskProgress = App.ScreenShotManager.Progress;
+                        if (list != null)
+                            list.AllTaskProgress = App.ScreenShotManager.Progress;
                     };
 
                     break;

@@ -80,7 +80,7 @@ namespace Jvedio.Core.UserControls
         /// <summary>
         /// 单位 MB
         /// </summary>
-        List<long> SizeList { get; set; } = new List<long>() { 0l * MB_TO_B, 500l * MB_TO_B, 1000l * MB_TO_B, 2000l * MB_TO_B, 3000l * MB_TO_B };
+        List<long> SizeList { get; set; } = new List<long>() { 0L * MB_TO_B, 500L * MB_TO_B, 1000L * MB_TO_B, 2000L * MB_TO_B, 3000L * MB_TO_B };
 
         #endregion
 

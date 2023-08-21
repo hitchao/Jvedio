@@ -50,6 +50,9 @@ namespace Jvedio.Core.UserControls
         #region "事件"
 
         public static Action onStatistic;
+
+        public static Action<bool> onSearchingChange;
+
         public static Action<List<Video>> onDeleteID;
         public Action<WrapperEventArg<Video>> onRenderSql;
         public Action onInitTagStamps;
@@ -184,6 +187,8 @@ namespace Jvedio.Core.UserControls
             this.onInitTagStamps += () => {
                 this.filter.InitTagStamp();
             };
+
+            VieModel_VideoList.onSearchingChange += onSearchingChange;
         }
 
         private void ResizingTimer_Tick(object sender, EventArgs e)
@@ -1109,12 +1114,7 @@ namespace Jvedio.Core.UserControls
         private void DownLoadSelectMovie(object sender, RoutedEventArgs e)
         {
             HandleMenuSelected(sender);
-            //vieModel.DownloadStatus = "Downloading";
             DownLoadVideo(vieModel.SelectedVideo);
-
-            //setDownloadStatus();
-            //if (!vieModel.EditMode)
-            //    vieModel.SelectedVideo.Clear();
         }
 
         public void DownLoadVideo(List<Video> videoList)
@@ -1125,27 +1125,6 @@ namespace Jvedio.Core.UserControls
 
             App.DownloadManager.Start();
         }
-
-        public void setDownloadStatus()
-        {
-            //if (!CheckingDownloadStatus) {
-            //    CheckingDownloadStatus = true;
-            //    Task.Run(() => {
-            //        while (true) {
-            //            if (vieModel.DownLoadTasks.All(arg =>
-            //             arg.Status == System.Threading.Tasks.TaskStatus.Canceled ||
-            //             arg.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)) {
-            //                vieModel.DownloadStatus = "Complete";
-            //                CheckingDownloadStatus = false;
-            //                break;
-            //            } else {
-            //                Task.Delay(1000).Wait();
-            //            }
-            //        }
-            //    });
-            //}
-        }
-
 
         private void SetSelectMode(object sender, RoutedEventArgs e)
         {
@@ -1356,14 +1335,10 @@ namespace Jvedio.Core.UserControls
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
         {
             MessageNotify.Info(LangManager.GetValueByKey("CrawlAllWarning"));
-            //vieModel.DownloadStatus = "Downloading";
             SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
             wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
             List<Video> videos = videoMapper.SelectList();
             DownLoadVideo(videos);
-            //if (!Jvedio.Global.DownloadManager.Dispatcher.Working)
-            //    Jvedio.Global.DownloadManager.Dispatcher.BeginWork();
-            //setDownloadStatus();
         }
 
         public void DownloadVideo(Video video)
@@ -1990,32 +1965,12 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        private async void doSearch(object sender, RoutedEventArgs e)
+        private void doSearch(object sender, RoutedEventArgs e)
         {
             SearchMode mode = (SearchMode)vieModel.TabSelectedIndex;
-
-            if (vieModel.TabSelectedIndex == 0) {
-                vieModel.Searching = true;
-                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
-                vieModel.Query((SearchField)searchTabControl.SelectedIndex);
-                SaveSearchHistory(mode, (SearchField)searchTabControl.SelectedIndex);
-            } else if (vieModel.TabSelectedIndex == 1) {
-                // 搜寻演员
-                //vieModel.SearchingActor = true;
-                //vieModel.SelectActor();
-                //SaveSearchHistory(mode, 0);
-            }
-            //else if (vieModel.TabSelectedIndex == 2) {
-            //    // 搜寻标签
-            //    vieModel.GetLabelList();
-            //    SaveSearchHistory(mode, 0);
-            //} else if (vieModel.TabSelectedIndex == 3) {
-            //    // 搜寻分类
-            //    vieModel.SetClassify(true);
-            //    SaveSearchHistory(mode, (SearchField)vieModel.ClassifySelectedIndex);
-            //}
-
-            vieModel.Searching = false;
+            ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
+            vieModel.Query((SearchField)searchTabControl.SelectedIndex);
+            SaveSearchHistory(mode, (SearchField)searchTabControl.SelectedIndex);
         }
 
         private void SaveSearchHistory(SearchMode mode, SearchField field)
