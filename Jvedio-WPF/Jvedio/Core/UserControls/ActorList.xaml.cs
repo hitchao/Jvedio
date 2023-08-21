@@ -122,8 +122,6 @@ namespace Jvedio.Core.UserControls
         private int actorFirstIdx { get; set; } = -1;
         private int actorSecondIdx { get; set; } = -1;
 
-        public bool Rendering { get; set; }
-
         public CancellationTokenSource RenderCTS { get; set; }
 
         public CancellationToken RenderCT { get; set; }
@@ -237,6 +235,28 @@ namespace Jvedio.Core.UserControls
 
             set {
                 _SelectedActors = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private int _RenderProgress;
+
+        public int RenderProgress {
+            get { return _RenderProgress; }
+
+            set {
+                _RenderProgress = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool _rendering;
+        public bool Rendering {
+            get { return _rendering; }
+            set {
+                _rendering = value;
                 RaisePropertyChanged();
             }
         }
@@ -544,8 +564,8 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                 Rendering = true;
                 ActorInfo actorInfo = Actors[i];
                 ActorInfo.SetImage(ref actorInfo);
-                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
-                    new LoadActorDelegate(LoadActor), actorInfo, i);
+                await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadActorDelegate(LoadActor), actorInfo, i);
+                RenderProgress = (int)(100 * (i + 1) / (float)Actors.Count);
             }
 
             // 清除
@@ -569,12 +589,34 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                 return;
             if (CurrentList.Count < PageSize) {
                 if (idx < CurrentList.Count) {
-                    CurrentList[idx] = actor;
+                    LoadActor(idx, actor);
                 } else {
                     CurrentList.Add(actor);
                 }
             } else {
-                CurrentList[idx] = actor;
+                LoadActor(idx, actor);
+            }
+        }
+
+        private void LoadActor(int idx, ActorInfo actorInfo)
+        {
+            if (CurrentList[idx].ActorID == actorInfo.ActorID) {
+                // 不知为啥，如果 2 个对象相等，则不会触发 notify
+                ActorInfo temp = CurrentList[idx];
+                RefreshData(ref temp, actorInfo);
+            } else {
+                CurrentList[idx] = actorInfo;
+            }
+        }
+
+        private void RefreshData(ref ActorInfo origin, ActorInfo target)
+        {
+            System.Reflection.PropertyInfo[] propertyInfos = target.GetType().GetProperties();
+            foreach (var item in propertyInfos) {
+                object v = item.GetValue(target);
+                if (v != null) {
+                    item.SetValue(origin, v);
+                }
             }
         }
 

@@ -590,8 +590,25 @@
                 </ContextMenu>
             </Grid.ContextMenu>-->
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ProgressBar
+                Width="auto"
+                Height="2"
+                Margin="10,2,10,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Foreground="{DynamicResource Button.Fill.Background}"
+                Style="{StaticResource NormalStaticProgressBar}"
+                Visibility="{Binding Rendering, Converter={StaticResource BoolToVisibilityConverter}}"
+                Value="{Binding RenderProgress, Mode=OneWay}" />
+
             <ScrollViewer
                 x:Name="scrollViewer"
+                Grid.Row="1"
                 CanContentScroll="True"
                 FocusVisualStyle="{x:Null}"
                 IsDeferredScrollingEnabled="False"
@@ -630,6 +647,7 @@
 
             <DataGrid
                 x:Name="tableData"
+                Grid.Row="1"
                 Margin="5"
                 HorizontalContentAlignment="Left"
                 d:ItemsSource="{d:SampleData}"

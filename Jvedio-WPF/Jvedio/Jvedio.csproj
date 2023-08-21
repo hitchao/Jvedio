@@ -645,6 +645,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Content Include="Reference\CommonNet.dll" />
+    <Resource Include="Resources\Picture\refresh.png" />
+    <Resource Include="Resources\Picture\pinned.png" />
     <Resource Include="Resources\Picture\nothing.png" />
     <Resource Include="Resources\Picture\boy.png" />
     <Resource Include="Resources\Picture\girl.png" />

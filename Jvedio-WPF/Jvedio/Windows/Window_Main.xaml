@@ -724,8 +724,14 @@
                                                 </Border.Style>
                                                 <Border.ContextMenu>
                                                     <ContextMenu>
-                                                        <MenuItem Click="RefreshCurrentTab" Header="{DynamicResource Refresh}" />
-                                                        <MenuItem Click="CloseCurrentTab" Header="{DynamicResource Close}" />
+                                                        <MenuItem
+                                                            Click="RefreshCurrentTab"
+                                                            Header="{DynamicResource Refresh}"
+                                                            Icon="pack://application:,,,/Resources/Picture/refresh.png" />
+                                                        <MenuItem
+                                                            Click="CloseCurrentTab"
+                                                            Header="{DynamicResource Close}"
+                                                            Icon="pack://application:,,,/Resources/Picture/status_fail.png" />
                                                         <MenuItem Click="CloseOtherTab" Header="{DynamicResource CloseOther}" />
                                                         <MenuItem Click="CloseAllLeftTab" Header="{DynamicResource CloseAllLeft}" />
                                                         <MenuItem Click="CloseAllRightTab" Header="{DynamicResource CloseAllRight}" />
@@ -737,9 +743,9 @@
                                                         <MenuItem
                                                             Click="PinTab"
                                                             Header="固定"
+                                                            Icon="pack://application:,,,/Resources/Picture/pinned.png"
                                                             IsCheckable="True"
                                                             IsChecked="{Binding Pinned, Mode=OneWay}" />
-                                                        <Separator />
                                                     </ContextMenu>
                                                 </Border.ContextMenu>
                                                 <Grid>
