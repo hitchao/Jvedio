@@ -226,7 +226,7 @@ namespace Jvedio
             }
         }
 
-        private  void StartDownLoadActorImage()
+        private void StartDownLoadActorImage()
         {
             // await HttpHelper.AsyncDownLoadFile(actorInfo.ImageUrl, CrawlerHeader.Default);
         }
@@ -650,7 +650,7 @@ namespace Jvedio
                 FileHelper.TryOpenUrl(url);
         }
 
-        public  void TranslateMovie(object sender, RoutedEventArgs e)
+        public void TranslateMovie(object sender, RoutedEventArgs e)
         {
             // if (IsTranslating) return;
 
@@ -1033,24 +1033,17 @@ namespace Jvedio
             });
 
             // 扫描预览图目录
+            List<string> screenShotList = await GetImageList(video.GetScreenShot());
+            List<string> imageList = await GetImageList(video.GetExtraImage());
+            vieModel.PreviewImageCount = imageList.Count;
+            vieModel.ScreenShotCount = screenShotList.Count;
+
             List<string> imagePathList = new List<string>();
-            string imagePath = video.GetExtraImage();
-            if (isScreenShot)
-                imagePath = video.GetScreenShot();
-            await Task.Run(() => {
-                if (Directory.Exists(imagePath)) {
-                    foreach (var path in FileHelper.TryScanDIr(imagePath, "*.*", System.IO.SearchOption.AllDirectories))
-                        imagePathList.Add(path);
 
-                    if (imagePathList.Count > 0)
-                        imagePathList = imagePathList.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).CustomSort().ToList();
-                }
-            });
-
-            if (!isScreenShot) {
-                vieModel.PreviewImageCount = imagePathList.Count;
+            if (isScreenShot) {
+                imagePathList = screenShotList;
             } else {
-                vieModel.ScreenShotCount = imagePathList.Count;
+                imagePathList = imageList;
             }
 
             // 加载预览图/截图
@@ -1065,6 +1058,20 @@ namespace Jvedio
             return true;
         }
 
+        private async Task<List<string>> GetImageList(string imagePath)
+        {
+            return await Task.Run(() => {
+                List<string> imagePathList = new List<string>();
+                if (Directory.Exists(imagePath)) {
+                    foreach (var path in FileHelper.TryScanDIr(imagePath, "*.*", System.IO.SearchOption.AllDirectories))
+                        imagePathList.Add(path);
+
+                    if (imagePathList.Count > 0)
+                        imagePathList = imagePathList.Where(arg => ScanTask.PICTURE_EXTENSIONS_LIST.Contains(Path.GetExtension(arg).ToLower())).CustomSort().ToList();
+                }
+                return imagePathList;
+            });
+        }
 
         private void LoadExtraImage(BitmapSource bitmapSource)
         {
