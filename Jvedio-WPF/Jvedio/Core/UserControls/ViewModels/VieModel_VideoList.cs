@@ -718,7 +718,7 @@ namespace Jvedio.Core.UserControls.ViewModels
                     continue;
                 Video.SetImage(ref video, ShowImageMode);
                 Video.SetTagStamps(ref video); // 设置标签戳
-                Video.SetTileAndDate(ref video); // 设置标题和发行日期
+                Video.SetTitleAndDate(ref video); // 设置标题和发行日期
                 Video.SetAsso(ref video);
 
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadVideoDelegate(LoadVideo), video, i);

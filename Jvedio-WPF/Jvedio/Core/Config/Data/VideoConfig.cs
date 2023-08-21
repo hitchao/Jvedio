@@ -34,6 +34,7 @@ namespace Jvedio.Core.Config.Data
             ActorSortDescending = true;
             ShowFilter = true;
             ActorShowCount = true;
+            BlurBackground = true;
 
         }
 
@@ -272,6 +273,14 @@ namespace Jvedio.Core.Config.Data
             get { return _ShowFilter; }
             set {
                 _ShowFilter = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _BlurBackground;
+        public bool BlurBackground {
+            get { return _BlurBackground; }
+            set {
+                _BlurBackground = value;
                 RaisePropertyChanged();
             }
         }

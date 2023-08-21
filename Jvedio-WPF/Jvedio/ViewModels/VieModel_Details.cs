@@ -256,7 +256,7 @@ namespace Jvedio.ViewModel
                 return;
             }
             Video.SetTagStamps(ref video); // 设置标签戳
-            Video.SetTileAndDate(ref video);
+            Video.SetTitleAndDate(ref video);
             Video.SetAsso(ref video);
 
             CurrentVideo = video;
@@ -318,7 +318,7 @@ namespace Jvedio.ViewModel
                     bigimage = smallimage;
                 video.BigImage = bigimage;
                 Video.SetTagStamps(ref video); // 设置标签戳
-                Video.SetTileAndDate(ref video); // 设置标题和发行日期
+                Video.SetTitleAndDate(ref video); // 设置标题和发行日期
 
                 if (ConfigManager.Settings.AutoGenScreenShot) {
                     string path = video.GetScreenShot();

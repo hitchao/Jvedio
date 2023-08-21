@@ -1081,6 +1081,7 @@
                                     <CheckBox Content="{DynamicResource Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                 </WrapPanel>
                                 <CheckBox Content="{DynamicResource ApplyBgToDetail}" IsChecked="{Binding DetailShowBg, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
+                                <CheckBox Content="{DynamicResource BlurBackground}" IsChecked="{Binding BlurBackground, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />
 
                                 <WrapPanel
                                     Margin="5"
@@ -1137,7 +1138,8 @@
                                 <WrapPanel
                                     Margin="5"
                                     HorizontalAlignment="Left"
-                                    Orientation="Horizontal">
+                                    Orientation="Horizontal"
+                                    Visibility="{Binding BlurBackground, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                                     <TextBlock
                                         MinWidth="100"
                                         Style="{StaticResource BaseTextBlock}"

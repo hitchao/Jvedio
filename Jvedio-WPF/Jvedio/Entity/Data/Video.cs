@@ -343,7 +343,7 @@ namespace Jvedio.Entity
         /// 设置标题和发行日期
         /// </summary>
         /// <param name="video"></param>
-        public static void SetTileAndDate(ref Video video)
+        public static void SetTitleAndDate(ref Video video)
         {
             if (ConfigManager.VideoConfig.ShowFileNameIfTitleEmpty
                 && !string.IsNullOrEmpty(video.Path) && string.IsNullOrEmpty(video.Title))
@@ -351,6 +351,10 @@ namespace Jvedio.Entity
             if (ConfigManager.VideoConfig.ShowCreateDateIfReleaseDateEmpty
                 && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
                 video.ReleaseDate = DateHelper.ToLocalDate(video.LastScanDate);
+
+            if (string.IsNullOrEmpty(video.VID) && !string.IsNullOrEmpty(video.Title))
+                video.VID = video.Title;
+
         }
 
 
@@ -858,9 +862,9 @@ namespace Jvedio.Entity
             }
 
             if (bigimage == null) {
-                if (!findScreenShot) 
+                if (!findScreenShot)
                     SetScreenShotImage(ref video);
-                
+
                 if (video.ViewImage != null)
                     video.BigImage = video.ViewImage;
                 else
@@ -1047,7 +1051,7 @@ namespace Jvedio.Entity
             Video video = MapperManager.videoMapper.SelectVideoByID(dataID);
             SetImage(ref video);
             SetTagStamps(ref video);
-            SetTileAndDate(ref video);
+            SetTitleAndDate(ref video);
             SetAsso(ref video);
             return video;
         }

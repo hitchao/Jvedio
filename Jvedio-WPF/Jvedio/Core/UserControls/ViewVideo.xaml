@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:local="clr-namespace:Jvedio.Core.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="clr-namespace:Jvedio.Core.Media"
@@ -34,21 +35,87 @@
         Width="{Binding ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
         Margin="10"
         Tag="{Binding DataID, Mode=OneWay}">
+
+
+
         <Border
-            Name="rootBorder"
+            x:Name="rootBorder"
+            MinWidth="200"
+            Margin="0"
+            BorderThickness="2"
+            CornerRadius="10"
+            Effect="{StaticResource BlueDropShadowEffect}"
+            Style="{StaticResource SimpleBorder}">
+            <Border.Background>
+                <VisualBrush Viewbox="0.1,0.1,0.7,0.7">
+                    <VisualBrush.Visual>
+                        <Image
+                            Width="300"
+                            Height="300"
+                            Source="{Binding BigImage}"
+                            Visibility="{Binding BlurBackground, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Image.BitmapEffect>
+                                <BlurBitmapEffect
+                                    KernelType="Gaussian"
+                                    Radius="100"
+                                    RenderOptions.BitmapScalingMode="LowQuality"
+                                    RenderOptions.EdgeMode="Unspecified" />
+                            </Image.BitmapEffect>
+                        </Image>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Border.Background>
+        </Border>
+
+        <Border
             MinWidth="200"
             Margin="0"
             Background="{DynamicResource ListBoxItem.Background}"
             BorderThickness="2"
-            CornerRadius="3"
+            CornerRadius="10"
             Effect="{StaticResource BlueDropShadowEffect}"
             Opacity="{Binding MovieOpacity, Mode=OneWay, Source={x:Static config:ConfigManager.VideoConfig}}"
-            Style="{StaticResource SimpleBorder}" />
+            Style="{StaticResource SimpleBorder}"
+            Visibility="{Binding BlurBackground, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
 
         <StackPanel Margin="0" Tag="{Binding DataID, Mode=OneWay}">
             <!--  图片  -->
             <super:SimplePanel Grid.Row="0">
-                <media:GifImage
+                <Border
+                    Width="{Binding Path=ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
+                    Height="{Binding Path=ImageHeight, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
+                    Margin="2.5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    CornerRadius="10 10 0 0"
+                    Cursor="Hand"
+                    MouseEnter="Image_MouseEnter"
+                    MouseLeave="Image_MouseLeave"
+                    MouseLeftButtonDown="CanShowDetails"
+                    MouseLeftButtonUp="ShowDetails">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ImageMode, ElementName=viewVideo, Mode=OneWay}" Value="0">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="{Binding SmallImage}" Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ImageMode, ElementName=viewVideo, Mode=OneWay}" Value="1">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="{Binding BigImage}" Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+
+                <!--<media:GifImage
                     x:Name="GifImage"
                     Width="{Binding Path=ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
                     Height="{Binding Path=ImageHeight, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
@@ -65,7 +132,7 @@
                     RenderOptions.BitmapScalingMode="LowQuality"
                     SmallImageSource="{Binding SmallImage, Mode=OneWay}"
                     Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}"
-                    Style="{StaticResource GifImageStyle}" />
+                    Style="{StaticResource GifImageStyle}" />-->
 
                 <!--  关联视频 + 分段视频  -->
                 <StackPanel
@@ -172,6 +239,7 @@
                         HorizontalAlignment="Left"
                         Cursor="Hand"
                         FontSize="15"
+                        FontWeight="Bold"
                         MouseLeftButtonDown="CopyText"
                         Style="{StaticResource BaseTextBlock}"
                         Text="{Binding VID, Mode=OneWay}"

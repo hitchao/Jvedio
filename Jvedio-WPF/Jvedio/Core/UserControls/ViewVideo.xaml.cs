@@ -308,7 +308,7 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
         }
         public void SetBackground(SolidColorBrush brush)
         {
-            rootBorder.Background = brush;
+            // rootBorder.Background = brush;
         }
 
         public void SetEditMode(bool mode)

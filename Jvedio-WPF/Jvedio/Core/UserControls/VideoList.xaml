@@ -172,6 +172,7 @@
                 AssoVisible="{Binding Path=DataContext.ShowAsso, ElementName=videoList}"
                 ContextMenu="{StaticResource VideoContextMenu}"
                 ContextMenuOpening="ContextMenu_ContextMenuOpening"
+                DataContext="{Binding ., Mode=OneWay}"
                 ImageHeight="{Binding Path=DataContext.GlobalImageHeight, ElementName=videoList}"
                 ImageMode="{Binding Path=DataContext.ShowImageMode, ElementName=videoList}"
                 ImageMouseEnter="viewVideo_ImageMouseEnter"
@@ -832,7 +833,7 @@
                 VerticalAlignment="Center"
                 LargeChange="10"
                 Maximum="800"
-                Minimum="200"
+                Minimum="120"
                 SmallChange="5"
                 ValueChanged="ImageSizeSlider_ValueChanged"
                 Value="{Binding Path=GlobalImageWidth, Mode=TwoWay}" />
