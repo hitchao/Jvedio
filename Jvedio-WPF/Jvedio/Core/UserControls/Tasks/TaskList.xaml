@@ -39,7 +39,19 @@
 
             <StackPanel Orientation="Horizontal">
                 <super:HoverPath Click="HideLog" Style="{StaticResource BackHoverPath}" />
-                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Log}" />
+                <TextBlock
+                    Foreground="{DynamicResource Window.Sub.Foreground}"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="{DynamicResource Return}" />
+                <Rectangle
+                    Width="2"
+                    Height="auto"
+                    Margin="3,8"
+                    Fill="{DynamicResource Window.Sub.Foreground}" />
+                <TextBlock
+                    FontWeight="Bold"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="{DynamicResource Log}" />
             </StackPanel>
 
             <Border
@@ -66,6 +78,15 @@
 
 
         <StackPanel Margin="5" Orientation="Horizontal">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding TaskStatusList.Count, ElementName=taskList}" Value="0">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
 
             <Button
                 Grid.Column="1"
@@ -210,12 +231,19 @@
 
 
                 <DataGridTextColumn
+                    Width="100"
                     MinWidth="50"
                     Binding="{Binding Title}"
-                    Foreground="{DynamicResource Window.Foreground}"
                     Header="{DynamicResource Title}"
                     IsReadOnly="True"
-                    SortMemberPath="Title" />
+                    SortMemberPath="Title">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style BasedOn="{StaticResource BaseTextBlock}" TargetType="TextBlock">
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                            <Setter Property="FontSize" Value="12" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
 
                 <DataGridTemplateColumn Header="{DynamicResource Progress}" SortMemberPath="Progress">
@@ -247,7 +275,7 @@
                                     FontSize="10"
                                     Text="{Binding Progress, StringFormat=\{0\} %}">
                                     <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
+                                        <Style BasedOn="{StaticResource BaseTextBlock}" TargetType="TextBlock">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
                                                     <Setter Property="Visibility" Value="Hidden" />

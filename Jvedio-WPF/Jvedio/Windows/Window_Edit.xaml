@@ -584,9 +584,10 @@
 
             <Button
                 Grid.Row="1"
-                MinWidth="100"
-                Margin="690,0,0,10"
-                HorizontalAlignment="Left"
+                Height="40"
+                MinWidth="200"
+                Margin="10"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Click="SaveInfo"
                 Content="{DynamicResource Save}"

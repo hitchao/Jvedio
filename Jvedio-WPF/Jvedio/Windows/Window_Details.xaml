@@ -658,13 +658,16 @@
                                                 Margin="-1,0,0,5"
                                                 HorizontalAlignment="Left"
                                                 Orientation="Horizontal">
-                                                <TextBox
+                                                <TextBlock
+                                                    Width="270"
                                                     HorizontalAlignment="Left"
                                                     FontFamily="Times New Roman"
                                                     FontSize="24"
                                                     Foreground="{DynamicResource Window.Foreground}"
-                                                    Style="{StaticResource ViewTextBox}"
-                                                    Text="{Binding CurrentVideo.VID, Mode=OneWay, FallbackValue=VID}" />
+                                                    Style="{StaticResource BaseTextBlock}"
+                                                    Text="{Binding CurrentVideo.VID, Mode=OneWay, FallbackValue=VID}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    TextWrapping="NoWrap" />
                                                 <super:HoverPath
                                                     Grid.Column="1"
                                                     CopyData="{Binding VID}"
@@ -672,7 +675,7 @@
                                             </StackPanel>
                                             <ItemsControl
                                                 Grid.Column="1"
-                                                Margin="5,5"
+                                                Margin="0,5"
                                                 HorizontalAlignment="Left"
                                                 ItemsSource="{Binding CurrentVideo.TagStamp}"
                                                 Visibility="{Binding Path=DisplayStamp, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}">
@@ -722,7 +725,7 @@
 
 
                                             <super:Rating
-                                                Margin="5,10"
+                                                Margin="0,10"
                                                 Cursor="Hand"
                                                 FocusVisualStyle="{x:Null}"
                                                 Half="True"
