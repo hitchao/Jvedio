@@ -10,9 +10,11 @@ using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using static Jvedio.MapperManager;
 using static SuperUtils.Media.ImageHelper;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
@@ -68,6 +70,17 @@ namespace Jvedio
             if (this.ActorID <= 0)
                 return;
             CurrentActorInfo = ActorInfo.GetById(ActorID);
+            SetGender();
+        }
+
+        private void SetGender()
+        {
+            if (CurrentActorInfo == null)
+                return;
+            if (CurrentActorInfo.Gender == Gender.Boy)
+                boy.IsChecked = true;
+            else
+                girl.IsChecked = true;
         }
 
 
@@ -210,5 +223,19 @@ namespace Jvedio
             e.Handled = true; // 必须加
         }
 
+
+        private void SetGender(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton button &&
+                button.Parent is StackPanel panel &&
+                panel.Children.OfType<RadioButton>().ToList() is List<RadioButton> buttonList) {
+                int idx = buttonList.IndexOf(button);
+                if (idx == 0) {
+                    CurrentActorInfo.Gender = Gender.Boy;
+                } else {
+                    CurrentActorInfo.Gender = Gender.Girl;
+                }
+            }
+        }
     }
 }

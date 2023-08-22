@@ -154,7 +154,8 @@ namespace Jvedio.Core.UserControls
         private void ActorRate_ValueChanged(object sender, EventArgs e)
         {
             Rate rate = (Rate)sender;
-            actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), CurrentActorInfo.ActorID);
+            if (CurrentActorInfo != null)
+                actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), CurrentActorInfo.ActorID);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

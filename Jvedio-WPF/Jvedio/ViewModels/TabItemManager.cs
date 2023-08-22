@@ -102,6 +102,31 @@ namespace Jvedio.ViewModels
         }
 
 
+        public void OnActorGradeChange(long actorID, float grade)
+        {
+            List<ActorList> list = GetAllActorList();
+            if (list != null) {
+                foreach (ActorList data in list) {
+                    data.RefreshGrade(actorID, grade);
+                }
+            }
+            List<VideoList> videoLists = GetAllVideoList();
+            if (videoLists != null) {
+
+                ActorInfo actorInfo = ActorInfo.GetById(actorID);
+
+                foreach (VideoList video in videoLists) {
+                    if (!video.IsShowActor())
+                        continue;
+
+                    if (video.GetCurrentActor() is ActorInfo info &&
+                        info.ActorID == actorID) {
+                        video.SetActor(actorInfo);
+                        break;
+                    }
+                }
+            }
+        }
         public void OnGradeChange(long dataID, float grade)
         {
             List<VideoList> videoLists = GetAllVideoList();
@@ -193,6 +218,7 @@ namespace Jvedio.ViewModels
                     actorList.Uid = tabItem.UUID;
 
                     actorList.onShowSameActor += vieModel.ShowSameActor;
+                    actorList.onGradeChange += OnActorGradeChange;
 
                     TabPanel.Children.Add(actorList);
                     break;

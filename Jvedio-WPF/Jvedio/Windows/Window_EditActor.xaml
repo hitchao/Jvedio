@@ -65,7 +65,18 @@
         </Grid.ColumnDefinitions>
 
 
+
         <Grid Grid.Column="0">
+
+            <super:HoverPath
+                Grid.Column="0"
+                Margin="5,120,2,5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Panel.ZIndex="55"
+                Style="{StaticResource HelpHoverPath}"
+                ToolTip="{DynamicResource UseSameImageWithSameActorName}" />
+
 
             <StackPanel
                 Grid.Column="0"
@@ -105,28 +116,42 @@
 
 
                 <super:SearchBox
-                    Width="200"
+                    Width="180"
                     PlaceHolder="{DynamicResource ActorName}"
                     ShowClearButton="False"
                     Text="{Binding CurrentActorInfo.ActorName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     TextAlignment="Center" />
 
-
-
-                <Border
-                    Margin="0,10"
+                <StackPanel
+                    Margin="10"
                     HorizontalAlignment="Center"
-                    Background="{DynamicResource Window.Title.Background}"
-                    CornerRadius="5">
-                    <TextBlock
-                        FontSize="12"
-                        Foreground="{DynamicResource Window.Sub.Foreground}"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="{DynamicResource UseSameImageWithSameActorName}"
-                        TextAlignment="Left"
-                        TextWrapping="Wrap" />
-                </Border>
+                    Orientation="Horizontal">
+                    <RadioButton
+                        x:Name="boy"
+                        Click="SetGender"
+                        Content="{DynamicResource Boy}"
+                        GroupName="gender"
+                        Style="{StaticResource FlatRoundRadioButton}" />
+                    <RadioButton
+                        x:Name="girl"
+                        Click="SetGender"
+                        Content="{DynamicResource Girl}"
+                        GroupName="gender"
+                        Style="{StaticResource FlatRoundRadioButton}" />
+                </StackPanel>
 
+
+                <super:Rate
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    AllowHalf="True"
+                    Background="{DynamicResource Window.Title.Background}"
+                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                    ItemHeight="20"
+                    ItemMargin="3 0"
+                    ToolTip="{DynamicResource DoubleClickToCancel}"
+                    Value="{Binding CurrentActorInfo.Grade, Mode=TwoWay}" />
             </StackPanel>
 
         </Grid>
@@ -143,63 +168,135 @@
                 VerticalScrollBarVisibility="Visible">
                 <StackPanel x:Name="ActorInfoStackPanel">
 
-
-                    <DockPanel>
+                    <DockPanel LastChildFill="True">
                         <Label Content="{DynamicResource Actress_Birthday}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Birthday, Mode=TwoWay}" />
-                    </DockPanel>
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Birthday, Mode=TwoWay}" />
 
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Actress_Age}"
+                            Style="{StaticResource BaseInfoLabel}" />
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Age, Mode=TwoWay}" />
 
-
-
-                    <DockPanel>
-                        <Label Content="{DynamicResource Actress_Age}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Age, Mode=TwoWay}" />
-                    </DockPanel>
-
-
-
-                    <DockPanel>
-                        <Label Content="{DynamicResource Actress_Birthplace}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Actress_Birthplace}"
+                            Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.BirthPlace, Mode=TwoWay}" />
                     </DockPanel>
 
-
-                    <DockPanel>
+                    <DockPanel LastChildFill="True">
                         <Label Content="{DynamicResource Actress_Height}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
-                    </DockPanel>
-                    <DockPanel>
-                        <Label Content="{DynamicResource Actress_Weight}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Weight, Mode=TwoWay}" />
-                    </DockPanel>
-
-                    <DockPanel Visibility="{Binding TeenMode, Source={x:Static config:ConfigManager.Settings}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}">
-                        <Label Content="{DynamicResource Actress_Cup}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}" />
-                    </DockPanel>
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Height, Mode=TwoWay}" />
 
 
-                    <DockPanel>
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Actress_Weight}"
+                            Style="{StaticResource BaseInfoLabel}" />
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Weight, Mode=TwoWay}" />
+
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Actress_Cup}"
+                            Style="{StaticResource BaseInfoLabel}"
+                            Visibility="{Binding TeenMode, Source={x:Static config:ConfigManager.Settings}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}" />
+                        <super:SearchBox
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Cup, Mode=TwoWay}"
+                            Visibility="{Binding TeenMode, Source={x:Static config:ConfigManager.Settings}, Mode=OneWay, Converter={StaticResource OppositeBooleanConverter}}" />
+                    </DockPanel>
+
+                    <DockPanel LastChildFill="True">
                         <Label Content="{DynamicResource Actress_Chest}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Chest, Mode=TwoWay}" />
-                    </DockPanel>
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Chest, Mode=TwoWay}" />
 
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Actress_Waist}"
+                            Style="{StaticResource BaseInfoLabel}" />
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Waist, Mode=TwoWay}" />
 
-
-                    <DockPanel>
-                        <Label Content="{DynamicResource Actress_Waist}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Waist, Mode=TwoWay}" />
-                    </DockPanel>
-                    <DockPanel>
-                        <Label Content="{DynamicResource Actress_Hipline}" Style="{StaticResource BaseInfoLabel}" />
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Actress_Hipline}"
+                            Style="{StaticResource BaseInfoLabel}" />
                         <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Hipline, Mode=TwoWay}" />
                     </DockPanel>
-                    <DockPanel>
-                        <Label Content="{DynamicResource Actress_Hobby}" Style="{StaticResource BaseInfoLabel}" />
-                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}" />
+
+                    <DockPanel LastChildFill="True">
+                        <Label Content="{DynamicResource BloodType}" Style="{StaticResource BaseInfoLabel}" />
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.BloodType, Mode=TwoWay}" />
+
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Country}"
+                            Style="{StaticResource BaseInfoLabel}" />
+                        <super:SearchBox
+                            Width="120"
+                            Margin="5"
+                            Text="{Binding CurrentActorInfo.Country, Mode=TwoWay}" />
+
+                        <Label
+                            MinWidth="0"
+                            Content="{DynamicResource Nationality}"
+                            Style="{StaticResource BaseInfoLabel}" />
+                        <super:SearchBox Margin="5" Text="{Binding CurrentActorInfo.Nation, Mode=TwoWay}" />
                     </DockPanel>
 
+                    <Label Content="{DynamicResource Actress_Hobby}" Style="{StaticResource BaseInfoLabel}" />
+
+
+                    <Border
+                        Margin="50,5,10,5"
+                        Padding="5"
+                        Background="{DynamicResource Window.Title.Background}"
+                        BorderThickness="1"
+                        CornerRadius="3">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=editTextBoxCommand, Path=IsFocused}" Value="True">
+                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBox
+                            Height="100"
+                            Padding="2,0,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalContentAlignment="Top"
+                            AcceptsReturn="True"
+                            Background="Transparent"
+                            ContextMenu="{StaticResource TextBoxContextMenu}"
+                            FontSize="12"
+                            Style="{StaticResource BaseTextBox}"
+                            Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}"
+                            TextAlignment="Left"
+                            TextWrapping="Wrap" />
+                    </Border>
 
 
                 </StackPanel>

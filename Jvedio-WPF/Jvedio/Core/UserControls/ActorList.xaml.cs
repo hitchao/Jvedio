@@ -1,4 +1,5 @@
-﻿using Jvedio.Entity;
+﻿using Jvedio.Core.Enums;
+using Jvedio.Entity;
 using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
@@ -39,6 +40,8 @@ namespace Jvedio.Core.UserControls
         }
 
         #region "事件"
+
+        public Action<long, float> onGradeChange;
         public event EventHandler PageChangedCompleted;
         public Action<long> onShowSameActor;
         public static Action onStatistic;
@@ -316,6 +319,18 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
         public void Refresh()
         {
             Select();
+        }
+
+        public void RefreshGrade(long actorID, float grade)
+        {
+            if (actorID <= 0)
+                return;
+            for (int i = 0; i < CurrentList.Count; i++) {
+                if (CurrentList[i].ActorID == actorID) {
+                    CurrentList[i].Grade = grade;
+                    break;
+                }
+            }
         }
 
         public void BindingEvent()
@@ -906,6 +921,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                 long.TryParse(rate.Tag.ToString(), out long actorID) &&
                 actorID > 0) {
                 actorMapper.UpdateFieldById("Grade", rate.Value.ToString(), actorID);
+                onGradeChange?.Invoke(actorID, (float)rate.Value);
             }
 
         }

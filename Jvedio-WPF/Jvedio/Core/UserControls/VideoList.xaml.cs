@@ -1715,7 +1715,16 @@ namespace Jvedio.Core.UserControls
             vieModel.ShowActorGrid = true;
             vieModel.ShowActorToggle = true;
             actorInfoView.CurrentActorInfo = actorInfo;
+        }
 
+        public bool IsShowActor()
+        {
+            return vieModel.ShowActorGrid;
+        }
+
+        public ActorInfo GetCurrentActor()
+        {
+            return actorInfoView.CurrentActorInfo;
         }
 
         private void HideActressGrid(object sender, MouseButtonEventArgs e)
