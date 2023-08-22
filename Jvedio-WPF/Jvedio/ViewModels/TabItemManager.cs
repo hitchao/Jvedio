@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 
 namespace Jvedio.ViewModels
 {
@@ -26,6 +27,11 @@ namespace Jvedio.ViewModels
         private SimplePanel TabPanel { get; set; }
 
         private WrapperEventArg<Video> CurrentWrapperArg { get; set; }
+
+        /// <summary>
+        /// 只能打开一次详情页
+        /// </summary>
+        private static Window_Details WindowDetails { get; set; }
 
         #endregion
 
@@ -96,6 +102,16 @@ namespace Jvedio.ViewModels
         }
 
 
+        public void OnGradeChange(long dataID, float grade)
+        {
+            List<VideoList> videoLists = GetAllVideoList();
+            if (videoLists != null) {
+                foreach (VideoList video in videoLists) {
+                    video.RefreshGrade(dataID, grade);
+                }
+            }
+            WindowDetails?.RefreshGrade(dataID, grade);
+        }
         public void OnViewAssoData(long dataID)
         {
             if (dataID <= 0)
@@ -134,12 +150,12 @@ namespace Jvedio.ViewModels
 
         public void onShowDetailData(long dataID)
         {
-            Window_Details windowDetails = new Window_Details(dataID, CurrentWrapperArg);
-            windowDetails.onViewAssoData += (id) => {
+            WindowDetails = new Window_Details(dataID, CurrentWrapperArg);
+            WindowDetails.onViewAssoData += (id) => {
                 OnViewAssoData(id);
-                windowDetails.Close();
+                WindowDetails.Close();
             };
-            windowDetails.Show();
+            WindowDetails.Show();
         }
 
         private void onAddData(TabItemEx tabItem, params object[] tabData)
@@ -161,6 +177,7 @@ namespace Jvedio.ViewModels
                     videoList.Uid = tabItem.UUID;
                     videoList.OnItemClick += OnItemClick;
                     videoList.OnItemViewAsso += OnViewAssoData;
+                    videoList.onGradeChange += OnGradeChange;
                     videoList.onRenderSql += OnRenderSql;
 
                     if (tabData.Length > 1 && tabData[1] is ActorInfo actorInfo) {

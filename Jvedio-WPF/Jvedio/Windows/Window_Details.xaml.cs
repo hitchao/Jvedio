@@ -260,16 +260,28 @@ namespace Jvedio
             vieModel.Load(DataID);
         }
 
-        public void RefreshLabel(string data)
+        public void RefreshGrade(long dataID, float data)
         {
+            if (vieModel.CurrentVideo.DataID != dataID)
+                return;
+            vieModel.CurrentVideo.Grade = data;
+        }
+        public void RefreshLabel(long dataID, string data)
+        {
+            if (vieModel.CurrentVideo.DataID != dataID)
+                return;
             vieModel.CurrentVideo.Label = data;
         }
-        public void RefreshGenre(string data)
+        public void RefreshGenre(long dataID, string data)
         {
+            if (vieModel.CurrentVideo.DataID != dataID)
+                return;
             vieModel.CurrentVideo.Genre = data;
         }
-        public void RefreshSeries(string data)
+        public void RefreshSeries(long dataID, string data)
         {
+            if (vieModel.CurrentVideo.DataID != dataID)
+                return;
             vieModel.CurrentVideo.Series = data;
         }
 

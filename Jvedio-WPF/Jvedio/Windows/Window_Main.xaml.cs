@@ -995,6 +995,8 @@ namespace Jvedio
             vieModel.TabItemManager.RefreshAllTab();
         }
 
+
+        // todo tab
         public void RefreshData(long dataID)
         {
 
@@ -1008,6 +1010,7 @@ namespace Jvedio
             }
         }
 
+        // todo tab
         public void RefreshGrade(Video newVideo)
         {
         }

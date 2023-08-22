@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using static Jvedio.Core.UserControls.ObjectEventArgs;
 
 namespace Jvedio.Core.UserControls
 {
@@ -31,6 +32,15 @@ namespace Jvedio.Core.UserControls
 
         public static Action onStatistic;
 
+
+        public static readonly RoutedEvent OnGradeChangeEvent =
+            EventManager.RegisterRoutedEvent("OnGradeChange", RoutingStrategy.Bubble,
+                typeof(ObjectEventArgsHandler), typeof(ViewVideo));
+
+        public event ObjectEventArgsHandler OnGradeChange {
+            add => AddHandler(OnGradeChangeEvent, value);
+            remove => RemoveHandler(OnGradeChangeEvent, value);
+        }
 
         public static readonly RoutedEvent OnViewAssoDataEvent =
             EventManager.RegisterRoutedEvent("OnViewAssoData", RoutingStrategy.Bubble,
@@ -293,10 +303,10 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
 
             if (sender is Rate rate &&
                 rate.Tag != null &&
-                long.TryParse(rate.Tag.ToString(), out long DataID) &&
-                DataID > 0) {
+                long.TryParse(rate.Tag.ToString(), out long DataID) && DataID > 0) {
                 MapperManager.metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), DataID);
                 onStatistic?.Invoke();
+                RaiseEvent(new ObjectEventArgs((float)rate.Value, OnGradeChangeEvent, sender));
             }
             CanRateChange = false;
         }

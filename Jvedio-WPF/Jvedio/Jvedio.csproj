@@ -334,6 +334,7 @@
     <Compile Include="Core\UserControls\Tasks\TaskList.xaml.cs">
       <DependentUpon>TaskList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\UserControls\ObjectEventArgs.cs" />
     <Compile Include="Core\UserControls\VideoItemEventArgs.cs" />
     <Compile Include="Core\UserControls\VideoList.xaml.cs">
       <DependentUpon>VideoList.xaml</DependentUpon>

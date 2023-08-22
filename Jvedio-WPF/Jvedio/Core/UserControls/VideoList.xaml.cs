@@ -50,6 +50,7 @@ namespace Jvedio.Core.UserControls
         #region "事件"
 
         public static Action onStatistic;
+        public Action<long, float> onGradeChange;
 
         public static Action<bool> onSearchingChange;
 
@@ -133,6 +134,10 @@ namespace Jvedio.Core.UserControls
         public void Refresh()
         {
             vieModel.Refresh();
+        }
+        public void RefreshData(long dataID)
+        {
+            vieModel.RefreshData(dataID);
         }
 
         public void BindingEvent()
@@ -924,17 +929,15 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        public void RefreshGrade(Video newVideo)
+        public void RefreshGrade(long dataID, float grade)
         {
-            if (newVideo == null || vieModel.CurrentVideoList == null || vieModel.CurrentVideoList.Count <= 0)
+            if (dataID <= 0)
                 return;
             for (int i = 0; i < vieModel.CurrentVideoList.Count; i++) {
-                if (vieModel.CurrentVideoList[i]?.DataID == newVideo.DataID) {
-                    Video video = vieModel.CurrentVideoList[i];
-                    //vieModel.CurrentVideoList[i] = null;
-                    video.Grade = newVideo.Grade;
-                    vieModel.CurrentVideoList[i] = video;
+                if (vieModel.CurrentVideoList[i].DataID == dataID) {
+                    vieModel.CurrentVideoList[i].Grade = grade;
                     onStatistic?.Invoke();
+                    break;
                 }
             }
         }
@@ -2120,12 +2123,12 @@ namespace Jvedio.Core.UserControls
 
             if (sender is Rate rate &&
                 rate.Tag != null &&
-                long.TryParse(rate.Tag.ToString(), out long dataID) &&
-                dataID > 0) {
+                long.TryParse(rate.Tag.ToString(), out long dataID) && dataID > 0) {
                 metaDataMapper.UpdateFieldById("Grade", rate.Value.ToString(), dataID);
                 onStatistic?.Invoke();
-                CanRateChange = false;
+                onGradeChange?.Invoke(dataID, (float)rate.Value);
             }
+            CanRateChange = false;
         }
 
         private void OpenVideoPath(object sender, RoutedEventArgs e)
@@ -2148,6 +2151,28 @@ namespace Jvedio.Core.UserControls
                 long.TryParse(button.Tag.ToString(), out long id)) {
                 RaiseEvent(new VideoItemEventArgs(id, OnItemClickEvent, sender));
             }
+        }
+
+
+
+        private void viewVideo_OnItemChange(object sender, ObjectEventArgs e)
+        {
+            if (sender is ViewVideo viewVideo &&
+               GetDataID(viewVideo) is long dataID && dataID > 0 &&
+               e.Data is float grade) {
+                onGradeChange?.Invoke(dataID, grade);
+            }
+        }
+
+        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            int idx = tableData.SelectedIndex;
+            if (idx < 0 || idx >= vieModel.CurrentVideoList.Count)
+                return;
+            Video video = vieModel.CurrentVideoList[idx];
+            if (video == null)
+                return;
+            RaiseEvent(new VideoItemEventArgs(video.DataID, OnItemClickEvent, sender));
         }
     }
 }

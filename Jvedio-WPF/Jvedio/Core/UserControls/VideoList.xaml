@@ -26,6 +26,8 @@
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
 
         <!--  搜索  -->
@@ -179,6 +181,7 @@
                 ImageMouseLeave="viewVideo_ImageMouseLeave"
                 ImageWidth="{Binding Path=DataContext.GlobalImageWidth, ElementName=videoList}"
                 Loaded="viewVideo_Loaded"
+                OnGradeChange="viewVideo_OnItemChange"
                 OnPlayVideo="viewVideo_OnPlayVideo"
                 OnTagStampRemove="viewVideo_OnTagStampRemove"
                 OnViewAssoData="viewVideo_OnViewAssoData"
@@ -316,32 +319,6 @@
                     </Viewbox>
                 </ToggleButton>
 
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=DataContext.ShowImageMode, Mode=OneWay, ElementName=videoList}" Value="2">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-                    <TextBlock
-                        Margin="10,0,5,0"
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource Window.Foreground}"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="{DynamicResource Edit}" />
-
-                    <super:Switch
-                        Height="20"
-                        Background="{DynamicResource Window.Title.Background}"
-                        CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
-                        Click="SetSelectMode"
-                        IsChecked="{Binding EditMode, Mode=TwoWay}" />
-                </StackPanel>
-
 
 
                 <super:HoverPath
@@ -414,6 +391,34 @@
                         </ContextMenu>
                     </super:HoverPath.ContextMenu>
                 </super:HoverPath>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=DataContext.ShowImageMode, Mode=OneWay, ElementName=videoList}" Value="2">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock
+                        Margin="10,0,5,0"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="{DynamicResource Window.Foreground}"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="{DynamicResource Edit}" />
+
+                    <super:Switch
+                        Height="20"
+                        Background="{DynamicResource Window.Title.Background}"
+                        CheckedBackground="{DynamicResource CheckBox.Checked.Background}"
+                        Click="SetSelectMode"
+                        IsChecked="{Binding EditMode, Mode=TwoWay}" />
+                </StackPanel>
+
 
 
             </StackPanel>
@@ -589,10 +594,13 @@
                 Style="{DynamicResource FlatDataGrid}"
                 Visibility="{Binding DataContext.ShowTable, ElementName=videoList, Converter={StaticResource BoolToVisibilityConverter}}">
                 <DataGrid.RowStyle>
-                    <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow" />
+                    <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                        <!--  一设置 EventSetter 热重载就失效  -->
+                        <!--<EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />-->
+                    </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="{DynamicResource Operate}" SortMemberPath="Favorites">
+                    <DataGridTemplateColumn MinWidth="120" Header="{DynamicResource Operate}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel
@@ -629,6 +637,7 @@
 
                     <DataGridTemplateColumn
                         Width="150"
+                        MinWidth="100"
                         Header="{DynamicResource ID}"
                         SortMemberPath="Favorites">
                         <DataGridTemplateColumn.CellTemplate>
@@ -646,21 +655,28 @@
                     <DataGridTemplateColumn
                         x:Name="TextCol01"
                         Width="200"
+                        MinWidth="120"
                         Header="{DynamicResource Title}"
                         SortMemberPath="Title">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox
+                                <TextBlock
                                     Cursor="Arrow"
-                                    Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                    Style="{StaticResource BaseTextBlock}"
                                     Text="{Binding Title}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap"
                                     ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTemplateColumn Header="{DynamicResource Favorites}" SortMemberPath="Favorites">
+                    <DataGridTemplateColumn
+                        Width="140"
+                        MinWidth="140"
+                        Header="{DynamicResource Favorites}"
+                        SortMemberPath="Favorites">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <super:Rate
@@ -680,7 +696,10 @@
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTemplateColumn Header="{DynamicResource Path}" SortMemberPath="Favorites">
+                    <DataGridTemplateColumn
+                        MinWidth="140"
+                        Header="{DynamicResource Path}"
+                        SortMemberPath="Favorites">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel
@@ -717,7 +736,8 @@
 
 
                     <DataGridTextColumn
-                        Width="100"
+                        Width="80"
+                        MinWidth="80"
                         Binding="{Binding Size, Converter={StaticResource BitToGBConverter}}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Size}"
@@ -727,6 +747,7 @@
 
                     <DataGridTextColumn
                         Width="60"
+                        MinWidth="60"
                         Binding="{Binding Duration}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Duration}"
@@ -738,6 +759,7 @@
 
                     <DataGridTextColumn
                         Width="90"
+                        MinWidth="90"
                         Binding="{Binding ReleaseDate}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource ReleaseDate}"
@@ -746,6 +768,7 @@
 
                     <DataGridTextColumn
                         Width="80"
+                        MinWidth="80"
                         Binding="{Binding ViewCount}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource ViewNumber}"
@@ -755,6 +778,7 @@
 
                     <DataGridTextColumn
                         Width="180"
+                        MinWidth="180"
                         Binding="{Binding ViewDate}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource RecentView}"
@@ -763,6 +787,7 @@
 
                     <DataGridTextColumn
                         Width="180"
+                        MinWidth="180"
                         Binding="{Binding LastScanDate}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource ImportDate}"
@@ -771,6 +796,7 @@
 
                     <DataGridTextColumn
                         Width="120"
+                        MinWidth="120"
                         Binding="{Binding Director}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Director}"
@@ -779,6 +805,7 @@
 
                     <DataGridTextColumn
                         Width="120"
+                        MinWidth="120"
                         Binding="{Binding Studio}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Studio}"
@@ -787,6 +814,7 @@
 
                     <DataGridTextColumn
                         Width="180"
+                        MinWidth="180"
                         Binding="{Binding CreateDate}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource CreatedDate}"
@@ -794,6 +822,7 @@
                         SortMemberPath="CreateDate" />
                     <DataGridTextColumn
                         Width="180"
+                        MinWidth="180"
                         Binding="{Binding UpdateDate}"
                         ElementStyle="{StaticResource DataGridTextBlockStyle}"
                         Header="{DynamicResource Update}"
@@ -836,7 +865,17 @@
                 Minimum="120"
                 SmallChange="5"
                 ValueChanged="ImageSizeSlider_ValueChanged"
-                Value="{Binding Path=GlobalImageWidth, Mode=TwoWay}" />
+                Value="{Binding Path=GlobalImageWidth, Mode=TwoWay}">
+                <super:Slider.Style>
+                    <Style BasedOn="{StaticResource NormalSliderStyle}" TargetType="super:Slider">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=DataContext.ShowImageMode, Mode=OneWay, ElementName=videoList}" Value="2">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </super:Slider.Style>
+            </super:Slider>
 
             <Grid Grid.Column="1" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
