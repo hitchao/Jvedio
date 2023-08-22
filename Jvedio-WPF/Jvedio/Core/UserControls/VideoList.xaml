@@ -466,7 +466,7 @@
         </Grid>
 
         <!--  信息展示：演员信息+影片展示  -->
-        <Grid Grid.Row="2" Visibility="{Binding DataContext.Nothing, ElementName=videoList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
@@ -489,358 +489,361 @@
                 Grid.Column="1"
                 Visibility="{Binding DataContext.ShowActorGrid, Converter={StaticResource BoolToVisibilityConverter}, ElementName=videoList}" />
 
-            <!--  影片  -->
-            <super:SimplePanel
+            <Image
+                Grid.Column="2"
+                Height="256"
+                Margin="3"
+                Source="pack://application:,,,/Resources/Picture/nothing.png"
+                Visibility="{Binding DataContext.Nothing, ElementName=videoList, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <Grid
                 Grid.Column="2"
                 Panel.ZIndex="2"
-                AllowDrop="True"
-                FocusVisualStyle="{x:Null}"
-                Visibility="{Binding DataContext.ShowTable, ElementName=videoList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
-                <super:SimplePanel.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem
-                            Click="SelectAll"
-                            FontWeight="Bold"
-                            Header="{DynamicResource SelectAll}" />
-                        <Separator />
-
-                        <MenuItem Header="{DynamicResource AllData}">
-                            <MenuItem Click="GenerateAllScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
-                            <MenuItem Click="DownloadAllVideo" Header="{DynamicResource SyncInfo}" />
-                        </MenuItem>
-                    </ContextMenu>
-                </super:SimplePanel.ContextMenu>
+                Visibility="{Binding DataContext.Nothing, ElementName=videoList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
 
 
-
-                <ProgressBar
-                    Width="auto"
-                    Height="2"
-                    Margin="10,2,10,0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Top"
-                    Foreground="{DynamicResource Button.Fill.Background}"
-                    Style="{StaticResource NormalStaticProgressBar}"
-                    Visibility="{Binding Rendering, Converter={StaticResource BoolToVisibilityConverter}}"
-                    Value="{Binding RenderProgress, Mode=OneWay}" />
 
                 <!--  影片  -->
-
-                <ItemsControl
-                    x:Name="MovieItemsControl"
-                    Background="Transparent"
+                <super:SimplePanel
+                    AllowDrop="True"
                     FocusVisualStyle="{x:Null}"
-                    ItemTemplate="{StaticResource VideoDataTemplate}"
-                    ItemsSource="{Binding CurrentVideoList}"
-                    PreviewMouseWheel="MovieItemsControl_PreviewMouseWheel"
-                    ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
-                    Style="{StaticResource ItemsControlVirtualizedWrapPanelStyle}">
+                    Visibility="{Binding DataContext.ShowTable, ElementName=videoList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                    <super:SimplePanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem
+                                Click="SelectAll"
+                                FontWeight="Bold"
+                                Header="{DynamicResource SelectAll}" />
+                            <Separator />
 
-                    <ItemsControl.Template>
-                        <ControlTemplate>
-                            <local:WheelSpeedScrollViewer
-                                super:ScrollAnimationBehavior.IsEnabled="True"
-                                super:ScrollAnimationBehavior.PointsToScroll="1"
-                                super:ScrollAnimationBehavior.TimeDuration="00:00:00.5"
-                                super:ScrollAnimationBehavior.VerticalOffset="0"
-                                SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static config:ConfigManager.Main}}"
-                                Style="{StaticResource FloatScrollViewer}">
-                                <ItemsPresenter />
-                            </local:WheelSpeedScrollViewer>
+                            <MenuItem Header="{DynamicResource AllData}">
+                                <MenuItem Click="GenerateAllScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
+                                <MenuItem Click="DownloadAllVideo" Header="{DynamicResource SyncInfo}" />
+                            </MenuItem>
+                        </ContextMenu>
+                    </super:SimplePanel.ContextMenu>
 
-                            <!--<ScrollViewer
+
+
+                    <ProgressBar
+                        Width="auto"
+                        Height="2"
+                        Margin="10,2,10,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Foreground="{DynamicResource Button.Fill.Background}"
+                        Style="{StaticResource NormalStaticProgressBar}"
+                        Visibility="{Binding Rendering, Converter={StaticResource BoolToVisibilityConverter}}"
+                        Value="{Binding RenderProgress, Mode=OneWay}" />
+
+                    <!--  影片  -->
+
+                    <ItemsControl
+                        x:Name="MovieItemsControl"
+                        Background="Transparent"
+                        FocusVisualStyle="{x:Null}"
+                        ItemTemplate="{StaticResource VideoDataTemplate}"
+                        ItemsSource="{Binding CurrentVideoList}"
+                        PreviewMouseWheel="MovieItemsControl_PreviewMouseWheel"
+                        ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
+                        Style="{StaticResource ItemsControlVirtualizedWrapPanelStyle}">
+
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <local:WheelSpeedScrollViewer
+                                    super:ScrollAnimationBehavior.IsEnabled="True"
+                                    super:ScrollAnimationBehavior.PointsToScroll="1"
+                                    super:ScrollAnimationBehavior.TimeDuration="00:00:00.5"
+                                    super:ScrollAnimationBehavior.VerticalOffset="0"
+                                    SpeedFactor="{Binding ScrollSpeedFactor, Mode=OneWay, Source={x:Static config:ConfigManager.Main}}"
+                                    Style="{StaticResource FloatScrollViewer}">
+                                    <ItemsPresenter />
+                                </local:WheelSpeedScrollViewer>
+
+                                <!--<ScrollViewer
                                                             super:ScrollAnimationBehavior.IsEnabled="False"
                                                             super:ScrollAnimationBehavior.PointsToScroll="1"
                                                             super:ScrollAnimationBehavior.TimeDuration="00:00:00.05">
                                                             <ItemsPresenter />
                                                         </ScrollViewer>-->
-                            <!--<super:SmoothScrollViewer>
+                                <!--<super:SmoothScrollViewer>
                                                             <ItemsPresenter />
                                                         </super:SmoothScrollViewer>-->
 
 
 
-                            <!--<ScrollViewer>
+                                <!--<ScrollViewer>
                                                             <ItemsPresenter />
                                                         </ScrollViewer>-->
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                </ItemsControl>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                    </ItemsControl>
 
-                <!--  去到顶部/底部  -->
-                <super:GoToTop
-                    Margin="20,10"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Panel.ZIndex="99"
-                    OnGoToBottom="GotoBottom"
-                    OnGoToTop="GotoTop" />
-            </super:SimplePanel>
+                    <!--  去到顶部/底部  -->
+                    <super:GoToTop
+                        Margin="20,10"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Panel.ZIndex="99"
+                        OnGoToBottom="GotoBottom"
+                        OnGoToTop="GotoTop" />
+                </super:SimplePanel>
 
-            <!--  表格展示  -->
-            <DataGrid
-                Name="tableData"
-                Grid.Column="2"
-                Margin="5"
-                HorizontalContentAlignment="Left"
-                Panel.ZIndex="10"
-                d:ItemsSource="{d:SampleData}"
-                AllowDrop="True"
-                CanUserResizeColumns="True"
-                CanUserSortColumns="False"
-                IsReadOnly="True"
-                ItemsSource="{Binding CurrentVideoList}"
-                RowHeight="40"
-                Style="{DynamicResource FlatDataGrid}"
-                Visibility="{Binding DataContext.ShowTable, ElementName=videoList, Converter={StaticResource BoolToVisibilityConverter}}">
-                <DataGrid.RowStyle>
-                    <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
-                        <!--  一设置 EventSetter 热重载就失效  -->
-                        <!--<EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />-->
-                    </Style>
-                </DataGrid.RowStyle>
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn MinWidth="120" Header="{DynamicResource Operate}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel
-                                    x:Name="_stackPanel"
-                                    Opacity="0.8"
-                                    Orientation="Horizontal"
-                                    Visibility="Hidden">
-                                    <Button
-                                        Grid.Column="0"
-                                        Height="25"
-                                        Margin="5,0"
-                                        HorizontalAlignment="Stretch"
-                                        Click="EditInfo"
-                                        Content="{DynamicResource Edit}"
-                                        Style="{StaticResource ButtonPrimary}"
-                                        Tag="{Binding DataID, Mode=OneWay}" />
-                                    <Button
-                                        Grid.Column="1"
-                                        Margin="0"
-                                        HorizontalAlignment="Stretch"
-                                        Click="ShowDetail"
-                                        Content="{DynamicResource Detail}"
-                                        Style="{StaticResource ButtonWarning}"
-                                        Tag="{Binding DataID, Mode=OneWay}" />
-                                </StackPanel>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
-                                        <Setter TargetName="_stackPanel" Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                <!--  表格展示  -->
+                <DataGrid
+                    Name="tableData"
+                    Margin="5"
+                    HorizontalContentAlignment="Left"
+                    Panel.ZIndex="10"
+                    d:ItemsSource="{d:SampleData}"
+                    AllowDrop="True"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding CurrentVideoList}"
+                    RowHeight="40"
+                    Style="{DynamicResource FlatDataGrid}"
+                    Visibility="{Binding DataContext.ShowTable, ElementName=videoList, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGrid.RowStyle>
+                        <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                            <!--  一设置 EventSetter 热重载就失效  -->
+                            <!--<EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />-->
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn MinWidth="120" Header="{DynamicResource Operate}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel
+                                        x:Name="_stackPanel"
+                                        Opacity="0.8"
+                                        Orientation="Horizontal"
+                                        Visibility="Hidden">
+                                        <Button
+                                            Grid.Column="0"
+                                            Height="25"
+                                            Margin="5,0"
+                                            HorizontalAlignment="Stretch"
+                                            Click="EditInfo"
+                                            Content="{DynamicResource Edit}"
+                                            Style="{StaticResource ButtonPrimary}"
+                                            Tag="{Binding DataID, Mode=OneWay}" />
+                                        <Button
+                                            Grid.Column="1"
+                                            Margin="0"
+                                            HorizontalAlignment="Stretch"
+                                            Click="ShowDetail"
+                                            Content="{DynamicResource Detail}"
+                                            Style="{StaticResource ButtonWarning}"
+                                            Tag="{Binding DataID, Mode=OneWay}" />
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                            <Setter TargetName="_stackPanel" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn
-                        Width="150"
-                        MinWidth="100"
-                        Header="{DynamicResource ID}"
-                        SortMemberPath="Favorites">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBox
-                                    Cursor="Arrow"
-                                    Style="{StaticResource ReadOnlyNoWrapTextBox}"
-                                    Text="{Binding VID}"
-                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-
-                    <DataGridTemplateColumn
-                        x:Name="TextCol01"
-                        Width="200"
-                        MinWidth="120"
-                        Header="{DynamicResource Title}"
-                        SortMemberPath="Title">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock
-                                    Cursor="Arrow"
-                                    Style="{StaticResource BaseTextBlock}"
-                                    Text="{Binding Title}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="NoWrap"
-                                    ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            Width="150"
+                            MinWidth="100"
+                            Header="{DynamicResource ID}"
+                            SortMemberPath="Favorites">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        Cursor="Arrow"
+                                        Style="{StaticResource ReadOnlyNoWrapTextBox}"
+                                        Text="{Binding VID}"
+                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
 
-                    <DataGridTemplateColumn
-                        Width="140"
-                        MinWidth="140"
-                        Header="{DynamicResource Favorites}"
-                        SortMemberPath="Favorites">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <super:Rate
-                                    Grid.Row="1"
-                                    AllowHalf="True"
-                                    Background="{DynamicResource Window.Title.Background}"
-                                    Foreground="{DynamicResource Common.HighLight.Deep.Background}"
-                                    ItemHeight="20"
-                                    ItemMargin="3 0"
-                                    PreviewMouseDown="Rate_PreviewMouseDown"
-                                    Tag="{Binding DataID, Mode=OneWay}"
-                                    ToolTip="{DynamicResource DoubleClickToCancel}"
-                                    ValueChanged="Rate_ValueChanged"
-                                    Value="{Binding Grade, Mode=TwoWay}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            x:Name="TextCol01"
+                            Width="200"
+                            MinWidth="120"
+                            Header="{DynamicResource Title}"
+                            SortMemberPath="Title">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+                                        Cursor="Arrow"
+                                        Style="{StaticResource BaseTextBlock}"
+                                        Text="{Binding Title}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="NoWrap"
+                                        ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
 
-                    <DataGridTemplateColumn
-                        MinWidth="140"
-                        Header="{DynamicResource Path}"
-                        SortMemberPath="Favorites">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel
-                                    x:Name="_stackPanel"
-                                    Opacity="0.8"
-                                    Orientation="Horizontal"
-                                    Visibility="Hidden">
-                                    <Button
-                                        Grid.Column="0"
-                                        Height="25"
-                                        Margin="5,0"
-                                        HorizontalAlignment="Stretch"
-                                        Click="OnPlayVideo"
-                                        Content="{DynamicResource PlayVideo}"
-                                        Style="{StaticResource ButtonSuccess}"
-                                        Tag="{Binding DataID, Mode=OneWay}" />
-                                    <Button
-                                        Grid.Column="1"
-                                        Margin="0"
-                                        HorizontalAlignment="Stretch"
-                                        Click="OpenVideoPath"
-                                        Content="{DynamicResource OpenPath}"
-                                        Style="{StaticResource ButtonWarning}"
-                                        Tag="{Binding DataID, Mode=OneWay}" />
-                                </StackPanel>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
-                                        <Setter TargetName="_stackPanel" Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            Width="140"
+                            MinWidth="140"
+                            Header="{DynamicResource Favorites}"
+                            SortMemberPath="Favorites">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <super:Rate
+                                        Grid.Row="1"
+                                        AllowHalf="True"
+                                        Background="{DynamicResource Window.Title.Background}"
+                                        Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                                        ItemHeight="20"
+                                        ItemMargin="3 0"
+                                        PreviewMouseDown="Rate_PreviewMouseDown"
+                                        Tag="{Binding DataID, Mode=OneWay}"
+                                        ToolTip="{DynamicResource DoubleClickToCancel}"
+                                        ValueChanged="Rate_ValueChanged"
+                                        Value="{Binding Grade, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
 
-                    <DataGridTextColumn
-                        Width="80"
-                        MinWidth="80"
-                        Binding="{Binding Size, Converter={StaticResource BitToGBConverter}}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource Size}"
-                        IsReadOnly="True"
-                        SortMemberPath="Size" />
+                        <DataGridTemplateColumn
+                            MinWidth="140"
+                            Header="{DynamicResource Path}"
+                            SortMemberPath="Favorites">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel
+                                        x:Name="_stackPanel"
+                                        Opacity="0.8"
+                                        Orientation="Horizontal"
+                                        Visibility="Hidden">
+                                        <Button
+                                            Grid.Column="0"
+                                            Height="25"
+                                            Margin="5,0"
+                                            HorizontalAlignment="Stretch"
+                                            Click="OnPlayVideo"
+                                            Content="{DynamicResource PlayVideo}"
+                                            Style="{StaticResource ButtonSuccess}"
+                                            Tag="{Binding DataID, Mode=OneWay}" />
+                                        <Button
+                                            Grid.Column="1"
+                                            Margin="0"
+                                            HorizontalAlignment="Stretch"
+                                            Click="OpenVideoPath"
+                                            Content="{DynamicResource OpenPath}"
+                                            Style="{StaticResource ButtonWarning}"
+                                            Tag="{Binding DataID, Mode=OneWay}" />
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                            <Setter TargetName="_stackPanel" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
 
-                    <DataGridTextColumn
-                        Width="60"
-                        MinWidth="60"
-                        Binding="{Binding Duration}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource Duration}"
-                        IsReadOnly="True"
-                        SortMemberPath="Duration" />
+                        <DataGridTextColumn
+                            Width="80"
+                            MinWidth="80"
+                            Binding="{Binding Size, Converter={StaticResource BitToGBConverter}}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource Size}"
+                            IsReadOnly="True"
+                            SortMemberPath="Size" />
 
+
+                        <DataGridTextColumn
+                            Width="60"
+                            MinWidth="60"
+                            Binding="{Binding Duration}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource Duration}"
+                            IsReadOnly="True"
+                            SortMemberPath="Duration" />
 
 
 
-                    <DataGridTextColumn
-                        Width="90"
-                        MinWidth="90"
-                        Binding="{Binding ReleaseDate}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource ReleaseDate}"
-                        IsReadOnly="True"
-                        SortMemberPath="ReleaseDate" />
 
-                    <DataGridTextColumn
-                        Width="80"
-                        MinWidth="80"
-                        Binding="{Binding ViewCount}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource ViewNumber}"
-                        IsReadOnly="True"
-                        SortMemberPath="ViewCount" />
+                        <DataGridTextColumn
+                            Width="90"
+                            MinWidth="90"
+                            Binding="{Binding ReleaseDate}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource ReleaseDate}"
+                            IsReadOnly="True"
+                            SortMemberPath="ReleaseDate" />
+
+                        <DataGridTextColumn
+                            Width="80"
+                            MinWidth="80"
+                            Binding="{Binding ViewCount}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource ViewNumber}"
+                            IsReadOnly="True"
+                            SortMemberPath="ViewCount" />
 
 
-                    <DataGridTextColumn
-                        Width="180"
-                        MinWidth="180"
-                        Binding="{Binding ViewDate}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource RecentView}"
-                        IsReadOnly="True"
-                        SortMemberPath="ViewDate" />
+                        <DataGridTextColumn
+                            Width="180"
+                            MinWidth="180"
+                            Binding="{Binding ViewDate}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource RecentView}"
+                            IsReadOnly="True"
+                            SortMemberPath="ViewDate" />
 
-                    <DataGridTextColumn
-                        Width="180"
-                        MinWidth="180"
-                        Binding="{Binding LastScanDate}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource ImportDate}"
-                        IsReadOnly="True"
-                        SortMemberPath="LastScanDate" />
+                        <DataGridTextColumn
+                            Width="180"
+                            MinWidth="180"
+                            Binding="{Binding LastScanDate}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource ImportDate}"
+                            IsReadOnly="True"
+                            SortMemberPath="LastScanDate" />
 
-                    <DataGridTextColumn
-                        Width="120"
-                        MinWidth="120"
-                        Binding="{Binding Director}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource Director}"
-                        IsReadOnly="True"
-                        SortMemberPath="Director" />
+                        <DataGridTextColumn
+                            Width="120"
+                            MinWidth="120"
+                            Binding="{Binding Director}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource Director}"
+                            IsReadOnly="True"
+                            SortMemberPath="Director" />
 
-                    <DataGridTextColumn
-                        Width="120"
-                        MinWidth="120"
-                        Binding="{Binding Studio}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource Studio}"
-                        IsReadOnly="True"
-                        SortMemberPath="Studio" />
+                        <DataGridTextColumn
+                            Width="120"
+                            MinWidth="120"
+                            Binding="{Binding Studio}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource Studio}"
+                            IsReadOnly="True"
+                            SortMemberPath="Studio" />
 
-                    <DataGridTextColumn
-                        Width="180"
-                        MinWidth="180"
-                        Binding="{Binding CreateDate}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource CreatedDate}"
-                        IsReadOnly="True"
-                        SortMemberPath="CreateDate" />
-                    <DataGridTextColumn
-                        Width="180"
-                        MinWidth="180"
-                        Binding="{Binding UpdateDate}"
-                        ElementStyle="{StaticResource DataGridTextBlockStyle}"
-                        Header="{DynamicResource Update}"
-                        IsReadOnly="True"
-                        SortMemberPath="UpdateDate" />
-                </DataGrid.Columns>
-            </DataGrid>
-
+                        <DataGridTextColumn
+                            Width="180"
+                            MinWidth="180"
+                            Binding="{Binding CreateDate}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource CreatedDate}"
+                            IsReadOnly="True"
+                            SortMemberPath="CreateDate" />
+                        <DataGridTextColumn
+                            Width="180"
+                            MinWidth="180"
+                            Binding="{Binding UpdateDate}"
+                            ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                            Header="{DynamicResource Update}"
+                            IsReadOnly="True"
+                            SortMemberPath="UpdateDate" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
 
         </Grid>
-
-        <Image
-            Grid.Row="2"
-            Height="256"
-            Margin="3"
-            Source="pack://application:,,,/Resources/Picture/nothing.png"
-            Visibility="{Binding DataContext.Nothing, ElementName=videoList, Converter={StaticResource BoolToVisibilityConverter}}" />
-
 
         <!--  底部  -->
         <Grid

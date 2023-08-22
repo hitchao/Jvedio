@@ -236,7 +236,7 @@
                         Expand="Common_Expand"
                         FontSize="14"
                         Header="{DynamicResource Other}"
-                        IsExpanded="{Binding ExpandCommon, ElementName=filter, Mode=TwoWay}"
+                        IsExpanded="{Binding ExpandCommon, ElementName=filter, Mode=TwoWay, FallbackValue=True}"
                         IsSelected="False"
                         LineWidth="0"
                         Style="{StaticResource BaseTogglePanel}">
@@ -251,10 +251,19 @@
 
                         <DockPanel Style="{StaticResource LinePanelStyle}">
                             <StackPanel Orientation="Horizontal">
+                                <super:HoverPath
+                                    Width="18"
+                                    Height="18"
+                                    Margin="0"
+                                    Padding="0"
+                                    VerticalAlignment="Center"
+                                    PathPadding="3"
+                                    Style="{StaticResource HelpHoverPath}"
+                                    ToolTip="{DynamicResource PleaseSetExistsIndex}" />
                                 <ToggleButton
                                     Click="SetAllSelected"
                                     Style="{StaticResource SelectAllToggleButton}"
-                                    Visibility="Hidden" />
+                                    Visibility="Collapsed" />
                                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="{DynamicResource File}" />
                             </StackPanel>
                             <WrapPanel Name="playWrapPanel" Orientation="Horizontal">
