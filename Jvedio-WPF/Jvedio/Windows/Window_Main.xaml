@@ -541,23 +541,46 @@
                                             ShadowDepth="5" />
                                     </TextBlock.Effect>
                                 </TextBlock>
-                                <Button
+
+                                <StackPanel
                                     Grid.Row="1"
-                                    Width="150"
-                                    Margin="20"
-                                    Padding="10,15"
-                                    super:CommonExt.BorderThickness="2"
-                                    BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                                    Click="ImportVideo"
-                                    Style="{StaticResource BorderButton}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image
-                                            Height="13"
-                                            Margin="0,0,5,0"
-                                            Source="/Resources/Picture/导入.png" />
-                                        <TextBlock Margin="5,0" Text="{DynamicResource ImportVideo}" />
-                                    </StackPanel>
-                                </Button>
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Width="150"
+                                        Margin="20"
+                                        Padding="10,15"
+                                        super:CommonExt.BorderThickness="2"
+                                        BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                                        Click="ImportVideo"
+                                        Style="{StaticResource BorderButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Height="13"
+                                                Margin="0,0,5,0"
+                                                Source="/Resources/Picture/导入.png" />
+                                            <TextBlock Margin="5,0" Text="{DynamicResource ImportVideo}" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button
+                                        Width="150"
+                                        Margin="20"
+                                        Padding="10,15"
+                                        super:CommonExt.BorderThickness="2"
+                                        BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                                        Command="{Binding AddNewMovie}"
+                                        Style="{StaticResource BorderButton}"
+                                        Visibility="{Binding Path=TeenMode, Source={x:Static config:ConfigManager.Settings}, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Height="13"
+                                                Margin="0,0,5,0"
+                                                Source="/Resources/Picture/新增.png" />
+                                            <TextBlock Margin="5,0" Text="{DynamicResource ID}" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
 
 
 
