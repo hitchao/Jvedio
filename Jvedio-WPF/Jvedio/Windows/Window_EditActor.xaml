@@ -82,6 +82,17 @@
                 Grid.Column="0"
                 Background="{DynamicResource Window.Side.Background}"
                 Orientation="Vertical">
+                <StackPanel.Resources>
+                    <ImageBrush x:Key="imageBrush" Stretch="Fill">
+                        <ImageBrush.ImageSource>
+                            <Binding Path="CurrentActorInfo.SmallImage" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}">
+                                <Binding.TargetNullValue>
+                                    <ImageSource>/Resources/Picture/NoPrinting_A.png</ImageSource>
+                                </Binding.TargetNullValue>
+                            </Binding>
+                        </ImageBrush.ImageSource>
+                    </ImageBrush>
+                </StackPanel.Resources>
                 <Border
                     Grid.Column="3"
                     Width="126"
@@ -90,6 +101,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     AllowDrop="True"
+                    Background="{StaticResource imageBrush}"
                     CornerRadius="4"
                     DragEnter="Border_DragEnter"
                     Drop="ActorImage_Drop"
@@ -99,18 +111,6 @@
                             <MenuItem Click="SetActorImage" Header="{DynamicResource SetActorImage}" />
                         </ContextMenu>
                     </Border.ContextMenu>
-
-                    <Border.Background>
-                        <ImageBrush Stretch="Fill">
-                            <ImageBrush.ImageSource>
-                                <Binding Path="CurrentActorInfo.SmallImage">
-                                    <Binding.TargetNullValue>
-                                        <ImageSource>/Resources/Picture/NoPrinting_A.png</ImageSource>
-                                    </Binding.TargetNullValue>
-                                </Binding>
-                            </ImageBrush.ImageSource>
-                        </ImageBrush>
-                    </Border.Background>
 
                 </Border>
 
@@ -284,6 +284,7 @@
                             </Style>
                         </Border.Style>
                         <TextBox
+                            Name="editTextBoxCommand"
                             Height="100"
                             Padding="2,0,0,0"
                             HorizontalAlignment="Stretch"

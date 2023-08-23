@@ -178,12 +178,11 @@
                             </Grid>
                             <Popup
                                 x:Name="searchActorPopup"
-                                Width="900"
+                                Width="1200"
                                 Height="500"
                                 AllowsTransparency="True"
-                                HorizontalOffset="0"
+                                HorizontalOffset="-100"
                                 Placement="Bottom"
-                                PlacementTarget="{Binding ElementName=actorTagPanel}"
                                 PopupAnimation="Fade"
                                 StaysOpen="True"
                                 VerticalOffset="0">
@@ -254,11 +253,13 @@
                                                 Orientation="Horizontal">
                                                 <Button
                                                     MinWidth="100"
+                                                    MinHeight="30"
                                                     Click="newActor_Cancel"
                                                     Content="{StaticResource Cancel}"
                                                     Style="{StaticResource ButtonDanger}" />
                                                 <Button
                                                     MinWidth="100"
+                                                    MinHeight="30"
                                                     Click="newActor_Confirm"
                                                     Content="{StaticResource Confirm}"
                                                     Style="{StaticResource ButtonPrimary}" />
@@ -316,7 +317,6 @@
                                     AllowsTransparency="True"
                                     HorizontalOffset="-5"
                                     Placement="Bottom"
-                                    PlacementTarget="{Binding ElementName=labelTagPanel}"
                                     PopupAnimation="Fade"
                                     StaysOpen="False"
                                     VerticalOffset="-5">

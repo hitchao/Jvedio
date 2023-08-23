@@ -81,6 +81,28 @@
         <StackPanel Margin="0" Tag="{Binding DataID, Mode=OneWay}">
             <!--  图片  -->
             <super:SimplePanel Grid.Row="0">
+                <super:SimplePanel.Resources>
+                    <!--  技巧：代理节点  -->
+                    <ImageBrush
+                        x:Key="smallImage"
+                        ImageSource="{Binding SmallImage}"
+                        Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
+                    <ImageBrush
+                        x:Key="bigImage"
+                        ImageSource="{Binding BigImage}"
+                        Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
+                    <Style x:Key="ImageBorder" TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ImageMode, ElementName=viewVideo, Mode=OneWay}" Value="0">
+                                <Setter Property="Background" Value="{StaticResource smallImage}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ImageMode, ElementName=viewVideo, Mode=OneWay}" Value="1">
+                                <Setter Property="Background" Value="{StaticResource bigImage}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </super:SimplePanel.Resources>
+
                 <Border
                     Width="{Binding Path=ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
                     Height="{Binding Path=ImageHeight, Mode=OneWay, ElementName=viewVideo, FallbackValue=200}"
@@ -92,28 +114,8 @@
                     MouseEnter="Image_MouseEnter"
                     MouseLeave="Image_MouseLeave"
                     MouseLeftButtonDown="CanShowDetails"
-                    MouseLeftButtonUp="ShowDetails">
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ImageMode, ElementName=viewVideo, Mode=OneWay}" Value="0">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <ImageBrush ImageSource="{Binding SmallImage}" Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ImageMode, ElementName=viewVideo, Mode=OneWay}" Value="1">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <ImageBrush ImageSource="{Binding BigImage}" Stretch="{Binding Path=MainImageAutoMode, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToImageStretchConverter}, Mode=OneWay}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                </Border>
+                    MouseLeftButtonUp="ShowDetails"
+                    Style="{StaticResource ImageBorder}" />
 
                 <!--<media:GifImage
                     x:Name="GifImage"

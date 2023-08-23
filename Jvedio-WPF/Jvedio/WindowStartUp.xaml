@@ -441,16 +441,14 @@
                                 MouseDoubleClick="listBox_MouseDoubleClick">
                                 <ListBox.Resources>
                                     <ItemsPanelTemplate x:Key="ListBoxWrapTemplate">
-                                        <WrapPanel
-                                            Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
-                                            ItemHeight="{Binding (ListView.View).ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                            ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                                        <WrapPanel Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}" />
                                     </ItemsPanelTemplate>
                                     <ItemsPanelTemplate x:Key="ListBoxVerticalStackTemplate">
                                         <StackPanel Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}" Orientation="Vertical" />
                                     </ItemsPanelTemplate>
                                 </ListBox.Resources>
                                 <ListBox.Style>
+                                    <!--  这里不知道为啥，XAML 提示绑定失败，然而删除相关代码后仍绑定失败  -->
                                     <Style BasedOn="{StaticResource NormalListBox}" TargetType="ListBox">
                                         <Setter Property="ItemsPanel" Value="{DynamicResource ListBoxVerticalStackTemplate}" />
                                         <!--<Setter Property="ItemsPanel" Value="{DynamicResource ListBoxWrapTemplate}" />-->
@@ -483,15 +481,9 @@
                                 <ContextMenu>
                                     <MenuItem
                                         Click="ShowAbout"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                         Header="{DynamicResource About}" />
                                     <MenuItem
-                                        Command="cmd:OpenWindow.Settings"
-                                        Header="{DynamicResource Settings}"
-                                        Visibility="Collapsed" />
-                                    <MenuItem
                                         Click="ShowUpgradeWindow"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                         Header="{DynamicResource CheckUpgrade}" />
                                     <MenuItem Command="cmd:File.OpenBaseDir" Header="{DynamicResource OpenAppPath}" />
                                 </ContextMenu>

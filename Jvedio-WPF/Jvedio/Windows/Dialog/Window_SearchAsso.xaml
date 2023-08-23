@@ -70,7 +70,7 @@
                         </Style>
                     </Border.Style>
                 </Border>
-                <Grid Margin="0" Tag="{Binding id, Mode=OneWay}">
+                <Grid Margin="0">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />

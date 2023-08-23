@@ -278,7 +278,6 @@
     <Compile Include="Core\Exceptions\DllLoadFailedException.cs" />
     <Compile Include="Core\Exceptions\DirCreateFailedException.cs" />
     <Compile Include="Core\Command\File.cs" />
-    <Compile Include="Core\Command\OpenWindow.cs" />
     <Compile Include="Core\Config\Common\ProxyConfig.cs" />
     <Compile Include="Core\Config\Common\FFmpegConfig.cs" />
     <Compile Include="Core\Config\Common\RenameConfig.cs" />

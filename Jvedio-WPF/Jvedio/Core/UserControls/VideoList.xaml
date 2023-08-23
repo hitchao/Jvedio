@@ -84,10 +84,7 @@
                 Click="DownLoadWithUrl"
                 Header="{DynamicResource Menu_CustomUrl}"
                 Visibility="Collapsed" />
-            <MenuItem
-                Click="EditInfo"
-                Header="{DynamicResource Menu_EditInfo}"
-                Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}, Mode=TwoWay}" />
+            <MenuItem Click="EditInfo" Header="{DynamicResource Menu_EditInfo}" />
             <MenuItem Click="AddToPlayerList" Header="{DynamicResource AddToPlayList}" />
             <MenuItem Name="TagMenuItems" Header="{DynamicResource AddTagStamp}" />
             <MenuItem Header="{DynamicResource Menu_Advance}">
@@ -122,7 +119,7 @@
                 Header="{DynamicResource ViewWebsite}"
                 Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
 
-            <MenuItem Header="{DynamicResource OpenPath}" Visibility="{Binding EditMode, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+            <MenuItem Header="{DynamicResource OpenPath}">
                 <MenuItem Click="OpenPath" Header="{DynamicResource Movie}" />
                 <MenuItem Click="OpenPath" Header="{DynamicResource Poster}" />
                 <MenuItem Click="OpenPath" Header="{DynamicResource Thumbnail}" />
@@ -434,9 +431,8 @@
             VerticalAlignment="Center"
             Panel.ZIndex="4"
             Opacity="0"
-            Visibility="{Binding DisplayNavigation, Source={x:Static config:ConfigManager.VideoConfig}, Converter={StaticResource BoolToVisibilityConverter}}">
+            Visibility="{Binding DisplayNavigation, Source={x:Static config:ConfigManager.Main}, Converter={StaticResource BoolToVisibilityConverter}}">
             <Rectangle
-                Margin="{Binding MainGridThickness, Converter={StaticResource SmallerThicknessConverter}, ConverterParameter=-5, FallbackValue=5}"
                 Effect="{StaticResource ZeroShadowEffect}"
                 Fill="{DynamicResource Window.Side.Background}"
                 Opacity="0.5"
@@ -444,7 +440,7 @@
                 RadiusY="2"
                 Stroke="#5AC6FC"
                 StrokeThickness="1" />
-            <ScrollViewer Margin="0,10" VerticalScrollBarVisibility="Hidden">
+            <!-- <ScrollViewer Margin="0,10" VerticalScrollBarVisibility="Hidden">
                 <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding LettersNavigation}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -461,7 +457,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-            </ScrollViewer>
+            </ScrollViewer>-->
 
         </Grid>
 
@@ -607,7 +603,7 @@
                     <DataGrid.RowStyle>
                         <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
                             <!--  一设置 EventSetter 热重载就失效  -->
-                            <!--<EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />-->
+                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
@@ -850,7 +846,7 @@
             Grid.Row="3"
             HorizontalAlignment="Stretch"
             Panel.ZIndex="5"
-            Visibility="{Binding DisplayPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}">
+            Visibility="{Binding DisplayPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />

@@ -18,6 +18,17 @@
     <super:BaseWindow.Resources>
 
         <Style
+            x:Key="DataGridTextBlockStyle"
+            BasedOn="{StaticResource BaseTextBlock}"
+            TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <Style
             x:Key="TitleTextStyle"
             BasedOn="{StaticResource BaseTextBlock}"
             TargetType="TextBlock">
@@ -186,6 +197,7 @@
                 <DataGridTextColumn
                     MinWidth="50"
                     Binding="{Binding Handle}"
+                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
                     FontWeight="Bold"
                     Header="{DynamicResource Operate}"
                     IsReadOnly="True" />
@@ -193,11 +205,13 @@
                 <DataGridTextColumn
                     MinWidth="100"
                     Binding="{Binding Reason}"
+                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
                     Header="{DynamicResource Reason}"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     MinWidth="60"
                     Binding="{Binding Extension}"
+                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
                     Header="{DynamicResource Extension}"
                     IsReadOnly="True" />
                 <DataGridTemplateColumn

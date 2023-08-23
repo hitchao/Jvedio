@@ -201,17 +201,11 @@
 
                 <MenuItem
                     Click="ShowAbout"
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                     Header="{DynamicResource About}"
                     Icon="/Resources/Picture/about.png" />
                 <MenuItem Click="OpenHelp" Header="{DynamicResource Help}" />
                 <MenuItem Click="OpenFeedBack" Header="{DynamicResource FeedBack}" />
                 <MenuItem Click="OpenJvedioWebPage" Header="{DynamicResource WebSite}" />
-                <MenuItem
-                    Command="cmd:OpenWindow.Thanks"
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                    Header="{DynamicResource Thanks}" />
-
             </MenuItem>
 
 
@@ -223,7 +217,6 @@
 
             <MenuItem
                 Click="ShowUpgradeWindow"
-                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                 Header="{DynamicResource CheckUpgrade}"
                 Icon="/Resources/Picture/update.png" />
 
@@ -341,11 +334,8 @@
 
 
 
-                            <ScrollViewer
-                                Grid.Row="1"
-                                Width="{Binding ElementName=SideBorder, Path=ActualWidth}"
-                                VerticalScrollBarVisibility="Hidden">
-                                <Grid Width="{Binding ElementName=SideBorder, Path=ActualWidth}">
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+                                <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="auto" />
                                         <RowDefinition Height="auto" />

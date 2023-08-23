@@ -976,82 +976,6 @@
 
 
 
-                        <super:TogglePanel
-                            Margin="10,0"
-                            Padding="0,5"
-                            FontSize="15"
-                            Header="{DynamicResource Other}"
-                            IsExpanded="True"
-                            LineWidth="0"
-                            Style="{StaticResource BaseTogglePanel}"
-                            Visibility="Collapsed">
-                            <StackPanel Orientation="Vertical">
-
-                                <StackPanel Margin="10,10" Orientation="Horizontal">
-
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=HttpTimeoutSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource TimeOut_CloseConnection}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10" Orientation="Horizontal">
-
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=RequestTimeoutSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource TimeOut_HTTP}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10" Orientation="Horizontal">
-
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=TcpTimeoutSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource TimeOut_TCP}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10" Orientation="Horizontal">
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=DownloadTimeoutSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource TimeOut_DownloadImage}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="10" Orientation="Horizontal">
-
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{Binding Value, ElementName=StreamTimeoutSlider}" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource TextBlockTitle}"
-                                        Text="{DynamicResource TimeOut_ReadWrite}" />
-                                </StackPanel>
-
-
-                            </StackPanel>
-                        </super:TogglePanel>
-
-
-
 
                     </StackPanel>
                 </ScrollViewer>
@@ -1939,7 +1863,6 @@
                                         Margin="5"
                                         HorizontalAlignment="Stretch"
                                         DisplayMemberPath="Name"
-                                        ItemsSource="{Binding DataBases}"
                                         SelectedValuePath="DBId"
                                         SelectionChanged="DatabaseComboBox_SelectionChanged"
                                         Style="{StaticResource BorderComboBox}" />

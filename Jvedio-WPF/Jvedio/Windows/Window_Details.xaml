@@ -659,7 +659,7 @@
                                                 HorizontalAlignment="Left"
                                                 Orientation="Horizontal">
                                                 <TextBlock
-                                                    Width="270"
+                                                    MaxWidth="270"
                                                     HorizontalAlignment="Left"
                                                     FontFamily="Times New Roman"
                                                     FontSize="24"
@@ -670,7 +670,7 @@
                                                     TextWrapping="NoWrap" />
                                                 <super:HoverPath
                                                     Grid.Column="1"
-                                                    CopyData="{Binding VID}"
+                                                    CopyData="{Binding CurrentVideo.VID}"
                                                     Style="{StaticResource CopyHoverPath}" />
                                             </StackPanel>
                                             <ItemsControl
@@ -784,7 +784,7 @@
                                                                         CornerRadius="4"
                                                                         Cursor="Hand">
                                                                         <Border.Background>
-                                                                            <VisualBrush Viewbox="0.06,0.1,0.85,0.8">
+                                                                            <VisualBrush Viewbox="0.06,0.1,0.85,0.6">
                                                                                 <VisualBrush.Visual>
                                                                                     <Image Source="{Binding SmallImage}">
                                                                                         <Image.BitmapEffect>
@@ -815,20 +815,24 @@
                                                                             <RowDefinition Height="auto" />
                                                                             <RowDefinition Height="*" />
                                                                         </Grid.RowDefinitions>
+
+                                                                        <Grid.Resources>
+                                                                            <ImageBrush
+                                                                                x:Key="imageBrush"
+                                                                                ImageSource="{Binding SmallImage}"
+                                                                                Stretch="Fill" />
+                                                                        </Grid.Resources>
+
                                                                         <Border
                                                                             Grid.Row="0"
                                                                             Width="80"
                                                                             Height="80"
                                                                             Margin="1.5"
                                                                             VerticalAlignment="Top"
+                                                                            Background="{StaticResource imageBrush}"
                                                                             CornerRadius="4"
                                                                             Cursor="Hand"
-                                                                            FocusVisualStyle="{x:Null}">
-                                                                            <Border.Background>
-                                                                                <ImageBrush ImageSource="{Binding SmallImage}" Stretch="Fill" />
-                                                                            </Border.Background>
-
-                                                                        </Border>
+                                                                            FocusVisualStyle="{x:Null}" />
 
 
                                                                         <TextBlock

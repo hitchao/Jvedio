@@ -64,7 +64,6 @@
                     BorderThickness="0"
                     ContextMenu="{StaticResource TextBoxContextMenu}"
                     FontFamily="微软雅黑"
-                    FontSize="{Binding SerialPort.TextFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Foreground="{DynamicResource Window.Foreground}"
                     GotFocus="textBox_GotFocus"
                     IsReadOnly="True"

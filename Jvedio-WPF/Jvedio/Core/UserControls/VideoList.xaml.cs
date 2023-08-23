@@ -365,8 +365,6 @@ namespace Jvedio.Core.UserControls
 
         public void EditInfo(object sender, RoutedEventArgs e)
         {
-            //AssoDataPopup.IsOpen = false;
-            //windowEdit?.Close();
             long dataID = 0;
             if (sender is Button button && button.Tag != null &&
                 long.TryParse(button.Tag.ToString(), out dataID)) {

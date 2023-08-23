@@ -22,6 +22,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.App;
+using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 
@@ -924,6 +925,16 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                 onGradeChange?.Invoke(actorID, (float)rate.Value);
             }
 
+        }
+
+        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+            if (CurrentList != null && tableData.SelectedIndex is int idx &&
+                idx >= 0 && idx < CurrentList.Count &&
+                CurrentList[idx] is ActorInfo info && info.ActorID is long id) {
+                onShowSameActor?.Invoke(id);
+            }
         }
     }
 }

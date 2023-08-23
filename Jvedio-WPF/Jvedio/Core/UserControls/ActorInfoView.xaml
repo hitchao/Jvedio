@@ -22,12 +22,6 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableEditActress}" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource Window.Side.Background}" />
-                    <Setter Property="IsReadOnly" Value="False" />
-                </DataTrigger>
-            </Style.Triggers>
         </Style>
 
         <Style

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:localControl="clr-namespace:Jvedio.Core.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:Jvedio.Properties"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
@@ -237,10 +238,11 @@
                         <super:Rate
                             Grid.Row="1"
                             Margin="12,0"
-                            VerticalAlignment="Center"
+                            VerticalAlignment="Top"
                             AllowHalf="True"
                             Background="{DynamicResource Window.Background}"
                             Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                            IsEnabled="{Binding ViewMode, Converter={StaticResource OppositeBooleanConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type localControl:ActorList}}}"
                             ItemHeight="20"
                             ItemMargin="3 0"
                             Tag="{Binding ActorID, Mode=OneWay}"
@@ -664,7 +666,9 @@
                 Style="{DynamicResource FlatDataGrid}"
                 Visibility="{Binding ShowTable, ElementName=actorList, Converter={StaticResource BoolToVisibilityConverter}}">
                 <DataGrid.RowStyle>
-                    <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow" />
+                    <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                    </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
                     <DataGridTemplateColumn MinWidth="120" Header="{DynamicResource Operate}">
@@ -672,6 +676,7 @@
                             <DataTemplate>
                                 <StackPanel
                                     x:Name="_stackPanel"
+                                    IsEnabled="{Binding ViewMode, Converter={StaticResource OppositeBooleanConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type localControl:ActorList}}}"
                                     Opacity="0.8"
                                     Orientation="Horizontal"
                                     Visibility="Hidden">
@@ -758,6 +763,7 @@
                                     AllowHalf="True"
                                     Background="{DynamicResource Window.Title.Background}"
                                     Foreground="{DynamicResource Common.HighLight.Deep.Background}"
+                                    IsEnabled="{Binding ViewMode, Converter={StaticResource OppositeBooleanConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type localControl:ActorList}}}"
                                     ItemHeight="20"
                                     ItemMargin="3 0"
                                     Tag="{Binding ActorID, Mode=OneWay}"
