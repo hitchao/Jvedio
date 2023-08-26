@@ -4,6 +4,7 @@ using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
 using SuperControls.Style;
 using SuperUtils.Common;
+using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.Tasks;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.Net
@@ -25,8 +27,8 @@ namespace Jvedio.Core.Net
         private const String WRONG_STATUS_CODE = "-1";
 
         #region "事件"
-        public event EventHandler onDownloadSuccess;
-        public event EventHandler onDownloadPreview;
+        public static Action<DownLoadTask> onDownloadSuccess;
+        public static Action<long, string, byte[]> onDownloadPreview;
 
         #endregion
 
@@ -318,8 +320,7 @@ namespace Jvedio.Core.Net
                             });
                             if (fileByte != null && fileByte.Length > 0) {
                                 FileHelper.ByteArrayToFile(fileByte, saveFileName);
-                                PreviewImageEventArgs arg = new PreviewImageEventArgs(saveFileName, fileByte);
-                                onDownloadPreview?.Invoke(this, arg);
+                                onDownloadPreview?.Invoke(DataID, saveFileName, fileByte);
                                 StatusText = $"{i + 1}/{imageCount} 同步预览图成功";
                             } else {
                                 Logger.Error($"{i + 1}/{imageCount} 下载图片失败，文件为空");
@@ -402,7 +403,7 @@ namespace Jvedio.Core.Net
                 video.SaveNfo();
                 if (ConfigManager.Settings.SaveInfoToNFO)
                     StatusText = "2.3 成功保存 NFO";
-                onDownloadSuccess?.Invoke(this, null);
+                onDownloadSuccess?.Invoke(this);
                 return true;
             } else {
                 return false;
@@ -470,7 +471,7 @@ namespace Jvedio.Core.Net
                         return;
                     }
 
-                    onDownloadSuccess?.Invoke(this, null);
+                    onDownloadSuccess?.Invoke(this);
                     StatusText = "5. 开始同步演员头像";
                     success = await DownloadActors(video, dict, downLoader, header);
 
@@ -523,6 +524,22 @@ namespace Jvedio.Core.Net
 
             return null;
         }
+
+        #region "对外静态方法"
+        public static void DownloadVideo(Video video)
+        {
+            DownLoadTask downloadTask = new DownLoadTask(video, ConfigManager.DownloadConfig.DownloadPreviewImage, ConfigManager.DownloadConfig.OverrideInfo);
+
+            if (App.DownloadManager.Exists(downloadTask)) {
+                MessageNotify.Warning(LangManager.GetValueByKey("TaskExists"));
+                return;
+            }
+            downloadTask.onError += (s, ev) => MessageCard.Error((ev as MessageCallBackEventArgs).Message);
+            App.DownloadManager.AddTask(downloadTask);
+        }
+
+        #endregion
+
 
 
         public override bool Equals(object obj)

@@ -172,16 +172,6 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private bool _DownloadPreviewImage = ConfigManager.Settings.DownloadPreviewImage;
-
-        public bool DownloadPreviewImage {
-            get { return _DownloadPreviewImage; }
-
-            set {
-                _DownloadPreviewImage = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private bool _SkipExistImage = ConfigManager.Settings.SkipExistImage;
 
@@ -200,17 +190,6 @@ namespace Jvedio.ViewModel
 
             set {
                 _DownloadWhenTitleNull = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _OverrideInfo = ConfigManager.Settings.OverrideInfo;
-
-        public bool OverrideInfo {
-            get { return _OverrideInfo; }
-
-            set {
-                _OverrideInfo = value;
                 RaisePropertyChanged();
             }
         }

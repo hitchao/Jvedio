@@ -53,21 +53,26 @@ namespace Jvedio.Core.Config
                 return;
             foreach (Dictionary<object, object> d in dicts) {
                 CrawlerServer server = new CrawlerServer();
-                if (!server.HasAllKeys(d))
-                    continue;
+                //if (!server.HasAllKeys(d))
+                //    continue;
                 if (d.ContainsKey("PluginID"))
                     server.PluginID = d["PluginID"].ToString();
                 if (string.IsNullOrEmpty(server.PluginID))
                     continue;
                 if (!CrawlerManager.PluginMetaDatas.Where(arg => arg.PluginID.Equals(server.PluginID)).Any())
                     continue;
-                server.Url = d["Url"].ToString();
-                server.Cookies = d["Cookies"].ToString();
-                server.Enabled = "true".Equals(d["Enabled"].ToString().ToLower());
-                server.LastRefreshDate = d["LastRefreshDate"].ToString();
-                server.Headers = d["Headers"].ToString();
-                int.TryParse(d["Available"].ToString(), out int available);
-                server.Available = available;
+                if (d.ContainsKey("Url") && d["Url"] is string url)
+                    server.Url = url;
+                if (d.ContainsKey("Cookies") && d["Cookies"] is string Cookies)
+                    server.Cookies = Cookies;
+                if (d.ContainsKey("Enabled") && d["Enabled"] is bool enabled)
+                    server.Enabled = enabled;
+                if (d.ContainsKey("LastRefreshDate") && d["LastRefreshDate"] is string LastRefreshDate)
+                    server.LastRefreshDate = LastRefreshDate;
+                if (d.ContainsKey("Headers") && d["Headers"] is string Headers)
+                    server.Headers = Headers;
+                if (d.ContainsKey("Available") && int.TryParse(d["Available"].ToString(), out int available))
+                    server.Available = available;
                 CrawlerServers.Add(server);
             }
         }

@@ -107,6 +107,11 @@ namespace Jvedio.Core.Tasks
             }
         }
 
+        public bool Exists(AbstractTask task)
+        {
+            return CurrentTasks.Contains(task);
+        }
+
         public virtual void AddToDispatcher(AbstractTask task)
         {
             throw new NotImplementedException();

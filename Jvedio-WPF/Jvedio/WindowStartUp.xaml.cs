@@ -120,6 +120,7 @@ namespace Jvedio
             await MovePlugins();
             await DeletePlugins();
             CrawlerManager.Init(true);
+            ConfigManager.ServerConfig.Read();
 
             InitContext();
             UtilsManager.OnUtilSettingChange(); // 初始化 SuperUtils 的配置

@@ -635,7 +635,7 @@ namespace Jvedio.Entity
             if (!ConfigManager.Settings.SaveInfoToNFO)
                 return;
             string dir = ConfigManager.Settings.NFOSavePath;
-            bool overrideInfo = ConfigManager.Settings.OverrideInfo;
+            bool overrideInfo = ConfigManager.DownloadConfig.OverrideInfo;
 
             string saveName = $"{VID.ToProperFileName()}.nfo";
             if (string.IsNullOrEmpty(VID))
@@ -1054,6 +1054,29 @@ namespace Jvedio.Entity
             SetTitleAndDate(ref video);
             SetAsso(ref video);
             return video;
+        }
+
+        public static List<Video> GetAllByDBID(long dbid)
+        {
+
+            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
+            wrapper.Eq("DBId", dbid).Eq("DataType", "0");
+            string[] SelectFields =
+            {
+                "DISTINCT metadata.DataID",
+                "MVID",
+                "VID",
+                "metadata.Grade",
+                "metadata.Title",
+            };
+
+            wrapper.Select(SelectFields);
+            string sql = wrapper.ToSelect(false) + VideoMapper.SQL_BASE + wrapper.ToWhere(false);
+
+            List<Dictionary<string, object>> list = MapperManager.metaDataMapper.Select(sql);
+            List<Video> videos = MapperManager.metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
+
+            return videos;
         }
     }
 }

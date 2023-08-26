@@ -313,6 +313,7 @@ namespace Jvedio
                 int idx = i;
                 proxies[i].Click += (s, ev) => {
                     ConfigManager.ProxyConfig.ProxyMode = idx;
+                    MessageCard.Info(LangManager.GetValueByKey("RebootToTakeEffect"));
                 };
             }
 
@@ -929,10 +930,8 @@ namespace Jvedio
             ConfigManager.Settings.AutoHandleHeader = vieModel.AutoHandleHeader;
 
             ConfigManager.Settings.PicPathMode = vieModel.PicPathMode;
-            ConfigManager.Settings.DownloadPreviewImage = vieModel.DownloadPreviewImage;
             ConfigManager.Settings.SkipExistImage = vieModel.SkipExistImage;
             ConfigManager.Settings.DownloadWhenTitleNull = vieModel.DownloadWhenTitleNull;
-            ConfigManager.Settings.OverrideInfo = vieModel.OverrideInfo;
             ConfigManager.Settings.IgnoreCertVal = vieModel.IgnoreCertVal;
             ConfigManager.Settings.AutoBackup = vieModel.AutoBackup;
             ConfigManager.Settings.AutoBackupPeriodIndex = vieModel.AutoBackupPeriodIndex;
@@ -1149,6 +1148,7 @@ namespace Jvedio
                 if (httpResult.StatusCode == HttpStatusCode.OK) {
                     MessageCard.Success($"{LangManager.GetValueByKey("Success")} {LangManager.GetValueByKey("Delay")} {stopwatch.ElapsedMilliseconds} ms");
                     vieModel.TestProxyStatus = TaskStatus.RanToCompletion;
+                    MessageCard.Info(LangManager.GetValueByKey("RebootToTakeEffect"));
                 } else {
                     MessageCard.Error(httpResult.Error);
                     vieModel.TestProxyStatus = TaskStatus.Canceled;
@@ -1357,13 +1357,13 @@ namespace Jvedio
                 vieModel.HttpTimeout = ProxyConfig.DEFAULT_TIMEOUT;
                 vieModel.DownloadWhenTitleNull = true;
                 vieModel.SkipExistImage = false;
-                vieModel.OverrideInfo = false;
                 vieModel.SaveInfoToNFO = false;
 
                 ConfigManager.DownloadConfig.DownloadThumbNail = true;
                 ConfigManager.DownloadConfig.DownloadPoster = true;
                 ConfigManager.DownloadConfig.DownloadPreviewImage = false;
                 ConfigManager.DownloadConfig.DownloadActor = true;
+                ConfigManager.DownloadConfig.OverrideInfo = false;
                 ConfigManager.DownloadConfig.Save();
 
                 ConfigManager.ProxyConfig.ProxyMode = (int)ProxyConfig.DEFAULT_PROXY_MODE;

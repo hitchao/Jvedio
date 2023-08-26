@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
@@ -26,12 +27,39 @@ namespace Jvedio.Entity
         #region "属性"
 
 
+
+        private long _DataID;
+
         [TableId(IdType.AUTO)]
-        public long DataID { get; set; }
+        public long DataID {
+            get { return _DataID; }
 
-        public long DBId { get; set; }
+            set {
+                _DataID = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string Title { get; set; }
+        private long _DBId;
+
+        public long DBId {
+            get { return _DBId; }
+
+            set {
+                _DBId = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _Title;
+        public string Title {
+            get { return _Title; }
+
+            set {
+                _Title = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private long _Size;
 
@@ -56,23 +84,104 @@ namespace Jvedio.Entity
             }
         }
 
-        public string Hash { get; set; }
+        private string _Hash;
 
-        public string Country { get; set; }
+        public string Hash {
+            get { return _Hash; }
 
-        public string ReleaseDate { get; set; }
+            set {
+                _Hash = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public int ReleaseYear { get; set; }
 
-        public int ViewCount { get; set; }
+        private string _Country;
 
-        public DataType DataType { get; set; }
+        public string Country {
+            get { return _Country; }
 
-        public float Rating { get; set; }
+            set {
+                _Country = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public int RatingCount { get; set; }
+        private string _ReleaseDate;
 
-        public int FavoriteCount { get; set; }
+        public string ReleaseDate {
+            get { return _ReleaseDate; }
+
+            set {
+                _ReleaseDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _ReleaseYear;
+        public int ReleaseYear {
+            get { return _ReleaseYear; }
+
+            set {
+                _ReleaseYear = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _ViewCount;
+        public int ViewCount {
+            get { return _ViewCount; }
+
+            set {
+                _ViewCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private DataType _DataType;
+
+        public DataType DataType {
+            get { return _DataType; }
+
+            set {
+                _DataType = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private float _Rating;
+
+        public float Rating {
+            get { return _Rating; }
+
+            set {
+                _Rating = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _RatingCount;
+
+        public int RatingCount {
+            get { return _RatingCount; }
+
+            set {
+                _RatingCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _FavoriteCount;
+
+        public int FavoriteCount {
+            get { return _FavoriteCount; }
+
+            set {
+                _FavoriteCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         private string _Genre;
 
@@ -138,9 +247,20 @@ namespace Jvedio.Entity
             }
         }
 
-        public string ViewDate { get; set; }
+        private string _ViewDate;
 
-        public string _FirstScanDate;
+
+        public string ViewDate {
+            get { return _ViewDate; }
+
+            set {
+                _ViewDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private string _FirstScanDate;
 
         public string FirstScanDate {
             get { return _FirstScanDate; }
@@ -162,10 +282,39 @@ namespace Jvedio.Entity
             }
         }
 
-        public string CreateDate { get; set; }
+        private string _CreateDate;
 
-        public string UpdateDate { get; set; }
-        public int PathExist { get; set; }
+        public string CreateDate {
+            get { return _CreateDate; }
+
+            set {
+                _CreateDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _UpdateDate;
+
+        public string UpdateDate {
+            get { return _UpdateDate; }
+
+            set {
+                _UpdateDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _PathExist;
+
+        public int PathExist {
+            get { return _PathExist; }
+
+            set {
+                _PathExist = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         private BitmapSource _ViewImage;
 

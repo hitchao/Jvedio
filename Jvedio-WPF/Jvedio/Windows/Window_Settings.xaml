@@ -742,7 +742,7 @@
 
                                     <CheckBox Content="标题为空才同步信息" IsChecked="{Binding DownloadWhenTitleNull, Mode=TwoWay}" />
                                     <CheckBox Content="{DynamicResource SkipDownloadImage}" IsChecked="{Binding SkipExistImage, Mode=TwoWay}" />
-                                    <CheckBox Content="{DynamicResource ForcedFetchInfo}" IsChecked="{Binding OverrideInfo, Mode=TwoWay}" />
+                                    <CheckBox Content="{DynamicResource ForcedFetchInfo}" IsChecked="{Binding OverrideInfo, Source={x:Static config:ConfigManager.DownloadConfig}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
                                     <WrapPanel Margin="10,0" Orientation="Horizontal">
@@ -2014,7 +2014,6 @@
                                 Margin="10"
                                 HorizontalAlignment="Left"
                                 DockPanel.Dock="Top"
-                                FontWeight="Bold"
                                 Style="{StaticResource BaseTextBlock}"
                                 Text="是否启用" />
                             <super:Switch
@@ -2029,7 +2028,6 @@
                                 Margin="10"
                                 HorizontalAlignment="Left"
                                 DockPanel.Dock="Top"
-                                FontWeight="Bold"
                                 Style="{StaticResource BaseTextBlock}"
                                 Text="服务器源" />
 
@@ -2043,8 +2041,8 @@
                                     Style="{DynamicResource FillButton}" />
 
                                 <super:HoverPath
-                                    Width="30"
-                                    Height="30"
+                                    Width="25"
+                                    Height="25"
                                     Margin="5,0"
                                     Click="ShowCrawlerHelp"
                                     Style="{StaticResource HelpHoverPath}" />

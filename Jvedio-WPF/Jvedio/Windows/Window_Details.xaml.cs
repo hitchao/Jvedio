@@ -75,6 +75,8 @@ namespace Jvedio
 
         private List<long> DataIDs { get; set; } = new List<long>();
 
+        private object RefreshLock { get; set; } = new object();
+
         public long DataID { get; set; }
 
         private bool CancelLoadImage { get; set; }// 切换到下一个影片时停止加载图片
@@ -130,8 +132,31 @@ namespace Jvedio
             InitDataIDs();          // 设置切换的影片列表
             OpenOtherUrlMenuItem.Items.Clear(); // 设置右键菜单
             RemoveNewAddTag();
+            BindEvent();
         }
 
+
+        private void BindEvent()
+        {
+            DownLoadTask.onDownloadPreview += (long dataID, string path, byte[] fileByte) => {
+                Dispatcher.Invoke(() => {
+                    lock (RefreshLock) {
+                        OnDownloadPreview(dataID, path, fileByte);
+                    }
+                });
+            };
+
+            DownLoadTask.onDownloadSuccess += (task) => {
+                Dispatcher.Invoke(() => {
+                    lock (RefreshLock) {
+                        if (DataID == task.DataID)
+                            Refresh();
+                    }
+                });
+            };
+
+
+        }
 
 
         /// <summary>
@@ -294,50 +319,31 @@ namespace Jvedio
             // if (GlobalFont != null) this.FontFamily = GlobalFont;
         }
 
-        // todo 刮削
         public void DownLoad(object sender, RoutedEventArgs e)
         {
-            if (windowMain == null) {
-                MessageNotify.Error("主界面必须开启！");
-                return;
-            }
             Video video = vieModel.CurrentVideo;
             if (video == null || video.DataID <= 0)
                 return;
-            DownLoadTask task = new DownLoadTask(video, true, ConfigManager.Settings.OverrideInfo); // 详情页面下载预览图
-            long dataId = video.DataID;
-            task.onDownloadSuccess += (s, ev) => {
-                DownLoadTask t = s as DownLoadTask;
-                Dispatcher.Invoke(() => {
-                    if (dataId.Equals(vieModel.CurrentVideo.DataID))
-                        vieModel.Load(dataId);
+            DownLoadTask.DownloadVideo(video);
+        }
 
-                    // 通知主界面刷新
-                    windowMain?.RefreshData(dataId);
-                });
-            };
-            task.onDownloadPreview += (s, ev) => {
-                DownLoadTask t = s as DownLoadTask;
-                PreviewImageEventArgs arg = ev as PreviewImageEventArgs;
-                Dispatcher.Invoke(() => {
-                    if (dataId.Equals(vieModel.CurrentVideo.DataID) && !vieModel.ShowScreenShot) {
-                        // 加入到列表
-                        if (vieModel.CurrentVideo.PreviewImagePathList == null)
-                            vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
-                        if (vieModel.CurrentVideo.PreviewImageList == null)
-                            vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
-                        vieModel.CurrentVideo.PreviewImagePathList.Add(arg.Path);
-                        vieModel.CurrentVideo.PreviewImageList.Add(ImageHelper.BitmapImageFromByte(arg.FileByte));
-                    }
-                });
-            };
-            //if (!Global.DownloadManager.Dispatcher.Working)
-            //    Global.DownloadManager.Dispatcher.BeginWork();
-            //bool? added = windowMain?.addToDownload(task);
-            //if ((bool)added) {
-            //    windowMain?.setDownloadStatus();
-            //    MessageNotify.Success("成功加入下载列表");
-            //}
+
+
+        public void OnDownloadPreview(long dataID, string path, byte[] fileByte)
+        {
+            if (dataID.Equals(vieModel.CurrentVideo.DataID) && !vieModel.ShowScreenShot &&
+                File.Exists(path) && fileByte != null) {
+                // 加入到列表
+                if (vieModel.CurrentVideo.PreviewImagePathList == null)
+                    vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
+                if (vieModel.CurrentVideo.PreviewImageList == null)
+                    vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
+                vieModel.CurrentVideo.PreviewImagePathList.Add(path);
+                vieModel.CurrentVideo.PreviewImageList.Add(ImageHelper.BitmapImageFromByte(fileByte));
+
+                vieModel.PreviewImageCount = vieModel.CurrentVideo.PreviewImagePathList.Count;
+            }
+
         }
 
         public void GetScreenGif(object sender, RoutedEventArgs e)
@@ -562,6 +568,10 @@ namespace Jvedio
             windowMain?.RefreshImage(vieModel.CurrentVideo);
         }
 
+        private void SetToBigPic(object sender, RoutedEventArgs e)
+        {
+            SetToPic(vieModel.CurrentVideo.GetBigImage(searchExt: false), GetExtraImagePath(sender as FrameworkElement, 1));
+        }
 
         private void SetToSmallPic(object sender, RoutedEventArgs e)
         {
@@ -571,14 +581,12 @@ namespace Jvedio
 
         private void SetToBigAndSmallPic(object sender, RoutedEventArgs e)
         {
-            SetToPic(vieModel.CurrentVideo.GetSmallImage(searchExt: false), GetExtraImagePath(sender as FrameworkElement, 1));
-            SetToPic(vieModel.CurrentVideo.GetBigImage(searchExt: false), GetExtraImagePath(sender as FrameworkElement, 1));
+            string path = GetExtraImagePath(sender as FrameworkElement, 1);
+            SetToPic(vieModel.CurrentVideo.GetSmallImage(searchExt: false), path);
+            SetToPic(vieModel.CurrentVideo.GetBigImage(searchExt: false), path);
         }
 
-        private void SetToBigPic(object sender, RoutedEventArgs e)
-        {
-            SetToPic(vieModel.CurrentVideo.GetBigImage(searchExt: false), GetExtraImagePath(sender as FrameworkElement, 1));
-        }
+
 
         private void SetToPic(string target, string origin)
         {
@@ -591,6 +599,8 @@ namespace Jvedio
                 ImageCache.Remove(target);
                 Refresh();
                 windowMain?.RefreshImage(vieModel.CurrentVideo);
+            } else {
+                MessageNotify.Error("设置失败");
             }
         }
 

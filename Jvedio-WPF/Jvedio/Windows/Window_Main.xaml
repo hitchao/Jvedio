@@ -185,11 +185,7 @@
                 <MenuItem Click="OpenServer" Header="后台服务管理" />
                 <MenuItem Click="ClearCache" Header="清空缓存" />
             </MenuItem>
-            <MenuItem
-                Click="ShowStatistic"
-                Header="{DynamicResource Statistic}"
-                IsEnabled="False"
-                Visibility="Collapsed" />
+
 
             <MenuItem
                 Click="ShowSponsor"

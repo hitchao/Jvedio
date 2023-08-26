@@ -360,6 +360,9 @@
                                                 <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="RanToCompletion">
                                                     <Setter Property="IsEnabled" Value="True" />
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Running">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status, Mode=OneWay}" Value="Canceled">
                                                     <Setter Property="IsEnabled" Value="True" />
                                                 </DataTrigger>

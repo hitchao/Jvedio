@@ -8,6 +8,7 @@ using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.Entity.CommonSQL;
+using Jvedio.Mapper;
 using Microsoft.VisualBasic.FileIO;
 using SuperControls.Style;
 using SuperControls.Style.Windows;
@@ -17,6 +18,7 @@ using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.Tasks;
 using SuperUtils.IO;
+using SuperUtils.Media;
 using SuperUtils.NetWork;
 using SuperUtils.Time;
 using SuperUtils.WPF.VisualTools;
@@ -87,6 +89,10 @@ namespace Jvedio.Core.UserControls
         private DispatcherTimer ResizingTimer { get; set; }
         private ScrollViewer dataScrollViewer { get; set; }
         private bool Resizing { get; set; }
+
+
+        private object RefreshLock { get; set; } = new object();
+
 
 
         public TabItemEx TabItemEx { get; set; }
@@ -194,6 +200,17 @@ namespace Jvedio.Core.UserControls
             };
 
             VieModel_VideoList.onSearchingChange += onSearchingChange;
+
+            DownLoadTask.onDownloadSuccess += (task) => {
+                Dispatcher.Invoke(() => {
+                    lock (RefreshLock) {
+                        vieModel.RefreshData(task.DataID);
+                        // 更新图片存在
+                        if (task.Success)
+                            UpdateImageIndex(task.DataID, true, true);
+                    }
+                });
+            };
         }
 
         private void ResizingTimer_Tick(object sender, EventArgs e)
@@ -756,14 +773,14 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        public void UpdateImageIndex(Video video, bool smallImageExists = false, bool bigImageExists = false)
+        public static void UpdateImageIndex(long dataID, bool smallImageExists = false, bool bigImageExists = false)
         {
             long pathType = ConfigManager.Settings.PicPathMode;
             List<string> list = new List<string>();
             // 小图
-            list.Add($"({video.DataID},{pathType},0,{(smallImageExists ? 1 : 0)})");
+            list.Add($"({dataID},{pathType},0,{(smallImageExists ? 1 : 0)})");
             // 大图
-            list.Add($"({video.DataID},{pathType},1,{(bigImageExists ? 1 : 0)})");
+            list.Add($"({dataID},{pathType},1,{(bigImageExists ? 1 : 0)})");
             string insertSql = $"begin;insert or replace into common_picture_exist(DataID,PathType,ImageType,Exist) values {string.Join(",", list)};commit;";
             MapperManager.videoMapper.ExecuteNonQuery(insertSql);
         }
@@ -1120,10 +1137,9 @@ namespace Jvedio.Core.UserControls
 
         public void DownLoadVideo(List<Video> videoList)
         {
-            foreach (Video video in vieModel.SelectedVideo) {
-                DownloadVideo(video);
+            foreach (Video video in videoList) {
+                DownLoadTask.DownloadVideo(video);
             }
-
             App.DownloadManager.Start();
         }
 
@@ -1309,14 +1325,18 @@ namespace Jvedio.Core.UserControls
                 return;
             }
 
-            SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
-            List<MetaData> metaDatas = metaDataMapper.SelectList(wrapper);
-            if (metaDatas == null || metaDatas.Count <= 0)
+            List<Video> videos = Video.GetAllByDBID(ConfigManager.Main.CurrentDBId);
+            if (videos == null || videos.Count == 0) {
+                MessageNotify.Error("数目为空");
                 return;
+            }
 
-            foreach (MetaData metaData in metaDatas) {
-                ScreenShotVideo(metaData);
+            if (new MsgBox($"即将开始截图 {videos.Count} 个资源，是否继续？").ShowDialog() == false) {
+                return;
+            }
+
+            foreach (Video video in videos) {
+                ScreenShotVideo(video.toMetaData());
             }
         }
 
@@ -1335,58 +1355,38 @@ namespace Jvedio.Core.UserControls
 
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
         {
-            MessageNotify.Info(LangManager.GetValueByKey("CrawlAllWarning"));
-            SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
-            List<Video> videos = videoMapper.SelectList();
+            List<Video> videos = Video.GetAllByDBID(ConfigManager.Main.CurrentDBId);
+
+            if (videos == null || videos.Count == 0) {
+                MessageNotify.Error("数目为空");
+                return;
+            }
+
+            if (new MsgBox($"即将开始同步 {videos.Count} 个资源，是否继续？").ShowDialog() == false) {
+                return;
+            }
+
+            MessageCard.Warning(LangManager.GetValueByKey("CrawlAllWarning"));
             DownLoadVideo(videos);
         }
 
-        public void DownloadVideo(Video video)
+
+
+
+
+        private void RefreshPreviewImage()
         {
-            DownLoadTask downloadTask = new DownLoadTask(video, ConfigManager.Settings.DownloadPreviewImage, ConfigManager.Settings.OverrideInfo);
-            downloadTask.onError += (s, ev) => {
-                MessageCard.Error((ev as MessageCallBackEventArgs).Message);
-            };
-            downloadTask.onDownloadSuccess += (s, ev) => {
-                DownLoadTask task = s as DownLoadTask;
-                Dispatcher.Invoke(() => {
-                    vieModel.RefreshData(task.DataID);
-                    // 更新图片存在
-                    if (task.Success)
-                        UpdateImageIndex(video, true, true);
-                });
-            };
 
-            App.DownloadManager.AddTask(downloadTask);
         }
-
-
-        public bool AddToDownload(DownLoadTask task)
-        {
-            return false;
-            //throw new Exception();
-            //if (!vieModel.DownLoadTasks.Contains(task)) {
-            //    Jvedio.Global.DownloadManager.Dispatcher.Enqueue(task);
-            //    vieModel.DownLoadTasks.Add(task);
-            //    return true;
-            //} else {
-            //    DownLoadTask downLoadTask =
-            //        vieModel.DownLoadTasks.FirstOrDefault(arg => arg.DataID == task.DataID);
-            //    if (!downLoadTask.Running) {
-            //        downLoadTask.Restart();
-            //        return true;
-            //    } else {
-            //        MessageNotify.Error("任务进行中！");
-            //        return false;
-            //    }
-            //}
-        }
-
 
 
         public void AddToScreenShot(ScreenShotTask task)
         {
+            if (App.ScreenShotManager.Exists(task)) {
+                MessageNotify.Warning(LangManager.GetValueByKey("TaskExists"));
+                return;
+            }
+
             App.ScreenShotManager.AddTask(task);
         }
 
@@ -1411,7 +1411,7 @@ namespace Jvedio.Core.UserControls
                                 vieModel.CurrentVideoList[i].BigImage = null;
                                 vieModel.CurrentVideoList[i].BigImage = currentVideo.ViewImage;
                                 // 更新索引
-                                UpdateImageIndex(video, false, true);
+                                UpdateImageIndex(currentVideo.DataID, false, true);
                             }
                         }
                     }

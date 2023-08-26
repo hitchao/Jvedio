@@ -1,4 +1,5 @@
 ﻿using Jvedio.Core.CustomEventArgs;
+using Jvedio.Core.Net;
 using Jvedio.Core.Scan;
 using Jvedio.Core.UserControls;
 using Jvedio.Core.UserControls.Tasks;
@@ -37,6 +38,7 @@ namespace Jvedio.ViewModels
 
         private TabItemManager()
         {
+            BindEvent();
         }
 
         public static TabItemManager CreateInstance(VieModel_Main vieModel, SimplePanel tabPanel)
@@ -47,6 +49,11 @@ namespace Jvedio.ViewModels
                 instance.TabPanel = tabPanel;
             }
             return instance;
+        }
+
+        private void BindEvent()
+        {
+
         }
 
         public void Add(TabType type, string tabName, params object[] tabData)

@@ -999,7 +999,10 @@ namespace Jvedio
         // todo tab
         public void RefreshData(long dataID)
         {
-
+            List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
+            foreach (var item in videoLists) {
+                item.RefreshData(dataID);
+            }
         }
 
         public void RefreshImage(Video video)
@@ -1162,100 +1165,6 @@ namespace Jvedio
             }
         }
 
-
-        private void ShowStatistic(object sender, RoutedEventArgs e)
-        {
-        }
-
-
-        public ObservableCollection<Video> GetVideosFromTagMenu(MenuItem menuItem)
-        {
-            if (menuItem == null)
-                return null;
-
-            ContextMenu contextMenu = menuItem.Parent as ContextMenu;
-            if (contextMenu == null || contextMenu.PlacementTarget == null)
-                return null;
-
-            Border border = contextMenu.PlacementTarget as Border;
-            if (border == null)
-                return null;
-
-            ItemsControl itemsControl = VisualHelper.FindParentOfType<ItemsControl>(border);
-            if (itemsControl == null)
-                return null;
-
-
-            ItemsControl control = VisualHelper.FindParentOfType<ItemsControl>(itemsControl);
-            if (control == null)
-                return null;
-
-
-
-            return control.ItemsSource as ObservableCollection<Video>;
-        }
-
-
-
-        private void DeleteVideoTagStamp(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            Border border = (menuItem.Parent as ContextMenu).PlacementTarget as Border;
-            long.TryParse(border.Tag.ToString(), out long tagID);
-            if (tagID <= 0)
-                return;
-
-            ItemsControl itemsControl = border.FindParentOfType<ItemsControl>();
-            if (itemsControl == null || itemsControl.Tag == null)
-                return;
-            long.TryParse(itemsControl.Tag.ToString(), out long DataID);
-            if (DataID <= 0)
-                return;
-            ObservableCollection<TagStamp> tagStamps = itemsControl.ItemsSource as ObservableCollection<TagStamp>;
-            if (tagStamps == null)
-                return;
-            TagStamp tagStamp = tagStamps.FirstOrDefault(arg => arg.TagID.Equals(tagID));
-            if (tagStamp != null) {
-
-
-                ObservableCollection<Video> datas = GetVideosFromTagMenu(sender as MenuItem);
-
-                tagStamps.Remove(tagStamp);
-                string sql = $"delete from metadata_to_tagstamp where TagID='{tagID}' and DataID='{DataID}'";
-                tagStampMapper.ExecuteNonQuery(sql);
-
-                for (int i = 0; i < datas.Count; i++) {
-                    if (datas[i].DataID.Equals(DataID)) {
-                        Video video = videoMapper.SelectVideoByID(DataID);
-                        if (video == null)
-                            continue;
-                        datas[i].TagIDs = video.TagIDs;
-                        break;
-                    }
-                }
-
-                InitTagStamp();
-            }
-        }
-
-        private void ScrollViewer_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer scrollViewer = sender as ScrollViewer;
-            scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
-            e.Handled = true;
-        }
-
-        private void RestartTask(object sender, RoutedEventArgs e)
-        {
-            //string dataID = (sender as Button).Tag.ToString();
-            //if (string.IsNullOrEmpty(dataID))
-            //    return;
-            //DownLoadTask task = vieModel.DownLoadTasks.Where(arg => arg.DataID.ToString().Equals(dataID)).FirstOrDefault();
-            //task?.Restart();
-            //if (!Global.DownloadManager.Dispatcher.Working)
-            //    Global.DownloadManager.Dispatcher.BeginWork();
-        }
-
         private void ShowSponsor(object sender, RoutedEventArgs e)
         {
             // 检测
@@ -1317,16 +1226,6 @@ namespace Jvedio
             about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
             about.ShowDialog();
         }
-
-
-        private void OpenScanPath(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            if (menuItem != null && menuItem.Tag != null) {
-                FileHelper.TryOpenPath(menuItem.Tag.ToString());
-            }
-        }
-
 
         private void ShowPluginWindow(object sender, RoutedEventArgs e)
         {
@@ -1456,31 +1355,9 @@ namespace Jvedio
             windowStartUp.Show();
         }
 
-        private void NewTagStamp(object sender, RoutedEventArgs e)
-        {
-            Window_TagStamp window_TagStamp = new Window_TagStamp();
-            window_TagStamp.Owner = this;
-            bool? dialog = window_TagStamp.ShowDialog();
-            if ((bool)dialog) {
-                string name = window_TagStamp.TagName;
-                if (string.IsNullOrEmpty(name))
-                    return;
-                SolidColorBrush backgroundBrush = window_TagStamp.BackgroundBrush;
-                SolidColorBrush ForegroundBrush = window_TagStamp.ForegroundBrush;
-
-                TagStamp tagStamp = new TagStamp() {
-                    TagName = name,
-                    Foreground = VisualHelper.SerializeBrush(ForegroundBrush),
-                    Background = VisualHelper.SerializeBrush(backgroundBrush),
-                };
-                tagStampMapper.Insert(tagStamp);
-                InitTagStamp();
-            }
-        }
-
 
         /// <summary>
-        /// 通知所有过滤器控件改变
+        /// todo 通知所有过滤器控件改变
         /// </summary>
         public void InitTagStamp()
         {
