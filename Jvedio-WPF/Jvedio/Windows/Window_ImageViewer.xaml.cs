@@ -42,7 +42,7 @@ namespace Jvedio
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
-                CloseWindow(null, null);
+                this.Close();
         }
     }
 }

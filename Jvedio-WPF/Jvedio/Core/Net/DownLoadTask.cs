@@ -1,5 +1,4 @@
-﻿using Jvedio.Core.CustomEventArgs;
-using Jvedio.Core.Enums;
+﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Exceptions;
 using Jvedio.Entity;
 using SuperControls.Style;
@@ -16,7 +15,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using static Jvedio.MapperManager;
 
 namespace Jvedio.Core.Net

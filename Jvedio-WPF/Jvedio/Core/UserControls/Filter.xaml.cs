@@ -263,6 +263,18 @@ namespace Jvedio.Core.UserControls
 
             InitProp();
             LoadAll();
+            BindEvent();
+        }
+
+        private void BindEvent()
+        {
+            Window_Details.onRemoveTagStamp += onRemoveTagStamp;
+        }
+
+
+        private void onRemoveTagStamp()
+        {
+            this.InitTagStamp();
         }
 
 

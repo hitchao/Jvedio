@@ -12,6 +12,7 @@
     Title="{DynamicResource Edit}"
     Width="1000"
     MinWidth="800"
+    d:DesignHeight="1200"
     Closing="BaseWindow_Closing"
     Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
@@ -453,7 +454,7 @@
                             FontSize="15"
                             Foreground="{DynamicResource Window.Foreground}"
                             Header="{DynamicResource Others}"
-                            IsExpanded="{Binding MoreExpanded, Mode=TwoWay}"
+                            IsExpanded="{Binding MoreExpanded, Mode=TwoWay, FallbackValue=True}"
                             IsSelected="False"
                             LineWidth="0"
                             Style="{StaticResource BaseTogglePanel}">
@@ -538,16 +539,22 @@
                                         VerticalAlignment="Top"
                                         Content="{DynamicResource Plot}"
                                         Style="{StaticResource BaseInfoLabel}" />
-                                    <TextBox
-                                        Height="80"
+                                    <Border
                                         Margin="15,10"
                                         Padding="5"
-                                        HorizontalAlignment="Stretch"
-                                        Background="{DynamicResource ListBoxItem.Background}"
-                                        BorderThickness="0"
-                                        FontSize="14"
-                                        Style="{StaticResource MultiLineTextBox}"
-                                        Text="{Binding CurrentVideo.Plot, Mode=TwoWay}" />
+                                        BorderThickness="1"
+                                        Style="{StaticResource InfoBorder}">
+                                        <TextBox
+                                            MinHeight="80"
+                                            HorizontalAlignment="Stretch"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            FontSize="14"
+                                            GotFocus="onTextBoxGotFocus"
+                                            LostFocus="onTextBoxLostFocus"
+                                            Style="{StaticResource MultiLineTextBox}"
+                                            Text="{Binding CurrentVideo.Plot, Mode=TwoWay}" />
+                                    </Border>
                                 </DockPanel>
                                 <DockPanel>
                                     <Label
@@ -555,16 +562,23 @@
                                         VerticalAlignment="Top"
                                         Content="{DynamicResource Outline}"
                                         Style="{StaticResource BaseInfoLabel}" />
-                                    <TextBox
-                                        Height="80"
+                                    <Border
                                         Margin="15,10"
                                         Padding="5"
-                                        HorizontalAlignment="Stretch"
-                                        Background="{DynamicResource ListBoxItem.Background}"
-                                        BorderThickness="0"
-                                        FontSize="14"
-                                        Style="{StaticResource MultiLineTextBox}"
-                                        Text="{Binding CurrentVideo.Outline, Mode=TwoWay}" />
+                                        BorderThickness="1"
+                                        Style="{StaticResource InfoBorder}">
+                                        <TextBox
+                                            MinHeight="80"
+                                            HorizontalAlignment="Stretch"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            FontSize="14"
+                                            GotFocus="onTextBoxGotFocus"
+                                            LostFocus="onTextBoxLostFocus"
+                                            Style="{StaticResource MultiLineTextBox}"
+                                            Text="{Binding CurrentVideo.Outline, Mode=TwoWay}" />
+                                    </Border>
+
                                 </DockPanel>
 
 

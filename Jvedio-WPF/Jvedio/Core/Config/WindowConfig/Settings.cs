@@ -1,5 +1,4 @@
 ﻿using Jvedio.Core.Config.Base;
-using Jvedio.Core.Media;
 using System.Collections.Generic;
 
 namespace Jvedio.Core.WindowConfig

@@ -1,5 +1,4 @@
 ﻿using Jvedio.Core.Enums;
-using Jvedio.Core.UserControls;
 using Jvedio.Entity;
 using Jvedio.ViewModel;
 using SuperControls.Style;
@@ -34,6 +33,7 @@ namespace Jvedio
         private VieModel_Edit vieModel { get; set; }
         #endregion
 
+        public static Action<long> onRefreshData;
 
         public Window_Edit(long dataID)
         {
@@ -49,8 +49,6 @@ namespace Jvedio
         {
             main = GetWindowByName("Main", App.Current.Windows) as Main;
             windowDetails = GetWindowByName("Window_Details", App.Current.Windows) as Window_Details;
-            //if (StyleManager.GlobalFont != null)
-            //    this.FontFamily = StyleManager.GlobalFont; // 设置字体
         }
 
         private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
@@ -79,10 +77,7 @@ namespace Jvedio
             bool success = vieModel.Save();
             if (success) {
                 vieModel.Init();
-
-                // 更新到主界面和详情界面
-                main?.RefreshData(vieModel.CurrentVideo.DataID);
-                windowDetails?.Refresh();
+                onRefreshData?.Invoke(vieModel.CurrentVideo.DataID);
                 SuperControls.Style.MessageNotify.Success(SuperControls.Style.LangManager.GetValueByKey("Message_Success"));
             } else {
                 SuperControls.Style.MessageNotify.Error(SuperControls.Style.LangManager.GetValueByKey("Message_Fail"));
@@ -330,7 +325,14 @@ namespace Jvedio
             }
         }
 
+        private void onTextBoxGotFocus(object sender, RoutedEventArgs e)
+        {
+            Jvedio.AvalonEdit.Utils.GotFocus(sender);
+        }
 
-
+        private void onTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            Jvedio.AvalonEdit.Utils.LostFocus(sender);
+        }
     }
 }

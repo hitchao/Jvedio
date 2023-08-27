@@ -1,8 +1,6 @@
-﻿using Jvedio.Core.Enums;
-using Jvedio.Entity;
+﻿using Jvedio.Entity;
 using SuperControls.Style;
 using SuperControls.Style.Windows;
-using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
@@ -19,10 +17,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.App;
-using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.MapperManager;
 using static SuperUtils.WPF.VisualTools.VisualHelper;
 

@@ -14,7 +14,6 @@ using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
-using SuperUtils.NetWork;
 using SuperUtils.WPF.Entity;
 using SuperUtils.WPF.VisualTools;
 using System;
@@ -55,6 +54,8 @@ namespace Jvedio
         private delegate void LoadExtraPathDelegate(string path);
 
         public Action<long> onViewAssoData;
+
+        public static Action onRemoveTagStamp;
 
         private static Main windowMain { get; set; }
 
@@ -138,36 +139,71 @@ namespace Jvedio
 
         private void BindEvent()
         {
-            DownLoadTask.onDownloadPreview += (long dataID, string path, byte[] fileByte) => {
-                Dispatcher.Invoke(() => {
-                    lock (RefreshLock) {
-                        OnDownloadPreview(dataID, path, fileByte);
-                    }
-                });
-            };
+            DownLoadTask.onDownloadPreview += onDownloadPreview;
+            DownLoadTask.onDownloadSuccess += onDownloadSuccess;
+            ScreenShotTask.onScreenShotCompleted += onScreenShotCompleted;
+            Filter.onTagStampDelete += RemoveTag;
+            Filter.onTagStampRefresh += onRefreshTagStemp;
+            Window_Edit.onRefreshData += Refresh;
+            Window_EditActor.onActorInfoChanged += RefreshActor;
+            VideoList.onTagStampChange += onTagStampChange;
+            ViewVideo.onTagStampRemove += onTagStampRemove;
+        }
 
-            DownLoadTask.onDownloadSuccess += (task) => {
-                Dispatcher.Invoke(() => {
-                    lock (RefreshLock) {
-                        if (DataID == task.DataID)
-                            Refresh();
-                    }
-                });
-            };
+        private void onTagStampRemove(long dataID, long tagID)
+        {
+            if (dataID != vieModel.CurrentVideo.DataID)
+                return;
+            Video video = vieModel.CurrentVideo;
+            Video.RefreshTagStamp(ref video, tagID, true);
+        }
 
-            ScreenShotTask.onScreenShotCompleted += (ok, dataId) => {
-                Dispatcher.Invoke(async () => {
-                    if (vieModel.ShowScreenShot && dataId.Equals(vieModel.CurrentVideo.DataID)) {
-                        // 加入到列表
-                        if (vieModel.CurrentVideo.PreviewImagePathList == null)
-                            vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
-                        if (vieModel.CurrentVideo.PreviewImageList == null)
-                            vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
-                        await LoadImage(true);
-                        vieModel.ScreenShotCount = vieModel.CurrentVideo.PreviewImagePathList.Count;
-                    }
-                });
-            };
+        private void onDownloadPreview(long dataID, string path, byte[] fileByte)
+        {
+            Dispatcher.Invoke(() => {
+                lock (RefreshLock) {
+                    OnDownloadPreview(dataID, path, fileByte);
+                }
+            });
+        }
+
+        private void onDownloadSuccess(DownLoadTask task)
+        {
+            Dispatcher.Invoke(() => {
+                lock (RefreshLock) {
+                    if (DataID == task.DataID)
+                        Refresh();
+                }
+            });
+        }
+
+        private void onScreenShotCompleted(bool ok, long dataId)
+        {
+            Dispatcher.Invoke(async () => {
+                if (vieModel.ShowScreenShot && dataId.Equals(vieModel.CurrentVideo.DataID)) {
+                    // 加入到列表
+                    if (vieModel.CurrentVideo.PreviewImagePathList == null)
+                        vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
+                    if (vieModel.CurrentVideo.PreviewImageList == null)
+                        vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
+                    await LoadImage(true);
+                    vieModel.ScreenShotCount = vieModel.CurrentVideo.PreviewImagePathList.Count;
+                }
+            });
+        }
+
+        private void onTagStampChange(long id, long newTag, bool deleted)
+        {
+            if (id != vieModel.CurrentVideo.DataID)
+                return;
+
+            Video video = vieModel.CurrentVideo;
+            Video.RefreshTagStamp(ref video, newTag, deleted);
+        }
+
+        private void RefreshActor(long actorID)
+        {
+            ShowActor();
         }
 
 
@@ -180,9 +216,17 @@ namespace Jvedio
                 vieModel.CurrentVideo.TagStamp.Any(arg => arg.TagID == TagStamp.TAG_ID_NEW_ADD)) {
                 string sql = $"delete from metadata_to_tagstamp where TagID='{TagStamp.TAG_ID_NEW_ADD}' and DataID='{DataID}'";
                 tagStampMapper.ExecuteNonQuery(sql);
-                windowMain?.InitTagStamp();
+                onRemoveTagStamp?.Invoke();
                 windowMain?.RefreshData(DataID);
             }
+        }
+
+        private void onRefreshTagStemp(long id)
+        {
+            if (vieModel.CurrentVideo.DataID != id)
+                return;
+            Video video = vieModel.CurrentVideo;
+            Video.SetTagStamps(ref video);
         }
 
         public void RemoveTag(long tagID)
@@ -297,6 +341,12 @@ namespace Jvedio
             vieModel.Load(DataID);
         }
 
+        public void Refresh(long dataID)
+        {
+            if (DataID == DataID)
+                Refresh();
+        }
+
         public void RefreshGrade(long dataID, float data)
         {
             if (vieModel.CurrentVideo.DataID != dataID)
@@ -377,7 +427,11 @@ namespace Jvedio
             ShowSameString(sender, LabelType.Genre);
         }
 
-        // 显示演员
+        /// <summary>
+        /// 显示演员
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void ShowSameActor(object sender, MouseButtonEventArgs e)
         {
             Grid grid = sender as Grid;
@@ -869,7 +923,7 @@ namespace Jvedio
                 vieModel.SaveLove();
 
                 // 更新主界面
-                windowMain?.RefreshGrade(vieModel.CurrentVideo);
+                windowMain?.RefreshGrade(vieModel.CurrentVideo.DataID, vieModel.CurrentVideo.Grade);
             }
         }
 

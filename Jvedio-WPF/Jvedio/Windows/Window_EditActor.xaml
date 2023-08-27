@@ -13,7 +13,6 @@
     Background="{DynamicResource Window.Background}"
     Foreground="{DynamicResource Window.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
-    Loaded="BaseWindow_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -274,25 +273,16 @@
                         Background="{DynamicResource Window.Title.Background}"
                         BorderThickness="1"
                         CornerRadius="3">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=editTextBoxCommand, Path=IsFocused}" Value="True">
-                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.Selected.BorderBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
                         <TextBox
-                            Name="editTextBoxCommand"
                             Height="100"
-                            Padding="2,0,0,0"
                             HorizontalAlignment="Stretch"
-                            VerticalContentAlignment="Top"
+                            VerticalContentAlignment="Stretch"
                             AcceptsReturn="True"
                             Background="Transparent"
                             ContextMenu="{StaticResource TextBoxContextMenu}"
                             FontSize="12"
+                            GotFocus="onTextBoxFocus"
+                            LostFocus="onTextBoxLostFocus"
                             Style="{StaticResource BaseTextBox}"
                             Text="{Binding CurrentActorInfo.Hobby, Mode=TwoWay}"
                             TextAlignment="Left"

@@ -1,8 +1,5 @@
-﻿using Jvedio.Core.Enums;
-using Jvedio.Core.Media;
-using Jvedio.Entity;
+﻿using Jvedio.Entity;
 using SuperUtils.Framework.ORM.Utils;
-using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

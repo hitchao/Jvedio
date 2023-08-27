@@ -24,9 +24,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using static Jvedio.App;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace Jvedio.Entity
 {
@@ -288,6 +286,32 @@ namespace Jvedio.Entity
         }
 
         #region "对外静态方法"
+
+
+        public static void RefreshTagStamp(ref Video video, long newTagID, bool deleted)
+        {
+            if (video == null || newTagID <= 0)
+                return;
+            string tagIDs = video.TagIDs;
+            if (!deleted && string.IsNullOrEmpty(tagIDs)) {
+                video.TagStamp = new ObservableCollection<TagStamp>();
+                video.TagStamp.Add(Jvedio.Entity.CommonSQL.TagStamp.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
+                video.TagIDs = newTagID.ToString();
+            } else {
+                List<string> list = tagIDs.Split(',').ToList();
+                if (!deleted && !list.Contains(newTagID.ToString()))
+                    list.Add(newTagID.ToString());
+                if (deleted && list.Contains(newTagID.ToString()))
+                    list.Remove(newTagID.ToString());
+                video.TagIDs = string.Join(",", list);
+                video.TagStamp = new ObservableCollection<TagStamp>();
+                foreach (var arg in list) {
+                    long.TryParse(arg, out long id);
+                    video.TagStamp.Add(Jvedio.Entity.CommonSQL.TagStamp.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
+                }
+            }
+        }
+
 
         public void OpenWeb()
         {

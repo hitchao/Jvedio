@@ -31,6 +31,7 @@ namespace Jvedio.Core.UserControls
         #region "事件"
 
         public static Action onStatistic;
+        public static Action<long, long> onTagStampRemove;
 
 
         public static readonly RoutedEvent OnGradeChangeEvent =
@@ -288,6 +289,7 @@ nameof(ImageMode), typeof(int), typeof(ViewVideo), new PropertyMetadata(1));
                 video.TagIDs = video.TagIDs;
                 // 通知上层数目变化了
                 RaiseEvent(new RoutedEventArgs(OnTagStampRemoveEvent) { Source = this });
+                onTagStampRemove?.Invoke(dataID, tagID);
             }
         }
 

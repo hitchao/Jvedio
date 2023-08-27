@@ -307,18 +307,5 @@ namespace Jvedio.ViewModel
 
             return toDelete;
         }
-
-
-        public bool SaveAssociations(List<Video> videoList)
-        {
-            if (videoList.Count == 1)
-                return false;
-            List<Association> toInsert = new List<Association>();
-            long baseId = videoList[0].DataID;
-            foreach (Video item in videoList)
-                toInsert.Add(new Association(baseId, item.DataID));
-            int count = associationMapper.InsertBatch(toInsert, InsertMode.Ignore);
-            return count > 0;
-        }
     }
 }

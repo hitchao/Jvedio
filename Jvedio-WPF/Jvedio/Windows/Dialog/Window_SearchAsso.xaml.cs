@@ -120,47 +120,6 @@ namespace Jvedio
         }
 
 
-        private long GetIDFromMenuItem(object sender, int depth = 0)
-        {
-            MenuItem mnu = sender as MenuItem;
-            ContextMenu contextMenu = null;
-            if (depth == 0) {
-                contextMenu = mnu.Parent as ContextMenu;
-            } else {
-                MenuItem _mnu = mnu.Parent as MenuItem;
-                contextMenu = _mnu.Parent as ContextMenu;
-            }
-
-            FrameworkElement ele = contextMenu.PlacementTarget as FrameworkElement;
-            return GetDataID(ele, false);
-        }
-
-
-        private void AddDataAssociation(object sender, RoutedEventArgs e)
-        {
-            //if (Properties.Settings.Default.EditMode && vieModel.SelectedVideo.Count > 0) {
-            //    // 多选关联
-            //    vieModel.SaveAssociations(vieModel.SelectedVideo);
-            //    foreach (var item in vieModel.SelectedVideo) {
-            //        OnDataRefresh?.Invoke(item.DataID);
-            //    }
-            //} else {
-            //    Properties.Settings.Default.EditMode = false;
-            //    vieModel.SelectedVideo.Clear();
-            //    OnSelectData?.Invoke();
-            //    long dataID = GetIDFromMenuItem(sender as MenuItem, 1);
-            //    if (dataID <= 0)
-            //        return;
-            //    vieModel.LoadExistAssociationDatas(dataID);
-            //    CurrentAssocDataID = dataID;
-            //    searchDataBox.Text = string.Empty;
-            //    vieModel.AssociationDatas?.Clear();
-            //    vieModel.AssociationSelectedDatas?.Clear();
-            //    vieModel.LoadAssoMetaData();
-            //}
-
-        }
-
         protected override void Confirm(object sender, RoutedEventArgs e)
         {
             if (CurrentAssocDataID <= 0)

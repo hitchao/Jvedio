@@ -250,17 +250,14 @@ namespace Jvedio.ViewModel
             // todo 事务下导致阻塞
             metaDataMapper.IncreaseFieldById("ViewCount", dataID); // 访问次数+1
             Logger.Info($"view count ++");
-            Video video = videoMapper.SelectVideoByID(dataID);
+
+            Video video = Video.GetById(dataID);
             if (video == null) {
                 LoadingData = false;
                 return;
             }
-            Video.SetTagStamps(ref video); // 设置标签戳
-            Video.SetTitleAndDate(ref video);
-            Video.SetAsso(ref video);
 
             CurrentVideo = video;
-
             // 磁力
             List<Magnet> magnets = magnetsMapper.SelectList(new SelectWrapper<Magnet>().Eq("DataID", dataID));
             if (magnets?.Count > 0) {

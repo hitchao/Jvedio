@@ -665,7 +665,7 @@
                                                             Background="{Binding BackgroundBrush}"
                                                             BorderThickness="0"
                                                             CornerRadius="3">
-                                                            <TextBlock Foreground="{DynamicResource Window.Foreground}" Text="{Binding TagName}" />
+                                                            <TextBlock Foreground="{Binding ForegroundBrush}" Text="{Binding TagName}" />
                                                         </Border>
 
                                                     </DataTemplate>
@@ -734,6 +734,7 @@
                                                         Grid.Column="2"
                                                         Height="auto"
                                                         VerticalAlignment="Top"
+                                                        d:ItemsSource="{d:SampleData ItemCount=5}"
                                                         Background="Transparent"
                                                         ItemsSource="{Binding CurrentActorList}">
                                                         <ItemsControl.ItemsPanel>

@@ -125,6 +125,26 @@ namespace Jvedio
         }
 
 
+        public static void ShowAbout()
+        {
+            Dialog_About about = new Dialog_About();
+            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            if (local.EndsWith(".0.0"))
+                local = local.Substring(0, local.Length - ".0.0".Length);
+            about.AppName = "Jvedio";
+            about.AppSubName = "本地视频管理软件";
+            about.Version = local;
+            about.ReleaseDate = ConfigManager.RELEASE_DATE;
+            about.Author = "Chao";
+            about.License = "GPL-3.0";
+            about.GithubUrl = UrlManager.ProjectUrl;
+            about.WebUrl = UrlManager.WebPage;
+            about.JoinGroupUrl = UrlManager.ProjectUrl;
+            about.Image =
+                SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
+            about.ShowDialog();
+        }
+
 
 
     }

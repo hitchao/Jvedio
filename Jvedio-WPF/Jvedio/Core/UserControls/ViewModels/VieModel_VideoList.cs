@@ -1,22 +1,17 @@
 ﻿using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
-using Jvedio.Core.Media;
 using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
-using SuperUtils.IO;
 using SuperUtils.WPF.VieModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.App;
 using static Jvedio.MapperManager;
@@ -828,6 +823,24 @@ namespace Jvedio.Core.UserControls.ViewModels
             RefreshData(ref temp, video);
             temp = CurrentVideoList[idx];
             RefreshData(ref temp, video);
+        }
+
+        public void RefreshTagStamp(long dataID)
+        {
+            for (int i = 0; i < VideoList.Count; i++) {
+                if (VideoList[i].DataID == dataID) {
+                    Video video = VideoList[i];
+                    Video.SetTagStamps(ref video);
+                    break;
+                }
+            }
+            for (int i = 0; i < CurrentVideoList.Count; i++) {
+                if (CurrentVideoList[i].DataID == dataID) {
+                    Video video = CurrentVideoList[i];
+                    Video.SetTagStamps(ref video);
+                    break;
+                }
+            }
         }
 
         private void RefreshData(ref Video origin, Video target)

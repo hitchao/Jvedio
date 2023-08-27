@@ -8,7 +8,6 @@ using Jvedio.Core.Server;
 using Jvedio.Core.UserControls;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
-using Jvedio.Entity.CommonSQL;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
 using SuperControls.Style;
@@ -20,7 +19,6 @@ using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Systems;
-using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,11 +33,9 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Jvedio.App;
-using static Jvedio.Core.DataBase.Tables.Sqlite;
 using static Jvedio.Core.Global.UrlManager;
 using static Jvedio.MapperManager;
 using static Jvedio.Window_Settings;
-using static SuperUtils.WPF.VisualTools.VisualHelper;
 using static SuperUtils.WPF.VisualTools.WindowHelper;
 
 namespace Jvedio
@@ -50,17 +46,9 @@ namespace Jvedio
     public partial class Main : BaseWindow, IBaseWindow
     {
 
-        /// <summary>
-        /// 30分钟检测一次
-        /// </summary>
-        public const int NOTICE_INTERVAL = 1800;
-
-
         #region "静态属性"
 
         private static Style SearchBoxListItemContainerStyle { get; set; }
-
-        private static MessageHistory MessageRecorder { get; set; } = new MessageHistory();
 
         public static List<string> ClickFilterDict { get; set; }
 
@@ -71,10 +59,6 @@ namespace Jvedio
 
         public static string[] TagStringTranslated { get; set; }
 
-        /// <summary>
-        /// 淡入淡出时间
-        /// </summary>
-        public static TimeSpan FadeInterval { get; set; }
 
         public static DataBaseType CurrentDataBaseType { get; set; }
 
@@ -82,12 +66,23 @@ namespace Jvedio
 
         public static DataType CurrentDataType { get; set; }
 
+        public static string[] TransParentBackGround { get; set; } = new string[] {
+            "TabItem.Background",
+            "ListBoxItem.Background",
+            "Window.Side.Background",
+            "Window.Side.Hover.Background",
+            "DataGrid.Row.Even.Background",
+            "DataGrid.Row.Odd.Background",
+            "DataGrid.Row.Hover.Background",
+            "DataGrid.Header.Background",
+        };
+
 
         #endregion
 
         #region "属性"
 
-
+        private Window_Server window_Server { get; set; }
         private bool CanDragTabItem { get; set; } = false;
 
         private FrameworkElement CurrentDragElement { get; set; }
@@ -116,7 +111,6 @@ namespace Jvedio
             ClickFilterDict = new List<string>() { "Genre", "Series", "Studio", "Director", };
             TagStringHD = new string[] { "hd", "高清" };
             TagStringTranslated = new string[] { "中文", "日本語", "Translated", "English" };
-            FadeInterval = TimeSpan.FromMilliseconds(150);
             CurrentDataBaseType = DataBaseType.SQLite;
             ClickGoBackToStartUp = false;
             CurrentDataType = DataType.Video;
@@ -144,31 +138,21 @@ namespace Jvedio
         public void Dispose()
         {
             SaveConfigValue();
-
-            //if (!IsToUpdate && ConfigManager.Settings.CloseToTaskBar && this.IsVisible == true)
-            //{
-            //    //SetWindowVisualStatus(false);
-            //    e.Cancel = true;
-            //}
+            DownloadManager.CancelAll();
+            ScreenShotManager.CancelAll();
+            ScanManager.CancelAll();
         }
 
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            //AdjustWindow(); 
             ConfigFirstRun();
             InitTheme();
             InitNotice();
             InitDataBases();
             InitRecentWatched();
-
-            // vieModel.GetFilterInfo();
             vieModel.Statistic();
-            // await vieModel.InitLettersNavigation();
-
             BindingEventAfterRender();
-            InitTagStamp();
-            OpenListen();
             InitUpgrade();
             CheckServerStatus();
             InitAvalonEdit();
@@ -221,22 +205,16 @@ namespace Jvedio
 
         public void InitTheme()
         {
-            ThemeSelectorDefault.AddTransParentColor("TabItem.Background");
-            ThemeSelectorDefault.AddTransParentColor("ListBoxItem.Background");
-            ThemeSelectorDefault.AddTransParentColor("Window.Side.Background");
-            ThemeSelectorDefault.AddTransParentColor("Window.Side.Hover.Background");
-            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Even.Background");
-            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Odd.Background");
-            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Hover.Background");
-            ThemeSelectorDefault.AddTransParentColor("DataGrid.Header.Background");
-            ThemeSelectorDefault.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex, ConfigManager.ThemeConfig.ThemeID);
+            foreach (var item in TransParentBackGround) {
+                ThemeSelectorDefault.AddTransParentColor(item);
+            }
+            ThemeSelectorDefault.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex,
+                ConfigManager.ThemeConfig.ThemeID);
             ThemeSelectorDefault.onThemeChanged += (ThemeIdx, ThemeID) => {
                 ConfigManager.ThemeConfig.ThemeIndex = ThemeIdx;
                 ConfigManager.ThemeConfig.ThemeID = ThemeID;
                 ConfigManager.ThemeConfig.Save();
                 SetAllSelect();
-
-                windowDetails?.SetSkin();
             };
             ThemeSelectorDefault.onBackGroundImageChanged += (image) => {
                 ImageBackground.Source = image;
@@ -260,97 +238,28 @@ namespace Jvedio
             CheckUpgrade(); // 检查更新
         }
 
-
-        private void OpenListen()
-        {
-            if (ConfigManager.Settings.ListenEnabled) {
-                // 开启端口监听
-            }
-        }
-
-
-        /// <summary>
-        /// 用于任务栏显示最新消息
-        /// </summary>
-        public class MessageHistory
-        {
-            public EventHandler MsgShown;
-
-            public class MessageEventArg : EventArgs
-            {
-                public MessageEventArg(Message message)
-                {
-                    this.Message = message;
-                }
-
-                public Message Message { get; set; }
-            }
-
-            public void Success(string msg)
-            {
-                MessageCard.Success(msg);
-                Message message = new Message(MessageCard.MessageCardType.Success, msg);
-                MsgShown?.Invoke(this, new MessageEventArg(message));
-            }
-
-            public void Error(string msg)
-            {
-                MessageCard.Error(msg);
-                Message message = new Message(MessageCard.MessageCardType.Error, msg);
-                MsgShown?.Invoke(this, new MessageEventArg(message));
-            }
-
-            public void Warning(string msg)
-            {
-                MessageCard.Warning(msg);
-                Message message = new Message(MessageCard.MessageCardType.Warning, msg);
-                MsgShown?.Invoke(this, new MessageEventArg(message));
-            }
-
-            public void Info(string msg)
-            {
-                MessageCard.Info(msg);
-                Message message = new Message(MessageCard.MessageCardType.Info, msg);
-                MsgShown?.Invoke(this, new MessageEventArg(message));
-            }
-        }
-
         private void BindingEventAfterRender()
         {
             SetComboboxID();
-
-            // 加载关联影片完成
-            //vieModel.LoadAssocMetaDataCompleted += (s, e) => {
-            //    //SetAssocSelected();
-            //    if (ConfigManager.Settings.AutoGenScreenShot)
-            //        AutoGenScreenShot(vieModel.AssociationDatas);
-            //};
-
-            // 下载中
             App.DownloadManager.onRunning += onDownloading;
-            // 长时间暂停
             App.DownloadManager.onLongDelay += onLoadDelay;
-
-
-            Main.OnRecvWinMsg += (str) => {
-                Logger.Info($"recv win msg: {str}");
-                switch (str) {
-                    case Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW:
-                        SetWindowVisualStatus(true, true);
-                        break;
-                    default:
-                        break;
-                }
-
-            };
-
+            Main.OnRecvWinMsg += onRecvWinMsg;
             Video.onPlayVideo += () => vieModel.Statistic();
             ActorList.onStatistic += () => vieModel.Statistic();
-
             VideoList.onDeleteID += (list) => DeleteID(list, false);
-
             Window_EditActor.onActorInfoChanged += onActorInfoChanged;
+        }
 
+        private void onRecvWinMsg(string str)
+        {
+            Logger.Info($"recv win msg: {str}");
+            switch (str) {
+                case Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW:
+                    SetWindowVisualStatus(true, true);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void onActorInfoChanged(long id)
@@ -375,8 +284,6 @@ namespace Jvedio
                 });
             }
         }
-
-
 
         private void onLoadDelay(object sender, EventArgs e)
         {
@@ -409,7 +316,8 @@ namespace Jvedio
 
         public void SetComboboxID()
         {
-            vieModel.CurrentDbId = vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == ConfigManager.Main.CurrentDBId);
+            vieModel.CurrentDbId =
+                vieModel.DataBases.ToList().FindIndex(arg => arg.DBId == ConfigManager.Main.CurrentDBId);
         }
 
 
@@ -447,7 +355,7 @@ namespace Jvedio
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
-            Console.WriteLine("***************OnSourceInitialized***************");
+            Logger.Info("***************OnSourceInitialized***************");
 
             // 热键
             WindowHandle = new WindowInteropHelper(this).Handle;
@@ -461,6 +369,7 @@ namespace Jvedio
             if (ConfigManager.Settings.HotKeyEnable && modifier != 0 && vk != 0) {
                 Win32Helper.UnregisterHotKey(WindowHandle, HOTKEY_ID); // 取消之前的热键
                 bool success = Win32Helper.RegisterHotKey(WindowHandle, HOTKEY_ID, modifier, vk);
+                Logger.Info($"register hot key, modifier: {modifier}, vk: {vk}, ret: {success}");
                 if (!success) {
                     new MsgBox(SuperControls.Style.LangManager.GetValueByKey("HotKeyConflict")).ShowDialog(this);
                 }
@@ -511,29 +420,31 @@ namespace Jvedio
             if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
                 TaskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
 
-            // 侧边栏动画
-            this.OnSideTrigger += async () => {
-                //SideGridColumn.Width = new GridLength(200);
-                AnimatingSideGrid = true;
-                ButtonSideTop.Visibility = Visibility.Collapsed;
-                await Task.Run(async () => {
-                    for (int i = 0; i <= 200; i += 10) {
-                        await App.Current.Dispatcher.InvokeAsync(() => {
-                            SideGridColumn.Width = new GridLength(i);
-                        });
-                        await Task.Delay(5);
-                    }
-                });
-                AnimatingSideGrid = false;
-            };
-
-
-            // 筛选器变动
+            this.OnSideTrigger += onSideTrigger;
             Filter.onTagStampDelete += onTagStampDelete;
-            Filter.onTagStampRefresh += onTagStampRefresh;
+            Filter.onTagStampRefresh += RefreshTagStamp;
         }
 
-        private void onTagStampRefresh(long id)
+
+        /// <summary>
+        /// 侧边栏动画
+        /// </summary>
+        private async void onSideTrigger()
+        {
+            AnimatingSideGrid = true;
+            ButtonSideTop.Visibility = Visibility.Collapsed;
+            await Task.Run(async () => {
+                for (int i = 0; i <= 200; i += 10) {
+                    await App.Current.Dispatcher.InvokeAsync(() => {
+                        SideGridColumn.Width = new GridLength(i);
+                    });
+                    await Task.Delay(5);
+                }
+            });
+            AnimatingSideGrid = false;
+        }
+
+        public void RefreshTagStamp(long id)
         {
             List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
             if (videoLists != null) {
@@ -553,8 +464,6 @@ namespace Jvedio
                 }
             }
         }
-
-
 
         private void onTagStampDelete(long id)
         {
@@ -653,9 +562,6 @@ namespace Jvedio
                     continue;
                 }
             }
-
-            if (fileWatcherMessage != string.Empty)
-                MessageRecorder.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_WatchFail")} {fileWatcherMessage}");
         }
 
         private static void OnCreated(object obj, FileSystemEventArgs e)
@@ -842,7 +748,7 @@ namespace Jvedio
             scanTask.Title = "-";
 
             scanTask.onCanceled += (s, ev) => Logger.Warn("cancel scan task");
-            scanTask.onError += (s, ev) => MessageRecorder.Error((ev as MessageCallBackEventArgs).Message);
+            scanTask.onError += (s, ev) => MessageCard.Error((ev as MessageCallBackEventArgs).Message);
             scanTask.onCompleted += ScanComplete;
             App.ScanManager.AddTask(scanTask);
 
@@ -995,8 +901,6 @@ namespace Jvedio
             vieModel.TabItemManager.RefreshAllTab();
         }
 
-
-        // todo tab
         public void RefreshData(long dataID)
         {
             List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
@@ -1013,53 +917,13 @@ namespace Jvedio
             }
         }
 
-        // todo tab
-        public void RefreshGrade(Video newVideo)
+        public void RefreshGrade(long dataID, float grade)
         {
+            List<VideoList> videoLists = vieModel.TabItemManager.GetAllVideoList();
+            foreach (var item in videoLists) {
+                item.RefreshGrade(dataID, grade);
+            }
         }
-
-        private void Image_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Link;
-            e.Handled = true;
-        }
-
-        private void Image_Drop(object sender, DragEventArgs e)
-        {
-            // string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            // string file = dragdropFiles[0];
-
-            // if (IsFile(file))
-            // {
-            //    FileInfo fileInfo = new FileInfo(file);
-            //    if (fileInfo.Extension.ToLower() == ".jpg")
-            //    {
-            //        FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"Actresses\\{vieModel.Actress.name}.jpg", true);
-            //        Actress actress = vieModel.Actress;
-            //        actress.smallimage = null;
-            //        actress.smallimage = GetActorImage(actress.name);
-            //        vieModel.Actress = null;
-            //        vieModel.Actress = actress;
-
-            // if (vieModel.ActorList == null || vieModel.ActorList.Count == 0) return;
-
-            // for (int i = 0; i < vieModel.ActorList.Count; i++)
-            //        {
-            //            if (vieModel.ActorList[i].name == actress.name)
-            //            {
-            //                vieModel.ActorList[i] = actress;
-            //                break;
-            //            }
-            //        }
-
-            // }
-            //    else
-            //    {
-            //        msgCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_OnlySupportJPG"));
-            //    }
-            // }
-        }
-
 
         private void HideBeginScanGrid(object sender, RoutedEventArgs e)
         {
@@ -1082,23 +946,7 @@ namespace Jvedio
 
         public void ShowSameActor(long actorID)
         {
-
             vieModel.ShowSameActor(actorID);
-            //if (actorID <= 0)
-            //    return;
-            //SelectWrapper<Video> wrapper = new SelectWrapper<Video>();
-            //wrapper.Eq("actor_info.ActorID", actorID);
-            ////vieModel.ExtraWrapper = wrapper;
-            //vieModel.ClickFilterType = "Actor";
-            //pagination.CurrentPageChange -= Pagination_CurrentPageChange;
-            //vieModel.CurrentPage = 1;
-            //vieModel.LoadData();
-            //ActorInfo actorInfo = actorMapper.SelectOne(new SelectWrapper<ActorInfo>().Eq("ActorID", actorID));
-            //ActorInfo.SetImage(ref actorInfo);
-            //vieModel.ShowActorGrid = true;
-            //pagination.CurrentPageChange += Pagination_CurrentPageChange;
-            //ActorNavigator.Navigate("/Pages/ActorInfoPage.xaml", actorInfo);
-            //vieModel.StatusText = actorInfo.ActorName;
         }
 
 
@@ -1124,23 +972,12 @@ namespace Jvedio
             FileHelper.TryOpenPath(AppDomain.CurrentDomain.BaseDirectory);
         }
 
-
-
         private void ShowActorNotice(object sender, RoutedEventArgs e)
         {
             PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
             if (pathType.Equals(PathType.RelativeToData))
-                MessageRecorder.Info(LangManager.GetValueByKey("ShowActorImageWarning"));
+                MessageCard.Info(LangManager.GetValueByKey("ShowActorImageWarning"));
         }
-
-        private void HideMsg(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-            Border border = (button.Parent as Grid).Parent as Border;
-            border.Visibility = Visibility.Collapsed;
-        }
-
-
 
         private void ImportVideo(object sender, RoutedEventArgs e)
         {
@@ -1165,30 +1002,6 @@ namespace Jvedio
             }
         }
 
-        private void ShowSponsor(object sender, RoutedEventArgs e)
-        {
-            // 检测
-            string message = "请设置一个刮削网址后在尝试";
-            if (ConfigManager.ServerConfig.CrawlerServers != null &&
-                ConfigManager.ServerConfig.CrawlerServers.Count > 0) {
-                bool found = false;
-
-                foreach (var item in ConfigManager.ServerConfig.CrawlerServers) {
-                    if (!string.IsNullOrEmpty(item.Url)) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) {
-                    //new Dialog_Sponsor(this).ShowDialog();
-                    return;
-                }
-            }
-
-            MessageNotify.Info(message);
-        }
-
 
         private void CopyTextBlock(object sender, RoutedEventArgs e)
         {
@@ -1210,21 +1023,7 @@ namespace Jvedio
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
-            Dialog_About about = new Dialog_About();
-            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            if (local.EndsWith(".0.0"))
-                local = local.Substring(0, local.Length - ".0.0".Length);
-            about.AppName = "Jvedio";
-            about.AppSubName = "本地视频管理软件";
-            about.Version = local;
-            about.ReleaseDate = ConfigManager.RELEASE_DATE;
-            about.Author = "Chao";
-            about.License = "GPL-3.0";
-            about.GithubUrl = UrlManager.ProjectUrl;
-            about.WebUrl = UrlManager.WebPage;
-            about.JoinGroupUrl = UrlManager.ProjectUrl;
-            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
-            about.ShowDialog();
+            App.ShowAbout();
         }
 
         private void ShowPluginWindow(object sender, RoutedEventArgs e)
@@ -1304,7 +1103,6 @@ namespace Jvedio
 
             dataBase.OnDataChanged += () => {
                 vieModel.Statistic();
-                //vieModel.LoadData(); // todo tab
             };
 
             dataBase.ShowDialog();
@@ -1317,9 +1115,6 @@ namespace Jvedio
                 App.DownloadManager.RunningCount > 0);
         }
 
-
-
-        //private Window_Server window_Server;
 
         private void OpenServer(object sender, RoutedEventArgs e)
         {
@@ -1353,15 +1148,6 @@ namespace Jvedio
                 windowStartUp = new WindowStartUp();
             Application.Current.MainWindow = windowStartUp;
             windowStartUp.Show();
-        }
-
-
-        /// <summary>
-        /// todo 通知所有过滤器控件改变
-        /// </summary>
-        public void InitTagStamp()
-        {
-
         }
 
         private void ClearCache(object sender, RoutedEventArgs e)
@@ -1549,14 +1335,6 @@ namespace Jvedio
         {
             if (!CanDragTabItem)
                 return;
-
-            //this.Cursor = Cursors.SizeWE;
-
-        }
-
-        private void BaseWindow_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-
         }
     }
 

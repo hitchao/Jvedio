@@ -34,8 +34,19 @@ namespace Jvedio
 {
     public partial class WindowStartUp : BaseWindow, IBaseWindow
     {
+        /// <summary>
+        /// 日志保存期限
+        /// </summary>
         private const int CLEAR_LOG_DAY = -10;
+
+        /// <summary>
+        /// 备份文件期限
+        /// </summary>
         private const int CLEAR_BACKUP_DAY = -30;
+
+        /// <summary>
+        /// 标题栏高度
+        /// </summary>
         private const int DEFAULT_TITLE_HEIGHT = 30;
 
         #region "属性"
@@ -104,7 +115,7 @@ namespace Jvedio
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // ************************************
-            // ************* 以下不可移动 *********
+            // ************* 以下顺序不可移动 ******
             // ************************************
 
             EnsureFileExists();
@@ -146,7 +157,6 @@ namespace Jvedio
 #if DEBUG
             //ConfigManager.Main.FirstRun = true;
 #endif
-
             if (ConfigManager.Main.FirstRun) {
                 Dialog_SetSkinLang skinLang = new Dialog_SetSkinLang();
                 skinLang.SetThemeConfig(ConfigManager.ThemeConfig.ThemeIndex,
@@ -277,9 +287,7 @@ namespace Jvedio
                 Jvedio4ToJvedio5.MoveRecentWatch();
                 Jvedio4ToJvedio5.MoveMagnets();
                 Jvedio4ToJvedio5.MoveTranslate();
-                Jvedio4ToJvedio5.MoveMyList();      // 清单和 Label 合并，统一为 Label
-
-                // Jvedio4ToJvedio5.MoveSearchHistory();
+                Jvedio4ToJvedio5.MoveMyList();
                 Jvedio4ToJvedio5.MoveScanPathConfig(files);
                 ConfigManager.Settings.OpenDataBaseDefault = false;
             }
@@ -353,7 +361,8 @@ namespace Jvedio
                     FileHelper.TryDeleteDir("Temp");
                 }
 
-                FileHelper.TryDeleteDir(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
+                FileHelper.TryDeleteDir(
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "themes", "temp"));
 
             } catch (Exception ex) {
                 Logger.Error(ex);
@@ -529,7 +538,6 @@ namespace Jvedio
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel.Loading = false;
                 tabControl.SelectedIndex = 1;
-                //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
             }
 
@@ -561,14 +569,12 @@ namespace Jvedio
                 ConfigManager.Settings.OpenDataBaseDefault = false;
                 vieModel.Loading = false;
                 tabControl.SelectedIndex = 1;
-                //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                 return;
             } else {
                 vieModel.Loading = false;
 
                 // 次数+1
                 appDatabaseMapper.IncreaseFieldById("ViewCount", id);
-
                 ConfigManager.Main.CurrentDBId = id;
 
                 // 是否需要扫描
@@ -576,8 +582,6 @@ namespace Jvedio
                     // 未打开过 main 的时候才会扫描
                     if (!string.IsNullOrEmpty(database.ScanPath)) {
                         tabControl.SelectedIndex = 0;
-                        //await Task.Delay(1000);
-                        //this.TitleHeight = 0;
                         List<string> toScan = JsonUtils.TryDeserializeObject<List<string>>(database.ScanPath);
                         try {
                             ScanTask = new ScanTask(toScan, null, ScanTask.VIDEO_EXTENSIONS_LIST);
@@ -596,8 +600,6 @@ namespace Jvedio
                             Logger.Error(ex);
                             MsgBox.Show(ex.Message);
                         }
-
-                        //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
                     } else {
                         tabControl.SelectedIndex = 1;
                     }
@@ -622,21 +624,6 @@ namespace Jvedio
                 if (ScanTask != null)
                     App.ScanManager.CurrentTasks.Add(ScanTask);
 
-            } else {
-                //Window_MetaDatas metaData = GetWindowByName("Window_MetaDatas", App.Current.Windows) as Window_MetaDatas;
-                //if (metaData == null)
-                //{
-                //    metaData = new Window_MetaDatas();
-                //    metaData.Title = "Jvedio-" + Main.CurrentDataType.ToString();
-                //    Application.Current.MainWindow = metaData;
-                //}
-                //else
-                //{
-                //    metaData.setDataBases();
-                //    metaData.setComboboxID();
-                //}
-
-                //metaData.Show();
             }
 
             // 设置当前状态为：进入库
@@ -719,23 +706,11 @@ namespace Jvedio
             LoadDataBase();
         }
 
-
-        private void ShowHelpGame(object sender, MouseButtonEventArgs e)
-        {
-            MessageCard.Info("新建库并打开后，将含有 EXE 的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
-        }
-
-        private void ShowHelpComics(object sender, MouseButtonEventArgs e)
-        {
-            MessageCard.Info("新建库并打开后，将含有漫画图片的文件夹拖入（仅扫描当前文件夹，不扫描子文件夹），即可导入");
-        }
-
         private void CancelScan(object sender, RoutedEventArgs e)
         {
             ScanTask?.Cancel();
             CancelScanTask = true;
             tabControl.SelectedIndex = 1;
-            //this.TitleHeight = DEFAULT_TITLE_HEIGHT;
         }
 
         private async void RestoreDatabase(object sender, RoutedEventArgs e)
@@ -775,21 +750,7 @@ namespace Jvedio
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
-            Dialog_About about = new Dialog_About();
-            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            if (local.EndsWith(".0.0"))
-                local = local.Substring(0, local.Length - ".0.0".Length);
-            about.AppName = "Jvedio";
-            about.AppSubName = "本地视频管理软件";
-            about.Version = local;
-            about.ReleaseDate = ConfigManager.RELEASE_DATE;
-            about.Author = "Chao";
-            about.License = "GPL-3.0";
-            about.GithubUrl = UrlManager.ProjectUrl;
-            about.WebUrl = UrlManager.WebPage;
-            about.JoinGroupUrl = UrlManager.ProjectUrl;
-            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/Resources/Picture/Jvedio.png");
-            about.ShowDialog();
+            App.ShowAbout();
         }
 
         private void RefreshDatabase(object sender, RoutedEventArgs e)

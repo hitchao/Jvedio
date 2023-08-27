@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Security.Policy;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio.Entity
@@ -328,14 +327,43 @@ namespace Jvedio.Entity
             }
         }
 
-        [TableField(exist: false)]
-        public ObservableCollection<TagStamp> TagStamp { get; set; }
+
+        private ObservableCollection<TagStamp> _TagStamp;
 
         [TableField(exist: false)]
-        public string TagIDs { get; set; }
+        public ObservableCollection<TagStamp> TagStamp {
+            get { return _TagStamp; }
+            set {
+                _TagStamp = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+
+        private string _TagIDs;
 
         [TableField(exist: false)]
-        public bool HasVideo { get; set; }
+        public string TagIDs {
+            get { return _TagIDs; }
+            set {
+
+                _TagIDs = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool _HasVideo;
+        [TableField(exist: false)]
+        public bool HasVideo {
+            get { return _HasVideo; }
+
+            set {
+                _HasVideo = value;
+                RaisePropertyChanged();
+            }
+        }
 
         [TableField(exist: false)]
         public List<string> AttachedVideos { get; set; }

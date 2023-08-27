@@ -260,6 +260,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AvalonEdit\AvalonEditManager.cs" />
+    <Compile Include="AvalonEdit\Utils.cs" />
     <Compile Include="Core\Config\Base\AbstractConfig.cs" />
     <Compile Include="Core\Config\Base\IConfig.cs" />
     <Compile Include="Core\Config\Common\DownloadConfig.cs" />
@@ -403,12 +404,6 @@
     <Compile Include="Entity\CommonSQL\CommonMagnet.cs" />
     <Compile Include="Entity\CommonSQL\Translation.cs" />
     <Compile Include="Entity\Common\VideoInfo.cs" />
-    <Compile Include="WindowsDialog\Dialog_LoadPage.xaml.cs">
-      <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WindowsDialog\Dialog_SelectActor.xaml.cs">
-      <DependentUpon>Dialog_SelectActor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WindowsDialog\Dialog_Notice.xaml.cs">
       <DependentUpon>Dialog_Notice.xaml</DependentUpon>
     </Compile>
@@ -552,14 +547,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WindowsDialog\Dialog_Logs.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WindowsDialog\Dialog_LoadPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WindowsDialog\Dialog_SelectActor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

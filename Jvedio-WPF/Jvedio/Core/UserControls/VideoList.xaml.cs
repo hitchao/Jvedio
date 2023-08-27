@@ -8,18 +8,14 @@ using Jvedio.Core.UserControls.ViewModels;
 using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.Entity.CommonSQL;
-using Jvedio.Mapper;
 using Microsoft.VisualBasic.FileIO;
 using SuperControls.Style;
 using SuperControls.Style.Windows;
 using SuperUtils.Common;
-using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.Framework.Tasks;
 using SuperUtils.IO;
-using SuperUtils.Media;
-using SuperUtils.NetWork;
 using SuperUtils.Time;
 using SuperUtils.WPF.VisualTools;
 using System;
@@ -55,6 +51,8 @@ namespace Jvedio.Core.UserControls
         public Action<long, float> onGradeChange;
 
         public static Action<bool> onSearchingChange;
+
+        public static Action<long, long, bool> onTagStampChange;
 
         public static Action<List<Video>> onDeleteID;
         public Action<WrapperEventArg<Video>> onRenderSql;
@@ -219,6 +217,8 @@ namespace Jvedio.Core.UserControls
                     }
                 });
             };
+
+            Window_Edit.onRefreshData += RefreshData;
         }
 
         private void ResizingTimer_Tick(object sender, EventArgs e)
@@ -1625,9 +1625,8 @@ namespace Jvedio.Core.UserControls
                     for (int i = 0; i < datas.Count; i++) {
                         if (datas[i].DataID == dataID) {
                             Video video = datas[i];
-                            RefreshTagStamp(ref video, tagID, deleted);
-                            //datas[i] = null;
-                            datas[i] = video;
+                            Video.RefreshTagStamp(ref video, tagID, deleted);
+                            onTagStampChange?.Invoke(dataID, tagID, deleted);
                             break;
                         }
                     }
@@ -1639,30 +1638,6 @@ namespace Jvedio.Core.UserControls
                 vieModel.SelectedVideo.Clear();
         }
 
-
-        public void RefreshTagStamp(ref Video video, long newTagID, bool deleted)
-        {
-            if (video == null || newTagID <= 0)
-                return;
-            string tagIDs = video.TagIDs;
-            if (!deleted && string.IsNullOrEmpty(tagIDs)) {
-                video.TagStamp = new ObservableCollection<TagStamp>();
-                video.TagStamp.Add(TagStamp.TagStamps.Where(arg => arg.TagID == newTagID).FirstOrDefault());
-                video.TagIDs = newTagID.ToString();
-            } else {
-                List<string> list = tagIDs.Split(',').ToList();
-                if (!deleted && !list.Contains(newTagID.ToString()))
-                    list.Add(newTagID.ToString());
-                if (deleted && list.Contains(newTagID.ToString()))
-                    list.Remove(newTagID.ToString());
-                video.TagIDs = string.Join(",", list);
-                video.TagStamp = new ObservableCollection<TagStamp>();
-                foreach (var arg in list) {
-                    long.TryParse(arg, out long id);
-                    video.TagStamp.Add(TagStamp.TagStamps.Where(item => item.TagID == id).FirstOrDefault());
-                }
-            }
-        }
 
 
         public void RefreshTagStamps(long tagID)
@@ -1676,9 +1651,10 @@ namespace Jvedio.Core.UserControls
                 toRefreshData.Add(video.DataID);
             }
             foreach (var item in toRefreshData) {
-                vieModel.RefreshData(item);
+                vieModel.RefreshTagStamp(item);
             }
         }
+
 
 
         public void SetActor(ActorInfo actorInfo)

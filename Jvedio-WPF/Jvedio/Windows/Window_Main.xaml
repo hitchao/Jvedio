@@ -187,12 +187,6 @@
             </MenuItem>
 
 
-            <MenuItem
-                Click="ShowSponsor"
-                Header="{DynamicResource SponsorMe}"
-                Visibility="Collapsed" />
-
-
             <MenuItem Header="Jvedio">
 
                 <MenuItem

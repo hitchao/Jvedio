@@ -1,14 +1,11 @@
 ﻿using Jvedio.Core.Enums;
 using Jvedio.Core.Scan;
-using Jvedio.Core.UserControls;
 using Jvedio.Entity;
 using SuperControls.Style;
-using SuperControls.Style.Plugin;
 using SuperControls.Style.Windows;
 using SuperUtils.Framework.ORM.Utils;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
-using SuperUtils.Media;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,16 +23,13 @@ namespace Jvedio
     /// </summary>
     public partial class Window_EditActor : BaseWindow
     {
-
-
-
         #region "事件"
         public static Action<long> onActorInfoChanged;
 
         #endregion
-        #region "属性"
-        private Main main { get; set; }
 
+
+        #region "属性"
         public long ActorID { get; set; }
 
         public ActorInfo CurrentActorInfo { get; set; }
@@ -46,7 +40,6 @@ namespace Jvedio
         private Window_EditActor()
         {
             InitializeComponent();
-            main = GetWindowByName("Main", App.Current.Windows) as Main;
         }
 
 
@@ -81,12 +74,6 @@ namespace Jvedio
                 boy.IsChecked = true;
             else
                 girl.IsChecked = true;
-        }
-
-
-        private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void SaveActor(object sender, RoutedEventArgs e)
@@ -236,6 +223,16 @@ namespace Jvedio
                     CurrentActorInfo.Gender = Gender.Girl;
                 }
             }
+        }
+
+        private void onTextBoxFocus(object sender, RoutedEventArgs e)
+        {
+            Jvedio.AvalonEdit.Utils.GotFocus(sender);
+        }
+
+        private void onTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            Jvedio.AvalonEdit.Utils.LostFocus(sender);
         }
     }
 }

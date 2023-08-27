@@ -231,20 +231,12 @@ namespace Jvedio.Core.UserControls.Tasks
 
         private void textBox_GotFocus(object sender, System.Windows.RoutedEventArgs e)
         {
-            TextEditor textEditor = sender as TextEditor;
-            if (textEditor == null || textEditor.Parent == null)
-                return;
-            Border border = textEditor.Parent as Border;
-            if (border == null)
-                return;
-            border.BorderBrush = (SolidColorBrush)Application.Current.Resources["Button.Selected.BorderBrush"];
+            Jvedio.AvalonEdit.Utils.GotFocus(sender);
         }
 
         private void textBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextEditor textEditor = sender as TextEditor;
-            if (textEditor != null && textEditor.Parent is Border border)
-                border.BorderBrush = Brushes.Transparent;
+            Jvedio.AvalonEdit.Utils.LostFocus(sender);
         }
 
 

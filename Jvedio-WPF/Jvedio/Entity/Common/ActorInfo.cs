@@ -3,7 +3,6 @@ using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
-using Jvedio.Mapper;
 using SuperUtils.Framework.ORM.Attributes;
 using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
