@@ -211,6 +211,14 @@ namespace Jvedio.Core.UserControls
                     }
                 });
             };
+
+            ScreenShotTask.onScreenShotCompleted += (ok, dataID) => {
+                Dispatcher.Invoke(() => {
+                    if (ok) {
+                        LoadImageAfterScreenShort(dataID);
+                    }
+                });
+            };
         }
 
         private void ResizingTimer_Tick(object sender, EventArgs e)
@@ -1055,9 +1063,7 @@ namespace Jvedio.Core.UserControls
                 return;
 
             foreach (Video video in vieModel.SelectedVideo) {
-                string url = video.WebUrl;
-                if (url.IsProperUrl())
-                    FileHelper.TryOpenUrl(url);
+                video.OpenWeb();
             }
         }
 
@@ -1117,15 +1123,6 @@ namespace Jvedio.Core.UserControls
             }
 
             contextMenu.IsOpen = false;
-        }
-
-        public void ScreenShotVideo(MetaData metaData)
-        {
-            ScreenShotTask task = new ScreenShotTask(metaData);
-            task.onError += (s, ev) => {
-                MessageCard.Error((ev as MessageCallBackEventArgs).Message);
-            };
-            AddToScreenShot(task);
         }
 
 
@@ -1336,22 +1333,10 @@ namespace Jvedio.Core.UserControls
             }
 
             foreach (Video video in videos) {
-                ScreenShotVideo(video.toMetaData());
+                ScreenShotTask.ScreenShotVideo(video);
             }
         }
 
-        public void ScreenShotVideo(Video video, bool gif = false)
-        {
-            ScreenShotTask screenShotTask = new ScreenShotTask(video, gif);
-            screenShotTask.onError += (s, ev) => {
-                MessageCard.Error((ev as MessageCallBackEventArgs).Message);
-            };
-            screenShotTask.onCompleted += (s, ev) => {
-                if (screenShotTask.Success)
-                    LoadImageAfterScreenShort(video);
-            };
-            AddToScreenShot(screenShotTask);
-        }
 
         public void DownloadAllVideo(object sender, RoutedEventArgs e)
         {
@@ -1380,25 +1365,16 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        public void AddToScreenShot(ScreenShotTask task)
-        {
-            if (App.ScreenShotManager.Exists(task)) {
-                MessageNotify.Warning(LangManager.GetValueByKey("TaskExists"));
-                return;
-            }
 
-            App.ScreenShotManager.AddTask(task);
-        }
-
-        private void LoadImageAfterScreenShort(Video video)
+        private void LoadImageAfterScreenShort(long dataID)
         {
-            if (video == null)
+            if (dataID <= 0)
                 return;
             for (int i = 0; i < vieModel.CurrentVideoList.Count; i++) {
                 if (vieModel.CurrentVideoList[i] == null)
                     continue;
                 try {
-                    if (!video.DataID.Equals(vieModel.CurrentVideoList[i].DataID))
+                    if (!dataID.Equals(vieModel.CurrentVideoList[i].DataID))
                         continue;
                     if (vieModel.CurrentVideoList[i].BigImage == MetaData.DefaultBigImage) {
                         // 检查有无截图
@@ -1542,11 +1518,8 @@ namespace Jvedio.Core.UserControls
             }
 
             foreach (Video video in Videos) {
-                ScreenShotVideo(video, gif);
+                ScreenShotTask.ScreenShotVideo(video, gif);
             }
-
-            //if (!vieModel.EditMode)
-            //    vieModel.SelectedVideo.Clear();
         }
 
 
@@ -1730,6 +1703,7 @@ namespace Jvedio.Core.UserControls
             vieModel.ShowActorGrid = false;
         }
 
+
         private void OpenPath(object sender, RoutedEventArgs e)
         {
             MenuItem menu = sender as MenuItem;
@@ -1742,28 +1716,14 @@ namespace Jvedio.Core.UserControls
 
 
             string header = menu.Header.ToString();
+
+            OpenPathType openPathType = Video.StringToImageType(header);
+
             long dataID = GetIDFromMenuItem(sender, 1);
             if (dataID <= 0)
                 return;
             Video video = datas.Where(arg => arg.DataID == dataID).FirstOrDefault();
-            if (video == null)
-                return;
-            if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Movie"))) {
-                if (!File.Exists(video.Path))
-                    MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_FileNotExist") + ": " + video.Path);
-                else
-                    FileHelper.TryOpenSelectPath(video.Path);
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Poster"))) {
-                FileHelper.TryOpenSelectPath(video.GetBigImage());
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail"))) {
-                FileHelper.TryOpenSelectPath(video.GetSmallImage());
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview"))) {
-                FileHelper.TryOpenSelectPath(video.GetExtraImage());
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot"))) {
-                FileHelper.TryOpenSelectPath(video.GetScreenShot());
-            } else if (header.Equals("GIF")) {
-                FileHelper.TryOpenSelectPath(video.GetGifPath());
-            }
+            video?.OpenPath(openPathType);
         }
 
 

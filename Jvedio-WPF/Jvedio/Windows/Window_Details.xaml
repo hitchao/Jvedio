@@ -429,32 +429,9 @@
                             <Grid.ContextMenu>
                                 <ContextMenu Opacity="0.8" PreviewKeyUp="ContextMenu_PreviewKeyUp">
                                     <MenuItem Click="DownLoad" Header="{DynamicResource Menu_SyncInfo}" />
-                                    <MenuItem
-                                        Header="{DynamicResource Menu_SyncExtra}"
-                                        IsEnabled="False"
-                                        Visibility="Collapsed">
-                                        <MenuItem Click="DownLoadMagnets" Header="{DynamicResource SyncMagnets}" />
-                                    </MenuItem>
                                     <MenuItem Header="{DynamicResource Menu_Advance}">
                                         <MenuItem Click="GetScreenShot" Header="{DynamicResource Menu_GenerateScreenShot}" />
-                                        <MenuItem
-                                            Click="GetScreenGif"
-                                            Header="{DynamicResource Menu_GenerateGif}"
-                                            Visibility="Collapsed" />
-
-                                        <MenuItem
-                                            Click="TranslateMovie"
-                                            Header="{DynamicResource Menu_Translate}"
-                                            IsEnabled="False"
-                                            Visibility="Collapsed" />
-                                        <MenuItem
-                                            Header="{DynamicResource Menu_GenerateThumbnail}"
-                                            IsEnabled="False"
-                                            Visibility="Collapsed" />
-                                        <MenuItem
-                                            Header="{DynamicResource Menu_GenerateActressImage}"
-                                            IsEnabled="False"
-                                            Visibility="Collapsed" />
+                                        <MenuItem Click="GetScreenGif" Header="{DynamicResource Menu_GenerateGif}" />
                                     </MenuItem>
                                     <MenuItem Header="{DynamicResource OpenPath}">
                                         <MenuItem
@@ -468,14 +445,10 @@
                                         <MenuItem Click="OpenPath" Header="{DynamicResource ScreenShot}" />
                                     </MenuItem>
 
-
-
-
                                     <MenuItem
                                         Click="OpenWeb"
                                         Header="{DynamicResource ViewWebsite}"
                                         Icon="pack://application:,,,/Resources/menuitem/openwebsite.png" />
-                                    <MenuItem x:Name="OpenOtherUrlMenuItem" Header="{DynamicResource OpenOtherUrl}" />
 
                                     <MenuItem
                                         x:Name="CopyMagnetsMenuItem"

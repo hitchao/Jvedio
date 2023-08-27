@@ -130,7 +130,7 @@ namespace Jvedio
 
             rootGrid.Focus();       // 设置键盘左右可切换
             InitDataIDs();          // 设置切换的影片列表
-            OpenOtherUrlMenuItem.Items.Clear(); // 设置右键菜单
+
             RemoveNewAddTag();
             BindEvent();
         }
@@ -155,7 +155,19 @@ namespace Jvedio
                 });
             };
 
-
+            ScreenShotTask.onScreenShotCompleted += (ok, dataId) => {
+                Dispatcher.Invoke(async () => {
+                    if (vieModel.ShowScreenShot && dataId.Equals(vieModel.CurrentVideo.DataID)) {
+                        // 加入到列表
+                        if (vieModel.CurrentVideo.PreviewImagePathList == null)
+                            vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
+                        if (vieModel.CurrentVideo.PreviewImageList == null)
+                            vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
+                        await LoadImage(true);
+                        vieModel.ScreenShotCount = vieModel.CurrentVideo.PreviewImagePathList.Count;
+                    }
+                });
+            };
         }
 
 
@@ -348,36 +360,13 @@ namespace Jvedio
 
         public void GetScreenGif(object sender, RoutedEventArgs e)
         {
-            //Video video = vieModel.CurrentVideo;
-            //ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo, true); // 详情页面下载预览图
-
-            //if (!Global.FFmpegManager.Dispatcher.Working)
-            //    Global.FFmpegManager.Dispatcher.BeginWork();
-            //windowMain?.addToScreenShot(task);
+            Video video = vieModel.CurrentVideo;
+            ScreenShotTask.ScreenShotVideo(video, gif: true);
         }
 
         public void GetScreenShot(object sender, RoutedEventArgs e)
         {
-            Video video = vieModel.CurrentVideo;
-            ScreenShotTask task = new ScreenShotTask(vieModel.CurrentVideo); // 详情页面下载预览图
-            long dataId = video.DataID;
-            task.onCompleted += (s, ev) => {
-                ScreenShotTask t = s as ScreenShotTask;
-                PreviewImageEventArgs arg = ev as PreviewImageEventArgs;
-                Dispatcher.Invoke(async () => {
-                    if (vieModel.ShowScreenShot && dataId.Equals(vieModel.CurrentVideo.DataID)) {
-                        // 加入到列表
-                        if (vieModel.CurrentVideo.PreviewImagePathList == null)
-                            vieModel.CurrentVideo.PreviewImagePathList = new ObservableCollection<string>();
-                        if (vieModel.CurrentVideo.PreviewImageList == null)
-                            vieModel.CurrentVideo.PreviewImageList = new ObservableCollection<BitmapSource>();
-                        await LoadImage(true);
-                    }
-                });
-            };
-            //if (!Global.FFmpegManager.Dispatcher.Working)
-            //    Global.FFmpegManager.Dispatcher.BeginWork();
-            //windowMain?.addToScreenShot(task);
+            ScreenShotTask.ScreenShotVideo(vieModel.CurrentVideo);
         }
 
         public void CloseWindow(object sender, RoutedEventArgs e) => this.Close();
@@ -619,6 +608,11 @@ namespace Jvedio
 
         public void DeleteFile(object sender, RoutedEventArgs e)
         {
+
+            if (new MsgBox(LangManager.GetValueByKey("ToolTip_DeleteFile")).ShowDialog() == false) {
+                return;
+            }
+
             int num = 0;
             Video video = vieModel.CurrentVideo;
             if (video.SubSectionList?.Count > 0) {
@@ -649,6 +643,10 @@ namespace Jvedio
 
         public void DeleteID(object sender, RoutedEventArgs e)
         {
+            if (new MsgBox(LangManager.GetValueByKey("IsToDeleteFromLibrary")).ShowDialog() == false) {
+                return;
+            }
+
             windowMain?.DeleteID(new List<Video> { vieModel.CurrentVideo }, true);
             int idx = DataIDs.IndexOf(vieModel.CurrentVideo.DataID);
             DataIDs.RemoveAll(arg => arg == vieModel.CurrentVideo.DataID);
@@ -665,11 +663,7 @@ namespace Jvedio
 
         private void OpenWeb(object sender, RoutedEventArgs e)
         {
-            string url = vieModel.CurrentVideo.WebUrl;
-            if (string.IsNullOrEmpty(url))
-                return;
-            if (url.IsProperUrl())
-                FileHelper.TryOpenUrl(url);
+            vieModel.CurrentVideo.OpenWeb();
         }
 
         public void TranslateMovie(object sender, RoutedEventArgs e)
@@ -996,7 +990,10 @@ namespace Jvedio
 
                 menuItem.Header = $"{magnet.Releasedate} {tag} {magnet.Size.ToProperFileSize()} {magnet.Title}";
                 menuItem.ToolTip = menuItem.Header;
-                menuItem.Click += (s, ev) => ClipBoard.TrySetDataObject(magnet.MagnetLink);
+                menuItem.Click += (s, ev) => {
+                    ClipBoard.TrySetDataObject(magnet.MagnetLink);
+                    MessageNotify.Success(LangManager.GetValueByKey("Message_Copied"));
+                };
                 CopyMagnetsMenuItem.Items.Add(menuItem);
             }
         }
@@ -1162,11 +1159,6 @@ namespace Jvedio
 
         }
 
-        private void DownLoadMagnets(object sender, RoutedEventArgs e)
-        {
-            new MsgBox("开发中").ShowDialog();
-        }
-
         public void ShowSubsection(object sender)
         {
             ContextMenu contextMenu = (sender as Grid).ContextMenu;
@@ -1229,18 +1221,7 @@ namespace Jvedio
         {
             MenuItem menu = sender as MenuItem;
             string header = menu.Header.ToString();
-            Video video = vieModel.CurrentVideo;
-            if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Poster"))) {
-                FileHelper.TryOpenSelectPath(video.GetBigImage());
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail"))) {
-                FileHelper.TryOpenSelectPath(video.GetSmallImage());
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview"))) {
-                FileHelper.TryOpenSelectPath(video.GetExtraImage());
-            } else if (header.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot"))) {
-                FileHelper.TryOpenSelectPath(video.GetScreenShot());
-            } else if (header.Equals("GIF")) {
-                FileHelper.TryOpenSelectPath(video.GetGifPath());
-            }
+            vieModel.CurrentVideo.OpenPath(Video.StringToImageType(header));
         }
 
         private void ViewAssocDatas(object sender, RoutedEventArgs e)

@@ -817,7 +817,7 @@ namespace Jvedio
             ConfigManager.Main.Y = this.Top;
             ConfigManager.Main.Width = this.Width;
             ConfigManager.Main.Height = this.Height;
-            // ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
+            ConfigManager.Main.SideGridWidth = SideGridColumn.ActualWidth;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

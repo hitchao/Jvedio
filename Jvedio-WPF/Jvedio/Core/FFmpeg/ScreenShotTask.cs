@@ -12,6 +12,17 @@ namespace Jvedio.Core.FFmpeg
 {
     public class ScreenShotTask : AbstractTask
     {
+        #region "事件"
+
+        public static Action<string> onScreenShotError;
+
+        public static Action<bool, long> onScreenShotCompleted;
+
+        #endregion
+
+        #region "属性"
+
+        #endregion
         public long DataID { get; set; }
         public bool Gif { get; set; }
 
@@ -97,5 +108,29 @@ namespace Jvedio.Core.FFmpeg
         {
             return DataID.GetHashCode();
         }
+
+        #region "对外方法"
+        public static void ScreenShotVideo(Video video, bool gif = false)
+        {
+            long dataID = video.DataID;
+            ScreenShotTask screenShotTask = new ScreenShotTask(video, gif);
+            screenShotTask.onError += (e, v) => onScreenShotError((v as MessageCallBackEventArgs).Message);
+            screenShotTask.onCompleted += (e, v) => onScreenShotCompleted((e as ScreenShotTask).Success, dataID);
+            AddToScreenShot(screenShotTask);
+        }
+
+
+
+        public static void AddToScreenShot(ScreenShotTask task)
+        {
+            if (App.ScreenShotManager.Exists(task)) {
+                MessageNotify.Warning(LangManager.GetValueByKey("TaskExists"));
+                return;
+            }
+
+            App.ScreenShotManager.AddTask(task);
+        }
+
+        #endregion
     }
 }

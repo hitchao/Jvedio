@@ -12,6 +12,7 @@ using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Media;
+using SuperUtils.NetWork;
 using SuperUtils.Reflections;
 using SuperUtils.Time;
 using SuperUtils.WPF.Entity;
@@ -285,6 +286,61 @@ namespace Jvedio.Entity
             if (_initDefaultImage)
                 InitDefaultImage();
         }
+
+        #region "对外静态方法"
+
+        public void OpenWeb()
+        {
+            string url = WebUrl;
+            if (string.IsNullOrEmpty(url))
+                return;
+            if (url.IsProperUrl())
+                FileHelper.TryOpenUrl(url);
+        }
+
+
+        public static OpenPathType StringToImageType(string type)
+        {
+            if (type.Equals(SuperControls.Style.LangManager.GetValueByKey("Movie"))) {
+                return OpenPathType.Video;
+            } else if (type.Equals(SuperControls.Style.LangManager.GetValueByKey("Poster"))) {
+                return OpenPathType.Poster;
+            } else if (type.Equals(SuperControls.Style.LangManager.GetValueByKey("Thumbnail"))) {
+                return OpenPathType.Thumnail;
+            } else if (type.Equals(SuperControls.Style.LangManager.GetValueByKey("Preview"))) {
+                return OpenPathType.Preview;
+            } else if (type.Equals(SuperControls.Style.LangManager.GetValueByKey("ScreenShot"))) {
+                return OpenPathType.ScreenShot;
+            } else if (type.ToUpper().Equals("GIF")) {
+                return OpenPathType.Gif;
+            }
+            return OpenPathType.Video;
+        }
+
+        public void OpenPath(OpenPathType type)
+        {
+            string target = "";
+            if (type == OpenPathType.Video) {
+                target = Path;
+                if (!File.Exists(Path)) {
+                    MessageCard.Error(SuperControls.Style.LangManager.GetValueByKey("Message_FileNotExist") + ": " + Path);
+                } else {
+                    FileHelper.TryOpenSelectPath(Path);
+                }
+            } else if (type == OpenPathType.Poster) {
+                FileHelper.TryOpenSelectPath(GetBigImage());
+            } else if (type == OpenPathType.Thumnail) {
+                FileHelper.TryOpenSelectPath(GetSmallImage());
+            } else if (type == OpenPathType.Preview) {
+                FileHelper.TryOpenSelectPath(GetExtraImage());
+            } else if (type == OpenPathType.ScreenShot) {
+                FileHelper.TryOpenSelectPath(GetScreenShot());
+            } else if (type == OpenPathType.Gif) {
+                FileHelper.TryOpenSelectPath(GetGifPath());
+            }
+        }
+
+        #endregion
 
         // 延迟加载图片
         public void InitDefaultImage()

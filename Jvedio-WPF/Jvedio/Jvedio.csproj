@@ -270,6 +270,7 @@
     <Compile Include="Core\Config\UtilsManager.cs" />
     <Compile Include="Core\DataBase\SqlManager.cs" />
     <Compile Include="Core\Enums\NotImportReason.cs" />
+    <Compile Include="Core\Enums\OpenPathType.cs" />
     <Compile Include="Core\Enums\SearchMode.cs" />
     <Compile Include="Core\Enums\ThemeSingleColor.cs" />
     <Compile Include="Core\Exceptions\CrawlerNotSupportException.cs" />
