@@ -159,6 +159,7 @@ namespace Jvedio.Core.UserControls.Tasks
             TaskType = type;
         }
 
+#if DEBUG
         public async void InitSample()
         {
             for (int i = 1; i <= 100; i++) {
@@ -183,9 +184,8 @@ namespace Jvedio.Core.UserControls.Tasks
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
                         new AsyncLoadItemDelegate<AbstractTask>(AsyncLoadItem), TaskStatusList, task);
             }
-
-
         }
+#endif
 
         private void ShowContextMenu(object sender, RoutedEventArgs e)
         {

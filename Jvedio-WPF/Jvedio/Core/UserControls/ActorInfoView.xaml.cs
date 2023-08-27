@@ -56,12 +56,6 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        private void Image_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Link;
-            e.Handled = true;
-        }
-
         private void OpenActorPath(object sender, RoutedEventArgs e)
         {
             if (CurrentActorInfo != null)
@@ -99,45 +93,6 @@ namespace Jvedio.Core.UserControls
 
             // };
         }
-
-
-
-        private void Image_Drop(object sender, DragEventArgs e)
-        {
-            // string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            // string file = dragdropFiles[0];
-
-            // if (IsFile(file))
-            // {
-            //    FileInfo fileInfo = new FileInfo(file);
-            //    if (fileInfo.Extension.ToLower() == ".jpg")
-            //    {
-            //        FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"Actresses\\{vieModel.Actress.name}.jpg", true);
-            //        Actress actress = vieModel.Actress;
-            //        actress.smallimage = null;
-            //        actress.smallimage = GetActorImage(actress.name);
-            //        vieModel.Actress = null;
-            //        vieModel.Actress = actress;
-
-            // if (vieModel.ActorList == null || vieModel.ActorList.Count == 0) return;
-
-            // for (int i = 0; i < vieModel.ActorList.Count; i++)
-            //        {
-            //            if (vieModel.ActorList[i].name == actress.name)
-            //            {
-            //                vieModel.ActorList[i] = actress;
-            //                break;
-            //            }
-            //        }
-
-            // }
-            //    else
-            //    {
-            //        msgCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_OnlySupportJPG"));
-            //    }
-            // }
-        }
-
         private void EditActress(object sender, MouseButtonEventArgs e)
         {
             if (CurrentActorInfo != null) {

@@ -21,7 +21,6 @@ namespace Jvedio.Core.UserControls.ViewModels
     class VieModel_VideoList : ViewModelBase
     {
         private const int SEARCH_CANDIDATE_MAX_COUNT = 10;
-        private const string LabelJoinSql = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
 
         #region "事件"
 
@@ -502,7 +501,6 @@ namespace Jvedio.Core.UserControls.ViewModels
         public void RandomDisplay()
         {
             Select(true);
-            //TabItemManager.Add(TabType.GeoRandom, LangManager.GetValueByKey("ToolTip_RandomShow"));
         }
 
         public void Refresh() => Select();
@@ -617,13 +615,13 @@ namespace Jvedio.Core.UserControls.ViewModels
             if (ExtraWrapper != null) {
                 wrapper.Join(ExtraWrapper);
                 if (!string.IsNullOrEmpty(ExtraWrapper.ExtraSql))
-                    sql += ExtraWrapper.ExtraSql; // 一些 join 语句
+                    sql += ExtraWrapper.ExtraSql;
             }
 
             if (SearchWrapper != null) {
                 wrapper.Join(SearchWrapper);
                 if (!string.IsNullOrEmpty(SearchWrapper.ExtraSql))
-                    sql += SearchWrapper.ExtraSql; // 一些 join 语句
+                    sql += SearchWrapper.ExtraSql;
             }
 
             if (FilterWrapper != null) {
@@ -736,7 +734,10 @@ namespace Jvedio.Core.UserControls.ViewModels
             PageChangedCompleted?.Invoke(this, null);
         }
 
-        // 搜索
+        /// <summary>
+        /// 搜索
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<string>> GetSearchCandidate()
         {
             return await Task.Run(() => {
@@ -773,7 +774,7 @@ namespace Jvedio.Core.UserControls.ViewModels
                 if (searchType == SearchField.ActorName)
                     sql += ActorMapper.SQL_JOIN_ACTOR;
                 else if (searchType == SearchField.LabelName)
-                    sql += LabelJoinSql;
+                    sql += VideoMapper.SQL_JOIN_LABEL;
 
 
                 string condition_sql = wrapper.ToWhere(false) + wrapper.ToOrder()

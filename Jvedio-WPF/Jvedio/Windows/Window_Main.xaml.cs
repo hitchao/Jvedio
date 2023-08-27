@@ -195,11 +195,6 @@ namespace Jvedio
                     video.SetSelected();
                 }
             }
-            if (actorLists != null) {
-                foreach (ActorList data in actorLists) {
-                    data.SetSelected();
-                }
-            }
         }
 
 
@@ -669,8 +664,7 @@ namespace Jvedio
                 string remote = result.LatestVersion;
                 string ReleaseDate = result.ReleaseDate;
                 if (!string.IsNullOrEmpty(remote)) {
-                    string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                    //local = local.Substring(0, local.Length - ".0.0".Length);
+                    string local = App.GetLocalVersion(false);
                     if (local.CompareTo(remote) < 0) {
                         bool opened = (bool)new MsgBox(
                             $"存在新版本\n版本：{remote}\n日期：{ReleaseDate}").ShowDialog();

@@ -129,10 +129,7 @@ namespace Jvedio.ViewModel
         public override void Init()
         {
             ReadFromDataBase();
-
-            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            if (local.EndsWith(".0.0"))
-                Version = local.Substring(0, local.Length - ".0.0".Length);
+            Version = App.GetLocalVersion();
         }
 
         public void ReadFromDataBase()

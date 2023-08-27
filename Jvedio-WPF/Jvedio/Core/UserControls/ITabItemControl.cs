@@ -1,7 +1,5 @@
 ﻿namespace Jvedio.Core.UserControls
 {
-
-
     public enum TabActionType
     {
         None = 0,
@@ -15,6 +13,9 @@
     }
 
 
+    /// <summary>
+    /// 选项卡通用方法
+    /// </summary>
     internal interface ITabItemControl
     {
         void Refresh();

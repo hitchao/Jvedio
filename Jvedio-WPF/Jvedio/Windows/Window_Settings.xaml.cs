@@ -50,7 +50,7 @@ namespace Jvedio
     public partial class Window_Settings : SuperControls.Style.BaseWindow
     {
 
-        private const string DEFAULT_TEST_URL = "https://www.baidu.com/";
+        private const string DEFAULT_TEST_URL = "https://www.example.com/";
 
         #region "事件"
 
@@ -58,6 +58,9 @@ namespace Jvedio
         #endregion
 
         #region "静态属性"
+
+        private List<string> RenameList { get; set; } = new List<string>();
+
         public static Video SampleVideo { get; set; }
 
         public static string SupportVideoFormat { get; set; }
@@ -271,41 +274,47 @@ namespace Jvedio
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            // 初次启动后不给设置默认打开上一次库，否则会提示无此数据库
-            if (ConfigManager.Settings.DefaultDBID <= 0)
-                openDefaultCheckBox.IsEnabled = false;
+            InitIndex();
+            InitScanDatabases();
+            InitViewRename(ConfigManager.RenameConfig.FormatString);
+            InitCheckedBoxChecked();
+            InitRenameCombobox();
+            InitProxy();
+            InitLang();
+        }
 
-            // 设置 crawlerIndex
-            serverListBox.SelectedIndex = (int)ConfigManager.Settings.CrawlerSelectedIndex;
-
-            // 设置当前数据库
-            SetScanDatabases();
-
-            // if (vieModel.DataBases?.Count == 1) DatabaseComboBox.Visibility = Visibility.Hidden;
-            ShowViewRename(ConfigManager.RenameConfig.FormatString);
-
-            SetCheckedBoxChecked();
-            foreach (ComboBoxItem item in OutComboBox.Items) {
-                if (item.Content.ToString().Equals(ConfigManager.RenameConfig.OutSplit)) {
-                    OutComboBox.SelectedIndex = OutComboBox.Items.IndexOf(item);
-                    break;
+        /// <summary>
+        /// 设置语言
+        /// </summary>
+        private void InitLang()
+        {
+            int langIdx = 0;
+            if (!string.IsNullOrEmpty(ConfigManager.Settings.CurrentLanguage)) {
+                for (int i = 0; i < langComboBox.Items.Count; i++) {
+                    ComboBoxItem item = langComboBox.Items[i] as ComboBoxItem;
+                    if (item.Tag.ToString().Equals(ConfigManager.Settings.CurrentLanguage)) {
+                        langIdx = i;
+                        break;
+                    }
                 }
             }
-
-            if (OutComboBox.SelectedIndex < 0)
-                OutComboBox.SelectedIndex = 0;
-
-            foreach (ComboBoxItem item in InComboBox.Items) {
-                if (item.Content.ToString().Equals(ConfigManager.RenameConfig.InSplit)) {
-                    InComboBox.SelectedIndex = InComboBox.Items.IndexOf(item);
-                    break;
+            langComboBox.SelectedIndex = langIdx;
+            langComboBox.SelectionChanged += (s, ev) => {
+                if (ev.AddedItems?.Count > 0) {
+                    ComboBoxItem comboBoxItem = ev.AddedItems[0] as ComboBoxItem;
+                    string lang = comboBoxItem.Tag.ToString();
+                    SuperControls.Style.LangManager.SetLang(lang);
+                    Jvedio.Core.Lang.LangManager.SetLang(lang);
+                    vieModel.CurrentLanguage = lang;
                 }
-            }
+            };
+        }
 
-            if (InComboBox.SelectedIndex < 0)
-                OutComboBox.SelectedIndex = 0;
-
-            // 设置代理选中
+        /// <summary>
+        /// 设置代理选中
+        /// </summary>
+        private void InitProxy()
+        {
             List<RadioButton> proxies = proxyStackPanel.Children.OfType<RadioButton>().ToList();
             for (int i = 0; i < proxies.Count; i++) {
                 if (i == ConfigManager.ProxyConfig.ProxyMode)
@@ -334,30 +343,42 @@ namespace Jvedio
                 if (!string.IsNullOrEmpty(passwordBox.Password))
                     vieModel.ProxyPwd = JvedioLib.Security.Encrypt.AesEncrypt(passwordBox.Password, 0);
             };
-
-            // 设置语言
-            int langIdx = 0;
-            if (!string.IsNullOrEmpty(ConfigManager.Settings.CurrentLanguage)) {
-                for (int i = 0; i < langComboBox.Items.Count; i++) {
-                    ComboBoxItem item = langComboBox.Items[i] as ComboBoxItem;
-                    if (item.Tag.ToString().Equals(ConfigManager.Settings.CurrentLanguage)) {
-                        langIdx = i;
-                        break;
-                    }
-                }
-            }
-            langComboBox.SelectedIndex = langIdx;
-            langComboBox.SelectionChanged += (s, ev) => {
-                if (ev.AddedItems?.Count > 0) {
-                    ComboBoxItem comboBoxItem = ev.AddedItems[0] as ComboBoxItem;
-                    string lang = comboBoxItem.Tag.ToString();
-                    SuperControls.Style.LangManager.SetLang(lang);
-                    Jvedio.Core.Lang.LangManager.SetLang(lang);
-                    vieModel.CurrentLanguage = lang;
-                }
-            };
         }
 
+        private void InitIndex()
+        {
+            // 初次启动后不给设置默认打开上一次库，否则会提示无此数据库
+            if (ConfigManager.Settings.DefaultDBID <= 0)
+                openDefaultCheckBox.IsEnabled = false;
+
+            // 设置 crawlerIndex
+            serverListBox.SelectedIndex = (int)ConfigManager.Settings.CrawlerSelectedIndex;
+
+        }
+
+
+        private void InitRenameCombobox()
+        {
+            foreach (ComboBoxItem item in OutComboBox.Items) {
+                if (item.Content.ToString().Equals(ConfigManager.RenameConfig.OutSplit)) {
+                    OutComboBox.SelectedIndex = OutComboBox.Items.IndexOf(item);
+                    break;
+                }
+            }
+
+            if (OutComboBox.SelectedIndex < 0)
+                OutComboBox.SelectedIndex = 0;
+
+            foreach (ComboBoxItem item in InComboBox.Items) {
+                if (item.Content.ToString().Equals(ConfigManager.RenameConfig.InSplit)) {
+                    InComboBox.SelectedIndex = InComboBox.Items.IndexOf(item);
+                    break;
+                }
+            }
+
+            if (InComboBox.SelectedIndex < 0)
+                OutComboBox.SelectedIndex = 0;
+        }
 
         public void AddPath(object sender, RoutedEventArgs e)
         {
@@ -387,19 +408,6 @@ namespace Jvedio
             vieModel.ScanPath?.Clear();
         }
 
-        private void ListenCheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox checkBox = sender as CheckBox;
-            if (checkBox?.IsVisible == false)
-                return;
-            if ((bool)checkBox.IsChecked) {
-                // 测试是否能监听
-                if (!TestListen())
-                    checkBox.IsChecked = false;
-                else
-                    SuperControls.Style.MessageCard.Info(SuperControls.Style.LangManager.GetValueByKey("RebootToTakeEffect"));
-            }
-        }
 
         #region "文件监听"
 
@@ -498,13 +506,6 @@ namespace Jvedio
             vieModel.SaveNFOParseData();
         }
 
-        private void SetListenStatus()
-        {
-            if (ConfigManager.Settings.ListenEnabled) {
-                // 开启端口监听
-            }
-        }
-
         private void SavePath()
         {
             Dictionary<string, string> dict = (Dictionary<string, string>)vieModel.PicPaths[PathType.RelativeToData.ToString()];
@@ -541,7 +542,11 @@ namespace Jvedio
             vieModel.LoadScanPath(db);
         }
 
-        private void SetScanDatabases()
+
+        /// <summary>
+        /// 设置当前数据库
+        /// </summary>
+        private void InitScanDatabases()
         {
             List<AppDatabase> appDatabases = MainWindow?.vieModel.DataBases.ToList();
             AppDatabase db = MainWindow?.vieModel.CurrentAppDataBase;
@@ -556,7 +561,7 @@ namespace Jvedio
             }
         }
 
-        private void SetCheckedBoxChecked()
+        private void InitCheckedBoxChecked()
         {
             List<ToggleButton> toggleButtons = CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList();
             List<string> list = toggleButtons.Select(arg => Video.ToSqlField(arg.Content.ToString())).ToList();
@@ -568,7 +573,7 @@ namespace Jvedio
                 while (right > 0 && right < formatString.Length) {
                     string name = formatString.Substring(left + 1, right - left - 1);
                     if (list.Contains(name)) {
-                        //RenameList.Add(name);
+                        RenameList.Add(name);
                         toggleButtons[list.IndexOf(name)].IsChecked = true;
                     }
                     left = formatString.IndexOf("{", left + 1);
@@ -749,15 +754,6 @@ namespace Jvedio
             return child;
         }
 
-        private void SetServerEnable(object sender, MouseButtonEventArgs e)
-        {
-            // bool enable = !(bool)((CheckBox)sender).IsChecked;
-            // vieModel.Servers[CurrentRowIndex].IsEnable = enable;
-            // ServerConfig.Instance.SaveServer(vieModel.Servers[CurrentRowIndex]);
-            // InitVariable();
-            // ServersDataGrid.Items.Refresh();
-        }
-
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             // 注册热键
@@ -810,27 +806,22 @@ namespace Jvedio
             }
         }
 
-        //private List<string> RenameList = new List<string>();
 
 
         private void SetRenameFormat()
         {
-            //string format = vieModel.FormatString;
-            //if (RenameList.Count > 0)
-            //{
+            string format = vieModel.FormatString;
+            if (RenameList.Count > 0) {
 
-            //    StringBuilder builder = new StringBuilder();
-            //    string sep = ConfigManager.RenameConfig.OutSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.OutSplit;
-            //    List<string> formatNames = new List<string>();
-            //    foreach (string name in RenameList)
-            //    {
-            //        formatNames.Add($"{{{name}}}");
-            //    }
-
-            //    vieModel.FormatString = string.Join(sep, formatNames);
-            //}
-            //else
-            //    vieModel.FormatString = string.Empty;
+                StringBuilder builder = new StringBuilder();
+                string sep = ConfigManager.RenameConfig.OutSplit.Equals("[null]") ? string.Empty : ConfigManager.RenameConfig.OutSplit;
+                List<string> formatNames = new List<string>();
+                foreach (string name in RenameList) {
+                    formatNames.Add($"{{{name}}}");
+                }
+                vieModel.FormatString = string.Join(sep, formatNames);
+            } else
+                vieModel.FormatString = string.Empty;
         }
 
         private void AddToRename(object sender, RoutedEventArgs e)
@@ -847,17 +838,18 @@ namespace Jvedio
                         if (format.Length > 0 && !string.IsNullOrEmpty(sep) && !format[format.Length - 1].Equals(sep.ToCharArray()[0]))
                             format += sep;
                         format += $"{{{value}}}";
-                        //RenameList.Add(value);
+                        RenameList.Add(value);
                     }
                 } else {
                     // 移除所有
                     format = format.Replace($"{sep}{{{value}}}", "");
                     format = format.Replace($"{{{value}}}", "");
+                    RenameList.Remove(value);
                 }
                 vieModel.FormatString = format;
             }
             SetRenameFormat();
-            ShowViewRename(vieModel.FormatString);
+            InitViewRename(vieModel.FormatString);
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -866,10 +858,10 @@ namespace Jvedio
                 return;
             TextBox textBox = (TextBox)sender;
             string txt = textBox.Text;
-            ShowViewRename(txt);
+            InitViewRename(txt);
         }
 
-        private void ShowViewRename(string txt)
+        private void InitViewRename(string txt)
         {
             if (string.IsNullOrEmpty(txt)) {
                 vieModel.ViewRenameFormat = string.Empty;
@@ -902,7 +894,7 @@ namespace Jvedio
                 return;
             ConfigManager.RenameConfig.InSplit = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
             SetRenameFormat();
-            ShowViewRename(vieModel.FormatString);
+            InitViewRename(vieModel.FormatString);
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -989,20 +981,6 @@ namespace Jvedio
             FileHelper.TryOpenUrl(FFMPEG_URL);
         }
 
-        public string GetValueKey(string filename)
-        {
-            string v = string.Empty;
-            try {
-                using (StreamReader sr = new StreamReader(filename)) {
-                    v = sr.ReadToEnd();
-                }
-            } catch (Exception ex) {
-                Logger.Error(ex);
-            }
-            return string.Empty;
-        }
-
-
         private void ImageSelectComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as ComboBox).SelectedIndex;
@@ -1012,20 +990,6 @@ namespace Jvedio
                     vieModel.BasePicPath = vieModel.PicPaths[type.ToString()].ToString();
             }
         }
-
-
-
-        private void url_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            SearchBox searchBox = sender as SearchBox;
-            string cookies = searchBox.Text;
-            DialogInput dialogInput = new DialogInput($"{LangManager.GetValueByKey("PleaseEnter")} cookie", cookies);
-            if (dialogInput.ShowDialog(this) == true) {
-                searchBox.Text = dialogInput.Text;
-            }
-        }
-
-
 
         private void url_PreviewMouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
         {
@@ -1076,10 +1040,10 @@ namespace Jvedio
         private void InputHeader_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (parsedTextbox != null)
-                parsedTextbox.Text = parse((sender as TextBox).Text);
+                parsedTextbox.Text = Parse((sender as TextBox).Text);
         }
 
-        private string parse(string text)
+        private string Parse(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
@@ -1114,12 +1078,6 @@ namespace Jvedio
                 .Replace("\",\"", $"\",{Environment.NewLine}    \"");
         }
 
-        private void SetAutoHeader(object sender, RoutedEventArgs e)
-        {
-            if (parsedTextbox != null)
-                parsedTextbox.Text = parse(inputTextbox.Text);
-        }
-
         private async void TestProxy(object sender, RoutedEventArgs e)
         {
             vieModel.TestProxyStatus = TaskStatus.Running;
@@ -1127,11 +1085,6 @@ namespace Jvedio
             Button button = sender as Button;
             button.IsEnabled = false;
             string url = textProxyUrl.Text;
-
-            // url = "https://www.baidu.com";
-            // string url = "https://www.google.com";
-
-            // WebProxy proxy = null;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -1265,9 +1218,6 @@ namespace Jvedio
         {
         }
 
-
-
-
         private void PluginList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as ListBox).SelectedIndex;
@@ -1293,17 +1243,6 @@ namespace Jvedio
             vieModel.CurrentPlugin?.SaveConfig();
         }
 
-        private void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (!e.Handled) {
-                e.Handled = true;
-                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
-                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
-                eventArg.Source = sender;
-                var parent = ((Control)sender).Parent as UIElement;
-                parent.RaiseEvent(eventArg);
-            }
-        }
 
         private void RestoreDefault(object sender, RoutedEventArgs e)
         {

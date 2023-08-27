@@ -80,10 +80,7 @@
                     Height="125"
                     Margin="0,30,0,0"
                     VerticalAlignment="Top"
-                    AllowDrop="True"
                     CornerRadius="4"
-                    DragOver="Image_DragOver"
-                    Drop="Image_Drop"
                     Tag="{Binding CurrentActorInfo.ActorID, Mode=OneWay}">
                     <Border.ContextMenu>
                         <ContextMenu>

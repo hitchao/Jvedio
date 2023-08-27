@@ -121,10 +121,7 @@ namespace Jvedio
 
         }
 
-        private void SearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
 
-        }
 
 
         private async void StartServer()

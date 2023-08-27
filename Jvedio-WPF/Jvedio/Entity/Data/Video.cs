@@ -32,7 +32,6 @@ namespace Jvedio.Entity
     [Table(tableName: "metadata_video")]
     public class Video : MetaData
     {
-
         #region "事件"
         public static Action onPlayVideo;
 
@@ -43,6 +42,7 @@ namespace Jvedio.Entity
 
         public static string[] HDV { get; set; } =
             new string[] { "hd", "high_definition", "high definition", "高清", "2k", "4k", "8k", "16k", "32k" };
+
 
         #endregion
 
@@ -366,7 +366,9 @@ namespace Jvedio.Entity
 
         #endregion
 
-        // 延迟加载图片
+        /// <summary>
+        /// 延迟加载图片
+        /// </summary>
         public void InitDefaultImage()
         {
             SmallImage = MetaData.DefaultSmallImage;
@@ -438,7 +440,7 @@ namespace Jvedio.Entity
         }
 
 
-        public bool toDownload()
+        public bool ToDownload()
         {
             if (ConfigManager.Settings.DownloadWhenTitleNull) {
                 return string.IsNullOrEmpty(Title);

@@ -607,7 +607,7 @@ namespace Jvedio.ViewModel
                 case LabelType.LabelName:
                     tabName = LangManager.GetValueByKey("Label");
                     ExtraWrapper.Eq(typeName, label);
-                    ExtraWrapper.ExtraSql = LabelView.SQL_JOIN;
+                    ExtraWrapper.ExtraSql = VideoMapper.SQL_JOIN_LABEL;
                     break;
 
                 case LabelType.Genre:

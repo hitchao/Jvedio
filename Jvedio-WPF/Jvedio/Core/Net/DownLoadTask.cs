@@ -104,7 +104,7 @@ namespace Jvedio.Core.Net
             }
 
             // 判断是否需要下载，自动跳过已下载的信息
-            if (OverrideInfo || video.toDownload()) {
+            if (OverrideInfo || video.ToDownload()) {
                 if (!string.IsNullOrEmpty(video.VID)) {
                     // 有 VID 的
                     try {
@@ -345,7 +345,7 @@ namespace Jvedio.Core.Net
         public async Task<bool> CheckDataInfo(Video video, Dictionary<string, object> dict, VideoDownLoader downLoader, RequestHeader header)
         {
             // 只有同步了信息才需要校验信息
-            if (!(video.toDownload() || OverrideInfo)) {
+            if (!(video.ToDownload() || OverrideInfo)) {
                 return true;
             }
             bool success = false;

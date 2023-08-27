@@ -53,9 +53,6 @@ namespace Jvedio
             SuperUtils.Handler.LogHandler.Logger = Logger;
             SuperControls.Style.Handler.LogHandler.Logger = Logger;
 
-
-            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
             Logger.Info(Environment.NewLine);
             Logger.Info("     ██╗██╗   ██╗███████╗██████╗ ██╗ ██████╗ ");
             Logger.Info("     ██║██║   ██║██╔════╝██╔══██╗██║██╔═══██╗");
@@ -65,7 +62,7 @@ namespace Jvedio
             Logger.Info(" ╚════╝   ╚═══╝  ╚══════╝╚═════╝ ╚═╝ ╚═════╝ ");
             Logger.Info(Environment.NewLine);
 
-            Logger.Info($"app init, version: {local}");
+            Logger.Info($"app init, version: {App.GetLocalVersion(false)}");
             Logger.Info($"release date: {ConfigManager.RELEASE_DATE}");
 
 #if DEBUG
@@ -128,12 +125,9 @@ namespace Jvedio
         public static void ShowAbout()
         {
             Dialog_About about = new Dialog_About();
-            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            if (local.EndsWith(".0.0"))
-                local = local.Substring(0, local.Length - ".0.0".Length);
             about.AppName = "Jvedio";
             about.AppSubName = "本地视频管理软件";
-            about.Version = local;
+            about.Version = GetLocalVersion();
             about.ReleaseDate = ConfigManager.RELEASE_DATE;
             about.Author = "Chao";
             about.License = "GPL-3.0";
@@ -146,6 +140,13 @@ namespace Jvedio
         }
 
 
+        public static string GetLocalVersion(bool format = true)
+        {
+            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            if (format && local.EndsWith(".0.0"))
+                local = local.Substring(0, local.Length - ".0.0".Length);
+            return local;
+        }
 
     }
 }

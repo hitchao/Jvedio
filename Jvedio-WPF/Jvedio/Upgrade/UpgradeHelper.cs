@@ -41,7 +41,7 @@ namespace Jvedio.Upgrade
         public static void CreateDialog_Upgrade()
         {
             dialog_Upgrade = new Dialog_Upgrade(Upgrader);
-            dialog_Upgrade.LocalVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            dialog_Upgrade.LocalVersion = App.GetLocalVersion(false);
             dialog_Upgrade.OnSourceChanged += (s, e) => {
                 // 保存当前选择的地址
                 int index = e.NewValue;

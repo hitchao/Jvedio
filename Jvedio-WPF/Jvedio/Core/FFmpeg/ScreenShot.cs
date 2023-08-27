@@ -16,7 +16,6 @@ using static Jvedio.App;
 
 namespace Jvedio.Core.FFmpeg
 {
-    // TODO 线程池
     public class ScreenShot
     {
         private const int MAX_THREAD_NUM = 10;

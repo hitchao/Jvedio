@@ -380,9 +380,12 @@ namespace Jvedio.Entity
 
         static MetaData()
         {
-            DefaultSmallImage = new BitmapImage(new Uri("pack://application:,,,/Resources/Picture/NoPrinting_S.png", UriKind.RelativeOrAbsolute));
-            DefaultBigImage = new BitmapImage(new Uri("pack://application:,,,/Resources/Picture/NoPrinting_B.png", UriKind.RelativeOrAbsolute));
-            DefaultActorImage = new BitmapImage(new Uri("pack://application:,,,/Resources/Picture/NoPrinting_A.png", UriKind.RelativeOrAbsolute));
+            DefaultSmallImage =
+                new BitmapImage(new Uri("pack://application:,,,/Resources/Picture/NoPrinting_S.png", UriKind.RelativeOrAbsolute));
+            DefaultBigImage =
+                new BitmapImage(new Uri("pack://application:,,,/Resources/Picture/NoPrinting_B.png", UriKind.RelativeOrAbsolute));
+            DefaultActorImage =
+                new BitmapImage(new Uri("pack://application:,,,/Resources/Picture/NoPrinting_A.png", UriKind.RelativeOrAbsolute));
         }
 
         public override bool Equals(object obj)

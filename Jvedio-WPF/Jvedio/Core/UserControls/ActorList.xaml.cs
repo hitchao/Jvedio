@@ -44,6 +44,10 @@ namespace Jvedio.Core.UserControls
         public static Action onStatistic;
 
 
+        private delegate void LoadActorDelegate(ActorInfo actor, int idx);
+
+
+
         #endregion
 
         #region "静态属性"
@@ -353,58 +357,11 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
 
             this.PageChangedCompleted += (s, ev) => {
-                if (ConfigManager.VideoConfig.ActorEditMode)
-                    SetSelected();
+                //if (ConfigManager.VideoConfig.ActorEditMode)
+                //    SetSelected();
                 scrollViewer.ScrollToTop();
             };
         }
-
-
-        public void SetSelected()
-        {
-            //ItemsControl itemsControl = ActorItemsControl;
-            //if (itemsControl == null)
-            //    return;
-
-            //for (int i = 0; i < itemsControl.Items.Count; i++) {
-            //    ContentPresenter presenter = (ContentPresenter)itemsControl.ItemContainerGenerator.ContainerFromItem(itemsControl.Items[i]);
-            //    if (presenter == null)
-            //        continue;
-            //    Border border = FindElementByName<Border>(presenter, "rootBorder");
-            //    if (border == null)
-            //        continue;
-            //    long actorID = GetDataID(border);
-            //    if (border != null && actorID > 0) {
-            //        border.Background = (SolidColorBrush)Application.Current.Resources["ListBoxItem.Background"];
-            //        border.BorderBrush = Brushes.Transparent;
-            //        if (ConfigManager.VideoConfig.ActorEditMode && SelectedActors != null &&
-            //            SelectedActors.Where(arg => arg.ActorID == actorID).Any()) {
-            //            border.Background = StyleManager.Common.HighLight.Background;
-            //            border.BorderBrush = StyleManager.Common.HighLight.BorderBrush;
-            //        }
-            //    }
-            //}
-        }
-
-        private long GetDataID(UIElement o, bool findParent = true)
-        {
-            FrameworkElement element = o as FrameworkElement;
-            if (element == null)
-                return -1;
-
-            FrameworkElement target = element;
-            if (findParent)
-                target = element.FindParentOfType<SimplePanel>("rootGrid");
-
-            if (target != null &&
-                target.Tag != null &&
-                target.Tag.ToString() is string tag &&
-                long.TryParse(target.Tag.ToString(), out long id))
-                return id;
-
-            return -1;
-        }
-
 
         public void SetViewMode(object sender, RoutedEventArgs e)
         {
@@ -593,8 +550,6 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             PageChangedCompleted?.Invoke(this, null);
         }
 
-        private delegate void LoadActorDelegate(ActorInfo actor, int idx);
-
         private void LoadActor(ActorInfo actor, int idx)
         {
             if (RenderCT.IsCancellationRequested)
@@ -636,10 +591,10 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Right) {
                 // 末页
-                SetSelected();
+                //SetSelected();
             } else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Left) {
                 CurrentPage = 1;
-                SetSelected();
+                //SetSelected();
 
             }
         }
@@ -647,7 +602,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
         private void SetActorSelectMode(object sender, RoutedEventArgs e)
         {
             SelectedActors.Clear();
-            SetSelected();
+            //SetSelected();
         }
 
         private void CurrentActorPageChange(object sender, EventArgs e)
@@ -736,74 +691,6 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             // if (!ConfigManager.VideoConfig.ActorEditMode) SelectedActress.Clear();
         }
 
-        private void ActorImage_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Link;
-            e.Handled = true;
-        }
-
-        private void ActorImage_Drop(object sender, DragEventArgs e)
-        {
-            // string[] dragdropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            //    string file = dragdropFiles[0];
-
-            // Image image = sender as Image;
-            //    StackPanel stackPanel = image.Parent as StackPanel;
-            //    TextBox textBox = stackPanel.Children.OfType<TextBox>().First();
-            //    string name = textBox.Text.Split('(')[0];
-
-            // Actress currentActress = null;
-            //    for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
-            //    {
-            //        if (vieModel.CurrentActorList[i].name == name)
-            //        {
-            //            currentActress = vieModel.CurrentActorList[i];
-            //            break;
-            //        }
-            //    }
-
-            // if (currentActress == null) return;
-
-            // if (IsFile(file))
-            //    {
-            //        FileInfo fileInfo = new FileInfo(file);
-            //        if (fileInfo.Extension.ToLower() == ".jpg")
-            //        {
-            //            FileHelper.TryCopyFile(fileInfo.FullName, BasePicPath + $"Actresses\\{currentActress.name}.jpg", true);
-            //            Actress actress = currentActress;
-            //            actress.smallimage = null;
-            //            actress.smallimage = GetActorImage(actress.name);
-
-            // if (vieModel.ActorList == null || vieModel.ActorList.Count == 0) return;
-
-            // for (int i = 0; i < vieModel.ActorList.Count; i++)
-            //            {
-            //                if (vieModel.ActorList[i].name == actress.name)
-            //                {
-            //                    vieModel.ActorList[i] = null;
-            //                    vieModel.ActorList[i] = actress;
-            //                    break;
-            //                }
-            //            }
-
-            // for (int i = 0; i < vieModel.CurrentActorList.Count; i++)
-            //            {
-            //                if (vieModel.CurrentActorList[i].name == actress.name)
-            //                {
-            //                    vieModel.CurrentActorList[i] = null;
-            //                    vieModel.CurrentActorList[i] = actress;
-            //                    break;
-            //                }
-            //            }
-
-            // }
-            //        else
-            //        {
-            //            msgCard.Info(SuperControls.Style.LangManager.GetValueByKey("Message_OnlySupportJPG"));
-            //        }
-            //    }
-        }
-
         private void OpenActorImagePath(object sender, RoutedEventArgs e)
         {
             MenuItem mnu = sender as MenuItem;
@@ -846,7 +733,6 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                 return;
 
             onShowSameActor?.Invoke(actorID);
-            //ShowSameActor(actorID);
         }
 
         private void NewActor(object sender, RoutedEventArgs e)
@@ -859,10 +745,6 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             }
         }
 
-        private void doSearch(object sender, TextChangedEventArgs e)
-        {
-
-        }
 
         public void SetSearchFocus()
         {

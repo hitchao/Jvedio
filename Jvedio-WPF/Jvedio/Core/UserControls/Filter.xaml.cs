@@ -36,17 +36,17 @@ namespace Jvedio.Core.UserControls
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+
+        private const long MB_TO_B = 1024 * 1024;
+
+
         #region "事件"
 
         public event Action Close;
 
         public static Action<long> onTagStampDelete;
         public static Action<long> onTagStampRefresh;
-
-
         public event EventHandler OnApplyWrapper;
-
-        //public Action<SelectWrapper<Video>> onApplyWrapper;
 
         private delegate void AsyncLoadItemDelegate(UIElementCollection collection, UIElement item);
 
@@ -59,28 +59,14 @@ namespace Jvedio.Core.UserControls
 
         private static Main MainWindow { get; set; }
 
-        private static List<string> FilterList { get; set; } = new List<string>()
-         {
-            "Year",
-            "Month",
-            "Duration",
-            "Genre",
-            "Grade",
-            "Series",
-            "Director",
-            "Studio",
-            "Publisher",
-        };
-
-
-        private const long MB_TO_B = 1024 * 1024;
-
-        List<int> TimeList { get; set; } = new List<int>() { 0, 30, 60, 120, 240, 360 };
+        private static List<int> TimeList { get; set; } =
+            new List<int>() { 0, 30, 60, 120, 240, 360 };
 
         /// <summary>
         /// 单位 MB
         /// </summary>
-        List<long> SizeList { get; set; } = new List<long>() { 0L * MB_TO_B, 500L * MB_TO_B, 1000L * MB_TO_B, 2000L * MB_TO_B, 3000L * MB_TO_B };
+        private static List<long> SizeList { get; set; } =
+            new List<long>() { 0L * MB_TO_B, 500L * MB_TO_B, 1000L * MB_TO_B, 2000L * MB_TO_B, 3000L * MB_TO_B };
 
         #endregion
 

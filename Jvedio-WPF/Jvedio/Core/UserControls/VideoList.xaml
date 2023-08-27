@@ -105,10 +105,6 @@
                     Visibility="Collapsed" />
                 <MenuItem Click="RenameFile" Header="{DynamicResource Menu_RenameFile}" />
                 <MenuItem Click="ReMoveZero" Header="{DynamicResource Menu_RemoveZero}" />
-                <MenuItem
-                    Click="DeleteDownloadInfo"
-                    Header="{DynamicResource ClearDownloadInfo}"
-                    Visibility="Collapsed" />
 
             </MenuItem>
 
@@ -177,7 +173,6 @@
                 ImageMouseEnter="viewVideo_ImageMouseEnter"
                 ImageMouseLeave="viewVideo_ImageMouseLeave"
                 ImageWidth="{Binding Path=DataContext.GlobalImageWidth, ElementName=videoList}"
-                Loaded="viewVideo_Loaded"
                 OnGradeChange="viewVideo_OnItemChange"
                 OnPlayVideo="viewVideo_OnPlayVideo"
                 OnTagStampRemove="viewVideo_OnTagStampRemove"
@@ -541,7 +536,6 @@
                         ItemTemplate="{StaticResource VideoDataTemplate}"
                         ItemsSource="{Binding CurrentVideoList}"
                         PreviewMouseWheel="MovieItemsControl_PreviewMouseWheel"
-                        ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
                         Style="{StaticResource ItemsControlVirtualizedWrapPanelStyle}">
 
                         <ItemsControl.Template>
@@ -863,7 +857,6 @@
                 Maximum="800"
                 Minimum="120"
                 SmallChange="5"
-                ValueChanged="ImageSizeSlider_ValueChanged"
                 Value="{Binding Path=GlobalImageWidth, Mode=TwoWay}">
                 <super:Slider.Style>
                     <Style BasedOn="{StaticResource NormalSliderStyle}" TargetType="super:Slider">

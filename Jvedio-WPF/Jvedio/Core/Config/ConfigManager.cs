@@ -15,7 +15,7 @@ namespace Jvedio
 {
     public static class ConfigManager
     {
-        public const string RELEASE_DATE = "2023-07-08";
+        public const string RELEASE_DATE = "2023-08-27";
 
         private static bool Loaded { get; set; } = false;
 

@@ -25,9 +25,6 @@ namespace Jvedio.Core.UserControls
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-
-        public const string SQL_JOIN = " join metadata_to_label on metadata_to_label.DataID=metadata.DataID ";
-
         #region "事件"
 
         private delegate void AsyncLoadItemDelegate<T>(ObservableCollection<T> list, T item);

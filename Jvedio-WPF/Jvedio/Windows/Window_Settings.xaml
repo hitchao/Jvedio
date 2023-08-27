@@ -195,7 +195,10 @@
 
                                 <CheckBox Content="{DynamicResource DeleteFileWhenDeleteInfo}" IsChecked="{Binding DelInfoAfterDelFile, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
 
-                                <WrapPanel IsEnabled="False" Orientation="Horizontal">
+                                <WrapPanel
+                                    IsEnabled="False"
+                                    Orientation="Horizontal"
+                                    Visibility="Collapsed">
                                     <CheckBox Content="{DynamicResource ShowHistory}" IsChecked="{Binding ShowSearchHistory, Mode=TwoWay}" />
                                     <Button Click="ViewSearchHistory" Content="{DynamicResource ViewHistory}" />
                                 </WrapPanel>
@@ -2051,6 +2054,7 @@
                                 x:Name="ServersDataGrid"
                                 MinHeight="200"
                                 Margin="10,5"
+                                d:ItemsSource="{d:SampleData ItemCount=5}"
                                 CanUserDeleteRows="True"
                                 CanUserResizeColumns="True"
                                 PreviewMouseLeftButtonDown="SetCurrentRowIndex"
@@ -2084,8 +2088,7 @@
                                                     super:CheckBoxExt.HookWidth="12"
                                                     super:CheckBoxExt.MarkHeight="17"
                                                     super:CheckBoxExt.MarkWidth="17"
-                                                    IsChecked="{Binding Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                    PreviewMouseUp="SetServerEnable" />
+                                                    IsChecked="{Binding Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
