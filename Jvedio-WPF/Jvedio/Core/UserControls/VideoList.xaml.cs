@@ -48,13 +48,11 @@ namespace Jvedio.Core.UserControls
         #region "事件"
 
         public static Action onStatistic;
-        public Action<long, float> onGradeChange;
-
         public static Action<bool> onSearchingChange;
-
         public static Action<long, long, bool> onTagStampChange;
-
         public static Action<List<Video>> onDeleteID;
+
+        public Action<long, float> onGradeChange;
         public Action<WrapperEventArg<Video>> onRenderSql;
         public Action onInitTagStamps;
         public Action<string> onRenameFile;
@@ -81,7 +79,7 @@ namespace Jvedio.Core.UserControls
 
         #region "属性"
 
-        private static Style SearchBoxListItemContainerStyle { get; set; }
+        private Style SearchBoxListItemContainerStyle { get; set; }
         private VieModel_VideoList vieModel { get; set; }
 
         private DispatcherTimer ResizingTimer { get; set; }
@@ -336,7 +334,7 @@ namespace Jvedio.Core.UserControls
         {
             Pagination pagination = sender as Pagination;
             vieModel.CurrentPage = pagination.CurrentPage;
-            VieModel_VideoList.PageQueue.Enqueue(pagination.CurrentPage);
+            vieModel.PageQueue.Enqueue(pagination.CurrentPage);
             vieModel.LoadData();
         }
 
@@ -1101,10 +1099,10 @@ namespace Jvedio.Core.UserControls
             // 搜索
             searchBox.TextChanged += RefreshCandidate;
             searchTabControl.SelectionChanged += (s, e) => {
-                if (ConfigManager.Main.SearchSelectedIndex == searchTabControl.SelectedIndex)
-                    return;
-                ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
-                RefreshCandidate(null, null);
+                if (e.AddedItems != null && e.AddedItems.Count > 0 && e.AddedItems[0].GetType() != typeof(string)) {
+                    // 不知道为啥，点击 tabitem 会导致 SelectionChanged
+                    RefreshCandidate(null, null);
+                }
             };
 
             // 搜索的 style
@@ -1127,14 +1125,18 @@ namespace Jvedio.Core.UserControls
                 listBoxItem.Content != null &&
                 listBoxItem.Content.ToString() is string search) {
                 BeginSearch(search);
+                e.Handled = true;
             }
 
         }
 
         private async void RefreshCandidate(object sender, TextChangedEventArgs e)
         {
+            Logger.Info("refresh candidate");
             List<string> list = await vieModel.GetSearchCandidate();
-            int idx = (int)ConfigManager.Main.SearchSelectedIndex;
+            int idx = vieModel.SearchSelectedIndex;
+            if (idx < 0 || idx >= searchTabControl.Items.Count)
+                return;
             TabItem tabItem = searchTabControl.Items[idx] as TabItem;
             AddOrRefreshItem(tabItem, list);
         }
@@ -1145,17 +1147,16 @@ namespace Jvedio.Core.UserControls
             if (tabItem.Content == null) {
                 listBox = new ListBox();
                 tabItem.Content = listBox;
+                listBox.Margin = new Thickness(0, 0, 0, 5);
+                listBox.Style = (System.Windows.Style)App.Current.Resources["NormalListBox"];
+                listBox.ItemContainerStyle = SearchBoxListItemContainerStyle;
+                listBox.Background = Brushes.Transparent;
+                listBox.PreviewKeyUp += searchTabItem_PreviewKeyUp;
             } else {
                 listBox = tabItem.Content as ListBox;
             }
-
-            listBox.Margin = new Thickness(0, 0, 0, 5);
-            listBox.Style = (System.Windows.Style)App.Current.Resources["NormalListBox"];
-            listBox.ItemContainerStyle = SearchBoxListItemContainerStyle;
-            listBox.Background = Brushes.Transparent;
             listBox.ItemsSource = list;
-            listBox.PreviewKeyUp += searchTabItem_PreviewKeyUp;
-            if (vieModel.TabSelectedIndex == 0 && !string.IsNullOrEmpty(vieModel.SearchText))
+            if (!string.IsNullOrEmpty(vieModel.SearchText))
                 vieModel.Searching = true;
         }
 
@@ -1656,10 +1657,12 @@ namespace Jvedio.Core.UserControls
 
         private void doSearch(object sender, RoutedEventArgs e)
         {
-            SearchMode mode = (SearchMode)vieModel.TabSelectedIndex;
-            ConfigManager.Main.SearchSelectedIndex = searchTabControl.SelectedIndex;
-            vieModel.Query((SearchField)searchTabControl.SelectedIndex);
-            SaveSearchHistory(mode, (SearchField)searchTabControl.SelectedIndex);
+            int idx = vieModel.SearchSelectedIndex;
+            if (idx < 0)
+                idx = 0;
+            //SearchMode mode = (SearchMode)vieModel.TabSelectedIndex;
+            vieModel.Query((SearchField)idx);
+            //SaveSearchHistory(mode, (SearchField)idx);
         }
 
         private void SaveSearchHistory(SearchMode mode, SearchField field)
@@ -1689,9 +1692,8 @@ namespace Jvedio.Core.UserControls
                 if (searchTabControl.SelectedItem is TabItem tabItem &&
                     tabItem != null && tabItem.Content is ListBox listbox && listbox.Items.Count > 0) {
                     listbox.Focus();
-                    listbox.SelectedIndex = 0;
+                    //listbox.SelectedIndex = 0;
                 }
-
             } else if (e.Key == Key.Escape) {
                 vieModel.Searching = false;
             } else if (e.Key == Key.Delete) {
@@ -1718,25 +1720,20 @@ namespace Jvedio.Core.UserControls
                 searchTabControl.SelectedIndex = idx;
                 e.Handled = true;
             } else if (e.Key == Key.Enter) {
-                if (sender is ListBox listBox &&
-                    listBox.Items.Count > 0 &&
-                    listBox.SelectedItem is string search
+                if (sender is ListBox listBox && listBox.Items.Count > 0 && listBox.SelectedItem is string search
                     && !string.IsNullOrEmpty(search)) {
                     BeginSearch(search);
                     e.Handled = true;
                 }
             }
-
         }
 
         private void BeginSearch(string search)
         {
             searchBox.TextChanged -= RefreshCandidate;
-
             vieModel.SearchText = search;
             doSearch(null, null);
             vieModel.Searching = false;
-
             searchBox.TextChanged += RefreshCandidate;
         }
 

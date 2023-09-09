@@ -48,8 +48,6 @@ namespace Jvedio
 
         #region "静态属性"
 
-        private static Style SearchBoxListItemContainerStyle { get; set; }
-
         public static List<string> ClickFilterDict { get; set; }
 
         /// <summary>

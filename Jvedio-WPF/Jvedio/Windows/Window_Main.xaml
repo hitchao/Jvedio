@@ -88,16 +88,6 @@
         </Style>
 
 
-        <Style
-            x:Key="SearchBoxListItemContainerStyle"
-            BasedOn="{StaticResource NormalListBoxItem}"
-            TargetType="{x:Type ListBoxItem}">
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="5" />
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-
-
 
 
         <Style
@@ -695,7 +685,7 @@
                                 <ItemsControl AlternationCount="999" ItemsSource="{Binding TabItems}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <StackPanel Background="{DynamicResource Window.Side.Background}" Orientation="Horizontal" />
+                                            <StackPanel Background="Transparent" Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
@@ -705,7 +695,7 @@
                                                 MinWidth="150"
                                                 BorderThickness="0"
                                                 ContextMenuOpening="Border_ContextMenuOpening"
-                                                CornerRadius="10 10 0 0"
+                                                CornerRadius="5 5 0 0"
                                                 Cursor="Hand"
                                                 PreviewMouseLeftButtonDown="BeginDragTabItem"
                                                 PreviewMouseLeftButtonUp="SetTabSelected"
@@ -716,10 +706,10 @@
                                                         <Setter Property="Background" Value="{DynamicResource TabItem.Background}" />
                                                         <Style.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource TabItem.Hover.Background}" />
+                                                                <Setter Property="Background" Value="{DynamicResource ListBoxItem.Selected.Active.BorderBrush}" />
                                                             </Trigger>
                                                             <DataTrigger Binding="{Binding Selected}" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource Window.Background}" />
+                                                                <Setter Property="Background" Value="{DynamicResource ListBoxItem.Selected.Active.Background}" />
                                                             </DataTrigger>
 
                                                         </Style.Triggers>

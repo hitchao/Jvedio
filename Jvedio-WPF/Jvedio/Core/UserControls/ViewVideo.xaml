@@ -236,7 +236,7 @@
                     <TextBlock
                         Height="20"
                         MinWidth="50"
-                        MaxWidth="{Binding Path=ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=150, Converter={StaticResource SmallerValueConverter}, ConverterParameter=150}"
+                        MaxWidth="{Binding Path=ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=150, Converter={StaticResource SmallerValueConverter}, ConverterParameter=100}"
                         Margin="0,7"
                         Padding="12,0,0,0"
                         HorizontalAlignment="Left"

@@ -53,7 +53,7 @@ namespace Jvedio.Core.UserControls
         #region "静态属性"
 
 
-        public static Queue<int> PageQueue { get; set; } = new Queue<int>();
+
         public static Dictionary<int, string> SortDict { get; set; } = new Dictionary<int, string>();
 
 
@@ -120,7 +120,7 @@ namespace Jvedio.Core.UserControls
 
         #region "属性"
 
-
+        private Queue<int> PageQueue { get; set; } = new Queue<int>();
         private int firstIdx { get; set; } = -1;
         private int secondIdx { get; set; } = -1;
         private int actorFirstIdx { get; set; } = -1;

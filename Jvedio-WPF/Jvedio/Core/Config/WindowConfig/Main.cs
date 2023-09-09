@@ -46,20 +46,8 @@ namespace Jvedio.Core.WindowConfig
 
         public double Height { get; set; }
 
-        public long WindowState { get; set; }
-
         public long CurrentDBId { get; set; }
 
-        private long _SearchSelectedIndex;
-        public long SearchSelectedIndex {
-            get { return _SearchSelectedIndex; }
-            set {
-                _SearchSelectedIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public long ClassifySelectedIndex { get; set; }
 
         public double SideGridWidth { get; set; }
 

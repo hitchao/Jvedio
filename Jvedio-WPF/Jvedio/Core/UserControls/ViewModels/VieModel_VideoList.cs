@@ -87,12 +87,12 @@ namespace Jvedio.Core.UserControls.ViewModels
             "metadata_video.WebType",
             "(select group_concat(TagID,',') from metadata_to_tagstamp where metadata_to_tagstamp.DataID=metadata.DataID)  as TagIDs ",
         };
-        public static Queue<int> PageQueue { get; set; } = new Queue<int>();
 
 
         #endregion
 
         #region "属性"
+        public Queue<int> PageQueue { get; set; } = new Queue<int>();
 
 
         /// <summary>
@@ -124,6 +124,17 @@ namespace Jvedio.Core.UserControls.ViewModels
         public string ClickFilterType { get; set; }
 
 
+
+        private int _SearchSelectedIndex;
+
+        public int SearchSelectedIndex {
+            get { return _SearchSelectedIndex; }
+
+            set {
+                _SearchSelectedIndex = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private bool _Nothing;
 
@@ -157,19 +168,6 @@ namespace Jvedio.Core.UserControls.ViewModels
             }
         }
 
-
-        private int _TabSelectedIndex;
-
-        public int TabSelectedIndex {
-            get { return _TabSelectedIndex; }
-
-            set {
-                _TabSelectedIndex = value;
-                RaisePropertyChanged();
-
-                // BeginSearch();
-            }
-        }
         private string _SearchText = string.Empty;
 
         public string SearchText {
@@ -629,7 +627,7 @@ namespace Jvedio.Core.UserControls.ViewModels
             }
 
             // todo 如果搜索框选中了标签，搜索出来的结果不一致
-            SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
+            SearchField searchType = (SearchField)SearchSelectedIndex;
             if (Searching) {
                 if (searchType == SearchField.ActorName)
                     sql += VideoMapper.SQL_JOIN_ACTOR;
@@ -739,7 +737,7 @@ namespace Jvedio.Core.UserControls.ViewModels
         public async Task<List<string>> GetSearchCandidate()
         {
             return await Task.Run(() => {
-                SearchField searchType = (SearchField)ConfigManager.Main.SearchSelectedIndex;
+                SearchField searchType = (SearchField)SearchSelectedIndex;
                 string field = searchType.ToString();
 
                 List<string> result = new List<string>();

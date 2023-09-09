@@ -235,6 +235,7 @@
                             FocusVisualStyle="{x:Null}"
                             ItemContainerStyle="{StaticResource FlatTabItem}"
                             PreviewKeyUp="searchTabControl_PreviewKeyUp"
+                            SelectedIndex="{Binding SearchSelectedIndex, Mode=TwoWay}"
                             Style="{StaticResource FlatTabControl}">
                             <TabItem Header="{DynamicResource ID}" />
                             <TabItem Header="{DynamicResource Title}" />
