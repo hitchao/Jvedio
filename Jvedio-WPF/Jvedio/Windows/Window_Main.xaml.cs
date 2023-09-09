@@ -251,7 +251,7 @@ namespace Jvedio
             Logger.Info($"recv win msg: {str}");
             switch (str) {
                 case Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW:
-                    SetWindowVisualStatus(true, true);
+                    ShowMainWindow(null, null);
                     break;
                 default:
                     break;
@@ -500,6 +500,7 @@ namespace Jvedio
         {
             SetWindowVisualStatus(true);
             notiIconPopup.IsOpen = false;
+            this.Activate();
         }
 
 

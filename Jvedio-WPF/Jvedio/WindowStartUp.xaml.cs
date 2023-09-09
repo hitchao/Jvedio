@@ -16,6 +16,7 @@ using SuperControls.Style.Windows;
 using SuperUtils.Common;
 using SuperUtils.CustomEventArgs;
 using SuperUtils.IO;
+using SuperUtils.Systems;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,8 @@ namespace Jvedio
 
         public void Dispose()
         {
+            if (ConfigManager.StartUp == null)
+                return;
             ConfigManager.StartUp.Tile = vieModel.Tile;
             ConfigManager.StartUp.ShowHideItem = vieModel.ShowHideItem;
             ConfigManager.StartUp.SideIdx = vieModel.CurrentSideIdx;
@@ -138,6 +141,7 @@ namespace Jvedio
             UtilsManager.OnUtilSettingChange(); // 初始化 SuperUtils 的配置
             InitFirstRun();
             InitMainWindow();
+            InitBinding();
         }
 
         private void InitMainWindow()
@@ -150,6 +154,11 @@ namespace Jvedio
                 tabControl.SelectedIndex = 1;
                 vieModel.Loading = false;
             }
+        }
+
+        private void InitBinding()
+        {
+
         }
 
 

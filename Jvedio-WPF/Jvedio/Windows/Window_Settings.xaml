@@ -1479,15 +1479,13 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Orientation="Vertical">
-                                <CheckBox
-                                    Click="AddToRename"
-                                    Content="{DynamicResource TrimTitle}"
-                                    IsChecked="{Binding Path=RemoveTitleSpace, Mode=TwoWay}" />
+                                <CheckBox Content="{DynamicResource TrimTitle}" IsChecked="{Binding Path=RemoveTitleSpace, Mode=TwoWay}" />
                                 <CheckBox
                                     Click="AddToRename"
                                     Content="{DynamicResource AutoAddStamp}"
                                     IsChecked="{Binding Path=AddRenameTag, Mode=TwoWay}"
-                                    IsEnabled="False" />
+                                    IsEnabled="False"
+                                    Visibility="Collapsed" />
 
 
 
@@ -2007,14 +2005,22 @@
                         HorizontalAlignment="Left"
                         Panel.ZIndex="10"
                         Style="{StaticResource HoverSpliter}" />
-                    <TextBlock
+
+                    <Grid
                         Grid.Column="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Panel.ZIndex="-1"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="请前往插件中心下载插件"
-                        Visibility="{Binding ShowCurrentPlugin, Mode=OneWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}" />
+                        Visibility="{Binding ShowCurrentPlugin, Mode=OneWay, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="请前往插件中心下载插件" />
+                            <Button
+                                Content="{DynamicResource Plugin}"
+                                Style="{StaticResource ButtonPrimary}"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+
+                    </Grid>
 
                     <Grid Grid.Column="2" Visibility="{Binding ShowCurrentPlugin, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <DockPanel Panel.ZIndex="1" LastChildFill="True">

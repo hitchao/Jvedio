@@ -5,6 +5,11 @@ using SuperUtils.IO;
 using System;
 using System.Threading;
 using System.Windows;
+using SuperControls.Style;
+using System.Text;
+using System.Windows.Interop;
+using SuperUtils.Systems;
+using Jvedio.Windows;
 #if DEBUG
 #else
 using System.Diagnostics;
@@ -24,6 +29,7 @@ namespace Jvedio
         public static ScreenShotManager ScreenShotManager { get; private set; }
         public static ScanManager ScanManager { get; private set; }
         public static DownloadManager DownloadManager { get; private set; }
+
 
         public EventWaitHandle ProgramStarted { get; set; }
 
@@ -75,22 +81,24 @@ namespace Jvedio
                 //Environment.Exit(0);
 
                 var current = Process.GetCurrentProcess();
+                Process[] processes = Process.GetProcessesByName(current.ProcessName);
+                //new MsgBox($"找到数目：{processes.Length}, ProcessName： {current.ProcessName}, id: {current.Id}").ShowDialog();
 
-                foreach (var process in Process.GetProcessesByName(current.ProcessName)) {
-                    if (process.Id != current.Id) {
-                        IntPtr hWnd = IntPtr.Zero;
-                        hWnd = process.MainWindowHandle;
-
-                        // todo 最小化到任务栏后，无法打开窗体
-                        // Win32Helper.SendArgs(hWnd, Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW);
-
-                        SuperUtils.Systems.Win32Helper.ShowWindowAsync(new HandleRef(null, hWnd), SuperUtils.Systems.Win32Helper.SW_RESTORE);
-                        SuperUtils.Systems.Win32Helper.SetForegroundWindow(process.MainWindowHandle);
-
-
-
+                Process runningProcess = null;
+                for (int i = 0; i < processes.Length; i++) {
+                    if (processes[i].Id != current.Id) {
+                        runningProcess = processes[i];
                         break;
                     }
+                }
+                if (runningProcess != null) {
+                    //new MsgBox($"找到运行中的任务：{runningProcess.Id}").ShowDialog();
+                    IntPtr hWnd = IntPtr.Zero;
+                    hWnd = runningProcess.MainWindowHandle;
+
+                    // todo 最小化到任务栏后，无法打开窗体
+                    Logger.Info($"send to {runningProcess.Id} with data: {Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW}");
+                    Win32Helper.SendArgs(hWnd, Win32Helper.WIN_CUSTOM_MSG_OPEN_WINDOW);
                 }
                 Shutdown();
             }
