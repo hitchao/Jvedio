@@ -1684,7 +1684,7 @@ namespace Jvedio.Core.UserControls
         private void SearchBar_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) {
-                doSearch(sender, null);
+                vieModel.Searching = false;
             } else if (e.Key == Key.Down || e.Key == Key.Up) {
                 if (searchTabControl.SelectedItem is TabItem tabItem &&
                     tabItem != null && tabItem.Content is ListBox listbox && listbox.Items.Count > 0) {
@@ -1723,6 +1723,7 @@ namespace Jvedio.Core.UserControls
                     listBox.SelectedItem is string search
                     && !string.IsNullOrEmpty(search)) {
                     BeginSearch(search);
+                    e.Handled = true;
                 }
             }
 
