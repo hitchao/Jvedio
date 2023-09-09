@@ -1221,22 +1221,26 @@ namespace Jvedio
 
         public void ShowSubsection(object sender)
         {
-            ContextMenu contextMenu = (sender as Grid).ContextMenu;
-            contextMenu.Items.Clear();
-            for (int i = 0; i < vieModel.CurrentVideo.SubSectionList?.Count; i++) {
-                string filepath = vieModel.CurrentVideo.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
-                MenuItem menuItem = new MenuItem();
-                menuItem.Header = i + 1;
-                menuItem.Click += (s, _) => Video.PlayVideoWithPlayer(filepath, DataID);
-                contextMenu.Items.Add(menuItem);
-            }
+            if (sender is Grid grid && grid.ContextMenu is ContextMenu contextMenu) {
+                contextMenu.Items.Clear();
+                for (int i = 0; i < vieModel.CurrentVideo.SubSectionList?.Count; i++) {
+                    string filepath = vieModel.CurrentVideo.SubSectionList[i].Value; // 这样可以，放在  PlayVideoWithPlayer 就超出索引
+                    MenuItem menuItem = new MenuItem();
+                    menuItem.Header = i + 1;
+                    menuItem.Click += (s, _) => Video.PlayVideoWithPlayer(filepath, DataID);
+                    contextMenu.Items.Add(menuItem);
+                }
 
-            contextMenu.IsOpen = true;
-            contextMenu.Visibility = Visibility.Visible;
+                contextMenu.IsOpen = true;
+                contextMenu.Visibility = Visibility.Visible;
+            }
         }
 
         private void PlayVideo(object sender, MouseButtonEventArgs e)
         {
+            if (vieModel == null || vieModel.CurrentVideo == null)
+                return;
+
             if (vieModel.CurrentVideo.HasSubSection)
                 ShowSubsection(sender);
             else
