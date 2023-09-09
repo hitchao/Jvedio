@@ -541,6 +541,7 @@
                                         ToolTip="[0-2000]" />
                                     <super:SearchBox
                                         MinWidth="100"
+                                        ShowClearButton="False"
                                         Text="{Binding MinFileSize, Mode=TwoWay}"
                                         TextAlignment="Center"
                                         ToolTip="[0-2000]" />
@@ -718,6 +719,7 @@
                                     <super:SearchBox
                                         MinWidth="100"
                                         Background="{DynamicResource Window.Title.Background}"
+                                        ShowClearButton="False"
                                         Text="{Binding HttpTimeout, Mode=TwoWay}"
                                         TextAlignment="Center" />
                                     <TextBlock
@@ -1005,7 +1007,10 @@
                                     <CheckBox Content="{DynamicResource PageDropMenu}" IsChecked="{Binding PaginationCombobox, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                     <CheckBox Content="{DynamicResource StatusBar}" IsChecked="{Binding DisplayStatusBar, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
                                     <CheckBox Content="{DynamicResource FunctionBar}" IsChecked="{Binding DisplayFunBar, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
-                                    <CheckBox Content="{DynamicResource Navigation}" IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}" />
+                                    <CheckBox
+                                        Content="{DynamicResource Navigation}"
+                                        IsChecked="{Binding DisplayNavigation, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}}"
+                                        Visibility="Collapsed" />
                                 </WrapPanel>
                                 <CheckBox Content="{DynamicResource ApplyBgToDetail}" IsChecked="{Binding DetailShowBg, Mode=TwoWay, Source={x:Static config:ConfigManager.Settings}}" />
                                 <CheckBox Content="{DynamicResource BlurBackground}" IsChecked="{Binding BlurBackground, Mode=TwoWay, Source={x:Static config:ConfigManager.VideoConfig}}" />

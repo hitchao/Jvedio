@@ -180,6 +180,8 @@ namespace Jvedio.ViewModels
 
         public void onShowDetailData(long dataID)
         {
+            if (WindowDetails != null)
+                WindowDetails?.Close();
             WindowDetails = new Window_Details(dataID, CurrentWrapperArg);
             WindowDetails.onViewAssoData += (id) => {
                 OnViewAssoData(id);

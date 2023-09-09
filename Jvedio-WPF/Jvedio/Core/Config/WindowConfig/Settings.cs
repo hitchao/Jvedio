@@ -33,6 +33,8 @@ namespace Jvedio.Core.WindowConfig
             Debug = false;
             ImageCache = true;
             CacheExpiration = Jvedio.Core.Media.ImageCache.DEFAULT_CACHE_EXPIRATION;
+
+            DelInfoAfterDelFile = true;
         }
 
         public static List<int> BackUpPeriods = new List<int> { 1, 3, 7, 15, 30 };

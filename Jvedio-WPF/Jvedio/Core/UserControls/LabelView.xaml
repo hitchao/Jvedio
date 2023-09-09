@@ -2,6 +2,7 @@
     x:Class="Jvedio.Core.UserControls.LabelView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Jvedio.Core.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -22,7 +23,8 @@
             Margin="0,5,0,0"
             HideClearButtonOnMouseLeave="False"
             Style="{StaticResource SearchBoxStyle}"
-            TextChanged="doSearch" />
+            TextChanged="doSearch"
+            Visibility="{Binding DisplaySearchBox, Source={x:Static config:ConfigManager.Main}, Converter={StaticResource BoolToVisibilityConverter}}" />
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button

@@ -463,7 +463,8 @@
             Search="searchBox_Search"
             SearchOnTextChanged="False"
             Style="{StaticResource SearchBoxStyle}"
-            Text="{Binding Path=DataContext.SearchText, Mode=TwoWay, ElementName=actorList}" />
+            Text="{Binding Path=DataContext.SearchText, Mode=TwoWay, ElementName=actorList}"
+            Visibility="{Binding DisplaySearchBox, Source={x:Static config:ConfigManager.Main}, Converter={StaticResource BoolToVisibilityConverter}}" />
         <!--  工具栏  -->
         <Grid
             Grid.Row="1"
@@ -676,7 +677,7 @@
                 Visibility="{Binding ShowTable, ElementName=actorList, Converter={StaticResource BoolToVisibilityConverter}}">
                 <DataGrid.RowStyle>
                     <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
-                        <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                        <!--<EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />-->
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>

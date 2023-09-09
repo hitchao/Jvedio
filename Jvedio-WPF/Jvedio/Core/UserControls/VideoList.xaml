@@ -614,7 +614,7 @@
                     <DataGrid.RowStyle>
                         <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
                             <!--  一设置 EventSetter 热重载就失效  -->
-                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                            <!--<EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />-->
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
