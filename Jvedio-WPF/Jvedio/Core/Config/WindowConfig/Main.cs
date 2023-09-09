@@ -16,6 +16,7 @@ namespace Jvedio.Core.WindowConfig
             SideDefaultExpanded = true;
             SideClassifyExpanded = true;
             SideTagStampExpanded = true;
+            PaginationCombobox = true;
 
             DisplayFunBar = true;
             DisplayNavigation = false;

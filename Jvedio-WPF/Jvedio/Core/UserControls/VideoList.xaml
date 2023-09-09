@@ -493,9 +493,36 @@
                 Visibility="{Binding DataContext.Nothing, ElementName=videoList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
 
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+
+                <ProgressBar
+                    Grid.Row="0"
+                    Width="auto"
+                    Height="2"
+                    Margin="10,2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Foreground="{DynamicResource Button.Fill.Background}"
+                    Value="{Binding RenderProgress, Mode=OneWay}">
+                    <ProgressBar.Style>
+                        <Style BasedOn="{StaticResource NormalStaticProgressBar}" TargetType="ProgressBar">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Rendering}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ProgressBar.Style>
+                </ProgressBar>
 
                 <!--  影片  -->
                 <super:SimplePanel
+                    Grid.Row="1"
                     AllowDrop="True"
                     FocusVisualStyle="{x:Null}"
                     Visibility="{Binding DataContext.ShowTable, ElementName=videoList, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
@@ -514,19 +541,6 @@
                         </ContextMenu>
                     </super:SimplePanel.ContextMenu>
 
-
-
-                    <ProgressBar
-                        Width="auto"
-                        Height="2"
-                        Margin="10,2,10,0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
-                        Foreground="{DynamicResource Button.Fill.Background}"
-                        Style="{StaticResource NormalStaticProgressBar}"
-                        Visibility="{Binding Rendering, Converter={StaticResource BoolToVisibilityConverter}}"
-                        Value="{Binding RenderProgress, Mode=OneWay}" />
-
                     <!--  影片  -->
 
                     <ItemsControl
@@ -535,12 +549,14 @@
                         FocusVisualStyle="{x:Null}"
                         ItemTemplate="{StaticResource VideoDataTemplate}"
                         ItemsSource="{Binding CurrentVideoList}"
+                        Loaded="MovieItemsControl_Loaded"
                         PreviewMouseWheel="MovieItemsControl_PreviewMouseWheel"
                         Style="{StaticResource ItemsControlVirtualizedWrapPanelStyle}">
 
                         <ItemsControl.Template>
                             <ControlTemplate>
                                 <local:WheelSpeedScrollViewer
+                                    x:Name="dataScrollViewer"
                                     super:ScrollAnimationBehavior.IsEnabled="True"
                                     super:ScrollAnimationBehavior.PointsToScroll="1"
                                     super:ScrollAnimationBehavior.TimeDuration="00:00:00.5"
@@ -582,6 +598,7 @@
                 <!--  表格展示  -->
                 <DataGrid
                     Name="tableData"
+                    Grid.Row="1"
                     Margin="5"
                     HorizontalContentAlignment="Left"
                     Panel.ZIndex="10"
@@ -855,7 +872,7 @@
                 VerticalAlignment="Center"
                 LargeChange="10"
                 Maximum="800"
-                Minimum="120"
+                Minimum="150"
                 SmallChange="5"
                 Value="{Binding Path=GlobalImageWidth, Mode=TwoWay}">
                 <super:Slider.Style>

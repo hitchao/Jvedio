@@ -1,13 +1,21 @@
 ﻿
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Jvedio.Windows
 {
     /// <summary>
     /// Window_Progress.xaml 的交互逻辑
     /// </summary>
-    public partial class Window_Progress : SuperControls.Style.BaseWindow, INotifyPropertyChanged
+    public partial class Window_Progress : Window, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
         #region "属性"
         private string _MainText = string.Empty;
@@ -91,6 +99,13 @@ namespace Jvedio.Windows
             MainProgress = mainProgress;
             SubProgress = subProgress;
             LogText = logText;
+        }
+
+        private void Progress_Window_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed) {
+                this.DragMove();
+            }
         }
     }
 }

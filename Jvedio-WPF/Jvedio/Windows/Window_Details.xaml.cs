@@ -221,11 +221,12 @@ namespace Jvedio
             }
         }
 
-        private void onRefreshTagStemp(long id)
+        private void onRefreshTagStemp(long tagID)
         {
-            if (vieModel.CurrentVideo.DataID != id)
-                return;
             Video video = vieModel.CurrentVideo;
+            ObservableCollection<TagStamp> tagStamp = video.TagStamp;
+            if (tagStamp == null || !tagStamp.Any(arg => arg.TagID == tagID))
+                return;
             Video.SetTagStamps(ref video);
         }
 
@@ -253,7 +254,12 @@ namespace Jvedio
             TextBlock textBlock = border.Child as TextBlock;
             string text = textBlock.Text;
             string value = text.Substring(0, text.IndexOf("("));
-            vieModel.CurrentVideo.LabelList.Add(new ObservableString(value));
+            ObservableString observableString = new ObservableString(value);
+            if (vieModel.CurrentVideo.LabelList.Contains(observableString)) {
+                searchLabelPopup.IsOpen = false;
+                return;
+            }
+            vieModel.CurrentVideo.LabelList.Add(observableString);
             LabelChanged(null, null);
             searchLabelPopup.IsOpen = false;
         }
@@ -1380,6 +1386,8 @@ namespace Jvedio
                 list = vieModel.CurrentVideo.LabelList.Select(arg => arg.Value).ToList();
             vieModel.CurrentVideo.Label = string.Join(SuperUtils.Values.ConstValues.SeparatorString, list);
             MapperManager.metaDataMapper.SaveLabel(vieModel.CurrentVideo.toMetaData());
+            // 标签已改变
+            vieModel.GetLabels();
         }
 
 

@@ -21,7 +21,7 @@ namespace Jvedio.Core.Config
             LoadDataAfterScan = true;
             DataExistsIndexAfterScan = true;
             ImageExistsIndexAfterScan = true;
-            ScanNfo = false;
+            ScanNfo = true;
         }
 
         private static ScanConfig _instance = null;

@@ -44,8 +44,9 @@ namespace Jvedio.Core.UserControls
 
         public event Action Close;
 
-        public static Action<long> onTagStampDelete;
-        public static Action<long> onTagStampRefresh;
+        public static Action<long> onTagStampDelete { get; set; }
+        public static Action<long> onTagStampRefresh { get; set; }
+
         public event EventHandler OnApplyWrapper;
 
         private delegate void AsyncLoadItemDelegate(UIElementCollection collection, UIElement item);

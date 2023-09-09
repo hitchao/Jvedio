@@ -9,6 +9,7 @@ using Jvedio.Entity;
 using Jvedio.Entity.CommonSQL;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
+using Jvedio.Windows;
 using SuperControls.Style;
 using SuperControls.Style.CSFile.Interfaces;
 using SuperControls.Style.Windows;
@@ -696,7 +697,7 @@ namespace Jvedio
             vieModel.ReadFromDataBase();
         }
 
-        private void Window_StartUp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Dispose();
         }
@@ -758,5 +759,9 @@ namespace Jvedio
             RefreshDatabase();
         }
 
+        private void Window_StartUp_ContentRendered(object sender, EventArgs e)
+        {
+            //new Window_Progress().ShowDialog();
+        }
     }
 }

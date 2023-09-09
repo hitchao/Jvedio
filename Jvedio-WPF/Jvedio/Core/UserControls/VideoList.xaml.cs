@@ -132,12 +132,17 @@ namespace Jvedio.Core.UserControls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             BindingEventAfterRender();
-            Refresh();
+            Refresh(vieModel.CurrentPage);
         }
 
-        public void Refresh()
+        public void Refresh(int page = -1)
         {
-            vieModel.Refresh();
+            if (page > 0 && vieModel.CurrentPage != page) {
+                vieModel.CurrentPage = page;
+                pagination.CurrentPage = page;
+            } else {
+                vieModel.Refresh();
+            }
         }
         public void RefreshData(long dataID)
         {
@@ -348,13 +353,30 @@ namespace Jvedio.Core.UserControls
             }
         }
 
+
+        private void MovieItemsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private ScrollViewer GetScrollViewer()
+        {
+            if (MovieItemsControl != null && VisualTreeHelper.GetChildrenCount(MovieItemsControl) > 0)
+                return VisualTreeHelper.GetChild(MovieItemsControl, 0) as ScrollViewer;
+            return null;
+        }
+
         public void GotoTop(object sender, RoutedEventArgs e)
         {
+            if (dataScrollViewer == null)
+                dataScrollViewer = GetScrollViewer();
             dataScrollViewer?.ScrollToTop();
         }
 
         public void GotoBottom(object sender, RoutedEventArgs e)
         {
+            if (dataScrollViewer == null)
+                dataScrollViewer = GetScrollViewer();
             dataScrollViewer?.ScrollToBottom();
         }
 
@@ -1824,5 +1846,6 @@ namespace Jvedio.Core.UserControls
                 return;
             RaiseEvent(new VideoItemEventArgs(video.DataID, OnItemClickEvent, sender));
         }
+
     }
 }

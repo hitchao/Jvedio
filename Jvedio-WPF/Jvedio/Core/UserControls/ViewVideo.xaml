@@ -235,7 +235,8 @@
                 <StackPanel Orientation="Vertical">
                     <TextBlock
                         Height="20"
-                        MaxWidth="150"
+                        MinWidth="50"
+                        MaxWidth="{Binding Path=ImageWidth, Mode=OneWay, ElementName=viewVideo, FallbackValue=150, Converter={StaticResource SmallerValueConverter}, ConverterParameter=150}"
                         Margin="0,7"
                         Padding="12,0,0,0"
                         HorizontalAlignment="Left"
@@ -247,10 +248,7 @@
                         Text="{Binding VID, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis"
                         Visibility="{Binding Path=DisplayID, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Static config:ConfigManager.VideoConfig}, Mode=OneWay}" />
-
-
                     <!--  日期  -->
-
                     <TextBlock
                         Height="20"
                         MaxWidth="150"

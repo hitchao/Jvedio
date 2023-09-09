@@ -604,8 +604,21 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Click="SaveInfo"
-                Content="{DynamicResource Save}"
-                Style="{StaticResource ButtonSuccess}" />
+                IsEnabled="{Binding Saving, Converter={StaticResource OppositeBooleanConverter}}"
+                Style="{StaticResource ButtonSuccess}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource BaseTextBlock}" Text="{DynamicResource Save}" />
+                    <super:LoadingCircle
+                        Width="20"
+                        Height="20"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        DotSize="3"
+                        Visibility="{Binding Saving, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </StackPanel>
+            </Button>
+
+
 
 
         </Grid>

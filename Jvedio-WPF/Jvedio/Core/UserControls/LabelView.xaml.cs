@@ -100,7 +100,7 @@ namespace Jvedio.Core.UserControls
         }
 
 
-        public void Refresh()
+        public void Refresh(int page = -1)
         {
             onRefresh?.Invoke(LabelType);
             Init(Cache);

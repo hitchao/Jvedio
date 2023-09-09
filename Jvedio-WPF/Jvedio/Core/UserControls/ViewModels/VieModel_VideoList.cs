@@ -419,8 +419,6 @@ namespace Jvedio.Core.UserControls.ViewModels
 
             set {
                 _CurrentPage = value;
-
-                // FlowNum = 0;
                 RaisePropertyChanged();
             }
         }

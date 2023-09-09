@@ -18,7 +18,7 @@
     /// </summary>
     internal interface ITabItemControl
     {
-        void Refresh();
+        void Refresh(int page = -1);
         void SetSearchFocus();
         void NextPage();
         void PreviousPage();

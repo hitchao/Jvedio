@@ -49,16 +49,39 @@ namespace Jvedio.Entity
 
         #region "属性"
 
+
+        private long _MVID;
+
         [TableId(IdType.AUTO)]
-        public long MVID { get; set; }
+        public long MVID {
+            get { return _MVID; }
+            set {
+                _MVID = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         /// <summary>
         /// 此处不可删除，需要保证 select 查出 id
         /// </summary>
-        public new long DataID { get; set; }
+        public long _DataID;
+        public new long DataID {
+            get { return _DataID; }
+            set {
+                _DataID = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string VID { get; set; }
+        private string _VID;
+        public string VID {
+            get { return _VID; }
+            set {
+                _VID = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         private string _Series;
@@ -138,12 +161,22 @@ namespace Jvedio.Entity
 
                 if (SubSectionList.Count >= 2)
                     HasSubSection = true;
+                else
+                    HasSubSection = false;
                 RaisePropertyChanged();
             }
         }
 
+
+        private bool _HasSubSection;
         [TableField(exist: false)]
-        public bool HasSubSection { get; set; }
+        public bool HasSubSection {
+            get { return _HasSubSection; }
+            set {
+                _HasSubSection = value;
+                RaisePropertyChanged();
+            }
+        }
 
         [TableField(exist: false)]
         public ObservableCollection<string> PreviewImagePathList { get; set; }

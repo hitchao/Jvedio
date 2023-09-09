@@ -419,19 +419,19 @@ namespace Jvedio.ViewModels
             videoList?.Refresh();
         }
 
-        public void RefreshTab(int idx)
+        public void RefreshTab(int idx, int page)
         {
             if (idx < 0 || idx >= TabPanel.Children.Count)
                 return;
             ITabItemControl ele = TabPanel.Children[idx] as ITabItemControl;
-            ele?.Refresh();
+            ele?.Refresh(page);
         }
 
-        public void RefreshAllTab()
+        public void RefreshAllTab(int page)
         {
             if (TabPanel.Children != null && TabPanel.Children.Count > 0) {
                 for (int i = 0; i < TabPanel.Children.Count; i++) {
-                    RefreshTab(i);
+                    RefreshTab(i, page);
                 }
             }
         }

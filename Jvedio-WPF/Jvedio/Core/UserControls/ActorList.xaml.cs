@@ -317,9 +317,14 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             }
         }
 
-        public void Refresh()
+        public void Refresh(int page = -1)
         {
-            Select();
+            if (page > 0 && CurrentPage != page) {
+                CurrentPage = page;
+                pagination.CurrentPage = page;
+            } else {
+                Select();
+            }
         }
 
         public void RefreshGrade(long actorID, float grade)

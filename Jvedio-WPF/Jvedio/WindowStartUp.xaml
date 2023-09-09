@@ -13,7 +13,8 @@
     MinWidth="500"
     Background="{DynamicResource Window.InnerDialog.Background}"
     CanResize="True"
-    Closing="Window_StartUp_Closing"
+    Closing="Window_Closing"
+    ContentRendered="Window_StartUp_ContentRendered"
     Foreground="{DynamicResource Window.Title.Foreground}"
     Icon="pack://application:,,,/Resources/Jvedio.ico"
     Loaded="Window_Loaded"
@@ -479,12 +480,8 @@
                         <super:HoverPath Grid.Row="1" Style="{StaticResource SettingHoverPath}">
                             <super:HoverPath.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem
-                                        Click="ShowAbout"
-                                        Header="{DynamicResource About}" />
-                                    <MenuItem
-                                        Click="ShowUpgradeWindow"
-                                        Header="{DynamicResource CheckUpgrade}" />
+                                    <MenuItem Click="ShowAbout" Header="{DynamicResource About}" />
+                                    <MenuItem Click="ShowUpgradeWindow" Header="{DynamicResource CheckUpgrade}" />
                                     <MenuItem Command="cmd:File.OpenBaseDir" Header="{DynamicResource OpenAppPath}" />
                                 </ContextMenu>
                             </super:HoverPath.ContextMenu>

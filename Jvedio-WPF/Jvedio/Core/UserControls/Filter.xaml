@@ -203,7 +203,7 @@
                                             CornerRadius="0"
                                             Fill="{Binding BackgroundBrush}"
                                             FontSize="12"
-                                            Foreground="{DynamicResource Window.Foreground}"
+                                            Foreground="{Binding ForegroundBrush}"
                                             IsChecked="{Binding Selected, Mode=TwoWay}"
                                             MainText="{Binding TagName}"
                                             Path="M121.6 247.872h780.8c23.488 0 42.496 19.008 42.496 42.496v417.92a42.496 42.496 0 0 1-42.496 42.496H121.6a42.496 42.496 0 0 1-42.496-42.496v-417.92a42.496 42.496 0 0 1 42.496-42.496z"

@@ -4,6 +4,7 @@ using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static Jvedio.App;
@@ -27,6 +28,16 @@ namespace Jvedio.ViewModel
 
         private bool LoadingLabel { get; set; }
 
+        private bool _Saving;
+
+        public bool Saving {
+            get { return _Saving; }
+
+            set {
+                _Saving = value;
+                RaisePropertyChanged();
+            }
+        }
         private Video _CurrentVideo;
 
         public Video CurrentVideo {
@@ -242,29 +253,31 @@ namespace Jvedio.ViewModel
             LoadingLabel = false;
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            if (CurrentVideo == null)
-                return false;
-            MetaData data = CurrentVideo.toMetaData();
-            if (data == null)
-                return false;
+            return await Task.Run(() => {
+                if (CurrentVideo == null)
+                    return false;
+                MetaData data = CurrentVideo.toMetaData();
+                if (data == null)
+                    return false;
 
-            data.DataID = DataID;
-            int update1 = MapperManager.metaDataMapper.UpdateById(data);
-            int update2 = MapperManager.videoMapper.UpdateById(CurrentVideo);
+                data.DataID = DataID;
+                int update1 = MapperManager.metaDataMapper.UpdateById(data);
+                int update2 = MapperManager.videoMapper.UpdateById(CurrentVideo);
 
-            Logger.Info($"save metadata ret[{update1}], video ret[{update2}]");
+                Logger.Info($"save metadata ret[{update1}], video ret[{update2}]");
 
-            // 标签
-            MapperManager.metaDataMapper.SaveLabel(data);
-            Logger.Info("save label");
+                // 标签
+                MapperManager.metaDataMapper.SaveLabel(data);
+                Logger.Info("save label");
 
-            // 演员
-            MapperManager.videoMapper.SaveActor(CurrentVideo, ViewActors.ToList());
-            Logger.Info("save actors");
+                // 演员
+                MapperManager.videoMapper.SaveActor(CurrentVideo, ViewActors.ToList());
+                Logger.Info("save actors");
 
-            return update1 > 0 & update2 > 0;
+                return update1 > 0 & update2 > 0;
+            });
         }
 
 

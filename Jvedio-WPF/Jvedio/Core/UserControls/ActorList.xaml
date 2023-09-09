@@ -609,9 +609,18 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
                 Foreground="{DynamicResource Button.Fill.Background}"
-                Style="{StaticResource NormalStaticProgressBar}"
-                Visibility="{Binding Rendering, Converter={StaticResource BoolToVisibilityConverter}}"
-                Value="{Binding RenderProgress, Mode=OneWay}" />
+                Value="{Binding RenderProgress, Mode=OneWay}">
+                <ProgressBar.Style>
+                    <Style BasedOn="{StaticResource NormalStaticProgressBar}" TargetType="ProgressBar">
+                        <Setter Property="Visibility" Value="Hidden" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rendering}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ProgressBar.Style>
+            </ProgressBar>
 
             <ScrollViewer
                 x:Name="scrollViewer"

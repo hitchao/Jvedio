@@ -243,6 +243,7 @@ namespace Jvedio
             ActorList.onStatistic += () => vieModel.Statistic();
             VideoList.onDeleteID += (list) => DeleteID(list, false);
             Window_EditActor.onActorInfoChanged += onActorInfoChanged;
+            Window_Edit.onRefreshData += (id) => vieModel.Statistic();
         }
 
         private void onRecvWinMsg(string str)
@@ -892,7 +893,7 @@ namespace Jvedio
 
             // 切换数据库
             vieModel.Statistic();
-            vieModel.TabItemManager.RefreshAllTab();
+            vieModel.TabItemManager.RefreshAllTab(1); // 回到第一页
         }
 
         public void RefreshData(long dataID)
@@ -1184,7 +1185,7 @@ namespace Jvedio
             int idx = GetTabIndexByMenuItem(sender);
             if (idx < 0)
                 return;
-            vieModel.TabItemManager.RefreshTab(idx);
+            vieModel.TabItemManager.RefreshTab(idx, -1);
         }
 
         private void CloseCurrentTab(object sender, RoutedEventArgs e)
