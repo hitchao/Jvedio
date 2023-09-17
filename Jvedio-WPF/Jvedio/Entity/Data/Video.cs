@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.Enums;
+﻿using Google.Protobuf.WellKnownTypes;
+using Jvedio.Core.Enums;
 using Jvedio.Core.Global;
 using Jvedio.Core.Media;
 using Jvedio.Core.Scan;
@@ -23,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using static Jvedio.App;
 
@@ -154,11 +156,7 @@ namespace Jvedio.Entity
 
             set {
                 _SubSection = value;
-                SubSectionList = new ObservableCollection<ObservableString>();
-                if (!string.IsNullOrEmpty(value))
-                    foreach (var item in value.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries))
-                        SubSectionList.Add(new ObservableString(item));
-
+                SubSectionList = SubSectionToList(value);
                 if (SubSectionList.Count >= 2)
                     HasSubSection = true;
                 else
@@ -1212,6 +1210,77 @@ namespace Jvedio.Entity
             List<Video> videos = MapperManager.metaDataMapper.ToEntity<Video>(list, typeof(Video).GetProperties(), false);
 
             return videos;
+        }
+
+        private bool CanSubSectionSortByNum(List<string> list)
+        {
+            if (list == null || list.Count == 0)
+                return false;
+
+            bool[] result = new bool[list.Count];
+
+            for (int i = 0; i < list.Count; i++) {
+                for (int j = 0; j < list.Count; j++) {
+                    string value = $"-{(i + 1)}";
+                    if (list[j].IndexOf(value) >= 0) {
+                        result[i] = true;
+                        break;
+                    }
+                }
+            }
+            return result.All(arg => arg);
+        }
+
+        private ObservableCollection<ObservableString> SubSectionToList(string subSection)
+        {
+            ObservableCollection<ObservableString> result = new ObservableCollection<ObservableString>();
+
+            if (string.IsNullOrEmpty(subSection) || subSection.IndexOf(SuperUtils.Values.ConstValues.Separator) <= 0)
+                return result;
+
+            List<string> list =
+                subSection.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> orderList;
+
+            if (list.Count >= 10 && CanSubSectionSortByNum(list)) {
+                orderList = list.OrderBy(arg => arg, new SubSectionComparer()).ToList();
+            } else {
+                orderList = list;
+            }
+
+            foreach (var item in orderList) {
+                result.Add(new ObservableString(item));
+            }
+            return result;
+        }
+    }
+
+
+    /// <summary>
+    /// 仅支持形如 -1, -2, -3, ... 的分段视频
+    /// </summary>
+    public class SubSectionComparer : IComparer<string>
+    {
+
+        // ABCD-123-1
+        // ABCD-123-2
+        // ABCD-123-3
+        // ABCD-123-11
+
+        public int Compare(string path1, string path2)
+        {
+            string name1 = Path.GetFileNameWithoutExtension(path1);
+            string name2 = Path.GetFileNameWithoutExtension(path2);
+            string vid = JvedioLib.Security.Identify.GetVID(name1);
+
+            int idx1 = name1.IndexOf(vid) + vid.Length + "-".Length;
+            int idx2 = name2.IndexOf(vid) + vid.Length + "-".Length;
+
+            string v1 = name1.Substring(idx1);
+            string v2 = name2.Substring(idx2);
+            int.TryParse(v1, out int c1);
+            int.TryParse(v2, out int c2);
+            return c1 - c2;
         }
     }
 }
