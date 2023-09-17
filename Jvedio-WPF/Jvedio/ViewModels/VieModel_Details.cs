@@ -271,10 +271,6 @@ namespace Jvedio.ViewModel
                 }
             }
 
-            BitmapImage image = BitmapImageFromFile(CurrentVideo.GetBigImage());
-            if (image == null)
-                image = MetaData.DefaultBigImage;
-            CurrentVideo.BigImage = image;
             if (InfoSelectedIndex == 1)
                 LoadVideoInfo();
             QueryCompleted?.Invoke(this, new EventArgs());

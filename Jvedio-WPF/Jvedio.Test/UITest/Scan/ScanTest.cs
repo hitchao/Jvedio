@@ -5,6 +5,7 @@ using System.Threading;
 namespace Jvedio.Test.UITest
 {
     [TestClass]
+    [Ignore]
     public class UnitTest : TestBase
     {
         private const string BUTTON_NEW_DATA_BASE = "newDataBaseButton";

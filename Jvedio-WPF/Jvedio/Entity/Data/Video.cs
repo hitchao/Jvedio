@@ -215,6 +215,17 @@ namespace Jvedio.Entity
                 RaisePropertyChanged();
             }
         }
+        private string _BigImagePath;
+
+        [TableField(exist: false)]
+        public string BigImagePath {
+            get { return _BigImagePath; }
+
+            set {
+                _BigImagePath = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private Uri _GifUri;
 
@@ -939,6 +950,11 @@ namespace Jvedio.Entity
             video.ViewImage = image;
         }
 
+        private static string GetScreenShot(string[] arr)
+        {
+            return arr[arr.Length / 2];
+        }
+
 
         private static void SetScreenShotImage(ref Video video)
         {
@@ -949,7 +965,9 @@ namespace Jvedio.Entity
                 if (Directory.Exists(path)) {
                     string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
                     if (array.Length > 0) {
-                        Video.SetImage(ref video, array[array.Length / 2]);
+                        string targetPath = GetScreenShot(array);
+                        Video.SetImage(ref video, targetPath);
+                        video.BigImagePath = targetPath;
                     }
                 }
             }
@@ -958,8 +976,10 @@ namespace Jvedio.Entity
 
         public static void SetImage(ref Video video, int imageMode = 0)
         {
+            video.BigImagePath = video.GetBigImage();
+
             BitmapImage smallimage = ImageCache.Get(video.GetSmallImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
-            BitmapImage bigimage = ImageCache.Get(video.GetBigImage(), Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
+            BitmapImage bigimage = ImageCache.Get(video.BigImagePath, Jvedio.Core.WindowConfig.Main.MAX_IMAGE_WIDTH);
 
             bool findScreenShot = false;
 

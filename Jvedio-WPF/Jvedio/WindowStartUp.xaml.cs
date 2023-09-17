@@ -325,7 +325,7 @@ namespace Jvedio
         private void InitAppData()
         {
             try {
-                ScanHelper.InitSearchPattern();
+                VideoParser.InitSearchPattern();
                 // 读取配置文件，设置 debug
                 ReadConfig();
             } catch (Exception ex) {

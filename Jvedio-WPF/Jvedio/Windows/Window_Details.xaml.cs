@@ -1071,6 +1071,20 @@ namespace Jvedio
             CancelLoadImage = false;
         }
 
+        private void AddBigImageToPreviewList()
+        {
+            Video video = vieModel.CurrentVideo;
+            BitmapSource bigImage = video.BigImage;
+            if (bigImage == null || bigImage == MetaData.DefaultBigImage)
+                return;
+
+            string path = video.BigImagePath;
+            if (File.Exists(path)) {
+                video.PreviewImageList.Add(bigImage);
+                video.PreviewImagePathList.Add(path);
+            }
+        }
+
         private async Task<bool> LoadImage(bool isScreenShot = false)
         {
             scrollViewer.ScrollToHorizontalOffset(0);
@@ -1082,27 +1096,9 @@ namespace Jvedio
 
             video.PreviewImageList = new ObservableCollection<BitmapSource>();
             video.PreviewImagePathList = new ObservableCollection<string>();
+            if (!isScreenShot)
+                AddBigImageToPreviewList();
 
-            string bigImagePath = video.GetBigImage();
-            if (!isScreenShot) {
-                if (File.Exists(bigImagePath)) {
-                    video.PreviewImageList.Add(video.BigImage);
-                    video.PreviewImagePathList.Add(bigImagePath);
-                } else {
-                    if (video.BigImage == MetaData.DefaultBigImage) {
-                        // 检查有无截图
-                        string path = video.GetScreenShot();
-                        if (Directory.Exists(path)) {
-                            string[] array = FileHelper.TryScanDIr(path, "*.*", System.IO.SearchOption.TopDirectoryOnly);
-                            if (array.Length > 0) {
-                                string imgPath = array[array.Length / 2];
-                                video.PreviewImageList.Add(ImageHelper.BitmapImageFromFile(imgPath));
-                                video.PreviewImagePathList.Add(imgPath);
-                            }
-                        }
-                    }
-                }
-            }
 
             await Task.Run(async () => {
                 await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate {

@@ -302,6 +302,7 @@
     <Compile Include="Core\Config\PathManager.cs" />
     <Compile Include="Core\Lang\LangManager.cs" />
     <Compile Include="Core\Media\ImageCache.cs" />
+    <Compile Include="Core\Scan\IScan.cs" />
     <Compile Include="Core\Tasks\BaseManager.cs" />
     <Compile Include="Core\Tasks\ScreenShotManager.cs" />
     <Compile Include="Core\Net\UrlManager.cs" />

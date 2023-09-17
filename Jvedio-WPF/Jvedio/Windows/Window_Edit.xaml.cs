@@ -100,7 +100,7 @@ namespace Jvedio
 
             if (dragdropFiles.Length == 1) {
                 string path = dragdropFiles[0];
-                if (ScanHelper.IsProperMovie(path))
+                if (VideoParser.IsProperMovie(path))
                     vieModel.CurrentVideo.Path = path;
             } else {
                 vieModel.CurrentVideo.Path = dragdropFiles[0];
@@ -110,7 +110,7 @@ namespace Jvedio
                     ObservableString str = new ObservableString(file);
                     if (vieModel.CurrentVideo.SubSectionList.Contains(str))
                         continue;
-                    if (FileHelper.IsFile(file) && ScanHelper.IsProperMovie(file)) {
+                    if (FileHelper.IsFile(file) && VideoParser.IsProperMovie(file)) {
                         vieModel.CurrentVideo.SubSectionList.Add(str);
                     }
                 }

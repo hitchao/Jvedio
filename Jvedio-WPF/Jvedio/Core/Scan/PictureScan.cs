@@ -84,7 +84,7 @@ namespace Jvedio.Core.Scan
                     return;
                 }
 
-                ScanHelper scanHelper = new ScanHelper();
+                VideoParser scanHelper = new VideoParser();
 
                 (List<Picture> import, List<string> notImport) = parsePicture();
 

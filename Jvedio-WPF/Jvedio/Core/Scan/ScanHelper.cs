@@ -19,10 +19,18 @@ using static Jvedio.App;
 
 namespace Jvedio
 {
-    public class ScanHelper
+    public class VideoParser : IScan
     {
         private const string CHARACTERS = "abcdefghijklmn";
-        public const int DEFAULT_MIN_FILESIZE = 1 * 1024 * 1024;   // 1MB
+        public const int DEFAULT_MIN_FILESIZE = 0 * 1024 * 1024;   // 1MB
+
+        private Action<string> Log { get; set; }
+
+        public VideoParser(Action<string> log = null)
+        {
+            Log = log;
+            Log?.Invoke("init video scan");
+        }
 
         #region "属性"
 
@@ -43,6 +51,12 @@ namespace Jvedio
             FilePattern = ScanTask.VIDEO_EXTENSIONS_LIST;
         }
 
+        public long GetMinFileSize()
+        {
+            Log?.Invoke($"min file size: {ConfigManager.ScanConfig.MinFileSize}");
+            return (long)ConfigManager.ScanConfig.MinFileSize * 1024 * 1024;
+        }
+
         public (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO)
             ParseMovie(List<string> filepaths, List<string> fileExt, CancellationToken ct,
             bool insertNFO = true, Action<string> callBack = null, long minFileSize = 0)
@@ -58,7 +72,7 @@ namespace Jvedio
             List<string> videoPaths = new List<string>();
 
 
-            minFileSize = (long)ConfigManager.ScanConfig.MinFileSize * 1024 * 1024;
+            minFileSize = GetMinFileSize();
             if (minFileSize < 0)
                 minFileSize = DEFAULT_MIN_FILESIZE;
 

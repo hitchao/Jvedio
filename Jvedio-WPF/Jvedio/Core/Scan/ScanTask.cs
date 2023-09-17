@@ -9,6 +9,7 @@ using SuperUtils.IO;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -134,55 +135,65 @@ namespace Jvedio.Core.Scan
             if (FileExt == null)
                 FileExt = VIDEO_EXTENSIONS_LIST; // 默认导入视频
             ScanResult = new ScanResult();
+            Logs.Add($"scan task init, paths count: {FilePaths.Count}, dir count: {ScanPaths.Count}");
         }
 
+        private void ScanDir()
+        {
+            int total = ScanPaths.Count;
+            int count = 0;
+            foreach (string path in ScanPaths) {
+                IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) => {
+                    // 发生异常
+                    Logger.Error(ex.Message);
+                }, (dir) => {
+                    Message = dir;
+                    onScanning?.Invoke(this, new MessageCallBackEventArgs(dir));
+                }, TokenCTS);
+                FilePaths.AddRange(paths);
+                count++;
+                Progress = (float)Math.Round(((float)count) / total, 4) * 100;
+            }
+            Progress = 30;
+        }
+
+        /// <summary>
+        /// 在 UI 中显示要导入的文件
+        /// </summary>
+        private void NotifyScanPath()
+        {
+            if (ScanPaths.Count == 0 && FilePaths.Count != 0) {
+                string path = FilePaths[FilePaths.Count - 1];
+                Message = path;
+                onScanning?.Invoke(this, new MessageCallBackEventArgs(path));
+            }
+        }
 
         public override void DoWork()
         {
-            Task.Run((Action)(() => {
-                TimeWatch.Start();
-                Logger.Info(LangManager.GetValueByKey("BeginScan"));
-                if (ScanPaths.Count == 0 && FilePaths.Count != 0) {
-                    string path = FilePaths[FilePaths.Count - 1];
-                    Message = path;
-                    onScanning?.Invoke(this, new MessageCallBackEventArgs(path));
-                }
-
-                int total = ScanPaths.Count;
-                int count = 0;
-
-                foreach (string path in ScanPaths) {
-                    IEnumerable<string> paths = DirHelper.GetFileList(path, "*.*", (ex) => {
-                        // 发生异常
-                        Logger.Error(ex.Message);
-                    }, (dir) => {
-                        Message = dir;
-                        onScanning?.Invoke(this, new MessageCallBackEventArgs(dir));
-                    }, TokenCTS);
-                    FilePaths.AddRange(paths);
-                    count++;
-                    Progress = (float)Math.Round(((float)count) / total, 4) * 100;
-                }
-
-                Progress = 30;
-
+            Logger.Info(LangManager.GetValueByKey("BeginScan"));
+            Task.Run(() => {
+                StartWatch();
+                NotifyScanPath();
+                ScanDir();
 
                 try {
                     CheckStatus();
-                } catch (TaskCanceledException ex) {
-                    Logger.Error(ex.Message);
-                    Status = TaskStatus.Canceled;
-                    Running = false;
+                } catch (TaskCanceledException) {
+                    FinalizeWithCancel();
                     return;
                 }
 
-                ScanHelper scanHelper = new ScanHelper();
+                VideoParser videoParser = new VideoParser((msg) => {
+                    if (Logs != null)
+                        Logs.Add(msg);
+                });
 
                 try {
-                    (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO) parseResult
-                     = scanHelper.ParseMovie(FilePaths, FileExt, Token, ConfigManager.ScanConfig.ScanNfo, callBack: (msg) => {
-                         Logger.Error(msg);
-                     });
+                    (List<Video> import, Dictionary<string, NotImportReason> notImport, List<string> failNFO)
+                    parseResult = videoParser.ParseMovie(FilePaths, FileExt, Token, ConfigManager.ScanConfig.ScanNfo, callBack: (msg) => {
+                        Logger.Error(msg);
+                    });
 
                     Progress = 60;
 
@@ -216,18 +227,16 @@ namespace Jvedio.Core.Scan
                     Success = true;
                 } catch (Exception ex) {
                     Logger.Error(ex.Message);
-                    Success = false;
-                    Progress = 0;
+                    FinalizeWithCancel();
+                    return;
                 }
 
                 Running = false;
-                TimeWatch.Stop();
-                ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
+                StopWatch();
                 ScanResult.ElapsedMilliseconds = ElapsedMilliseconds;
                 Status = TaskStatus.RanToCompletion;
-
                 base.OnCompleted(null);
-            }));
+            });
         }
 
         private List<Video> GetExistVideos()
@@ -276,9 +285,13 @@ namespace Jvedio.Core.Scan
 
             vidList.RemoveAll(arg => existVideos.Where(t => arg.Size.Equals(t.Size) && arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && File.Exists(t.Path)).Any());
 
-            // 存在不同路径，相同 VID，不同大小，且原路径存在（可能是剪辑的视频）
+            // 存在不同路径，相同 VID，不同大小，且原路径存在（可能是剪辑的视频），且分段视频不相等
             foreach (var item in vidList
-                .Where(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path))
+                .Where(arg => existVideos.Where(t => arg.VID.Equals(t.VID) &&
+                !arg.Path.Equals(t.Path) &&
+                !arg.Size.Equals(t.Size) &&
+                File.Exists(t.Path) &&
+                t.SubSection.Equals(arg.SubSection))
                 .Any())) {
                 ScanDetailInfo scanDetailInfo = new ScanDetailInfo(LangManager.GetValueByKey("SamePathNotSameFileSize"));
                 StringBuilder builder = new StringBuilder($"和 {item.Path} 存在重复：");
@@ -292,13 +305,17 @@ namespace Jvedio.Core.Scan
                 ScanResult.NotImport.Add(item.Path, scanDetailInfo);
             }
 
-            vidList.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID) && !arg.Path.Equals(t.Path) && !arg.Size.Equals(t.Size) && File.Exists(t.Path)).Any());
+            vidList.RemoveAll(arg => existVideos.Where(t => arg.VID.Equals(t.VID)
+            && !arg.Path.Equals(t.Path) &&
+            !arg.Size.Equals(t.Size) &&
+            File.Exists(t.Path) &&
+            t.SubSection.Equals(arg.SubSection)).Any());
 
             // 1.2 需要 update 路径
-            // VID 相同，原路径不同
+            // VID 相同，原路径（或分段视频路径）不同
             List<Video> toUpdate = new List<Video>();
             foreach (Video video in vidList) {
-                Video existVideo = existVideos.Where(t => video.VID.Equals(t.VID) && !video.Path.Equals(t.Path)).FirstOrDefault();
+                Video existVideo = existVideos.Where(t => video.VID.Equals(t.VID) && (!video.Path.Equals(t.Path) || !video.SubSection.Equals(t.SubSection))).FirstOrDefault();
                 if (existVideo != null) {
                     video.DataID = existVideo.DataID;
                     video.MVID = existVideo.MVID; // 下面使用 videoMapper 更新的时候会使用到
@@ -669,9 +686,8 @@ namespace Jvedio.Core.Scan
         public void CheckStatus()
         {
             if (Status == TaskStatus.Canceled) {
-                TimeWatch.Stop();
+                StopWatch();
                 Running = false;
-                ElapsedMilliseconds = TimeWatch.ElapsedMilliseconds;
                 throw new TaskCanceledException();
             }
         }

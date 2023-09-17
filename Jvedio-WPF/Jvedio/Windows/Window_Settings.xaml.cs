@@ -485,7 +485,7 @@ namespace Jvedio
                 MessageCard.Error(msg);
             });
             if (success) {
-                ScanHelper.InitSearchPattern();
+                VideoParser.InitSearchPattern();
                 SavePath();
                 SaveSettings();
 
