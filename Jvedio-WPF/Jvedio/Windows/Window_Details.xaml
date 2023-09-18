@@ -111,7 +111,7 @@
     <Grid
         x:Name="rootGrid"
         Focusable="True"
-        PreviewKeyUp="Grid_PreviewKeyUp">
+        KeyUp="Grid_KeyUp">
 
         <Border
             x:Name="backgroundBorder"

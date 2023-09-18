@@ -788,7 +788,7 @@ namespace Jvedio
             // IsTranslating = false;
         }
 
-        private void Grid_PreviewKeyUp(object sender, KeyEventArgs e)
+        private void Grid_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
                 this.Close();

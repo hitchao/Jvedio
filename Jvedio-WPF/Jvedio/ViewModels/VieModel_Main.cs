@@ -150,6 +150,13 @@ namespace Jvedio.ViewModel
             VideoList.onStatistic += Statistic;
             ViewVideo.onStatistic += Statistic;
             VideoList.onSearchingChange += (value) => Searching = value;
+            VideoList.onWaiting += OnWaiting;
+        }
+
+        private void OnWaiting(string msg, bool status)
+        {
+            Waiting = status;
+            WaitingMsg = msg;
         }
 
 
@@ -166,6 +173,30 @@ namespace Jvedio.ViewModel
         #endregion
 
         #region "界面显示属性"
+
+
+        public string _WaitingMsg;
+
+        public string WaitingMsg {
+            get { return _WaitingMsg; }
+
+            set {
+                _WaitingMsg = value;
+                RaisePropertyChanged();
+            }
+        }
+        public bool _Waiting;
+
+        public bool Waiting {
+            get { return _Waiting; }
+
+            set {
+                _Waiting = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
 
         public bool _DragInFile;
 

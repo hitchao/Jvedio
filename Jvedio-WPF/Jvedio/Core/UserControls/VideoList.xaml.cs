@@ -1,4 +1,5 @@
-﻿using Jvedio.Core.CustomEventArgs;
+﻿using Google.Protobuf.WellKnownTypes;
+using Jvedio.Core.CustomEventArgs;
 using Jvedio.Core.Enums;
 using Jvedio.Core.FFmpeg;
 using Jvedio.Core.Global;
@@ -51,6 +52,7 @@ namespace Jvedio.Core.UserControls
         public static Action<bool> onSearchingChange;
         public static Action<long, long, bool> onTagStampChange;
         public static Action<List<Video>> onDeleteID;
+        public static Action<string, bool> onWaiting;
 
         public Action<long, float> onGradeChange;
         public Action<WrapperEventArg<Video>> onRenderSql;
@@ -491,50 +493,59 @@ namespace Jvedio.Core.UserControls
             DeleteIDs(vieModel.CurrentVideoList, list, fromDetail);
         }
 
-        // todo 异步删除
-        public void DeleteFile(object sender, RoutedEventArgs e)
+        private async Task<(int, int)> AsyncDeleteFile()
         {
-            HandleMenuSelected(sender);
-            if (vieModel.EditMode && new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false) {
-                return;
-            }
-
+            //return (0, 0);
             int num = 0;
             int totalCount = vieModel.SelectedVideo.Count;
-            vieModel.SelectedVideo.ForEach((Action<Video>)(arg => {
-                if (arg.SubSectionList?.Count > 0) {
-                    totalCount += arg.SubSectionList.Count - 1;
+            await Task.Run(() => {
+                vieModel.SelectedVideo.ForEach((Action<Video>)(arg => {
+                    if (arg.SubSectionList?.Count > 0) {
+                        totalCount += arg.SubSectionList.Count - 1;
 
-                    // 分段视频
-                    foreach (var path in arg.SubSectionList.Select(t => t.Value)) {
-                        if (File.Exists(path)) {
+                        // 分段视频
+                        foreach (var path in arg.SubSectionList.Select(t => t.Value)) {
+                            if (File.Exists(path)) {
+                                try {
+                                    FileSystem.DeleteFile(path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                                    num++;
+                                } catch (Exception ex) {
+                                    Logger.Error(ex);
+                                }
+                            }
+                        }
+                    } else {
+                        if (File.Exists(arg.Path)) {
                             try {
-                                FileSystem.DeleteFile(path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                                FileSystem.DeleteFile(arg.Path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
                                 num++;
                             } catch (Exception ex) {
                                 Logger.Error(ex);
                             }
                         }
                     }
-                } else {
-                    if (File.Exists(arg.Path)) {
-                        try {
-                            FileSystem.DeleteFile(arg.Path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
-                            num++;
-                        } catch (Exception ex) {
-                            Logger.Error(ex);
-                        }
-                    }
-                }
-            }));
-            MessageNotify.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_DeleteToRecycleBin")} {num}/{totalCount}");
+                }));
+            });
+            return (num, totalCount);
+        }
 
+        public async void DeleteFile(object sender, RoutedEventArgs e)
+        {
+            HandleMenuSelected(sender);
+            if (vieModel.EditMode && new MsgBox(SuperControls.Style.LangManager.GetValueByKey("IsToDelete")).ShowDialog() == false) {
+                return;
+            }
+            onWaiting?.Invoke("删除中", true);
+            (int num, int totalCount) = await AsyncDeleteFile();
+            //await Task.Delay(2000);
             if (ConfigManager.Settings.DelInfoAfterDelFile) {
                 List<Video> temp = vieModel.SelectedVideo.ToList();
                 DeleteIDs(GetVideosByMenu(sender as MenuItem, 0), vieModel.SelectedVideo, false);
                 onDeleteID?.Invoke(temp);
             }
 
+            MessageNotify.Info($"{SuperControls.Style.LangManager.GetValueByKey("Message_DeleteToRecycleBin")} {num}/{totalCount}");
+            onWaiting?.Invoke("", false);
             if (!vieModel.EditMode)
                 vieModel.SelectedVideo.Clear();
         }
@@ -1748,6 +1759,13 @@ namespace Jvedio.Core.UserControls
         public void SetSearchFocus()
         {
             searchBox.SetFocus();
+        }
+
+        public void ResetSearch()
+        {
+            vieModel.SearchText = "";
+            vieModel.SearchWrapper = null;
+            vieModel.Searching = false;
         }
 
         public void NextPage()

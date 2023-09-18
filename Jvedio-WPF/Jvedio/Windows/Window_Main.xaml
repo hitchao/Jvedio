@@ -261,6 +261,28 @@
             </Grid>
         </Popup>
 
+        <Grid Panel.ZIndex="5" Visibility="{Binding Waiting, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
+            <Border Background="{DynamicResource Window.Detail.Background}" Opacity="0.5" />
+            <Border
+                Width="200"
+                Height="200"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Effect="{StaticResource PopupDropShadowEffect}"
+                Style="{StaticResource InfoBorder}" />
+            <StackPanel
+                Margin="50"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+                <super:LoadingLine
+                    Width="100"
+                    Height="30"
+                    Margin="20" />
+                <TextBlock Style="{StaticResource BaseTextBlock}" Text="{Binding WaitingMsg}" />
+            </StackPanel>
+        </Grid>
+
         <Grid Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

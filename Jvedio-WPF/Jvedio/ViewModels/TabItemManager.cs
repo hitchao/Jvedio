@@ -77,7 +77,7 @@ namespace Jvedio.ViewModels
 
                 SetTabSelected(vieModel.TabItems.IndexOf(tabItem));
                 // 触发刷新
-                RefreshTab(type);
+                RefreshVideoTab(type);
                 return;
                 //RemoveTabItem(vieModel.TabItems.IndexOf(tabItem));
             }
@@ -413,11 +413,12 @@ namespace Jvedio.ViewModels
             return videoLists.FirstOrDefault(arg => arg.TaskType == type);
         }
 
-        public void RefreshTab(TabType type)
+        public void RefreshVideoTab(TabType type)
         {
             if (type == TabType.GeoTask)
                 return;
             VideoList videoList = GetVideoListByType(type);
+            videoList.ResetSearch();
             videoList?.Refresh();
         }
 
