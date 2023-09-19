@@ -418,8 +418,10 @@ namespace Jvedio.ViewModels
             if (type == TabType.GeoTask)
                 return;
             VideoList videoList = GetVideoListByType(type);
+            if (videoList == null)
+                return;
             videoList.ResetSearch();
-            videoList?.Refresh();
+            videoList.Refresh();
         }
 
         public void RefreshTab(int idx, int page)
