@@ -485,6 +485,7 @@
                     <Grid
                         Grid.Column="2"
                         AllowDrop="True"
+                        Background="Transparent"
                         DragLeave="OnDragFileLeave"
                         DragOver="OnDragFileOver"
                         Drop="OnDragFileDrop">
