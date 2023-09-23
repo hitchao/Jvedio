@@ -476,8 +476,8 @@ namespace Jvedio.Entity
                 && !string.IsNullOrEmpty(video.LastScanDate) && string.IsNullOrEmpty(video.ReleaseDate))
                 video.ReleaseDate = DateHelper.ToLocalDate(video.LastScanDate);
 
-            if (string.IsNullOrEmpty(video.VID) && !string.IsNullOrEmpty(video.Title))
-                video.VID = video.Title;
+            //if (string.IsNullOrEmpty(video.VID) && !string.IsNullOrEmpty(video.Title))
+            //    video.VID = video.Title;
 
         }
 
