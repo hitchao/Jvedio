@@ -705,7 +705,10 @@
                                 PreviewMouseWheel="Tab_PreviewMouseWheel"
                                 Style="{StaticResource FloatScrollViewer}"
                                 VerticalScrollBarVisibility="Hidden">
-                                <ItemsControl AlternationCount="999" ItemsSource="{Binding TabItems}">
+                                <ItemsControl
+                                    Name="tabItemsControl"
+                                    AlternationCount="999"
+                                    ItemsSource="{Binding TabItems}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Background="Transparent" Orientation="Horizontal" />

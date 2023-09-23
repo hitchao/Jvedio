@@ -7,6 +7,7 @@ using Jvedio.Entity.Common;
 using Jvedio.ViewModel;
 using SuperControls.Style;
 using SuperUtils.Framework.ORM.Wrapper;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,6 +19,16 @@ namespace Jvedio.ViewModels
 
     public class TabItemManager
     {
+        #region "事件"
+
+
+        /// <summary>
+        /// 滚动到该 Tab
+        /// </summary>
+        public static Action<TabItemEx> OnFocusItem { get; set; }
+        #endregion
+
+
         #region "属性"
 
         private static TabItemManager instance { get; set; }
@@ -78,6 +89,8 @@ namespace Jvedio.ViewModels
                 SetTabSelected(vieModel.TabItems.IndexOf(tabItem));
                 // 触发刷新
                 RefreshVideoTab(type);
+
+                OnFocusItem?.Invoke(tabItem);
                 return;
                 //RemoveTabItem(vieModel.TabItems.IndexOf(tabItem));
             }
@@ -268,6 +281,8 @@ namespace Jvedio.ViewModels
                 default:
                     break;
             }
+
+            OnFocusItem?.Invoke(tabItem); 
         }
 
         private void OnRenderSql(WrapperEventArg<Video> arg)

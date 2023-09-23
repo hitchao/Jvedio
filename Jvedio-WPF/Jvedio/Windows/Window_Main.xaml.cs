@@ -10,6 +10,7 @@ using Jvedio.Entity;
 using Jvedio.Entity.Common;
 using Jvedio.Upgrade;
 using Jvedio.ViewModel;
+using Jvedio.ViewModels;
 using SuperControls.Style;
 using SuperControls.Style.CSFile.Interfaces;
 using SuperControls.Style.Plugin;
@@ -19,6 +20,7 @@ using SuperUtils.CustomEventArgs;
 using SuperUtils.Framework.ORM.Wrapper;
 using SuperUtils.IO;
 using SuperUtils.Systems;
+using SuperUtils.WPF.VisualTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -242,6 +244,14 @@ namespace Jvedio
             VideoList.onDeleteID += (list) => DeleteID(list, false);
             Window_EditActor.onActorInfoChanged += onActorInfoChanged;
             Window_Edit.onRefreshData += (id) => vieModel.Statistic();
+            TabItemManager.OnFocusItem += OnFocusItem;
+        }
+
+        private void OnFocusItem(TabItemEx tabItem)
+        {
+            var container = tabItemsControl.ItemContainerGenerator.ContainerFromItem(tabItem) as FrameworkElement;
+            if (container != null)
+                container.BringIntoView();
         }
 
         private void onRecvWinMsg(string str)
