@@ -23,6 +23,7 @@ namespace Jvedio.Core.Config
             GifHeight = DEFAULT_GIF_HEIGHT;
             GifDuration = DEFAULT_GIF_DURATION;
             SkipExistScreenShot = true;
+            SkipExistGif = true;
             ScreenShotAfterImport = true;
         }
 

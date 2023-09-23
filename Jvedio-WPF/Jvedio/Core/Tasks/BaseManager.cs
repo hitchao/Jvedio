@@ -158,7 +158,7 @@ namespace Jvedio.Core.Tasks
         {
             if (string.IsNullOrEmpty(id))
                 return;
-            AbstractTask task = CurrentTasks.Where(arg => arg.ID.Equals(id)).FirstOrDefault();
+            AbstractTask task = CurrentTasks.FirstOrDefault(arg => arg.ID.Equals(id));
             task?.Cancel();
         }
 
@@ -166,7 +166,7 @@ namespace Jvedio.Core.Tasks
         {
             if (string.IsNullOrEmpty(id))
                 return;
-            AbstractTask task = CurrentTasks.Where(arg => arg.ID.Equals(id)).FirstOrDefault();
+            AbstractTask task = CurrentTasks.FirstOrDefault(arg => arg.ID.Equals(id));
             task?.Restart();
         }
 
@@ -174,7 +174,7 @@ namespace Jvedio.Core.Tasks
         {
             if (string.IsNullOrEmpty(id))
                 return "";
-            AbstractTask task = CurrentTasks.Where(arg => arg.ID.Equals(id)).FirstOrDefault();
+            AbstractTask task = CurrentTasks.FirstOrDefault(arg => arg.ID.Equals(id));
             if (task == null)
                 return "";
             return string.Join(Environment.NewLine, task.Logs);

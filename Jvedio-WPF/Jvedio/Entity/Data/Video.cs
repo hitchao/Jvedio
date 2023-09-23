@@ -689,6 +689,10 @@ namespace Jvedio.Entity
             return imagePath;
         }
 
+        /// <summary>
+        /// 相对影片下，不支持 gif 截图，截图任务会提示给定关键字不在字典中
+        /// </summary>
+        /// <returns></returns>
         public string GetGifPath()
         {
             string imagePath = GetImagePath(ImageType.Gif, ".gif");
