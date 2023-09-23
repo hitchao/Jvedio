@@ -106,6 +106,8 @@ namespace Jvedio.Core.UserControls
             "actor_info.CreateDate",
             "actor_info.UpdateDate",
         };
+        
+        public static string[] SelectedFieldUnion { get; set; }  = SelectedField.ToArray();
 
 
         public static Dictionary<string, string> Actor_SELECT_TYPE { get; set; } = new Dictionary<string, string>()
@@ -298,10 +300,10 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
 
         static ActorList()
         {
-
             for (int i = 0; i < SortDictList.Count; i++) {
                 SortDict.Add(i, SortDictList[i]);
             }
+            SelectedFieldUnion[0] = "CASE WHEN count(ActorName) = 1 THEN 0 ELSE 1 END as Count";
         }
 
 
@@ -438,6 +440,7 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
             SetSortOrder(wrapper);
 
             bool search = !string.IsNullOrEmpty(SearchText);
+            string searchText = SearchText.ToProperSql();
 
             string count_sql = "SELECT count(*) as Count " +
                          "from (SELECT actor_info.ActorID FROM actor_info join metadata_to_actor " +
@@ -445,28 +448,32 @@ nameof(ViewMode), typeof(bool), typeof(ActorList), new PropertyMetadata(false));
                          "join metadata " +
                          "on metadata_to_actor.DataID=metadata.DataID " +
                          $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                         $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
+                         $"{(search ? $"and actor_info.ActorName like '%{searchText}%' " : string.Empty)} " +
                          "GROUP BY actor_info.ActorID " +
                          "UNION " +
                          "select actor_info.ActorID  " +
                          "FROM actor_info WHERE NOT EXISTS " +
                          "(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) " +
-                         $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
+                         $"{(search ? $"and actor_info.ActorName like '%{searchText}%' " : string.Empty)} " +
                          "GROUP BY actor_info.ActorID)";
 
 
             TotalCount = actorMapper.SelectCount(count_sql);
 
-            string sql = $"{wrapper.Select(SelectedField).ToSelect(false)} FROM actor_info " +
+            string filedSelect = new SelectWrapper<ActorInfo>().Select(SelectedField).ToSelect(false);
+            string unionSelect = new SelectWrapper<ActorInfo>().Select(SelectedFieldUnion).ToSelect(false);
+
+            string sql = $"{filedSelect} FROM actor_info " +
                 $"join metadata_to_actor on metadata_to_actor.ActorID=actor_info.ActorID " +
                 $"join metadata on metadata_to_actor.DataID=metadata.DataID " +
                 $"WHERE metadata.DBId={ConfigManager.Main.CurrentDBId} and metadata.DataType={0} " +
-                $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
+                $"{(search ? $"and actor_info.ActorName like '%{searchText}%' " : string.Empty)} " +
                 $"GROUP BY actor_info.ActorID " +
                 "UNION " +
-                $"{wrapper.Select(SelectedField).ToSelect(false)} FROM actor_info " +
-                "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID ) GROUP BY actor_info.ActorID " +
-                $"{(search ? $"and actor_info.ActorName like '%{SearchText.ToProperSql()}%' " : string.Empty)} " +
+                // 显示只有演员名，没有数量的演员
+                $"{unionSelect} FROM actor_info " +
+                "WHERE NOT EXISTS(SELECT 1 from metadata_to_actor where metadata_to_actor.ActorID=actor_info.ActorID )" +
+                $"{(search ? $"and actor_info.ActorName like '%{searchText}%' " : string.Empty)}  GROUP BY actor_info.ActorID " +
                 wrapper.ToOrder() + ActorToLimit();
 
             onPageChange(TotalCount);

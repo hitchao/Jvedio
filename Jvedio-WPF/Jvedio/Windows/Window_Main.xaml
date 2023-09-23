@@ -504,8 +504,10 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
-                            <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Vertical">
                                 <Image
                                     Grid.Row="0"
                                     Height="96"
