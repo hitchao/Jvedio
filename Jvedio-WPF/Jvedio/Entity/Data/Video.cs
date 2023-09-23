@@ -1242,6 +1242,7 @@ namespace Jvedio.Entity
                 subSection.Split(new char[] { SuperUtils.Values.ConstValues.Separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
             List<string> orderList;
 
+            // 大于 10 才需要排序，其他的由用户添加顺序决定
             if (list.Count >= 10 && CanSubSectionSortByNum(list)) {
                 orderList = list.OrderBy(arg => arg, new SubSectionComparer()).ToList();
             } else {
@@ -1249,6 +1250,8 @@ namespace Jvedio.Entity
             }
 
             foreach (var item in orderList) {
+                if (item == null || string.IsNullOrEmpty(item.Trim()))
+                    continue;
                 result.Add(new ObservableString(item));
             }
             return result;

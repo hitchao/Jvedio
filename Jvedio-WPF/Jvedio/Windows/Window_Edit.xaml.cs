@@ -187,6 +187,11 @@ namespace Jvedio
                 vieModel.CurrentVideo.SubSectionList.Add(new ObservableString(item));
             }
 
+            // 默认原路径是否存在
+            bool existDefault = vieModel.CurrentVideo.SubSectionList.Any(arg => arg.Value.Equals(vieModel.CurrentVideo.Path));
+            if (!existDefault)
+                vieModel.CurrentVideo.SubSectionList.Insert(0, new ObservableString(vieModel.CurrentVideo.Path));
+
             vieModel.CurrentVideo.SubSection =
                 string.Join(SuperUtils.Values.ConstValues.SeparatorString,
                 vieModel.CurrentVideo.SubSectionList.Select(arg => arg.Value));
