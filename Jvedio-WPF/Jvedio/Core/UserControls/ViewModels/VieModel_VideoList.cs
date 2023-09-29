@@ -29,6 +29,8 @@ namespace Jvedio.Core.UserControls.ViewModels
 
         public static Action<bool> onSearchingChange;
 
+        public event Action PageChangedStarted;
+
         public event EventHandler PageChangedCompleted;
 
         public event EventHandler RenderSqlChanged;
@@ -698,6 +700,9 @@ namespace Jvedio.Core.UserControls.ViewModels
                     Nothing = CurrentVideoList.Count == 0;
                 };
             }
+
+            PageChangedStarted?.Invoke();
+
             for (int i = 0; i < VideoList.Count; i++) {
                 try {
                     RenderVideoCT.ThrowIfCancellationRequested();

@@ -155,6 +155,7 @@ namespace Jvedio.Core.UserControls
             SetImageViewMode();
             ResizingTimer.Interval = TimeSpan.FromSeconds(0.5);
             ResizingTimer.Tick += new EventHandler(ResizingTimer_Tick);
+            vieModel.PageChangedStarted += PageChangedStarted;
             vieModel.PageChangedCompleted += PageChangedCompleted;
             vieModel.RenderSqlChanged += (s, ev) => onRenderSql?.Invoke(ev as WrapperEventArg<Video>);
             vieModel.onPageChange += (totalCount) => pagination.Total = totalCount;
@@ -194,9 +195,13 @@ namespace Jvedio.Core.UserControls
             }
         }
 
-        private void PageChangedCompleted(object sender, EventArgs ev)
+        private void PageChangedStarted()
         {
             GotoTop(null, null);
+        }
+
+        private void PageChangedCompleted(object sender, EventArgs ev)
+        {
             if (vieModel.EditMode)
                 SetSelected();
             if (ConfigManager.Settings.AutoGenScreenShot)
