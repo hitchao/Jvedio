@@ -43,11 +43,13 @@ namespace Jvedio.Test.ScanTest
             "D:\\电影\\abcd-123-12.mp4" })]
         public void SubSectionImport(string[] filePaths)
         {
+            Jvedio.App.Init();
             Mock<IScan> mock = new Mock<IScan>();
             mock.Setup(arg => arg.GetMinFileSize()).Returns(0);
-            System.Console.WriteLine(123);
+            List<string> list = filePaths.ToList();
+            Assert.AreEqual(12, list.Count);
 
-            Core.Scan.ScanTask scanTask = new Core.Scan.ScanTask(null, filePaths.ToList());
+            ScanTask scanTask = new ScanTask(null, list);
             scanTask.Start();
             while (true) {
                 Task.Delay(20);

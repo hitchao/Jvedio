@@ -695,7 +695,6 @@
                         <Grid Grid.Row="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <!--  选项 tabitem 栏  -->
@@ -840,7 +839,7 @@
                             </ScrollViewer>
 
                             <!--  动态新增内容  -->
-                            <super:SimplePanel x:Name="TabDataPanel" Grid.Row="2" />
+                            <super:SimplePanel x:Name="TabDataPanel" Grid.Row="1" />
 
                         </Grid>
 

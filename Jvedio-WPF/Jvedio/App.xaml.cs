@@ -35,6 +35,11 @@ namespace Jvedio
 
         static App()
         {
+            Init();
+        }
+
+        public static void Init()
+        {
 
             Logger = Jvedio.Core.Logs.Logger.Instance;
 
@@ -50,7 +55,6 @@ namespace Jvedio
             Window_ErrorMsg.OnLog += (str) => {
                 Logger.Info(str);
             };
-
 
         }
 
