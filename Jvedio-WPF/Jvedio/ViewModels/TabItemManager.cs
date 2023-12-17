@@ -264,13 +264,13 @@ namespace Jvedio.ViewModels
 
 
 
-                    if (tabData[0] is LabelType labelType) {
+                    if (tabData[0] is LabelType labelType && tabData[1] is string searchText) {
                         LabelView labelView = new LabelView(labelType);
                         labelView.Uid = tabItem.UUID;
 
-                        labelView.SetLabel(GetLabelList(labelType));
+                        labelView.SetLabel(GetLabelList(labelType, searchText));
                         labelView.onRefresh += (t) => {
-                            labelView.SetLabel(GetLabelList(t));
+                            labelView.SetLabel(GetLabelList(t, searchText));
                         };
 
                         labelView.onLabelClick += vieModel.onLabelClick;
@@ -292,7 +292,7 @@ namespace Jvedio.ViewModels
             CurrentWrapperArg = arg;
         }
 
-        private List<string> GetLabelList(LabelType type)
+        private List<string> GetLabelList(LabelType type,string searchText)
         {
             List<string> list = null;
             switch (type) {
@@ -300,12 +300,12 @@ namespace Jvedio.ViewModels
                     list = vieModel.GetLabelList();
                     break;
                 case LabelType.Genre:
-                    list = vieModel.GetGenreList();
+                    list = VideoSideMenu.GetGenreList(searchText);
                     break;
                 case LabelType.Series:
                 case LabelType.Studio:
                 case LabelType.Director:
-                    list = vieModel.GetListByField(type.ToString());
+                    list = VideoSideMenu.GetListByField(type.ToString(), searchText);
                     break;
                 default:
                     break;

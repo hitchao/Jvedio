@@ -1,0 +1,134 @@
+﻿<UserControl
+    x:Class="Jvedio.Core.UserControls.VideoSideMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Jvedio.Core.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
+    d:DesignHeight="450"
+    d:DesignWidth="300"
+    Loaded="UserControl_Loaded"
+    mc:Ignorable="d">
+
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <super:TogglePanel
+                Grid.Row="0"
+                Margin="1,0"
+                Padding="0,4"
+                FontSize="14"
+                Header="{DynamicResource Default}"
+                IsExpanded="{Binding SideDefaultExpanded, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}, UpdateSourceTrigger=PropertyChanged, FallbackValue=true}"
+                IsSelected="False"
+                LineWidth="0"
+                Style="{StaticResource BaseTogglePanel}">
+                <StackPanel x:Name="firstStackPanel">
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        IsChecked="True"
+                        MainText="{DynamicResource AllVideo}"
+                        Path="{StaticResource GeoVideo}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding AllVideoCount}"
+                        Tag="All" />
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource Favorites}"
+                        Path="{StaticResource GeoStar}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding FavoriteVideoCount}"
+                        Tag="Favorite" />
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource RecentPlay}"
+                        Path="{StaticResource GeoRecentPlay}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding RecentWatchCount}"
+                        Tag="RecentWatch">
+                        <super:PathRadioButton.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Click="ClearRecentWatched" Header="{DynamicResource Clear}" />
+                            </ContextMenu>
+                        </super:PathRadioButton.ContextMenu>
+                    </super:PathRadioButton>
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource Actors}"
+                        Path="{StaticResource GeoActor}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding AllActorCount}"
+                        Tag="Actor" />
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource MyLabel}"
+                        Path="{StaticResource GeoLabel}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding AllLabelCount}"
+                        Tag="Label" />
+                </StackPanel>
+            </super:TogglePanel>
+
+
+            <super:TogglePanel
+                Grid.Row="1"
+                Margin="1,0"
+                Padding="0,4"
+                FontSize="14"
+                Header="{DynamicResource AutoClassification}"
+                IsExpanded="{Binding SideClassifyExpanded, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}, UpdateSourceTrigger=PropertyChanged, FallbackValue=true}"
+                IsSelected="False"
+                LineWidth="0"
+                Style="{StaticResource BaseTogglePanel}">
+
+                <StackPanel x:Name="secondStackPanel">
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource Genre}"
+                        Path="{StaticResource GeoClassify}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding AllGenreCount}"
+                        Tag="Genre" />
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource Tag}"
+                        Path="{StaticResource GeoClassify}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding AllSeriesCount}"
+                        Tag="Series" />
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource Studio}"
+                        Path="{StaticResource GeoClassify}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding AllStudioCount}"
+                        Tag="Studio" />
+                    <super:PathRadioButton
+                        Click="HandleSideClick"
+                        GroupName="videoRadioButton"
+                        MainText="{DynamicResource Director}"
+                        Path="{StaticResource GeoClassify}"
+                        Style="{StaticResource BasePathRadioButton}"
+                        SubText="{Binding AllDirectorCount}"
+                        Tag="Director" />
+                </StackPanel>
+            </super:TogglePanel>
+
+        </Grid>
+    </ScrollViewer>
+
+</UserControl>

@@ -329,6 +329,7 @@
     <Compile Include="Core\Tasks\ScanManager.cs" />
     <Compile Include="Core\Server\ServerManager.cs" />
     <Compile Include="Core\Server\ServerStatus.cs" />
+    <Compile Include="Core\UserControls\Interfaces\ISideMenu.cs" />
     <Compile Include="Core\UserControls\ITabItemControl.cs" />
     <Compile Include="Core\UserControls\LabelView.xaml.cs">
       <DependentUpon>LabelView.xaml</DependentUpon>
@@ -340,6 +341,9 @@
     <Compile Include="Core\UserControls\VideoItemEventArgs.cs" />
     <Compile Include="Core\UserControls\VideoList.xaml.cs">
       <DependentUpon>VideoList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\UserControls\VideoSideMenu.xaml.cs">
+      <DependentUpon>VideoSideMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\UserControls\ViewModels\VieModel_VideoList.cs" />
     <Compile Include="Core\UserControls\ViewVideo.xaml.cs">
@@ -516,6 +520,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Core\UserControls\VideoList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Core\UserControls\VideoSideMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

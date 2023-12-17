@@ -6,6 +6,7 @@
     xmlns:config="clr-namespace:Jvedio;assembly=Jvedio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Jvedio"
+    xmlns:localControl="clr-namespace:Jvedio.Core.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="{DynamicResource AppTitle}"
@@ -308,9 +309,8 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-
                             </Grid.RowDefinitions>
+
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -334,121 +334,12 @@
                                     ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
                             </Grid>
 
-
-
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <super:TogglePanel
-                                        Grid.Row="0"
-                                        Margin="1,0"
-                                        Padding="0,4"
-                                        FontSize="14"
-                                        Header="{DynamicResource Default}"
-                                        IsExpanded="{Binding SideDefaultExpanded, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}, UpdateSourceTrigger=PropertyChanged, FallbackValue=true}"
-                                        IsSelected="False"
-                                        LineWidth="0"
-                                        Style="{StaticResource BaseTogglePanel}">
-                                        <StackPanel>
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="All"
-                                                IsChecked="{Binding MainDataChecked, Mode=OneWay}"
-                                                MainText="{DynamicResource AllVideo}"
-                                                Path="{StaticResource GeoVideo}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllVideoCount}" />
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="Favorite"
-                                                MainText="{DynamicResource Favorites}"
-                                                Path="{StaticResource GeoStar}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding FavoriteVideoCount}" />
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="RecentWatch"
-                                                MainText="{DynamicResource RecentPlay}"
-                                                Path="{StaticResource GeoRecentPlay}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding RecentWatchCount}">
-                                                <super:PathRadioButton.ContextMenu>
-                                                    <ContextMenu>
-                                                        <MenuItem Click="ClearRecentWatched" Header="{DynamicResource Clear}" />
-                                                    </ContextMenu>
-                                                </super:PathRadioButton.ContextMenu>
-                                            </super:PathRadioButton>
-                                            <super:PathRadioButton
-                                                Click="ShowActorNotice"
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="Actor"
-                                                MainText="{DynamicResource Actors}"
-                                                Path="{StaticResource GeoActor}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllActorCount}" />
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="Label"
-                                                MainText="{DynamicResource MyLabel}"
-                                                Path="{StaticResource GeoLabel}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllLabelCount}" />
-                                        </StackPanel>
-                                    </super:TogglePanel>
-
-
-                                    <super:TogglePanel
-                                        Grid.Row="1"
-                                        Margin="1,0"
-                                        Padding="0,4"
-                                        FontSize="14"
-                                        Header="{DynamicResource AutoClassification}"
-                                        IsExpanded="{Binding SideClassifyExpanded, Mode=TwoWay, Source={x:Static config:ConfigManager.Main}, UpdateSourceTrigger=PropertyChanged, FallbackValue=true}"
-                                        IsSelected="False"
-                                        LineWidth="0"
-                                        Style="{StaticResource BaseTogglePanel}">
-
-                                        <StackPanel>
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="Genre"
-                                                MainText="{DynamicResource Genre}"
-                                                Path="{StaticResource GeoClassify}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllGenreCount}" />
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="Series"
-                                                MainText="{DynamicResource Tag}"
-                                                Path="{StaticResource GeoClassify}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllSeriesCount}" />
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="Studio"
-                                                MainText="{DynamicResource Studio}"
-                                                Path="{StaticResource GeoClassify}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllStudioCount}" />
-                                            <super:PathRadioButton
-                                                Command="{Binding SideButtonCmd}"
-                                                CommandParameter="Director"
-                                                MainText="{DynamicResource Director}"
-                                                Path="{StaticResource GeoClassify}"
-                                                Style="{StaticResource BasePathRadioButton}"
-                                                SubText="{Binding AllDirectorCount}" />
-                                        </StackPanel>
-                                    </super:TogglePanel>
-
-                                </Grid>
-                            </ScrollViewer>
+                            <Border x:Name="sideMenuContainer" Grid.Row="1">
+                                <localControl:VideoSideMenu />
+                            </Border>
 
                             <Grid
-                                Grid.Row="3"
+                                Grid.Row="2"
                                 Margin="0,0,5,5"
                                 VerticalAlignment="Bottom">
                                 <Image
@@ -468,7 +359,6 @@
                                     Style="{StaticResource SettingHoverPath}"
                                     ToolTip="{DynamicResource Settings}" />
                             </Grid>
-
                         </Grid>
 
                     </Border>

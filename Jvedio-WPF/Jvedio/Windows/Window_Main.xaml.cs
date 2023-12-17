@@ -150,13 +150,41 @@ namespace Jvedio
             InitTheme();
             InitNotice();
             InitDataBases();
-            InitRecentWatched();
-            vieModel.Statistic();
             BindingEventAfterRender();
             InitUpgrade();
             CheckServerStatus();
             InitAvalonEdit();
+            InitSideMenu();
         }
+
+        public void InitSideMenu()
+        {
+            if (Main.CurrentDataType != DataType.Video) {
+                sideMenuContainer.Child = null;
+            }
+
+            switch (Main.CurrentDataType) {
+                case DataType.Video:
+                    
+                    // 初始化绑定关系
+                    VideoSideMenu sideMenu = sideMenuContainer.Child as VideoSideMenu;
+                    sideMenu.onSideButtonCmd = vieModel.HandleSideButtonCmd;
+                    vieModel.SetSideMenu(sideMenu);
+                    break;
+                case DataType.Picture:
+                    break;
+                case DataType.Game:
+                    break;
+                case DataType.Comics:
+                    break;
+                default:
+                    break;
+            }
+
+            vieModel.Statistic();
+        }
+
+
 
         public void InitAvalonEdit()
         {
@@ -343,16 +371,6 @@ namespace Jvedio
         }
 
 
-        /// <summary>
-        /// 显示最近播放
-        /// </summary>
-        private void InitRecentWatched()
-        {
-            SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("DataType", (int)Main.CurrentDataType).NotEq("ViewDate", string.Empty);
-            long count = metaDataMapper.SelectCount(wrapper);
-            vieModel.RecentWatchedCount = count;
-        }
 
         #region "热键"
 
@@ -810,14 +828,6 @@ namespace Jvedio
             vieModel.DragInFile = false;
         }
 
-        private void ClearRecentWatched(object sender, RoutedEventArgs e)
-        {
-            SelectWrapper<MetaData> wrapper = new SelectWrapper<MetaData>();
-            wrapper.Eq("DBId", ConfigManager.Main.CurrentDBId).Eq("DataType", "0");
-            metaDataMapper.UpdateField("ViewDate", string.Empty, wrapper);
-            vieModel.Statistic();
-        }
-
         private void ConfigFirstRun()
         {
             if (ConfigManager.Main.FirstRun) {
@@ -976,12 +986,6 @@ namespace Jvedio
             FileHelper.TryOpenPath(AppDomain.CurrentDomain.BaseDirectory);
         }
 
-        private void ShowActorNotice(object sender, RoutedEventArgs e)
-        {
-            PathType pathType = (PathType)ConfigManager.Settings.PicPathMode;
-            if (pathType.Equals(PathType.RelativeToData))
-                MessageCard.Info(LangManager.GetValueByKey("ShowActorImageWarning"));
-        }
 
         private void ImportVideo(object sender, RoutedEventArgs e)
         {
