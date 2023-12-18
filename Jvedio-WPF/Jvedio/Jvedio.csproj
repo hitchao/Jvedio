@@ -342,6 +342,9 @@
     <Compile Include="Core\UserControls\VideoList.xaml.cs">
       <DependentUpon>VideoList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\UserControls\PictureSideMenu.xaml.cs">
+      <DependentUpon>PictureSideMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\UserControls\VideoSideMenu.xaml.cs">
       <DependentUpon>VideoSideMenu.xaml</DependentUpon>
     </Compile>
@@ -522,6 +525,10 @@
     <Page Include="Core\UserControls\VideoList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Core\UserControls\PictureSideMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Core\UserControls\VideoSideMenu.xaml">
       <SubType>Designer</SubType>

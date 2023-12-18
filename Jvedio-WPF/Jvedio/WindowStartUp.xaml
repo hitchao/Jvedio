@@ -320,8 +320,7 @@
                                 HorizontalAlignment="Stretch"
                                 Click="ChangeDataType"
                                 Content="{DynamicResource Picture}"
-                                Style="{StaticResource SideRadioButton}"
-                                Visibility="Collapsed" />
+                                Style="{StaticResource SideRadioButton}" />
 
 
                             <RadioButton

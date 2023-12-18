@@ -588,7 +588,9 @@ namespace Jvedio
                 ConfigManager.Main.CurrentDBId = id;
 
                 // 是否需要扫描
-                if (main == null && ConfigManager.ScanConfig.ScanOnStartUp) {
+                if (main == null &&
+                    Main.CurrentDataType == DataType.Video &&
+                    ConfigManager.ScanConfig.ScanOnStartUp) {
                     // 未打开过 main 的时候才会扫描
                     if (!string.IsNullOrEmpty(database.ScanPath)) {
                         tabControl.SelectedIndex = 0;
@@ -619,22 +621,19 @@ namespace Jvedio
             TagStamp.Init(); // 初始化标签戳
 
             // 启动主窗口
-            if (Main.CurrentDataType == DataType.Video) {
 
-                if (main == null) {
-                    main = new Main();
-                    Application.Current.MainWindow = main;
-                } else {
-                    main.InitDataBases();
-                    main.SetComboboxID();
-                    main.LoadAll();
-                }
-
-                main.Show();
-                if (ScanTask != null)
-                    App.ScanManager.CurrentTasks.Add(ScanTask);
-
+            if (main == null) {
+                main = new Main();
+                Application.Current.MainWindow = main;
+            } else {
+                main.InitDataBases();
+                main.SetComboboxID();
+                main.LoadAll();
             }
+
+            main.Show();
+            if (ScanTask != null)
+                App.ScanManager.CurrentTasks.Add(ScanTask);
 
             // 设置当前状态为：进入库
             EnteringDataBase = true;

@@ -162,16 +162,17 @@ namespace Jvedio
             if (Main.CurrentDataType != DataType.Video) {
                 sideMenuContainer.Child = null;
             }
-
+            // 初始化绑定关系
             switch (Main.CurrentDataType) {
                 case DataType.Video:
-                    
-                    // 初始化绑定关系
                     VideoSideMenu sideMenu = sideMenuContainer.Child as VideoSideMenu;
                     sideMenu.onSideButtonCmd = vieModel.HandleSideButtonCmd;
                     vieModel.SetSideMenu(sideMenu);
                     break;
                 case DataType.Picture:
+                    PictureSideMenu pictureSideMenu = new PictureSideMenu();
+                    pictureSideMenu.onSideButtonCmd = vieModel.HandleSideButtonCmd;
+                    sideMenuContainer.Child = pictureSideMenu;
                     break;
                 case DataType.Game:
                     break;
